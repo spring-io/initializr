@@ -1,0 +1,8 @@
+---
+applications:
+- name: spring
+  memory: 512M
+  instances: 1
+  url: spring.cfapps.io
+  path: .
+  command: ./spring/bin/spring run app.groovy -- --server.port=$PORT
