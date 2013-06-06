@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html">
+  <head>
+    <title>Spring Initializr</title>
+    <link rel="stylesheet"
+      href="/css/bootstrap.min.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand"
+              href="https://www.springsource.org">
+              Spring
+          </a>
+          <ul class="nav">
+            <li>
+              <a href="/spring.zip">
+                Download
+              </a>
+            </li>
+            <li>
+              <a href="/">
+                Projects
+              </a>
+            </li>
+            <li>
+              <a href="/installer">
+                Installer
+              </a>
+            </li>
+            <li>
+              <a href="/gs">
+                Getting Started
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <h1>Getting Started</h1>
+      <div>
+        <ul><% repos.each { %>
+            <li><a href="/gs/${it.repo}">${it.name}</a></li><% } %>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

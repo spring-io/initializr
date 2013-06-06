@@ -1,5 +1,7 @@
 @Grab("org.springframework.bootstrap:spring-bootstrap-actuator:0.5.0.BUILD-SNAPSHOT")
 @Grab("org.codehaus.groovy:groovy-ant:2.1.3")
+@Grab("org.codehaus.groovy.modules.http-builder:http-builder:0.5.2")
+import groovyx.net.http.*
 
 @Controller
 @Log
@@ -10,6 +12,8 @@ class MainController {
 
   @Value('${TMPDIR:.}')
   private String tmpdir
+
+  private gettingStartedRepos = []
 
   @RequestMapping("/")
   @ResponseBody
@@ -47,7 +51,7 @@ class MainController {
 
   @RequestMapping("/pom")
   @ResponseBody
-  ResponseEntity<String> pom(PomRequest request) {
+  ResponseEntity<byte[]> pom(PomRequest request) {
 
     def style = request.style
     log.info("Styles requested: " + style)
@@ -69,6 +73,65 @@ class MainController {
 
     def body = template "starter-pom.xml", model
     new ResponseEntity<byte[]>(body, ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
+  }
+
+  @RequestMapping("/gs")
+  @ResponseBody
+  String gettingStartedList(@RequestHeader("Authorization") auth) { 
+    if (gettingStartedRepos.empty) {
+      RESTClient github = new RESTClient("https://api.github.com")
+      if (auth) { 
+        github.headers['Authorization'] = auth
+      }
+      github.headers['User-Agent'] = 'Mozilla/4.0'
+      def names = github.get( path : "orgs/springframework-meta/repos").data.collect { it.name }
+      names = names.findAll {  it.startsWith "gs-"}
+      gettingStartedRepos = names.collect { [repo:it, name:it.split("-").findAll{it!="gs"}.collect{it.capitalize()}.join(" ")]}
+    }
+    template "gs.html", [repos:gettingStartedRepos]
+  }
+
+  @RequestMapping("/gs/{repo}")
+  @ResponseBody
+  ResponseEntity<byte[]> gettingStartedProject(java.security.Principal principal, @RequestHeader("Authorization") auth, @PathVariable String repo) {
+    RESTClient github = new RESTClient("https://api.github.com")
+    if (auth) { 
+      github.headers['Authorization'] = auth
+    }
+    github.headers['User-Agent'] = 'Mozilla/4.0'
+    def body = github.get( path : "repos/springframework-meta/${repo}/zipball/master").data.bytes
+    log.info("Downloaded: " + body.length + " bytes of ${repo} for ${principal.name}")
+    new ResponseEntity<byte[]>(body, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
+  }
+
+}
+
+@Grab("org.springframework.security:spring-security-javaconfig:1.0.0.CI-SNAPSHOT")
+import org.springframework.security.config.annotation.web.*
+import org.springframework.security.authentication.*
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.AuthorityUtils
+import org.springframework.bootstrap.actuate.properties.SecurityProperties
+@Configuration
+@Log
+class SecurityConfiguration {
+
+  @Bean(name = "org.springframework.bootstrap.actuate.properties.SecurityProperties")
+  SecurityProperties securityProperties() {
+    SecurityProperties security = new SecurityProperties()
+    security.getBasic().setPath("/gs/**")
+    security.getBasic().setRealm("Github Credentials")
+    security
+  }
+
+  @Bean
+  AuthenticationManager authenticationManager() { 
+    new AuthenticationManager() {
+      Authentication authenticate(Authentication authentication) {
+        log.info("Authenticating: " + authentication.name)
+        new UsernamePasswordAuthenticationToken(authentication.name, "<N/A>", AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"))
+      }
+    }
   }
 
 }
