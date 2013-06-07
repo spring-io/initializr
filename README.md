@@ -30,3 +30,14 @@ Use the spring command:
 
     $ spring run app.groovy
 
+## Deploying to Cloud Foundry
+
+To help avoid a timeout on startup you should upload all the
+dependencies.  You can get those locally by running the app with
+`--local`:
+
+    $ spring run --local app.groovy
+    
+this will create a local directory `grapes/` with all the jar
+dependencies.  Then when you `cf push` they will be uploaded and used
+if the app is again launched with `--local`.

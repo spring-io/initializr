@@ -1,8 +1,8 @@
 ---
 applications:
 - name: spring
-  memory: 512M
+  memory: 1024M
   instances: 1
   url: spring.cfapps.io
   path: .
-  command: ./spring/bin/spring run app.groovy -- --server.port=$PORT
+  command: JAVA_OPTS=-Djava.util.logging.config.file=logging.properties cp cacerts .jdk/lib/security && ./spring/bin/spring run --local app.groovy -- --server.port=$PORT
