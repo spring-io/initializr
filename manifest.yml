@@ -6,4 +6,4 @@ applications:
   url: initializr.cfapps.io
   path: .
   command: java -jar ./spring/lib/*.jar run --local app.groovy -- --server.port=$PORT
-  buildpack: https://github.com/cloudfoundry/cloudfoundry-buildpack-java
+#  buildpack: https://github.com/dsyer/cloudfoundry-buildpack-java

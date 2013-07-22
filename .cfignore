@@ -11,6 +11,4 @@ build
 target
 .springBeans
 tmp*
-spring
-grapes
 spring.zip

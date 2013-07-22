@@ -50,14 +50,42 @@ class MainController {
     new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
   }
 
+  @RequestMapping("/starter")
+  @ResponseBody
+  ResponseEntity<byte[]> spring(PomRequest request) {
+
+    def model = [:]
+    String pom = new String(pom(request, model).body)
+    File dir = File.createTempFile("tmp","",new File(tmpdir));
+    dir.delete()
+    dir.mkdirs()
+    new File(dir, "pom.xml").write(pom)
+
+    File src = new File(new File(dir, "src/main/java"),request.packageName.replace(".", "/"))
+    src.mkdirs()
+
+    def body = template "Application.java", model
+    log.info("Creating: "  + src + "Application.java")
+    new File(src, "Application.java").write(body)
+    
+    File download = new File(tmpdir, dir.name + ".zip")
+    log.info("Creating: "  + download)
+    
+    new AntBuilder().zip(destfile: download) { 
+      zipfileset(dir:dir, includes:"**")
+    }
+    log.info("Downloading: "  + download)
+    new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
+
+  }
+
   @RequestMapping("/pom")
   @ResponseBody
-  ResponseEntity<byte[]> pom(PomRequest request) {
+  ResponseEntity<byte[]> pom(PomRequest request, Map model) {
 
     def style = request.style
     log.info("Styles requested: " + style)
 
-    def model = [:]
     model.groupId = request.groupId
     model.artifactId = request.artifactId
     model.version = request.version
@@ -68,7 +96,7 @@ class MainController {
     if (style==null || style.size()==0) { 
       style = [""]
     }
-    model["styles"] = style.collect{ it=="" ? "" : it + "-" }
+    model["styles"] = style.collect{ it=="" ? "" : "-" + it }
 
     log.info("Model: " + model)
 
@@ -107,13 +135,8 @@ class MainController {
 
 }
 
-@Grab("org.springframework.security:spring-security-config:3.2.0.M2")
-@Grab(value="org.springframework.security:spring-security-web:3.2.0.M2", transitive=false)
-import org.springframework.security.config.annotation.web.*
-import org.springframework.security.authentication.*
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.actuate.properties.SecurityProperties
+@EnableWebSecurity
 @Configuration
 @Log
 class SecurityConfiguration {

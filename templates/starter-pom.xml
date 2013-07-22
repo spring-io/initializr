@@ -19,19 +19,19 @@
 	<dependencies><% styles.each { %>
 		<dependency>
 			<groupId>org.springframework.zero</groupId>
-			<artifactId>spring-starter-${it}</artifactId>
+			<artifactId>spring-starter${it}</artifactId>
 		</dependency><% } %>
 	</dependencies>
 
 	<properties>
-		<start-class>${packageName}.ApplicationConfiguration</start-class>
+		<start-class>${packageName}.Application</start-class>
 	</properties>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
+				<groupId>org.springframework.zero</groupId>
+				<artifactId>spring-package-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
