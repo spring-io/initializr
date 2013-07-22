@@ -1,8 +1,9 @@
 ---
 applications:
-- name: spring
+- name: initializr
   memory: 1024M
   instances: 1
-  url: spring.cfapps.io
+  url: initializr.cfapps.io
   path: .
-  command: JAVA_OPTS=-Djava.util.logging.config.file=logging.properties cp cacerts .jdk/lib/security && ./spring/bin/spring run --local app.groovy -- --server.port=$PORT
+  command: java -jar ./spring/lib/*.jar run --local app.groovy -- --server.port=$PORT
+  buildpack: https://github.com/cloudfoundry/cloudfoundry-buildpack-java

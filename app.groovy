@@ -1,5 +1,5 @@
-@Grab("org.springframework.bootstrap:spring-bootstrap-actuator:0.5.0.BUILD-SNAPSHOT")
-@Grab("org.codehaus.groovy:groovy-ant:2.1.3")
+@Grab("org.springframework.zero:spring-actuator:0.5.0.BUILD-SNAPSHOT")
+@Grab("org.codehaus.groovy:groovy-ant:2.1.6")
 @Grab("org.codehaus.groovy.modules.http-builder:http-builder:0.5.2")
 @Grab(group='net.sf.json-lib', module='json-lib', version='2.3', classifier='jdk15')
 import groovyx.net.http.*
@@ -107,17 +107,18 @@ class MainController {
 
 }
 
-@Grab("org.springframework.security:spring-security-javaconfig:1.0.0.CI-SNAPSHOT")
+@Grab("org.springframework.security:spring-security-config:3.2.0.M2")
+@Grab(value="org.springframework.security:spring-security-web:3.2.0.M2", transitive=false)
 import org.springframework.security.config.annotation.web.*
 import org.springframework.security.authentication.*
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.AuthorityUtils
-import org.springframework.bootstrap.actuate.properties.SecurityProperties
+import org.springframework.actuate.properties.SecurityProperties
 @Configuration
 @Log
 class SecurityConfiguration {
 
-  @Bean(name = "org.springframework.bootstrap.actuate.properties.SecurityProperties")
+  @Bean(name = "org.springframework.actuate.properties.SecurityProperties")
   SecurityProperties securityProperties() {
     SecurityProperties security = new SecurityProperties()
     security.getBasic().setPath("/gs/**")
@@ -141,7 +142,7 @@ class PomRequest {
   def style = []
 
   String name = "demo"
-  String description = "Demo project for Spring Bootstrap"
+  String description = "Demo project for Spring Zero"
   String groupId = "org.test"
   String artifactId
   String version = "0.0.1.SNAPSHOT"

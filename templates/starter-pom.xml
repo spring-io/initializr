@@ -11,15 +11,15 @@
 	<description>${description}</description>
 
 	<parent>
-		<groupId>org.springframework.bootstrap</groupId>
-		<artifactId>spring-bootstrap-starters</artifactId>
+		<groupId>org.springframework.zero</groupId>
+		<artifactId>spring-starter-parent</artifactId>
 		<version>0.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 
 	<dependencies><% styles.each { %>
 		<dependency>
-			<groupId>org.springframework.bootstrap</groupId>
-			<artifactId>spring-bootstrap-${it}starter</artifactId>
+			<groupId>org.springframework.zero</groupId>
+			<artifactId>spring-starter-${it}</artifactId>
 		</dependency><% } %>
 	</dependencies>
 
