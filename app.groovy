@@ -1,4 +1,5 @@
-@Grab("org.springframework.zero:spring-actuator:0.5.0.BUILD-SNAPSHOT")
+package app
+
 @Grab("org.codehaus.groovy:groovy-ant:2.1.6")
 @Grab("org.codehaus.groovy.modules.http-builder:http-builder:0.5.2")
 @Grab(group='net.sf.json-lib', module='json-lib', version='2.3', classifier='jdk15')
@@ -14,6 +15,9 @@ class MainController {
   @Value('${TMPDIR:.}')
   private String tmpdir
 
+  @Autowired
+  private Reactor reactor
+
   private gettingStartedRepos = []
 
   @RequestMapping("/")
@@ -27,12 +31,6 @@ class MainController {
     model["styles"] << [name:"JPA", value:"jpa"]
     model["types"] = [[name:"Maven POM", value:"pom", selected: true], [name:"Maven Project", value:"pomproject", selected: false]]
     template "home.html", model
-  }
-
-  @RequestMapping("/installer")
-  @ResponseBody
-  String installer(@RequestHeader(required=false) String host) {
-    template "installer.sh", [host: host!=null ? host : home]
   }
 
   @RequestMapping("/spring")
@@ -54,9 +52,12 @@ class MainController {
   @ResponseBody
   ResponseEntity<byte[]> spring(PomRequest request) {
 
+    def tempFiles = []
+
     def model = [:]
     String pom = new String(pom(request, model).body)
     File dir = File.createTempFile("tmp","",new File(tmpdir));
+    tempFiles << dir
     dir.delete()
     dir.mkdirs()
     new File(dir, "pom.xml").write(pom)
@@ -65,12 +66,15 @@ class MainController {
     src.mkdirs()
 
     def body = template "Application.java", model
-    log.info("Creating: "  + src + "Application.java")
+    log.info("Creating: "  + src + "/Application.java")
     new File(src, "Application.java").write(body)
     
     File download = new File(tmpdir, dir.name + ".zip")
     log.info("Creating: "  + download)
-    
+    tempFiles << download
+
+    reactor.notify("tempfiles", Event.wrap(tempFiles))
+
     new AntBuilder().zip(destfile: download) { 
       zipfileset(dir:dir, includes:"**")
     }
@@ -135,13 +139,60 @@ class MainController {
 
 }
 
-import org.springframework.actuate.properties.SecurityProperties
+import reactor.spring.context.ConsumerBeanPostProcessor;
+@Configuration
+@EnableReactor
+class ReactorConfiguration {
+
+	@Bean
+	public reactor.core.Environment reactorEnvironment() {
+		return new reactor.core.Environment(); // TODO: use Spring Environment to configure?
+	}
+
+	@Bean
+	public Reactor rootReactor() {
+		return reactorEnvironment().getRootReactor();
+	}
+
+}
+
+@Component
+@Log
+class TemporaryFileCleaner {
+
+  @Autowired
+  Reactor reactor
+
+  @PostConstruct
+  void init() { 
+		reactor.on(Selectors.$("tempfiles"), [
+			accept: { 
+                       def tempFiles = event.data
+                       log.info "Tempfiles: " + tempFiles
+                       if (tempFiles) { 
+                         tempFiles.each {
+                           File file = it as File
+                           if (file.directory) { 
+                             file.deleteDir()
+                           } else {
+                             file.delete()
+                           }
+                         }
+                       }
+			}
+		] as Consumer)
+  }
+
+}
+
+@Grab("org.springframework.boot:spring-boot-starter-actuator:0.5.0.M1")
+import org.springframework.boot.ops.properties.SecurityProperties
 @EnableWebSecurity
 @Configuration
 @Log
 class SecurityConfiguration {
 
-  @Bean(name = "org.springframework.actuate.properties.SecurityProperties")
+  @Bean(name = "org.springframework.boot.ops.properties.SecurityProperties")
   SecurityProperties securityProperties() {
     SecurityProperties security = new SecurityProperties()
     security.getBasic().setPath("/gs/**")
@@ -165,12 +216,12 @@ class PomRequest {
   def style = []
 
   String name = "demo"
-  String description = "Demo project for Spring Zero"
+  String description = "Demo project for Spring Boot"
   String groupId = "org.test"
   String artifactId
   String version = "0.0.1.SNAPSHOT"
   String packageName
-  String getName() {
+  String getArtifactId() {
     artifactId == null ? name : artifactId
   }
   String getPackageName() {
