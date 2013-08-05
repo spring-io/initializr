@@ -2,9 +2,15 @@
 
 ## Prerequisites
 
-You need Java (1.6 or better) and a bash-like shell. To get started,
-some basic operating system tools (`curl` and `zip`).  The `spring`
-command line interface can be installed like this
+You need Java (1.6 or better) and a bash-like shell. 
+
+If you are on a Mac and using [homebrew](http://brew.sh/), all you must do to install it is:
+
+    $ brew install spring-boot-cli
+    
+It will install `/usr/local/bin/spring`. You can jump right to [running the app](#running_the_app).
+
+An alternative way to install the `spring` command line interface can be installed like this:
 
     $ curl spring.cfapps.io/installer | bash
 
@@ -24,6 +30,7 @@ Windoze users we recommend [cygwin](http://cygwin.org)), or you can
 download the [zip file](http://spring.cfapps.io/spring.zip) and unpack
 it yourself.
 
+<a name="running_the_app"></a>
 ## Running the app
 
 Use the spring command:
