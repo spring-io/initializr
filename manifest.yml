@@ -6,5 +6,4 @@ applications:
   host: initializr
   domain: cfapps.io
   path: .
-  command: java -jar ./spring/lib/*.jar run --cp . --local app.groovy -- --server.port=$PORT
-#  buildpack: https://github.com/dsyer/cloudfoundry-buildpack-java
+  buildpack: https://github.com/cloudfoundry/java-buildpack
