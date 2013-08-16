@@ -1,6 +1,6 @@
 package app
 
-@Grab("org.springframework.boot:spring-boot-starter-actuator:0.5.0.M1")
+@Grab("org.springframework.boot:spring-boot-starter-actuator:0.5.0.BUILD-SNAPSHOT")
 @Grab("org.codehaus.groovy:groovy-ant:2.1.6")
 @Grab("org.codehaus.groovy.modules.http-builder:http-builder:0.5.2")
 @Grab(group='net.sf.json-lib', module='json-lib', version='2.3', classifier='jdk15')
@@ -72,14 +72,15 @@ class MainController {
     log.info("Creating: "  + download)
     tempFiles << download
 
-    reactor.notify("tempfiles", Event.wrap(tempFiles))
-
     new AntBuilder().zip(destfile: download) { 
       zipfileset(dir:dir, includes:"**")
     }
     log.info("Downloading: "  + download)
-    new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
+    def result = new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
 
+    reactor.notify("tempfiles", Event.wrap(tempFiles))
+
+    result
   }
 
   @RequestMapping("/pom")
@@ -136,7 +137,7 @@ class TemporaryFileCleaner {
   @PostConstruct
   void init() { 
 		reactor.on(Selectors.$("tempfiles"), [
-			accept: { 
+			accept: { event ->
                        def tempFiles = event.data
                        log.info "Tempfiles: " + tempFiles
                        if (tempFiles) { 
@@ -168,6 +169,6 @@ class PomRequest {
     artifactId == null ? name : artifactId
   }
   String getPackageName() {
-    packageName == null ? name : packageName
+    packageName == null ? name.replace('-', '.') : packageName
   }
 }
