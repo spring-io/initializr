@@ -100,6 +100,9 @@ class MainController {
     if (style==null || style.size()==0) { 
       style = [""]
     }
+    if (!style.class.isArray() && !(style instanceof Collection)) {
+      style = [style]
+    }
     model["styles"] = style.collect{ it=="" ? "" : "-" + it }
 
     log.info("Model: " + model)
