@@ -11,15 +11,15 @@
 	<description>${description}</description>
 
 	<parent>
-		<groupId>org.springframework.zero</groupId>
-		<artifactId>spring-starter-parent</artifactId>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>0.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 
 	<dependencies><% styles.each { %>
 		<dependency>
-			<groupId>org.springframework.zero</groupId>
-			<artifactId>spring-starter${it}</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter${it}</artifactId>
 		</dependency><% } %>
 	</dependencies>
 
@@ -30,8 +30,8 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.zero</groupId>
-				<artifactId>spring-package-maven-plugin</artifactId>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
