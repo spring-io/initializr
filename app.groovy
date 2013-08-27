@@ -2,9 +2,6 @@ package app
 
 @Grab("org.springframework.boot:spring-boot-starter-actuator:0.5.0.BUILD-SNAPSHOT")
 @Grab("org.codehaus.groovy:groovy-ant:2.1.6")
-@Grab("org.codehaus.groovy.modules.http-builder:http-builder:0.5.2")
-@Grab(group='net.sf.json-lib', module='json-lib', version='2.3', classifier='jdk15')
-import groovyx.net.http.*
 
 @Controller
 @Log
