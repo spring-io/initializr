@@ -7,4 +7,4 @@ applications:
   domain: cfapps.io
   path: .
   buildpack: https://github.com/cloudfoundry/java-buildpack
-  command: JAVA_HOME=./.java ./spring/bin/spring run --local app.groovy -- --server.port=$PORT
+  command: ls && JAVA_HOME=./.java ./spring/bin/spring run --local app.groovy -- --server.port=$PORT
