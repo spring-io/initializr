@@ -110,9 +110,12 @@ class MainController {
 
 }
 
-import reactor.spring.context.ConsumerBeanPostProcessor;
 @Configuration
-@EnableReactor
+@Grab("org.projectreactor:reactor-core:1.0.0.M2")
+import reactor.core.Reactor
+import reactor.function.Consumer
+import reactor.event.selector.Selectors
+import reactor.event.Event
 class ReactorConfiguration {
 
 	@Bean
