@@ -20,12 +20,12 @@ class MainController {
   @ResponseBody
   String home() {
     def model = [:]
-    model["styles"] = [[name:"Standard", value:""]]
-    model["styles"] << [name:"Web", value:"web"]
+    model["styles"] = [[name:"Web", value:"web"]]
     model["styles"] << [name:"Actuator", value:"actuator"]
+    model["styles"] << [name:"Security", value:"security"]
     model["styles"] << [name:"Batch", value:"batch"]
     model["styles"] << [name:"JPA", value:"jpa"]
-    model["types"] = [[name:"Maven POM", value:"pom", selected: true], [name:"Maven Project", value:"pomproject", selected: false]]
+    model["types"] = [[name:"Maven POM", value:"pom", selected: false], [name:"Maven Project", value:"pomproject", selected: true]]
     template "home.html", model
   }
 
