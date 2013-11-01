@@ -24,7 +24,7 @@ class MainController {
     model["styles"] << [name:"Actuator", value:"actuator"]
     model["styles"] << [name:"Security", value:"security"]
     model["styles"] << [name:"Batch", value:"batch"]
-    model["styles"] << [name:"JPA", value:"jpa"]
+    model["styles"] << [name:"JPA", value:"data-jpa"]
     model["types"] = [[name:"Maven POM", value:"pom", selected: false], [name:"Maven Project", value:"pomproject", selected: true]]
     template "home.html", model
   }
