@@ -24,6 +24,10 @@ class MainController {
     model["styles"] << [name:"Actuator", value:"actuator"]
     model["styles"] << [name:"Security", value:"security"]
     model["styles"] << [name:"Batch", value:"batch"]
+    model["styles"] << [name:"JDBC", value:"jdbc"]
+    model["styles"] << [name:"JMS", value:"jms"]
+    model["styles"] << [name:"AMQP", value:"amqp"]
+    model["styles"] << [name:"AOP", value:"aop"]
     model["styles"] << [name:"JPA", value:"data-jpa"]
     model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true]]
     template "home.html", model
