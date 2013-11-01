@@ -1,6 +1,6 @@
 package app
 
-@Grab("org.springframework.boot:spring-boot-starter-actuator:0.5.0.BUILD-SNAPSHOT")
+@Grab("spring-boot-starter-actuator")
 @Grab("org.codehaus.groovy:groovy-ant:2.1.6")
 
 @Controller
@@ -25,7 +25,7 @@ class MainController {
     model["styles"] << [name:"Security", value:"security"]
     model["styles"] << [name:"Batch", value:"batch"]
     model["styles"] << [name:"JPA", value:"data-jpa"]
-    model["types"] = [[name:"Maven POM", value:"pom", selected: false], [name:"Maven Project", value:"pomproject", selected: true]]
+    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true]]
     template "home.html", model
   }
 
@@ -60,11 +60,12 @@ class MainController {
 
     File src = new File(new File(dir, "src/main/java"),request.packageName.replace(".", "/"))
     src.mkdirs()
-
-    def body = template "Application.java", model
-    log.info("Creating: "  + src + "/Application.java")
-    new File(src, "Application.java").write(body)
+    write(src, "Application.java", model)
     
+    File test = new File(new File(dir, "src/test/java"),request.packageName.replace(".", "/"))
+    test.mkdirs()
+    write(test, "ApplicationTests.java", model)
+
     File download = new File(tmpdir, dir.name + ".zip")
     log.info("Creating: "  + download)
     tempFiles << download
@@ -80,12 +81,21 @@ class MainController {
     result
   }
 
+  def write(File src, String name, def model) { 
+    def body = template name, model
+    log.info("Creating: "  + src + "/" + name)
+    new File(src, name).write(body)
+  }
+
   @RequestMapping("/pom")
   @ResponseBody
   ResponseEntity<byte[]> pom(PomRequest request, Map model) {
 
     def style = request.style
     log.info("Styles requested: " + style)
+
+    def type = request.type
+    log.info("Type requested: " + type)
 
     model.groupId = request.groupId
     model.artifactId = request.artifactId
@@ -100,6 +110,7 @@ class MainController {
     if (!style.class.isArray() && !(style instanceof Collection)) {
       style = [style]
     }
+    style = style.collect{ it=="jpa" ? "data-jpa" : it }
     model["styles"] = style.collect{ it=="" ? "" : "-" + it }
 
     log.info("Model: " + model)
@@ -163,10 +174,11 @@ class PomRequest {
   def style = []
 
   String name = "demo"
+  String type = "starter"
   String description = "Demo project for Spring Boot"
   String groupId = "org.test"
   String artifactId
-  String version = "0.0.1.SNAPSHOT"
+  String version = "0.0.1-SNAPSHOT"
   String packageName
   String getArtifactId() {
     artifactId == null ? name : artifactId

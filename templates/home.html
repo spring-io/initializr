@@ -34,7 +34,7 @@
       </div>
       <h1>Spring Initializr</h1>
       <div>
-        <form action="/starter.zip" method="get">
+        <form id="form" action="/starter.zip" method="get">
           <label for="groupId">Group:</label> <input id="groupId" type="text" value="org.demo" name="groupId"/>
           <label for="artifactId">Artifact:</label> <input id="artifactId" type="text" value="demo" name="artifactId"/>
           <label for="name">Name:</label> <input id="name" type="text" value="demo" name="name"/>
@@ -49,7 +49,7 @@
           <label>Type:</label>
           <% types.each { %>
             <label class="radio">
-              <input type="radio" name="type" value="${it.value}"${it.selected ? ' checked="true"' : ''}/>
+              <input type="radio" name="type" value="${it.value}"${it.selected ? ' checked="true"' : ''} onclick="javascript:this.form.action='/${it.value}'"/>
               ${it.name}
             </label><% } %>
           <button type="submit" class="btn">Generate</button>
