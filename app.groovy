@@ -29,7 +29,7 @@ class MainController {
     model["styles"] << [name:"AMQP", value:"amqp"]
     model["styles"] << [name:"AOP", value:"aop"]
     model["styles"] << [name:"JPA", value:"data-jpa"]
-    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true]]
+    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true], [name:"Gradle Build", value:"build.gradle", selected: false]]
     template "home.html", model
   }
 
@@ -94,6 +94,17 @@ class MainController {
   @RequestMapping("/pom")
   @ResponseBody
   ResponseEntity<byte[]> pom(PomRequest request, Map model) {
+    new ResponseEntity<byte[]>(render("starter-pom.xml", request, model), ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
+
+  }
+
+  @RequestMapping("/build")
+  @ResponseBody
+  ResponseEntity<byte[]> gradle(PomRequest request, Map model) {
+    new ResponseEntity<byte[]>(render("starter-build.gradle", request, model), ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
+  }
+   
+  byte[] render(String path, PomRequest request, Map model) {
 
     def style = request.style
     log.info("Styles requested: " + style)
@@ -119,8 +130,8 @@ class MainController {
 
     log.info("Model: " + model)
 
-    def body = template "starter-pom.xml", model
-    new ResponseEntity<byte[]>(body, ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
+    def body = template path, model
+    body
   }
 
 }
