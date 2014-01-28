@@ -29,6 +29,9 @@ class MainController {
     model["styles"] << [name:"AMQP", value:"amqp"]
     model["styles"] << [name:"AOP", value:"aop"]
     model["styles"] << [name:"JPA", value:"data-jpa"]
+    model["styles"] << [name:"Redis", value:"redis"]
+    model["styles"] << [name:"Remote Shell", value:"shell-remote"]
+    model["styles"] << [name:"Mobile", value:"mobile"]
     model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true], [name:"Gradle Build", value:"build.gradle", selected: false]]
     template "home.html", model
   }
