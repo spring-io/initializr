@@ -12,7 +12,7 @@ It will install `/usr/local/bin/spring`. You can jump right to [running the app]
 
 An alternative way to install the `spring` command line interface can be installed like this:
 
-    $ curl spring.cfapps.io/installer | bash
+    $ curl start.spring.io/install.sh | bash
 
 After running that command you should see a `spring` directory:
 
@@ -27,7 +27,7 @@ assume you did that).
 
 If you don't have `curl` or `zip` you can probably get them (for
 Windoze users we recommend [cygwin](http://cygwin.org)), or you can
-download the [zip file](http://spring.cfapps.io/spring.zip) and unpack
+download the [zip file](http://start.spring.io/spring.zip) and unpack
 it yourself.
 
 <a name="running_the_app"></a>
