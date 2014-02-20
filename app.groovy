@@ -21,10 +21,12 @@ class MainController {
   String home() {
     def model = [:]
     model["styles"] = [[name:"Web", value:"web"]]
+    model["styles"] << [[name:"Thymeleaf", value:"thymeleaf"]]
     model["styles"] << [name:"Actuator", value:"actuator"]
     model["styles"] << [name:"Security", value:"security"]
     model["styles"] << [name:"Batch", value:"batch"]
     model["styles"] << [name:"JDBC", value:"jdbc"]
+    model["styles"] << [name:"JMS", value:"integration"]
     model["styles"] << [name:"JMS", value:"jms"]
     model["styles"] << [name:"AMQP", value:"amqp"]
     model["styles"] << [name:"AOP", value:"aop"]
