@@ -36,6 +36,10 @@ class MainController {
     model["styles"] << [name:"Remote Shell", value:"shell-remote"]
     model["styles"] << [name:"Mobile", value:"mobile"]
     model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true], [name:"Gradle Build", value:"build.gradle", selected: false]]
+
+   // sort lists
+    model["styles"] = model["styles"].sort { it.name }
+    model["types"] = model["types"].sort { it.name }
     template "home.html", model
   }
 
