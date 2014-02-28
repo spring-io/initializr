@@ -33,6 +33,7 @@ class MainController {
     model["styles"] << [name:"JPA", value:"data-jpa"]
     model["styles"] << [name:"MongoDB", value:"data-mongodb"]
     model["styles"] << [name:"Redis", value:"redis"]
+    model["styles"] << [name:"Rest Repositories", value:"data-rest"]
     model["styles"] << [name:"Remote Shell", value:"shell-remote"]
     model["styles"] << [name:"Mobile", value:"mobile"]
     model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], [name:"Maven Project", value:"starter.zip", selected: true], [name:"Gradle Build", value:"build.gradle", selected: false]]
