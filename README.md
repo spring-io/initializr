@@ -2,12 +2,12 @@
 
 ## Prerequisites
 
-You need Java (1.6 or better) and a bash-like shell. 
+You need Java (1.6 or better) and a bash-like shell.
 
-If you are on a Mac and using [homebrew](http://brew.sh/), all you must do to install it is:
+If you are on a Mac and using [homebrew](http://brew.sh/), all you need to do to install it is:
 
     $ brew install spring-boot-cli
-    
+
 It will install `/usr/local/bin/spring`. You can jump right to [running the app](#running_the_app).
 
 An alternative way to install the `spring` command line interface can be installed like this:
@@ -17,8 +17,8 @@ An alternative way to install the `spring` command line interface can be install
 After running that command you should see a `spring` directory:
 
     $ ./spring/bin/spring --help
-    
-    usage: spring [--help] [--version] 
+
+    usage: spring [--help] [--version]
        <command> [<args>]
     ...
 
@@ -26,12 +26,12 @@ You could add that `bin` directory to your `PATH` (the examples below
 assume you did that).
 
 If you don't have `curl` or `zip` you can probably get them (for
-Windoze users we recommend [cygwin](http://cygwin.org)), or you can
+Windows users we recommend [cygwin](http://cygwin.org)), or you can
 download the [zip file](http://start.spring.io/spring.zip) and unpack
 it yourself.
 
 <a name="running_the_app"></a>
-## Running the app
+## Running the app locally
 
 Use the spring command:
 
@@ -39,12 +39,20 @@ Use the spring command:
 
 ## Deploying to Cloud Foundry
 
-To help avoid a timeout on startup you should upload all the
-dependencies.  You can get those locally by running the app with
-`--local`:
+If you are on a Mac and using [homebrew](http://brew.sh/), install the Cloud Foundry CLI:
 
-    $ spring run --local app.groovy
-    
-this will create a local directory `grapes/` with all the jar
-dependencies.  Then when you `cf push` they will be uploaded and used
-if the app is again launched with `--local`.
+    $ brew install cloudfoundry-cli
+
+Alternatively, download a suitable binary for your platform from [Pivotal Web Services](https://console.run.pivotal.io/tools).
+
+To help avoid a timeout on startup you should upload all the dependencies.
+You can get those locally by running `spring grab`:
+
+    $ spring grab app.groovy
+
+this will create a local directory `repository/` with all the jar dependencies.
+Then when you `cf push` they will be uploaded and used.
+
+An example Cloud Foundry `manifest.yml` file is provided. You should ensure that
+the application name and URL (name and host values) are suitable for your environment
+before running `cf push`.

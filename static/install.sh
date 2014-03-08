@@ -50,7 +50,7 @@ To get started:
   $ spring --version
   $ spring help
 
-And take a look at the README at https://github.com/springsource/spring-boot#readme.
+And take a look at the README at https://github.com/spring-projects/spring-boot#readme.
 
 EOF
 elif type sudo >/dev/null 2>&1; then
@@ -64,7 +64,7 @@ To get started:
   $ spring --version
   $ spring help
 
-And take a look at the README at https://github.com/springsource/spring-boot#readme.
+And take a look at the README at https://github.com/spring-projects/spring-boot#readme.
 
 EOF
     else
@@ -76,7 +76,7 @@ Couldn't create the symlink. Please either:
   (3) Rerun this command to try again.
 
 Then to get started, take a look at 'spring help' or see the README at
-https://github.com/springsource/spring-boot#readme.
+https://github.com/spring-projects/spring-boot#readme.
 EOF
     fi
 else
@@ -89,7 +89,7 @@ Now you need to do one of the following:
         cp ${SPRING_HOME}/bin /usr/bin/spring
 
 Then to get started, take a look at 'spring help' or see the README at
-https://github.com/springsource/spring-boot#readme.
+https://github.com/spring-projects/spring-boot#readme.
 EOF
 fi
 
