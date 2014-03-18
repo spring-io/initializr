@@ -79,6 +79,13 @@ class MainController {
     
     File test = new File(new File(dir, "src/test/java"),request.packageName.replace(".", "/"))
     test.mkdirs()
+    if (model.styles.contains("-web")) { 
+      model.testAnnotations = "@WebAppConfiguration\n"
+      model.testImports = "import org.springframework.test.context.web.WebAppConfiguration;\n"
+    } else { 
+      model.testAnnotations = ""
+      model.testImports = ""
+    }
     write(test, "ApplicationTests.java", model)
 
     File download = new File(tmpdir, dir.name + ".zip")
@@ -97,8 +104,8 @@ class MainController {
   }
 
   def write(File src, String name, def model) { 
-    def body = template name, model
     log.info("Creating: "  + src + "/" + name)
+    def body = template name, model
     new File(src, name).write(body)
   }
 
