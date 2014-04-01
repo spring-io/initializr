@@ -30,9 +30,7 @@
 
 	<properties>
 		<start-class>${packageName}.Application</start-class>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.7</java.version>
+		<java.version>1.7</java.version>
 	</properties>
 
 	<build>
@@ -42,7 +40,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build><% if (!bootVersion.contains("RELEASE")) { %>
 
 	<repositories>
 		<repository>
@@ -80,5 +78,6 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
+<% } %>
 
 </project>
