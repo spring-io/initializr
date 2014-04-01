@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.0.0.BUILD-SNAPSHOT'
+		springBootVersion = '${bootVersion}'
 	}
     repositories {
     	mavenLocal()

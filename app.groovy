@@ -10,6 +10,9 @@ class MainController {
   @Value('${info.home:http://localhost:8080/}')
   private String home
 
+  @Value('${info.spring-boot.version:1.0.0.RELEASE}')
+  private String bootVersion
+
   @Value('${TMPDIR:.}')
   private String tmpdir
 
@@ -116,6 +119,7 @@ class MainController {
   @RequestMapping("/pom")
   @ResponseBody
   ResponseEntity<byte[]> pom(PomRequest request, Map model) {
+    model.bootVersion = bootVersion
     new ResponseEntity<byte[]>(render("starter-pom.xml", request, model), ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
 
   }
@@ -123,6 +127,7 @@ class MainController {
   @RequestMapping("/build")
   @ResponseBody
   ResponseEntity<byte[]> gradle(PomRequest request, Map model) {
+    model.bootVersion = bootVersion
     new ResponseEntity<byte[]>(render("starter-build.gradle", request, model), ["Content-Type":"application/octet-stream"] as HttpHeaders, HttpStatus.OK)
   }
    
