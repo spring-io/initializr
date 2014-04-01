@@ -88,6 +88,10 @@ class MainController {
     }
     write(test, "ApplicationTests.java", model)
 
+    File resources = new File(dir, "src/main/resources")
+    resources.mkdirs()
+    new File(resources, "application.properties").write("")
+
     File download = new File(tmpdir, dir.name + ".zip")
     log.info("Creating: "  + download)
     tempFiles << download
