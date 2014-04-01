@@ -3,7 +3,7 @@ buildscript {
 		springBootVersion = '${bootVersion}'
 	}
     repositories {
-    	mavenLocal()<% if (!bootVersion.contains("RELEASE")) { %>
+    	mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
         maven { url "http://repo.spring.io/snapshot" }
         maven { url "http://repo.spring.io/milestone" }
 <% } %>
@@ -12,7 +12,6 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}")
     }
 }
-
 
 apply plugin: 'java'
 apply plugin: 'eclipse'

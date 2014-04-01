@@ -62,19 +62,64 @@ class MainController {
     new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
   }
 
-  @RequestMapping("/starter")
+  @RequestMapping(value="/starter.tgz", produces="application/x-compress")
   @ResponseBody
-  ResponseEntity<byte[]> spring(PomRequest request) {
+  ResponseEntity<byte[]> springTgz(PomRequest request) {
+
+    File dir = File.createTempFile("tmp","",new File(tmpdir));
+    def tempFiles = getProjectFiles(dir, request)
+
+    File download = new File(tmpdir, dir.name + ".tgz")
+    log.info("Creating: "  + download)
+    tempFiles << download
+    
+    new AntBuilder().tar(destfile: download, compression: "gzip") { 
+      zipfileset(dir:dir, includes:"**")
+    }
+    log.info("Downloading: "  + download)
+    def result = new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/x-compress"] as HttpHeaders, HttpStatus.OK)
+
+    reactor.notify("tempfiles", Event.wrap(tempFiles))
+
+    result
+  }
+
+  @RequestMapping("/starter.zip")
+  @ResponseBody
+  ResponseEntity<byte[]> springZip(PomRequest request) {
+
+    File dir = File.createTempFile("tmp","",new File(tmpdir));
+    def tempFiles = getProjectFiles(dir, request)
+
+    File download = new File(tmpdir, dir.name + ".zip")
+    log.info("Creating: "  + download)
+    tempFiles << download
+    
+    new AntBuilder().zip(destfile: download) { 
+      zipfileset(dir:dir, includes:"**")
+    }
+    log.info("Downloading: "  + download)
+    def result = new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
+
+    reactor.notify("tempfiles", Event.wrap(tempFiles))
+
+    result
+  }
+
+  def getProjectFiles(File dir, PomRequest request) { 
 
     def tempFiles = []
 
     def model = [:]
-    String pom = new String(pom(request, model).body)
-    File dir = File.createTempFile("tmp","",new File(tmpdir));
     tempFiles << dir
     dir.delete()
     dir.mkdirs()
+
+    String pom = new String(pom(request, model).body)
     new File(dir, "pom.xml").write(pom)
+
+    String gradle = new String(gradle(request, model).body)
+    new File(dir, "build.gradle").write(gradle)
 
     File src = new File(new File(dir, "src/main/java"),request.packageName.replace(".", "/"))
     src.mkdirs()
@@ -95,19 +140,8 @@ class MainController {
     resources.mkdirs()
     new File(resources, "application.properties").write("")
 
-    File download = new File(tmpdir, dir.name + ".zip")
-    log.info("Creating: "  + download)
-    tempFiles << download
+    tempFiles
 
-    new AntBuilder().zip(destfile: download) { 
-      zipfileset(dir:dir, includes:"**")
-    }
-    log.info("Downloading: "  + download)
-    def result = new ResponseEntity<byte[]>(download.bytes, ["Content-Type":"application/zip"] as HttpHeaders, HttpStatus.OK)
-
-    reactor.notify("tempfiles", Event.wrap(tempFiles))
-
-    result
   }
 
   def write(File src, String name, def model) { 
