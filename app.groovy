@@ -10,7 +10,7 @@ class MainController {
   @Value('${info.home:http://localhost:8080/}')
   private String home
 
-  @Value('${info.spring-boot.version:1.0.0.RELEASE}')
+  @Value('${info.spring-boot.version:1.0.1.RELEASE}')
   private String bootVersion
 
   @Value('${TMPDIR:.}')
