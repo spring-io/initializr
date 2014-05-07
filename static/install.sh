@@ -3,7 +3,7 @@
 set -e
 # set -x
 
-VERSION="1.0.1.RELEASE"
+VERSION="1.0.2.RELEASE"
 if [ -z "${PREFIX}" ]; then
     PREFIX="/usr/local/bin"
 fi
@@ -11,10 +11,17 @@ if [ -z "${JAR_FILE}" ]; then
     JAR_FILE="/tmp/spring.zip"
     if [ -z "${JAR_URL}" ]; then
 
-        echo "Downloading spring ${VERSION} distribution"
-        echo
+        case "${VERSION}" in
+            *SNAPSHOT) REPO=snapshot ;;
+            *.M*) REPO=milestone ;;
+            *.RC*) REPO=milestone ;;
+            *) REPO=release ;;
+        esac
 
-	    JAR_URL="https://repo.spring.io/milestone/org/springframework/boot/spring-boot-cli/${VERSION}/spring-boot-cli-${VERSION}-bin.zip"
+        echo "Downloading spring ${VERSION} distribution from repo.spring.io/${REPO}"
+        echo
+        
+	    JAR_URL="https://repo.spring.io/${REPO}/org/springframework/boot/spring-boot-cli/${VERSION}/spring-boot-cli-${VERSION}-bin.zip"
         curl --progress-bar --fail "$JAR_URL" -o "$JAR_FILE"
 
     fi
