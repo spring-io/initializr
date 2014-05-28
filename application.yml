@@ -1,0 +1,50 @@
+info:
+  project:
+    name: Spring Start
+    version: 0.1.0
+# remember to update static/install.sh as well:
+  spring-boot:
+    version: 1.1.0.RELEASE
+
+projects:
+  styles:
+    - name: Web
+      value: web
+    - name: Thymeleaf
+      value: thymeleaf
+    - name: Actuator
+      value: actuator
+    - name: Security
+      value: security
+    - name: Batch
+      value: batch
+    - name: JDBC
+      value: jdbc
+    - name: Integration
+      value: integration
+    - name: AMQP
+      value: amqp
+    - name: AOP
+      value: aop
+    - name: JPA
+      value: data-jpa
+    - name: MongoDB
+      value: data-mongodb
+    - name: Redis
+      value: redis
+    - name: Rest Repositories
+      value: data-rest
+    - name: Remote Shell
+      value: remote-shell
+    - name: Mobile
+      value: mobile
+  types:
+    - name: Maven POM
+      value: pom.xml
+      selected: false
+    - name: Maven Project
+      value: starter.zip
+      selected: true
+    - name: Gradle
+      value: build.gradle
+      selected: false

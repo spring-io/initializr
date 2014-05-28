@@ -1,7 +1,5 @@
 package test
 
-@Grab("spring-boot-starter-test")
-
 @SpringApplicationConfiguration(classes=app.MainController)
 @WebAppConfiguration
 @IntegrationTest('server.port:0')
@@ -12,9 +10,21 @@ class IntegrationTests {
   int port
   
   @Test
-  void testHome() {
+  void homeIsZipForm() {
     String body = new TestRestTemplate().getForObject('http://localhost:' + port, String)
     assertTrue('Wrong body:\n' + body, body.contains('action="/starter.zip"'))
   }
   
+  @Test
+  void infoHasExternalProperties() {
+    String body = new TestRestTemplate().getForObject('http://localhost:' + port + '/info', String)
+    assertTrue('Wrong body:\n' + body, body.contains('"project"'))
+  }
+  
+  @Test
+  void homeHasWebStyle() {
+    String body = new TestRestTemplate().getForObject('http://localhost:' + port, String)
+    assertTrue('Wrong body:\n' + body, body.contains('name="style" value="web"'))
+  }
+
 }

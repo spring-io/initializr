@@ -1,8 +1,10 @@
 package app
 
 @Grab("spring-boot-starter-actuator")
-@Grab("org.codehaus.groovy:groovy-ant:2.1.6")
+@Grab("org.codehaus.groovy:groovy-ant:2.3.2")
 
+@Configuration
+@EnableConfigurationProperties(Projects)
 @Controller
 @Log
 class MainController {
@@ -19,33 +21,16 @@ class MainController {
   @Autowired
   private Reactor reactor
 
+  @Autowired
+  private Projects projects
+
   @RequestMapping("/")
   @ResponseBody
   String home() {
     def model = [:]
-    model["styles"] = [[name:"Web", value:"web"]]
-    model["styles"] << [name:"Thymeleaf", value:"thymeleaf"]
-    model["styles"] << [name:"Actuator", value:"actuator"]
-    model["styles"] << [name:"Security", value:"security"]
-    model["styles"] << [name:"Batch", value:"batch"]
-    model["styles"] << [name:"JDBC", value:"jdbc"]
-    model["styles"] << [name:"Integration", value:"integration"]
-    // model["styles"] << [name:"JMS", value:"jms"]
-    model["styles"] << [name:"AMQP", value:"amqp"]
-    model["styles"] << [name:"AOP", value:"aop"]
-    model["styles"] << [name:"JPA", value:"data-jpa"]
-    model["styles"] << [name:"MongoDB", value:"data-mongodb"]
-    model["styles"] << [name:"Redis", value:"redis"]
-    model["styles"] << [name:"Rest Repositories", value:"data-rest"]
-    model["styles"] << [name:"Remote Shell", value:"remote-shell"]
-    model["styles"] << [name:"Mobile", value:"mobile"]
-    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], 
-                      [name:"Maven Project", value:"starter.zip", selected: true], 
-                      [name:"Gradle Build", value:"build.gradle", selected: false]]
-
-   // sort lists
-    model["styles"] = model["styles"].sort { it.name }
-    model["types"] = model["types"].sort { it.name }
+    // sort lists
+    model["styles"] = projects.styles.sort { it.name }
+    model["types"] = projects.types.sort { it.name }
     template "home.html", model
   }
 
@@ -210,31 +195,26 @@ class ReactorConfiguration {
 
 }
 
-@Component
+@Consumer
 @Log
 class TemporaryFileCleaner {
 
   @Autowired
   Reactor reactor
 
-  @PostConstruct
-  void init() { 
-		reactor.on(Selectors.$("tempfiles"), [
-			accept: { event ->
-                       def tempFiles = event.data
-                       log.info "Tempfiles: " + tempFiles
-                       if (tempFiles) { 
-                         tempFiles.each {
-                           File file = it as File
-                           if (file.directory) { 
-                             file.deleteDir()
-                           } else {
-                             file.delete()
-                           }
-                         }
-                       }
-			}
-		] as Consumer)
+  @Selector('tempfiles')
+  void clean(def tempFiles) { 
+    log.info "Tempfiles: " + tempFiles
+    if (tempFiles) { 
+      tempFiles.each {
+        File file = it as File
+        if (file.directory) { 
+          file.deleteDir()
+        } else {
+          file.delete()
+        }
+      }
+    }
   }
 
 }
@@ -255,4 +235,10 @@ class PomRequest {
   String getPackageName() {
     packageName == null ? name.replace('-', '.') : packageName
   }
+}
+
+@ConfigurationProperties(prefix='projects', ignoreUnknownFields=false)
+class Projects {
+  List<Map<String,Object>> styles
+  List<Map<String,Object>> types  
 }
