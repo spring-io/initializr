@@ -200,21 +200,12 @@ class MainController {
 }
 
 @Configuration
-import reactor.core.Reactor
-import reactor.function.Consumer
-import reactor.event.selector.Selectors
-import reactor.event.Event
-@Grab("reactor-core")
+@EnableReactor
 class ReactorConfiguration {
 
 	@Bean
-	public reactor.core.Environment reactorEnvironment() {
-		return new reactor.core.Environment(); // TODO: use Spring Environment to configure?
-	}
-
-	@Bean
-	public Reactor rootReactor() {
-		return reactorEnvironment().getRootReactor();
+	public Reactor rootReactor(reactor.core.Environment reactorEnvironment) {
+		return reactorEnvironment.getRootReactor();
 	}
 
 }
