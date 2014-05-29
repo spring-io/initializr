@@ -16,9 +16,11 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'spring-boot' <% if (packaging=='war') {  %>
+apply plugin: 'war'
+<% } %>
 
-jar {
+<% if (packaging=='war') {  %>war<% } else { %>jar<% } %> {
     baseName = '${artifactId}'
     version =  '${version}'
 }

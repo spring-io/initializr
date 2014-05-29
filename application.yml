@@ -4,12 +4,20 @@ info:
     version: 0.1.0
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.1.0.RELEASE
+    version: 1.1.0.BUILD-SNAPSHOT
 
 projects:
   styles:
     - name: Web
       value: web
+    - name: Websocket
+      value: websocket
+    - name: Freemarker
+      value: freemarker
+    - name: Velocity
+      value: velocity
+    - name: Groovy Templates
+      value: groovy-templates
     - name: Thymeleaf
       value: thymeleaf
     - name: Actuator
@@ -32,19 +40,43 @@ projects:
       value: data-mongodb
     - name: Redis
       value: redis
+    - name: Gemfire
+      value: data-gemfire
+    - name: Solr
+      value: data-solr
     - name: Rest Repositories
       value: data-rest
     - name: Remote Shell
       value: remote-shell
     - name: Mobile
       value: mobile
+    - name: Facebook
+      value: social-facebook
+    - name: LinkedIn
+      value: social-linkedin
+    - name: Twitter
+      value: social-twitter
   types:
     - name: Maven POM
+      action: /pom.xml
       value: pom.xml
       selected: false
     - name: Maven Project
+      action: /starter.zip
       value: starter.zip
       selected: true
-    - name: Gradle
+    - name: Gradle Config
+      action: /build.gradle
       value: build.gradle
+      selected: false
+    - name: Gradle Project
+      action: /starter.zip
+      value: gradle.zip
+      selected: false
+  packagings:
+    - name: Jar
+      value: jar
+      selected: true
+    - name: War
+      value: war
       selected: false

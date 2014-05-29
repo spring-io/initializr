@@ -16,6 +16,12 @@ class IntegrationTests {
   }
   
   @Test
+  void webIsAdded() {
+    String body = new TestRestTemplate().getForObject('http://localhost:' + port + '/pom.xml?packaging=war', String)
+    assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
+  }
+  
+  @Test
   void infoHasExternalProperties() {
     String body = new TestRestTemplate().getForObject('http://localhost:' + port + '/info', String)
     assertTrue('Wrong body:\n' + body, body.contains('"project"'))
@@ -36,7 +42,7 @@ class IntegrationTests {
   
 }
 
-// CLI compliled classes are not @ComponentScannable so we have to create
+// CLI compiled classes are not @ComponentScannable so we have to create
 // an explicit configuration for the test
 @Configuration
 @Import([app.MainController, app.Projects, app.TemporaryFileCleaner])

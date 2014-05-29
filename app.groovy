@@ -10,7 +10,7 @@ class MainController {
   @Value('${info.home:http://localhost:8080/}')
   private String home
 
-  @Value('${info.spring-boot.version:1.0.1.RELEASE}')
+  @Value('${info.spring-boot.version:1.0.2.RELEASE}')
   private String bootVersion
 
   @Value('${TMPDIR:.}')
@@ -29,6 +29,7 @@ class MainController {
     // sort lists
     model['styles'] = projects.styles.sort { it.name }
     model['types'] = projects.types.sort { it.name }
+    model['packagings'] = projects.packagings.sort { it.name }
     template 'home.html', model
   }
 
@@ -43,7 +44,7 @@ class MainController {
         zipfileset(dir:'.', includes:'spring/**', excludes:'spring/bin/**')
       }
     }
-    log.info('Downloading: '  + download)
+    log.info('Uploading: '  + download)
     new ResponseEntity<byte[]>(download.bytes, ['Content-Type':'application/zip'] as HttpHeaders, HttpStatus.OK)
   }
 
@@ -64,7 +65,7 @@ class MainController {
     log.info("Uploading: ${download} (${download.bytes.length} bytes)")
     def result = new ResponseEntity<byte[]>(download.bytes, ['Content-Type':'application/x-compress'] as HttpHeaders, HttpStatus.OK)
 
-    log.info('Notifying reactor: ' + download)
+    log.fine('Notifying reactor: ' + download)
     reactor.notify('tempfiles', Event.wrap(tempFiles))
 
     result
@@ -93,7 +94,7 @@ class MainController {
     result
   }
 
-  def getProjectFiles(File dir, PomRequest request) { 
+  def getProjectFiles(File dir, PomRequest request) {
 
     def tempFiles = []
 
@@ -102,15 +103,21 @@ class MainController {
     dir.delete()
     dir.mkdirs()
 
-    String pom = new String(pom(request, model).body)
-    new File(dir, 'pom.xml').write(pom)
-
-    String gradle = new String(gradle(request, model).body)
-    new File(dir, 'build.gradle').write(gradle)
+    if (request.type.contains('gradle')) {
+      String gradle = new String(gradle(request, model).body)
+      new File(dir, 'build.gradle').write(gradle)
+    } else { 
+      String pom = new String(pom(request, model).body)
+      new File(dir, 'pom.xml').write(pom)
+    }
 
     File src = new File(new File(dir, 'src/main/java'),request.packageName.replace('.', '/'))
     src.mkdirs()
     write(src, 'Application.java', model)
+
+    if (request.packaging=='war') {
+      write(src, 'ServletInitializer.java', model)
+    }
     
     File test = new File(new File(dir, 'src/test/java'),request.packageName.replace('.', '/'))
     test.mkdirs()
@@ -154,6 +161,10 @@ class MainController {
    
   byte[] render(String path, PomRequest request, Map model) {
 
+    if (request.packaging=='war' && !request.style.any { isWebStyle(it) }) { 
+      request.style << 'web'
+    }
+
     def style = request.style
     log.info('Styles requested: ' + style)
 
@@ -166,6 +177,7 @@ class MainController {
     model.name = request.name
     model.description = request.description
     model.packageName = request.packageName
+    model.packaging = request.packaging
 
     if (style==null || style.size()==0) { 
       style = ['']
@@ -182,6 +194,10 @@ class MainController {
     body
   }
 
+  private boolean isWebStyle(String style) {
+    return style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
+  }
+
 }
 
 @EnableReactor
@@ -194,7 +210,7 @@ class TemporaryFileCleaner {
 
   @Selector('tempfiles')
   void clean(def tempFiles) { 
-    log.info 'Tempfiles: ' + tempFiles
+    log.fine 'Tempfiles: ' + tempFiles
     if (tempFiles) { 
       tempFiles.each {
         File file = it as File
@@ -218,6 +234,7 @@ class PomRequest {
   String groupId = 'org.test'
   String artifactId
   String version = '0.0.1-SNAPSHOT'
+  String packaging = 'jar'
   String packageName
   String getArtifactId() {
     artifactId == null ? name : artifactId
@@ -231,5 +248,17 @@ class PomRequest {
 @ConfigurationProperties(prefix='projects', ignoreUnknownFields=false)
 class Projects {
   List<Map<String,Object>> styles
-  List<Map<String,Object>> types  
+  List<Type> types
+  List<Packaging> packagings
+  static class Packaging { 
+    String name
+    String value
+    boolean selected
+  }
+  static class Type {
+    String name
+    String action
+    String value
+    boolean selected
+  }
 }

@@ -49,7 +49,13 @@
           <label>Type:</label>
           <% types.each { %>
             <label class="radio">
-              <input type="radio" name="type" value="${it.value}"${it.selected ? ' checked="true"' : ''} onclick="javascript:this.form.action='/${it.value}'"/>
+              <input type="radio" name="type" value="${it.value}"${it.selected==true ? ' checked="true"' : ''} onclick="javascript:this.form.action='${it.action}'"/>
+              ${it.name}
+            </label><% } %>
+           <label>Packaging:</label>
+         <% packagings.each { %>
+            <label class="radio">
+              <input type="radio" name="packaging" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
               ${it.name}
             </label><% } %>
           <button type="submit" class="btn">Generate</button>
