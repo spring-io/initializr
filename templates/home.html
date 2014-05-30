@@ -61,7 +61,7 @@
          <label>Java Version:</label>
          <% javaVersions.each { %>
             <label class="radio">
-              <input type="radio" name="packaging" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
+              <input type="radio" name="javaVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
               ${it.value}
             </label><% } %>
           <button type="submit" class="btn">Generate</button>
