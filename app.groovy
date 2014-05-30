@@ -144,6 +144,11 @@ class MainController {
     resources.mkdirs()
     new File(resources, 'application.properties').write('')
 
+    if (isWebStyle(request.style)) {
+      new File(dir, 'src/main/resources/templates').mkdirs()
+      new File(dir, 'src/main/resources/static').mkdirs()
+    }
+
     tempFiles
 
   }
