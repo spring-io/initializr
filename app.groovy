@@ -30,6 +30,7 @@ class MainController {
     model['styles'] = projects.styles.sort { it.name }
     model['types'] = projects.types.sort { it.name }
     model['packagings'] = projects.packagings.sort { it.name }
+    model['javaVersions'] = projects.javaVersions
     template 'home.html', model
   }
 
@@ -178,6 +179,7 @@ class MainController {
     model.description = request.description
     model.packageName = request.packageName
     model.packaging = request.packaging
+    model.javaVersion = request.javaVersion
 
     if (style==null || style.size()==0) { 
       style = ['']
@@ -236,6 +238,7 @@ class PomRequest {
   String version = '0.0.1-SNAPSHOT'
   String packaging = 'jar'
   String packageName
+  String javaVersion = '1.7'
   String getArtifactId() {
     artifactId == null ? name : artifactId
   }
@@ -250,6 +253,11 @@ class Projects {
   List<Map<String,Object>> styles
   List<Type> types
   List<Packaging> packagings
+  List<JavaVersion> javaVersions
+  static class JavaVersion { 
+    String value
+    boolean selected
+  }
   static class Packaging { 
     String name
     String value

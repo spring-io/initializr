@@ -24,6 +24,8 @@ apply plugin: 'war'
     baseName = '${artifactId}'
     version =  '${version}'
 }
+sourceCompatibility = ${javaVersion}
+targetCompatibility = ${javaVersion}
 
 repositories {
     mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>

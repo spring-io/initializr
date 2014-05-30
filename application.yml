@@ -80,3 +80,10 @@ projects:
     - name: War
       value: war
       selected: false
+  javaVersions:
+    - value: 1.6
+      selected: false
+    - value: 1.7
+      selected: true
+    - value: 1.8
+      selected: false
