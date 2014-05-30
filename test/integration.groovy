@@ -52,6 +52,13 @@ class IntegrationTests {
     assertTrue(body.length>100)
   }
   
+  @Test
+  void installer() {
+    ResponseEntity<String> response = new TestRestTemplate().getForEntity('http://localhost:' + port + 'install.sh', String)
+    assertEquals(HttpStatus.OK, response.getStatusCode())
+    assertNotNull(response.body)
+  }
+  
 }
 
 // CLI compiled classes are not @ComponentScannable so we have to create

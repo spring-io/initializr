@@ -144,7 +144,7 @@ class MainController {
     resources.mkdirs()
     new File(resources, 'application.properties').write('')
 
-    if (isWebStyle(request.style)) {
+    if (request.style.any { isWebStyle(it) }) {
       new File(dir, 'src/main/resources/templates').mkdirs()
       new File(dir, 'src/main/resources/static').mkdirs()
     }
@@ -212,7 +212,7 @@ class MainController {
   }
 
   private boolean isWebStyle(String style) {
-    return style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
+    style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
   }
 
 }
