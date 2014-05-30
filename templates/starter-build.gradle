@@ -13,7 +13,7 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
+apply plugin: '${language}'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot' <% if (packaging=='war') {  %>
@@ -35,8 +35,9 @@ repositories {
 }
 
 dependencies {<% styles.each { %>
-    compile("org.springframework.boot:spring-boot-starter${it}:\${springBootVersion}")<% } %>
-    testCompile("org.springframework.boot:spring-boot-starter-test:\${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter${it}")<% } %>
+    <% if (language=='groovy') { %>compile("org.codehaus.groovy:groovy")<% } %>
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
 task wrapper(type: Wrapper) {

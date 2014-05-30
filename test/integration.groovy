@@ -8,11 +8,23 @@ class IntegrationTests {
 
   @Value('${local.server.port}')
   int port
+
+  private String home() {
+    HttpHeaders headers = new HttpHeaders()
+    headers.setAccept([MediaType.TEXT_HTML])
+    new TestRestTemplate().exchange('http://localhost:' + port, HttpMethod.GET, new HttpEntity<Void>(headers), String).body
+  }
   
   @Test
   void homeIsForm() {
-    String body = new TestRestTemplate().getForObject('http://localhost:' + port, String)
+    String body = home()
     assertTrue('Wrong body:\n' + body, body.contains('action="/starter.zip"'))
+  }
+  
+  @Test
+  void homeIsJson() {
+    String body = new TestRestTemplate().getForObject('http://localhost:' + port, String)
+    assertTrue('Wrong body:\n' + body, body.contains('{"styles"'))
   }
   
   @Test
@@ -29,7 +41,7 @@ class IntegrationTests {
   
   @Test
   void homeHasWebStyle() {
-    String body = new TestRestTemplate().getForObject('http://localhost:' + port, String)
+    String body = home()
     assertTrue('Wrong body:\n' + body, body.contains('name="style" value="web"'))
   }
 

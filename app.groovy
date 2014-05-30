@@ -22,7 +22,13 @@ class MainController {
   @Autowired
   private Projects projects
 
-  @RequestMapping('/')
+  @RequestMapping(value='/')
+  @ResponseBody
+  Projects projects() {
+    projects
+  }
+
+  @RequestMapping(value='/', produces='text/html')
   @ResponseBody
   String home() {
     def model = [:]
@@ -31,6 +37,7 @@ class MainController {
     model['types'] = projects.types.sort { it.name }
     model['packagings'] = projects.packagings.sort { it.name }
     model['javaVersions'] = projects.javaVersions
+    model['languages'] = projects.languages
     template 'home.html', model
   }
 
@@ -112,15 +119,17 @@ class MainController {
       new File(dir, 'pom.xml').write(pom)
     }
 
-    File src = new File(new File(dir, 'src/main/java'),request.packageName.replace('.', '/'))
+    String language = request.language
+
+    File src = new File(new File(dir, 'src/main/' + language),request.packageName.replace('.', '/'))
     src.mkdirs()
-    write(src, 'Application.java', model)
+    write(src, 'Application.' + language, model)
 
     if (request.packaging=='war') {
-      write(src, 'ServletInitializer.java', model)
+      write(src, 'ServletInitializer.' + language, model)
     }
     
-    File test = new File(new File(dir, 'src/test/java'),request.packageName.replace('.', '/'))
+    File test = new File(new File(dir, 'src/test/' + language),request.packageName.replace('.', '/'))
     test.mkdirs()
     if (model.styles.contains('-web')) { 
       model.testAnnotations = '@WebAppConfiguration\n'
@@ -129,7 +138,7 @@ class MainController {
       model.testAnnotations = ''
       model.testImports = ''
     }
-    write(test, 'ApplicationTests.java', model)
+    write(test, 'ApplicationTests.' + language, model)
 
     File resources = new File(dir, 'src/main/resources')
     resources.mkdirs()
@@ -180,6 +189,7 @@ class MainController {
     model.packageName = request.packageName
     model.packaging = request.packaging
     model.javaVersion = request.javaVersion
+    model.language = request.language
 
     if (style==null || style.size()==0) { 
       style = ['']
@@ -237,6 +247,7 @@ class PomRequest {
   String artifactId
   String version = '0.0.1-SNAPSHOT'
   String packaging = 'jar'
+  String language = 'java'
   String packageName
   String javaVersion = '1.7'
   String getArtifactId() {
@@ -254,6 +265,12 @@ class Projects {
   List<Type> types
   List<Packaging> packagings
   List<JavaVersion> javaVersions
+  List<Language> languages
+  static class Language { 
+    String name
+    String value
+    boolean selected
+  }
   static class JavaVersion { 
     String value
     boolean selected

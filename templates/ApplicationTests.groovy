@@ -1,0 +1,16 @@
+package ${packageName}
+
+import org.junit.Test
+import org.junit.runner.RunWith
+${testImports}import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+
+@RunWith(SpringJUnit4ClassRunner)
+@SpringApplicationConfiguration(classes = Application)
+${testAnnotations}class ApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

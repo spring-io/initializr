@@ -64,6 +64,12 @@
               <input type="radio" name="javaVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
               ${it.value}
             </label><% } %>
+         <label>Language:</label>
+         <% languages.each { %>
+            <label class="radio">
+              <input type="radio" name="language" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
+              ${it.name}
+            </label><% } %>
           <button type="submit" class="btn">Generate</button>
         </form>
       </div>

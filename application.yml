@@ -87,3 +87,10 @@ projects:
       selected: true
     - value: 1.8
       selected: false
+  languages:
+    - name: Groovy
+      value: groovy
+      selected: false
+    - name: Java
+      value: java
+      selected: true
