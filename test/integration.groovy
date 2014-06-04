@@ -28,9 +28,17 @@ class IntegrationTests {
   }
   
   @Test
-  void webIsAdded() {
+  void webIsAddedPom() {
     String body = new TestRestTemplate().getForObject('http://localhost:' + port + '/pom.xml?packaging=war', String)
     assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
+    assertTrue('Wrong body:\n' + body, body.contains('provided'))
+  }
+  
+  @Test
+  void webIsAddedGradle() {
+    String body = new TestRestTemplate().getForObject('http://localhost:' + port + '/build.gradle?packaging=war', String)
+    assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
+    assertTrue('Wrong body:\n' + body, body.contains('providedRuntime'))
   }
   
   @Test
