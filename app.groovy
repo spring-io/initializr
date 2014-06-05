@@ -55,12 +55,10 @@ class MainController {
   @ResponseBody
   ResponseEntity<byte[]> springTgz(PomRequest request) {
 
-    File dir = File.createTempFile('tmp','',new File(tmpdir));
-    def tempFiles = getProjectFiles(dir, request)
+    File dir = getProjectFiles(request)
 
     File download = new File(tmpdir, dir.name + '.tgz')
-    log.info('Creating: '  + download)
-    tempFiles << download
+    addTempFile(dir.name, download)
     
     new AntBuilder().tar(destfile: download, compression: 'gzip') { 
       zipfileset(dir:dir, includes:'**')
@@ -68,8 +66,7 @@ class MainController {
     log.info("Uploading: ${download} (${download.bytes.length} bytes)")
     def result = new ResponseEntity<byte[]>(download.bytes, ['Content-Type':'application/x-compress'] as HttpHeaders, HttpStatus.OK)
 
-    log.fine('Notifying reactor: ' + download)
-    reactor.notify('tempfiles', Event.wrap(tempFiles))
+    cleanTempFiles(dir.name)
 
     result
   }
@@ -78,12 +75,10 @@ class MainController {
   @ResponseBody
   ResponseEntity<byte[]> springZip(PomRequest request) {
 
-    File dir = File.createTempFile('tmp','',new File(tmpdir));
-    def tempFiles = getProjectFiles(dir, request)
+    def dir = getProjectFiles(request)
 
     File download = new File(tmpdir, dir.name + '.zip')
-    log.info('Creating: '  + download)
-    tempFiles << download
+    addTempFile(dir.name, download)
     
     new AntBuilder().zip(destfile: download) { 
       zipfileset(dir:dir, includes:'**')
@@ -91,18 +86,25 @@ class MainController {
     log.info("Uploading: ${download} (${download.bytes.length} bytes)")
     def result = new ResponseEntity<byte[]>(download.bytes, ['Content-Type':'application/zip'] as HttpHeaders, HttpStatus.OK)
 
-    log.info('Notifying reactor: ' + download)
-    reactor.notify('tempfiles', Event.wrap(tempFiles))
+    cleanTempFiles(dir.name)
 
     result
   }
 
-  def getProjectFiles(File dir, PomRequest request) {
+  private void addTempFile(String group, File file) {
+    reactor.notify('/temp/' + group, Event.wrap(file))
+  }
 
-    def tempFiles = []
+  private void cleanTempFiles(String group) {
+    reactor.notify('/clean/' + group)
+  }
+
+  def getProjectFiles(PomRequest request) {
 
     def model = [:]
-    tempFiles << dir
+
+    File dir = File.createTempFile('tmp','',new File(tmpdir));
+    addTempFile(dir.name, dir)
     dir.delete()
     dir.mkdirs()
 
@@ -144,12 +146,11 @@ class MainController {
       new File(dir, 'src/main/resources/static').mkdirs()
     }
 
-    tempFiles
+    dir
 
   }
 
   def write(File src, String name, def model) { 
-    log.info('Creating: '  + src + '/' + name)
     def body = template name, model
     new File(src, name).write(body)
   }
@@ -200,17 +201,24 @@ class TemporaryFileCleaner {
   @Autowired
   Reactor reactor
 
-  @Selector('tempfiles')
-  void clean(def tempFiles) { 
+  private Map files = [:].withDefault { [] }
+
+  @Selector(value='/temp/{stem}', type=SelectorType.URI)
+  void add(Event<File> file) {
+    String stem = file.headers.stem
+    files[stem] << file.data
+  }
+
+  @Selector(value='/clean/{stem}', type=SelectorType.URI)
+  void clean(Event<File> event) {
+    String stem = event.headers.stem
+    def tempFiles = files.remove(stem)
     log.fine 'Tempfiles: ' + tempFiles
-    if (tempFiles) { 
-      tempFiles.each {
-        File file = it as File
-        if (file.directory) { 
-          file.deleteDir()
-        } else {
-          file.delete()
-        }
+    tempFiles.each { File file ->
+      if (file.directory) { 
+        file.deleteDir()
+      } else {
+        file.delete()
       }
     }
   }
