@@ -10,7 +10,7 @@ class MainController {
   @Value('${info.home:http://localhost:8080/}')
   private String home
 
-  @Value('${info.spring-boot.version:1.0.2.RELEASE}')
+  @Value('${info.spring-boot.version}')
   private String bootVersion
 
   @Value('${TMPDIR:.}')
@@ -32,12 +32,7 @@ class MainController {
   @ResponseBody
   String home() {
     def model = [:]
-    // sort lists
-    model['styles'] = projects.styles.sort { it.name }
-    model['types'] = projects.types.sort { it.name }
-    model['packagings'] = projects.packagings.sort { it.name }
-    model['javaVersions'] = projects.javaVersions
-    model['languages'] = projects.languages
+    projects.properties.each { model[it.key] = it.value }
     template 'home.html', model
   }
 
@@ -144,7 +139,7 @@ class MainController {
     resources.mkdirs()
     new File(resources, 'application.properties').write('')
 
-    if (request.style.any { isWebStyle(it) }) {
+    if (request.isWebStyle()) {
       new File(dir, 'src/main/resources/templates').mkdirs()
       new File(dir, 'src/main/resources/static').mkdirs()
     }
@@ -175,27 +170,16 @@ class MainController {
   }
    
   byte[] render(String path, PomRequest request, Map model) {
-
-    if (request.packaging=='war' && !request.style.any { isWebStyle(it) }) { 
+    if (request.packaging=='war' && !request.isWebStyle()) { 
       request.style << 'web'
     }
+    log.info("Styles requested: ${request.style}, Type requested: ${request.type}")
+    request.properties.each { model[it.key] = it.value }
+    model.styles = fixStyles(request.style)
+    template path, model
+  }
 
-    def style = request.style
-    log.info('Styles requested: ' + style)
-
-    def type = request.type
-    log.info('Type requested: ' + type)
-
-    model.groupId = request.groupId
-    model.artifactId = request.artifactId
-    model.version = request.version
-    model.name = request.name
-    model.description = request.description
-    model.packageName = request.packageName
-    model.packaging = request.packaging
-    model.javaVersion = request.javaVersion
-    model.language = request.language
-
+  private def fixStyles(def style) {
     if (style==null || style.size()==0) { 
       style = ['']
     }
@@ -203,16 +187,7 @@ class MainController {
       style = [style]
     }
     style = style.collect{ it=='jpa' ? 'data-jpa' : it }
-    model['styles'] = style.collect{ it=='' ? '' : '-' + it }
-
-    log.info('Model: ' + model)
-
-    def body = template path, model
-    body
-  }
-
-  private boolean isWebStyle(String style) {
-    style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
+    style.collect{ it=='' ? '' : '-' + it }
   }
 
 }
@@ -260,6 +235,12 @@ class PomRequest {
   }
   String getPackageName() {
     packageName == null ? name.replace('-', '.') : packageName
+  }
+  boolean isWebStyle() {
+    style.any { webStyle(it) }
+  }
+  private boolean webStyle(String style) {
+    style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
   }
 }
 
