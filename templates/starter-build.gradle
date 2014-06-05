@@ -13,8 +13,9 @@ buildscript {
     }
 }
 
-apply plugin: '${language}'
-apply plugin: 'eclipse'
+apply plugin: '${language}'<% if (packaging=='war') {  %>
+apply plugin: 'eclipse-wtp'<% } else { %>
+apply plugin: 'eclipse'<% } %>
 apply plugin: 'idea'
 apply plugin: 'spring-boot' <% if (packaging=='war') {  %>
 apply plugin: 'war'
@@ -43,6 +44,13 @@ dependencies {<% styles.each { %>
     compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>
     testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+eclipse {
+    classpath {
+         containers.remove(''org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
+    }
 }
 
 task wrapper(type: Wrapper) {
