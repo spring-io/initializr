@@ -31,8 +31,8 @@ repositories {
 }
 
 dependencies {<% styles.each { %>
-    compile("org.springframework.boot:spring-boot-starter${it}:\${springBootVersion}")<% } %>
-    testCompile("org.springframework.boot:spring-boot-starter-test:\${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter${it}")<% } %>
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
 task wrapper(type: Wrapper) {
