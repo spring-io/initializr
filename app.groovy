@@ -10,7 +10,7 @@ class MainController {
   @Value('${info.home:http://localhost:8080/}')
   private String home
 
-  @Value('${info.spring-boot.version:1.0.1.RELEASE}')
+  @Value('${info.spring-boot.version:1.1.0.RELEASE}')
   private String bootVersion
 
   @Value('${TMPDIR:.}')
@@ -39,7 +39,19 @@ class MainController {
     model["styles"] << [name:"Rest Repositories", value:"data-rest"]
     model["styles"] << [name:"Remote Shell", value:"remote-shell"]
     model["styles"] << [name:"Mobile", value:"mobile"]
-    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false], 
+    model["styles"] << [name:"Elasticsearch", value:"data-elasticsearch"]
+    model["styles"] << [name:"Gemfire", value:"data-gemfire"]
+    model["styles"] << [name:"Solr", value:"data-solr"]
+    model["styles"] << [name:"Freemarker", value:"freemarker"]
+    model["styles"] << [name:"Groovy Templates", value:"groovy-templates"]
+    model["styles"] << [name:"Velocity", value:"velocity"]
+    model["styles"] << [name:"HornetQ", value:"hornetq"]
+    model["styles"] << [name:"Social Facebook", value:"social-facebook"]
+    model["styles"] << [name:"Social LinkedIn", value:"social-linkedin"]
+    model["styles"] << [name:"Social Twitter", value:"social-twitter"]
+    model["styles"] << [name:"WebSocket", value:"websocket"]
+    model["styles"] << [name:"SOAP", value:"ws"]
+    model["types"] = [[name:"Maven POM", value:"pom.xml", selected: false],
                       [name:"Maven Project", value:"starter.zip", selected: true], 
                       [name:"Gradle Build", value:"build.gradle", selected: false]]
 

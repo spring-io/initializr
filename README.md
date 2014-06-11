@@ -6,7 +6,7 @@ You need Java (1.6 or better) and a bash-like shell.
 
 If you are on a Mac and using [homebrew](http://brew.sh/), all you need to do to install it is:
 
-    $ brew install spring-boot-cli
+    $ brew tap pivotal/tap && brew install springboot
 
 It will install `/usr/local/bin/spring`. You can jump right to [running the app](#running_the_app).
 
