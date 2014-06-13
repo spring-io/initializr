@@ -150,8 +150,9 @@ class MainController {
 
   }
 
-  def write(File src, String name, def model) { 
-    def body = template name, model
+  def write(File src, String name, def model) {
+    String tmpl = name.endsWith('.groovy') ? name + '.tmpl' : name
+    def body = template tmpl, model
     new File(src, name).write(body)
   }
 
