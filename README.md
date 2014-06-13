@@ -48,7 +48,7 @@ Alternatively, download a suitable binary for your platform from [Pivotal Web Se
 To help avoid a timeout on startup you should upload all the dependencies.
 You can get those locally by running `spring grab`:
 
-    $ spring grab app.groovy
+    $ spring jar app.groovy
 
 this will create a local directory `repository/` with all the jar dependencies.
 Then when you `cf push` they will be uploaded and used.
@@ -56,3 +56,8 @@ Then when you `cf push` they will be uploaded and used.
 An example Cloud Foundry `manifest.yml` file is provided. You should ensure that
 the application name and URL (name and host values) are suitable for your environment
 before running `cf push`.
+
+Alternatively you can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
+
+    $ spring jar --include '+templates/*.groovy,+spring/**' --exclude '-**/*.groovy,-**/*.jar,start.jar' start.jar app.groovy
+    $ cf push -p start.jar -p start.jar -n start

@@ -1,10 +1,10 @@
 info:
   project:
     name: Spring Start
-    version: 0.1.0
+    version: 0.2.0
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.1.0.RELEASE
+    version: 1.1.1.RELEASE
 
 projects:
   styles:
