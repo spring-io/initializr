@@ -54,6 +54,12 @@ class IntegrationTests {
   }
 
   @Test
+  void homeHasBootVersion() {
+    String body = home()
+    assertTrue('Wrong body:\n' + body, body.contains('name="bootVersion" value="1'))
+  }
+
+  @Test
   void downloadStarter() {
     byte[] body = new TestRestTemplate().getForObject('http://localhost:' + port + 'starter.zip', byte[])
     assertNotNull(body)

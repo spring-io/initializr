@@ -59,5 +59,5 @@ before running `cf push`.
 
 Alternatively you can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
 
-    $ spring jar --include '+templates/*.groovy,+spring/**' --exclude '-**/*.groovy,-**/*.jar,start.jar' start.jar app.groovy
+    $ spring jar --include '+spring/**' --exclude '-**/*.jar,start.jar' start.jar app.groovy
     $ cf push -p start.jar -p start.jar -n start

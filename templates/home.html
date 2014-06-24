@@ -70,6 +70,12 @@
               <input type="radio" name="language" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
               ${it.name}
             </label><% } %>
+         <label>Spring Boot Version:</label>
+         <% bootVersions.each { %>
+            <label class="radio">
+              <input type="radio" name="bootVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
+              ${it.name}
+            </label><% } %>
           <button type="submit" class="btn">Generate</button>
         </form>
       </div>

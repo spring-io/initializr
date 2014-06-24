@@ -94,3 +94,10 @@ projects:
     - name: Java
       value: java
       selected: true
+  bootVersions:
+    - value: 1.1.2.BUILD-SNAPSHOT
+      selected: false
+    - value: 1.1.1.RELEASE
+      selected: true
+    - value: 1.0.2.RELEASE
+      selected: false

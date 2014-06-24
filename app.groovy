@@ -269,6 +269,7 @@ class Projects {
   List<Packaging> packagings
   List<JavaVersion> javaVersions
   List<Language> languages
+  List<BootVersion> bootVersions
   static class Language { 
     String name
     String value
@@ -288,5 +289,9 @@ class Projects {
     String action
     String value
     boolean selected
+  }
+  static class BootVersion {
+    String value
+    boolean selected    
   }
 }
