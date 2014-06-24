@@ -22,6 +22,13 @@ class MainController {
   @Autowired
   private Projects projects
 
+  @ModelAttribute
+  PomRequest pomRequest() {
+    PomRequest request = new PomRequest()
+    request.bootVersion = bootVersion
+    request
+  }
+
   @RequestMapping(value='/')
   @ResponseBody
   Projects projects() {
@@ -159,7 +166,7 @@ class MainController {
   @RequestMapping('/pom')
   @ResponseBody
   ResponseEntity<byte[]> pom(PomRequest request, Map model) {
-    model.bootVersion = bootVersion
+    model.bootVersion = request.bootVersion
     new ResponseEntity<byte[]>(render('starter-pom.xml', request, model), ['Content-Type':'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
 
   }
@@ -167,7 +174,7 @@ class MainController {
   @RequestMapping('/build')
   @ResponseBody
   ResponseEntity<byte[]> gradle(PomRequest request, Map model) {
-    model.bootVersion = bootVersion
+    model.bootVersion = request.bootVersion
     new ResponseEntity<byte[]>(render('starter-build.gradle', request, model), ['Content-Type':'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
   }
    
@@ -235,6 +242,7 @@ class PomRequest {
   String groupId = 'org.test'
   String artifactId
   String version = '0.0.1-SNAPSHOT'
+  String bootVersion
   String packaging = 'jar'
   String language = 'java'
   String packageName
