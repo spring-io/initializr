@@ -74,7 +74,7 @@
          <% bootVersions.each { %>
             <label class="radio">
               <input type="radio" name="bootVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
-              ${it.name}
+              ${it.value}
             </label><% } %>
           <button type="submit" class="btn">Generate</button>
         </form>
