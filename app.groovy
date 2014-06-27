@@ -264,7 +264,7 @@ class PomRequest {
 @Component
 @ConfigurationProperties(prefix='projects', ignoreUnknownFields=false)
 class Projects {
-  List<Map<String,Object>> styles
+  List<Style> styles
   List<Type> types
   List<Packaging> packagings
   List<JavaVersion> javaVersions
@@ -293,5 +293,9 @@ class Projects {
   static class BootVersion {
     String value
     boolean selected    
+  }
+  static class Style {
+	String name
+	List<Map<String,Object>> starters
   }
 }

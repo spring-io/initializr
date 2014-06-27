@@ -1,84 +1,166 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <title>Spring Initializr</title>
-    <link rel="stylesheet"
-      href="/css/bootstrap.min.css"/>
-  </head>
-  <body>
-    <div class="container">
-      <div class="navbar">
-        <div class="navbar-inner">
-          <a class="brand"
-              href="https://spring.io">
-              Spring
-          </a>
-          <ul class="nav">
-            <li>
-              <a href="/" title="Download a template project or build file with some very basic content.">
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="/spring.zip" title="Download the spring CLI as a zip distribution (unpack and run bin/spring on a command line).">
-                Download
-              </a>
-            </li>
-            <li>
-              <a href="/install.sh" title="Installer for the spring CLI command on Un*x-like system (should work on Linux, Mac or Cygwin). Curl this link and pipe to bash, or download the script and run it.">
-                Installer
-              </a>
-            </li>
-          </ul>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/spring.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="initializr-header">
+            <div class="container">
+                <h1>Spring Initializr</h1>
+                <p>Bootstrap your application now</p>
+            </div>
         </div>
-      </div>
-      <h1>Spring Initializr</h1>
-      <div>
-        <form id="form" action="/starter.zip" method="get">
-          <label for="groupId">Group:</label> <input id="groupId" type="text" value="org.demo" name="groupId"/>
-          <label for="artifactId">Artifact:</label> <input id="artifactId" type="text" value="demo" name="artifactId"/>
-          <label for="name">Name:</label> <input id="name" type="text" value="demo" name="name"/>
-          <label for="name">Description:</label> <input id="description" type="text" value="Demo project" name="description"/>
-          <label for="packageName">Package Name:</label> <input id="packageName" type="text" value="demo" name="packageName"/>
-          <label>Styles:</label>
-          <% styles.each { %>
-            <label class="checkbox">
-              <input type="checkbox" name="style" value="${it.value}"/>
-              ${it.name}
-            </label><% } %>
-          <label>Type:</label>
-          <% types.each { %>
-            <label class="radio">
-              <input type="radio" name="type" value="${it.value}"${it.selected==true ? ' checked="true"' : ''} onclick="javascript:this.form.action='${it.action}'"/>
-              ${it.name}
-            </label><% } %>
-           <label>Packaging:</label>
-         <% packagings.each { %>
-            <label class="radio">
-              <input type="radio" name="packaging" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
-              ${it.name}
-            </label><% } %>
-         <label>Java Version:</label>
-         <% javaVersions.each { %>
-            <label class="radio">
-              <input type="radio" name="javaVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
-              ${it.value}
-            </label><% } %>
-         <label>Language:</label>
-         <% languages.each { %>
-            <label class="radio">
-              <input type="radio" name="language" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
-              ${it.name}
-            </label><% } %>
-         <label>Spring Boot Version:</label>
-         <% bootVersions.each { %>
-            <label class="radio">
-              <input type="radio" name="bootVersion" value="${it.value}"${it.selected==true ? ' checked="true"' : ''}/>
-              ${it.value}
-            </label><% } %>
-          <button type="submit" class="btn">Generate</button>
-        </form>
-      </div>
     </div>
-  </body>
+    <form id="form" class="form-horizontal" action="/starter.zip" method="get" role="form">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Project metadata</h3>
+                <div class="form-group">
+                    <label for="groupId" class="col-md-3 control-label">Group</label>
+                    <div class="col-md-8">
+                        <input id="groupId" class="form-control" type="text" value="org.demo" name="groupId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="artifactId" class="col-md-3 control-label">Artifact</label>
+                    <div class="col-md-8">
+                        <input id="artifactId" class="form-control" type="text" value="demo" name="artifactId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-md-3 control-label">Name</label>
+                    <div class="col-md-8">
+                        <input id="name" class="form-control" type="text" value="demo" name="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-md-3 control-label">Description</label>
+                    <div class="col-md-8">
+                        <input id="description" class="form-control" type="text" value="Demo project" name="description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="packageName" class="col-md-3 control-label">Package Name</label>
+                    <div class="col-md-8">
+                        <input id="packageName" class="form-control" type="text" value="demo" name="packageName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-md-3 control-label">Type</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="type" name="packaging" onchange="javascript:updateForm(this)">
+                            <% types.each { %>
+                            <option data-action="${it.action}" value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="packaging" class="col-md-3 control-label">Packaging</label>
+                    <div class="col-md-8">
+                    <select class="form-control" id="packaging" name="packaging">
+                        <% packagings.each { %>
+                        <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                        <% } %>
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="javaVersion" class="col-md-3 control-label">Java Version</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="javaVersion" id="javaVersion">
+                            <% javaVersions.each { %>
+                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.value}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="language" class="col-md-3 control-label">Language</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="language" id="language">
+                            <% languages.each { %>
+                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bootVersion" class="col-md-3 control-label">Spring Boot Version</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="bootVersion" id="bootVersion">
+                            <% bootVersions.each { %>
+                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.value}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h3>Project dependencies</h3>
+                <% styles.each { %>
+                <div class="form-group col-sm-6">
+                <h4>${it.name}</h4>
+                    <% it.starters.each { %>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="style" value="${it.value}">
+                            ${it.name}
+                        </label>
+                    </div><% } %>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <div class="row">
+            <p class="text-center">
+                <button type="submit" class="btn btn-lg btn-primary" role="button">
+                    <span class="glyphicon glyphicon-download"></span> Generate Project
+                </button>
+            </p>
+        </div>
+        <div class="page-header">
+            <h1>Spring CLI <small>Quickly prototype with Spring</small></h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-5">
+                <h3>Spring CLI Zip</h3>
+                <p>
+                    Download the spring CLI as a zip distribution (unpack and run bin/spring on a command line).
+                </p>
+                <p>
+                    <a href="/spring.zip" class="btn btn-lg btn-primary" role="button">
+                        <span class="glyphicon glyphicon-download-alt"></span> Download Spring CLI Zip
+                    </a>
+                </p>
+            </div>
+            <div class="col-sm-5">
+                <h3>Spring CLI Installer</h3>
+                <p>Installer for the spring CLI command on Un*x-like system (should work on Linux, Mac or Cygwin).</p>
+                <p>You can <kbd>curl http://start.spring.io/install.sh | sh</kbd>, or download the script and run it.</p>
+                <p>
+                    <a href="/install.sh" class="btn btn-lg btn-primary" role="button">
+                        <span class="glyphicon glyphicon-download-alt"></span> Download Spring Installer
+                    </a>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var updateForm = function(sel) {
+        var selected = sel.options[sel.selectedIndex];
+        sel.form.action = selected.getAttribute("data-action");
+    }
+</script>
+</body>
 </html>

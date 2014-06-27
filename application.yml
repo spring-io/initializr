@@ -8,54 +8,68 @@ info:
 
 projects:
   styles:
+    - name: Core
+      starters:
+        - name: Security
+          value: security
+        - name: AOP
+          value: aop
+    - name: Data
+      starters:
+        - name: JDBC
+          value: jdbc
+        - name: JPA
+          value: data-jpa
+        - name: MongoDB
+          value: data-mongodb
+        - name: Redis
+          value: redis
+        - name: Gemfire
+          value: data-gemfire
+        - name: Solr
+          value: data-solr
+    - name: I/O
+      starters:
+      - name: Batch
+        value: batch
+      - name: Integration
+        value: integration
+      - name: AMQP
+        value: amqp
     - name: Web
-      value: web
-    - name: Websocket
-      value: websocket
-    - name: Freemarker
-      value: freemarker
-    - name: Velocity
-      value: velocity
-    - name: Groovy Templates
-      value: groovy-templates
-    - name: Thymeleaf
-      value: thymeleaf
-    - name: Actuator
-      value: actuator
-    - name: Security
-      value: security
-    - name: Batch
-      value: batch
-    - name: JDBC
-      value: jdbc
-    - name: Integration
-      value: integration
-    - name: AMQP
-      value: amqp
-    - name: AOP
-      value: aop
-    - name: JPA
-      value: data-jpa
-    - name: MongoDB
-      value: data-mongodb
-    - name: Redis
-      value: redis
-    - name: Gemfire
-      value: data-gemfire
-    - name: Solr
-      value: data-solr
-    - name: Rest Repositories
-      value: data-rest
-    - name: Remote Shell
-      value: remote-shell
-    - name: Mobile
-      value: mobile
-    - name: Facebook
-      value: social-facebook
-    - name: LinkedIn
-      value: social-linkedin
-    - name: Twitter
-      value: social-twitter
+      starters:
+        - name: Web
+          value: web
+        - name: Websocket
+          value: websocket
+        - name: Rest Repositories
+          value: data-rest
+        - name: Mobile
+          value: mobile
+    - name: Template Engines
+      starters:
+        - name: Freemarker
+          value: freemarker
+        - name: Velocity
+          value: velocity
+        - name: Groovy Templates
+          value: groovy-templates
+        - name: Thymeleaf
+          value: thymeleaf
+    - name: Social
+      starters:
+        - name: Facebook
+          value: social-facebook
+        - name: LinkedIn
+          value: social-linkedin
+        - name: Twitter
+          value: social-twitter
+    - name: Ops
+      starters:
+        - name: Actuator
+          value: actuator
+        - name: Remote Shell
+          value: remote-shell
   types:
     - name: Maven POM
       action: /pom.xml

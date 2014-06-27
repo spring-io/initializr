@@ -1,0 +1,27 @@
+body, h1, h2, h3 {
+    font-weight: 400;
+    font-family: "Varela Round",sans-serif;
+}
+
+.initializr-header {
+    color: #f1f1f1;
+    background-color: #34302d;
+    height: auto;
+    padding: 60px 60px;
+    background-size: 300px;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+@media (min-width: 768px) {
+    .initializr-header {
+        background: url(/img/platform-bg.png) #34302d 90% 50% no-repeat;
+    }
+}
+
+.initializr-header h1 {
+    font-family: Montserrat,sans-serif;
+    font-size: 40px;
+    line-height: 30px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
