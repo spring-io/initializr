@@ -75,7 +75,10 @@ You can jar up the app and make it executable in any environment.
 
     $ spring jar start.jar app.groovy
 
-To deploy on Cloudfoundry:
+## Building an Executable JAR
+
+The safest way to deploy to do is jar up the app and make it executable in any
+environment. Care is needed with the includes and excludes:
 
     $ cf push start -p start.jar -n start-<space>
     
