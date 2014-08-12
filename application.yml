@@ -4,7 +4,7 @@ info:
     version: 0.2.1
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.1.4.RELEASE
+    version: 1.1.5.RELEASE
 
 projects:
   styles:
@@ -95,9 +95,9 @@ projects:
       value: java
       selected: true
   bootVersions:
-    - value: 1.1.5.BUILD-SNAPSHOT
+    - value: 1.2.0.BUILD-SNAPSHOT
       selected: false
-    - value: 1.1.4.RELEASE
+    - value: 1.1.5.RELEASE
       selected: true
     - value: 1.0.2.RELEASE
       selected: false
