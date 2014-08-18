@@ -1,0 +1,63 @@
+info:
+  spring-boot:
+    version: 1.1.5.RELEASE
+
+
+initializr:
+  dependencies:
+    - name: Core
+      starters:
+        - name: Web
+          value: web
+        - name: Security
+          value: security
+        - name: Data JPA
+          value: data-jpa
+  types:
+    - name: Maven POM
+      id: pom.xml
+      default: false
+      action: /pom.xml
+    - name: Maven Project
+      id: starter.zip
+      default: true
+      action: /starter.zip
+    - name: Gradle Config
+      id: build.gradle
+      default: false
+      action: /build.gradle
+    - name: Gradle Project
+      id: gradle.zip
+      default: false
+      action: /starter.zip
+  packagings:
+    - name: Jar
+      id: jar
+      default: true
+    - name: War
+      id: war
+      default: false
+  javaVersions:
+    - id: 1.6
+      default: false
+    - id: 1.7
+      default: true
+    - id: 1.8
+      default: false
+  languages:
+    - name: Groovy
+      id: groovy
+      default: false
+    - name: Java
+      id: java
+      default: true
+  bootVersions:
+    - name : Latest SNAPSHOT
+      id: 1.2.0.BUILD-SNAPSHOT
+      default: false
+    - name: 1.1.5
+      id: 1.1.5.RELEASE
+      default: true
+    - name: 1.0.2
+      id: 1.0.2.RELEASE
+      default: false

@@ -30,10 +30,31 @@ Windows users we recommend [cygwin](http://cygwin.org)), or you can
 download the [zip file](http://start.spring.io/spring.zip) and unpack
 it yourself.
 
+## Project structure
+
+Initializr is a library that provides all the default features and a service with a very simple script
+that uses the auto-configuration feature of Spring Boot. All you need is _grabbing_ the library and
+create a proper configuration file with the following script:
+
+```
+package org.acme.myapp
+
+@Grab('io.spring.initalizr:initializr:1.0.0.BUILD-SNAPSHOT')
+class InitializerService { }
+```
+
+As a reference, `initializr-service` represents the _default_ service that runs at http://start.spring.io
+
 <a name="running_the_app"></a>
 ## Running the app locally
 
-Use the spring command:
+First make sure that you have built the library:
+
+    $ cd initializr
+    $ mvn clean install
+
+Once you have done that, you can easily start the app using the spring command from the `initializr-service`
+directory (`cd ../initializr-service`):
 
     $ spring run app.groovy
 

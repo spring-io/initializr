@@ -57,9 +57,9 @@
                 <div class="form-group">
                     <label for="type" class="col-md-3 control-label">Type</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="type" name="packaging" onchange="javascript:updateForm(this)">
+                        <select class="form-control" id="type" name="type" onchange="javascript:updateForm(this)">
                             <% types.each { %>
-                            <option data-action="${it.action}" value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                            <option data-action="${it.action}" value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
@@ -69,7 +69,7 @@
                     <div class="col-md-8">
                     <select class="form-control" id="packaging" name="packaging">
                         <% packagings.each { %>
-                        <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                        <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                         <% } %>
                     </select>
                     </div>
@@ -79,7 +79,7 @@
                     <div class="col-md-8">
                         <select class="form-control" name="javaVersion" id="javaVersion">
                             <% javaVersions.each { %>
-                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.value}</option>
+                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
@@ -89,7 +89,7 @@
                     <div class="col-md-8">
                         <select class="form-control" name="language" id="language">
                             <% languages.each { %>
-                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.name}</option>
+                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
@@ -99,7 +99,7 @@
                     <div class="col-md-8">
                         <select class="form-control" name="bootVersion" id="bootVersion">
                             <% bootVersions.each { %>
-                            <option value="${it.value}" ${it.selected==true ? ' selected' : ''}>${it.value}</option>
+                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
@@ -107,7 +107,7 @@
             </div>
             <div class="col-sm-6">
                 <h3>Project dependencies</h3>
-                <% styles.each { %>
+                <% dependencies.each { %>
                 <div class="form-group col-sm-6">
                 <h4>${it.name}</h4>
                     <% it.starters.each { %>

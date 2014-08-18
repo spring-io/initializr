@@ -1,13 +1,13 @@
 info:
   project:
     name: Spring Start
-    version: 0.2.1
+    version: 0.3.0
 # remember to update static/install.sh as well:
   spring-boot:
     version: 1.1.5.RELEASE
 
-projects:
-  styles:
+initializr:
+  dependencies:
     - name: Core
       starters:
         - name: Security
@@ -71,47 +71,50 @@ projects:
         - name: Remote Shell
           value: remote-shell
   types:
-    - name: Maven POM
-      action: /pom.xml
-      value: pom.xml
-      selected: false
-    - name: Maven Project
-      action: /starter.zip
-      value: starter.zip
-      selected: true
-    - name: Gradle Config
-      action: /build.gradle
-      value: build.gradle
-      selected: false
-    - name: Gradle Project
-      action: /starter.zip
-      value: gradle.zip
-      selected: false
+      - name: Maven POM
+        id: pom.xml
+        default: false
+        action: /pom.xml
+      - name: Maven Project
+        id: starter.zip
+        default: true
+        action: /starter.zip
+      - name: Gradle Config
+        id: build.gradle
+        default: false
+        action: /build.gradle
+      - name: Gradle Project
+        id: gradle.zip
+        default: false
+        action: /starter.zip
   packagings:
     - name: Jar
-      value: jar
-      selected: true
+      id: jar
+      default: true
     - name: War
-      value: war
-      selected: false
+      id: war
+      default: false
   javaVersions:
-    - value: 1.6
-      selected: false
-    - value: 1.7
-      selected: true
-    - value: 1.8
-      selected: false
+    - id: 1.6
+      default: false
+    - id: 1.7
+      default: true
+    - id: 1.8
+      default: false
   languages:
     - name: Groovy
-      value: groovy
-      selected: false
+      id: groovy
+      default: false
     - name: Java
-      value: java
-      selected: true
+      id: java
+      default: true
   bootVersions:
-    - value: 1.2.0.BUILD-SNAPSHOT
-      selected: false
-    - value: 1.1.5.RELEASE
-      selected: true
-    - value: 1.0.2.RELEASE
-      selected: false
+    - name : Latest SNAPSHOT
+      id: 1.2.0.BUILD-SNAPSHOT
+      default: false
+    - name: 1.1.5
+      id: 1.1.5.RELEASE
+      default: true
+    - name: 1.0.2
+      id: 1.0.2.RELEASE
+      default: false
