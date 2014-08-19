@@ -67,23 +67,18 @@ If you are on a Mac and using [homebrew](http://brew.sh/), install the Cloud Fou
 
 Alternatively, download a suitable binary for your platform from [Pivotal Web Services](https://console.run.pivotal.io/tools).
 
-To help avoid a timeout on startup you should upload all the dependencies.
-You can get those locally by running `spring grab`:
-
-    $ spring jar app.groovy
-
-this will create a local directory `repository/` with all the jar dependencies.
-Then when you `cf push` they will be uploaded and used.
-
 An example Cloud Foundry `manifest.yml` file is provided. You should ensure that
 the application name and URL (name and host values) are suitable for your environment
 before running `cf push`.
 
-Alternatively you can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
+You can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
 
     $ version=1.1.5.RELEASE
     $ wget -O spring.zip https://repo.spring.io/org/springframework/boot/spring-boot-cli/${version}/spring-boot-cli-${version}-bin.zip
     $ spring jar --include '+spring.zip' start.jar app.groovy
+    
+To deploy on Cloudfoundry:
+    
     $ cf push start -p start.jar -n start-<space>
     
 Where `<space>` is the name of the space. As a failsafe, and a
