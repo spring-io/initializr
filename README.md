@@ -80,6 +80,8 @@ before running `cf push`.
 
 Alternatively you can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
 
+    $ version=1.1.5.RELEASE
+    $ wget -O spring.zip https://repo.spring.io/org/springframework/boot/spring-boot-cli/${version}/spring-boot-cli-${version}-bin.zip
     $ spring jar --include '+spring.zip' start.jar app.groovy
     $ cf push start -p start.jar -n start-<space>
     
@@ -91,4 +93,3 @@ manifest that defaults it to `start-development`.
 If you are deploying the "legacy" service for STS in production:
 
     $ cf push start-legacy -p start.jar -n start-legacy
-
