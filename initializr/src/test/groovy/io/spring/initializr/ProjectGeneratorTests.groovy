@@ -50,6 +50,60 @@ class ProjectGeneratorTests {
 				.hasSnapshotRepository().hasSpringBootStarterDependency('web')
 	}
 
+	@Test
+	void mavenPomWithWebFacet() {
+		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		dependency.id = 'thymeleaf'
+		dependency.groupId = 'org.foo'
+		dependency.artifactId = 'thymeleaf'
+		dependency.facets << 'web'
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('test', dependency).get()
+		projectGenerator.metadata = metadata
+
+		ProjectRequest request = createProjectRequest('thymeleaf')
+		generateMavenPom(request).hasStartClass('demo.Application')
+				.hasDependency('org.foo', 'thymeleaf')
+				.hasDependenciesCount(2)
+
+	}
+
+	@Test
+	void mavenWarPomWithWebFacet() {
+		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		dependency.id = 'thymeleaf'
+		dependency.groupId = 'org.foo'
+		dependency.artifactId = 'thymeleaf'
+		dependency.facets << 'web'
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('test', dependency).get()
+		projectGenerator.metadata = metadata
+
+		ProjectRequest request = createProjectRequest('thymeleaf')
+		request.packaging = 'war'
+		generateMavenPom(request).hasStartClass('demo.Application')
+				.hasSpringBootStarterDependency('tomcat')
+				.hasDependency('org.foo', 'thymeleaf') // This is tagged as web facet so it brings the web one
+				.hasSpringBootStarterDependency('test')
+				.hasDependenciesCount(3)
+
+	}
+
+	@Test
+	void mavenWarPomWithoutWebFacet() {
+		ProjectRequest request = createProjectRequest('data-jpa')
+		request.packaging = 'war'
+		generateMavenPom(request).hasStartClass('demo.Application')
+				.hasSpringBootStarterDependency('tomcat')
+				.hasSpringBootStarterDependency('data-jpa')
+				.hasSpringBootStarterDependency('web') // Added by war packaging
+				.hasSpringBootStarterDependency('test')
+				.hasDependenciesCount(4)
+
+	}
+
 	PomAssert generateMavenPom(ProjectRequest request) {
 		String content = new String(projectGenerator.generateMavenPom(request))
 		return new PomAssert(content).validateProjectRequest(request)

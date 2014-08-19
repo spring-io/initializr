@@ -45,14 +45,12 @@ class ProjectRequest {
 	String javaVersion
 
 	def dependencies = []
+	def facets = []
 
 	/**
 	 * Resolve this instance against the specified {@link InitializrMetadata}
 	 */
 	void resolve(InitializrMetadata metadata) {
-		if (packaging == 'war' && !isWebStyle()) {
-			style << 'web'
-		}
 		if (style == null || style.size() == 0) {
 			style = []
 		}
@@ -71,14 +69,39 @@ class ProjectRequest {
 			}
 			dependency
 		}
+		dependencies.each {
+			it.facets.each {
+				if (!facets.contains(it)) {
+					facets.add(it)
+				}
+			}
+		}
+		afterResolution(metadata)
 	}
 
-	boolean isWebStyle() {
-		style.any { webStyle(it) }
+	/**
+	 * Update this request once it has been resolved with the specified {@link InitializrMetadata}.
+	 */
+	protected afterResolution(InitializrMetadata metadata) {
+		if (packaging == 'war' && !hasWebFacet()) {
+			// Need to be able to bootstrap the web app
+			dependencies << metadata.getDependency('web')
+			facets << 'web'
+		}
 	}
 
-	private boolean webStyle(String style) {
-		style.contains('web') || style.contains('thymeleaf') || style.contains('freemarker') || style.contains('velocity') || style.contains('groovy-template')
+	/**
+	 * Specify if this request has the web facet enabled.
+	 */
+	boolean hasWebFacet() {
+		hasFacet('web')
+	}
+
+	/**
+	 * Specify if this request has the specified facet enabled
+	 */
+	boolean hasFacet(String facet) {
+		facets.contains(facet)
 	}
 
 }

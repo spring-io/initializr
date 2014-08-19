@@ -9,6 +9,8 @@ initializr:
       content:
         - name: Web
           id: web
+          facets:
+            - web
         - name: Security
           id: security
         - name: Data JPA

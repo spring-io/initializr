@@ -160,6 +160,9 @@ class InitializrMetadata {
 		List<String> aliases = []
 
 		@JsonIgnore
+		List<String> facets = []
+
+		@JsonIgnore
 		String groupId
 
 		@JsonIgnore

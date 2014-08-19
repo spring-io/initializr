@@ -42,6 +42,8 @@ initializr:
       content:
         - name: Web
           id: web
+          facets:
+            - web
         - name: Websocket
           id: websocket
         - name: Rest Repositories
@@ -52,12 +54,20 @@ initializr:
       content:
         - name: Freemarker
           id: freemarker
+          facets:
+            - web
         - name: Velocity
           id: velocity
+          facets:
+            - web
         - name: Groovy Templates
           id: groovy-templates
+          facets:
+            - web
         - name: Thymeleaf
           id: thymeleaf
+          facets:
+            - web
     - name: Social
       content:
         - name: Facebook
