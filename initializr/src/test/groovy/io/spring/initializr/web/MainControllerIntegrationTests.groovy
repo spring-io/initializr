@@ -32,7 +32,7 @@ import static org.junit.Assert.*
 class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTests {
 
 	@Test
-	public void simpleZipProject() {
+	void simpleZipProject() {
 		downloadZip('/starter.zip?style=web&style=jpa').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert()
 				.hasDependenciesCount(3)
@@ -42,7 +42,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 	}
 
 	@Test
-	public void simpleTgzProject() {
+	void simpleTgzProject() {
 		downloadTgz('/starter.tgz?style=data-jpa').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
@@ -50,7 +50,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 	}
 
 	@Test
-	public void gradleWarProject() {
+	void gradleWarProject() {
 		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip').isJavaWarProject()
 				.isGradleProject()
 	}
@@ -132,7 +132,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 		File tgzFile = writeArchive(body)
 
 		def project = folder.newFolder()
-		new AntBuilder().untar(dest: project, src: tgzFile, compression: 'gzip');
+		new AntBuilder().untar(dest: project, src: tgzFile, compression: 'gzip')
 		new ProjectAssert(project)
 	}
 

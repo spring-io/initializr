@@ -26,14 +26,14 @@ import static org.junit.Assert.assertEquals
 class InitializrMetadataTests {
 
 	@Test
-	public void getDefaultNoDefault() {
+	void getDefaultNoDefault() {
 		List elements = []
 		elements << createJavaVersion('one', false) << createJavaVersion('two', false)
 		assertEquals 'three', InitializrMetadata.getDefault(elements, 'three')
 	}
 
 	@Test
-	public void getDefaultWithDefault() {
+	void getDefaultWithDefault() {
 		List elements = []
 		elements << createJavaVersion('one', false) << createJavaVersion('two', true)
 		assertEquals 'two', InitializrMetadata.getDefault(elements, 'three')

@@ -36,14 +36,14 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
-	public void defaultMavenPom() {
+	void defaultMavenPom() {
 		ProjectRequest request = createProjectRequest('web')
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasNoRepository().hasSpringBootStarterDependency('web')
 	}
 
 	@Test
-	public void mavenPomWithBootSnapshot() {
+	void mavenPomWithBootSnapshot() {
 		ProjectRequest request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
 		generateMavenPom(request).hasStartClass('demo.Application')
@@ -51,7 +51,7 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
-	public void mavenWarPomWithoutWebFacet() {
+	void mavenWarPomWithoutWebFacet() {
 		ProjectRequest request = createProjectRequest('data-jpa')
 		request.packaging = 'war'
 		generateMavenPom(request).hasStartClass('demo.Application')

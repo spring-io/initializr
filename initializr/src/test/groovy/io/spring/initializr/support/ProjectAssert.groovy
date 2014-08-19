@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals
  */
 class ProjectAssert {
 
-	final File dir;
+	final File dir
 
 	/**
 	 * Create a new instance with the directory holding the generated project.

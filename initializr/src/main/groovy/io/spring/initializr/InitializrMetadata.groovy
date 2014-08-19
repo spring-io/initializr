@@ -34,7 +34,7 @@ class InitializrMetadata {
 
 	final List<BootVersion> bootVersions = new ArrayList<BootVersion>()
 
-	final Defaults defaults = new Defaults();
+	final Defaults defaults = new Defaults()
 
 	/**
 	 * Initializes a {@link ProjectRequest} instance with the defaults

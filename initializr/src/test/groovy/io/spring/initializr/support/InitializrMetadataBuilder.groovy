@@ -61,7 +61,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addType(String id, boolean defaultValue, String action) {
-		InitializrMetadata.Type type = new InitializrMetadata.Type();
+		InitializrMetadata.Type type = new InitializrMetadata.Type()
 		type.id = id
 		type.name = id
 		type.default = defaultValue
@@ -75,7 +75,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addPackaging(String id, boolean defaultValue) {
-		InitializrMetadata.Packaging packaging = new InitializrMetadata.Packaging();
+		InitializrMetadata.Packaging packaging = new InitializrMetadata.Packaging()
 		packaging.id = id
 		packaging.name = id
 		packaging.default = defaultValue
@@ -88,7 +88,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addJavaVersion(String version, boolean defaultValue) {
-		InitializrMetadata.JavaVersion javaVersion = new InitializrMetadata.JavaVersion();
+		InitializrMetadata.JavaVersion javaVersion = new InitializrMetadata.JavaVersion()
 		javaVersion.id = version
 		javaVersion.name = version
 		javaVersion.default = defaultValue
@@ -101,7 +101,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addLanguage(String id, boolean defaultValue) {
-		InitializrMetadata.Language language = new InitializrMetadata.Language();
+		InitializrMetadata.Language language = new InitializrMetadata.Language()
 		language.id = id
 		language.name = id
 		language.default = defaultValue
@@ -115,7 +115,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addBootVersion(String id, boolean defaultValue) {
-		InitializrMetadata.BootVersion bootVersion = new InitializrMetadata.BootVersion();
+		InitializrMetadata.BootVersion bootVersion = new InitializrMetadata.BootVersion()
 		bootVersion.id = id
 		bootVersion.name = id
 		bootVersion.default = defaultValue

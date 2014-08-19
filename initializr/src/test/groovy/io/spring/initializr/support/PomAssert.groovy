@@ -44,7 +44,7 @@ class PomAssert {
 		context.put 'pom', 'http://maven.apache.org/POM/4.0.0'
 		SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext(context)
 		eng.namespaceContext = namespaceContext
-		doc = XMLUnit.buildControlDocument(content);
+		doc = XMLUnit.buildControlDocument(content)
 		parseDependencies()
 	}
 
@@ -59,32 +59,32 @@ class PomAssert {
 	}
 
 	PomAssert hasGroupId(String groupId) {
-		assertEquals groupId, eng.evaluate(createRootNodeXPath('groupId'), doc);
+		assertEquals groupId, eng.evaluate(createRootNodeXPath('groupId'), doc)
 		this
 	}
 
 	PomAssert hasArtifactId(String artifactId) {
-		assertEquals artifactId, eng.evaluate(createRootNodeXPath('artifactId'), doc);
+		assertEquals artifactId, eng.evaluate(createRootNodeXPath('artifactId'), doc)
 		this
 	}
 
 	PomAssert hasVersion(String version) {
-		assertEquals version, eng.evaluate(createRootNodeXPath('version'), doc);
+		assertEquals version, eng.evaluate(createRootNodeXPath('version'), doc)
 		this
 	}
 
 	PomAssert hasPackaging(String packaging) {
-		assertEquals packaging, eng.evaluate(createRootNodeXPath('packaging'), doc);
+		assertEquals packaging, eng.evaluate(createRootNodeXPath('packaging'), doc)
 		this
 	}
 
 	PomAssert hasName(String name) {
-		assertEquals name, eng.evaluate(createRootNodeXPath('name'), doc);
+		assertEquals name, eng.evaluate(createRootNodeXPath('name'), doc)
 		this
 	}
 
 	PomAssert hasDescription(String description) {
-		assertEquals description, eng.evaluate(createRootNodeXPath('description'), doc);
+		assertEquals description, eng.evaluate(createRootNodeXPath('description'), doc)
 		this
 	}
 
@@ -141,7 +141,7 @@ class PomAssert {
 		def nodes = eng.getMatchingNodes(createRootNodeXPath('repositories/pom:repository/pom:id'), doc)
 		for (int i = 0; i < nodes.getLength(); i++) {
 			if (name.equals(nodes.item(i).getTextContent())) {
-				return;
+				return
 			}
 		}
 		throw new IllegalArgumentException('No repository found with id ' + name)
@@ -151,7 +151,7 @@ class PomAssert {
 		def nodes = eng.getMatchingNodes(createRootNodeXPath('pluginRepositories/pom:pluginRepository/pom:id'), doc)
 		for (int i = 0; i < nodes.getLength(); i++) {
 			if (name.equals(nodes.item(i).getTextContent())) {
-				return;
+				return
 			}
 		}
 		throw new IllegalArgumentException('No plugin repository found with id ' + name)

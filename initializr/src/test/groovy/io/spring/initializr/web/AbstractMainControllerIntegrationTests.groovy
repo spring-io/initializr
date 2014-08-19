@@ -42,7 +42,7 @@ import org.springframework.web.client.RestTemplate
 abstract class AbstractMainControllerIntegrationTests {
 
 	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
+	public final TemporaryFolder folder = new TemporaryFolder()
 
 	@Value('${local.server.port}')
 	private int port
