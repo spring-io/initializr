@@ -1,0 +1,8 @@
+initializr:
+  defaults:
+    groupId: org.foo
+    artifactId: foo-bar
+    version: 1.2.4-SNAPSHOT
+    name: FooBar
+    description: FooBar Project
+    packageName: org.foo.demo

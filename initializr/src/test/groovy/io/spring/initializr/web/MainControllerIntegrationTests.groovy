@@ -17,40 +17,19 @@
 package io.spring.initializr.web
 
 import io.spring.initializr.support.ProjectAssert
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.http.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.web.client.RestTemplate
 
 import static org.junit.Assert.*
 
 /**
  * @author Stephane Nicoll
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Config.class)
-@WebAppConfiguration
-@IntegrationTest('server.port=0')
 @ActiveProfiles('test-default')
-class MainControllerIntegrationTests {
-
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
-
-	@Value('${local.server.port}')
-	private int port
-
-	final RestTemplate restTemplate = new RestTemplate()
+class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTests {
 
 	@Test
 	public void simpleZipProject() {
@@ -80,7 +59,7 @@ class MainControllerIntegrationTests {
 
 	@Test
 	void homeIsForm() {
-		String body = home()
+		String body = htmlHome()
 		assertTrue 'Wrong body:\n' + body, body.contains('action="/starter.zip"')
 	}
 
@@ -113,13 +92,13 @@ class MainControllerIntegrationTests {
 
 	@Test
 	void homeHasWebStyle() {
-		String body = home()
+		String body = htmlHome()
 		assertTrue('Wrong body:\n' + body, body.contains('name="style" value="web"'))
 	}
 
 	@Test
 	void homeHasBootVersion() {
-		String body = home()
+		String body = htmlHome()
 		assertTrue('Wrong body:\n' + body, body.contains('name="bootVersion"'))
 		assertTrue('Wrong body:\n' + body, body.contains('1.2.0.BUILD-SNAPSHOT"'))
 	}
@@ -136,12 +115,6 @@ class MainControllerIntegrationTests {
 		ResponseEntity<String> response = restTemplate.getForEntity(createUrl('install.sh'), String)
 		assertEquals(HttpStatus.OK, response.getStatusCode())
 		assertNotNull(response.body)
-	}
-
-	private String home() {
-		HttpHeaders headers = new HttpHeaders()
-		headers.setAccept([MediaType.TEXT_HTML])
-		restTemplate.exchange(createUrl('/'), HttpMethod.GET, new HttpEntity<Void>(headers), String).body
 	}
 
 
@@ -173,13 +146,5 @@ class MainControllerIntegrationTests {
 		}
 		archiveFile
 	}
-
-
-	String createUrl(String context) {
-		return 'http://localhost:' + port + context
-	}
-
-	@EnableAutoConfiguration
-	static class Config {}
 
 }
