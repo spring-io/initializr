@@ -16,12 +16,19 @@
 
 package io.spring.initializr.web
 
-import io.spring.initializr.support.ProjectAssert
-import org.junit.Test
+import java.nio.charset.Charset
 
+import io.spring.initializr.support.ProjectAssert
+import org.json.JSONObject
+import org.junit.Test
+import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
+
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.util.StreamUtils
 
 import static org.junit.Assert.*
 
@@ -53,6 +60,20 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 	void gradleWarProject() {
 		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip').isJavaWarProject()
 				.isGradleProject()
+	}
+
+	@Test // Test that the current output is exactly what we expect
+	void validateCurrentProjectMetadata() {
+		String json = restTemplate.getForObject(createUrl('/'), String.class)
+		JSONObject expected = readJson('1.0')
+		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT)
+	}
+
+	@Test // Test that the  current code complies "at least" with 1.0
+	void validateProjectMetadata10() {
+		String json = restTemplate.getForObject(createUrl('/'), String.class)
+		JSONObject expected = readJson('1.0')
+		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
 	}
 
 	// Existing tests for backward compatibility
@@ -145,6 +166,18 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 			stream.close()
 		}
 		archiveFile
+	}
+
+
+	private static JSONObject readJson(String version) {
+		def resource = new ClassPathResource('metadata/test-default-' + version + '.json')
+		def stream = resource.getInputStream()
+		try {
+			String json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
+			new JSONObject(json)
+		} finally {
+			stream.close()
+		}
 	}
 
 }
