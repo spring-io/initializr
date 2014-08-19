@@ -59,8 +59,6 @@ class ProjectRequest {
 		if (!style.class.isArray() && !(style instanceof Collection)) {
 			style = [style]
 		}
-		style = style.collect { it == 'jpa' ? 'data-jpa' : it }
-		style.collect { it == '' ? '' : '-' + it }
 		dependencies = style.collect {
 			InitializrMetadata.Dependency dependency = metadata.getDependency(it)
 			if (dependency == null) {

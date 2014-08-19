@@ -93,6 +93,9 @@ class InitializrMetadata {
 			for (Dependency dependency : group.getContent()) {
 				validateDependency(dependency)
 				indexDependency(dependency.id, dependency)
+				for (String alias : dependency.aliases) {
+					indexDependency(alias, dependency)
+				}
 			}
 		}
 	}
@@ -152,6 +155,9 @@ class InitializrMetadata {
 
 	@ToString(ignoreNulls = true, includePackage = false)
 	static class Dependency extends IdentifiableElement {
+
+		@JsonIgnore
+		List<String> aliases = []
 
 		@JsonIgnore
 		String groupId

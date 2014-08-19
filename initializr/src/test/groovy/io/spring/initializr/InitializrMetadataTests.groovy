@@ -115,17 +115,12 @@ class InitializrMetadataTests {
 
 	@Test
 	void indexedDependencies() {
-		InitializrMetadata metadata = new InitializrMetadata()
-		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
-
 		InitializrMetadata.Dependency dependency = createDependency('first')
-		group.content.add(dependency)
 		InitializrMetadata.Dependency dependency2 = createDependency('second')
-		group.content.add(dependency2)
 
-		metadata.dependencies.add(group)
 
-		metadata.validate()
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('foo', dependency, dependency2).get()
 
 		assertSame dependency, metadata.getDependency('first')
 		assertSame dependency2, metadata.getDependency('second')
@@ -134,19 +129,46 @@ class InitializrMetadataTests {
 
 	@Test
 	void addTwoDependenciesWithSameId() {
-		InitializrMetadata metadata = new InitializrMetadata()
-		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
-
 		InitializrMetadata.Dependency dependency = createDependency('conflict')
-		group.content.add(dependency)
 		InitializrMetadata.Dependency dependency2 = createDependency('conflict')
-		group.content.add(dependency2)
 
-		metadata.dependencies.add(group)
+		InitializrMetadataBuilder builder = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('foo', dependency, dependency2)
 
 		thrown.expect(IllegalArgumentException)
 		thrown.expectMessage('conflict')
-		metadata.validate()
+		builder.get()
+	}
+
+	@Test
+	void addDependencyWithAliases() {
+		InitializrMetadata.Dependency dependency = createDependency('first')
+		dependency.aliases.add('alias1')
+		dependency.aliases.add('alias2')
+
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('foo', dependency).get()
+
+		assertSame dependency, metadata.getDependency('first')
+		assertSame dependency, metadata.getDependency('alias1')
+		assertSame dependency, metadata.getDependency('alias2')
+	}
+
+	@Test
+	void aliasClashWithAnotherDependency() {
+		InitializrMetadata.Dependency dependency = createDependency('first')
+		dependency.aliases.add('alias1')
+		dependency.aliases.add('alias2')
+
+		InitializrMetadata.Dependency dependency2 = createDependency('alias2')
+
+		InitializrMetadataBuilder builder = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('foo', dependency)
+				.addDependencyGroup('bar', dependency2)
+
+		thrown.expect(IllegalArgumentException)
+		thrown.expectMessage('alias2')
+		builder.get()
 	}
 
 	@Test

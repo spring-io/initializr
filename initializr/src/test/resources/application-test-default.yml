@@ -13,6 +13,8 @@ initializr:
           id: security
         - name: Data JPA
           id: data-jpa
+          aliases:
+            - jpa
     - name: Other
       content:
         - name: Foo
