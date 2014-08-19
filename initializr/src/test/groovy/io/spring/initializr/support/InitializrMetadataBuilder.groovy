@@ -33,8 +33,12 @@ class InitializrMetadataBuilder {
 		new InitializrMetadataBuilder().addDefaults()
 	}
 
-	InitializrMetadata get() {
+	InitializrMetadata validateAndGet() {
 		metadata.validate()
+		instance()
+	}
+
+	InitializrMetadata instance() {
 		metadata
 	}
 

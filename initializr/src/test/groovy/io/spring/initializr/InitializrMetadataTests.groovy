@@ -120,7 +120,7 @@ class InitializrMetadataTests {
 
 
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('foo', dependency, dependency2).get()
+				.addDependencyGroup('foo', dependency, dependency2).validateAndGet()
 
 		assertSame dependency, metadata.getDependency('first')
 		assertSame dependency2, metadata.getDependency('second')
@@ -137,7 +137,7 @@ class InitializrMetadataTests {
 
 		thrown.expect(IllegalArgumentException)
 		thrown.expectMessage('conflict')
-		builder.get()
+		builder.validateAndGet()
 	}
 
 	@Test
@@ -147,7 +147,7 @@ class InitializrMetadataTests {
 		dependency.aliases.add('alias2')
 
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('foo', dependency).get()
+				.addDependencyGroup('foo', dependency).validateAndGet()
 
 		assertSame dependency, metadata.getDependency('first')
 		assertSame dependency, metadata.getDependency('alias1')
@@ -168,28 +168,42 @@ class InitializrMetadataTests {
 
 		thrown.expect(IllegalArgumentException)
 		thrown.expectMessage('alias2')
-		builder.get()
+		builder.validateAndGet()
 	}
 
 	@Test
 	void createProjectRequest() {
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults().get()
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
 		ProjectRequest request = doCreateProjectRequest(metadata)
 		assertEquals metadata.defaults.groupId, request.groupId
+	}
+
+	@Test
+	void validateArtifactRepository() {
+		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults().instance()
+		metadata.env.artifactRepository = 'http://foo/bar'
+		metadata.validate()
+		assertEquals 'http://foo/bar/', metadata.env.artifactRepository
 	}
 
 	@Test
 	void getDefaultNoDefault() {
 		List elements = []
 		elements << createJavaVersion('one', false) << createJavaVersion('two', false)
-		assertEquals 'three', InitializrMetadata.getDefault(elements, 'three')
+		assertEquals 'one', InitializrMetadata.getDefault(elements)
 	}
 
 	@Test
-	void getDefaultWithDefault() {
+	void getDefaultEmpty() {
+		List elements = []
+		assertNull InitializrMetadata.getDefault(elements)
+	}
+
+	@Test
+	void getDefault() {
 		List elements = []
 		elements << createJavaVersion('one', false) << createJavaVersion('two', true)
-		assertEquals 'two', InitializrMetadata.getDefault(elements, 'three')
+		assertEquals 'two', InitializrMetadata.getDefault(elements)
 	}
 
 	private static ProjectRequest doCreateProjectRequest(InitializrMetadata metadata) {

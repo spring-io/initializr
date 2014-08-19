@@ -71,14 +71,12 @@ An example Cloud Foundry `manifest.yml` file is provided. You should ensure that
 the application name and URL (name and host values) are suitable for your environment
 before running `cf push`.
 
-You can jar up the app and make it executable in any environment. Care is needed with the includes and excludes:
+You can jar up the app and make it executable in any environment.
 
-    $ version=1.1.5.RELEASE
-    $ wget -O spring.zip https://repo.spring.io/org/springframework/boot/spring-boot-cli/${version}/spring-boot-cli-${version}-bin.zip
-    $ spring jar --include '+spring.zip' start.jar app.groovy
-    
+    $ spring jar start.jar app.groovy
+
 To deploy on Cloudfoundry:
-    
+
     $ cf push start -p start.jar -n start-<space>
     
 Where `<space>` is the name of the space. As a failsafe, and a

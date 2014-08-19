@@ -74,6 +74,16 @@ class MainController {
 		template 'home.html', model
 	}
 
+	@RequestMapping('/spring')
+	String spring() {
+		'redirect:' + metadata.env.createCliDistributionURl(metadata.defaults.bootVersion, 'zip')
+	}
+
+	@RequestMapping(value = ['/spring.tar.gz', 'spring.tgz'])
+	String springTgz() {
+		'redirect:' + metadata.env.createCliDistributionURl(metadata.defaults.bootVersion, 'tar.gz')
+	}
+
 	@RequestMapping('/pom')
 	@ResponseBody
 	ResponseEntity<byte[]> pom(ProjectRequest request) {
@@ -123,5 +133,7 @@ class MainController {
 		projectGenerator.cleanTempFiles(dir)
 		result
 	}
+
+
 
 }

@@ -62,6 +62,34 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 				.isGradleProject()
 	}
 
+	@Test
+	void downloadCli() {
+		assertSpringCliRedirect('/spring', 'zip')
+	}
+
+	@Test
+	void downloadCliAsZip() {
+		assertSpringCliRedirect('/spring.zip', 'zip')
+	}
+
+	@Test
+	void downloadCliAsTarGz() {
+		assertSpringCliRedirect('/spring.tar.gz', 'tar.gz')
+	}
+
+	@Test
+	void downloadCliAsTgz() {
+		assertSpringCliRedirect('/spring.tgz', 'tar.gz')
+	}
+
+	private void assertSpringCliRedirect(String context, String extension) {
+		ResponseEntity<?> entity = restTemplate.getForEntity(createUrl(context), ResponseEntity.class)
+		assertEquals HttpStatus.FOUND, entity.getStatusCode()
+		assertEquals new URI('https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.5.RELEASE' +
+				'/spring-boot-cli-1.1.5.RELEASE-bin.'+extension), entity.getHeaders().getLocation()
+
+	}
+
 	@Test // Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
 		String json = restTemplate.getForObject(createUrl('/'), String.class)

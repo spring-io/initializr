@@ -31,7 +31,7 @@ class ProjectGeneratorTests {
 	@Before
 	void setup() {
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').get()
+				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').validateAndGet()
 		projectGenerator.metadata = metadata
 	}
 
@@ -59,7 +59,7 @@ class ProjectGeneratorTests {
 		dependency.facets << 'web'
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
-				.addDependencyGroup('test', dependency).get()
+				.addDependencyGroup('test', dependency).validateAndGet()
 		projectGenerator.metadata = metadata
 
 		ProjectRequest request = createProjectRequest('thymeleaf')
@@ -78,7 +78,7 @@ class ProjectGeneratorTests {
 		dependency.facets << 'web'
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
-				.addDependencyGroup('test', dependency).get()
+				.addDependencyGroup('test', dependency).validateAndGet()
 		projectGenerator.metadata = metadata
 
 		ProjectRequest request = createProjectRequest('thymeleaf')

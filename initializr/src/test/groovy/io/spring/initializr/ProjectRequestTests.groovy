@@ -35,7 +35,7 @@ class ProjectRequestTests {
 	void resolve() {
 		ProjectRequest request = new ProjectRequest()
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('code', 'web', 'security', 'spring-data').get()
+				.addDependencyGroup('code', 'web', 'security', 'spring-data').validateAndGet()
 
 		request.style << 'web' << 'spring-data'
 		request.resolve(metadata)
@@ -47,7 +47,7 @@ class ProjectRequestTests {
 	void resolveFullMetadata() {
 		ProjectRequest request = new ProjectRequest()
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('code', createDependency('org.foo', 'acme', '1.2.0')).get()
+				.addDependencyGroup('code', createDependency('org.foo', 'acme', '1.2.0')).validateAndGet()
 		request.style << 'org.foo:acme'
 		request.resolve(metadata)
 		assertDependency(request.dependencies.get(0), 'org.foo', 'acme', '1.2.0')
@@ -57,7 +57,7 @@ class ProjectRequestTests {
 	void resolveUnknownSimpleIdAsSpringBootStarter() {
 		ProjectRequest request = new ProjectRequest()
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('code', 'org.foo:bar').get()
+				.addDependencyGroup('code', 'org.foo:bar').validateAndGet()
 
 		request.style << 'org.foo:bar' << 'foo-bar'
 		request.resolve(metadata)
@@ -69,7 +69,7 @@ class ProjectRequestTests {
 	void resolveUnknownDependency() {
 		ProjectRequest request = new ProjectRequest()
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
-				.addDependencyGroup('code', 'org.foo:bar').get()
+				.addDependencyGroup('code', 'org.foo:bar').validateAndGet()
 
 		request.style << 'org.foo:acme' // does not exist and
 

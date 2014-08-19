@@ -21,6 +21,8 @@ import javax.annotation.PostConstruct
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
@@ -33,6 +35,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * <li>Supported Java versions</li>
  * <li>Supported language</li>
  * <li>Supported Spring Boot versions</li>
+ * <li>Default settings used to generate the project</li>
+ * <li>Environment related settings</li>
  * </ul>
  *
  * @author Stephane Nicoll
@@ -40,6 +44,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  */
 @ConfigurationProperties(prefix = 'initializr', ignoreUnknownFields = false)
 class InitializrMetadata {
+
+	private static final Logger logger = LoggerFactory.getLogger(InitializrMetadata)
 
 	final List<DependencyGroup> dependencies = new ArrayList<DependencyGroup>()
 
@@ -54,6 +60,9 @@ class InitializrMetadata {
 	final List<BootVersion> bootVersions = new ArrayList<BootVersion>()
 
 	final Defaults defaults = new Defaults()
+
+	@JsonIgnore
+	final Env env = new Env()
 
 	@JsonIgnore
 	final Map<String, Dependency> indexedDependencies = new HashMap<String, Dependency>()
@@ -76,11 +85,6 @@ class InitializrMetadata {
 				request[key] = value
 			}
 		}
-		request.type = getDefault(types, request.type)
-		request.packaging = getDefault(packagings, request.packaging)
-		request.javaVersion = getDefault(javaVersions, request.javaVersion)
-		request.language = getDefault(languages, request.language)
-		request.bootVersion = getDefault(bootVersions, request.bootVersion)
 		request
 	}
 
@@ -98,6 +102,13 @@ class InitializrMetadata {
 				}
 			}
 		}
+		env.validate()
+
+		defaults.type = getDefault(types)
+		defaults.packaging = getDefault(packagings)
+		defaults.javaVersion = getDefault(javaVersions)
+		defaults.language = getDefault(languages)
+		defaults.bootVersion = getDefault(bootVersions)
 	}
 
 	private void indexDependency(String id, Dependency dependency) {
@@ -135,13 +146,14 @@ class InitializrMetadata {
 		}
 	}
 
-	static def getDefault(List elements, String defaultValue) {
+	static def getDefault(List elements) {
 		for (DefaultIdentifiableElement element : elements) {
 			if (element.default) {
 				return element.id
 			}
 		}
-		return defaultValue
+		logger.warn('No default found amongst' + elements)
+		return (elements.isEmpty() ? null : elements.get(0).id)
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -225,6 +237,11 @@ class InitializrMetadata {
 		String name = 'demo'
 		String description = 'Demo project for Spring Boot'
 		String packageName
+		String type
+		String packaging
+		String javaVersion
+		String language
+		String bootVersion
 
 		/**
 		 * Return the artifactId or the name of the project if none is set.
@@ -238,6 +255,28 @@ class InitializrMetadata {
 		 */
 		String getPackageName() {
 			packageName == null ? name.replace('-', '.') : packageName
+		}
+
+	}
+
+	/**
+	 * Defines additional environment settings
+	 */
+	static class Env {
+
+		String artifactRepository = 'https://repo.spring.io/release/'
+
+		/**
+		 * Create an URL suitable to download Spring Boot cli for the specified version and extension.
+		 */
+		String createCliDistributionURl(String version, String extension) {
+			artifactRepository + "org/springframework/boot/spring-boot-cli/$version/spring-boot-cli-$version-bin.$extension"
+		}
+
+		void validate() {
+			if (!artifactRepository.endsWith('/')) {
+				artifactRepository = artifactRepository + '/'
+			}
 		}
 
 	}
