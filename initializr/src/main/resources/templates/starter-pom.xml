@@ -18,10 +18,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<dependencies><% styles.each { %>
+	<dependencies><% dependencies.each { %>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter${it}</artifactId>
+			<groupId>${it.groupId}</groupId>
+			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+			<version>${it.version}</version><% } %>
 		</dependency><% } %><% if (language=='groovy') { %>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

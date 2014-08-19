@@ -34,6 +34,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadata get() {
+		metadata.validate()
 		metadata
 	}
 
@@ -41,11 +42,18 @@ class InitializrMetadataBuilder {
 		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
 		group.name = name
 		for (String id : ids) {
-			Map<String, Object> starter = new HashMap<>()
-			starter.put('name', id)
-			starter.put('value', id)
-			group.starters.add(starter)
+			InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+			dependency.id = id
+			group.content.add(dependency)
 		}
+		metadata.dependencies.add(group)
+		this
+	}
+
+	InitializrMetadataBuilder addDependencyGroup(String name, InitializrMetadata.Dependency... dependencies) {
+		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
+		group.name = name
+		group.content.addAll(dependencies)
 		metadata.dependencies.add(group)
 		this
 	}

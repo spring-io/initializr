@@ -43,10 +43,10 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void simpleTgzProject() {
-		downloadTgz('/starter.tgz?style=data-jpa').isJavaProject().isMavenProject()
+		downloadTgz('/starter.tgz?style=org.acme:bar').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
-				.hasSpringBootStarterDependency('data-jpa')
+				.hasDependency('org.acme', 'bar', '2.1.0')
 	}
 
 	@Test

@@ -39,8 +39,8 @@ repositories {
     providedRuntime
 }
 <% } %>
-dependencies {<% styles.each { %>
-    compile("org.springframework.boot:spring-boot-starter${it}")<% } %><% if (language=='groovy') { %>
+dependencies {<% dependencies.each { %>
+    compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
     compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>
     testCompile("org.springframework.boot:spring-boot-starter-test")

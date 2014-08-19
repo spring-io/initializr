@@ -16,6 +16,7 @@
 
 package io.spring.initializr.support
 
+import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.ProjectRequest
 import org.custommonkey.xmlunit.SimpleNamespaceContext
 import org.custommonkey.xmlunit.XMLUnit
@@ -36,7 +37,7 @@ class PomAssert {
 
 	final XpathEngine eng
 	final Document doc
-	final Map<String, Dependency> dependencies = new HashMap<String, Dependency>()
+	final Map<String, InitializrMetadata.Dependency> dependencies = new HashMap<String, InitializrMetadata.Dependency>()
 
 	PomAssert(String content) {
 		eng = XMLUnit.newXpathEngine()
@@ -170,7 +171,7 @@ class PomAssert {
 		for (int i = 0; i < nodes.length; i++) {
 			def item = nodes.item(i)
 			if (item instanceof Element) {
-				Dependency dependency = new Dependency()
+				InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
 				Element element = (Element) item
 				def groupId = element.getElementsByTagName('groupId')
 				if (groupId.length > 0) {
@@ -186,24 +187,14 @@ class PomAssert {
 				}
 				dependencies.put(dependency.generateId(), dependency)
 			}
-
 		}
 	}
 
 	private static String generateId(String groupId, String artifactId) {
-		groupId + ':' + artifactId
+		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		dependency.groupId = groupId
+		dependency.artifactId = artifactId
+		dependency.generateId()
 	}
-
-
-	private static class Dependency {
-		String groupId
-		String artifactId
-		String version
-
-		String generateId() {
-			generateId(groupId, artifactId)
-		}
-	}
-
 
 }

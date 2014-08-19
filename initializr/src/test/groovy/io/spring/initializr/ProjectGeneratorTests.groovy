@@ -50,19 +50,6 @@ class ProjectGeneratorTests {
 				.hasSnapshotRepository().hasSpringBootStarterDependency('web')
 	}
 
-	@Test
-	void mavenWarPomWithoutWebFacet() {
-		ProjectRequest request = createProjectRequest('data-jpa')
-		request.packaging = 'war'
-		generateMavenPom(request).hasStartClass('demo.Application')
-				.hasSpringBootStarterDependency('tomcat')
-				.hasSpringBootStarterDependency('data-jpa')
-				.hasSpringBootStarterDependency('web') // Added by web facet
-				.hasSpringBootStarterDependency('test')
-				.hasDependenciesCount(4)
-
-	}
-
 	PomAssert generateMavenPom(ProjectRequest request) {
 		String content = new String(projectGenerator.generateMavenPom(request))
 		return new PomAssert(content).validateProjectRequest(request)

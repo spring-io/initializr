@@ -110,10 +110,10 @@
                 <% dependencies.each { %>
                 <div class="form-group col-sm-6">
                 <h4>${it.name}</h4>
-                    <% it.starters.each { %>
+                    <% it.content.each { %>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="style" value="${it.value}">
+                            <input type="checkbox" name="style" value="${it.id}">
                             ${it.name}
                         </label>
                     </div><% } %>

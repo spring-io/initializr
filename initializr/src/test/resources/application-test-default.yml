@@ -6,13 +6,22 @@ info:
 initializr:
   dependencies:
     - name: Core
-      starters:
+      content:
         - name: Web
-          value: web
+          id: web
         - name: Security
-          value: security
+          id: security
         - name: Data JPA
-          value: data-jpa
+          id: data-jpa
+    - name: Other
+      content:
+        - name: Foo
+          groupId: org.acme
+          artifactId: foo
+          version: 1.3.5
+        - name: Bar
+          id: org.acme:bar
+          version: 2.1.0
   types:
     - name: Maven POM
       id: pom.xml

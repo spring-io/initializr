@@ -16,6 +16,9 @@
 
 package io.spring.initializr
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * A request to generate a project.
  *
@@ -24,6 +27,8 @@ package io.spring.initializr
  * @since 1.0
  */
 class ProjectRequest {
+
+	private static final Logger logger = LoggerFactory.getLogger(ProjectRequest.class)
 
 	def style = []
 
@@ -38,6 +43,37 @@ class ProjectRequest {
 	String language
 	String packageName
 	String javaVersion
+
+	def dependencies = []
+
+	/**
+	 * Resolve this instance against the specified {@link InitializrMetadata}
+	 */
+	void resolve(InitializrMetadata metadata) {
+		if (packaging == 'war' && !isWebStyle()) {
+			style << 'web'
+		}
+		if (style == null || style.size() == 0) {
+			style = []
+		}
+		if (!style.class.isArray() && !(style instanceof Collection)) {
+			style = [style]
+		}
+		style = style.collect { it == 'jpa' ? 'data-jpa' : it }
+		style.collect { it == '' ? '' : '-' + it }
+		dependencies = style.collect {
+			InitializrMetadata.Dependency dependency = metadata.getDependency(it)
+			if (dependency == null) {
+				if (it.contains(':')) {
+					throw new IllegalArgumentException('Unknown dependency ' + it + ' check project metadata')
+				}
+				logger.warn('No known dependency for style ' + it + ' assuming spring-boot-starter')
+				dependency = new InitializrMetadata.Dependency()
+				dependency.asSpringBootStarter(it)
+			}
+			dependency
+		}
+	}
 
 	boolean isWebStyle() {
 		style.any { webStyle(it) }

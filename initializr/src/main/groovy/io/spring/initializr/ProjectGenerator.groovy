@@ -123,26 +123,11 @@ class ProjectGenerator {
 
 	private Map initializeModel(ProjectRequest request) {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
-		if (request.packaging == 'war' && !request.isWebStyle()) {
-			request.style << 'web'
-		}
 		def model = [:]
+		request.resolve(metadata)
 		request.properties.each { model[it.key] = it.value }
-		model.styles = fixStyles(request.style)
 		model
 	}
-
-	private def fixStyles(def style) {
-		if (style == null || style.size() == 0) {
-			style = ['']
-		}
-		if (!style.class.isArray() && !(style instanceof Collection)) {
-			style = [style]
-		}
-		style = style.collect { it == 'jpa' ? 'data-jpa' : it }
-		style.collect { it == '' ? '' : '-' + it }
-	}
-
 
 	private byte[] doGenerateMavenPom(Map model) {
 		template 'starter-pom.xml', model
