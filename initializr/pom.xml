@@ -59,6 +59,10 @@
 		<dependency>
 			<groupId>org.skyscreamer</groupId>
 			<artifactId>jsonassert</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test-htmlunit</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -82,6 +86,11 @@
 				<groupId>org.skyscreamer</groupId>
 				<artifactId>jsonassert</artifactId>
 				<version>1.2.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test-htmlunit</artifactId>
+				<version>1.0.0.M2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -131,5 +140,22 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>springMilestone</id>
+			<repositories>
+				<repository>
+					<id>spring-milestones</id>
+					<name>Spring Milestones</name>
+					<url>http://repo.spring.io/milestone</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+
+	</profiles>
 
 </project>

@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web
 
+import io.spring.initializr.support.ProjectAssert
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
@@ -57,6 +58,42 @@ abstract class AbstractMainControllerIntegrationTests {
 		HttpHeaders headers = new HttpHeaders()
 		headers.setAccept([MediaType.TEXT_HTML])
 		restTemplate.exchange(createUrl('/'), HttpMethod.GET, new HttpEntity<Void>(headers), String).body
+	}
+
+	/**
+	 * Return a {@link ProjectAssert} for the following archive content.
+	 */
+	ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
+		File archiveFile = writeArchive(content)
+
+		def project = folder.newFolder()
+		switch (archiveType) {
+			case ArchiveType.ZIP:
+				new AntBuilder().unzip(dest: project, src: archiveFile)
+				break
+			case ArchiveType.TGZ:
+				new AntBuilder().untar(dest: project, src: archiveFile, compression: 'gzip')
+				break
+		}
+		new ProjectAssert(project)
+	}
+
+	protected File writeArchive(byte[] body) {
+		def archiveFile = folder.newFile()
+		def stream = new FileOutputStream(archiveFile)
+		try {
+			stream.write(body)
+		} finally {
+			stream.close()
+		}
+		archiveFile
+	}
+
+
+	enum ArchiveType {
+		ZIP,
+
+		TGZ
 	}
 
 	@EnableAutoConfiguration

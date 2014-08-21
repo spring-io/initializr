@@ -40,7 +40,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void simpleZipProject() {
-		downloadZip('/starter.zip?style=web&style=jpa').isJavaProject().isMavenProject()
+		download('/starter.zip?style=web&style=jpa', ArchiveType.ZIP).isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert()
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
@@ -50,7 +50,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void simpleTgzProject() {
-		downloadTgz('/starter.tgz?style=org.acme:bar').isJavaProject().isMavenProject()
+		download('/starter.tgz?style=org.acme:bar', ArchiveType.TGZ).isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
 				.hasDependency('org.acme', 'bar', '2.1.0')
@@ -58,8 +58,8 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void gradleWarProject() {
-		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip').isJavaWarProject()
-				.isGradleProject()
+		download('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip', ArchiveType.ZIP)
+				.isJavaWarProject().isGradleProject()
 	}
 
 	@Test
@@ -167,35 +167,10 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 	}
 
 
-	private ProjectAssert downloadZip(String context) {
+	private ProjectAssert download(String context, ArchiveType archiveType) {
 		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
-		File zipFile = writeArchive(body)
-
-		def project = folder.newFolder()
-		new AntBuilder().unzip(dest: project, src: zipFile)
-		new ProjectAssert(project)
+		projectAssert(body, archiveType)
 	}
-
-	private ProjectAssert downloadTgz(String context) {
-		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
-		File tgzFile = writeArchive(body)
-
-		def project = folder.newFolder()
-		new AntBuilder().untar(dest: project, src: tgzFile, compression: 'gzip')
-		new ProjectAssert(project)
-	}
-
-	private File writeArchive(byte[] body) {
-		def archiveFile = folder.newFile()
-		def stream = new FileOutputStream(archiveFile)
-		try {
-			stream.write(body)
-		} finally {
-			stream.close()
-		}
-		archiveFile
-	}
-
 
 	private static JSONObject readJson(String version) {
 		def resource = new ClassPathResource('metadata/test-default-' + version + '.json')
