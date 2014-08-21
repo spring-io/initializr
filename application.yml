@@ -12,6 +12,8 @@ projects:
       value: web
     - name: Websocket
       value: websocket
+    - name: WS
+      value: ws
     - name: Freemarker
       value: freemarker
     - name: Velocity
@@ -32,6 +34,8 @@ projects:
       value: integration
     - name: AMQP
       value: amqp
+    - name: JMS
+      value: hornetq
     - name: AOP
       value: aop
     - name: JPA
@@ -44,6 +48,8 @@ projects:
       value: data-gemfire
     - name: Solr
       value: data-solr
+    - name: Elasticsearch
+      value: data-elasticsearch
     - name: Rest Repositories
       value: data-rest
     - name: Remote Shell
