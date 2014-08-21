@@ -51,14 +51,14 @@ class MainController extends AbstractInitializrController {
 	@ModelAttribute
 	ProjectRequest projectRequest() {
 		ProjectRequest request = new ProjectRequest()
-		metadata.initializeProjectRequest(request)
+		metadataProvider.get().initializeProjectRequest(request)
 		request
 	}
 
 	@RequestMapping(value = "/")
 	@ResponseBody
 	InitializrMetadata metadata() {
-		metadata
+		metadataProvider.get()
 	}
 
 	@RequestMapping(value = '/', produces = 'text/html')
@@ -69,12 +69,12 @@ class MainController extends AbstractInitializrController {
 
 	@RequestMapping('/spring')
 	String spring() {
-		'redirect:' + metadata.env.createCliDistributionURl(metadata.defaults.bootVersion, 'zip')
+		'redirect:' + metadataProvider.get().createCliDistributionURl('zip')
 	}
 
 	@RequestMapping(value = ['/spring.tar.gz', 'spring.tgz'])
 	String springTgz() {
-		'redirect:' + metadata.env.createCliDistributionURl(metadata.defaults.bootVersion, 'tar.gz')
+		'redirect:' + metadataProvider.get().createCliDistributionURl('tar.gz')
 	}
 
 	@RequestMapping('/pom')
@@ -126,7 +126,5 @@ class MainController extends AbstractInitializrController {
 		projectGenerator.cleanTempFiles(dir)
 		result
 	}
-
-
 
 }

@@ -16,6 +16,9 @@
 
 package io.spring.initializr.web
 
+import io.spring.initializr.DefaultInitializrMetadataProvider
+import io.spring.initializr.InitializrMetadata
+import io.spring.initializr.InitializrMetadataProvider
 import io.spring.initializr.support.ProjectAssert
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -25,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -108,5 +112,17 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	}
 
 	@EnableAutoConfiguration
-	static class Config {}
+	static class Config {
+
+		@Bean
+		InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
+			new DefaultInitializrMetadataProvider(metadata) {
+				@Override
+				protected List<InitializrMetadata.BootVersion> fetchBootVersions() {
+					return null; // Disable metadata fetching from spring.io
+				}
+			}
+		}
+
+	}
 }

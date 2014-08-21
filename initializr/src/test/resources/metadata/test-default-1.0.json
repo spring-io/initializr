@@ -99,8 +99,8 @@
         "default": false
     },
     {
-        "name": "1.1.5",
-        "id": "1.1.5.RELEASE",
+        "name": "1.1.4",
+        "id": "1.1.4.RELEASE",
         "default": true
     },
     {
@@ -119,6 +119,6 @@
     "packaging": "jar",
     "javaVersion": "1.7",
     "language": "java",
-    "bootVersion": "1.1.5.RELEASE"
+    "bootVersion": "1.1.4.RELEASE"
 }
 }

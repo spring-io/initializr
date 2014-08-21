@@ -85,8 +85,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	private void assertSpringCliRedirect(String context, String extension) {
 		ResponseEntity<?> entity = restTemplate.getForEntity(createUrl(context), ResponseEntity.class)
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
-		assertEquals new URI('https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.5.RELEASE' +
-				'/spring-boot-cli-1.1.5.RELEASE-bin.'+extension), entity.getHeaders().getLocation()
+		assertEquals new URI('https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE' +
+				'/spring-boot-cli-1.1.4.RELEASE-bin.'+extension), entity.getHeaders().getLocation()
 
 	}
 
@@ -136,7 +136,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void infoHasExternalProperties() {
 		String body = restTemplate.getForObject(createUrl('/info'), String)
 		assertTrue('Wrong body:\n' + body, body.contains('"spring-boot"'))
-		assertTrue('Wrong body:\n' + body, body.contains('"version":"1.1.5.RELEASE"'))
+		assertTrue('Wrong body:\n' + body, body.contains('"version":"1.1.4.RELEASE"'))
 	}
 
 	@Test

@@ -14,32 +14,21 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web
-
-import io.spring.initializr.InitializrMetadataProvider
-
-import org.springframework.beans.factory.annotation.Autowired
-
-import static io.spring.initializr.support.GroovyTemplate.template
+package io.spring.initializr
 
 /**
- * A base controller that uses a {@link InitializrMetadataProvider}
+ * Provide the {@link InitializrMetadata} to use.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-abstract class AbstractInitializrController {
-
-	@Autowired
-	protected InitializrMetadataProvider metadataProvider
+interface InitializrMetadataProvider {
 
 	/**
-	 * Render the home page with the specified template.
+	 * Return the metadata to use. Rather than keeping a handle to
+	 * a particular instance, implementations may decide to refresh
+	 * or recompute the metadata if necessary.
 	 */
-	protected String renderHome(String templatePath) {
-		def model = [:]
-		metadataProvider.get().properties.each { model[it.key] = it.value }
-		template templatePath, model
-	}
+	InitializrMetadata get()
 
 }

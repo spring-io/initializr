@@ -76,6 +76,14 @@ class InitializrMetadata {
 	}
 
 	/**
+	 * Create an URL suitable to download Spring Boot cli for the specified version and extension.
+	 */
+	String createCliDistributionURl(String extension) {
+		env.artifactRepository + "org/springframework/boot/spring-boot-cli/" +
+				"$defaults.bootVersion/spring-boot-cli-$defaults.bootVersion-bin.$extension"
+	}
+
+	/**
 	 * Initializes a {@link ProjectRequest} instance with the defaults
 	 * defined in this instance.
 	 */
@@ -86,6 +94,19 @@ class InitializrMetadata {
 			}
 		}
 		request
+	}
+
+	/**
+	 * Merge this instance with the specified content.
+	 */
+	void merge(List<BootVersion> bootVersions) {
+		if (bootVersions != null) {
+			synchronized (this.bootVersions) {
+				this.bootVersions.clear()
+				this.bootVersions.addAll(bootVersions)
+			}
+		}
+		refreshDefaults()
 	}
 
 	/**
@@ -104,6 +125,10 @@ class InitializrMetadata {
 		}
 		env.validate()
 
+		refreshDefaults()
+	}
+
+	private void refreshDefaults() {
 		defaults.type = getDefault(types)
 		defaults.packaging = getDefault(packagings)
 		defaults.javaVersion = getDefault(javaVersions)
@@ -266,12 +291,7 @@ class InitializrMetadata {
 
 		String artifactRepository = 'https://repo.spring.io/release/'
 
-		/**
-		 * Create an URL suitable to download Spring Boot cli for the specified version and extension.
-		 */
-		String createCliDistributionURl(String version, String extension) {
-			artifactRepository + "org/springframework/boot/spring-boot-cli/$version/spring-boot-cli-$version-bin.$extension"
-		}
+		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
 
 		void validate() {
 			if (!artifactRepository.endsWith('/')) {

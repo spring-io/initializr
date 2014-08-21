@@ -1,6 +1,6 @@
 info:
   spring-boot:
-    version: 1.1.5.RELEASE
+    version: 1.1.4.RELEASE
 
 
 initializr:
@@ -68,8 +68,8 @@ initializr:
     - name : Latest SNAPSHOT
       id: 1.2.0.BUILD-SNAPSHOT
       default: false
-    - name: 1.1.5
-      id: 1.1.5.RELEASE
+    - name: 1.1.4
+      id: 1.1.4.RELEASE
       default: true
     - name: 1.0.2
       id: 1.0.2.RELEASE
