@@ -30,12 +30,16 @@ initializr:
           id: data-gemfire
         - name: Solr
           id: data-solr
+        - name: Elasticsearch
+          id: data-elasticsearch
     - name: I/O
       content:
         - name: Batch
           id: batch
         - name: Integration
           id: integration
+        - name: JMS
+          id: hornetq
         - name: AMQP
           id: amqp
     - name: Web
@@ -46,6 +50,8 @@ initializr:
             - web
         - name: Websocket
           id: websocket
+        - name: WS
+          id: ws
         - name: Rest Repositories
           id: data-rest
         - name: Mobile
