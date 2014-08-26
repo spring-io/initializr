@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 
-import static io.spring.initializr.support.GroovyTemplate.template
-
 /**
  * The main initializr controller provides access to the configured
  * metadata and serves as a central endpoint to generate projects
@@ -43,12 +41,9 @@ import static io.spring.initializr.support.GroovyTemplate.template
  * @since 1.0
  */
 @Controller
-class MainController {
+class MainController extends AbstractInitializrController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class)
-
-	@Autowired
-	private InitializrMetadata metadata
 
 	@Autowired
 	private ProjectGenerator projectGenerator
@@ -69,9 +64,7 @@ class MainController {
 	@RequestMapping(value = '/', produces = 'text/html')
 	@ResponseBody
 	String home() {
-		def model = [:]
-		metadata.properties.each { model[it.key] = it.value }
-		template 'home.html', model
+		renderHome('home.html')
 	}
 
 	@RequestMapping('/spring')

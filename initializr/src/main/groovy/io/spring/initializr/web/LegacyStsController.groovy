@@ -16,25 +16,24 @@
 
 package io.spring.initializr.web
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.spring.initializr.web.support.DefaultHomePage
-import io.spring.initializr.web.support.HomePage
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 
 /**
- * Form based tests for the "regular" home page.
+ * A controller used to serve the legacy home page used by STS.
  *
  * @author Stephane Nicoll
+ * @since 1.0
  */
-class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
+@Controller
+@Deprecated
+class LegacyStsController extends AbstractInitializrController {
 
-	@Override
-	protected String homeContext() {
-		'/'
-	}
-
-	@Override
-	protected HomePage createHomePage(HtmlPage home) {
-		new DefaultHomePage(home)
+	@RequestMapping(value = '/sts', produces = 'text/html')
+	@ResponseBody
+	String stsHome() {
+		renderHome('sts-home.html')
 	}
 
 }

@@ -14,27 +14,33 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web
+package io.spring.initializr.web.support
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.spring.initializr.web.support.DefaultHomePage
-import io.spring.initializr.web.support.HomePage
+import com.gargoylesoftware.htmlunit.html.HtmlSelect
 
 /**
- * Form based tests for the "regular" home page.
+ * The default home page.
  *
  * @author Stephane Nicoll
  */
-class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
+class DefaultHomePage extends HomePage {
 
-	@Override
-	protected String homeContext() {
-		'/'
+	DefaultHomePage(HtmlPage page) {
+		super(page)
 	}
 
 	@Override
-	protected HomePage createHomePage(HtmlPage home) {
-		new DefaultHomePage(home)
+	protected void setup() {
+		super.setup()
+		select('type', type)
+		select('packaging', packaging)
 	}
 
+	private void select(String selectId, String value) {
+		if (value != null) {
+			HtmlSelect input = page.getHtmlElementById(selectId)
+			input.setSelectedAttribute(value, true)
+		}
+	}
 }

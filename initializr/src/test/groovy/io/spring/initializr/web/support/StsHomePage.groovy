@@ -14,27 +14,33 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web
+package io.spring.initializr.web.support
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.spring.initializr.web.support.DefaultHomePage
-import io.spring.initializr.web.support.HomePage
 
 /**
- * Form based tests for the "regular" home page.
+ * The old home page, still used by the STS wizard.
  *
  * @author Stephane Nicoll
  */
-class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
+class StsHomePage extends HomePage {
 
-	@Override
-	protected String homeContext() {
-		'/'
+	StsHomePage(HtmlPage page) {
+		super(page)
 	}
 
 	@Override
-	protected HomePage createHomePage(HtmlPage home) {
-		new DefaultHomePage(home)
+	protected void setup() {
+		super.setup()
+		select('type', type)
+		select('packaging', packaging)
 	}
 
+	private void select(String selectId, String value) {
+		if (value != null) {
+			page.getElementsByIdAndOrName(selectId).each {
+				it.checked = value.equals(it.defaultValue)
+			}
+		}
+	}
 }

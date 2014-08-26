@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals
  * @author Stephane Nicoll
  */
 @ActiveProfiles(['test-default', 'test-custom-env'])
-class MainControllerEnvIntegrationTests extends AbstractMainControllerIntegrationTests {
+class MainControllerEnvIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void downloadCliWithCustomRepository() {

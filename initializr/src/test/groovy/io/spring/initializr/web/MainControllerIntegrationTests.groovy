@@ -36,11 +36,11 @@ import static org.junit.Assert.*
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTests {
+class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void simpleZipProject() {
-		download('/starter.zip?style=web&style=jpa', ArchiveType.ZIP).isJavaProject().isMavenProject()
+		downloadZip('/starter.zip?style=web&style=jpa').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert()
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
@@ -50,7 +50,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void simpleTgzProject() {
-		download('/starter.tgz?style=org.acme:bar', ArchiveType.TGZ).isJavaProject().isMavenProject()
+		downloadTgz('/starter.tgz?style=org.acme:bar').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
 				.hasDependency('org.acme', 'bar', '2.1.0')
@@ -58,7 +58,7 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 
 	@Test
 	void gradleWarProject() {
-		download('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip', ArchiveType.ZIP)
+		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip')
 				.isJavaWarProject().isGradleProject()
 	}
 
@@ -167,9 +167,14 @@ class MainControllerIntegrationTests extends AbstractMainControllerIntegrationTe
 	}
 
 
-	private ProjectAssert download(String context, ArchiveType archiveType) {
+	private ProjectAssert downloadZip(String context) {
 		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
-		projectAssert(body, archiveType)
+		zipProjectAssert(body)
+	}
+
+	private ProjectAssert downloadTgz(String context) {
+		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
+		tgzProjectAssert(body)
 	}
 
 	private static JSONObject readJson(String version) {

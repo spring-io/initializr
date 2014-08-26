@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue
  * @author Stephane Nicoll
  */
 @ActiveProfiles(['test-default', 'test-custom-defaults'])
-class MainControllerDefaultsIntegrationTests extends AbstractMainControllerIntegrationTests {
+class MainControllerDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization
 

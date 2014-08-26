@@ -25,7 +25,7 @@ import io.spring.initializr.support.ProjectAssert
  *
  * @author Stephane Nicoll
  */
-class HomePage {
+abstract class HomePage {
 
 	String groupId
 	String artifactId
@@ -36,9 +36,9 @@ class HomePage {
 	String packaging
 	List<String> dependencies = []
 
-	private final HtmlPage page
+	protected final HtmlPage page
 
-	HomePage(HtmlPage page) {
+	protected HomePage(HtmlPage page) {
 		this.page = page
 	}
 
@@ -58,32 +58,23 @@ class HomePage {
 	 * Setup the {@link HtmlPage} with the customization of this
 	 * instance. Only applied when a non-null value is set
 	 */
-	private void setup() {
+	protected void setup() {
 		setTextValue('groupId', groupId)
 		setTextValue('artifactId', artifactId)
 		setTextValue('name', name)
 		setTextValue('description', description)
 		setTextValue('packageName', packageName)
-		select('type', type)
-		select('packaging', packaging)
 		selectDependencies(dependencies)
 	}
 
-	private void setTextValue(String elementId, String value) {
+	protected void setTextValue(String elementId, String value) {
 		if (value != null) {
 			HtmlTextInput input = page.getHtmlElementById(elementId)
 			input.setValueAttribute(value)
 		}
 	}
 
-	private void select(String selectId, String value) {
-		if (value != null) {
-			HtmlSelect input = page.getHtmlElementById(selectId)
-			input.setSelectedAttribute(value, true)
-		}
-	}
-
-	private void selectDependencies(List<String> dependencies) {
+	protected void selectDependencies(List<String> dependencies) {
 		List<DomElement> styles = page.getElementsByName("style")
 		Map<String, HtmlCheckBoxInput> allStyles = new HashMap<>()
 		for (HtmlCheckBoxInput checkBoxInput : styles) {

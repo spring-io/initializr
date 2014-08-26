@@ -40,7 +40,7 @@ import org.springframework.web.client.RestTemplate
 @SpringApplicationConfiguration(classes = Config.class)
 @WebAppConfiguration
 @IntegrationTest('server.port=0')
-abstract class AbstractMainControllerIntegrationTests {
+abstract class AbstractInitializrControllerIntegrationTests {
 
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder()
@@ -63,6 +63,17 @@ abstract class AbstractMainControllerIntegrationTests {
 	/**
 	 * Return a {@link ProjectAssert} for the following archive content.
 	 */
+	protected ProjectAssert zipProjectAssert(byte[] content) {
+		projectAssert(content, ArchiveType.ZIP)
+	}
+
+	/**
+	 * Return a {@link ProjectAssert} for the following TGZ archive.
+	 */
+	protected ProjectAssert tgzProjectAssert(byte[] content) {
+		projectAssert(content, ArchiveType.TGZ)
+	}
+
 	ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
 		File archiveFile = writeArchive(content)
 
@@ -90,7 +101,7 @@ abstract class AbstractMainControllerIntegrationTests {
 	}
 
 
-	enum ArchiveType {
+	private enum ArchiveType {
 		ZIP,
 
 		TGZ

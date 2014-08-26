@@ -16,25 +16,30 @@
 
 package io.spring.initializr.web
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.spring.initializr.web.support.DefaultHomePage
-import io.spring.initializr.web.support.HomePage
+import io.spring.initializr.InitializrMetadata
+
+import org.springframework.beans.factory.annotation.Autowired
+
+import static io.spring.initializr.support.GroovyTemplate.template
 
 /**
- * Form based tests for the "regular" home page.
+ * A base controller that uses {@link InitializrMetadata}
  *
  * @author Stephane Nicoll
+ * @since 1.0
  */
-class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
+abstract class AbstractInitializrController {
 
-	@Override
-	protected String homeContext() {
-		'/'
-	}
+	@Autowired
+	protected InitializrMetadata metadata
 
-	@Override
-	protected HomePage createHomePage(HtmlPage home) {
-		new DefaultHomePage(home)
+	/**
+	 * Render the home page with the specified template.
+	 */
+	protected String renderHome(String templatePath) {
+		def model = [:]
+		metadata.properties.each { model[it.key] = it.value }
+		template templatePath, model
 	}
 
 }
