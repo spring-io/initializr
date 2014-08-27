@@ -78,6 +78,13 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void noDependencyAddsRootStarter() {
+		ProjectRequest request = createProjectRequest()
+		generateProject(request).isJavaProject().isMavenProject().pomAssert()
+				.hasSpringBootStarterRootDependency()
+	}
+
+	@Test
 	void mavenPomWithBootSnapshot() {
 		ProjectRequest request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'

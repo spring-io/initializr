@@ -66,7 +66,8 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		HomePage page = home()
 		ProjectAssert projectAssert = zipProjectAssert(page.generateProject())
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(false)
-				.pomAssert().hasDependenciesCount(1).hasSpringBootStarterDependency('test')
+				.pomAssert().hasDependenciesCount(2)
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
 	}
 
 	@Test

@@ -88,6 +88,21 @@ class ProjectRequest {
 			dependencies << metadata.getDependency('web')
 			facets << 'web'
 		}
+		if (dependencies.isEmpty()) {
+			addDefaultDependency()
+		}
+	}
+
+	/**
+	 * Add a default dependency if the project does not define any
+	 * dependency
+	 */
+	protected addDefaultDependency() {
+		InitializrMetadata.Dependency root = new InitializrMetadata.Dependency()
+		root.id = 'root_starter'
+		root.asSpringBootStarter('')
+		dependencies << root
+
 	}
 
 	/**

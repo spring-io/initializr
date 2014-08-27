@@ -25,6 +25,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.util.StringUtils
 
 /**
  * The metadata using by the initializr, that is:
@@ -218,10 +219,11 @@ class InitializrMetadata {
 
 		/**
 		 * Define this dependency as a standard spring boot starter with the specified name
+		 * <p>If no name is specified, the root 'spring-boot-starter' is assumed.
 		 */
 		def asSpringBootStarter(String name) {
 			groupId = 'org.springframework.boot'
-			artifactId = 'spring-boot-starter-' + name
+			artifactId = StringUtils.hasText(name) ? 'spring-boot-starter-' + name : 'spring-boot-starter'
 		}
 
 		/**

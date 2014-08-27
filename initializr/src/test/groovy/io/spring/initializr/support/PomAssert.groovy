@@ -113,6 +113,10 @@ class PomAssert {
 		hasDependency('org.springframework.boot', 'spring-boot-starter-' + dependency)
 	}
 
+	PomAssert hasSpringBootStarterRootDependency() {
+		hasDependency('org.springframework.boot', 'spring-boot-starter')
+	}
+
 	PomAssert hasDependency(String groupId, String artifactId) {
 		hasDependency(groupId, artifactId, null)
 	}

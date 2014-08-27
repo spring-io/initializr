@@ -58,6 +58,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
+	void noDependencyProject() {
+		downloadZip('/starter.zip').isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(false).pomAssert()
+				.hasDependenciesCount(2)
+				.hasSpringBootStarterRootDependency() // the root dep is added if none is specified
+				.hasSpringBootStarterDependency('test')
+	}
+
+	@Test
 	void gradleWarProject() {
 		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip')
 				.isJavaWarProject().isGradleProject()
