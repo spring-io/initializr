@@ -16,15 +16,22 @@
 
 package io.spring.initializr
 
+import io.spring.initializr.support.GradleBuildAssert
 import io.spring.initializr.support.InitializrMetadataBuilder
 import io.spring.initializr.support.PomAssert
+import io.spring.initializr.support.ProjectAssert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 /**
  * @author Stephane Nicoll
  */
 class ProjectGeneratorTests {
+
+	@Rule
+	public final TemporaryFolder folder = new TemporaryFolder()
 
 	private final ProjectGenerator projectGenerator = new ProjectGenerator()
 
@@ -33,6 +40,7 @@ class ProjectGeneratorTests {
 		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').validateAndGet()
 		projectGenerator.metadata = metadata
+		projectGenerator.tmpdir = folder.newFolder().getAbsolutePath()
 	}
 
 	@Test
@@ -40,6 +48,19 @@ class ProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest('web')
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasNoRepository().hasSpringBootStarterDependency('web')
+	}
+
+	@Test
+	void defaultGradleBuild() {
+		ProjectRequest request = createProjectRequest('web')
+		generateGradleBuild(request)
+	}
+
+	@Test
+	void defaultProject() {
+		ProjectRequest request = createProjectRequest('web')
+		generateProject(request).isJavaProject().isMavenProject().pomAssert()
+				.hasStartClass('demo.Application').hasNoRepository().hasSpringBootStarterDependency('web')
 	}
 
 	@Test
@@ -106,7 +127,17 @@ class ProjectGeneratorTests {
 
 	PomAssert generateMavenPom(ProjectRequest request) {
 		String content = new String(projectGenerator.generateMavenPom(request))
-		return new PomAssert(content).validateProjectRequest(request)
+		new PomAssert(content).validateProjectRequest(request)
+	}
+
+	GradleBuildAssert generateGradleBuild(ProjectRequest request) {
+		String content = new String(projectGenerator.generateGradleBuild(request))
+		new GradleBuildAssert(content).validateProjectRequest(request)
+	}
+
+	ProjectAssert generateProject(ProjectRequest request) {
+		File dir = projectGenerator.generateProjectStructure(request)
+		new ProjectAssert(dir)
 	}
 
 	ProjectRequest createProjectRequest(String... styles) {

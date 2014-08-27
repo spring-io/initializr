@@ -23,7 +23,7 @@ apply plugin: 'war'
 
 <% if (packaging=='war') {  %>war<% } else { %>jar<% } %> {
     baseName = '${artifactId}'
-    version =  '${version}'
+    version = '${version}'
 }
 sourceCompatibility = ${javaVersion}
 targetCompatibility = ${javaVersion}
