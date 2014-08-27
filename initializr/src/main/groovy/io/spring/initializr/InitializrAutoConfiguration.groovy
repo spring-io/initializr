@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit
 import com.google.common.cache.CacheBuilder
 import io.spring.initializr.web.MainController
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.actuate.metrics.CounterService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.CacheManager
@@ -32,6 +34,9 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(InitializrMetadata)
 class InitializrAutoConfiguration {
 
+	@Autowired
+	private CounterService counterService
+
 	@Bean
 	@ConditionalOnMissingBean(MainController)
 	MainController initializrMainController() {
@@ -41,13 +46,20 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(ProjectGenerator)
 	ProjectGenerator projectGenerator() {
-		new ProjectGenerator()
+		ProjectGenerator generator = new ProjectGenerator()
+		generator.listeners << metricsListener()
+		generator
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider)
 	InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
 		return new DefaultInitializrMetadataProvider(metadata)
+	}
+
+	@Bean
+	ProjectGenerationMetricsListener metricsListener() {
+		new ProjectGenerationMetricsListener(counterService)
 	}
 
 	@Bean

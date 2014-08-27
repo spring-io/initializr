@@ -37,6 +37,8 @@ class ProjectGenerator {
 	@Value('${TMPDIR:.}')
 	String tmpdir
 
+	final Set<ProjectGenerationListener> listeners = new LinkedHashSet<>()
+
 	private transient Map<String, List<File>> temporaryFiles = new HashMap<>()
 
 	/**
@@ -44,7 +46,9 @@ class ProjectGenerator {
 	 */
 	byte[] generateMavenPom(ProjectRequest request) {
 		Map model = initializeModel(request)
-		doGenerateMavenPom(model)
+		byte[] content = doGenerateMavenPom(model)
+		invokeListeners(request)
+		content
 	}
 
 	/**
@@ -52,7 +56,9 @@ class ProjectGenerator {
 	 */
 	byte[] generateGradleBuild(ProjectRequest request) {
 		Map model = initializeModel(request)
-		doGenerateGradleBuild(model)
+		byte[] content = doGenerateGradleBuild(model)
+		invokeListeners(request)
+		content
 	}
 
 	/**
@@ -104,7 +110,7 @@ class ProjectGenerator {
 			new File(dir, 'src/main/resources/templates').mkdirs()
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
-
+		invokeListeners(request)
 		dir
 
 	}
@@ -134,6 +140,12 @@ class ProjectGenerator {
 					file.delete()
 				}
 			}
+		}
+	}
+
+	private void invokeListeners(ProjectRequest request) {
+		listeners.each {
+			it.onGeneratedProject(request)
 		}
 	}
 

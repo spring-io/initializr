@@ -25,6 +25,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import static org.mockito.Mockito.*
+
 /**
  * @author Stephane Nicoll
  */
@@ -45,22 +47,34 @@ class ProjectGeneratorTests {
 
 	@Test
 	void defaultMavenPom() {
+		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		projectGenerator.listeners << listener
+
 		ProjectRequest request = createProjectRequest('web')
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasNoRepository().hasSpringBootStarterDependency('web')
+		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
 	@Test
 	void defaultGradleBuild() {
+		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		projectGenerator.listeners << listener
+
 		ProjectRequest request = createProjectRequest('web')
 		generateGradleBuild(request)
+		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
 	@Test
 	void defaultProject() {
+		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		projectGenerator.listeners << listener
+
 		ProjectRequest request = createProjectRequest('web')
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
 				.hasStartClass('demo.Application').hasNoRepository().hasSpringBootStarterDependency('web')
+		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
 	@Test

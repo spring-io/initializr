@@ -18,6 +18,7 @@ package io.spring.initializr.web
 
 import java.nio.charset.Charset
 
+import groovy.json.JsonSlurper
 import io.spring.initializr.support.ProjectAssert
 import org.json.JSONObject
 import org.junit.Test
@@ -102,6 +103,36 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		String json = restTemplate.getForObject(createUrl('/'), String.class)
 		JSONObject expected = readJson('1.0')
 		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
+	}
+
+	@Test
+	void metricsAvailableByDefault() {
+		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa')
+		def result = metricsEndpoint()
+		Long requests = result['counter.initializr.requests']
+		Long packaging = result['counter.initializr.packaging.jar']
+		Long javaVersion = result['counter.initializr.java_version.1_8']
+		Long webDependency = result['counter.initializr.dependency.web']
+		Long jpaDependency = result['counter.initializr.dependency.jpa']
+
+		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web') // No jpa dep this time
+
+		def updatedResult = metricsEndpoint()
+		assertEquals 'Number of request should have increased',
+				requests + 1, updatedResult['counter.initializr.requests']
+		assertEquals 'jar packaging metric should have increased',
+				packaging + 1, updatedResult['counter.initializr.packaging.jar']
+		assertEquals 'java version metric should have increased',
+				javaVersion + 1, updatedResult['counter.initializr.java_version.1_8']
+		assertEquals 'web dependency metric should have increased',
+				webDependency + 1, updatedResult['counter.initializr.dependency.web']
+		assertEquals 'jpa dependency metric should not have increased',
+				jpaDependency, updatedResult['counter.initializr.dependency.jpa']
+	}
+
+	private def metricsEndpoint() {
+		JsonSlurper slurper = new JsonSlurper()
+		slurper.parseText(restTemplate.getForObject(createUrl('/metrics'), String))
 	}
 
 	// Existing tests for backward compatibility
