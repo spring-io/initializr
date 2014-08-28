@@ -137,6 +137,3 @@ initializr:
       id: 1.0.2.RELEASE
       default: false
 
-security:
-  basic:
-      enabled: false
