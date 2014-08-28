@@ -73,7 +73,7 @@ class InitializrMetadata {
 	 * no such dependency exists.
 	 */
 	Dependency getDependency(String id) {
-		return indexedDependencies.get(id)
+		indexedDependencies.get(id)
 	}
 
 	/**
@@ -214,7 +214,7 @@ class InitializrMetadata {
 		 * and {@code artifactId}.
 		 */
 		boolean hasCoordinates() {
-			return groupId != null && artifactId != null
+			groupId != null && artifactId != null
 		}
 
 		/**
@@ -313,7 +313,7 @@ class InitializrMetadata {
 		}
 
 		boolean isDefault() {
-			return this.defaultValue
+			this.defaultValue
 		}
 	}
 

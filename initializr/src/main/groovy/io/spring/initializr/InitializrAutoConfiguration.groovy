@@ -54,7 +54,7 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider)
 	InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
-		return new DefaultInitializrMetadataProvider(metadata)
+		new DefaultInitializrMetadataProvider(metadata)
 	}
 
 	@Bean
@@ -66,18 +66,17 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean(CacheManager)
 	CacheManager cacheManager() {
 		SimpleCacheManager cacheManager = new SimpleCacheManager()
-		cacheManager.setCaches(Arrays.asList(
-				createConcurrentMapCache(600, 'initializr')
-		))
+		cacheManager.caches = Arrays.asList(
+				createConcurrentMapCache(600, 'initializr'))
 		cacheManager
 	}
 
 	private static ConcurrentMapCache createConcurrentMapCache(Long timeToLive, String name) {
 		CacheBuilder<Object, Object> cacheBuilder =
-				CacheBuilder.newBuilder().expireAfterWrite(timeToLive, TimeUnit.SECONDS);
+				CacheBuilder.newBuilder().expireAfterWrite(timeToLive, TimeUnit.SECONDS)
 
-		ConcurrentMap<Object, Object> map = cacheBuilder.build().asMap();
-		new ConcurrentMapCache(name, map, false);
+		ConcurrentMap<Object, Object> map = cacheBuilder.build().asMap()
+		new ConcurrentMapCache(name, map, false)
 	}
 
 }

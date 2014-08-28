@@ -86,7 +86,7 @@ abstract class HomePage {
 				checkBox.checked = true
 			} else {
 				throw new IllegalArgumentException('No dependency with name '
-						+ dependency + ' was found amongst ' + allStyles.keySet());
+						+ dependency + ' was found amongst ' + allStyles.keySet())
 			}
 		}
 	}

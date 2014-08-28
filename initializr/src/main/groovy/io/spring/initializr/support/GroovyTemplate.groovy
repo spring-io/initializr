@@ -32,7 +32,7 @@ class GroovyTemplate {
 
 	static String template(String name, Map<String, ?> model) throws IOException,
 			CompilationFailedException, ClassNotFoundException {
-		return template(new GStringTemplateEngine(), name, model)
+		template(new GStringTemplateEngine(), name, model)
 	}
 
 	static String template(TemplateEngine engine, String name, Map<String, ?> model)
@@ -40,7 +40,7 @@ class GroovyTemplate {
 		Writable writable = getTemplate(engine, name).make(model)
 		StringWriter result = new StringWriter()
 		writable.writeTo(result)
-		return result.toString()
+		result.toString()
 	}
 
 	static Template getTemplate(TemplateEngine engine, String name)

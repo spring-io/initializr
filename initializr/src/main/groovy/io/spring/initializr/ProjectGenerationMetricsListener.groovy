@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils
  */
 class ProjectGenerationMetricsListener implements ProjectGenerationListener {
 
-	private final CounterService counterService;
+	private final CounterService counterService
 
 	@Autowired
 	ProjectGenerationMetricsListener(CounterService counterService) {

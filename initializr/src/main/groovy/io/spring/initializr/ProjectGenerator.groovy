@@ -16,6 +16,9 @@
 
 package io.spring.initializr
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.util.Assert
@@ -30,6 +33,8 @@ import static io.spring.initializr.support.GroovyTemplate.template
  * @since 1.0
  */
 class ProjectGenerator {
+
+	private static final Logger logger = LoggerFactory.getLogger(ProjectGenerator)
 
 	@Autowired
 	InitializrMetadata metadata
@@ -153,6 +158,11 @@ class ProjectGenerator {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
 		request.resolve(metadata)
+
+		// request resolved so we can log what has been requested
+		logger.info('Processing request{type=' + request.type + ', ' +
+				'dependencies=' + request.dependencies.collect {it.id}+ '}')
+
 		request.properties.each { model[it.key] = it.value }
 		model
 	}

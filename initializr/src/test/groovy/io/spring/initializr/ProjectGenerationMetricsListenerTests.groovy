@@ -35,14 +35,14 @@ class ProjectGenerationMetricsListenerTests {
 
 
 	@Before
-	public void setup() {
+	void setup() {
 		TestCounterService counterService = new TestCounterService()
 		listener = new ProjectGenerationMetricsListener(counterService)
 		metricsAssert = new MetricsAssert(counterService)
 	}
 
 	@Test
-	public void projectGenerationCount() {
+	void projectGenerationCount() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -50,7 +50,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void dependencies() {
+	void dependencies() {
 		ProjectRequest request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)
@@ -60,7 +60,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void resolvedWebDependency() {
+	void resolvedWebDependency() {
 		ProjectRequest request = initialize()
 		request.style << 'spring-data'
 		request.packaging = 'war'
@@ -71,7 +71,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void aliasedDependencyUseStandardId() {
+	void aliasedDependencyUseStandardId() {
 		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
 		dependency.id ='foo'
 		dependency.aliases << 'foo-old'
@@ -86,7 +86,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultType() {
+	void defaultType() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -94,7 +94,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitType() {
+	void explicitType() {
 		ProjectRequest request = initialize()
 		request.type = 'build.gradle'
 		request.resolve(metadata)
@@ -103,7 +103,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultPackaging() {
+	void defaultPackaging() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -111,7 +111,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitPackaging() {
+	void explicitPackaging() {
 		ProjectRequest request = initialize()
 		request.packaging = 'war'
 		request.resolve(metadata)
@@ -120,7 +120,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultJavaVersion() {
+	void defaultJavaVersion() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -128,7 +128,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitJavaVersion() {
+	void explicitJavaVersion() {
 		ProjectRequest request = initialize()
 		request.javaVersion = '1.8'
 		request.resolve(metadata)
@@ -137,7 +137,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultLanguage() {
+	void defaultLanguage() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -145,7 +145,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitLanguage() {
+	void explicitLanguage() {
 		ProjectRequest request = initialize()
 		request.language = 'groovy'
 		request.resolve(metadata)
@@ -154,7 +154,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultBootVersion() {
+	void defaultBootVersion() {
 		ProjectRequest request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -162,7 +162,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitBootVersion() {
+	void explicitBootVersion() {
 		ProjectRequest request = initialize()
 		request.bootVersion = '1.0.2.RELEASE'
 		request.resolve(metadata)
@@ -171,7 +171,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void collectAllMetrics() {
+	void collectAllMetrics() {
 		ProjectRequest request = initialize()
 		request.style << 'web' << 'security'
 		request.type = 'gradle.zip'
@@ -190,7 +190,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void incrementMetrics() {
+	void incrementMetrics() {
 		ProjectRequest request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)

@@ -43,7 +43,7 @@ class LegacyStsControllerFormIntegrationTests extends AbstractInitializerControl
 	}
 
 	@Configuration
-	public static class LegacyStsConfig {
+	static class LegacyStsConfig {
 
 		@Bean
 		@SuppressWarnings("deprecation")

@@ -55,7 +55,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	final RestTemplate restTemplate = new RestTemplate()
 
 	String createUrl(String context) {
-		return 'http://localhost:' + port + context
+		'http://localhost:' + port + context
 	}
 
 	String htmlHome() {
@@ -119,7 +119,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 			new DefaultInitializrMetadataProvider(metadata) {
 				@Override
 				protected List<InitializrMetadata.BootVersion> fetchBootVersions() {
-					return null; // Disable metadata fetching from spring.io
+					null // Disable metadata fetching from spring.io
 				}
 			}
 		}

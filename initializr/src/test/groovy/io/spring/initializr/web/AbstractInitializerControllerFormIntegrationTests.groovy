@@ -118,7 +118,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	/**
 	 * Provide the context of the home page
 	 */
-	protected abstract String homeContext();
+	protected abstract String homeContext()
 
 	/**
 	 * Create a {@link HomePage} instance based on the specified {@link HtmlPage}
