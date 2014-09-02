@@ -37,7 +37,7 @@ class StsHomePage extends HomePage {
 	}
 
 	private void select(String selectId, String value) {
-		if (value != null) {
+		if (value) {
 			page.getElementsByIdAndOrName(selectId).each {
 				it.checked = value.equals(it.defaultValue)
 			}

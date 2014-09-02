@@ -37,8 +37,8 @@ class GroovyTemplate {
 
 	static String template(TemplateEngine engine, String name, Map<String, ?> model)
 			throws IOException, CompilationFailedException, ClassNotFoundException {
-		Writable writable = getTemplate(engine, name).make(model)
-		StringWriter result = new StringWriter()
+		def writable = getTemplate(engine, name).make(model)
+		def result = new StringWriter()
 		writable.writeTo(result)
 		result.toString()
 	}
@@ -46,14 +46,14 @@ class GroovyTemplate {
 	static Template getTemplate(TemplateEngine engine, String name)
 			throws CompilationFailedException, ClassNotFoundException, IOException {
 
-		File file = new File("templates", name)
+		def file = new File("templates", name)
 		if (file.exists()) {
 			return engine.createTemplate(file)
 		}
 
-		ClassLoader classLoader = GroovyTemplate.class.getClassLoader()
-		URL resource = classLoader.getResource("templates/" + name)
-		if (resource != null) {
+		def classLoader = GroovyTemplate.class.classLoader
+		def resource = classLoader.getResource("templates/" + name)
+		if (resource) {
 			return engine.createTemplate(resource)
 		}
 

@@ -59,7 +59,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	}
 
 	String htmlHome() {
-		HttpHeaders headers = new HttpHeaders()
+		def headers = new HttpHeaders()
 		headers.setAccept([MediaType.TEXT_HTML])
 		restTemplate.exchange(createUrl('/'), HttpMethod.GET, new HttpEntity<Void>(headers), String).body
 	}
@@ -79,7 +79,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	}
 
 	ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
-		File archiveFile = writeArchive(content)
+		def archiveFile = writeArchive(content)
 
 		def project = folder.newFolder()
 		switch (archiveType) {

@@ -93,7 +93,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private void assertSpringCliRedirect(String context, String extension) {
-		ResponseEntity<?> entity = restTemplate.getForEntity(createUrl(context), ResponseEntity.class)
+		def entity = restTemplate.getForEntity(createUrl(context), ResponseEntity.class)
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
 		assertEquals new URI('https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE' +
 				'/spring-boot-cli-1.1.4.RELEASE-bin.'+extension), entity.getHeaders().getLocation()
@@ -102,15 +102,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test // Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
-		String json = restTemplate.getForObject(createUrl('/'), String.class)
-		JSONObject expected = readJson('1.0')
+		def json = restTemplate.getForObject(createUrl('/'), String.class)
+		def expected = readJson('1.0')
 		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT)
 	}
 
 	@Test // Test that the  current code complies "at least" with 1.0
 	void validateProjectMetadata10() {
-		String json = restTemplate.getForObject(createUrl('/'), String.class)
-		JSONObject expected = readJson('1.0')
+		def json = restTemplate.getForObject(createUrl('/'), String.class)
+		def expected = readJson('1.0')
 		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
 	}
 
@@ -118,11 +118,11 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void metricsAvailableByDefault() {
 		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa')
 		def result = metricsEndpoint()
-		Long requests = result['counter.initializr.requests']
-		Long packaging = result['counter.initializr.packaging.jar']
-		Long javaVersion = result['counter.initializr.java_version.1_8']
-		Long webDependency = result['counter.initializr.dependency.web']
-		Long jpaDependency = result['counter.initializr.dependency.jpa']
+		def requests = result['counter.initializr.requests']
+		def packaging = result['counter.initializr.packaging.jar']
+		def javaVersion = result['counter.initializr.java_version.1_8']
+		def webDependency = result['counter.initializr.dependency.web']
+		def jpaDependency = result['counter.initializr.dependency.jpa']
 
 		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web') // No jpa dep this time
 
@@ -140,7 +140,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private def metricsEndpoint() {
-		JsonSlurper slurper = new JsonSlurper()
+		def slurper = new JsonSlurper()
 		slurper.parseText(restTemplate.getForObject(createUrl('/metrics'), String))
 	}
 
@@ -148,80 +148,80 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void homeIsForm() {
-		String body = htmlHome()
+		def body = htmlHome()
 		assertTrue 'Wrong body:\n' + body, body.contains('action="/starter.zip"')
 	}
 
 	@Test
 	void homeIsJson() {
-		String body = restTemplate.getForObject(createUrl('/'), String)
+		def body = restTemplate.getForObject(createUrl('/'), String)
 		assertTrue('Wrong body:\n' + body, body.contains('{"dependencies"'))
 	}
 
 	@Test
 	void webIsAddedPom() {
-		String body = restTemplate.getForObject(createUrl('/pom.xml?packaging=war'), String)
+		def body = restTemplate.getForObject(createUrl('/pom.xml?packaging=war'), String)
 		assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
 		assertTrue('Wrong body:\n' + body, body.contains('provided'))
 	}
 
 	@Test
 	void webIsAddedGradle() {
-		String body = restTemplate.getForObject(createUrl('/build.gradle?packaging=war'), String)
+		def body = restTemplate.getForObject(createUrl('/build.gradle?packaging=war'), String)
 		assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
 		assertTrue('Wrong body:\n' + body, body.contains('providedRuntime'))
 	}
 
 	@Test
 	void infoHasExternalProperties() {
-		String body = restTemplate.getForObject(createUrl('/info'), String)
+		def body = restTemplate.getForObject(createUrl('/info'), String)
 		assertTrue('Wrong body:\n' + body, body.contains('"spring-boot"'))
 		assertTrue('Wrong body:\n' + body, body.contains('"version":"1.1.4.RELEASE"'))
 	}
 
 	@Test
 	void homeHasWebStyle() {
-		String body = htmlHome()
+		def body = htmlHome()
 		assertTrue('Wrong body:\n' + body, body.contains('name="style" value="web"'))
 	}
 
 	@Test
 	void homeHasBootVersion() {
-		String body = htmlHome()
+		def body = htmlHome()
 		assertTrue('Wrong body:\n' + body, body.contains('name="bootVersion"'))
 		assertTrue('Wrong body:\n' + body, body.contains('1.2.0.BUILD-SNAPSHOT"'))
 	}
 
 	@Test
 	void downloadStarter() {
-		byte[] body = restTemplate.getForObject(createUrl('starter.zip'), byte[])
+		def body = restTemplate.getForObject(createUrl('starter.zip'), byte[])
 		assertNotNull(body)
 		assertTrue(body.length > 100)
 	}
 
 	@Test
 	void installer() {
-		ResponseEntity<String> response = restTemplate.getForEntity(createUrl('install.sh'), String)
+		def response = restTemplate.getForEntity(createUrl('install.sh'), String)
 		assertEquals(HttpStatus.OK, response.getStatusCode())
 		assertNotNull(response.body)
 	}
 
 
 	private ProjectAssert downloadZip(String context) {
-		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
+		def body = restTemplate.getForObject(createUrl(context), byte[])
 		zipProjectAssert(body)
 	}
 
 	private ProjectAssert downloadTgz(String context) {
-		byte[] body = restTemplate.getForObject(createUrl(context), byte[])
+		def body = restTemplate.getForObject(createUrl(context), byte[])
 		tgzProjectAssert(body)
 	}
 
 	private static JSONObject readJson(String version) {
 		def resource = new ClassPathResource('metadata/test-default-' + version + '.json')
-		def stream = resource.getInputStream()
+		def stream = resource.inputStream
 		try {
-			String json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
+			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
 			new JSONObject(json)
 		} finally {
 			stream.close()

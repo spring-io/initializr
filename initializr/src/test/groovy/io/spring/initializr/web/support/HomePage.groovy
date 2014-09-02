@@ -49,8 +49,8 @@ abstract class HomePage {
 	 */
 	byte[] generateProject() {
 		setup()
-		HtmlButton submit = page.getElementByName('generate-project')
-		Page newMessagePage = submit.click();
+		def submit = page.getElementByName('generate-project')
+		def newMessagePage = submit.click();
 		newMessagePage.webResponse.contentAsStream.bytes
 	}
 
@@ -68,21 +68,21 @@ abstract class HomePage {
 	}
 
 	protected void setTextValue(String elementId, String value) {
-		if (value != null) {
-			HtmlTextInput input = page.getHtmlElementById(elementId)
+		if (value) {
+			def input = page.getHtmlElementById(elementId)
 			input.setValueAttribute(value)
 		}
 	}
 
 	protected void selectDependencies(List<String> dependencies) {
-		List<DomElement> styles = page.getElementsByName("style")
-		Map<String, HtmlCheckBoxInput> allStyles = new HashMap<>()
+		def styles = page.getElementsByName("style")
+		def allStyles = [:]
 		for (HtmlCheckBoxInput checkBoxInput : styles) {
-			allStyles.put(checkBoxInput.getValueAttribute(), checkBoxInput)
+			allStyles[checkBoxInput.getValueAttribute()] = checkBoxInput
 		}
 		for (String dependency : dependencies) {
-			HtmlCheckBoxInput checkBox = allStyles.get(dependency)
-			if (checkBox != null) {
+			def checkBox = allStyles.get(dependency)
+			if (checkBox) {
 				checkBox.checked = true
 			} else {
 				throw new IllegalArgumentException('No dependency with name '

@@ -33,42 +33,42 @@ class ProjectRequestTests {
 
 	@Test
 	void resolve() {
-		ProjectRequest request = new ProjectRequest()
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('code', 'web', 'security', 'spring-data').validateAndGet()
 
 		request.style << 'web' << 'spring-data'
 		request.resolve(metadata)
-		assertBootStarter(request.dependencies.get(0), 'web')
-		assertBootStarter(request.dependencies.get(1), 'spring-data')
+		assertBootStarter(request.dependencies[0], 'web')
+		assertBootStarter(request.dependencies[1], 'spring-data')
 	}
 
 	@Test
 	void resolveFullMetadata() {
-		ProjectRequest request = new ProjectRequest()
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('code', createDependency('org.foo', 'acme', '1.2.0')).validateAndGet()
 		request.style << 'org.foo:acme'
 		request.resolve(metadata)
-		assertDependency(request.dependencies.get(0), 'org.foo', 'acme', '1.2.0')
+		assertDependency(request.dependencies[0], 'org.foo', 'acme', '1.2.0')
 	}
 
 	@Test
 	void resolveUnknownSimpleIdAsSpringBootStarter() {
-		ProjectRequest request = new ProjectRequest()
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('code', 'org.foo:bar').validateAndGet()
 
 		request.style << 'org.foo:bar' << 'foo-bar'
 		request.resolve(metadata)
-		assertDependency(request.dependencies.get(0), 'org.foo', 'bar', null)
-		assertBootStarter(request.dependencies.get(1), 'foo-bar')
+		assertDependency(request.dependencies[0], 'org.foo', 'bar', null)
+		assertBootStarter(request.dependencies[1], 'foo-bar')
 	}
 
 	@Test
 	void resolveUnknownDependency() {
-		ProjectRequest request = new ProjectRequest()
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('code', 'org.foo:bar').validateAndGet()
 
 		request.style << 'org.foo:acme' // does not exist and
@@ -79,13 +79,13 @@ class ProjectRequestTests {
 	}
 
 	private static void assertBootStarter(InitializrMetadata.Dependency actual, String name) {
-		InitializrMetadata.Dependency expected = new InitializrMetadata.Dependency()
+		def expected = new InitializrMetadata.Dependency()
 		expected.asSpringBootStarter(name)
 		assertDependency(actual, expected.groupId, expected.artifactId, expected.version)
 	}
 
 	private static InitializrMetadata.Dependency createDependency(String groupId, String artifactId, String version) {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.groupId = groupId
 		dependency.artifactId = artifactId
 		dependency.version = version

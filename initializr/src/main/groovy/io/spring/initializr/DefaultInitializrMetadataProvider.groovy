@@ -16,8 +16,7 @@
 
 package io.spring.initializr
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
@@ -29,9 +28,8 @@ import org.springframework.cache.annotation.Cacheable
  * @author Stephane Nicoll
  * @since 1.0
  */
+@Slf4j
 class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
-
-	private static final Logger logger = LoggerFactory.getLogger(DefaultInitializrMetadataProvider)
 
 	private final InitializrMetadata metadata
 
@@ -43,8 +41,8 @@ class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 	@Override
 	@Cacheable(value = 'initializr', key = "'metadata'")
 	InitializrMetadata get() {
-		List<InitializrMetadata.BootVersion> bootVersions = fetchBootVersions()
-		if (bootVersions != null && !bootVersions.isEmpty()) {
+		def bootVersions = fetchBootVersions()
+		if (bootVersions) {
 			metadata.merge(bootVersions)
 		}
 		metadata
@@ -52,12 +50,12 @@ class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
 	protected List<InitializrMetadata.BootVersion> fetchBootVersions() {
 		def url = metadata.env.springBootMetadataUrl
-		if (url != null) {
+		if (url) {
 			try {
-				logger.info('Fetching boot metadata from '+ url)
+				log.info('Fetching boot metadata from '+ url)
 				return new SpringBootMetadataReader(url).getBootVersions()
 			} catch (Exception e) {
-				logger.warn('Failed to fetch spring boot metadata', e)
+				log.warn('Failed to fetch spring boot metadata', e)
 			}
 		}
 		null

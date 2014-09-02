@@ -16,8 +16,7 @@
 
 package io.spring.initializr
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -32,9 +31,8 @@ import static io.spring.initializr.support.GroovyTemplate.template
  * @author Stephane Nicoll
  * @since 1.0
  */
+@Slf4j
 class ProjectGenerator {
-
-	private static final Logger logger = LoggerFactory.getLogger(ProjectGenerator)
 
 	@Autowired
 	InitializrMetadata metadata
@@ -42,16 +40,16 @@ class ProjectGenerator {
 	@Value('${TMPDIR:.}')
 	String tmpdir
 
-	final Set<ProjectGenerationListener> listeners = new LinkedHashSet<>()
+	final Set<ProjectGenerationListener> listeners = []
 
-	private transient Map<String, List<File>> temporaryFiles = new HashMap<>()
+	private transient Map<String, List<File>> temporaryFiles = [:]
 
 	/**
 	 * Generate a Maven pom for the specified {@link ProjectRequest}.
 	 */
 	byte[] generateMavenPom(ProjectRequest request) {
-		Map model = initializeModel(request)
-		byte[] content = doGenerateMavenPom(model)
+		def model = initializeModel(request)
+		def content = doGenerateMavenPom(model)
 		invokeListeners(request)
 		content
 	}
@@ -60,8 +58,8 @@ class ProjectGenerator {
 	 * Generate a Gradle build file for the specified {@link ProjectRequest}.
 	 */
 	byte[] generateGradleBuild(ProjectRequest request) {
-		Map model = initializeModel(request)
-		byte[] content = doGenerateGradleBuild(model)
+		def model = initializeModel(request)
+		def content = doGenerateGradleBuild(model)
 		invokeListeners(request)
 		content
 	}
@@ -73,22 +71,22 @@ class ProjectGenerator {
 	File generateProjectStructure(ProjectRequest request) {
 		def model = initializeModel(request)
 
-		File dir = File.createTempFile('tmp', '', new File(tmpdir))
+		def dir = File.createTempFile('tmp', '', new File(tmpdir))
 		addTempFile(dir.name, dir)
 		dir.delete()
 		dir.mkdirs()
 
 		if (request.type.contains('gradle')) {
-			String gradle = new String(doGenerateGradleBuild(model))
+			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
 		} else {
-			String pom = new String(doGenerateMavenPom(model))
+			def pom = new String(doGenerateMavenPom(model))
 			new File(dir, 'pom.xml').write(pom)
 		}
 
-		String language = request.language
+		def language = request.language
 
-		File src = new File(new File(dir, 'src/main/' + language), request.packageName.replace('.', '/'))
+		def src = new File(new File(dir, 'src/main/' + language), request.packageName.replace('.', '/'))
 		src.mkdirs()
 		write(src, 'Application.' + language, model)
 
@@ -96,7 +94,7 @@ class ProjectGenerator {
 			write(src, 'ServletInitializer.' + language, model)
 		}
 
-		File test = new File(new File(dir, 'src/test/' + language), request.packageName.replace('.', '/'))
+		def test = new File(new File(dir, 'src/test/' + language), request.packageName.replace('.', '/'))
 		test.mkdirs()
 		if (request.hasWebFacet()) {
 			model.testAnnotations = '@WebAppConfiguration\n'
@@ -107,7 +105,7 @@ class ProjectGenerator {
 		}
 		write(test, 'ApplicationTests.' + language, model)
 
-		File resources = new File(dir, 'src/main/resources')
+		def resources = new File(dir, 'src/main/resources')
 		resources.mkdirs()
 		new File(resources, 'application.properties').write('')
 
@@ -125,7 +123,7 @@ class ProjectGenerator {
 	 * directory and extension
 	 */
 	File createDistributionFile(File dir, String extension) {
-		File download = new File(tmpdir, dir.name + extension)
+		def download = new File(tmpdir, dir.name + extension)
 		addTempFile(dir.name, download)
 		download
 	}
@@ -137,7 +135,7 @@ class ProjectGenerator {
 	 */
 	void cleanTempFiles(File dir) {
 		def tempFiles = temporaryFiles.remove(dir.name)
-		if (tempFiles != null) {
+		if (tempFiles) {
 			tempFiles.each { File file ->
 				if (file.directory) {
 					file.deleteDir()
@@ -160,7 +158,7 @@ class ProjectGenerator {
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested
-		logger.info('Processing request{type=' + request.type + ', ' +
+		log.info('Processing request{type=' + request.type + ', ' +
 				'dependencies=' + request.dependencies.collect {it.id}+ '}')
 
 		request.properties.each { model[it.key] = it.value }
@@ -177,18 +175,18 @@ class ProjectGenerator {
 	}
 
 	def write(File src, String name, def model) {
-		String tmpl = name.endsWith('.groovy') ? name + '.tmpl' : name
+		def tmpl = name.endsWith('.groovy') ? name + '.tmpl' : name
 		def body = template tmpl, model
 		new File(src, name).write(body)
 	}
 
 	private void addTempFile(String group, File file) {
-		def content = temporaryFiles.get(group)
+		def content = temporaryFiles[group]
 		if (content == null) {
-			content = new ArrayList<File>()
-			temporaryFiles.put(group, content)
+			content = []
+			temporaryFiles[group] = content
 		}
-		content.add(file)
+		content << file
 	}
 
 }

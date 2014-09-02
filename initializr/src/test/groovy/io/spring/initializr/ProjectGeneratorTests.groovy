@@ -39,18 +39,18 @@ class ProjectGeneratorTests {
 
 	@Before
 	void setup() {
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').validateAndGet()
 		projectGenerator.metadata = metadata
-		projectGenerator.tmpdir = folder.newFolder().getAbsolutePath()
+		projectGenerator.tmpdir = folder.newFolder().absolutePath
 	}
 
 	@Test
 	void defaultMavenPom() {
-		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		def listener = mock(ProjectGenerationListener)
 		projectGenerator.listeners << listener
 
-		ProjectRequest request = createProjectRequest('web')
+		def request = createProjectRequest('web')
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasNoRepository().hasSpringBootStarterDependency('web')
 		verify(listener, times(1)).onGeneratedProject(request)
@@ -58,20 +58,20 @@ class ProjectGeneratorTests {
 
 	@Test
 	void defaultGradleBuild() {
-		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		def listener = mock(ProjectGenerationListener)
 		projectGenerator.listeners << listener
 
-		ProjectRequest request = createProjectRequest('web')
+		def request = createProjectRequest('web')
 		generateGradleBuild(request)
 		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
 	@Test
 	void defaultProject() {
-		ProjectGenerationListener listener = mock(ProjectGenerationListener)
+		def listener = mock(ProjectGenerationListener)
 		projectGenerator.listeners << listener
 
-		ProjectRequest request = createProjectRequest('web')
+		def request = createProjectRequest('web')
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
 				.hasStartClass('demo.Application').hasNoRepository().hasSpringBootStarterDependency('web')
 		verify(listener, times(1)).onGeneratedProject(request)
@@ -79,14 +79,14 @@ class ProjectGeneratorTests {
 
 	@Test
 	void noDependencyAddsRootStarter() {
-		ProjectRequest request = createProjectRequest()
+		def request = createProjectRequest()
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
 				.hasSpringBootStarterRootDependency()
 	}
 
 	@Test
 	void mavenPomWithBootSnapshot() {
-		ProjectRequest request = createProjectRequest('web')
+		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasSnapshotRepository().hasSpringBootStarterDependency('web')
@@ -94,17 +94,17 @@ class ProjectGeneratorTests {
 
 	@Test
 	void mavenPomWithWebFacet() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.id = 'thymeleaf'
 		dependency.groupId = 'org.foo'
 		dependency.artifactId = 'thymeleaf'
 		dependency.facets << 'web'
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('test', dependency).validateAndGet()
 		projectGenerator.metadata = metadata
 
-		ProjectRequest request = createProjectRequest('thymeleaf')
+		def request = createProjectRequest('thymeleaf')
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasDependency('org.foo', 'thymeleaf')
 				.hasDependenciesCount(2)
@@ -113,17 +113,17 @@ class ProjectGeneratorTests {
 
 	@Test
 	void mavenWarPomWithWebFacet() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.id = 'thymeleaf'
 		dependency.groupId = 'org.foo'
 		dependency.artifactId = 'thymeleaf'
 		dependency.facets << 'web'
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('test', dependency).validateAndGet()
 		projectGenerator.metadata = metadata
 
-		ProjectRequest request = createProjectRequest('thymeleaf')
+		def request = createProjectRequest('thymeleaf')
 		request.packaging = 'war'
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasSpringBootStarterDependency('tomcat')
@@ -135,7 +135,7 @@ class ProjectGeneratorTests {
 
 	@Test
 	void mavenWarPomWithoutWebFacet() {
-		ProjectRequest request = createProjectRequest('data-jpa')
+		def request = createProjectRequest('data-jpa')
 		request.packaging = 'war'
 		generateMavenPom(request).hasStartClass('demo.Application')
 				.hasSpringBootStarterDependency('tomcat')
@@ -147,22 +147,22 @@ class ProjectGeneratorTests {
 	}
 
 	PomAssert generateMavenPom(ProjectRequest request) {
-		String content = new String(projectGenerator.generateMavenPom(request))
+		def content = new String(projectGenerator.generateMavenPom(request))
 		new PomAssert(content).validateProjectRequest(request)
 	}
 
 	GradleBuildAssert generateGradleBuild(ProjectRequest request) {
-		String content = new String(projectGenerator.generateGradleBuild(request))
+		def content = new String(projectGenerator.generateGradleBuild(request))
 		new GradleBuildAssert(content).validateProjectRequest(request)
 	}
 
 	ProjectAssert generateProject(ProjectRequest request) {
-		File dir = projectGenerator.generateProjectStructure(request)
+		def dir = projectGenerator.generateProjectStructure(request)
 		new ProjectAssert(dir)
 	}
 
 	ProjectRequest createProjectRequest(String... styles) {
-		ProjectRequest request = new ProjectRequest()
+		def request = new ProjectRequest()
 		projectGenerator.metadata.initializeProjectRequest(request)
 		request.style.addAll Arrays.asList(styles)
 		request

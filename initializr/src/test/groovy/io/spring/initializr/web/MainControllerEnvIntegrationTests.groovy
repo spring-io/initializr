@@ -32,7 +32,7 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 
 	@Test
 	void downloadCliWithCustomRepository() {
-		HttpEntity entity = restTemplate.getForEntity(createUrl('/spring'), HttpEntity.class)
+		def entity = restTemplate.getForEntity(createUrl('/spring'), HttpEntity.class)
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
 		assertEquals new URI('https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE' +
 				'/spring-boot-cli-1.1.4.RELEASE-bin.zip'), entity.getHeaders().getLocation()

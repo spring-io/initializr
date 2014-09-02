@@ -43,10 +43,10 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addDependencyGroup(String name, String... ids) {
-		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
+		def group = new InitializrMetadata.DependencyGroup()
 		group.name = name
 		for (String id : ids) {
-			InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+			def dependency = new InitializrMetadata.Dependency()
 			dependency.id = id
 			group.content.add(dependency)
 		}
@@ -55,7 +55,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addDependencyGroup(String name, InitializrMetadata.Dependency... dependencies) {
-		InitializrMetadata.DependencyGroup group = new InitializrMetadata.DependencyGroup()
+		def group = new InitializrMetadata.DependencyGroup()
 		group.name = name
 		group.content.addAll(dependencies)
 		metadata.dependencies.add(group)
@@ -73,7 +73,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addType(String id, boolean defaultValue, String action) {
-		InitializrMetadata.Type type = new InitializrMetadata.Type()
+		def type = new InitializrMetadata.Type()
 		type.id = id
 		type.name = id
 		type.default = defaultValue
@@ -87,7 +87,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addPackaging(String id, boolean defaultValue) {
-		InitializrMetadata.Packaging packaging = new InitializrMetadata.Packaging()
+		def packaging = new InitializrMetadata.Packaging()
 		packaging.id = id
 		packaging.name = id
 		packaging.default = defaultValue
@@ -100,7 +100,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addJavaVersion(String version, boolean defaultValue) {
-		InitializrMetadata.JavaVersion javaVersion = new InitializrMetadata.JavaVersion()
+		def javaVersion = new InitializrMetadata.JavaVersion()
 		javaVersion.id = version
 		javaVersion.name = version
 		javaVersion.default = defaultValue
@@ -113,7 +113,7 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addLanguage(String id, boolean defaultValue) {
-		InitializrMetadata.Language language = new InitializrMetadata.Language()
+		def language = new InitializrMetadata.Language()
 		language.id = id
 		language.name = id
 		language.default = defaultValue
@@ -127,13 +127,12 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addBootVersion(String id, boolean defaultValue) {
-		InitializrMetadata.BootVersion bootVersion = new InitializrMetadata.BootVersion()
+		def bootVersion = new InitializrMetadata.BootVersion()
 		bootVersion.id = id
 		bootVersion.name = id
 		bootVersion.default = defaultValue
 		metadata.bootVersions.add(bootVersion)
 		this
 	}
-
 
 }

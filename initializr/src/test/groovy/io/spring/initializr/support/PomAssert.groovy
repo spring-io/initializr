@@ -37,13 +37,13 @@ class PomAssert {
 
 	final XpathEngine eng
 	final Document doc
-	final Map<String, InitializrMetadata.Dependency> dependencies = new HashMap<String, InitializrMetadata.Dependency>()
+	final Map<String, InitializrMetadata.Dependency> dependencies = [:]
 
 	PomAssert(String content) {
 		eng = XMLUnit.newXpathEngine()
-		Map<String, String> context = new HashMap<String, String>()
-		context.put 'pom', 'http://maven.apache.org/POM/4.0.0'
-		SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext(context)
+		def context = [:]
+		context['pom'] = 'http://maven.apache.org/POM/4.0.0'
+		def namespaceContext = new SimpleNamespaceContext(context)
 		eng.namespaceContext = namespaceContext
 		doc = XMLUnit.buildControlDocument(content)
 		parseDependencies()
@@ -123,9 +123,9 @@ class PomAssert {
 
 	PomAssert hasDependency(String groupId, String artifactId, String version) {
 		def id = generateId(groupId, artifactId)
-		def dependency = dependencies.get(id)
+		def dependency = dependencies[id]
 		assertNotNull 'No dependency found with ' + id + ' --> ' + dependencies.keySet(), dependency
-		if (version != null) {
+		if (version) {
 			assertEquals 'Wrong version for '+dependency, version, dependency.version
 		}
 		this
@@ -144,8 +144,8 @@ class PomAssert {
 
 	def hasRepository(String name) {
 		def nodes = eng.getMatchingNodes(createRootNodeXPath('repositories/pom:repository/pom:id'), doc)
-		for (int i = 0; i < nodes.getLength(); i++) {
-			if (name.equals(nodes.item(i).getTextContent())) {
+		for (int i = 0; i < nodes.length; i++) {
+			if (name.equals(nodes.item(i).textContent)) {
 				return
 			}
 		}
@@ -154,8 +154,8 @@ class PomAssert {
 
 	def hasPluginRepository(String name) {
 		def nodes = eng.getMatchingNodes(createRootNodeXPath('pluginRepositories/pom:pluginRepository/pom:id'), doc)
-		for (int i = 0; i < nodes.getLength(); i++) {
-			if (name.equals(nodes.item(i).getTextContent())) {
+		for (int i = 0; i < nodes.length; i++) {
+			if (name.equals(nodes.item(i).textContent)) {
 				return
 			}
 		}
@@ -175,27 +175,27 @@ class PomAssert {
 		for (int i = 0; i < nodes.length; i++) {
 			def item = nodes.item(i)
 			if (item instanceof Element) {
-				InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
-				Element element = (Element) item
+				def dependency = new InitializrMetadata.Dependency()
+				def element = (Element) item
 				def groupId = element.getElementsByTagName('groupId')
 				if (groupId.length > 0) {
-					dependency.groupId = groupId.item(0).getTextContent()
+					dependency.groupId = groupId.item(0).textContent
 				}
 				def artifactId = element.getElementsByTagName('artifactId')
 				if (artifactId.length > 0) {
-					dependency.artifactId = artifactId.item(0).getTextContent()
+					dependency.artifactId = artifactId.item(0).textContent
 				}
 				def version = element.getElementsByTagName('version')
 				if (version.length > 0) {
-					dependency.version = version.item(0).getTextContent()
+					dependency.version = version.item(0).textContent
 				}
-				dependencies.put(dependency.generateId(), dependency)
+				dependencies[dependency.generateId()] = dependency
 			}
 		}
 	}
 
 	private static String generateId(String groupId, String artifactId) {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.groupId = groupId
 		dependency.artifactId = artifactId
 		dependency.generateId()

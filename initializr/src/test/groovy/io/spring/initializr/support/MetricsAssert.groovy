@@ -34,7 +34,7 @@ class MetricsAssert {
 
 	MetricsAssert hasValue(long value, String... metrics) {
 		metrics.each {
-			Long actual = counterService.values[it]
+			def actual = counterService.values[it]
 			if (actual == null) {
 				fail('Metric ' + it + ' not found, got ' + counterService.values.keySet())
 			}
@@ -45,7 +45,7 @@ class MetricsAssert {
 
 	MetricsAssert hasNoValue(String... metrics) {
 		metrics.each {
-			assertEquals 'Metric ' + it + ' should not be registered', null, counterService.values.get(it)
+			assertEquals 'Metric ' + it + ' should not be registered', null, counterService.values[it]
 		}
 	}
 

@@ -35,7 +35,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void setCoordinatesFromId() {
-		InitializrMetadata.Dependency dependency = createDependency('org.foo:bar:1.2.3')
+		def dependency = createDependency('org.foo:bar:1.2.3')
 		metadata.validateDependency(dependency)
 		assertEquals 'org.foo', dependency.groupId
 		assertEquals 'bar', dependency.artifactId
@@ -45,7 +45,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void setCoordinatesFromIdNoVersion() {
-		InitializrMetadata.Dependency dependency = createDependency('org.foo:bar')
+		def dependency = createDependency('org.foo:bar')
 		metadata.validateDependency(dependency)
 		assertEquals 'org.foo', dependency.groupId
 		assertEquals 'bar', dependency.artifactId
@@ -55,7 +55,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void setIdFromCoordinates() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.groupId = 'org.foo'
 		dependency.artifactId = 'bar'
 		dependency.version = '1.0'
@@ -65,7 +65,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void setIdFromCoordinatesNoVersion() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.groupId = 'org.foo'
 		dependency.artifactId = 'bar'
 		metadata.validateDependency(dependency)
@@ -74,7 +74,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void setIdFromSimpleName() {
-		InitializrMetadata.Dependency dependency = createDependency('web')
+		def dependency = createDependency('web')
 
 		metadata.validateDependency(dependency)
 		assertEquals 'org.springframework.boot', dependency.groupId
@@ -91,7 +91,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void invalidIdFormatTooManyColons() {
-		InitializrMetadata.Dependency dependency = createDependency('org.foo:bar:1.0:test:external')
+		def dependency = createDependency('org.foo:bar:1.0:test:external')
 
 		thrown.expect(InvalidInitializrMetadataException)
 		metadata.validateDependency(dependency)
@@ -99,7 +99,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void generateIdWithNoGroupId() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.artifactId = 'bar'
 		thrown.expect(IllegalArgumentException)
 		dependency.generateId()
@@ -107,7 +107,7 @@ class InitializrMetadataTests {
 
 	@Test
 	void generateIdWithNoArtifactId() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.groupId = 'foo'
 		thrown.expect(IllegalArgumentException)
 		dependency.generateId()
@@ -115,11 +115,10 @@ class InitializrMetadataTests {
 
 	@Test
 	void indexedDependencies() {
-		InitializrMetadata.Dependency dependency = createDependency('first')
-		InitializrMetadata.Dependency dependency2 = createDependency('second')
+		def dependency = createDependency('first')
+		def dependency2 = createDependency('second')
 
-
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('foo', dependency, dependency2).validateAndGet()
 
 		assertSame dependency, metadata.getDependency('first')
@@ -129,10 +128,10 @@ class InitializrMetadataTests {
 
 	@Test
 	void addTwoDependenciesWithSameId() {
-		InitializrMetadata.Dependency dependency = createDependency('conflict')
-		InitializrMetadata.Dependency dependency2 = createDependency('conflict')
+		def dependency = createDependency('conflict')
+		def dependency2 = createDependency('conflict')
 
-		InitializrMetadataBuilder builder = InitializrMetadataBuilder.withDefaults()
+		def builder = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('foo', dependency, dependency2)
 
 		thrown.expect(IllegalArgumentException)
@@ -142,11 +141,11 @@ class InitializrMetadataTests {
 
 	@Test
 	void addDependencyWithAliases() {
-		InitializrMetadata.Dependency dependency = createDependency('first')
+		def dependency = createDependency('first')
 		dependency.aliases.add('alias1')
 		dependency.aliases.add('alias2')
 
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('foo', dependency).validateAndGet()
 
 		assertSame dependency, metadata.getDependency('first')
@@ -156,13 +155,13 @@ class InitializrMetadataTests {
 
 	@Test
 	void aliasClashWithAnotherDependency() {
-		InitializrMetadata.Dependency dependency = createDependency('first')
+		def dependency = createDependency('first')
 		dependency.aliases.add('alias1')
 		dependency.aliases.add('alias2')
 
-		InitializrMetadata.Dependency dependency2 = createDependency('alias2')
+		def dependency2 = createDependency('alias2')
 
-		InitializrMetadataBuilder builder = InitializrMetadataBuilder.withDefaults()
+		def builder = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('foo', dependency)
 				.addDependencyGroup('bar', dependency2)
 
@@ -173,14 +172,14 @@ class InitializrMetadataTests {
 
 	@Test
 	void createProjectRequest() {
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
-		ProjectRequest request = doCreateProjectRequest(metadata)
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+		def request = doCreateProjectRequest(metadata)
 		assertEquals metadata.defaults.groupId, request.groupId
 	}
 
 	@Test
 	void validateArtifactRepository() {
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults().instance()
+		def metadata = InitializrMetadataBuilder.withDefaults().instance()
 		metadata.env.artifactRepository = 'http://foo/bar'
 		metadata.validate()
 		assertEquals 'http://foo/bar/', metadata.env.artifactRepository
@@ -207,19 +206,19 @@ class InitializrMetadataTests {
 	}
 
 	private static ProjectRequest doCreateProjectRequest(InitializrMetadata metadata) {
-		ProjectRequest request = new ProjectRequest()
+		def request = new ProjectRequest()
 		metadata.initializeProjectRequest(request)
 		request
 	}
 
 	private static InitializrMetadata.Dependency createDependency(String id) {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.id = id
 		dependency
 	}
 
 	private static InitializrMetadata.JavaVersion createJavaVersion(String version, boolean selected) {
-		InitializrMetadata.JavaVersion javaVersion = new InitializrMetadata.JavaVersion()
+		def javaVersion = new InitializrMetadata.JavaVersion()
 		javaVersion.id = version
 		javaVersion.default = selected
 		javaVersion

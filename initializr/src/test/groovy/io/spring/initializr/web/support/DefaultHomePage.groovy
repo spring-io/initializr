@@ -38,8 +38,8 @@ class DefaultHomePage extends HomePage {
 	}
 
 	private void select(String selectId, String value) {
-		if (value != null) {
-			HtmlSelect input = page.getHtmlElementById(selectId)
+		if (value) {
+			def input = page.getHtmlElementById(selectId)
 			input.setSelectedAttribute(value, true)
 		}
 	}

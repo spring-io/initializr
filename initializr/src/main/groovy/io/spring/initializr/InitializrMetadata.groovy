@@ -21,8 +21,7 @@ import javax.annotation.PostConstruct
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.util.StringUtils
@@ -44,21 +43,20 @@ import org.springframework.util.StringUtils
  * @since 1.0
  */
 @ConfigurationProperties(prefix = 'initializr', ignoreUnknownFields = false)
+@Slf4j
 class InitializrMetadata {
 
-	private static final Logger logger = LoggerFactory.getLogger(InitializrMetadata)
+	final List<DependencyGroup> dependencies = []
 
-	final List<DependencyGroup> dependencies = new ArrayList<DependencyGroup>()
+	final List<Type> types = []
 
-	final List<Type> types = new ArrayList<Type>()
+	final List<Packaging> packagings = []
 
-	final List<Packaging> packagings = new ArrayList<Packaging>()
+	final List<JavaVersion> javaVersions = []
 
-	final List<JavaVersion> javaVersions = new ArrayList<JavaVersion>()
+	final List<Language> languages = []
 
-	final List<Language> languages = new ArrayList<Language>()
-
-	final List<BootVersion> bootVersions = new ArrayList<BootVersion>()
+	final List<BootVersion> bootVersions = []
 
 	final Defaults defaults = new Defaults()
 
@@ -66,14 +64,14 @@ class InitializrMetadata {
 	final Env env = new Env()
 
 	@JsonIgnore
-	final Map<String, Dependency> indexedDependencies = new HashMap<String, Dependency>()
+	private final Map<String, Dependency> indexedDependencies = [:]
 
 	/**
 	 * Return the {@link Dependency} with the specified id or {@code null} if
 	 * no such dependency exists.
 	 */
 	Dependency getDependency(String id) {
-		indexedDependencies.get(id)
+		indexedDependencies[id]
 	}
 
 	/**
@@ -101,7 +99,7 @@ class InitializrMetadata {
 	 * Merge this instance with the specified content.
 	 */
 	void merge(List<BootVersion> bootVersions) {
-		if (bootVersions != null) {
+		if (bootVersions) {
 			synchronized (this.bootVersions) {
 				this.bootVersions.clear()
 				this.bootVersions.addAll(bootVersions)
@@ -116,7 +114,7 @@ class InitializrMetadata {
 	@PostConstruct
 	void validate() {
 		for (DependencyGroup group : dependencies) {
-			for (Dependency dependency : group.getContent()) {
+			group.content.each { dependency ->
 				validateDependency(dependency)
 				indexDependency(dependency.id, dependency)
 				for (String alias : dependency.aliases) {
@@ -138,16 +136,16 @@ class InitializrMetadata {
 	}
 
 	private void indexDependency(String id, Dependency dependency) {
-		Dependency existing = indexedDependencies.get(id)
-		if (existing != null) {
+		def existing = indexedDependencies[id]
+		if (existing) {
 			throw new IllegalArgumentException('Could not register ' + dependency +
 					': another dependency has also the "' + id + '" id ' + existing)
 		}
-		indexedDependencies.put(id, dependency)
+		indexedDependencies[id] = dependency
 	}
 
 	static void validateDependency(Dependency dependency) {
-		String id = dependency.getId()
+		def id = dependency.id
 		if (id == null) {
 			if (!dependency.hasCoordinates()) {
 				throw new InvalidInitializrMetadataException('Invalid dependency, ' +
@@ -156,7 +154,7 @@ class InitializrMetadata {
 			dependency.generateId()
 		} else if (!dependency.hasCoordinates()) {
 			// Let's build the coordinates from the id
-			StringTokenizer st = new StringTokenizer(id, ':')
+			def st = new StringTokenizer(id, ':')
 			if (st.countTokens() == 1) { // assume spring-boot-starter
 				dependency.asSpringBootStarter(id)
 			} else if (st.countTokens() == 2 || st.countTokens() == 3) {
@@ -178,7 +176,7 @@ class InitializrMetadata {
 				return element.id
 			}
 		}
-		logger.warn('No default found amongst' + elements)
+		log.warn('No default found amongst' + elements)
 		return (elements.isEmpty() ? null : elements.get(0).id)
 	}
 
@@ -187,7 +185,7 @@ class InitializrMetadata {
 
 		String name
 
-		final List<Dependency> content = new ArrayList<Dependency>()
+		final List<Dependency> content = []
 
 	}
 
@@ -214,7 +212,7 @@ class InitializrMetadata {
 		 * and {@code artifactId}.
 		 */
 		boolean hasCoordinates() {
-			groupId != null && artifactId != null
+			groupId && artifactId
 		}
 
 		/**
@@ -325,7 +323,7 @@ class InitializrMetadata {
 		String id
 
 		String getName() {
-			(name != null ? name : id)
+			(name ?: id)
 		}
 	}
 }

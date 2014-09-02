@@ -28,16 +28,16 @@ class DefaultInitializrMetadataProviderTests {
 
 	@Test
 	void bootVersionsAreReplaced() {
-		InitializrMetadata metadata = new InitializrMetadataBuilder()
+		def metadata = new InitializrMetadataBuilder()
 				.addBootVersion('0.0.9.RELEASE', true).addBootVersion('0.0.8.RELEASE', false).validateAndGet()
 		assertEquals '0.0.9.RELEASE', metadata.defaults.bootVersion
-		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata)
+		def provider = new DefaultInitializrMetadataProvider(metadata)
 
-		InitializrMetadata updatedMetadata = provider.get()
+		def updatedMetadata = provider.get()
 		assertNotNull updatedMetadata.bootVersions
 		assertFalse 'Boot versions must be set', updatedMetadata.bootVersions.isEmpty()
 
-		String defaultVersion = null
+		def defaultVersion = null
 		updatedMetadata.bootVersions.each {
 			assertFalse '0.0.9.RELEASE should have been removed', '0.0.9.RELEASE'.equals(it.id)
 			assertFalse '0.0.8.RELEASE should have been removed', '0.0.8.RELEASE'.equals(it.id)

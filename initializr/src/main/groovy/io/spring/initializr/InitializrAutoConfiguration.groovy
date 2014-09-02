@@ -46,7 +46,7 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(ProjectGenerator)
 	ProjectGenerator projectGenerator() {
-		ProjectGenerator generator = new ProjectGenerator()
+		def generator = new ProjectGenerator()
 		generator.listeners << metricsListener()
 		generator
 	}
@@ -65,17 +65,17 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(CacheManager)
 	CacheManager cacheManager() {
-		SimpleCacheManager cacheManager = new SimpleCacheManager()
+		def cacheManager = new SimpleCacheManager()
 		cacheManager.caches = Arrays.asList(
 				createConcurrentMapCache(600, 'initializr'))
 		cacheManager
 	}
 
 	private static ConcurrentMapCache createConcurrentMapCache(Long timeToLive, String name) {
-		CacheBuilder<Object, Object> cacheBuilder =
-				CacheBuilder.newBuilder().expireAfterWrite(timeToLive, TimeUnit.SECONDS)
+		def cacheBuilder = CacheBuilder.newBuilder()
+				.expireAfterWrite(timeToLive, TimeUnit.SECONDS)
 
-		ConcurrentMap<Object, Object> map = cacheBuilder.build().asMap()
+		def map = cacheBuilder.build().asMap()
 		new ConcurrentMapCache(name, map, false)
 	}
 

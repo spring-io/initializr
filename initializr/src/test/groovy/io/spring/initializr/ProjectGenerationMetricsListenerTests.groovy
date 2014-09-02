@@ -36,14 +36,14 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Before
 	void setup() {
-		TestCounterService counterService = new TestCounterService()
+		def counterService = new TestCounterService()
 		listener = new ProjectGenerationMetricsListener(counterService)
 		metricsAssert = new MetricsAssert(counterService)
 	}
 
 	@Test
 	void projectGenerationCount() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.requests')
@@ -51,7 +51,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void dependencies() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -61,7 +61,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void resolvedWebDependency() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.style << 'spring-data'
 		request.packaging = 'war'
 		request.resolve(metadata)
@@ -72,12 +72,12 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void aliasedDependencyUseStandardId() {
-		InitializrMetadata.Dependency dependency = new InitializrMetadata.Dependency()
+		def dependency = new InitializrMetadata.Dependency()
 		dependency.id ='foo'
 		dependency.aliases << 'foo-old'
-		InitializrMetadata metadata = InitializrMetadataBuilder.withDefaults()
+		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('core', dependency).validateAndGet()
-		ProjectRequest request = new ProjectRequest()
+		def request = new ProjectRequest()
 		metadata.initializeProjectRequest(request)
 		request.style << 'foo-old'
 		request.resolve(metadata)
@@ -87,7 +87,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void defaultType() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.type.starter_zip')
@@ -95,7 +95,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void explicitType() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.type = 'build.gradle'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -104,7 +104,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void defaultPackaging() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.packaging.jar')
@@ -112,7 +112,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void explicitPackaging() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.packaging = 'war'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -121,7 +121,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void defaultJavaVersion() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.java_version.1_7')
@@ -129,7 +129,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void explicitJavaVersion() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.javaVersion = '1.8'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -138,7 +138,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void defaultLanguage() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.language.java')
@@ -146,7 +146,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void explicitLanguage() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.language = 'groovy'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -155,7 +155,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void defaultBootVersion() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.boot_version.1_1_5_RELEASE')
@@ -163,7 +163,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void explicitBootVersion() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.bootVersion = '1.0.2.RELEASE'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
@@ -172,7 +172,7 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void collectAllMetrics() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.style << 'web' << 'security'
 		request.type = 'gradle.zip'
 		request.packaging = 'jar'
@@ -191,14 +191,14 @@ class ProjectGenerationMetricsListenerTests {
 
 	@Test
 	void incrementMetrics() {
-		ProjectRequest request = initialize()
+		def request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.requests',
 				'initializr.dependency.security', 'initializr.dependency.spring-data')
 
-		ProjectRequest anotherRequest = initialize()
+		def anotherRequest = initialize()
 		anotherRequest.style << 'web' << 'spring-data'
 		anotherRequest.resolve(metadata)
 		listener.onGeneratedProject(anotherRequest)
@@ -209,7 +209,7 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	private ProjectRequest initialize() {
-		ProjectRequest request = new ProjectRequest()
+		def request = new ProjectRequest()
 		metadata.initializeProjectRequest(request)
 		request
 	}

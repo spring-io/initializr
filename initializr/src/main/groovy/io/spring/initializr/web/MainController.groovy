@@ -16,11 +16,10 @@
 
 package io.spring.initializr.web
 
+import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.ProjectGenerator
 import io.spring.initializr.ProjectRequest
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -41,16 +40,15 @@ import org.springframework.web.bind.annotation.ResponseBody
  * @since 1.0
  */
 @Controller
+@Slf4j
 class MainController extends AbstractInitializrController {
-
-	private static final Logger logger = LoggerFactory.getLogger(MainController.class)
 
 	@Autowired
 	private ProjectGenerator projectGenerator
 
 	@ModelAttribute
 	ProjectRequest projectRequest() {
-		ProjectRequest request = new ProjectRequest()
+		def request = new ProjectRequest()
 		metadataProvider.get().initializeProjectRequest(request)
 		request
 	}
@@ -96,12 +94,12 @@ class MainController extends AbstractInitializrController {
 	ResponseEntity<byte[]> springZip(ProjectRequest request) {
 		def dir = projectGenerator.generateProjectStructure(request)
 
-		File download = projectGenerator.createDistributionFile(dir, '.zip')
+		def download = projectGenerator.createDistributionFile(dir, '.zip')
 
 		new AntBuilder().zip(destfile: download) {
 			zipfileset(dir: dir, includes: '**')
 		}
-		logger.info("Uploading: ${download} (${download.bytes.length} bytes)")
+		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
 		def result = new ResponseEntity<byte[]>(download.bytes,
 				['Content-Type': 'application/zip'] as HttpHeaders, HttpStatus.OK)
 
@@ -114,12 +112,12 @@ class MainController extends AbstractInitializrController {
 	ResponseEntity<byte[]> springTgz(ProjectRequest request) {
 		def dir = projectGenerator.generateProjectStructure(request)
 
-		File download = projectGenerator.createDistributionFile(dir, '.tgz')
+		def download = projectGenerator.createDistributionFile(dir, '.tgz')
 
 		new AntBuilder().tar(destfile: download, compression: 'gzip') {
 			zipfileset(dir:dir, includes:'**')
 		}
-		logger.info("Uploading: ${download} (${download.bytes.length} bytes)")
+		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
 		def result = new ResponseEntity<byte[]>(download.bytes,
 				['Content-Type':'application/x-compress'] as HttpHeaders, HttpStatus.OK)
 

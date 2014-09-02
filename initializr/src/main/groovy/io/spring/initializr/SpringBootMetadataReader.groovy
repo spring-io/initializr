@@ -36,8 +36,8 @@ class SpringBootMetadataReader {
 	 * Parse the content of the metadata at the specified url
 	 */
 	SpringBootMetadataReader(String url) {
-		RestTemplate restTemplate = new RestTemplate()
-		String content = restTemplate.getForObject(url, String.class)
+		def restTemplate = new RestTemplate()
+		def content = restTemplate.getForObject(url, String.class)
 		this.content = new JsonSlurper().parseText(content)
 	}
 
@@ -46,9 +46,9 @@ class SpringBootMetadataReader {
 	 */
 	List<InitializrMetadata.BootVersion> getBootVersions() {
 		content.projectReleases.collect {
-			InitializrMetadata.BootVersion version = new InitializrMetadata.BootVersion()
+			def version = new InitializrMetadata.BootVersion()
 			version.id = it.version
-			String name = it.versionDisplayName
+			def name = it.versionDisplayName
 			version.name = (it.snapshot ? name + ' (SNAPSHOT)' : name)
 			version.setDefault(it.current)
 			version

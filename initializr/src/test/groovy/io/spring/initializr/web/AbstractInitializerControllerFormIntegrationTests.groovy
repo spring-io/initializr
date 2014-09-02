@@ -49,11 +49,11 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 
 	@Before
 	void setup() {
-		MockMvc mockMvc = MockMvcBuilders
+		def mockMvc = MockMvcBuilders
 				.webAppContextSetup(context)
 				.build()
 		webClient = new WebClient()
-		webClient.setWebConnection(new MockMvcWebConnection(mockMvc, ''))
+		webClient.webConnection = new MockMvcWebConnection(mockMvc, '')
 	}
 
 	@After
@@ -63,8 +63,8 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 
 	@Test
 	void createDefaultProject() {
-		HomePage page = home()
-		ProjectAssert projectAssert = zipProjectAssert(page.generateProject())
+		def page = home()
+		def projectAssert = zipProjectAssert(page.generateProject())
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(false)
 				.pomAssert().hasDependenciesCount(2)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
@@ -72,13 +72,13 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 
 	@Test
 	void createProjectWithCustomDefaults() {
-		HomePage page = home()
+		def page = home()
 		page.groupId = 'com.acme'
 		page.artifactId = 'foo-bar'
 		page.name = 'My project'
 		page.description = 'A description for my project'
 		page.dependencies << 'web' << 'data-jpa'
-		ProjectAssert projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page.generateProject())
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(true)
 
 		projectAssert.pomAssert().hasGroupId('com.acme').hasArtifactId('foo-bar')
@@ -90,18 +90,18 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 
 	@Test
 	void createSimpleGradleProject() {
-		HomePage page = home()
+		def page = home()
 		page.type = 'gradle.zip'
 		page.dependencies << 'data-jpa'
-		ProjectAssert projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page.generateProject())
 		projectAssert.isGradleProject().isJavaProject().hasStaticAndTemplatesResources(false)
 	}
 
 	@Test
 	void createWarProject() {
-		HomePage page = home()
+		def page = home()
 		page.packaging = 'war'
-		ProjectAssert projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page.generateProject())
 		projectAssert.isMavenProject().isJavaWarProject()
 				.pomAssert().hasPackaging('war').hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web') // Added with war packaging
@@ -110,8 +110,8 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	}
 
 	HomePage home() {
-		WebRequest request = new WebRequest(new URL('http://localhost' + homeContext()), 'text/html')
-		HtmlPage home = webClient.getPage(request)
+		def request = new WebRequest(new URL('http://localhost' + homeContext()), 'text/html')
+		def home = webClient.getPage(request)
 		createHomePage(home)
 	}
 

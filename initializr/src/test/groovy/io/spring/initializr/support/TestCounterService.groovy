@@ -25,22 +25,24 @@ import org.springframework.boot.actuate.metrics.CounterService
  */
 class TestCounterService implements CounterService {
 
-	final Map<String, Long> values = new HashMap<>()
+	final Map<String, Long> values = [:]
 
 	@Override
 	void increment(String metricName) {
-		Long value = values.get(metricName)
-		value != null ? values.put(metricName, ++value) : values.put(metricName, 1)
+		def value = values[metricName]
+		def valueToSet = value ? ++value : 1
+		values[metricName] = valueToSet
 	}
 
 	@Override
 	void decrement(String metricName) {
-		Long value = values.get(metricName)
-		value != null ? values.put(metricName, --value) : values.put(metricName, -1)
+		def value = values[metricName]
+		def valueToSet = value ? --value : -1
+		values[metricName] = valueToSet
 	}
 
 	@Override
 	void reset(String metricName) {
-		values.put(metricName, 0)
+		values[metricName] = 0
 	}
 }

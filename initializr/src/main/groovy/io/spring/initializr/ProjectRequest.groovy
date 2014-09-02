@@ -16,8 +16,7 @@
 
 package io.spring.initializr
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 
 /**
  * A request to generate a project.
@@ -26,9 +25,8 @@ import org.slf4j.LoggerFactory
  * @author Stephane Nicoll
  * @since 1.0
  */
+@Slf4j
 class ProjectRequest {
-
-	private static final Logger logger = LoggerFactory.getLogger(ProjectRequest.class)
 
 	def style = []
 
@@ -51,19 +49,17 @@ class ProjectRequest {
 	 * Resolve this instance against the specified {@link InitializrMetadata}
 	 */
 	void resolve(InitializrMetadata metadata) {
-		if (style == null || style.size() == 0) {
-			style = []
-		}
+		style = style ?: []
 		if (!style.class.isArray() && !(style instanceof Collection)) {
 			style = [style]
 		}
 		dependencies = style.collect {
-			InitializrMetadata.Dependency dependency = metadata.getDependency(it)
+			def dependency = metadata.getDependency(it)
 			if (dependency == null) {
 				if (it.contains(':')) {
 					throw new IllegalArgumentException('Unknown dependency ' + it + ' check project metadata')
 				}
-				logger.warn('No known dependency for style ' + it + ' assuming spring-boot-starter')
+				log.warn('No known dependency for style ' + it + ' assuming spring-boot-starter')
 				dependency = new InitializrMetadata.Dependency()
 				dependency.asSpringBootStarter(it)
 			}
@@ -98,7 +94,7 @@ class ProjectRequest {
 	 * dependency
 	 */
 	protected addDefaultDependency() {
-		InitializrMetadata.Dependency root = new InitializrMetadata.Dependency()
+		def root = new InitializrMetadata.Dependency()
 		root.id = 'root_starter'
 		root.asSpringBootStarter('')
 		dependencies << root

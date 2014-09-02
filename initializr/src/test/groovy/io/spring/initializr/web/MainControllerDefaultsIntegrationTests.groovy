@@ -17,15 +17,15 @@ class MainControllerDefaultsIntegrationTests extends AbstractInitializrControlle
 
 	@Test
 	void generateDefaultPom() {
-		String content = restTemplate.getForObject(createUrl('/pom.xml?style=web'), String)
-		PomAssert pomAssert = new PomAssert(content)
+		def content = restTemplate.getForObject(createUrl('/pom.xml?style=web'), String)
+		def pomAssert = new PomAssert(content)
 		pomAssert.hasGroupId('org.foo').hasArtifactId('foo-bar').hasVersion('1.2.4-SNAPSHOT').hasPackaging('jar')
 				.hasName('FooBar').hasDescription('FooBar Project').hasStartClass('org.foo.demo.Application')
 	}
 
 	@Test
 	void defaultsAppliedToHome() {
-		String body = htmlHome()
+		def body = htmlHome()
 		assertTrue 'custom groupId not found', body.contains('org.foo')
 		assertTrue 'custom artifactId not found', body.contains('foo-bar')
 		assertTrue 'custom name not found', body.contains('FooBar')
