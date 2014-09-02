@@ -110,7 +110,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	}
 
 	HomePage home() {
-		def request = new WebRequest(new URL('http://localhost' + homeContext()), 'text/html')
+		def request = new WebRequest(new URL("http://localhost${homeContext()}"), 'text/html')
 		def home = webClient.getPage(request)
 		createHomePage(home)
 	}

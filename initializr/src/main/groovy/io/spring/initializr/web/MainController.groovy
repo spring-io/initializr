@@ -67,12 +67,14 @@ class MainController extends AbstractInitializrController {
 
 	@RequestMapping('/spring')
 	String spring() {
-		'redirect:' + metadataProvider.get().createCliDistributionURl('zip')
+		def url = metadataProvider.get().createCliDistributionURl('zip')
+		"redirect:$url"
 	}
 
 	@RequestMapping(value = ['/spring.tar.gz', 'spring.tgz'])
 	String springTgz() {
-		'redirect:' + metadataProvider.get().createCliDistributionURl('tar.gz')
+		def url = metadataProvider.get().createCliDistributionURl('tar.gz')
+		"redirect:$url"
 	}
 
 	@RequestMapping('/pom')

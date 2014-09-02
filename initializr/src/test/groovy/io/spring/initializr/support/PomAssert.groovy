@@ -105,12 +105,13 @@ class PomAssert {
 	}
 
 	PomAssert hasDependenciesCount(int count) {
-		assertEquals 'Wrong number of declared dependencies -->' + dependencies.keySet(), count, dependencies.size()
+		assertEquals "Wrong number of declared dependencies -->'${dependencies.keySet()}",
+				count, dependencies.size()
 		this
 	}
 
 	PomAssert hasSpringBootStarterDependency(String dependency) {
-		hasDependency('org.springframework.boot', 'spring-boot-starter-' + dependency)
+		hasDependency('org.springframework.boot', "spring-boot-starter-$dependency")
 	}
 
 	PomAssert hasSpringBootStarterRootDependency() {
@@ -124,9 +125,9 @@ class PomAssert {
 	PomAssert hasDependency(String groupId, String artifactId, String version) {
 		def id = generateId(groupId, artifactId)
 		def dependency = dependencies[id]
-		assertNotNull 'No dependency found with ' + id + ' --> ' + dependencies.keySet(), dependency
+		assertNotNull "No dependency found with '$id' --> ${dependencies.keySet()}", dependency
 		if (version) {
-			assertEquals 'Wrong version for '+dependency, version, dependency.version
+			assertEquals "Wrong version for $dependency", version, dependency.version
 		}
 		this
 	}
@@ -149,7 +150,7 @@ class PomAssert {
 				return
 			}
 		}
-		throw new IllegalArgumentException('No repository found with id ' + name)
+		throw new IllegalArgumentException("No repository found with id $name")
 	}
 
 	def hasPluginRepository(String name) {
@@ -159,15 +160,15 @@ class PomAssert {
 				return
 			}
 		}
-		throw new IllegalArgumentException('No plugin repository found with id ' + name)
+		throw new IllegalArgumentException("No plugin repository found with id $name")
 	}
 
 	static String createPropertyNodeXpath(String propertyName) {
-		createRootNodeXPath('properties/pom:' + propertyName)
+		createRootNodeXPath("properties/pom:$propertyName")
 	}
 
 	static String createRootNodeXPath(String node) {
-		'/pom:project/pom:' + node
+		"/pom:project/pom:$node"
 	}
 
 	private def parseDependencies() {

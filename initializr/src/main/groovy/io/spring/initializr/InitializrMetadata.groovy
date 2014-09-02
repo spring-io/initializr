@@ -138,8 +138,7 @@ class InitializrMetadata {
 	private void indexDependency(String id, Dependency dependency) {
 		def existing = indexedDependencies[id]
 		if (existing) {
-			throw new IllegalArgumentException('Could not register ' + dependency +
-					': another dependency has also the "' + id + '" id ' + existing)
+			throw new IllegalArgumentException("Could not register $dependency another dependency has also the '$id' id $existing");
 		}
 		indexedDependencies[id] = dependency
 	}
@@ -148,8 +147,8 @@ class InitializrMetadata {
 		def id = dependency.id
 		if (id == null) {
 			if (!dependency.hasCoordinates()) {
-				throw new InvalidInitializrMetadataException('Invalid dependency, ' +
-						'should have at least an id or a groupId/artifactId pair.')
+				throw new InvalidInitializrMetadataException(
+						'Invalid dependency, should have at least an id or a groupId/artifactId pair.')
 			}
 			dependency.generateId()
 		} else if (!dependency.hasCoordinates()) {
@@ -164,8 +163,8 @@ class InitializrMetadata {
 					dependency.version = st.nextToken()
 				}
 			} else {
-				throw new InvalidInitializrMetadataException('Invalid dependency, id should ' +
-						'have the form groupId:artifactId[:version] but got ' + id)
+				throw new InvalidInitializrMetadataException(
+						"Invalid dependency, id should have the form groupId:artifactId[:version] but got $id")
 			}
 		}
 	}
@@ -176,7 +175,7 @@ class InitializrMetadata {
 				return element.id
 			}
 		}
-		log.warn('No default found amongst' + elements)
+		log.warn("No default found amongst $elements")
 		return (elements.isEmpty() ? null : elements.get(0).id)
 	}
 
@@ -229,8 +228,8 @@ class InitializrMetadata {
 		 */
 		def generateId() {
 			if (groupId == null || artifactId == null) {
-				throw new IllegalArgumentException('Could not generate id for ' + this
-						+ ': at least groupId and artifactId must be set.')
+				throw new IllegalArgumentException(
+						"Could not generate id for $this: at least groupId and artifactId must be set.")
 			}
 			StringBuilder sb = new StringBuilder()
 			sb.append(groupId).append(':').append(artifactId)

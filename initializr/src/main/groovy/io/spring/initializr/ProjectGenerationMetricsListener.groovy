@@ -49,37 +49,43 @@ class ProjectGenerationMetricsListener implements ProjectGenerationListener {
 
 	protected void handleDependencies(ProjectRequest request) {
 		request.dependencies.each {
-			increment(key('dependency.' + sanitize(it.id)))
+			def id = sanitize(it.id)
+			increment(key("dependency.$id"))
 		}
 	}
 
 	protected void handleType(ProjectRequest request) {
 		if (StringUtils.hasText(request.type)) {
-			increment(key('type.' + sanitize(request.type)))
+			def type = sanitize(request.type)
+			increment(key("type.$type"))
 		}
 	}
 
 	protected void handleJavaVersion(ProjectRequest request) {
 		if (StringUtils.hasText(request.javaVersion)) {
-			increment(key('java_version.' + sanitize(request.javaVersion)))
+			def javaVersion = sanitize(request.javaVersion)
+			increment(key("java_version.$javaVersion"))
 		}
 	}
 
 	protected void handlePackaging(ProjectRequest request) {
 		if (StringUtils.hasText(request.packaging)) {
-			increment(key('packaging.' + sanitize(request.packaging)))
+			def packaging = sanitize(request.packaging)
+			increment(key("packaging.$packaging"))
 		}
 	}
 
 	protected void handleLanguage(ProjectRequest request) {
 		if (StringUtils.hasText(request.language)) {
-			increment(key('language.' + sanitize(request.language)))
+			def language = sanitize(request.language)
+			increment(key("language.$language"))
 		}
 	}
 
 	protected void handleBootVersion(ProjectRequest request) {
 		if (StringUtils.hasText(request.bootVersion)) {
-			increment(key('boot_version.' + sanitize(request.bootVersion)))
+			def bootVersion = sanitize(request.bootVersion)
+			increment(key("boot_version.$bootVersion"))
 		}
 	}
 
@@ -88,7 +94,7 @@ class ProjectGenerationMetricsListener implements ProjectGenerationListener {
 	}
 
 	protected String key(String part) {
-		'initializr.' + part
+		"initializr.$part"
 	}
 
 	protected String sanitize(String s) {

@@ -85,8 +85,8 @@ abstract class HomePage {
 			if (checkBox) {
 				checkBox.checked = true
 			} else {
-				throw new IllegalArgumentException('No dependency with name '
-						+ dependency + ' was found amongst ' + allStyles.keySet())
+				throw new IllegalArgumentException(
+						"No dependency with name '$dependency' was found amongst '${allStyles.keySet()}")
 			}
 		}
 	}

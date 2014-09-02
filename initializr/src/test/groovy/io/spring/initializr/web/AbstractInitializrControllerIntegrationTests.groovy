@@ -55,7 +55,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	final RestTemplate restTemplate = new RestTemplate()
 
 	String createUrl(String context) {
-		'http://localhost:' + port + context
+		"http://localhost:$port$context"
 	}
 
 	String htmlHome() {

@@ -95,8 +95,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	private void assertSpringCliRedirect(String context, String extension) {
 		def entity = restTemplate.getForEntity(createUrl(context), ResponseEntity.class)
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
-		assertEquals new URI('https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE' +
-				'/spring-boot-cli-1.1.4.RELEASE-bin.'+extension), entity.getHeaders().getLocation()
+		def expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.$extension"
+		assertEquals new URI(expected), entity.getHeaders().getLocation()
 
 	}
 
@@ -149,47 +149,47 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void homeIsForm() {
 		def body = htmlHome()
-		assertTrue 'Wrong body:\n' + body, body.contains('action="/starter.zip"')
+		assertTrue "Wrong body:\n$body", body.contains('action="/starter.zip"')
 	}
 
 	@Test
 	void homeIsJson() {
 		def body = restTemplate.getForObject(createUrl('/'), String)
-		assertTrue('Wrong body:\n' + body, body.contains('{"dependencies"'))
+		assertTrue("Wrong body:\n$body", body.contains('{"dependencies"'))
 	}
 
 	@Test
 	void webIsAddedPom() {
 		def body = restTemplate.getForObject(createUrl('/pom.xml?packaging=war'), String)
-		assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
-		assertTrue('Wrong body:\n' + body, body.contains('provided'))
+		assertTrue("Wrong body:\n$body", body.contains('spring-boot-starter-web'))
+		assertTrue("Wrong body:\n$body", body.contains('provided'))
 	}
 
 	@Test
 	void webIsAddedGradle() {
 		def body = restTemplate.getForObject(createUrl('/build.gradle?packaging=war'), String)
-		assertTrue('Wrong body:\n' + body, body.contains('spring-boot-starter-web'))
-		assertTrue('Wrong body:\n' + body, body.contains('providedRuntime'))
+		assertTrue("Wrong body:\n$body", body.contains('spring-boot-starter-web'))
+		assertTrue("Wrong body:\n$body", body.contains('providedRuntime'))
 	}
 
 	@Test
 	void infoHasExternalProperties() {
 		def body = restTemplate.getForObject(createUrl('/info'), String)
-		assertTrue('Wrong body:\n' + body, body.contains('"spring-boot"'))
-		assertTrue('Wrong body:\n' + body, body.contains('"version":"1.1.4.RELEASE"'))
+		assertTrue("Wrong body:\n$body", body.contains('"spring-boot"'))
+		assertTrue("Wrong body:\n$body", body.contains('"version":"1.1.4.RELEASE"'))
 	}
 
 	@Test
 	void homeHasWebStyle() {
 		def body = htmlHome()
-		assertTrue('Wrong body:\n' + body, body.contains('name="style" value="web"'))
+		assertTrue("Wrong body:\n$body", body.contains('name="style" value="web"'))
 	}
 
 	@Test
 	void homeHasBootVersion() {
 		def body = htmlHome()
-		assertTrue('Wrong body:\n' + body, body.contains('name="bootVersion"'))
-		assertTrue('Wrong body:\n' + body, body.contains('1.2.0.BUILD-SNAPSHOT"'))
+		assertTrue("Wrong body:\n$body", body.contains('name="bootVersion"'))
+		assertTrue("Wrong body:\n$body", body.contains('1.2.0.BUILD-SNAPSHOT"'))
 	}
 
 	@Test
@@ -218,7 +218,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private static JSONObject readJson(String version) {
-		def resource = new ClassPathResource('metadata/test-default-' + version + '.json')
+		def resource = new ClassPathResource("metadata/test-default-$version" + ".json")
 		def stream = resource.inputStream
 		try {
 			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))

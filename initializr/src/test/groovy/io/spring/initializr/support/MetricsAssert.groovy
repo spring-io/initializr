@@ -36,21 +36,21 @@ class MetricsAssert {
 		metrics.each {
 			def actual = counterService.values[it]
 			if (actual == null) {
-				fail('Metric ' + it + ' not found, got ' + counterService.values.keySet())
+				fail("Metric '$it' not found, got '${counterService.values.keySet()}")
 			}
-			assertEquals 'Wrong value for metric ' + it, value, actual
+			assertEquals "Wrong value for metric $it", value, actual
 		}
 		this
 	}
 
 	MetricsAssert hasNoValue(String... metrics) {
 		metrics.each {
-			assertEquals 'Metric ' + it + ' should not be registered', null, counterService.values[it]
+			assertEquals "Metric '$it' should not be registered", null, counterService.values[it]
 		}
 	}
 
 	MetricsAssert metricsCount(int count) {
-		assertEquals 'Wrong number of metrics, got ' + counterService.values.keySet(),
+		assertEquals "Wrong number of metrics, got '${counterService.values.keySet()}",
 				count, counterService.values.size()
 		this
 	}

@@ -83,7 +83,7 @@ class ProjectAssert {
 
 	ProjectAssert assertFile(String localPath, boolean exist) {
 		def candidate = file(localPath)
-		assertEquals 'Invalid presence (' + exist + ') for ' + localPath, exist, candidate.exists()
+		assertEquals "Invalid presence ('$exist') for $localPath", exist, candidate.exists()
 		this
 	}
 

@@ -38,7 +38,7 @@ class SpringBootMetadataReaderTests {
 			assertNotNull 'Name must be set', it.name
 			if (it.default) {
 				if (defaultFound) {
-					fail('One default version was already found ' + it.id)
+					fail("One default version was already found $it.id")
 				}
 				defaultFound = true
 			}

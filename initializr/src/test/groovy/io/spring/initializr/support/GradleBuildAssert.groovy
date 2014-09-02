@@ -44,24 +44,24 @@ class GradleBuildAssert {
 	}
 
 	GradleBuildAssert hasArtifactId(String artifactId) {
-		contains('baseName = \'' + artifactId + '\'')
+		contains("baseName = '$artifactId'")
 	}
 
 	GradleBuildAssert hasVersion(String version) {
-		contains('version = \'' + version + '\'')
+		contains("version = '$version'")
 	}
 
 	GradleBuildAssert hasBootVersion(String bootVersion) {
-		contains('springBootVersion = \'' + bootVersion + '\'')
+		contains("springBootVersion = '$bootVersion'")
 	}
 
 	GradleBuildAssert hasJavaVersion(String javaVersion) {
-		contains('sourceCompatibility = ' + javaVersion + '')
-		contains('targetCompatibility = ' + javaVersion + '')
+		contains("sourceCompatibility = $javaVersion")
+		contains("targetCompatibility = $javaVersion")
 	}
 
 	GradleBuildAssert contains(String expression) {
-		assertTrue expression + ' has not been found in gradle build', content.contains(expression)
+		assertTrue "$expression has not been found in gradle build", content.contains(expression)
 		this
 	}
 }

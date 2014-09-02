@@ -52,7 +52,7 @@ class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 		def url = metadata.env.springBootMetadataUrl
 		if (url) {
 			try {
-				log.info('Fetching boot metadata from '+ url)
+				log.info("Fetching boot metadata from $url")
 				return new SpringBootMetadataReader(url).getBootVersions()
 			} catch (Exception e) {
 				log.warn('Failed to fetch spring boot metadata', e)

@@ -86,15 +86,15 @@ class ProjectGenerator {
 
 		def language = request.language
 
-		def src = new File(new File(dir, 'src/main/' + language), request.packageName.replace('.', '/'))
+		def src = new File(new File(dir, "src/main/$language"), request.packageName.replace('.', '/'))
 		src.mkdirs()
-		write(src, 'Application.' + language, model)
+		write(src, "Application.$language", model)
 
 		if (request.packaging == 'war') {
-			write(src, 'ServletInitializer.' + language, model)
+			write(src, "ServletInitializer.$language", model)
 		}
 
-		def test = new File(new File(dir, 'src/test/' + language), request.packageName.replace('.', '/'))
+		def test = new File(new File(dir, "src/test/$language"), request.packageName.replace('.', '/'))
 		test.mkdirs()
 		if (request.hasWebFacet()) {
 			model.testAnnotations = '@WebAppConfiguration\n'
@@ -103,7 +103,7 @@ class ProjectGenerator {
 			model.testAnnotations = ''
 			model.testImports = ''
 		}
-		write(test, 'ApplicationTests.' + language, model)
+		write(test, "ApplicationTests.$language", model)
 
 		def resources = new File(dir, 'src/main/resources')
 		resources.mkdirs()
@@ -158,8 +158,8 @@ class ProjectGenerator {
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested
-		log.info('Processing request{type=' + request.type + ', ' +
-				'dependencies=' + request.dependencies.collect {it.id}+ '}')
+		def dependencies = request.dependencies.collect { it.id }
+		log.info("Processing request{type=$request.type, dependencies=$dependencies}")
 
 		request.properties.each { model[it.key] = it.value }
 		model
@@ -182,7 +182,7 @@ class ProjectGenerator {
 
 	private void addTempFile(String group, File file) {
 		def content = temporaryFiles[group]
-		if (content == null) {
+		if (!content) {
 			content = []
 			temporaryFiles[group] = content
 		}
