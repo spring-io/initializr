@@ -101,12 +101,7 @@ class MainController extends AbstractInitializrController {
 		new AntBuilder().zip(destfile: download) {
 			zipfileset(dir: dir, includes: '**')
 		}
-		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
-		def result = new ResponseEntity<byte[]>(download.bytes,
-				['Content-Type': 'application/zip'] as HttpHeaders, HttpStatus.OK)
-
-		projectGenerator.cleanTempFiles(dir)
-		result
+		upload(download, dir, generateFileName(request, 'zip'), 'application/zip')
 	}
 
 	@RequestMapping(value='/starter.tgz', produces='application/x-compress')
@@ -119,10 +114,20 @@ class MainController extends AbstractInitializrController {
 		new AntBuilder().tar(destfile: download, compression: 'gzip') {
 			zipfileset(dir:dir, includes:'**')
 		}
-		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
-		def result = new ResponseEntity<byte[]>(download.bytes,
-				['Content-Type':'application/x-compress'] as HttpHeaders, HttpStatus.OK)
+		upload(download, dir, generateFileName(request, 'tgz'), 'application/x-compress')
+	}
 
+	private static String generateFileName(ProjectRequest request, String extension) {
+		String tmp = request.artifactId.replaceAll(' ', '_')
+		URLEncoder.encode(tmp, 'UTF-8') + '.' + extension
+	}
+
+	private ResponseEntity<byte[]> upload(File download, File dir, String fileName, String contentType) {
+		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
+		String contentDispositionValue = "attachment; filename=\"$fileName\""
+		def result = new ResponseEntity<byte[]>(download.bytes,
+				['Content-Type': contentType,
+				 'Content-Disposition': contentDispositionValue] as HttpHeaders, HttpStatus.OK)
 		projectGenerator.cleanTempFiles(dir)
 		result
 	}

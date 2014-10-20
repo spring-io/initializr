@@ -16,9 +16,8 @@
 
 package io.spring.initializr.web.support
 
-import com.gargoylesoftware.htmlunit.Page
+import com.gargoylesoftware.htmlunit.WebResponse
 import com.gargoylesoftware.htmlunit.html.*
-import io.spring.initializr.support.ProjectAssert
 
 /**
  * Represent the home page of the service.
@@ -44,14 +43,14 @@ abstract class HomePage {
 
 	/**
 	 * Generate a project using the specified temporary directory. Return
-	 * the {@link ProjectAssert} instance.
+	 * the {@link WebResponse}.
 	 * @see org.junit.rules.TemporaryFolder
 	 */
-	byte[] generateProject() {
+	WebResponse generateProject() {
 		setup()
 		def submit = page.getElementByName('generate-project')
 		def newMessagePage = submit.click();
-		newMessagePage.webResponse.contentAsStream.bytes
+		newMessagePage.webResponse
 	}
 
 	/**

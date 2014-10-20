@@ -18,6 +18,7 @@ package io.spring.initializr.web
 
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.WebRequest
+import com.gargoylesoftware.htmlunit.WebResponse
 import com.gargoylesoftware.htmlunit.html.HtmlPage
 import io.spring.initializr.support.ProjectAssert
 import io.spring.initializr.web.support.HomePage
@@ -27,10 +28,11 @@ import org.junit.Test
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.htmlunit.MockMvcWebConnection
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+
+import static org.junit.Assert.assertEquals
 
 /**
  * Integration tests that are actually using the HTML page to request new
@@ -64,7 +66,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	@Test
 	void createDefaultProject() {
 		def page = home()
-		def projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page.generateProject().contentAsStream.bytes)
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(false)
 				.pomAssert().hasDependenciesCount(2)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
@@ -78,7 +80,12 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		page.name = 'My project'
 		page.description = 'A description for my project'
 		page.dependencies << 'web' << 'data-jpa'
-		def projectAssert = zipProjectAssert(page.generateProject())
+
+		WebResponse webResponse = page.generateProject()
+		String value = webResponse.getResponseHeaderValue('Content-Disposition')
+		assertEquals  'attachment; filename="foo-bar.zip"', value
+
+		def projectAssert = zipProjectAssert(webResponse)
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(true)
 
 		projectAssert.pomAssert().hasGroupId('com.acme').hasArtifactId('foo-bar')
@@ -113,6 +120,10 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		def request = new WebRequest(new URL("http://localhost${homeContext()}"), 'text/html')
 		def home = webClient.getPage(request)
 		createHomePage(home)
+	}
+
+	ProjectAssert zipProjectAssert(WebResponse webResponse) {
+		zipProjectAssert(webResponse.contentAsStream.bytes)
 	}
 
 	/**
