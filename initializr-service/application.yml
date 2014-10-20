@@ -4,7 +4,7 @@ info:
     version: 0.3.0
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.1.5.RELEASE
+    version: 1.1.8.RELEASE
 
 initializr:
   dependencies:
@@ -130,8 +130,8 @@ initializr:
     - name : Latest SNAPSHOT
       id: 1.2.0.BUILD-SNAPSHOT
       default: false
-    - name: 1.1.5
-      id: 1.1.5.RELEASE
+    - name: 1.1.8
+      id: 1.1.8.RELEASE
       default: true
     - name: 1.0.2
       id: 1.0.2.RELEASE
