@@ -81,14 +81,14 @@ class MainController extends AbstractInitializrController {
 	@ResponseBody
 	ResponseEntity<byte[]> pom(ProjectRequest request) {
 		def mavenPom = projectGenerator.generateMavenPom(request)
-		new ResponseEntity<byte[]>(mavenPom, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
+		createResponseEntity(mavenPom, 'application/octet-stream', 'pom.xml')
 	}
 
 	@RequestMapping('/build')
 	@ResponseBody
 	ResponseEntity<byte[]> gradle(ProjectRequest request) {
 		def gradleBuild = projectGenerator.generateGradleBuild(request)
-		new ResponseEntity<byte[]>(gradleBuild, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
+		createResponseEntity(gradleBuild, 'application/octet-stream', 'build.gradle')
 	}
 
 	@RequestMapping('/starter.zip')
@@ -124,11 +124,16 @@ class MainController extends AbstractInitializrController {
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName, String contentType) {
 		log.info("Uploading: ${download} (${download.bytes.length} bytes)")
-		String contentDispositionValue = "attachment; filename=\"$fileName\""
-		def result = new ResponseEntity<byte[]>(download.bytes,
-				['Content-Type': contentType,
-				 'Content-Disposition': contentDispositionValue] as HttpHeaders, HttpStatus.OK)
+		ResponseEntity<byte[]> result = createResponseEntity(download.bytes, contentType, fileName)
 		projectGenerator.cleanTempFiles(dir)
+		result
+	}
+
+	private ResponseEntity<byte[]> createResponseEntity(byte[] content, String contentType, String fileName) {
+		String contentDispositionValue = "attachment; filename=\"$fileName\""
+		def result = new ResponseEntity<byte[]>(content,
+				['Content-Type'       : contentType,
+				 'Content-Disposition': contentDispositionValue] as HttpHeaders, HttpStatus.OK)
 		result
 	}
 
