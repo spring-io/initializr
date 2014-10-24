@@ -9,6 +9,7 @@ initializr:
       content:
         - name: Web
           id: web
+          description: Web dependency description
           facets:
             - web
         - name: Security

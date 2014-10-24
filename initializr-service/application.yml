@@ -12,82 +12,109 @@ initializr:
       content:
         - name: Security
           id: security
+          description: Support for spring-security
         - name: AOP
           id: aop
+          description: Support for aspect-oriented programming including spring-aop and AspectJ
     - name: Data
       content:
         - name: JDBC
           id: jdbc
+          description: Support for JDBC databases
         - name: JPA
           id: data-jpa
+          description: Support for the Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           aliases:
             - jpa
         - name: MongoDB
           id: data-mongodb
+          description: Support for the MongoDB NoSQL Database, including spring-data-mongodb
         - name: Redis
           id: redis
+          description: Support for the REDIS key-value data store, including spring-redis
         - name: Gemfire
           id: data-gemfire
+          description: Support for the GemFire distributed data store including spring-data-gemfire
         - name: Solr
           id: data-solr
+          description: Support for the Apache Solr search platform, including spring-data-solr
         - name: Elasticsearch
           id: data-elasticsearch
+          description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
     - name: I/O
       content:
         - name: Batch
           id: batch
+          description: Support for Spring Batch including HSQLDB database
         - name: Integration
           id: integration
+          description: Support for common spring-integration modules
         - name: JMS
           id: hornetq
+          description: Support for Java Message Service API via HornetQ
         - name: AMQP
           id: amqp
+          description: Support for the Advanced Message Queuing Protocol via spring-rabbit
     - name: Web
       content:
         - name: Web
           id: web
+          description: Support for full-stack web development, including Tomcat and spring-webmvc
           facets:
             - web
         - name: Websocket
           id: websocket
+          description: Support for websocket development with Tomcat
         - name: WS
           id: ws
+          description: Support for Spring Web Services
         - name: Rest Repositories
           id: data-rest
+          description: Support for exposing Spring Data repositories over REST via spring-data-rest-webmvc
         - name: Mobile
           id: mobile
+          description: Support for spring-mobile
     - name: Template Engines
       content:
         - name: Freemarker
           id: freemarker
+          description: Support for the FreeMarker templating engine
           facets:
             - web
         - name: Velocity
           id: velocity
+          description: Support for the Velocity templating engine
           facets:
             - web
         - name: Groovy Templates
           id: groovy-templates
+          description: Support for the Groovy templating engine
           facets:
             - web
         - name: Thymeleaf
           id: thymeleaf
+          description: Support for the Thymeleaf templating engine, including integration with Spring
           facets:
             - web
     - name: Social
       content:
         - name: Facebook
           id: social-facebook
+          description: Support for spring-social-facebook
         - name: LinkedIn
           id: social-linkedin
+          description: Support for spring-social-linkedin
         - name: Twitter
           id: social-twitter
+          description: Support for spring-social-twitter
     - name: Ops
       content:
         - name: Actuator
           id: actuator
+          description: Production ready features to help you monitor and manage your application
         - name: Remote Shell
           id: remote-shell
+          description: Support for CRaSH
   types:
     - name: Maven POM
       id: maven-build

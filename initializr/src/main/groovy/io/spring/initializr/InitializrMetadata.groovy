@@ -206,6 +206,8 @@ class InitializrMetadata {
 		@JsonIgnore
 		String version
 
+		String description
+
 		/**
 		 * Specify if the dependency has its coordinates set, i.e. {@code groupId}
 		 * and {@code artifactId}.
