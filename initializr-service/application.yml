@@ -90,19 +90,19 @@ initializr:
           id: remote-shell
   types:
     - name: Maven POM
-      id: pom.xml
+      id: maven-build
       default: false
       action: /pom.xml
     - name: Maven Project
-      id: starter.zip
+      id: maven-project
       default: true
       action: /starter.zip
     - name: Gradle Config
-      id: build.gradle
+      id: gradle-build
       default: false
       action: /build.gradle
     - name: Gradle Project
-      id: gradle.zip
+      id: gradle-project
       default: false
       action: /starter.zip
   packagings:
