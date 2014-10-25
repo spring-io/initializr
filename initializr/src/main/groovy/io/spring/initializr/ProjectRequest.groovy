@@ -57,7 +57,7 @@ class ProjectRequest {
 			def dependency = metadata.getDependency(it)
 			if (dependency == null) {
 				if (it.contains(':')) {
-					throw new IllegalArgumentException("Unknown dependency '$it' check project metadata")
+					throw new InvalidProjectRequestException("Unknown dependency '$it' check project metadata")
 				}
 				log.warn("No known dependency for style '$it' assuming spring-boot-starter")
 				dependency = new InitializrMetadata.Dependency()

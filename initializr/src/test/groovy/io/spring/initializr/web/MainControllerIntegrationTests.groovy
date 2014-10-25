@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.StreamUtils
+import org.springframework.web.client.HttpClientErrorException
 
 import static org.junit.Assert.*
 
@@ -38,6 +39,9 @@ import static org.junit.Assert.*
  */
 @ActiveProfiles('test-default')
 class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+
+	private final def slurper = new JsonSlurper()
+
 
 	@Test
 	void simpleZipProject() {
@@ -140,8 +144,23 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private def metricsEndpoint() {
-		def slurper = new JsonSlurper()
-		slurper.parseText(restTemplate.getForObject(createUrl('/metrics'), String))
+		parseJson(restTemplate.getForObject(createUrl('/metrics'), String))
+	}
+
+	@Test
+	void missingDependencyProperException() {
+		try {
+			invoke('/starter.zip?style=foo:bar')
+		} catch (HttpClientErrorException ex) {
+			def error = parseJson(ex.responseBodyAsString)
+			assertEquals HttpStatus.BAD_REQUEST, ex.getStatusCode()
+			assertTrue 'Dependency not in error message', error.message.contains('foo:bar')
+		}
+
+	}
+
+	private def parseJson(String content) {
+		slurper.parseText(content)
 	}
 
 	@Test
@@ -212,13 +231,17 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 
+	private byte[] invoke(String context) {
+		restTemplate.getForObject(createUrl(context), byte[])
+	}
+
 	private ProjectAssert downloadZip(String context) {
-		def body = restTemplate.getForObject(createUrl(context), byte[])
+		def body = invoke(context)
 		zipProjectAssert(body)
 	}
 
 	private ProjectAssert downloadTgz(String context) {
-		def body = restTemplate.getForObject(createUrl(context), byte[])
+		def body = invoke(context)
 		tgzProjectAssert(body)
 	}
 

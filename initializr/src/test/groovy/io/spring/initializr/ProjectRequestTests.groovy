@@ -73,7 +73,7 @@ class ProjectRequestTests {
 
 		request.style << 'org.foo:acme' // does not exist and
 
-		thrown.expect(IllegalArgumentException)
+		thrown.expect(InvalidProjectRequestException)
 		thrown.expectMessage('org.foo:acme')
 		request.resolve(metadata)
 	}

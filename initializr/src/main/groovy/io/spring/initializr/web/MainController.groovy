@@ -104,7 +104,7 @@ class MainController extends AbstractInitializrController {
 		upload(download, dir, generateFileName(request, 'zip'), 'application/zip')
 	}
 
-	@RequestMapping(value='/starter.tgz', produces='application/x-compress')
+	@RequestMapping(value = '/starter.tgz', produces = 'application/x-compress')
 	@ResponseBody
 	ResponseEntity<byte[]> springTgz(ProjectRequest request) {
 		def dir = projectGenerator.generateProjectStructure(request)
@@ -112,7 +112,7 @@ class MainController extends AbstractInitializrController {
 		def download = projectGenerator.createDistributionFile(dir, '.tgz')
 
 		new AntBuilder().tar(destfile: download, compression: 'gzip') {
-			zipfileset(dir:dir, includes:'**')
+			zipfileset(dir: dir, includes: '**')
 		}
 		upload(download, dir, generateFileName(request, 'tgz'), 'application/x-compress')
 	}

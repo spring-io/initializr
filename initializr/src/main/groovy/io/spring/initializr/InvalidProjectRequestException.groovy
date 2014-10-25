@@ -18,13 +18,16 @@ package io.spring.initializr
 
 import groovy.transform.InheritConstructors
 
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
+
 /**
- * Thrown when the configuration defines invalid metadata.
+ * Thrown when a {@link ProjectRequest} is invalid.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
 @InheritConstructors
-class InvalidInitializrMetadataException extends InitializrException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class InvalidProjectRequestException extends InitializrException {
 }
-

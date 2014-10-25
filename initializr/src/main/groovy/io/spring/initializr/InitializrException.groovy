@@ -19,12 +19,11 @@ package io.spring.initializr
 import groovy.transform.InheritConstructors
 
 /**
- * Thrown when the configuration defines invalid metadata.
+ * Base Initializr exception.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
 @InheritConstructors
-class InvalidInitializrMetadataException extends InitializrException {
+class InitializrException extends RuntimeException {
 }
-
