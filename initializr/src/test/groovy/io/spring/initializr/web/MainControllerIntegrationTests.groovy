@@ -144,6 +144,11 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		slurper.parseText(restTemplate.getForObject(createUrl('/metrics'), String))
 	}
 
+	@Test
+	void downloadWithUnknownSpringBootStarter() { // Simple id are accepted as spring-boot-starter
+		 downloadZip('/starter.zip?style=foo').pomAssert().hasSpringBootStarterDependency('foo')
+	}
+
 	// Existing tests for backward compatibility
 
 	@Test

@@ -223,6 +223,7 @@ class InitializrMetadata {
 		def asSpringBootStarter(String name) {
 			groupId = 'org.springframework.boot'
 			artifactId = StringUtils.hasText(name) ? 'spring-boot-starter-' + name : 'spring-boot-starter'
+			id = name
 		}
 
 		/**
