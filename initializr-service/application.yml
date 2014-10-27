@@ -117,19 +117,19 @@ initializr:
           description: Support for CRaSH
   types:
     - name: Maven POM
-      id: maven-build
+      id: pom.xml
       default: false
       action: /pom.xml
     - name: Maven Project
-      id: maven-project
+      id: starter.zip
       default: true
       action: /starter.zip
     - name: Gradle Config
-      id: gradle-build
+      id: build.gradle
       default: false
       action: /build.gradle
     - name: Gradle Project
-      id: gradle-project
+      id: gradle.zip
       default: false
       action: /starter.zip
   packagings:
