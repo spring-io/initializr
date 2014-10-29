@@ -33,6 +33,11 @@ import org.springframework.context.annotation.Configuration
 class LegacyStsControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
 
 	@Override
+	void createSimpleGradleProject() {
+		createSimpleGradleProject('gradle.zip')
+	}
+
+	@Override
 	protected String homeContext() {
 		'/sts'
 	}

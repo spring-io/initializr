@@ -242,6 +242,10 @@ class InitializrMetadata {
 
 	static class Type extends DefaultIdentifiableElement {
 
+		@JsonIgnore
+		@Deprecated
+		String stsId
+
 		String action
 	}
 

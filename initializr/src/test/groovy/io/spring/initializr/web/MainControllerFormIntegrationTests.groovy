@@ -27,6 +27,12 @@ import io.spring.initializr.web.support.HomePage
  */
 class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
 
+
+	@Override
+	void createSimpleGradleProject() {
+		createSimpleGradleProject('gradle-project')
+	}
+
 	@Override
 	protected String homeContext() {
 		'/'

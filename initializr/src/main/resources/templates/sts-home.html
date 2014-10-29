@@ -50,7 +50,7 @@
             <label>Type:</label>
             <% types.each { %>
             <label class="radio">
-                <input type="radio" name="type" value="${it.id}"${it.default==true ? ' checked="true"' : ''} onclick="javascript:this.form.action='${it.action}'"/>
+                <input type="radio" name="type" value="${it.stsId}"${it.default==true ? ' checked="true"' : ''} onclick="javascript:this.form.action='${it.action}'"/>
                 ${it.name}
             </label><% } %>
             <label>Packaging:</label>

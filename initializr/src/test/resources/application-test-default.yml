@@ -29,19 +29,23 @@ initializr:
           version: 2.1.0
   types:
     - name: Maven POM
-      id: pom.xml
+      id: maven-build
+      sts-id: pom.xml
       default: false
       action: /pom.xml
     - name: Maven Project
-      id: starter.zip
+      id: maven-project
+      sts-id: starter.zip
       default: true
       action: /starter.zip
     - name: Gradle Config
-      id: build.gradle
+      id: gradle-build
+      sts-id: build.gradle
       default: false
       action: /build.gradle
     - name: Gradle Project
-      id: gradle.zip
+      id: gradle-project
+      sts-id: gradle.zip
       default: false
       action: /starter.zip
   packagings:

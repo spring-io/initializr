@@ -96,13 +96,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	}
 
 	@Test
-	void createSimpleGradleProject() {
-		def page = home()
-		page.type = 'gradle.zip'
-		page.dependencies << 'data-jpa'
-		def projectAssert = zipProjectAssert(page.generateProject())
-		projectAssert.isGradleProject().isJavaProject().hasStaticAndTemplatesResources(false)
-	}
+	abstract void createSimpleGradleProject()
 
 	@Test
 	void createWarProject() {
@@ -114,6 +108,14 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 				.hasSpringBootStarterDependency('web') // Added with war packaging
 				.hasSpringBootStarterDependency('tomcat')
 				.hasSpringBootStarterDependency('test')
+	}
+
+	void createSimpleGradleProject(String projectType) {
+		def page = home()
+		page.type =  projectType
+		page.dependencies << 'data-jpa'
+		def projectAssert = zipProjectAssert(page.generateProject())
+		projectAssert.isGradleProject().isJavaProject().hasStaticAndTemplatesResources(false)
 	}
 
 	HomePage home() {

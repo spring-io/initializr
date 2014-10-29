@@ -32,25 +32,25 @@
 ], "types": [
     {
         "name": "Maven POM",
-        "id": "pom.xml",
+        "id": "maven-build",
         "action": "/pom.xml",
         "default": false
     },
     {
         "name": "Maven Project",
-        "id": "starter.zip",
+        "id": "maven-project",
         "action": "/starter.zip",
         "default": true
     },
     {
         "name": "Gradle Config",
-        "id": "build.gradle",
+        "id": "gradle-build",
         "action": "/build.gradle",
         "default": false
     },
     {
         "name": "Gradle Project",
-        "id": "gradle.zip",
+        "id": "gradle-project",
         "action": "/starter.zip",
         "default": false
     }
@@ -115,7 +115,7 @@
     "name": "demo",
     "description": "Demo project for Spring Boot",
     "packageName": "demo",
-    "type": "starter.zip",
+    "type": "maven-project",
     "packaging": "jar",
     "javaVersion": "1.7",
     "language": "java",
