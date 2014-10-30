@@ -68,16 +68,24 @@ class InitializrMetadataBuilder {
 	}
 
 	InitializrMetadataBuilder addDefaultTypes() {
-		addType('pom.xml', false, '/pom.xml').addType('starter.zip', true, '/starter.zip')
-				.addType('build.gradle', false, '/build.gradle').addType('gradle.zip', false, '/starter.zip')
+		addType('maven-build', false, '/pom.xml', 'maven', 'build')
+				.addType('maven-project', true, '/starter.zip', 'maven', 'project')
+				.addType('gradle-build', false, '/build.gradle', 'gradle', 'build')
+				.addType('gradle-project', false, '/starter.zip', 'gradle', 'project')
 	}
 
-	InitializrMetadataBuilder addType(String id, boolean defaultValue, String action) {
+	InitializrMetadataBuilder addType(String id, boolean defaultValue, String action, String build, String format) {
 		def type = new InitializrMetadata.Type()
 		type.id = id
 		type.name = id
 		type.default = defaultValue
 		type.action = action
+		if (build) {
+			type.tags['build'] = build
+		}
+		if (format) {
+			type.tags['format'] = format
+		}
 		metadata.types.add(type)
 		this
 	}

@@ -75,6 +75,19 @@ class InitializrMetadata {
 	}
 
 	/**
+	 * Return the {@link Type} with the specified id or {@code null} if no
+	 * such type exists.
+	 */
+	Type getType(String id) {
+		for (it in this.types) {
+			if (id.equals(it.id) || id.equals(it.stsId)) {
+				return it
+			}
+		}
+		return null
+	}
+
+	/**
 	 * Create an URL suitable to download Spring Boot cli for the specified version and extension.
 	 */
 	String createCliDistributionURl(String extension) {
@@ -247,6 +260,8 @@ class InitializrMetadata {
 		String stsId
 
 		String action
+
+		final Map<String, String> tags = [:]
 	}
 
 	static class Packaging extends DefaultIdentifiableElement {

@@ -31,21 +31,33 @@ initializr:
     - name: Maven POM
       id: maven-build
       sts-id: pom.xml
+      tags:
+        build: maven
+        format: build
       default: false
       action: /pom.xml
     - name: Maven Project
       id: maven-project
       sts-id: starter.zip
+      tags:
+        build: maven
+        format: project
       default: true
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
       sts-id: build.gradle
+      tags:
+        build: gradle
+        format: build
       default: false
       action: /build.gradle
     - name: Gradle Project
       id: gradle-project
       sts-id: gradle.zip
+      tags:
+        build: gradle
+        format: project
       default: false
       action: /starter.zip
   packagings:

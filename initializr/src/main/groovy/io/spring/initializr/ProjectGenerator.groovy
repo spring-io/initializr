@@ -76,7 +76,7 @@ class ProjectGenerator {
 		dir.delete()
 		dir.mkdirs()
 
-		if (request.type.contains('gradle')) {
+		if ('gradle'.equals(request.build)) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
 		} else {

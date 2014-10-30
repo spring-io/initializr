@@ -44,6 +44,7 @@ class ProjectRequest {
 
 	def dependencies = []
 	def facets = []
+	def build
 
 	/**
 	 * Resolve this instance against the specified {@link InitializrMetadata}
@@ -70,6 +71,17 @@ class ProjectRequest {
 				if (!facets.contains(it)) {
 					facets.add(it)
 				}
+			}
+		}
+
+		if (this.type) {
+			InitializrMetadata.Type type = metadata.getType(this.type)
+			if (!type) {
+				throw new InvalidProjectRequestException("Unknown type '${this.type}' check project metadata")
+			}
+			String buildTag = type.tags['build']
+			if (buildTag) {
+				this.build = buildTag
 			}
 		}
 		afterResolution(metadata)

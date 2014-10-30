@@ -90,16 +90,16 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
-		metricsAssert.hasValue(1, 'initializr.type.starter_zip')
+		metricsAssert.hasValue(1, 'initializr.type.maven-project')
 	}
 
 	@Test
 	void explicitType() {
 		def request = initialize()
-		request.type = 'build.gradle'
+		request.type = 'gradle-build'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
-		metricsAssert.hasValue(1, 'initializr.type.build_gradle')
+		metricsAssert.hasValue(1, 'initializr.type.gradle-build')
 	}
 
 	@Test
@@ -174,7 +174,7 @@ class ProjectGenerationMetricsListenerTests {
 	void collectAllMetrics() {
 		def request = initialize()
 		request.style << 'web' << 'security'
-		request.type = 'gradle.zip'
+		request.type = 'gradle-project'
 		request.packaging = 'jar'
 		request.javaVersion = '1.6'
 		request.language = 'groovy'
@@ -184,7 +184,7 @@ class ProjectGenerationMetricsListenerTests {
 		listener.onGeneratedProject(request)
 		metricsAssert.hasValue(1, 'initializr.requests',
 				'initializr.dependency.web', 'initializr.dependency.security',
-				'initializr.type.gradle_zip', 'initializr.packaging.jar',
+				'initializr.type.gradle-project', 'initializr.packaging.jar',
 				'initializr.java_version.1_6', 'initializr.language.groovy',
 				'initializr.boot_version.1_0_2_RELEASE').metricsCount(8)
 	}

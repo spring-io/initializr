@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNull
 
 /**
  * @author Stephane Nicoll
@@ -37,8 +38,10 @@ class ProjectRequestTests {
 		def metadata = InitializrMetadataBuilder.withDefaults()
 				.addDependencyGroup('code', 'web', 'security', 'spring-data').validateAndGet()
 
+		request.type = 'maven-project'
 		request.style << 'web' << 'spring-data'
 		request.resolve(metadata)
+		assertEquals 'Build type not detected', 'maven', request.build
 		assertBootStarter(request.dependencies[0], 'web')
 		assertBootStarter(request.dependencies[1], 'spring-data')
 	}
@@ -75,6 +78,38 @@ class ProjectRequestTests {
 
 		thrown.expect(InvalidProjectRequestException)
 		thrown.expectMessage('org.foo:acme')
+		request.resolve(metadata)
+	}
+
+	@Test
+	void resolveBuild() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+		request.type = 'gradle-project'
+
+		request.resolve(metadata)
+		assertEquals 'gradle', request.build
+	}
+
+	@Test
+	void resolveBuildNoTag() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addType('foo', false, '/foo.zip', null, null).validateAndGet()
+		request.type = 'foo'
+
+		request.resolve(metadata)
+		assertNull request.build
+	}
+
+	@Test
+	void resolveUnknownType() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+		request.type = 'foo-project'
+
+		thrown.expect(InvalidProjectRequestException)
+		thrown.expectMessage('foo-project')
 		request.resolve(metadata)
 	}
 

@@ -107,8 +107,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test // Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
 		def json = restTemplate.getForObject(createUrl('/'), String.class)
-		def expected = readJson('1.0.1')
+		def expected = readJson('1.1.0')
 		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT)
+	}
+
+	@Test // Test that the  current code complies "at least" with 1.0.1
+	void validateProjectMetadata101() {
+		def json = restTemplate.getForObject(createUrl('/'), String.class)
+		def expected = readJson('1.0.1')
+		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
 	}
 
 	@Test // Test that the  current code complies "at least" with 1.0.0
