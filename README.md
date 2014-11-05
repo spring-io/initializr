@@ -53,6 +53,10 @@ First make sure that you have built the library:
 
     $ cd initializr
     $ mvn clean install
+    
+The "springMilestone" might needed to bootstrap your lcoal Maven cache:
+
+    $ mvn clean install -P springMilestone
 
 Once you have done that, you can easily start the app using the spring command from the `initializr-service`
 directory (`cd ../initializr-service`):
