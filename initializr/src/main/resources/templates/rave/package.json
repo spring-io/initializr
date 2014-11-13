@@ -1,0 +1,15 @@
+{
+  "name": "app",
+  "version": "0.4.0",
+  "description": "My awesome app created with RaveJS.",
+  "main": "app/main.js",
+  "devDependencies": {
+    "serv": "0.0.7"
+  },
+  "scripts": {
+    "start": "serv"
+  },
+  "dependencies": {
+    "rave": "^0.4.3"
+  }
+}

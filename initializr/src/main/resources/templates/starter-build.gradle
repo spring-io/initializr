@@ -39,7 +39,7 @@ repositories {
     providedRuntime
 }
 <% } %>
-dependencies {<% dependencies.each { %>
+dependencies {<% dependencies.findAll{it.hasSpringBootStarter}.each { %>
     compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
     compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>
@@ -52,6 +52,15 @@ eclipse {
          containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
     }
 }
+
+<% if (facets.contains('rave')) {%>task clientInstall(type:Exec) {
+	logging.captureStandardOutput LogLevel.INFO
+	logging.captureStandardError LogLevel.LIFECYCLE
+	workingDir './src/main/resources/static'
+	commandLine 'npm', 'install'
+}
+
+build.dependsOn clientInstall<% } %>
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'

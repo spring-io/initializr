@@ -96,6 +96,15 @@ initializr:
           description: Support for the Thymeleaf templating engine, including integration with Spring
           facets:
             - web
+    - name: JavaScript
+      content:
+        - name: Rave
+          id: rave
+          hasSpringBootStarter: false
+          description: Zero-configuration application bootstrap and development
+          facets:
+            - web
+            - rave
     - name: Social
       content:
         - name: Facebook
