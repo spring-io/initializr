@@ -12,10 +12,12 @@
 
 'use strict';
 
+// This is the fundamental component for a CommonJS module. DO NOT DELETE!
 module.exports = function() {
 
 	// Start writing your code here, in a nicely contained module.
 	console.log('Greetings from RaveJS!');
 
-	// For more about CommonJS, see http://know.cujojs.com/tutorials/modules/authoring-cjs-modules
+	// For more about writing CommonJS modules,
+	// see http://know.cujojs.com/tutorials/modules/authoring-cjs-modules
 }
