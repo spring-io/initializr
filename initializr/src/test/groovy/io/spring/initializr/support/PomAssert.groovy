@@ -94,6 +94,16 @@ class PomAssert {
 		this
 	}
 
+	PomAssert hasPlugin(String pluginName) {
+		def nodes = eng.getMatchingNodes(createRootNodeXPath('build/pom:plugins/pom:plugin/pom:artifactId'), doc)
+		for (int i = 0; i < nodes.length; i++) {
+			if (pluginName.equals(nodes.item(i).textContent)) {
+				return this
+			}
+		}
+		throw new IllegalArgumentException("No plugin found with artifactId $pluginName")
+	}
+
 	PomAssert hasJavaVersion(String javaVersion) {
 		assertEquals javaVersion, eng.evaluate(createPropertyNodeXpath('java.version'), doc)
 		this

@@ -112,6 +112,25 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void mavenPomWithRaveFacet() {
+		def dependency = new InitializrMetadata.Dependency()
+		dependency.id = 'thymeleaf'
+		dependency.groupId = 'org.foo'
+		dependency.artifactId = 'thymeleaf'
+		dependency.facets << 'web'
+		dependency.facets << 'rave'
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('test', dependency).validateAndGet()
+		projectGenerator.metadata = metadata
+
+		def request = createProjectRequest('thymeleaf')
+		generateMavenPom(request)
+				.hasStartClass("demo.Application")
+				.hasPlugin("frontend-maven-plugin")
+				.hasDependenciesCount(2)
+	}
+
+	@Test
 	void mavenWarPomWithWebFacet() {
 		def dependency = new InitializrMetadata.Dependency()
 		dependency.id = 'thymeleaf'
