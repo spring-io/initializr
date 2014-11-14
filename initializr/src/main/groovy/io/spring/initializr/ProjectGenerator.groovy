@@ -113,6 +113,18 @@ class ProjectGenerator {
 			new File(dir, 'src/main/resources/templates').mkdirs()
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
+
+		if (request.hasRaveFacet()) {
+			def staticFolder = new File(dir, "src/main/resources/static")
+
+			new File(staticFolder, "index.html").write(template("rave/index.html", model))
+			new File(staticFolder, "package.json").write(template("rave/package.json", model))
+			new File(staticFolder, "boot.js").write(template("rave/boot.js", model))
+
+			def appFolder = new File(dir, "src/main/resources/static/app")
+			appFolder.mkdirs()
+			new File(appFolder, "main.js").write(template("rave/app/main.js", model))
+		}
 		invokeListeners(request)
 		dir
 

@@ -121,6 +121,13 @@ class ProjectRequest {
 	}
 
 	/**
+	 * Specify if this request has the JavaScript facet enabled
+	 */
+	boolean hasRaveFacet() {
+		hasFacet('rave')
+	}
+
+	/**
 	 * Specify if this request has the specified facet enabled
 	 */
 	boolean hasFacet(String facet) {

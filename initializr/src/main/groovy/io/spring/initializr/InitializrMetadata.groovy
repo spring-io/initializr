@@ -221,6 +221,9 @@ class InitializrMetadata {
 
 		String description
 
+		@JsonIgnore
+		boolean hasSpringBootStarter = true
+
 		/**
 		 * Specify if the dependency has its coordinates set, i.e. {@code groupId}
 		 * and {@code artifactId}.
