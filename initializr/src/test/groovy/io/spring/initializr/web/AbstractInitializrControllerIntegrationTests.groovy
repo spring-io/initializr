@@ -50,7 +50,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	public final TemporaryFolder folder = new TemporaryFolder()
 
 	@Value('${local.server.port}')
-	private int port
+	protected int port
 
 	final RestTemplate restTemplate = new RestTemplate()
 

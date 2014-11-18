@@ -178,6 +178,13 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void validateAction() {
+		def metadata = new InitializrMetadataBuilder()
+				.addType('foo', false, 'my-action.zip', 'none', 'none').validateAndGet()
+		assertEquals '/my-action.zip', metadata.getType('foo').action
+	}
+
+	@Test
 	void validateArtifactRepository() {
 		def metadata = InitializrMetadataBuilder.withDefaults().instance()
 		metadata.env.artifactRepository = 'http://foo/bar'

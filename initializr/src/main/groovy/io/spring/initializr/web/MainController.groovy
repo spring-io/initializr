@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 /**
  * The main initializr controller provides access to the configured
@@ -53,10 +54,18 @@ class MainController extends AbstractInitializrController {
 		request
 	}
 
-	@RequestMapping(value = "/")
+	@RequestMapping(value = "/", headers = "user-agent=SpringBootCli/1.2.0.RC1")
 	@ResponseBody
-	InitializrMetadata metadata() {
+	@Deprecated
+	InitializrMetadata oldMetadata() {
 		metadataProvider.get()
+	}
+
+	@RequestMapping(value = "/", produces = ["application/vnd.initializr.v2+json","application/json"])
+	@ResponseBody
+	String metadata() {
+		String appUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().build()
+		metadataProvider.get().generateJson(appUrl)
 	}
 
 	@RequestMapping(value = '/', produces = 'text/html')

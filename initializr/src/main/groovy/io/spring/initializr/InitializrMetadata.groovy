@@ -66,6 +66,8 @@ class InitializrMetadata {
 	@JsonIgnore
 	private final Map<String, Dependency> indexedDependencies = [:]
 
+	private final transient InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataJsonMapper()
+
 	/**
 	 * Return the {@link Dependency} with the specified id or {@code null} if
 	 * no such dependency exists.
@@ -119,6 +121,15 @@ class InitializrMetadata {
 			}
 		}
 		refreshDefaults()
+	}
+
+	/**
+	 * Generate a JSON representation of the current metadata
+	 *
+	 * @param appUrl the application url
+	 */
+	String generateJson(String appUrl) {
+		jsonMapper.write(this, appUrl)
 	}
 
 	/**
@@ -260,6 +271,14 @@ class InitializrMetadata {
 		String stsId
 
 		String action
+
+		void setAction(String action) {
+			String actionToUse = action
+			if (!actionToUse.startsWith("/")) {
+				actionToUse =  "/" +  actionToUse
+			}
+			this.action = actionToUse
+		}
 
 		final Map<String, String> tags = [:]
 	}

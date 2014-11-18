@@ -26,7 +26,11 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.StreamUtils
@@ -40,8 +44,10 @@ import static org.junit.Assert.*
 @ActiveProfiles('test-default')
 class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	private final def slurper = new JsonSlurper()
+	private static final MediaType CURRENT_METADATA_MEDIA_TYPE =
+			MediaType.parseMediaType('application/vnd.initializr.v2+json')
 
+	private final def slurper = new JsonSlurper()
 
 	@Test
 	void simpleZipProject() {
@@ -104,25 +110,50 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	}
 
+	@Test
+	void metadataWithNoAcceptHeader() { //  rest template sets application/json by default
+		ResponseEntity<String> response = getMetadata(null, '*/*')
+		assertEquals CURRENT_METADATA_MEDIA_TYPE, response.getHeaders().getContentType()
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void metadataWithCurrentAcceptHeader() {
+		ResponseEntity<String> response = getMetadata(null, 'application/vnd.initializr.v2+json')
+		assertEquals CURRENT_METADATA_MEDIA_TYPE, response.getHeaders().getContentType()
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
 	@Test // Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
-		def json = restTemplate.getForObject(createUrl('/'), String.class)
-		def expected = readJson('1.1.0')
-		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT)
+		def json = getMetadataJson()
+		validateCurrentMetadata(json)
+	}
+
+	private void validateCurrentMetadata(JSONObject json) {
+		def expected = readJson('2.0.0')
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
+	}
+
+	@Test // Test that the  current code complies exactly with 1.1.0
+	void validateProjectMetadata110() {
+		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
+		def expected = readJson('1.0.1')
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
 	}
 
 	@Test // Test that the  current code complies "at least" with 1.0.1
 	void validateProjectMetadata101() {
-		def json = restTemplate.getForObject(createUrl('/'), String.class)
+		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
 		def expected = readJson('1.0.1')
-		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
 	}
 
 	@Test // Test that the  current code complies "at least" with 1.0.0
 	void validateProjectMetadata100() {
-		def json = restTemplate.getForObject(createUrl('/'), String.class)
+		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
 		def expected = readJson('1.0.0')
-		JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.LENIENT)
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
 	}
 
 	@Test
@@ -186,7 +217,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void homeIsJson() {
 		def body = restTemplate.getForObject(createUrl('/'), String)
-		assertTrue("Wrong body:\n$body", body.contains('{"dependencies"'))
+		assertTrue("Wrong body:\n$body", body.contains('"dependencies"'))
 	}
 
 	@Test
@@ -237,6 +268,27 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		assertNotNull(response.body)
 	}
 
+	private JSONObject getMetadataJson()  {
+		getMetadataJson(null, null)
+	}
+
+	private JSONObject getMetadataJson(String userAgentHeader, String acceptHeader) {
+		String json = getMetadata(userAgentHeader, acceptHeader).body
+		return new JSONObject(json)
+	}
+
+	private ResponseEntity<String> getMetadata(String userAgentHeader, String acceptHeader) {
+		HttpHeaders headers = new HttpHeaders();
+		if (userAgentHeader) {
+			headers.set("User-Agent", userAgentHeader);
+		}
+		if (acceptHeader) {
+			headers.setAccept(Collections.singletonList(MediaType.parseMediaType(acceptHeader)))
+		}
+		return restTemplate.exchange(createUrl('/'),
+				HttpMethod.GET, new HttpEntity<Void>(headers), String.class)
+	}
+
 
 	private byte[] invoke(String context) {
 		restTemplate.getForObject(createUrl(context), byte[])
@@ -252,12 +304,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		tgzProjectAssert(body)
 	}
 
-	private static JSONObject readJson(String version) {
+	private JSONObject readJson(String version) {
 		def resource = new ClassPathResource("metadata/test-default-$version" + ".json")
 		def stream = resource.inputStream
 		try {
 			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
-			new JSONObject(json)
+
+			// Let's parse the port as it is random
+			def content = json.replaceAll('@port@', String.valueOf(this.port))
+			new JSONObject(content)
 		} finally {
 			stream.close()
 		}
