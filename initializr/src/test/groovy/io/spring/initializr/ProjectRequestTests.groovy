@@ -42,8 +42,22 @@ class ProjectRequestTests {
 		request.style << 'web' << 'spring-data'
 		request.resolve(metadata)
 		assertEquals 'Build type not detected', 'maven', request.build
-		assertBootStarter(request.dependencies[0], 'web')
-		assertBootStarter(request.dependencies[1], 'spring-data')
+		assertBootStarter(request.resolvedDependencies[0], 'web')
+		assertBootStarter(request.resolvedDependencies[1], 'spring-data')
+	}
+
+	@Test
+	void resolveWithDependencies() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('code', 'web', 'security', 'spring-data').validateAndGet()
+
+		request.type = 'maven-project'
+		request.dependencies << 'web' << 'spring-data'
+		request.resolve(metadata)
+		assertEquals 'Build type not detected', 'maven', request.build
+		assertBootStarter(request.resolvedDependencies[0], 'web')
+		assertBootStarter(request.resolvedDependencies[1], 'spring-data')
 	}
 
 	@Test
@@ -53,7 +67,7 @@ class ProjectRequestTests {
 				.addDependencyGroup('code', createDependency('org.foo', 'acme', '1.2.0')).validateAndGet()
 		request.style << 'org.foo:acme'
 		request.resolve(metadata)
-		assertDependency(request.dependencies[0], 'org.foo', 'acme', '1.2.0')
+		assertDependency(request.resolvedDependencies[0], 'org.foo', 'acme', '1.2.0')
 	}
 
 	@Test
@@ -64,8 +78,8 @@ class ProjectRequestTests {
 
 		request.style << 'org.foo:bar' << 'foo-bar'
 		request.resolve(metadata)
-		assertDependency(request.dependencies[0], 'org.foo', 'bar', null)
-		assertBootStarter(request.dependencies[1], 'foo-bar')
+		assertDependency(request.resolvedDependencies[0], 'org.foo', 'bar', null)
+		assertBootStarter(request.resolvedDependencies[1], 'foo-bar')
 	}
 
 	@Test

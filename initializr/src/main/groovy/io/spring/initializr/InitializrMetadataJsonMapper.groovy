@@ -34,6 +34,7 @@ class InitializrMetadataJsonMapper {
 
 	InitializrMetadataJsonMapper() {
 		this.templateVariables = new TemplateVariables(
+				new TemplateVariable('dependencies', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('type', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('packaging', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('javaVersion', TemplateVariable.VariableType.REQUEST_PARAM),
@@ -85,7 +86,7 @@ class InitializrMetadataJsonMapper {
 
 	private generateTemplatedUri(appUrl, action) {
 		String uri = appUrl != null ? appUrl + action : action
-		UriTemplate uriTemplate = new UriTemplate(uri + '?style={dependencies}', this.templateVariables)
+		UriTemplate uriTemplate = new UriTemplate(uri, this.templateVariables)
 		uriTemplate.toString()
 	}
 

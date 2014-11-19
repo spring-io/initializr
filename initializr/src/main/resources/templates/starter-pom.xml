@@ -18,7 +18,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<dependencies><% dependencies.each { %>
+	<dependencies><% resolvedDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>

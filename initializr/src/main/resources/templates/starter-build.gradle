@@ -39,7 +39,7 @@ repositories {
     providedRuntime
 }
 <% } %>
-dependencies {<% dependencies.each { %>
+dependencies {<% resolvedDependencies.each { %>
     compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
     compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>

@@ -48,7 +48,7 @@ class ProjectGenerationMetricsListener implements ProjectGenerationListener {
 	}
 
 	protected void handleDependencies(ProjectRequest request) {
-		request.dependencies.each {
+		request.resolvedDependencies.each {
 			def id = sanitize(it.id)
 			increment(key("dependency.$id"))
 		}

@@ -77,6 +77,26 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
+	void dependenciesIsAnAliasOfStyle() {
+		downloadZip('/starter.zip?dependencies=web&dependencies=jpa').isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(true).pomAssert()
+				.hasDependenciesCount(3)
+				.hasSpringBootStarterDependency('web')
+				.hasSpringBootStarterDependency('data-jpa') // alias jpa -> data-jpa
+				.hasSpringBootStarterDependency('test')
+	}
+
+	@Test
+	void dependenciesIsAnAliasOfStyleCommaSeparated() {
+		downloadZip('/starter.zip?dependencies=web,jpa').isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(true).pomAssert()
+				.hasDependenciesCount(3)
+				.hasSpringBootStarterDependency('web')
+				.hasSpringBootStarterDependency('data-jpa') // alias jpa -> data-jpa
+				.hasSpringBootStarterDependency('test')
+	}
+
+	@Test
 	void gradleWarProject() {
 		downloadZip('/starter.zip?style=web&style=security&packaging=war&type=gradle.zip')
 				.isJavaWarProject().isGradleProject()

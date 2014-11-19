@@ -28,8 +28,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class ProjectRequest {
 
-	def style = []
-
+	List<String> style = []
+	List<String> dependencies = []
 	String name
 	String type
 	String description
@@ -42,7 +42,9 @@ class ProjectRequest {
 	String packageName
 	String javaVersion
 
-	def dependencies = []
+	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
+	List<InitializrMetadata.Dependency> resolvedDependencies
+
 	def facets = []
 	def build
 
@@ -50,11 +52,8 @@ class ProjectRequest {
 	 * Resolve this instance against the specified {@link InitializrMetadata}
 	 */
 	void resolve(InitializrMetadata metadata) {
-		style = style ?: []
-		if (!style.class.isArray() && !(style instanceof Collection)) {
-			style = [style]
-		}
-		dependencies = style.collect {
+		List<String> depIds = style ? style : dependencies
+		resolvedDependencies = depIds.collect {
 			def dependency = metadata.getDependency(it)
 			if (dependency == null) {
 				if (it.contains(':')) {
@@ -66,7 +65,7 @@ class ProjectRequest {
 			}
 			dependency
 		}
-		dependencies.each {
+		resolvedDependencies.each {
 			it.facets.each {
 				if (!facets.contains(it)) {
 					facets.add(it)
@@ -93,10 +92,10 @@ class ProjectRequest {
 	protected afterResolution(InitializrMetadata metadata) {
 		if (packaging == 'war' && !hasWebFacet()) {
 			// Need to be able to bootstrap the web app
-			dependencies << metadata.getDependency('web')
+			resolvedDependencies << metadata.getDependency('web')
 			facets << 'web'
 		}
-		if (dependencies.isEmpty()) {
+		if (resolvedDependencies.isEmpty()) {
 			addDefaultDependency()
 		}
 	}
@@ -109,7 +108,7 @@ class ProjectRequest {
 		def root = new InitializrMetadata.Dependency()
 		root.id = 'root_starter'
 		root.asSpringBootStarter('')
-		dependencies << root
+		resolvedDependencies << root
 
 	}
 

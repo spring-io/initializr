@@ -158,7 +158,7 @@ class ProjectGenerator {
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested
-		def dependencies = request.dependencies.collect { it.id }
+		def dependencies = request.resolvedDependencies.collect { it.id }
 		log.info("Processing request{type=$request.type, dependencies=$dependencies}")
 
 		request.properties.each { model[it.key] = it.value }
