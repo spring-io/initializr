@@ -1,0 +1,42 @@
+== My cool new Spring Boot CLI app!
+
+This app uses Spring Boot CLI. You have picked:
+<% resolvedDependencies.each { %>
+* ${it.name}<% } %>
+
+These various options manifest in different ways. Sometimes with `@Grab` statements, and sometimes through the usage of other things, like annotations.
+
+=== Installing Spring Boot CLI
+
+Check out http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#getting-started-installing-the-cli[Installing the Spring Boot CLI] for more details on how to install it and run your new app!
+
+=== Using the right version of `spring`
+
+Got http://gvmtool.net/[GVM]? You can easily ask gvm to switch to the version of `spring` this app was originally built with.
+
+```
+\$ gvm use springboot ${bootVersion}
+\$ spring run app.groovy
+```
+
+=== Getting Help
+
+Some key bits of documentation regarding your choices:
+<% resolvedDependencies.each {  it.refdocs.each { %>
+* ${it}<% } } %>
+
+Other general sources of help:
+
+* http://stackoverflow.com/questions/tagged/spring-boot[Stack Overflow]
+* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#cli[Spring Boot ref docs - CLI section]
+* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#cli-testing[Writing tests for Spring Boot CLI]
+* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot general reference guide]
+* http://projects.spring.io/spring-boot/[Spring Boot project page]
+
+=== What do I do with this file?
+
+This file is a helper to get started. Once your project is up and running, feel free to clean it out and plug in details
+about your application. It's written in asciidoctor, which is nicely supported by GitHub if you commit it as README.adoc.
+
+Happy coding!
+-- The Spring Boot team

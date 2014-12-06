@@ -232,6 +232,9 @@ class InitializrMetadata {
 
 		String description
 
+		// Associated set of doc links for the dependency
+		List<String> refdocs = []
+
 		/**
 		 * Specify if the dependency has its coordinates set, i.e. {@code groupId}
 		 * and {@code artifactId}.
@@ -365,5 +368,6 @@ class InitializrMetadata {
 		String getName() {
 			(name ?: id)
 		}
+
 	}
 }

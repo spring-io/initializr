@@ -76,6 +76,18 @@ class ProjectGenerator {
 		dir.delete()
 		dir.mkdirs()
 
+		if ('spring-boot-cli-project'.equals(request.type)) {
+			doGenerateSpringBootCliStructure(dir, model, request)
+		} else {
+			doGenerateProjectStructure(dir, model, request)
+		}
+
+		invokeListeners(request)
+		dir
+
+	}
+
+	private File doGenerateProjectStructure(File dir, def model, ProjectRequest request) {
 		if ('gradle'.equals(request.build)) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
@@ -109,16 +121,132 @@ class ProjectGenerator {
 		resources.mkdirs()
 		new File(resources, 'application.properties').write('')
 
+		def readme = template 'README.adoc', model
+		new File(dir, 'README.adoc').write(readme)
+
 		if (request.hasWebFacet()) {
 			new File(dir, 'src/main/resources/templates').mkdirs()
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
-		invokeListeners(request)
-		dir
-
 	}
 
 	/**
+	 * Generate a project structure for the specified {@link ProjectRequest}. Returns
+	 * a directory containing the project.
+	 */
+	private File doGenerateSpringBootCliStructure(File dir, def model, ProjectRequest request) {
+		model.externalLibraries = []
+		model.shortcutLibraries = []
+		model.annotations = []
+		model.applicationAttributes = []
+		println(model)
+
+		boolean thymeleaf = false
+		boolean springSecurity = false
+		boolean springDataRest = false
+		boolean springDataJpa = false
+		boolean springDataMongo = false
+		boolean springDataRedis = false
+		boolean springDataGemfire = false
+		boolean springDataSolr = false
+		boolean springDataElasticsearch = false
+
+		model.resolvedDependencies.each {
+			if (it.name.equals('Security')) {
+				model.externalLibraries << it
+				springSecurity = true
+			} else if (it.name.equals('Batch')) {
+				model.annotations << "@EnableBatchProcessing"
+			} else if (it.name.equals('Integration')) {
+				model.annotations << "@EnableIntegration //or define a @MessageEndpoint"
+			} else if (it.name.equals('JMS')) {
+				model.annotations << "@EnableJmsMessaging"
+			} else if (it.name.equals('AMQP')) {
+				model.annotations << "@EnableRabbitMessaging"
+			} else if (it.name.equals('Freemarker')) {
+				model.shortcutLibraries << "freemarker"
+			} else if (it.name.equals('Velocity')) {
+				model.externalLibraries << it
+			} else if (it.name.equals('Groovy Templates')) {
+				model.annotations << "@EnableGroovyTemplates"
+			} else if (it.name.equals('Thymeleaf')) {
+				model.shortcutLibraries << 'thymeleaf-spring4'
+				thymeleaf = true
+			} else if (it.name.equals('JDBC')) {
+				model.applicationAttributes << "JdbcTemplate jdbcTemplate //or declare a NamedParameterJdbcTemplate or a DataSource"
+			} else if (it.name.equals('JPA')) {
+				model.externalLibraries << it
+				springDataJpa = true
+			} else if (it.name.equals('MongoDB')) {
+				model.externalLibraries << it
+				springDataMongo = true
+			} else if (it.name.equals('Redis')) {
+				model.externalLibraries << it
+				springDataRedis = true
+			} else if (it.name.equals('Gemfire')) {
+				model.externalLibraries << it
+				springDataGemfire = true
+			} else if (it.name.equals('Solr')) {
+				model.externalLibraries << it
+				springDataSolr = true
+			} else if (it.name.equals('Elasticsearch')) {
+				model.externalLibraries << it
+				springDataElasticsearch = true
+			} else if (it.name.equals('Web')) {
+				model.annotations << "@Controller //or @RestController"
+			} else if (it.name.equals('Websocket')) {
+				model.annotations << "@EnableWebSocket //or @EnableWebSocketMessageBroker"
+			} else if (it.name.equals('WS')) {
+				model.externalLibraries << it
+			} else if (it.name.equals('Rest Repositories')) {
+				model.externalLibraries << it
+				springDataRest = true
+			} else if (it.name.equals('Mobile')) {
+				model.annotations << "@EnableDeviceResolver"
+			} else if (it.name.equals('Facebook')) {
+				model.applicationAttributes << "Facebook facebookOperations"
+			} else if (it.name.equals('LinkedIn')) {
+				model.applicationAttributes << "LinkedIn linkedInOperations"
+			} else if (it.name.equals('Twitter')) {
+				model.applicationAttributes << "Twitter twitterOperations"
+			} else if (it.name.equals('Actuator')) {
+				model.externalLibraries << it
+			} else if (it.name.equals('Remote Shell')) {
+				model.externalLibraries << it
+			} else { // catch any unknown check boxes
+				model.externalLibraries << it
+			}
+		}
+
+		// Synergistic combinations
+		if (thymeleaf && springSecurity) {
+			model.externalLibraries << [groupId: "org.thymeleaf.extras", artifactId: "thymeleaf-extras-springsecurity3"]
+		}
+		if (springDataRest) {
+			model.resolvedDependencies.each {
+				if (it.name.equals('Rest Repositories')) {
+					if (springDataJpa) {
+						it.refdocs << "http://spring.io/guides/gs/accessing-data-rest/[Accessing JPA Data with REST]"
+					}
+					if (springDataMongo) {
+						it.refdocs << "http://spring.io/guides/gs/accessing-mongodb-data-rest/[Accessing MongoDB Data with REST]"
+					}
+					if (springDataGemfire) {
+						it.refdocs << "http://spring.io/guides/gs/accessing-gemfire-data-rest/[Accessing GemFire Data with REST]"
+					}
+				}
+			}
+		}
+
+
+		def readme = template 'spring-boot-cli-README.adoc', model
+		new File(dir, 'README.adoc').write(readme)
+
+		def app = template 'spring-boot-cli-app.groovy', model
+		new File(dir, 'app.groovy').write(app)
+	}
+
+		/**
 	 * Create a distribution file for the specified project structure
 	 * directory and extension
 	 */
