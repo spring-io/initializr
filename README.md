@@ -49,14 +49,15 @@ As a reference, `initializr-service` represents the _default_ service that runs 
 <a name="running_the_app"></a>
 ## Running the app locally
 
+Initializr currently uses a milestone release of `spring-test-htmlunit` that is available from
+the [spring.io milestone repository](http://repo.spring.io/milestone). If you use a repository
+manager, please make sure to configure it accordingly. For your convenience, the project defines
+a `springMilestone` that you should activate if you haven't defined that repository yourself.
+
 First make sure that you have built the library:
 
     $ cd initializr
-    $ mvn clean install
-    
-The "springMilestone" might needed to bootstrap your lcoal Maven cache:
-
-    $ mvn clean install -P springMilestone
+    $ mvn clean install -PspringMilestone
 
 Once you have done that, you can easily start the app using the spring command from the `initializr-service`
 directory (`cd ../initializr-service`):
@@ -79,10 +80,7 @@ You can jar up the app and make it executable in any environment.
 
     $ spring jar start.jar app.groovy
 
-## Building an Executable JAR
-
-The safest way to deploy to do is jar up the app and make it executable in any
-environment. Care is needed with the includes and excludes:
+Once the jar has been created, you can push the application:
 
     $ cf push start -p start.jar -n start-<space>
     
@@ -90,7 +88,3 @@ Where `<space>` is the name of the space. As a failsafe, and a
 reminder to be explicit, the deployment will fail in production
 without the `-n`. It is needed to select the route because there is a
 manifest that defaults it to `start-development`.
-
-If you are deploying the "legacy" service for STS in production:
-
-    $ cf push start-legacy -p start.jar -n start-legacy
