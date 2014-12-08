@@ -133,14 +133,14 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void metadataWithNoAcceptHeader() { //  rest template sets application/json by default
 		ResponseEntity<String> response = getMetadata(null, '*/*')
-		assertEquals CURRENT_METADATA_MEDIA_TYPE, response.getHeaders().getContentType()
+		assertTrue response.headers.getContentType().isCompatibleWith(CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
 		ResponseEntity<String> response = getMetadata(null, 'application/vnd.initializr.v2+json')
-		assertEquals CURRENT_METADATA_MEDIA_TYPE, response.getHeaders().getContentType()
+		assertTrue response.headers.getContentType().isCompatibleWith(CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
 
