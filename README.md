@@ -47,6 +47,11 @@ class InitializerService { }
 As a reference, `initializr-service` represents the _default_ service that runs at http://start.spring.io
 
 <a name="running_the_app"></a>
+## Running the tests
+    
+    $ cd initializr
+    $ mvn test -P springMilestone
+    
 ## Running the app locally
 
 First make sure that you have built the library:
@@ -54,7 +59,7 @@ First make sure that you have built the library:
     $ cd initializr
     $ mvn clean install
     
-The "springMilestone" might needed to bootstrap your lcoal Maven cache:
+The "springMilestone" profile might be needed to bootstrap your local Maven cache:
 
     $ mvn clean install -P springMilestone
 
