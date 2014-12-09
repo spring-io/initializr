@@ -135,11 +135,6 @@ class ProjectGenerator {
 	 * a directory containing the project.
 	 */
 	private File doGenerateSpringBootCliStructure(File dir, def model, ProjectRequest request) {
-		model.externalLibraries = []
-		model.annotations = []
-		model.applicationAttributes = []
-		println(model)
-
 		boolean thymeleaf = false
 		boolean springSecurity = false
 		boolean springDataRest = false
@@ -152,88 +147,40 @@ class ProjectGenerator {
 
 		model.resolvedDependencies.each {
 			if (it.name.equals('Security')) {
-				model.externalLibraries << it
 				springSecurity = true
-			} else if (it.name.equals('Batch')) {
-				model.annotations << "@EnableBatchProcessing"
-			} else if (it.name.equals('Integration')) {
-				model.annotations << "@EnableIntegration //or define a @MessageEndpoint"
-			} else if (it.name.equals('JMS')) {
-				model.annotations << "@EnableJmsMessaging"
-			} else if (it.name.equals('AMQP')) {
-				model.annotations << "@EnableRabbitMessaging"
-			} else if (it.name.equals('Freemarker')) {
-				model.externalLibraries << it
-			} else if (it.name.equals('Velocity')) {
-				model.externalLibraries << it
-			} else if (it.name.equals('Groovy Templates')) {
-				model.annotations << "@EnableGroovyTemplates"
 			} else if (it.name.equals('Thymeleaf')) {
-				model.externalLibraries << it
 				thymeleaf = true
-			} else if (it.name.equals('JDBC')) {
-				model.applicationAttributes << "JdbcTemplate jdbcTemplate //or declare a NamedParameterJdbcTemplate or a DataSource"
 			} else if (it.name.equals('JPA')) {
-				model.externalLibraries << it
 				springDataJpa = true
 			} else if (it.name.equals('MongoDB')) {
-				model.externalLibraries << it
 				springDataMongo = true
 			} else if (it.name.equals('Redis')) {
-				model.externalLibraries << it
 				springDataRedis = true
 			} else if (it.name.equals('Gemfire')) {
-				model.externalLibraries << it
 				springDataGemfire = true
 			} else if (it.name.equals('Solr')) {
-				model.externalLibraries << it
 				springDataSolr = true
 			} else if (it.name.equals('Elasticsearch')) {
-				model.externalLibraries << it
 				springDataElasticsearch = true
-			} else if (it.name.equals('Web')) {
-				model.annotations << "@Controller //or @RestController"
-			} else if (it.name.equals('Websocket')) {
-				model.annotations << "@EnableWebSocket //or @EnableWebSocketMessageBroker"
-			} else if (it.name.equals('WS')) {
-				model.externalLibraries << it
 			} else if (it.name.equals('Rest Repositories')) {
-				model.externalLibraries << it
 				springDataRest = true
-			} else if (it.name.equals('Mobile')) {
-				model.annotations << "@EnableDeviceResolver"
-			} else if (it.name.equals('Facebook')) {
-				model.applicationAttributes << "Facebook facebookOperations"
-			} else if (it.name.equals('LinkedIn')) {
-				model.applicationAttributes << "LinkedIn linkedInOperations"
-			} else if (it.name.equals('Twitter')) {
-				model.applicationAttributes << "Twitter twitterOperations"
-			} else if (it.name.equals('Actuator')) {
-				model.externalLibraries << it
-			} else if (it.name.equals('Remote Shell')) {
-				model.externalLibraries << it
-			} else { // catch any unknown check boxes
-				model.externalLibraries << it
 			}
 		}
 
 		// Synergistic combinations
 		if (thymeleaf && springSecurity) {
-			model.externalLibraries << [groupId: "org.thymeleaf.extras", artifactId: "thymeleaf-extras-springsecurity3"]
+			// Figure out how to add [groupId: "org.thymeleaf.extras", artifactId: "thymeleaf-extras-springsecurity3"]
 		}
 		if (springDataRest) {
-			model.resolvedDependencies.each {
-				if (it.name.equals('Rest Repositories')) {
-					if (springDataJpa) {
-						it.refdocs << "http://spring.io/guides/gs/accessing-data-rest/[Accessing JPA Data with REST]"
-					}
-					if (springDataMongo) {
-						it.refdocs << "http://spring.io/guides/gs/accessing-mongodb-data-rest/[Accessing MongoDB Data with REST]"
-					}
-					if (springDataGemfire) {
-						it.refdocs << "http://spring.io/guides/gs/accessing-gemfire-data-rest/[Accessing GemFire Data with REST]"
-					}
-				}
+			def restRepositoriesDeps = model.resolvedDependencies.find{it.name == "Rest Repositories"}
+			if (springDataJpa) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-data-rest/[Accessing JPA Data with REST]"
+			}
+			if (springDataMongo) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-mongodb-data-rest/[Accessing MongoDB Data with REST]"
+			}
+			if (springDataGemfire) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-gemfire-data-rest/[Accessing GemFire Data with REST]"
 			}
 		}
 

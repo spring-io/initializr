@@ -12,12 +12,23 @@ package ${packageName}
  *
  * @author Spring Initializr
  */
-<% shortcutLibraries.each { %>
-@Grab('${it}')<% } %><% externalLibraries.each { %>
-@Grab('${it.artifactId}')<% } %><% annotations.each { %>
-${it}<% } %>
+<% resolvedDependencies.each {
+	if (it?.springBootCliAnnotations?.size() > 0) {} else {%>
+@Grab('${it.artifactId}')<%
+	}
+}
+resolvedDependencies.each {
+	if (it?.springBootCliAnnotations?.size() > 0) {
+		it.springBootCliAnnotations.each {%>
+${it}<%
+		}
+	}
+} %>
 class App {
-	<% applicationAttributes.each { %>
-	${it}<% } %>
+	<% resolvedDependencies.each {
+		it.springBootCliAppAttrs.each {%>
+	${it}<%
+		}
+	} %>
 
 }
