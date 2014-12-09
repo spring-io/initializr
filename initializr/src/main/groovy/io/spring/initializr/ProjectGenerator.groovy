@@ -136,7 +136,6 @@ class ProjectGenerator {
 	 */
 	private File doGenerateSpringBootCliStructure(File dir, def model, ProjectRequest request) {
 		model.externalLibraries = []
-		model.shortcutLibraries = []
 		model.annotations = []
 		model.applicationAttributes = []
 		println(model)
@@ -164,13 +163,13 @@ class ProjectGenerator {
 			} else if (it.name.equals('AMQP')) {
 				model.annotations << "@EnableRabbitMessaging"
 			} else if (it.name.equals('Freemarker')) {
-				model.shortcutLibraries << "freemarker"
+				model.externalLibraries << it
 			} else if (it.name.equals('Velocity')) {
 				model.externalLibraries << it
 			} else if (it.name.equals('Groovy Templates')) {
 				model.annotations << "@EnableGroovyTemplates"
 			} else if (it.name.equals('Thymeleaf')) {
-				model.shortcutLibraries << 'thymeleaf-spring4'
+				model.externalLibraries << it
 				thymeleaf = true
 			} else if (it.name.equals('JDBC')) {
 				model.applicationAttributes << "JdbcTemplate jdbcTemplate //or declare a NamedParameterJdbcTemplate or a DataSource"
