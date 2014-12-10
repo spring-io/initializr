@@ -131,6 +131,7 @@ class ProjectRequestTests {
 		def expected = new InitializrMetadata.Dependency()
 		expected.asSpringBootStarter(name)
 		assertDependency(actual, expected.groupId, expected.artifactId, expected.version)
+		assertEquals name, actual.id
 	}
 
 	private static InitializrMetadata.Dependency createDependency(String groupId, String artifactId, String version) {

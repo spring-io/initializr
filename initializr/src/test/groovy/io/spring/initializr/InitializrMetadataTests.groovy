@@ -34,6 +34,14 @@ class InitializrMetadataTests {
 	private final InitializrMetadata metadata = new InitializrMetadata()
 
 	@Test
+	void createRootSpringBootStarter() {
+		InitializrMetadata.Dependency d = new InitializrMetadata.Dependency();
+		d.asSpringBootStarter("")
+		assertEquals 'org.springframework.boot', d.groupId
+		assertEquals 'spring-boot-starter', d.artifactId
+	}
+
+	@Test
 	void setCoordinatesFromId() {
 		def dependency = createDependency('org.foo:bar:1.2.3')
 		metadata.validateDependency(dependency)

@@ -28,6 +28,11 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class ProjectRequest {
 
+	/**
+	 * The id of the starter to use if no dependency is defined.
+	 */
+	static final DEFAULT_STARTER = 'root_starter'
+
 	List<String> style = []
 	List<String> dependencies = []
 	String name
@@ -106,7 +111,7 @@ class ProjectRequest {
 	 */
 	protected addDefaultDependency() {
 		def root = new InitializrMetadata.Dependency()
-		root.id = 'root_starter'
+		root.id = DEFAULT_STARTER
 		root.asSpringBootStarter('')
 		resolvedDependencies << root
 

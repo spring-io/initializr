@@ -47,6 +47,7 @@ class MetricsAssert {
 		metrics.each {
 			assertEquals "Metric '$it' should not be registered", null, counterService.values[it]
 		}
+		this
 	}
 
 	MetricsAssert metricsCount(int count) {

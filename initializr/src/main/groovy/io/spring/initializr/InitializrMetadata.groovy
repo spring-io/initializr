@@ -24,7 +24,6 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.util.StringUtils
 
 /**
  * The metadata using by the initializr, that is:
@@ -246,8 +245,10 @@ class InitializrMetadata {
 		 */
 		def asSpringBootStarter(String name) {
 			groupId = 'org.springframework.boot'
-			artifactId = StringUtils.hasText(name) ? 'spring-boot-starter-' + name : 'spring-boot-starter'
-			id = name
+			artifactId = name ? 'spring-boot-starter-' + name : 'spring-boot-starter'
+			if (name) {
+				id = name
+			}
 		}
 
 		/**

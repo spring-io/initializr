@@ -60,6 +60,14 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
+	void noDependencies() {
+		def request = initialize()
+		request.resolve(metadata)
+		listener.onGeneratedProject(request)
+		metricsAssert.hasNoValue('initializr.dependency.')
+	}
+
+	@Test
 	void resolvedWebDependency() {
 		def request = initialize()
 		request.style << 'spring-data'
