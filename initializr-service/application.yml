@@ -1,10 +1,10 @@
 info:
   project:
     name: Spring Start
-    version: 0.3.0
+    version: 0.3.1
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.1.9.RELEASE
+    version: 1.2.0.RELEASE
 
 initializr:
   dependencies:
@@ -171,12 +171,12 @@ initializr:
       default: true
   bootVersions:
     - name : Latest SNAPSHOT
-      id: 1.2.0.BUILD-SNAPSHOT
+      id: 1.2.1.BUILD-SNAPSHOT
       default: false
-    - name: 1.1.8
-      id: 1.1.9.RELEASE
+    - name: 1.2.0
+      id: 1.2.0.RELEASE
       default: true
-    - name: 1.0.2
-      id: 1.0.2.RELEASE
+    - name: 1.1.10
+      id: 1.1.10.RELEASE
       default: false
 
