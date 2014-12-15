@@ -18,6 +18,12 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<start-class>${packageName}.Application</start-class>
+		<java.version>${javaVersion}</java.version>
+	</properties>
+
 	<dependencies><% resolvedDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>
@@ -39,12 +45,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>${packageName}.Application</start-class>
-		<java.version>${javaVersion}</java.version>
-	</properties>
 
 	<build>
 		<plugins>
