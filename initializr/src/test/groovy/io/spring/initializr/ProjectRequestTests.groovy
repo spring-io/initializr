@@ -29,6 +29,8 @@ import static org.junit.Assert.assertNull
  */
 class ProjectRequestTests {
 
+	private static final String DEFAULT_APPLICATION_NAME = 'FooBarApplication'
+
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none()
 
@@ -125,6 +127,105 @@ class ProjectRequestTests {
 		thrown.expect(InvalidProjectRequestException)
 		thrown.expectMessage('foo-project')
 		request.resolve(metadata)
+	}
+
+	@Test
+	void resolveApplicationNameWithNoName() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+
+		request.resolve(metadata)
+		assertEquals ProjectRequest.DEFAULT_APPLICATION_NAME, request.applicationName
+	}
+
+	@Test
+	void resolveApplicationName() {
+		def request = new ProjectRequest()
+		request.name = 'Foo2'
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+
+		request.resolve(metadata)
+		assertEquals 'Foo2Application', request.applicationName
+	}
+
+	@Test
+	void resolveApplicationNameWithApplicationNameSet() {
+		def request = new ProjectRequest()
+		request.name = 'Foo2'
+		request.applicationName ='MyApplicationName'
+		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
+
+		request.resolve(metadata)
+		assertEquals 'MyApplicationName', request.applicationName
+	}
+
+	@Test
+	void generateApplicationNameSimple() {
+		assertEquals 'DemoApplication', generateApplicationName('demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleApplication() {
+		assertEquals 'DemoApplication', generateApplicationName('demoApplication')
+	}
+
+	@Test
+	void generateApplicationNameSimpleCamelCase() {
+		assertEquals 'MyDemoApplication', generateApplicationName('myDemo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleUnderscore() {
+		assertEquals 'MyDemoApplication', generateApplicationName('my_demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleColon() {
+		assertEquals 'MyDemoApplication', generateApplicationName('my:demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleSpace() {
+		assertEquals 'MyDemoApplication', generateApplicationName('my demo')
+	}
+
+	@Test
+	void generateApplicationNamSsimpleDash() {
+		assertEquals 'MyDemoApplication', generateApplicationName('my-demo')
+	}
+
+	@Test
+	void generateApplicationNameUpperCaseUnderscore() {
+		assertEquals 'MyDemoApplication', generateApplicationName('MY_DEMO')
+	}
+
+	@Test
+	void generateApplicationNameUpperCaseDash() {
+		assertEquals 'MyDemoApplication', generateApplicationName('MY-DEMO')
+	}
+
+	@Test
+	void generateApplicationNameMultiSpaces() {
+		assertEquals 'MyDemoApplication', generateApplicationName('   my    demo ')
+	}
+
+	@Test
+	void generateApplicationNameMultiSpacesUpperCase() {
+		assertEquals 'MyDemoApplication', generateApplicationName('   MY    DEMO ')
+	}
+
+	@Test
+	void generateApplicationNameInvalidStartCharacter() {
+		assertEquals DEFAULT_APPLICATION_NAME, generateApplicationName('1MyDemo')
+	}
+
+	@Test
+	void generateApplicationNameInvalidPartCharacter() {
+		assertEquals DEFAULT_APPLICATION_NAME, generateApplicationName('MyDe|mo')
+	}
+
+	private static generateApplicationName(String text) {
+		ProjectRequest.generateApplicationName(text, DEFAULT_APPLICATION_NAME)
 	}
 
 	private static void assertBootStarter(InitializrMetadata.Dependency actual, String name) {

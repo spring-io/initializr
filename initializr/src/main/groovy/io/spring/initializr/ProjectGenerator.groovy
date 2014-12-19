@@ -84,14 +84,16 @@ class ProjectGenerator {
 			new File(dir, 'pom.xml').write(pom)
 		}
 
+		def applicationName = request.applicationName
 		def language = request.language
 
 		def src = new File(new File(dir, "src/main/$language"), request.packageName.replace('.', '/'))
 		src.mkdirs()
-		write(src, "Application.$language", model)
+		write(new File(src, "${applicationName}.${language}"), "Application.$language", model)
 
 		if (request.packaging == 'war') {
-			write(src, "ServletInitializer.$language", model)
+			def fileName = "ServletInitializer.$language"
+			write(new File(src, fileName), fileName, model)
 		}
 
 		def test = new File(new File(dir, "src/test/$language"), request.packageName.replace('.', '/'))
@@ -103,7 +105,7 @@ class ProjectGenerator {
 			model.testAnnotations = ''
 			model.testImports = ''
 		}
-		write(test, "ApplicationTests.$language", model)
+		write(new File(test, "${applicationName}Tests.${language}"), "ApplicationTests.$language", model)
 
 		def resources = new File(dir, 'src/main/resources')
 		resources.mkdirs()
@@ -174,10 +176,10 @@ class ProjectGenerator {
 		template 'starter-build.gradle', model
 	}
 
-	def write(File src, String name, def model) {
-		def tmpl = name.endsWith('.groovy') ? name + '.tmpl' : name
+	def write(File target, String templateName, def model) {
+		def tmpl = templateName.endsWith('.groovy') ? templateName + '.tmpl' : templateName
 		def body = template tmpl, model
-		new File(src, name).write(body)
+		target.write(body)
 	}
 
 	private void addTempFile(String group, File file) {

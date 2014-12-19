@@ -20,7 +20,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>${packageName}.Application</start-class>
+		<start-class>${packageName}.${applicationName}</start-class>
 		<java.version>${javaVersion}</java.version>
 	</properties>
 

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.support
 
+import io.spring.initializr.InitializrMetadata
+
 import static org.junit.Assert.assertEquals
 
 /**
@@ -25,6 +27,8 @@ import static org.junit.Assert.assertEquals
  * @since 1.0
  */
 class ProjectAssert {
+
+	private static final DEFAULT_APPLICATION_NAME = generateDefaultApplicationName()
 
 	final File dir
 
@@ -51,15 +55,23 @@ class ProjectAssert {
 		hasFile('build.gradle').hasNoFile('pom.xml')
 	}
 
-	ProjectAssert isJavaProject() {
-		hasFile('src/main/java/demo/Application.java',
-				'src/test/java/demo/ApplicationTests.java',
+	ProjectAssert isJavaProject(String expectedApplicationName) {
+		hasFile("src/main/java/demo/${expectedApplicationName}.java",
+				"src/test/java/demo/${expectedApplicationName}Tests.java",
 				'src/main/resources/application.properties')
 	}
 
-	ProjectAssert isJavaWarProject() {
-		isJavaProject().hasStaticAndTemplatesResources(true)
+	ProjectAssert isJavaProject() {
+		isJavaProject(DEFAULT_APPLICATION_NAME)
+	}
+
+	ProjectAssert isJavaWarProject(String expectedApplicationName) {
+		isJavaProject(expectedApplicationName).hasStaticAndTemplatesResources(true)
 				.hasFile('src/main/java/demo/ServletInitializer.java')
+	}
+
+	ProjectAssert isJavaWarProject() {
+		isJavaWarProject(DEFAULT_APPLICATION_NAME)
 	}
 
 	ProjectAssert hasStaticAndTemplatesResources(boolean web) {
@@ -89,6 +101,10 @@ class ProjectAssert {
 
 	private File file(String localPath) {
 		new File(dir, localPath)
+	}
+
+	private static generateDefaultApplicationName() {
+		InitializrMetadata.Defaults.DEFAULT_NAME.capitalize() + 'Application'
 	}
 
 }

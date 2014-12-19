@@ -33,6 +33,11 @@ class ProjectRequest {
 	 */
 	static final DEFAULT_STARTER = 'root_starter'
 
+	/**
+	 * The default name of the application class.
+	 */
+	static final String DEFAULT_APPLICATION_NAME = 'Application'
+
 	List<String> style = []
 	List<String> dependencies = []
 	String name
@@ -43,6 +48,7 @@ class ProjectRequest {
 	String version
 	String bootVersion
 	String packaging
+	String applicationName
 	String language
 	String packageName
 	String javaVersion
@@ -88,6 +94,11 @@ class ProjectRequest {
 				this.build = buildTag
 			}
 		}
+
+		if (!applicationName) {
+			this.applicationName = generateApplicationName(this.name, DEFAULT_APPLICATION_NAME)
+		}
+
 		afterResolution(metadata)
 	}
 
@@ -114,7 +125,6 @@ class ProjectRequest {
 		root.id = DEFAULT_STARTER
 		root.asSpringBootStarter('')
 		resolvedDependencies << root
-
 	}
 
 	/**
@@ -129,6 +139,53 @@ class ProjectRequest {
 	 */
 	boolean hasFacet(String facet) {
 		facets.contains(facet)
+	}
+
+	/**
+	 * Generate a suitable application mame based on the specified name. If no suitable
+	 * application name can be generated from the specified {@code name}, the
+	 * {@code defaultApplicationName} is used instead.
+	 * <p>No suitable application name can be generated if the name is {@code null} or
+	 * if it contains an invalid character for a class identifier.
+	 */
+	static String generateApplicationName(String name, String defaultApplicationName) {
+		if (!name) {
+			return defaultApplicationName
+		}
+		String text = splitCamelCase(name.trim())
+		String result = text.replaceAll("(_|-| |:)+([A-Za-z0-9])", { Object[] it ->
+			it[2].toUpperCase()
+		})
+		if (!result.endsWith('Application')) {
+			result += 'Application'
+		}
+		String candidate = result.capitalize();
+		if (hasInvalidChar(candidate)) {
+			return defaultApplicationName
+		} else {
+			return candidate
+		}
+	}
+
+	private static String splitCamelCase(String text) {
+		text.split('(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])').collect {
+			String s = it.toLowerCase()
+			s.capitalize()
+		}.join("")
+	}
+
+	private static boolean hasInvalidChar(String text) {
+		if (!Character.isJavaIdentifierStart(text.charAt(0))) {
+			return true
+		}
+		if (text.length() > 1) {
+			for (int i = 1; i < text.length(); i++) {
+				if (!Character.isJavaIdentifierPart(text.charAt(i))) {
+					return true
+				}
+			}
+		}
+		return false
 	}
 
 }

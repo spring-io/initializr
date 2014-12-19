@@ -297,10 +297,13 @@ class InitializrMetadata {
 	}
 
 	static class Defaults {
+
+		static final String DEFAULT_NAME = 'demo'
+
 		String groupId = 'org.test'
 		String artifactId
 		String version = '0.0.1-SNAPSHOT'
-		String name = 'demo'
+		String name = DEFAULT_NAME
 		String description = 'Demo project for Spring Boot'
 		String packageName
 		String type

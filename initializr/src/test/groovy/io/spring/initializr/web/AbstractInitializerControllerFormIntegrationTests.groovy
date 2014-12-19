@@ -86,7 +86,8 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		assertEquals  'attachment; filename="foo-bar.zip"', value
 
 		def projectAssert = zipProjectAssert(webResponse)
-		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(true)
+		projectAssert.isMavenProject().isJavaProject('MyProjectApplication')
+				.hasStaticAndTemplatesResources(true)
 
 		projectAssert.pomAssert().hasGroupId('com.acme').hasArtifactId('foo-bar')
 				.hasName('My project').hasDescription('A description for my project')
