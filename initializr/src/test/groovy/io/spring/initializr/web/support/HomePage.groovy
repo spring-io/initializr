@@ -33,6 +33,7 @@ abstract class HomePage {
 	String packageName
 	String type
 	String packaging
+	String language
 	List<String> dependencies = []
 
 	protected final HtmlPage page
@@ -63,6 +64,7 @@ abstract class HomePage {
 		setTextValue('name', name)
 		setTextValue('description', description)
 		setTextValue('packageName', packageName)
+		select('language', language)
 		selectDependencies(dependencies)
 	}
 
@@ -72,6 +74,8 @@ abstract class HomePage {
 			input.setValueAttribute(value)
 		}
 	}
+
+	protected abstract void select(String selectId, String value)
 
 	protected void selectDependencies(List<String> dependencies) {
 		def styles = page.getElementsByName("style")

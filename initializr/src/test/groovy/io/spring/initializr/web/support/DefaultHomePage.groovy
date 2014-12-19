@@ -37,7 +37,8 @@ class DefaultHomePage extends HomePage {
 		select('packaging', packaging)
 	}
 
-	private void select(String selectId, String value) {
+	@Override
+	protected void select(String selectId, String value) {
 		if (value) {
 			def input = page.getHtmlElementById(selectId)
 			input.setSelectedAttribute(value, true)

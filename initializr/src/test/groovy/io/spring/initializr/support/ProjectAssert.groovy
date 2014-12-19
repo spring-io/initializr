@@ -65,6 +65,16 @@ class ProjectAssert {
 		isJavaProject(DEFAULT_APPLICATION_NAME)
 	}
 
+	ProjectAssert isGroovyProject(String expectedApplicationName) {
+		hasFile("src/main/groovy/demo/${expectedApplicationName}.groovy",
+				"src/test/groovy/demo/${expectedApplicationName}Tests.groovy",
+				'src/main/resources/application.properties')
+	}
+
+	ProjectAssert isGroovyProject() {
+		isGroovyProject(DEFAULT_APPLICATION_NAME)
+	}
+
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {
 		isJavaProject(expectedApplicationName).hasStaticAndTemplatesResources(true)
 				.hasFile('src/main/java/demo/ServletInitializer.java')

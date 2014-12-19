@@ -36,7 +36,8 @@ class StsHomePage extends HomePage {
 		select('packaging', packaging)
 	}
 
-	private void select(String selectId, String value) {
+	@Override
+	protected void select(String selectId, String value) {
 		if (value) {
 			page.getElementsByIdAndOrName(selectId).each {
 				it.checked = value.equals(it.defaultValue)

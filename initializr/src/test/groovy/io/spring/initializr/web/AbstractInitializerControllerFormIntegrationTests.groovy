@@ -20,6 +20,7 @@ import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.WebRequest
 import com.gargoylesoftware.htmlunit.WebResponse
 import com.gargoylesoftware.htmlunit.html.HtmlPage
+import io.spring.initializr.support.PomAssert
 import io.spring.initializr.support.ProjectAssert
 import io.spring.initializr.web.support.HomePage
 import org.junit.After
@@ -64,7 +65,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	}
 
 	@Test
-	void createDefaultProject() {
+	void createDefaultJavaProject() {
 		def page = home()
 		def projectAssert = zipProjectAssert(page.generateProject().contentAsStream.bytes)
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(false)
@@ -73,13 +74,19 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	}
 
 	@Test
-	void createProjectWithCustomDefaults() {
+	void createDefaultGroovyProject() {
 		def page = home()
-		page.groupId = 'com.acme'
-		page.artifactId = 'foo-bar'
-		page.name = 'My project'
-		page.description = 'A description for my project'
-		page.dependencies << 'web' << 'data-jpa'
+		page.language = 'groovy'
+		def projectAssert = zipProjectAssert(page.generateProject().contentAsStream.bytes)
+		projectAssert.isMavenProject().isGroovyProject().hasStaticAndTemplatesResources(false)
+				.pomAssert().hasDependenciesCount(3)
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
+				.hasDependency('org.codehaus.groovy', 'groovy')
+	}
+
+	@Test
+	void createJavaProjectWithCustomDefaults() {
+		def page = createCustomPage()
 
 		WebResponse webResponse = page.generateProject()
 		String value = webResponse.getResponseHeaderValue('Content-Disposition')
@@ -89,7 +96,38 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		projectAssert.isMavenProject().isJavaProject('MyProjectApplication')
 				.hasStaticAndTemplatesResources(true)
 
-		projectAssert.pomAssert().hasGroupId('com.acme').hasArtifactId('foo-bar')
+		assertMavenProject(projectAssert.pomAssert())
+	}
+
+	@Test
+	void createGroovyProjectWithCustomDefaults() {
+		def page = createCustomPage()
+		page.language = 'groovy'
+
+		WebResponse webResponse = page.generateProject()
+		String value = webResponse.getResponseHeaderValue('Content-Disposition')
+		assertEquals  'attachment; filename="foo-bar.zip"', value
+
+		def projectAssert = zipProjectAssert(webResponse)
+		projectAssert.isMavenProject().isGroovyProject('MyProjectApplication')
+				.hasStaticAndTemplatesResources(true)
+
+		assertMavenProject(projectAssert.pomAssert())
+				.hasDependency('org.codehaus.groovy', 'groovy')
+	}
+
+	private def createCustomPage() {
+		def page = home()
+		page.groupId = 'com.acme'
+		page.artifactId = 'foo-bar'
+		page.name = 'My project'
+		page.description = 'A description for my project'
+		page.dependencies << 'web' << 'data-jpa'
+		page
+	}
+
+	private PomAssert assertMavenProject(PomAssert pomAssert) {
+		pomAssert.hasGroupId('com.acme').hasArtifactId('foo-bar')
 				.hasName('My project').hasDescription('A description for my project')
 				.hasSpringBootStarterDependency('web')
 				.hasSpringBootStarterDependency('data-jpa')
