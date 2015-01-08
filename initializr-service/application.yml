@@ -171,10 +171,10 @@ initializr:
       default: true
   bootVersions:
     - name : Latest SNAPSHOT
-      id: 1.2.1.BUILD-SNAPSHOT
+      id: 1.2.2.BUILD-SNAPSHOT
       default: false
-    - name: 1.2.0
-      id: 1.2.0.RELEASE
+    - name: 1.2.1
+      id: 1.2.1.RELEASE
       default: true
     - name: 1.1.10
       id: 1.1.10.RELEASE
