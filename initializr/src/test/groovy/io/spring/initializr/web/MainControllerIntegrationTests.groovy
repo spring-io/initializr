@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import groovy.json.JsonSlurper
-import io.spring.initializr.support.ProjectAssert
+import io.spring.initializr.test.ProjectAssert
 import org.json.JSONObject
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert

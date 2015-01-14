@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.WebRequest
 import com.gargoylesoftware.htmlunit.WebResponse
 import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.spring.initializr.support.PomAssert
-import io.spring.initializr.support.ProjectAssert
+import io.spring.initializr.test.PomAssert
+import io.spring.initializr.test.ProjectAssert
 import io.spring.initializr.web.support.HomePage
 import org.junit.After
 import org.junit.Before

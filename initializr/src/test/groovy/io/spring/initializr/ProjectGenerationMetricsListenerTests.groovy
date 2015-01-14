@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package io.spring.initializr
 
-import io.spring.initializr.support.InitializrMetadataBuilder
-import io.spring.initializr.support.MetricsAssert
-import io.spring.initializr.support.TestCounterService
+import io.spring.initializr.test.InitializrMetadataBuilder
+import io.spring.initializr.test.MetricsAssert
+import io.spring.initializr.test.TestCounterService
 import org.junit.Before
 import org.junit.Test
 
