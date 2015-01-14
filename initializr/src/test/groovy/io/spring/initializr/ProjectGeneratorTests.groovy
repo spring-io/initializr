@@ -25,6 +25,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+
 import static org.mockito.Mockito.*
 
 /**
@@ -144,6 +149,60 @@ class ProjectGeneratorTests {
 				.hasSpringBootStarterDependency('test')
 				.hasDependenciesCount(4)
 
+	}
+
+	@Test
+	void springBoot11UseEnableAutoConfigurationJava() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.1.9.RELEASE'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/java/foo/MyDemoApplication.java')
+				.hasImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.doesNotHaveImports(SpringBootApplication.class.name)
+				.contains('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+				.doesNotContain('@SpringBootApplication')
+	}
+
+	@Test
+	void springBootUseSpringBootApplicationJava() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.2.0.RC1'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/java/foo/MyDemoApplication.java')
+				.hasImports(SpringBootApplication.class.name)
+				.doesNotHaveImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.contains('@SpringBootApplication')
+				.doesNotContain('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+	}
+
+	@Test
+	void springBoot11UseEnableAutoConfigurationGroovy() {
+		def request = createProjectRequest('web')
+		request.language = 'groovy'
+		request.bootVersion = '1.1.9.RELEASE'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/groovy/foo/MyDemoApplication.groovy')
+				.hasImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.doesNotHaveImports(SpringBootApplication.class.name)
+				.contains('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+				.doesNotContain('@SpringBootApplication')
+	}
+
+	@Test
+	void springBootUseSpringBootApplicationGroovy() {
+		def request = createProjectRequest('web')
+		request.language = 'groovy'
+		request.bootVersion = '1.2.0.RC1'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/groovy/foo/MyDemoApplication.groovy')
+				.hasImports(SpringBootApplication.class.name)
+				.doesNotHaveImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.contains('@SpringBootApplication')
+				.doesNotContain('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
 	}
 
 	PomAssert generateMavenPom(ProjectRequest request) {

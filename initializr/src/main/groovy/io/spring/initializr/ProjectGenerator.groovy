@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.spring.initializr
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.support.Version
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -33,6 +34,8 @@ import static io.spring.initializr.support.GroovyTemplate.template
  */
 @Slf4j
 class ProjectGenerator {
+
+	private static final VERSION_1_2_0_RC1 = Version.parse('1.2.0.RC1')
 
 	@Autowired
 	InitializrMetadata metadata
@@ -164,6 +167,10 @@ class ProjectGenerator {
 		log.info("Processing request{type=$request.type, dependencies=$dependencies}")
 
 		request.properties.each { model[it.key] = it.value }
+
+		// @SpringBootApplication available as from 1.2.0.RC1
+		model['useSpringBootApplication'] = VERSION_1_2_0_RC1
+				.compareTo(Version.safeParse(request.bootVersion)) <= 0
 		model
 	}
 

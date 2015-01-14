@@ -47,6 +47,14 @@ class ProjectAssert {
 		new PomAssert(file('pom.xml').text)
 	}
 
+	/**
+	 * Return a {@link SourceCodeAssert} for the specified source code.
+	 */
+	SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
+		hasFile(sourceCodePath)
+		new SourceCodeAssert(sourceCodePath, file(sourceCodePath).text)
+	}
+
 	ProjectAssert isMavenProject() {
 		hasFile('pom.xml').hasNoFile('build.gradle')
 	}
