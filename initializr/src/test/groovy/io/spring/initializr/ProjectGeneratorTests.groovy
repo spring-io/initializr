@@ -205,6 +205,15 @@ class ProjectGeneratorTests {
 				.doesNotContain('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
 	}
 
+	@Test
+	void customBaseDirectory() {
+		def request = createProjectRequest()
+		request.baseDir = 'my-project'
+		generateProject(request).hasBaseDir('my-project')
+				.isJavaProject()
+				.isMavenProject()
+	}
+
 	PomAssert generateMavenPom(ProjectRequest request) {
 		def content = new String(projectGenerator.generateMavenPom(request))
 		new PomAssert(content).validateProjectRequest(request)

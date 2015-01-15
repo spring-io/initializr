@@ -16,7 +16,10 @@
 
 package io.spring.initializr.web
 
+import com.gargoylesoftware.htmlunit.WebResponse
 import com.gargoylesoftware.htmlunit.html.HtmlPage
+import io.spring.initializr.InitializrMetadata
+import io.spring.initializr.test.ProjectAssert
 import io.spring.initializr.web.support.DefaultHomePage
 import io.spring.initializr.web.support.HomePage
 
@@ -26,7 +29,6 @@ import io.spring.initializr.web.support.HomePage
  * @author Stephane Nicoll
  */
 class MainControllerFormIntegrationTests extends AbstractInitializerControllerFormIntegrationTests {
-
 
 	@Override
 	void createSimpleGradleProject() {
@@ -41,6 +43,14 @@ class MainControllerFormIntegrationTests extends AbstractInitializerControllerFo
 	@Override
 	protected HomePage createHomePage(HtmlPage home) {
 		new DefaultHomePage(home)
+	}
+
+	@Override
+	protected ProjectAssert zipProjectAssert(HomePage page, WebResponse webResponse) {
+		ProjectAssert projectAssert = super.zipProjectAssert(page, webResponse)
+		// we require self contained archive by default
+		String dirName = page.artifactId ?: InitializrMetadata.Defaults.DEFAULT_NAME
+		projectAssert.hasBaseDir(dirName)
 	}
 
 }

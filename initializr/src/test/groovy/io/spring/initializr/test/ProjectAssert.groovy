@@ -19,6 +19,7 @@ package io.spring.initializr.test
 import io.spring.initializr.InitializrMetadata
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 
 /**
  * Various project based assertions.
@@ -38,6 +39,21 @@ class ProjectAssert {
 	 */
 	ProjectAssert(File dir) {
 		this.dir = dir
+	}
+
+	/**
+	 * Validate that the project contains a base directory with the specified name.
+	 * <p>When extracting such archive, a directory with the specified {@code name}
+	 * will be created with the content of the project instead of extracting it in
+	 * the directory itself.
+	 * @param name the expected name of the base directory
+	 * @return an updated project assert on that base directory
+	 */
+	ProjectAssert hasBaseDir(String name) {
+		File projectDir = file(name)
+		assertTrue "No directory $name found in $dir.absolutePath", projectDir.exists()
+		assertTrue "$name is not a directory", projectDir.isDirectory()
+		new ProjectAssert(projectDir) // Replacing the root dir so that other assertions match the root
 	}
 
 	/**

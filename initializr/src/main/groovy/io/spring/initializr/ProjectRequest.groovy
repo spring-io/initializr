@@ -53,6 +53,9 @@ class ProjectRequest {
 	String packageName
 	String javaVersion
 
+	// The base directory to create in the archive - no baseDir by default
+	String baseDir
+
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<InitializrMetadata.Dependency> resolvedDependencies
 

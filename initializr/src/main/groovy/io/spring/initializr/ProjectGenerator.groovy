@@ -74,10 +74,12 @@ class ProjectGenerator {
 	File generateProjectStructure(ProjectRequest request) {
 		def model = initializeModel(request)
 
-		def dir = File.createTempFile('tmp', '', new File(tmpdir))
-		addTempFile(dir.name, dir)
-		dir.delete()
-		dir.mkdirs()
+		def rootDir = File.createTempFile('tmp', '', new File(tmpdir))
+		addTempFile(rootDir.name, rootDir)
+		rootDir.delete()
+		rootDir.mkdirs()
+
+		def dir = initializerProjectDir(rootDir, request)
 
 		if ('gradle'.equals(request.build)) {
 			def gradle = new String(doGenerateGradleBuild(model))
@@ -119,7 +121,7 @@ class ProjectGenerator {
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
 		invokeListeners(request)
-		dir
+		rootDir
 
 	}
 
@@ -181,6 +183,16 @@ class ProjectGenerator {
 
 	private byte[] doGenerateGradleBuild(Map model) {
 		template 'starter-build.gradle', model
+	}
+
+	private File initializerProjectDir(File rootDir, ProjectRequest request) {
+		if (request.baseDir) {
+			File dir = new File(rootDir, request.baseDir)
+			dir.mkdir()
+			return dir
+		} else {
+			return rootDir
+		}
 	}
 
 	def write(File target, String templateName, def model) {

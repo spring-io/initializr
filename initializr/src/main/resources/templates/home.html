@@ -26,6 +26,7 @@
         </div>
     </div>
     <form id="form" class="form-horizontal" action="/starter.zip" method="get" role="form">
+        <input id="baseDir" name="baseDir" type="hidden" value="${defaults.artifactId}">
         <div class="row">
             <div class="col-sm-6">
                 <h3>Project metadata</h3>
@@ -38,7 +39,7 @@
                 <div class="form-group">
                     <label for="artifactId" class="col-md-3 control-label">Artifact</label>
                     <div class="col-md-8">
-                        <input id="artifactId" class="form-control" type="text" value="${defaults.artifactId}" name="artifactId">
+                        <input id="artifactId" class="form-control" type="text" value="${defaults.artifactId}" name="artifactId" onchange="javascript:updateBaseDir()">
                     </div>
                 </div>
                 <div class="form-group">
@@ -62,7 +63,7 @@
                 <div class="form-group">
                     <label for="type" class="col-md-3 control-label">Type</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="type" name="type" onchange="javascript:updateForm(this)">
+                        <select class="form-control" id="type" name="type" onchange="javascript:updateAction(this)">
                             <% types.each { %>
                             <option data-action="${it.action}" value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
@@ -162,9 +163,14 @@
     </form>
 </div>
 <script>
-    var updateForm = function(sel) {
+    var updateAction = function(sel) {
         var selected = sel.options[sel.selectedIndex];
         sel.form.action = selected.getAttribute("data-action");
+    };
+    var updateBaseDir = function() {
+        var artifactId = document.getElementById("artifactId");
+        var baseDir = document.getElementById("baseDir");
+        baseDir.value = artifactId.value
     }
 </script>
 </body>

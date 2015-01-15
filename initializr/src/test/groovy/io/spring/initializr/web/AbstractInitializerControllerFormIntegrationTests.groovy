@@ -67,7 +67,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	@Test
 	void createDefaultJavaProject() {
 		def page = home()
-		def projectAssert = zipProjectAssert(page.generateProject().contentAsStream.bytes)
+		def projectAssert = zipProjectAssert(page, page.generateProject())
 		projectAssert.isMavenProject().isJavaProject().hasStaticAndTemplatesResources(false)
 				.pomAssert().hasDependenciesCount(2)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
@@ -77,7 +77,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	void createDefaultGroovyProject() {
 		def page = home()
 		page.language = 'groovy'
-		def projectAssert = zipProjectAssert(page.generateProject().contentAsStream.bytes)
+		def projectAssert = zipProjectAssert(page, page.generateProject())
 		projectAssert.isMavenProject().isGroovyProject().hasStaticAndTemplatesResources(false)
 				.pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
@@ -92,7 +92,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		String value = webResponse.getResponseHeaderValue('Content-Disposition')
 		assertEquals  'attachment; filename="foo-bar.zip"', value
 
-		def projectAssert = zipProjectAssert(webResponse)
+		def projectAssert = zipProjectAssert(page, webResponse)
 		projectAssert.isMavenProject().isJavaProject('MyProjectApplication')
 				.hasStaticAndTemplatesResources(true)
 
@@ -108,7 +108,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		String value = webResponse.getResponseHeaderValue('Content-Disposition')
 		assertEquals  'attachment; filename="foo-bar.zip"', value
 
-		def projectAssert = zipProjectAssert(webResponse)
+		def projectAssert = zipProjectAssert(page, webResponse)
 		projectAssert.isMavenProject().isGroovyProject('MyProjectApplication')
 				.hasStaticAndTemplatesResources(true)
 
@@ -141,7 +141,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 	void createWarProject() {
 		def page = home()
 		page.packaging = 'war'
-		def projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page, page.generateProject())
 		projectAssert.isMavenProject().isJavaWarProject()
 				.pomAssert().hasPackaging('war').hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web') // Added with war packaging
@@ -153,7 +153,7 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		def page = home()
 		page.type =  projectType
 		page.dependencies << 'data-jpa'
-		def projectAssert = zipProjectAssert(page.generateProject())
+		def projectAssert = zipProjectAssert(page, page.generateProject())
 		projectAssert.isGradleProject().isJavaProject().hasStaticAndTemplatesResources(false)
 	}
 
@@ -163,7 +163,10 @@ abstract class AbstractInitializerControllerFormIntegrationTests extends Abstrac
 		createHomePage(home)
 	}
 
-	ProjectAssert zipProjectAssert(WebResponse webResponse) {
+	/**
+	 * Initialize a {@link ProjectAssert} for the  specified {@link HomePage} and {@link WebResponse}.
+	 */
+	protected ProjectAssert zipProjectAssert(HomePage page, WebResponse webResponse) {
 		zipProjectAssert(webResponse.contentAsStream.bytes)
 	}
 
