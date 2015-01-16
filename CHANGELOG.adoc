@@ -1,4 +1,4 @@
-The _default_ instance of Spring Initializr (i.e. https://start.spring.io) is using the continuous deployment
+The _default_ instance of Spring Initializr (i.e. link:https://start.spring.io[]) is using the continuous deployment
 technique: when a new feature or a bug is fixed, pushing the code to master leads to a job that runs all the
 tests and update the application live if they all pass.
 
