@@ -13,48 +13,97 @@ initializr:
         - name: Security
           id: security
           description: Support for spring-security
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security[Securing your app]
+            - http://spring.io/guides/gs/securing-web/[Securing a Web Application]
         - name: AOP
           id: aop
           description: Support for aspect-oriented programming including spring-aop and AspectJ
+          refdocs:
     - name: Data
       content:
         - name: JDBC
           id: jdbc
           description: Support for JDBC databases
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-using-jdbc-template[Using JdbcTemplate]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-intialize-a-database-using-spring-jdbc[Initializing a database using Spring JDBC]
+            - http://spring.io/guides/gs/relational-data-access/[Accessing Relational Data using JDBC with Spring]
+          springBootCliAppAttrs:
+            - "JdbcTemplate jdbcTemplate //or declare a NamedParameterJdbcTemplate or a DataSource"
         - name: JPA
           id: data-jpa
           description: Support for the Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           aliases:
             - jpa
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-jpa-and-spring-data[JPA and 'Spring Data']
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-data-access[Data Access]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-initialize-a-database-using-jpa[Initialize a database using JPA]
+            - http://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA]
         - name: MongoDB
           id: data-mongodb
           description: Support for the MongoDB NoSQL Database, including spring-data-mongodb
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb[Working with NoSQL - MongoDB]
+            - http://spring.io/guides/gs/accessing-data-mongodb/[Accessing MongoDB Data]
         - name: Redis
           id: redis
           description: Support for the REDIS key-value data store, including spring-redis
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-redis[Working with NoSQL - Redis]
+            - http://spring.io/guides/gs/messaging-redis/[Messaging with Redis]
         - name: Gemfire
           id: data-gemfire
           description: Support for the GemFire distributed data store including spring-data-gemfire
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-gemfire[Working with NoSQL - GemFire]
+            - http://spring.io/guides/gs/accessing-data-gemfire/[Accessing Data with GemFire]
+            - http://spring.io/guides/gs/caching-gemfire/[Caching with GemFire]
         - name: Solr
           id: data-solr
           description: Support for the Apache Solr search platform, including spring-data-solr
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-solr[Working with NoSQL - Solr]
         - name: Elasticsearch
           id: data-elasticsearch
           description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-elasticsearch[Working with NoSQL - Elasticsearch]
     - name: I/O
       content:
         - name: Batch
           id: batch
           description: Support for Spring Batch including HSQLDB database
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-initialize-a-spring-batch-database[Initialize a Spring Batch datanbase]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-batch-applications[Batch applications]
+            - http://spring.io/guides/gs/batch-processing/[Creating a Batch Service]
+          springBootCliAnnotations:
+            - "@EnableBatchProcessing"
         - name: Integration
           id: integration
           description: Support for common spring-integration modules
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-integration[Spring Integration]
+          springBootCliAnnotations:
+            - "@EnableIntegration //or define a @MessageEndpoint"
         - name: JMS
           id: hornetq
           description: Support for Java Message Service API via HornetQ
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-jms[JMS Messaging]
+            - http://spring.io/guides/gs/messaging-jms/[Messaging with JMS]
+          springBootCliAnnotations:
+            - "@EnableJmsMessaging"
         - name: AMQP
           id: amqp
           description: Support for the Advanced Message Queuing Protocol via spring-rabbit
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-messaging[Messaging]
+            - http://spring.io/guides/gs/messaging-rabbitmq/[Messaging with RabbitMQ]
+          springBootCliAnnotations:
+            - "@EnableRabbitMessaging"
     - name: Web
       content:
         - name: Web
@@ -62,18 +111,36 @@ initializr:
           description: Support for full-stack web development, including Tomcat and spring-webmvc
           facets:
             - web
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-developing-web-applications[Developing web applications]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-reload-java-classes-without-restarting[Reload Java classes without restarting the container]
+            - http://spring.io/guides?filter=web[Guides for web apps]
+          springBootCliAnnotations:
+            - "@Controller //or @RestController"
         - name: Websocket
           id: websocket
           description: Support for websocket development with Tomcat
+          refdocs:
+            - http://spring.io/guides/gs/messaging-stomp-websocket/[Using WebSocket to build an interactive web application]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-create-websocket-endpoints-using-serverendpoint[Create WebSocket endpoints using @ServerEndpoint]
+          springBootCliAnnotations:
+            - "@EnableWebSocket //or @EnableWebSocketMessageBroker"
         - name: WS
           id: ws
           description: Support for Spring Web Services
+          refdocs:
+            - http://spring.io/guides?filter=soap[Spring WS-based guides]
         - name: Rest Repositories
           id: data-rest
           description: Support for exposing Spring Data repositories over REST via spring-data-rest-webmvc
+          refdocs:
         - name: Mobile
           id: mobile
           description: Support for spring-mobile
+          refdocs:
+            - http://spring.io/guides/gs/serving-mobile-web-content/[Serving Mobile Web Content with Spring MVC]
+          springBootCliAnnotations:
+            - "@EnableDeviceResolver"
     - name: Template Engines
       content:
         - name: Freemarker
@@ -81,40 +148,76 @@ initializr:
           description: Support for the FreeMarker templating engine
           facets:
             - web
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines[Template engines]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-reload-freemarker-content[Reload Freemarker templates without restarting the container]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-view-resolvers[Customize ViewResolvers]
         - name: Velocity
           id: velocity
           description: Support for the Velocity templating engine
           facets:
             - web
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines[Template engines]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-reload-velocity-content[Reload Velocity templates without restarting the container]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-view-resolvers[Customize ViewResolvers]
         - name: Groovy Templates
           id: groovy-templates
           description: Support for the Groovy templating engine
           facets:
             - web
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines[Template engines]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-reload-groovy-template-content[Reload Groovy templates without restarting the container]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-view-resolvers[Customize ViewResolvers]
+          springBootCliAnnotations:
+            - "@EnableGroovyTemplates"
         - name: Thymeleaf
           id: thymeleaf
           description: Support for the Thymeleaf templating engine, including integration with Spring
           facets:
             - web
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines[Template engines]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-reload-thymeleaf-content[Reload Thymeleaf templates without restarting the container]
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-view-resolvers[Customize ViewResolvers]
     - name: Social
       content:
         - name: Facebook
           id: social-facebook
           description: Support for spring-social-facebook
+          refdocs:
+            - http://spring.io/guides/gs/register-facebook-app/[Registering an Application with Facebook]
+            - http://spring.io/guides/gs/accessing-facebook/[Accessing Facebook Data]
+          springBootCliAppAttrs:
+            - "Facebook facebookOperations"
         - name: LinkedIn
           id: social-linkedin
           description: Support for spring-social-linkedin
+          refdocs:
+          springBootCliAppAttrs:
+            - "LinkedIn linkedInOperations"
         - name: Twitter
           id: social-twitter
           description: Support for spring-social-twitter
+          refdocs:
+            - http://spring.io/guides/gs/register-twitter-app/[Registering an Application with Twitter]
+            - http://spring.io/guides/gs/accessing-twitter/[Accessing Twitter Data]
+          springBootCliAppAttrs:
+            - "Twitter twitterOperations"
     - name: Ops
       content:
         - name: Actuator
           id: actuator
           description: Production ready features to help you monitor and manage your application
+          refdocs:
+            - "http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready[Spring Boot Actuator: Production-ready features]"
+            - http://spring.io/guides/gs/actuator-service/[Building a RESTful Web Service with Spring Boot Actuator]
         - name: Remote Shell
           id: remote-shell
           description: Support for CRaSH
+          refdocs:
+            - http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-remote-shell[Monitoring and management using a remote shell]
   types:
     - name: Maven POM
       id: maven-build
@@ -145,6 +248,13 @@ initializr:
       sts-id: gradle.zip
       tags:
         build: gradle
+        format: project
+      default: false
+      action: /starter.zip
+    - name: Spring Boot CLI Project
+      id: spring-boot-cli-project
+      tags:
+        build: spring-boot-cli
         format: project
       default: false
       action: /starter.zip

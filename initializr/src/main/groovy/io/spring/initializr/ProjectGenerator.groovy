@@ -79,6 +79,18 @@ class ProjectGenerator {
 		dir.delete()
 		dir.mkdirs()
 
+		if ('spring-boot-cli-project'.equals(request.type)) {
+			doGenerateSpringBootCliStructure(dir, model, request)
+		} else {
+			doGenerateProjectStructure(dir, model, request)
+		}
+
+		invokeListeners(request)
+		dir
+
+	}
+
+	private File doGenerateProjectStructure(File dir, def model, ProjectRequest request) {
 		if ('gradle'.equals(request.build)) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
@@ -114,16 +126,78 @@ class ProjectGenerator {
 		resources.mkdirs()
 		new File(resources, 'application.properties').write('')
 
+		def readme = template 'README.adoc', model
+		new File(dir, 'README.adoc').write(readme)
+
 		if (request.hasWebFacet()) {
 			new File(dir, 'src/main/resources/templates').mkdirs()
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
-		invokeListeners(request)
-		dir
-
 	}
 
 	/**
+	 * Generate a project structure for the specified {@link ProjectRequest}. Returns
+	 * a directory containing the project.
+	 */
+	private File doGenerateSpringBootCliStructure(File dir, def model, ProjectRequest request) {
+		boolean thymeleaf = false
+		boolean springSecurity = false
+		boolean springDataRest = false
+		boolean springDataJpa = false
+		boolean springDataMongo = false
+		boolean springDataRedis = false
+		boolean springDataGemfire = false
+		boolean springDataSolr = false
+		boolean springDataElasticsearch = false
+
+		model.resolvedDependencies.each {
+			if (it.name.equals('Security')) {
+				springSecurity = true
+			} else if (it.name.equals('Thymeleaf')) {
+				thymeleaf = true
+			} else if (it.name.equals('JPA')) {
+				springDataJpa = true
+			} else if (it.name.equals('MongoDB')) {
+				springDataMongo = true
+			} else if (it.name.equals('Redis')) {
+				springDataRedis = true
+			} else if (it.name.equals('Gemfire')) {
+				springDataGemfire = true
+			} else if (it.name.equals('Solr')) {
+				springDataSolr = true
+			} else if (it.name.equals('Elasticsearch')) {
+				springDataElasticsearch = true
+			} else if (it.name.equals('Rest Repositories')) {
+				springDataRest = true
+			}
+		}
+
+		// Synergistic combinations
+		if (thymeleaf && springSecurity) {
+			// Figure out how to add [groupId: "org.thymeleaf.extras", artifactId: "thymeleaf-extras-springsecurity3"]
+		}
+		if (springDataRest) {
+			def restRepositoriesDeps = model.resolvedDependencies.find{it.name == "Rest Repositories"}
+			if (springDataJpa) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-data-rest/[Accessing JPA Data with REST]"
+			}
+			if (springDataMongo) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-mongodb-data-rest/[Accessing MongoDB Data with REST]"
+			}
+			if (springDataGemfire) {
+				restRepositoriesDeps.refdocs << "http://spring.io/guides/gs/accessing-gemfire-data-rest/[Accessing GemFire Data with REST]"
+			}
+		}
+
+
+		def readme = template 'spring-boot-cli-README.adoc', model
+		new File(dir, 'README.adoc').write(readme)
+
+		def app = template 'spring-boot-cli-app.groovy', model
+		new File(dir, 'app.groovy').write(app)
+	}
+
+		/**
 	 * Create a distribution file for the specified project structure
 	 * directory and extension
 	 */

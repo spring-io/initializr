@@ -1,0 +1,29 @@
+== My cool new Spring Boot app!
+
+This app uses Spring Boot. You have picked:
+<% resolvedDependencies.each { %>
+* ${it.name}<% } %>
+
+These modules manifest as various http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-starter-poms["starters"] in your build file.
+
+=== Getting Help
+
+Some key bits of documentation regarding your choices:
+<% resolvedDependencies.each {  it.refdocs.each { %>
+* ${it}<% } } %>
+<% if (build.equals('gradle')) {%>* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins-gradle-plugin[Spring Boot Gradle Plugin]<%} else if (build.equals('maven')) {%>* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins-maven-plugin[Spring Boot Maven Plugin]<%}%>
+
+Other general sources of help:
+
+* http://stackoverflow.com/questions/tagged/spring-boot[Stack Overflow]
+* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot general reference guide]
+* http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-testing[Spring Boot Testing]
+* http://projects.spring.io/spring-boot/[Spring Boot project page]
+
+=== What do I do with this file?
+
+This file is a helper to get started. Once your project is up and running, feel free to clean it out and plug in details
+about your application. It's written in asciidoctor, which is nicely supported by GitHub if you commit it as README.adoc.
+
+Happy coding!
+-- The Spring Boot team

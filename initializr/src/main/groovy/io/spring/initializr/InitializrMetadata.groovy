@@ -231,6 +231,14 @@ class InitializrMetadata {
 
 		String description
 
+		// Associated set of doc links for the dependency
+		List<String> refdocs = []
+
+		// Annotation to switch on behavior for Spring Boot CLI instead of @Grab statements
+		List<String> springBootCliAnnotations = []
+
+		List<String> springBootCliAppAttrs = []
+
 		/**
 		 * Specify if the dependency has its coordinates set, i.e. {@code groupId}
 		 * and {@code artifactId}.
@@ -369,5 +377,6 @@ class InitializrMetadata {
 		String getName() {
 			(name ?: id)
 		}
+
 	}
 }
