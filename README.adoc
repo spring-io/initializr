@@ -1,5 +1,10 @@
 = Spring Initializr
 
+Spring Initializr is a configurable service to generate quickstart project. You can see our default
+instance at https://start.spring.io
+
+NOTE: Check the link:CHANGELOG.adoc[changelog] for the list of changes
+
 == Prerequisites
 
 You need Java (1.6 or better) and a bash-like shell.
@@ -114,3 +119,7 @@ Where `<space>` is the name of the space. As a failsafe, and a
 reminder to be explicit, the deployment will fail in production
 without the `-n`. It is needed to select the route because there is a
 manifest that defaults it to `start-development`.
+
+== License
+Spring Initializr is Open Source software released under the
+http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].

@@ -1,0 +1,52 @@
+The _default_ instance of Spring Initializr (i.e. https://start.spring.io) is using the continuous deployment
+technique: when a new feature or a bug is fixed, pushing the code to master leads to a job that runs all the
+tests and update the application live if they all pass.
+
+Because of that, it may be hard to track what has changed; this page provides a summary of changes in descending
+order.
+
+=== Release 1.0.0 (In progress)
+
+* https://github.com/spring-io/initializr/issues/46[#46]: projects generated against Spring 1.2+ are using the
+new `@SpringBootApplication`
+* https://github.com/spring-io/initializr/issues/64[#64]: Groovy-based projects are now working properly with
+Java 8; update Groovy compiler to 2.3
+* https://github.com/spring-io/initializr/issues/60[#60]: the name of the application is now generated against
+the `name` property. As a result the new default name is now `DemoApplication` instead of `Application`. If the
+specified name contains invalid java identifier character, `Application` is used as a fallback
+* https://github.com/spring-io/initializr/issues/52[#52]: the home page now shows a reference to the Github project
+* Move the `<properties>` section of the pom higher so that it has a better visibility
+* https://github.com/spring-io/initializr/issues/57[#57]: fix wrong dependency metric when a project is generated
+with no explicit dependency
+* https://github.com/spring-io/initializr/issues/51[#51]: use `https` for artifact repositories
+* https://github.com/spring-io/initializr/issues/50[#50]: `dependencies` is now an alias of the `style` parameter.
+As a result, https://start.spring.io/starter.zip?dependencies=web has the same effect as
+https://start.spring.io/starter.zip?style=web
+* https://github.com/spring-io/initializr/issues/49[#49]: update metadata format to v2. The updated metadata format
+is now more descriptive and HAL-compliant and can be used with Spring HATEOAS to build a client. Metadata v1 is still
+served to preserve backward compatibility with Spring Boot CLI 1.2.0.RC1.
+* https://github.com/spring-io/initializr/issues/43[#43]: add _tag_ section to the `type` element to express more
+metadata about a particular type
+* https://github.com/spring-io/initializr/issues/38[#38]: associate a more meaningful HTTP status code for well-known
+exception types. Previously `500` was wrongly used for all of them.
+* https://github.com/spring-io/initializr/issues/41[#41]: fix potential NPE with unknown Spring Boot starter
+* https://github.com/spring-io/initializr/issues/40[#40]: add support for dependency description
+* https://github.com/spring-io/initializr/issues/36[#36]: the name of the project archive now depends on the value
+of the `artifactId` attribute. As a result, the default archive name is no longer `starter.zip` but `demo.zip`
+* https://github.com/spring-io/initializr/issues/32[#32]: add specific metrics, available from the `/metrics` endpoint
+* https://github.com/spring-io/initializr/issues/26[#26]: available Spring Boot versions are now retrieved from
+spring.io; it is no longer necessary to refresh the configuration and redeploy the instance when a new Spring Boot
+release is available
+* https://github.com/spring-io/initializr/issues/33[#33]: older STS version can now use the Spring Boot project
+wizard again
+* https://github.com/spring-io/initializr/issues/31[#31]: the `/spring` endpoint now redirects to the official
+repository location to use to download the latest CLI bundle
+* https://github.com/spring-io/initializr/issues/30[#30]: add support for dependency `facet`. A facet is a simple
+name that can be used to further tune the project request if necessary.
+* https://github.com/spring-io/initializr/issues/29[#29]: add dependency alias support. A dependency can have an
+arbitrary number of aliases. A project can be generated using that dependency either referring to its main id or
+any of its registered aliases.
+* https://github.com/spring-io/initializr/issues/17[#17]: add support for non Spring Boot starter dependency. A
+dependency can also be defined using `groupId`, `artifactId` and `version`
+* https://github.com/spring-io/initializr/issues/19[#19]: add more configurable defaults: `groupId`, `artifactId`,
+`version`, `name`, `description` and `packageName`
