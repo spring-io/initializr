@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.spring.initializr.web
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.CommandLineHelpGenerator
 import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.ProjectGenerator
 import io.spring.initializr.ProjectRequest
@@ -24,11 +25,14 @@ import io.spring.initializr.ProjectRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 /**
@@ -44,8 +48,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 @Slf4j
 class MainController extends AbstractInitializrController {
 
+	public static final MediaType META_DATA_V2 = MediaType.parseMediaType("application/vnd.initializr.v2+json")
+
 	@Autowired
 	private ProjectGenerator projectGenerator
+
+	private CommandLineHelpGenerator commandLineHelpGenerator = new CommandLineHelpGenerator()
+
 
 	@ModelAttribute
 	ProjectRequest projectRequest() {
@@ -61,11 +70,26 @@ class MainController extends AbstractInitializrController {
 		metadataProvider.get()
 	}
 
-	@RequestMapping(value = "/", produces = ["application/vnd.initializr.v2+json","application/json"])
-	@ResponseBody
-	String metadata() {
+	@RequestMapping(value = "/", produces = ["text/plain"])
+	ResponseEntity<String> serviceCapabilities(
+			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
 		String appUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().build()
-		metadataProvider.get().generateJson(appUrl)
+		def metadata = metadataProvider.get()
+
+		def builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
+		if (userAgent && userAgent.startsWith(WebConfig.CURL_USER_AGENT_PREFIX)) {
+			builder.body(commandLineHelpGenerator.generateCurlCapabilities(metadata,appUrl))
+		}
+		else {
+			builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
+		}
+	}
+
+	@RequestMapping(value = "/", produces = ["application/vnd.initializr.v2+json", "application/json"])
+	ResponseEntity<String> serviceCapabilities() {
+		String appUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().build()
+		def content = metadataProvider.get().generateJson(appUrl)
+		return ResponseEntity.ok().contentType(META_DATA_V2).body(content)
 	}
 
 	@RequestMapping(value = '/', produces = 'text/html')

@@ -1,0 +1,48 @@
+${logo}
+:: Spring Initializr ::  ${serviceUrl}
+
+This service generates quickstart projects and can be customized
+in many ways; the dependencies, java version, build system or
+build structure can be namely customized easily.
+
+The services uses a HAL based hypermedia format to expose a set of
+resources to interact with. If you access this root resource
+requesting application/json as media type the response will contain
+the following links:
+<% types.each {key, value -> %>
+* ${key} - ${value} <% } %>
+
+The URI templates take a set of parameters to customize the result of
+a request to the linked resource.
+
++-----------------+------------------------------------------+-----------------
+| Parameter       | Description                              | Default
+|-----------------+------------------------------------------+-----------------
+| groupId         | project coordinates                      | ${defaults.groupId}
+| artifactId      | project coordinates (infer archive name) | ${defaults.artifactId}
+| version         | project version                          | ${defaults.version}
+| name            | project name (infer application name)    | ${defaults.name}
+| description     | project description                      | ${defaults.description}
+| packageName     | root package                             | ${defaults.packageName}
+| applicationName | application name                         | ${defaults.applicationName}
+| dependencies    | dependency identifiers (comma separated) | none
+| type            | project type                             | ${defaults.type}
+| packaging       | project packaging                        | ${defaults.packaging}
+| language        | programming language                     | ${defaults.language}
+| javaVersion     | language level                           | ${defaults.javaVersion}
+| bootVersion     | spring boot version                      | ${defaults.bootVersion}
+| baseDir         | base directory to create in the archive  | no base dir
++-----------------+------------------------------------------+-----------------
+
+The following section has a list of supported identifiers for the comma separated
+list of "dependencies".
+<% dependencies.each {key, value -> %>
+${key} - ${value} <% } %>
+
+
+<% if (hasExamples) { %>
+Examples:
+
+${examples}
+
+<% } %>

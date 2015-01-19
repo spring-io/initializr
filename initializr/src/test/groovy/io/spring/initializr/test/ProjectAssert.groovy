@@ -64,6 +64,13 @@ class ProjectAssert {
 	}
 
 	/**
+	 * Return a {@link GradleBuildAssert} for this project.
+	 */
+	GradleBuildAssert gradleBuildAssert() {
+		new GradleBuildAssert(file('build.gradle').text)
+	}
+
+	/**
 	 * Return a {@link SourceCodeAssert} for the specified source code.
 	 */
 	SourceCodeAssert sourceCodeAssert(String sourceCodePath) {

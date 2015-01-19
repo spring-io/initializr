@@ -86,6 +86,10 @@ class InitializrMetadataBuilder {
 		if (format) {
 			type.tags['format'] = format
 		}
+		addType(type)
+	}
+
+	InitializrMetadataBuilder addType(InitializrMetadata.Type type) {
 		metadata.types.add(type)
 		this
 	}

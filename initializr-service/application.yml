@@ -118,6 +118,7 @@ initializr:
   types:
     - name: Maven POM
       id: maven-build
+      description: Generate a Maven pom.xml
       sts-id: pom.xml
       tags:
         build: maven
@@ -126,6 +127,7 @@ initializr:
       action: /pom.xml
     - name: Maven Project
       id: maven-project
+      description: Generate a Maven based project archive
       sts-id: starter.zip
       tags:
         build: maven
@@ -134,6 +136,7 @@ initializr:
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
+      description: Generate a Gradle based project archive
       sts-id: build.gradle
       tags:
         build: gradle
@@ -142,6 +145,7 @@ initializr:
       action: /build.gradle
     - name: Gradle Project
       id: gradle-project
+      description: Generate a Gradle build file
       sts-id: gradle.zip
       tags:
         build: gradle

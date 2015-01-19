@@ -19,7 +19,6 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import groovy.json.JsonSlurper
-import io.spring.initializr.test.ProjectAssert
 import org.json.JSONObject
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
@@ -36,6 +35,9 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.HttpClientErrorException
 
+import static org.hamcrest.CoreMatchers.allOf
+import static org.hamcrest.CoreMatchers.containsString
+import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
 
 /**
@@ -132,16 +134,58 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void metadataWithNoAcceptHeader() { //  rest template sets application/json by default
-		ResponseEntity<String> response = getMetadata(null, '*/*')
-		assertTrue response.headers.getContentType().isCompatibleWith(CURRENT_METADATA_MEDIA_TYPE)
-		validateCurrentMetadata(new JSONObject(response.body))
+		ResponseEntity<String> response = invokeHome(null, '*/*')
+		validateCurrentMetadata(response)
 	}
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
-		ResponseEntity<String> response = getMetadata(null, 'application/vnd.initializr.v2+json')
-		assertTrue response.headers.getContentType().isCompatibleWith(CURRENT_METADATA_MEDIA_TYPE)
+		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2+json')
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void curlReceivesTextByDefault() {
+		ResponseEntity<String> response = invokeHome('curl/1.2.4', "*/*")
+		validateCurlHelpContent(response)
+	}
+
+	@Test
+	void curlCanStillDownloadZipArchive() {
+		ResponseEntity<byte[]> response = execute('/starter.zip', byte[], 'curl/1.2.4', "*/*")
+		zipProjectAssert(response.body).isMavenProject().isJavaProject()
+	}
+
+	@Test
+	void curlCanStillDownloadTgzArchive() {
+		ResponseEntity<byte[]> response = execute('/starter.tgz', byte[], 'curl/1.2.4', "*/*")
+		tgzProjectAssert(response.body).isMavenProject().isJavaProject()
+	}
+
+	@Test // make sure curl can still receive metadata with json
+	void curlWithAcceptHeaderJson() {
+		ResponseEntity<String> response = invokeHome('curl/1.2.4', "application/json")
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void curlWithAcceptHeaderTextPlain() {
+		ResponseEntity<String> response = invokeHome('curl/1.2.4', "text/plain")
+		validateCurlHelpContent(response)
+	}
+
+	@Test
+	void unknownAgentReceivesJsonByDefault() {
+		ResponseEntity<String> response = invokeHome('foo/1.0', "*/*")
+		validateCurrentMetadata(response)
+	}
+
+	@Test
+	void unknownCliWithTextPlain() {
+		ResponseEntity<String> response = invokeHome(null, "text/plain")
+		validateGenericHelpContent(response)
 	}
 
 	@Test // Test that the current output is exactly what we expect
@@ -150,9 +194,30 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateCurrentMetadata(json)
 	}
 
+	private void validateCurrentMetadata(ResponseEntity<String> response) {
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
 	private void validateCurrentMetadata(JSONObject json) {
 		def expected = readJson('2.0.0')
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
+	}
+
+	private void validateCurlHelpContent(ResponseEntity<String> response) {
+		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.body, allOf(
+				containsString("Spring Initializr"),
+				containsString('Examples:'),
+				containsString("curl")))
+	}
+
+	private void validateGenericHelpContent(ResponseEntity<String> response) {
+		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.body, allOf(
+				containsString("Spring Initializr"),
+				not(containsString('Examples:')),
+				not(containsString("curl"))))
 	}
 
 	@Test // Test that the  current code complies exactly with 1.1.0
@@ -208,7 +273,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void missingDependencyProperException() {
 		try {
-			invoke('/starter.zip?style=foo:bar')
+			downloadArchive('/starter.zip?style=foo:bar')
 		} catch (HttpClientErrorException ex) {
 			def error = parseJson(ex.responseBodyAsString)
 			assertEquals HttpStatus.BAD_REQUEST, ex.getStatusCode()
@@ -236,7 +301,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void homeIsJson() {
-		def body = restTemplate.getForObject(createUrl('/'), String)
+		def body = invokeHome(null, null).body
 		assertTrue("Wrong body:\n$body", body.contains('"dependencies"'))
 	}
 
@@ -293,35 +358,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private JSONObject getMetadataJson(String userAgentHeader, String acceptHeader) {
-		String json = getMetadata(userAgentHeader, acceptHeader).body
+		String json = invokeHome(userAgentHeader, acceptHeader).body
 		return new JSONObject(json)
-	}
-
-	private ResponseEntity<String> getMetadata(String userAgentHeader, String acceptHeader) {
-		HttpHeaders headers = new HttpHeaders();
-		if (userAgentHeader) {
-			headers.set("User-Agent", userAgentHeader);
-		}
-		if (acceptHeader) {
-			headers.setAccept(Collections.singletonList(MediaType.parseMediaType(acceptHeader)))
-		}
-		return restTemplate.exchange(createUrl('/'),
-				HttpMethod.GET, new HttpEntity<Void>(headers), String.class)
-	}
-
-
-	private byte[] invoke(String context) {
-		restTemplate.getForObject(createUrl(context), byte[])
-	}
-
-	private ProjectAssert downloadZip(String context) {
-		def body = invoke(context)
-		zipProjectAssert(body)
-	}
-
-	private ProjectAssert downloadTgz(String context) {
-		def body = invoke(context)
-		tgzProjectAssert(body)
 	}
 
 	private JSONObject readJson(String version) {

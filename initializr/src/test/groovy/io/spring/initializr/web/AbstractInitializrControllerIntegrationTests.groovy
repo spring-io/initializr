@@ -33,9 +33,13 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.client.RestTemplate
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 
 /**
  * @author Stephane Nicoll
@@ -65,6 +69,17 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	}
 
 	/**
+	 * Validate the 'Content-Type' header of the specified response.
+	 */
+	protected void validateContentType(ResponseEntity<String> response, MediaType expected) {
+		def actual = response.headers.getContentType()
+		assertTrue "Non compatible media-type, expected $expected, got $actual" ,
+				actual.isCompatibleWith(expected)
+		assertEquals 'All text content should be UTF-8 encoded',
+				'UTF-8', actual.getParameter('charset')
+	}
+
+	/**
 	 * Return a {@link ProjectAssert} for the following archive content.
 	 */
 	protected ProjectAssert zipProjectAssert(byte[] content) {
@@ -78,7 +93,40 @@ abstract class AbstractInitializrControllerIntegrationTests {
 		projectAssert(content, ArchiveType.TGZ)
 	}
 
-	ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
+	protected ProjectAssert downloadZip(String context) {
+		def body = downloadArchive(context)
+		zipProjectAssert(body)
+	}
+
+	protected ProjectAssert downloadTgz(String context) {
+		def body = downloadArchive(context)
+		tgzProjectAssert(body)
+	}
+
+	protected byte[] downloadArchive(String context) {
+		restTemplate.getForObject(createUrl(context), byte[])
+	}
+
+	protected ResponseEntity<String> invokeHome(String userAgentHeader, String acceptHeader) {
+		execute('/', String, userAgentHeader, acceptHeader)
+	}
+
+	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
+										  String userAgentHeader, String acceptHeader) {
+		HttpHeaders headers = new HttpHeaders();
+		if (userAgentHeader) {
+			headers.set("User-Agent", userAgentHeader);
+		}
+		if (acceptHeader) {
+			headers.setAccept(Collections.singletonList(MediaType.parseMediaType(acceptHeader)))
+		} else {
+			headers.setAccept(Collections.emptyList())
+		}
+		return restTemplate.exchange(createUrl(contextPath),
+				HttpMethod.GET, new HttpEntity<Void>(headers), responseType)
+	}
+
+	protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
 		def archiveFile = writeArchive(content)
 
 		def project = folder.newFolder()
