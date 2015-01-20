@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/70[#70]: explicit support for HTTPie (similar to curl).
 * https://github.com/spring-io/initializr/issues/67[#67]: explicit support for curl by returning a text
 description of the service instead of the raw meta-data. curl users can still discover the json metadata
 by setting the appropriate Accept header.

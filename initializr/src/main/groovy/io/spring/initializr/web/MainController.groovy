@@ -77,12 +77,15 @@ class MainController extends AbstractInitializrController {
 		def metadata = metadataProvider.get()
 
 		def builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
-		if (userAgent && userAgent.startsWith(WebConfig.CURL_USER_AGENT_PREFIX)) {
-			builder.body(commandLineHelpGenerator.generateCurlCapabilities(metadata,appUrl))
+		if (userAgent) {
+			if (userAgent.startsWith(WebConfig.CURL_USER_AGENT_PREFIX)) {
+				return builder.body(commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl))
+			}
+			if (userAgent.startsWith(WebConfig.HTTPIE_USER_AGENT_PREFIX)) {
+				return builder.body(commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl))
+			}
 		}
-		else {
-			builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
-		}
+		builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
 	}
 
 	@RequestMapping(value = "/", produces = ["application/vnd.initializr.v2+json", "application/json"])

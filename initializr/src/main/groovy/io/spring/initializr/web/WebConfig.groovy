@@ -37,6 +37,8 @@ class WebConfig extends WebMvcConfigurerAdapter {
 
 	static final String CURL_USER_AGENT_PREFIX = 'curl'
 
+	static final String HTTPIE_USER_AGENT_PREFIX = 'HTTPie'
+
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 		configurer.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy())
@@ -59,7 +61,7 @@ class WebConfig extends WebMvcConfigurerAdapter {
 			}
 			String userAgent = request.getHeader(HttpHeaders.USER_AGENT)
 			if (userAgent) {
-				if (userAgent.startsWith(CURL_USER_AGENT_PREFIX)) {
+				if (userAgent.startsWith(CURL_USER_AGENT_PREFIX) || userAgent.startsWith(HTTPIE_USER_AGENT_PREFIX)) {
 					return Collections.singletonList(MediaType.TEXT_PLAIN)
 				}
 			}

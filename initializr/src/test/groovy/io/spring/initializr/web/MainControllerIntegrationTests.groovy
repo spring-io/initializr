@@ -183,6 +183,25 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
+	void httpieReceivesTextByDefault() {
+		ResponseEntity<String> response = invokeHome('HTTPie/0.8.0', "*/*")
+		validateHttpIeHelpContent(response)
+	}
+
+	@Test // make sure curl can still receive metadata with json
+	void httpieWithAcceptHeaderJson() {
+		ResponseEntity<String> response = invokeHome('HTTPie/0.8.0', "application/json")
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void httpieWithAcceptHeaderTextPlain() {
+		ResponseEntity<String> response = invokeHome('HTTPie/0.8.0', "text/plain")
+		validateHttpIeHelpContent(response)
+	}
+
+	@Test
 	void unknownCliWithTextPlain() {
 		ResponseEntity<String> response = invokeHome(null, "text/plain")
 		validateGenericHelpContent(response)
@@ -210,6 +229,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				containsString("Spring Initializr"),
 				containsString('Examples:'),
 				containsString("curl")))
+	}
+
+	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
+		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.body, allOf(
+				containsString("Spring Initializr"),
+				containsString('Examples:'),
+				not(containsString("curl")),
+				containsString("http")))
 	}
 
 	private void validateGenericHelpContent(ResponseEntity<String> response) {

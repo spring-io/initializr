@@ -57,6 +57,17 @@ class CommandLineHelpGenerator {
 		doGenerateCapabilities(model)
 	}
 
+	/**
+	 * Generate the capabilities of the service using "HTTPie" as a plain text
+	 * document.
+	 */
+	String generateHttpieCapabilities(InitializrMetadata metadata, String serviceUrl) {
+		def model = initializeModel(metadata, serviceUrl)
+		model['examples'] = template 'httpie-examples.txt', model
+		model['hasExamples'] = true
+		doGenerateCapabilities(model)
+	}
+
 	private doGenerateCapabilities(def model) {
 		template 'cli-capabilities.txt', model
 	}

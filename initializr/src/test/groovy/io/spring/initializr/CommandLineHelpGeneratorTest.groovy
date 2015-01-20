@@ -65,6 +65,19 @@ class CommandLineHelpGeneratorTest {
 		assertThat content, containsString('curl')
 	}
 
+	@Test
+	void generateHttpCapabilities() {
+		def metadata = InitializrMetadataBuilder.withDefaults().addDependencyGroup("test",
+				createDependency('id-b', 'depB'),
+				createDependency('id-a', 'depA', 'and some description')).validateAndGet()
+		String content = generator.generateHttpieCapabilities(metadata, "https://fake-service")
+		assertThat content, containsString('id-a - depA: and some description')
+		assertThat content, containsString('id-b - depB')
+		assertThat content, containsString("https://fake-service")
+		assertThat content, containsString('Examples:')
+		assertThat content, not(containsString('curl'))
+		assertThat content, containsString("http https://fake-service")
+	}
 
 	private static def createDependency(String id, String name) {
 		createDependency(id, name, null)
