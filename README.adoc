@@ -38,7 +38,7 @@ You could achieve the same result with a simple `curl` command
 
 [source,bash]
 ----
-$ curl https://start.spring.io/starter.zip >> demo.zip
+$ curl https://start.spring.io/starter.zip -o demo.zip
 ----
 
 The following request attributes are supported:
@@ -88,8 +88,11 @@ third-party clients. You can grab the meta-data by _curling_ the root
 
 [source,bash]
 ----
-$ curl https://start.spring.io
+$ curl -H 'Accept: application/json' https://start.spring.io
 ----
+
+NOTE: If you use `curl` without an accept header, you'll retrieve a human readable text version
+of the metadata. `HTTPie` is also supported.
 
 The meta-data basically lists the _capabilities_ of the service, that is the available options
 for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) The web UI
