@@ -130,13 +130,18 @@ class VersionTests {
 
 	@Test
 	void parseInvalidVersion() {
-		thrown.expect(IllegalArgumentException)
+		thrown.expect(InvalidVersionException)
 		parse('foo')
 	}
 
 	@Test
 	void safeParseInvalidVersion() {
 		assertNull safeParse('foo')
+	}
+
+	@Test
+	void parseVersionWithSpaces() {
+		assertThat(parse('    1.2.0.RC3  '), lessThan(parse('1.3.0.RELEASE')))
 	}
 
 }

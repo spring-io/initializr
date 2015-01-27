@@ -17,6 +17,8 @@
 package io.spring.initializr
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.support.Version
+import io.spring.initializr.support.VersionRange
 
 /**
  * A request to generate a project.
@@ -79,10 +81,19 @@ class ProjectRequest {
 			}
 			dependency
 		}
+		String actualBootVersion = bootVersion ?: metadata.defaults.bootVersion
+		Version requestedVersion = Version.parse(actualBootVersion)
 		resolvedDependencies.each {
 			it.facets.each {
 				if (!facets.contains(it)) {
 					facets.add(it)
+				}
+			}
+			if (it.versionRange) {
+				def range = VersionRange.parse(it.versionRange)
+				if (!range.match(requestedVersion)) {
+					throw new InvalidProjectRequestException("Dependency '$it.id' is not compatible " +
+							"with Spring Boot $bootVersion")
 				}
 			}
 		}

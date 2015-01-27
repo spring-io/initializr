@@ -101,8 +101,8 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			page.artifactId = 'foo-bar'
 			page.name = 'My project'
 			page.description = 'A description for my project'
-			page.dependency('web')
-			page.dependency('data-jpa')
+			page.dependency('web').click()
+			page.dependency('data-jpa').click()
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('foo-bar.zip'))
@@ -126,8 +126,8 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			page.artifactId = 'groovy-project'
 			page.name = 'My Groovy project'
 			page.description = 'A description for my Groovy project'
-			page.dependency('web')
-			page.dependency('data-jpa')
+			page.dependency('web').click()
+			page.dependency('data-jpa').click()
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('groovy-project.zip'))
@@ -147,7 +147,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	void createSimpleGradleProject() {
 		toHome {
 			page.type = 'gradle-project'
-			page.dependency('data-jpa')
+			page.dependency('data-jpa').click()
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('demo.zip'))
@@ -177,7 +177,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	void createMavenBuild() {
 		toHome {
 			page.type = 'maven-build'
-			page.dependency('data-jpa')
+			page.dependency('data-jpa').click()
 			page.artifactId = 'my-maven-project'
 			page.generateProject.click()
 			at HomePage
@@ -197,6 +197,35 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			at HomePage
 
 			gradleBuildAssert().hasArtifactId('my-gradle-project').hasJavaVersion('1.6')
+		}
+	}
+
+	@Test
+	void dependencyHiddenAccordingToRange() {
+		toHome { // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
+			page.dependency('org.acme:bur').displayed == true
+
+			page.bootVersion = '1.0.2.RELEASE'
+			page.dependency('org.acme:bur').displayed == false
+			page.dependency('org.acme:biz').displayed == false
+			page.bootVersion = '1.1.4.RELEASE'
+			page.dependency('org.acme:bur').displayed == true
+			page.dependency('org.acme:biz').displayed == false
+			page.bootVersion = '1.2.0.BUILD-SNAPSHOT'
+			page.dependency('org.acme:bur').displayed == false
+			page.dependency('org.acme:biz').displayed == true
+		}
+	}
+
+	@Test
+	void dependencyUncheckedWhenHidden() {
+		toHome {
+			page.dependency('org.acme:bur').value() == 'org.acme:bur'
+			page.bootVersion = '1.0.2.RELEASE'
+			page.dependency('org.acme:bur').displayed == false
+			page.bootVersion = '1.1.4.RELEASE'
+			page.dependency('org.acme:bur').displayed == true
+			page.dependency('org.acme:bur').value() == false
 		}
 	}
 

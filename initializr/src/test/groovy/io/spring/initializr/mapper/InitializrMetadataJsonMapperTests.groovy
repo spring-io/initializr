@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.spring.initializr
+package io.spring.initializr.mapper
 
 import groovy.json.JsonSlurper
+import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.test.InitializrMetadataBuilder
 import org.junit.Test
 
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertEquals
  */
 class InitializrMetadataJsonMapperTests {
 
-	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataJsonMapper()
+	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataV21JsonMapper()
 	private final JsonSlurper slurper = new JsonSlurper()
 
 	@Test

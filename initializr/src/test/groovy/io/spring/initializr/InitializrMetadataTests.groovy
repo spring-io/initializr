@@ -98,6 +98,16 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void invalidSpringBootRange() {
+		def dependency = createDependency('web')
+		dependency.versionRange = 'A.B.C'
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage('A.B.C')
+		metadata.validateDependency(dependency)
+	}
+
+	@Test
 	void invalidIdFormatTooManyColons() {
 		def dependency = createDependency('org.foo:bar:1.0:test:external')
 

@@ -95,6 +95,37 @@ class ProjectRequestTests {
 		thrown.expect(InvalidProjectRequestException)
 		thrown.expectMessage('org.foo:acme')
 		request.resolve(metadata)
+		assertEquals(1, request.resolvedDependencies.size())
+	}
+
+	@Test
+	void resolveDependencyInRange() {
+		def request = new ProjectRequest()
+		def dependency = createDependency('org.foo', 'bar', '1.2.0.RELEASE')
+		dependency.versionRange = '[1.0.1.RELEASE, 1.2.0.RELEASE)'
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('code', dependency).validateAndGet()
+
+		request.style << 'org.foo:bar'
+		request.bootVersion = '1.1.2.RELEASE'
+		request.resolve(metadata)
+	}
+
+	@Test
+	void resolveDependencyNotInRange() {
+		def request = new ProjectRequest()
+		def dependency = createDependency('org.foo', 'bar', '1.2.0.RELEASE')
+		dependency.versionRange = '[1.0.1.RELEASE, 1.2.0.RELEASE)'
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('code', dependency).validateAndGet()
+
+		request.style << 'org.foo:bar'
+		request.bootVersion = '0.9.9.RELEASE'
+
+		thrown.expect(InvalidProjectRequestException)
+		thrown.expectMessage('org.foo:bar')
+		thrown.expectMessage('0.9.9.RELEASE')
+		request.resolve(metadata)
 	}
 
 	@Test

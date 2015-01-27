@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package io.spring.initializr
+package io.spring.initializr.mapper
 
 import groovy.json.JsonBuilder
+import io.spring.initializr.InitializrMetadata
 
 import org.springframework.hateoas.TemplateVariable
 import org.springframework.hateoas.TemplateVariables
 import org.springframework.hateoas.UriTemplate
+import org.springframework.util.StringUtils
 
 /**
- * Generate a JSON representation of the metadata.
+ * A {@link InitializrMetadataJsonMapper} handling the meta-data format for v2.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-class InitializrMetadataJsonMapper {
+class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMapper {
 
 	private final TemplateVariables templateVariables
 
-	InitializrMetadataJsonMapper() {
+	InitializrMetadataV2JsonMapper() {
 		this.templateVariables = new TemplateVariables(
 				new TemplateVariable('dependencies', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('packaging', TemplateVariable.VariableType.REQUEST_PARAM),
@@ -48,6 +50,7 @@ class InitializrMetadataJsonMapper {
 		)
 	}
 
+	@Override
 	String write(InitializrMetadata metadata, String appUrl) {
 		JsonBuilder json = new JsonBuilder()
 		json {
@@ -68,7 +71,7 @@ class InitializrMetadataJsonMapper {
 		json.toString()
 	}
 
-	private links(parent, types, appUrl) {
+	protected links(parent, types, appUrl) {
 		def content = [:]
 		types.each {
 			content[it.id] = link(appUrl, it)
@@ -76,7 +79,7 @@ class InitializrMetadataJsonMapper {
 		parent._links content
 	}
 
-	private link(appUrl, type) {
+	protected link(appUrl, type) {
 		def result = [:]
 		result.href = generateTemplatedUri(appUrl, type)
 		result.templated = true
@@ -91,41 +94,40 @@ class InitializrMetadataJsonMapper {
 	}
 
 
-	private static dependencies(parent, groups) {
+	protected dependencies(parent, groups) {
 		parent.dependencies {
 			type 'hierarchical-multi-select'
 			values groups.collect {
-				processDependencyGroup(it)
+				mapDependencyGroup(it)
 			}
 		}
-
 	}
 
-	private static type(parent, defaultValue, dependencies) {
+	protected type(parent, defaultValue, dependencies) {
 		parent.type {
 			type 'action'
 			if (defaultValue) {
 				'default' defaultValue
 			}
 			values dependencies.collect {
-				processType(it)
+				mapType(it)
 			}
 		}
 	}
 
-	private static singleSelect(parent, name, defaultValue, itemValues) {
+	protected singleSelect(parent, name, defaultValue, itemValues) {
 		parent."$name" {
 			type 'single-select'
 			if (defaultValue) {
 				'default' defaultValue
 			}
 			values itemValues.collect {
-				processValue(it)
+				mapValue(it)
 			}
 		}
 	}
 
-	private static text(parent, name, value) {
+	protected text(parent, name, value) {
 		parent."$name" {
 			type 'text'
 			if (value) {
@@ -134,8 +136,7 @@ class InitializrMetadataJsonMapper {
 		}
 	}
 
-
-	private static processDependencyGroup(group) {
+	protected mapDependencyGroup(group) {
 		def result = [:]
 		result.name = group.name
 		if (group.hasProperty('description') && group.description) {
@@ -143,20 +144,29 @@ class InitializrMetadataJsonMapper {
 		}
 		def items = []
 		group.content.collect {
-			items << processValue(it)
+			def dependency = mapDependency(it)
+			if (dependency) {
+				items << dependency
+			}
 		}
 		result.values = items
 		result
 	}
 
-	private static processType(type) {
-		def result = processValue(type)
+	protected mapDependency(dependency) {
+		if (!dependency.versionRange) { // only map the dependency if no versionRange is set
+			mapValue(dependency)
+		}
+	}
+
+	protected mapType(type) {
+		def result = mapValue(type)
 		result.action = type.action
 		result.tags = type.tags
 		result
 	}
 
-	private static processValue(value) {
+	protected mapValue(value) {
 		def result = [:]
 		result.id = value.id
 		result.name = value.name

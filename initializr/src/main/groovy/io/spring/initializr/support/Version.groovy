@@ -19,6 +19,8 @@ package io.spring.initializr.support
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+import org.springframework.util.Assert
+
 /**
  * Define the version number of a module. A typical version is represented
  * as {@code MAJOR.MINOR.PATCH.QUALIFER} where the qualifier can have an
@@ -49,16 +51,18 @@ class Version implements Comparable<Version> {
 
 	/**
 	 * Parse the string representation of a {@link Version}. Throws an
-	 * {@link IllegalArgumentException} if the version could not be parsed.
+	 * {@link InvalidVersionException} if the version could not be parsed.
 	 * @param text the version text
 	 * @return a Version instance for the specified version text
-	 * @throws IllegalArgumentException if the version text could not be parsed
+	 * @throws InvalidVersionException if the version text could not be parsed
 	 * @see #safeParse(java.lang.String)
 	 */
 	static Version parse(String text) {
-		def matcher = (text =~ VERSION_REGEX)
+		Assert.notNull(text, 'Text must not be null')
+		def matcher = (text.trim() =~ VERSION_REGEX)
 		if (!matcher.matches()) {
-			throw new IllegalArgumentException("Could not determine version based on $text")
+			throw new InvalidVersionException("Could not determine version based on '$text': version format " +
+					"is Minor.Major.Patch.Qualifier (i.e. 1.0.5.RELEASE")
 		}
 		Version version = new Version()
 		version.major = Integer.valueOf(matcher[0][1])
@@ -87,7 +91,7 @@ class Version implements Comparable<Version> {
 	static safeParse(String text) {
 		try {
 			return parse(text)
-		} catch (IllegalArgumentException e) {
+		} catch (InvalidVersionException e) {
 			return null
 		}
 	}

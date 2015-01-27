@@ -4,7 +4,7 @@ info:
     version: 0.3.1
 # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.2.0.RELEASE
+    version: 1.2.1.RELEASE
 
 initializr:
   dependencies:
@@ -16,6 +16,14 @@ initializr:
         - name: AOP
           id: aop
           description: Support for aspect-oriented programming including spring-aop and AspectJ
+        - name: Atomikos (JTA)
+          id: jta-atomikos
+          description: Support for JTA distributed transactions via Atomikos
+          versionRange: 1.2.0.M1
+        - name: Bitronix (JTA)
+          id: jta-bitronix
+          description: Support for JTA distributed transactions via Bitronix
+          versionRange: 1.2.0.M1
     - name: Data
       content:
         - name: JDBC
@@ -55,6 +63,10 @@ initializr:
         - name: AMQP
           id: amqp
           description: Support for the Advanced Message Queuing Protocol via spring-rabbit
+        - name: Mail
+          id: mail
+          description: Support for javax.mail
+          versionRange: 1.2.0.RC1
     - name: Web
       content:
         - name: Web
@@ -68,9 +80,17 @@ initializr:
         - name: WS
           id: ws
           description: Support for Spring Web Services
+        - name: Jersey (JAX-RS)
+          id: jersey
+          description: Support for the Jersey RESTful Web Services framework
+          versionRange: 1.2.0.RELEASE
         - name: Rest Repositories
           id: data-rest
           description: Support for exposing Spring Data repositories over REST via spring-data-rest-webmvc
+        - name: HATEOAS
+          id: hateoas
+          description: Support for HATEOAS-based RESTful services
+          versionRange: 1.2.2.BUILD-SNAPSHOT
         - name: Mobile
           id: mobile
           description: Support for spring-mobile
@@ -96,6 +116,12 @@ initializr:
           description: Support for the Thymeleaf templating engine, including integration with Spring
           facets:
             - web
+        - name: Mustache
+          id: mustache
+          description: Support for the Mustache templating engine
+          versionRange: 1.2.2.BUILD-SNAPSHOT
+          facets:
+            - web
     - name: Social
       content:
         - name: Facebook
@@ -112,6 +138,10 @@ initializr:
         - name: Actuator
           id: actuator
           description: Production ready features to help you monitor and manage your application
+        - name: Cloud Connectors
+          id: cloud-connectors
+          description: Simplifies connecting to services in cloud platforms
+          versionRange: 1.2.0.RELEASE
         - name: Remote Shell
           id: remote-shell
           description: Support for CRaSH

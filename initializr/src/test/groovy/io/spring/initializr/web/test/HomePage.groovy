@@ -39,7 +39,7 @@ class HomePage extends Page {
 		language { $('form').language() }
 
 		dependency { id ->
-			$("form").find('input', type: "checkbox", name: "style", value: id).click()
+			$("form").find('input', type: "checkbox", name: "style", value: id)
 		}
 		generateProject { $('form').find('button', name: 'generate-project') }
 

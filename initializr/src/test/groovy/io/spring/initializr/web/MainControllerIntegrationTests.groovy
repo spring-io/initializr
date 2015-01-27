@@ -19,7 +19,9 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import groovy.json.JsonSlurper
+import io.spring.initializr.InitializrMetadataVersion
 import org.json.JSONObject
+import org.junit.Ignore
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
@@ -43,8 +45,7 @@ import static org.junit.Assert.*
 @ActiveProfiles('test-default')
 class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	private static final MediaType CURRENT_METADATA_MEDIA_TYPE =
-			MediaType.parseMediaType('application/vnd.initializr.v2+json')
+	private static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.mediaType
 
 	private final def slurper = new JsonSlurper()
 
@@ -60,10 +61,27 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void simpleTgzProject() {
-		downloadTgz('/starter.tgz?style=org.acme:bar').isJavaProject().isMavenProject()
+		downloadTgz('/starter.tgz?style=org.acme:foo').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
-				.hasDependency('org.acme', 'bar', '2.1.0')
+				.hasDependency('org.acme', 'foo', '1.3.5')
+	}
+
+	@Test
+	void dependencyInRange() {
+		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(false).pomAssert()
+				.hasDependenciesCount(2)
+				.hasDependency('org.acme', 'biz', '1.3.5')
+	}
+
+	@Test
+	void dependencyNotInRange() {
+		try {
+			execute('/starter.tgz?style=org.acme:bur', byte[], null, null)
+		} catch (HttpClientErrorException ex) {
+			assertEquals HttpStatus.NOT_ACCEPTABLE, ex.statusCode
+		}
 	}
 
 	@Test
@@ -136,10 +154,32 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
-	void metadataWithCurrentAcceptHeader() {
+	@Ignore("Need a comparator that does not care about the number of elements in an array")
+	void currentMetadataCompatibleWithV2() {
+		ResponseEntity<String> response = invokeHome(null, '*/*')
+		validateMetadata(response, CURRENT_METADATA_MEDIA_TYPE, '2.0.0', JSONCompareMode.LENIENT)
+	}
+
+	@Test
+	void metadataWithV2AcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2+json')
+		validateMetadata(response, InitializrMetadataVersion.V2.mediaType, '2.0.0', JSONCompareMode.STRICT)
+	}
+
+	@Test
+	void metadataWithCurrentAcceptHeader() {
+		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2.1+json')
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void metadataWithUnknownAcceptHeader() {
+		try {
+			invokeHome(null, 'application/vnd.initializr.v5.4+json')
+		} catch (HttpClientErrorException ex) {
+			assertEquals HttpStatus.NOT_ACCEPTABLE, ex.statusCode
+		}
 	}
 
 	@Test
@@ -210,13 +250,21 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateCurrentMetadata(json)
 	}
 
+	private void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
+								  String version, JSONCompareMode compareMode) {
+		validateContentType(response, mediaType)
+		def json = new JSONObject(response.body)
+		def expected = readJson(version)
+		JSONAssert.assertEquals(expected, json, compareMode)
+	}
+
 	private void validateCurrentMetadata(ResponseEntity<String> response) {
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
 
 	private void validateCurrentMetadata(JSONObject json) {
-		def expected = readJson('2.0.0')
+		def expected = readJson('2.1.0')
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
 	}
 
@@ -357,7 +405,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		assertNotNull(response.body)
 	}
 
-	private JSONObject getMetadataJson()  {
+	private JSONObject getMetadataJson() {
 		getMetadataJson(null, null)
 	}
 
