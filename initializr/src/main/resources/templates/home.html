@@ -114,7 +114,7 @@
             <div class="col-sm-6">
                 <h3>Project dependencies</h3>
                 <% dependencies.each { %>
-                <div class="form-group col-sm-6">
+                <div class="form-group col-xs-6">
                 <h4>${it.name}</h4>
                     <% it.content.each { %>
                     <div class="checkbox">
@@ -134,30 +134,30 @@
                 </button>
             </p>
         </div>
-        <div class="page-header">
+        <div class="page-header top10">
             <h1>Spring CLI <small>Quickly prototype with Spring</small></h1>
         </div>
         <div class="row">
             <div class="col-sm-offset-1 col-sm-5">
                 <h3>Spring CLI Zip</h3>
                 <p>
-                    Download the spring CLI as a zip distribution (unpack and run bin/spring on a command line).
-                </p>
-                <p>
                     <a href="/spring.zip" class="btn btn-lg btn-primary" role="button">
                         <span class="glyphicon glyphicon-download-alt"></span> Download Spring CLI Zip
                     </a>
                 </p>
+                <p>
+                    Download the spring CLI as a zip distribution (unpack and run bin/spring on a command line).
+                </p>
             </div>
             <div class="col-sm-5">
                 <h3>Spring CLI Installer</h3>
-                <p>Installer for the spring CLI command on Un*x-like system (should work on Linux, Mac or Cygwin).</p>
-                <p>You can <kbd>curl http://start.spring.io/install.sh | sh</kbd>, or download the script and run it.</p>
                 <p>
                     <a href="/install.sh" class="btn btn-lg btn-primary" role="button">
                         <span class="glyphicon glyphicon-download-alt"></span> Download Spring Installer
                     </a>
                 </p>
+                <p>Installer for the spring CLI command on Un*x-like system (should work on Linux, Mac or Cygwin).</p>
+                <p>You can <kbd class="curl">curl http://start.spring.io/install.sh | sh</kbd>, or download the script and run it.</p>
             </div>
         </div>
     </form>

@@ -3,6 +3,10 @@ body, h1, h2, h3 {
     font-family: "Varela Round",sans-serif;
 }
 
+.top10 {
+    margin-top: 10%;
+}
+
 .initializr-header {
     color: #f1f1f1;
     background-color: #34302d;
@@ -24,4 +28,10 @@ body, h1, h2, h3 {
     line-height: 30px;
     margin-bottom: 20px;
     text-transform: uppercase;
+}
+
+kbd.curl {
+    color: #333;
+    background-color: #ddd;
+    font-weight: 700;
 }
