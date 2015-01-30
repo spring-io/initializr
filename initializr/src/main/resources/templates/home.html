@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Spring Initializr</title>
-    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/spring.css"/>
@@ -39,7 +39,7 @@
                 <div class="form-group">
                     <label for="artifactId" class="col-md-3 control-label">Artifact</label>
                     <div class="col-md-8">
-                        <input id="artifactId" class="form-control" type="text" value="${defaults.artifactId}" name="artifactId" onchange="javascript:updateBaseDir()">
+                        <input id="artifactId" class="form-control" type="text" value="${defaults.artifactId}" name="artifactId">
                     </div>
                 </div>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="type" class="col-md-3 control-label">Type</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="type" name="type" onchange="javascript:updateAction(this)">
+                        <select class="form-control" id="type" name="type">
                             <% types.each { %>
                             <option data-action="${it.action}" value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
@@ -111,13 +111,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div id="dependencies" class="col-sm-6">
                 <h3>Project dependencies</h3>
                 <% dependencies.each { %>
                 <div class="form-group col-xs-6">
                 <h4>${it.name}</h4>
                     <% it.content.each { %>
-                    <div class="checkbox">
+                    <div class="checkbox" data-range="${it.versionRange}">
                         <label>
                             <input type="checkbox" name="style" value="${it.id}">
                             ${it.name}
@@ -162,16 +162,23 @@
         </div>
     </form>
 </div>
+<script src="/js/zepto.min.js"></script>
+<script src="/js/start.js"></script>
 <script>
-    var updateAction = function(sel) {
-        var selected = sel.options[sel.selectedIndex];
-        sel.form.action = selected.getAttribute("data-action");
+    var refreshDependencies = function(versionRange) {
+        var versions = new Versions();
+        \$("#dependencies div.checkbox").forEach(function(item) {
+            if(!\$(item).data('range') || versions.matchRange(\$(item).data('range'))(versionRange)) {
+                \$(item).show();
+            } else {
+                \$(item).hide();
+            }
+        });
     };
-    var updateBaseDir = function() {
-        var artifactId = document.getElementById("artifactId");
-        var baseDir = document.getElementById("baseDir");
-        baseDir.value = artifactId.value
-    }
+    refreshDependencies(\$("#bootVersion").attr('value'));
+    \$("#type").on('change', function() {\$("#form").attr('action', \$(this.options[this.selectedIndex]).data('action'))});
+    \$("#artifactId").on('change', function() {\$("#baseDir").attr('value', this.value)});
+    \$("#bootVersion").on("change", function(e){refreshDependencies(this.value);});
 </script>
 </body>
 </html>
