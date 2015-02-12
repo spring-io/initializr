@@ -32,6 +32,7 @@ class ProjectAssert {
 	private static final DEFAULT_APPLICATION_NAME = generateDefaultApplicationName()
 
 	final File dir
+	Boolean mavenProject
 
 	/**
 	 * Create a new instance with the directory holding the generated project.
@@ -80,10 +81,14 @@ class ProjectAssert {
 
 	ProjectAssert isMavenProject() {
 		hasFile('pom.xml').hasNoFile('build.gradle')
+		mavenProject = true
+		this
 	}
 
 	ProjectAssert isGradleProject() {
 		hasFile('build.gradle').hasNoFile('pom.xml')
+		mavenProject = false
+		this
 	}
 
 	ProjectAssert isJavaProject(String expectedApplicationName) {
@@ -97,8 +102,9 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isGroovyProject(String expectedApplicationName) {
-		hasFile("src/main/groovy/demo/${expectedApplicationName}.groovy",
-				"src/test/groovy/demo/${expectedApplicationName}Tests.groovy",
+		String codeLocation = (mavenProject ? 'java' : 'groovy')
+		hasFile("src/main/$codeLocation/demo/${expectedApplicationName}.groovy",
+				"src/test/$codeLocation/demo/${expectedApplicationName}Tests.groovy",
 				'src/main/resources/application.properties')
 	}
 

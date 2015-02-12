@@ -81,7 +81,8 @@ class ProjectGenerator {
 
 		def dir = initializerProjectDir(rootDir, request)
 
-		if ('gradle'.equals(request.build)) {
+		boolean gradleBuild = 'gradle'.equals(request.build)
+		if (gradleBuild) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
 		} else {
@@ -92,7 +93,8 @@ class ProjectGenerator {
 		def applicationName = request.applicationName
 		def language = request.language
 
-		def src = new File(new File(dir, "src/main/$language"), request.packageName.replace('.', '/'))
+		String codeLocation = ((language.equals("groovy") && gradleBuild) ? 'groovy': 'java')
+		def src = new File(new File(dir, "src/main/$codeLocation"), request.packageName.replace('.', '/'))
 		src.mkdirs()
 		write(new File(src, "${applicationName}.${language}"), "Application.$language", model)
 
@@ -101,7 +103,7 @@ class ProjectGenerator {
 			write(new File(src, fileName), fileName, model)
 		}
 
-		def test = new File(new File(dir, "src/test/$language"), request.packageName.replace('.', '/'))
+		def test = new File(new File(dir, "src/test/$codeLocation"), request.packageName.replace('.', '/'))
 		test.mkdirs()
 		if (request.hasWebFacet()) {
 			model.testAnnotations = '@WebAppConfiguration\n'
