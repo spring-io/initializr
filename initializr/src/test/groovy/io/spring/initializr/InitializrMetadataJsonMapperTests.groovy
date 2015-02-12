@@ -36,7 +36,7 @@ class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup('foo', 'one', 'two').validateAndGet()
 		def json = jsonMapper.write(metadata, null)
 		def result = slurper.parseText(json)
-		assertEquals '/foo.zip{?dependencies,type,packaging,javaVersion,language,bootVersion,' +
+		assertEquals '/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,' +
 				'groupId,artifactId,version,name,description,packageName}', result._links.foo.href
 	}
 
@@ -46,7 +46,7 @@ class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup('foo', 'one', 'two').validateAndGet()
 		def json = jsonMapper.write(metadata, 'http://server:8080/my-app')
 		def result = slurper.parseText(json)
-		assertEquals 'http://server:8080/my-app/foo.zip{?dependencies,type,packaging,javaVersion,' +
+		assertEquals 'http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,' +
 				'language,bootVersion,groupId,artifactId,version,name,description,packageName}',
 				result._links.foo.href
 	}

@@ -35,7 +35,6 @@ class InitializrMetadataJsonMapper {
 	InitializrMetadataJsonMapper() {
 		this.templateVariables = new TemplateVariables(
 				new TemplateVariable('dependencies', TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable('type', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('packaging', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('javaVersion', TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable('language', TemplateVariable.VariableType.REQUEST_PARAM),
@@ -79,13 +78,14 @@ class InitializrMetadataJsonMapper {
 
 	private link(appUrl, type) {
 		def result = [:]
-		result.href = generateTemplatedUri(appUrl, type.action)
+		result.href = generateTemplatedUri(appUrl, type)
 		result.templated = true
 		result
 	}
 
-	private generateTemplatedUri(appUrl, action) {
-		String uri = appUrl != null ? appUrl + action : action
+	private generateTemplatedUri(appUrl, type) {
+		String uri = appUrl != null ? appUrl + type.action : type.action
+		uri += "?type=$type.id"
 		UriTemplate uriTemplate = new UriTemplate(uri, this.templateVariables)
 		uriTemplate.toString()
 	}
