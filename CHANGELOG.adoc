@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/74[#74]: remove support for meta-data V1.
 * https://github.com/spring-io/initializr/issues/71[#71]: update project layout for Groovy-based projects.
 * https://github.com/spring-io/initializr/issues/69[#69]: improve the structure of templated urls.
 * https://github.com/spring-io/initializr/issues/70[#70]: explicit support for HTTPie (similar to curl).

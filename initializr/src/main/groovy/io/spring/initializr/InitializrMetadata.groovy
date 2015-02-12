@@ -18,8 +18,6 @@ package io.spring.initializr
 
 import javax.annotation.PostConstruct
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 
@@ -59,10 +57,8 @@ class InitializrMetadata {
 
 	final Defaults defaults = new Defaults()
 
-	@JsonIgnore
 	final Env env = new Env()
 
-	@JsonIgnore
 	private final Map<String, Dependency> indexedDependencies = [:]
 
 	private final transient InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataJsonMapper()
@@ -209,7 +205,6 @@ class InitializrMetadata {
 		return (elements.isEmpty() ? null : elements.get(0).id)
 	}
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	static class DependencyGroup {
 
 		String name
@@ -221,19 +216,14 @@ class InitializrMetadata {
 	@ToString(ignoreNulls = true, includePackage = false)
 	static class Dependency extends IdentifiableElement {
 
-		@JsonIgnore
 		List<String> aliases = []
 
-		@JsonIgnore
 		List<String> facets = []
 
-		@JsonIgnore
 		String groupId
 
-		@JsonIgnore
 		String artifactId
 
-		@JsonIgnore
 		String version
 
 		String description
@@ -276,7 +266,6 @@ class InitializrMetadata {
 
 		String description
 
-		@JsonIgnore
 		@Deprecated
 		String stsId
 
@@ -356,7 +345,6 @@ class InitializrMetadata {
 
 	static class DefaultIdentifiableElement extends IdentifiableElement {
 
-		@JsonIgnore
 		private boolean defaultValue
 
 		void setDefault(boolean defaultValue) {
@@ -368,7 +356,6 @@ class InitializrMetadata {
 		}
 	}
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	static class IdentifiableElement {
 
 		String name

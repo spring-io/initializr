@@ -18,7 +18,6 @@ package io.spring.initializr.web
 
 import groovy.util.logging.Slf4j
 import io.spring.initializr.CommandLineHelpGenerator
-import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.ProjectGenerator
 import io.spring.initializr.ProjectRequest
 
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 /**
@@ -61,13 +59,6 @@ class MainController extends AbstractInitializrController {
 		def request = new ProjectRequest()
 		metadataProvider.get().initializeProjectRequest(request)
 		request
-	}
-
-	@RequestMapping(value = "/", headers = "user-agent=SpringBootCli/1.2.0.RC1")
-	@ResponseBody
-	@Deprecated
-	InitializrMetadata oldMetadata() {
-		metadataProvider.get()
 	}
 
 	@RequestMapping(value = "/", produces = ["text/plain"])

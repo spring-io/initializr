@@ -25,9 +25,6 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -246,27 +243,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				containsString("Spring Initializr"),
 				not(containsString('Examples:')),
 				not(containsString("curl"))))
-	}
-
-	@Test // Test that the  current code complies exactly with 1.1.0
-	void validateProjectMetadata110() {
-		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
-		def expected = readJson('1.0.1')
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
-	}
-
-	@Test // Test that the  current code complies "at least" with 1.0.1
-	void validateProjectMetadata101() {
-		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
-		def expected = readJson('1.0.1')
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
-	}
-
-	@Test // Test that the  current code complies "at least" with 1.0.0
-	void validateProjectMetadata100() {
-		JSONObject json = getMetadataJson("SpringBootCli/1.2.0.RC1", null)
-		def expected = readJson('1.0.0')
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT)
 	}
 
 	@Test
