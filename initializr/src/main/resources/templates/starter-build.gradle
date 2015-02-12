@@ -41,7 +41,7 @@ repositories {
 <% } %>
 dependencies {<% resolvedDependencies.each { %>
     compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
-    compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
+    compile("org.codehaus.groovy:groovy-all")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
@@ -54,5 +54,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.2.1'
 }
