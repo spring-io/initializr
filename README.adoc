@@ -184,17 +184,21 @@ it yourself.
 [[building]]
 === Building
 
-NOTE: Initializr currently uses a milestone release of `spring-test-htmlunit` that is available from
-the http://repo.spring.io/milestone[spring.io milestone repository]. If you use a repository
-manager, please make sure to configure it accordingly. For your convenience, the project defines
-a `springMilestone` that you should activate if you haven't defined that repository yourself.
-
 The library is located in the `initializr` directory.
 
 [indent=0]
 ----
     $ cd initializr
-    $ mvn clean install -PspringMilestone
+    $ mvn clean install
+----
+
+If you want to run the smoke tests using Geb, you need to enable the
+`smokeTests` profile. Firefox should also be installed on your machine
+
+[indent=0]
+----
+    $ cd initializr
+    $ mvn verify -PsmokeTests
 ----
 
 
