@@ -84,6 +84,10 @@ class CommandLineHelpGenerator {
 			if (it.description) {
 				description += ": $it.description"
 			}
+			if (it.versionRange) {
+				String range = it.versionRange.trim()
+				description += " - $range"
+			}
 			dependencies[it.id] = description
 		}
 		model['dependencies'] = dependencies
