@@ -174,6 +174,14 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
+	void metadataWithSeveralAcceptHeader() {
+		ResponseEntity<String> response = invokeHome(null,
+				'application/vnd.initializr.v2.1+json', 'application/vnd.initializr.v2+json')
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
 	void metadataWithUnknownAcceptHeader() {
 		try {
 			invokeHome(null, 'application/vnd.initializr.v5.4+json')

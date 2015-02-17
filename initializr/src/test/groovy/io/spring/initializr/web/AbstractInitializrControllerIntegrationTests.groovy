@@ -107,18 +107,22 @@ abstract class AbstractInitializrControllerIntegrationTests {
 		restTemplate.getForObject(createUrl(context), byte[])
 	}
 
-	protected ResponseEntity<String> invokeHome(String userAgentHeader, String acceptHeader) {
-		execute('/', String, userAgentHeader, acceptHeader)
+	protected ResponseEntity<String> invokeHome(String userAgentHeader, String... acceptHeaders) {
+		execute('/', String, userAgentHeader, acceptHeaders)
 	}
 
 	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
-										  String userAgentHeader, String acceptHeader) {
+										  String userAgentHeader, String... acceptHeaders) {
 		HttpHeaders headers = new HttpHeaders();
 		if (userAgentHeader) {
 			headers.set("User-Agent", userAgentHeader);
 		}
-		if (acceptHeader) {
-			headers.setAccept(Collections.singletonList(MediaType.parseMediaType(acceptHeader)))
+		if (acceptHeaders) {
+			List<MediaType> mediaTypes = new ArrayList<>()
+			for (String acceptHeader : acceptHeaders) {
+				mediaTypes.add(MediaType.parseMediaType(acceptHeader))
+			}
+			headers.setAccept(mediaTypes)
 		} else {
 			headers.setAccept(Collections.emptyList())
 		}
