@@ -16,6 +16,8 @@
 
 package io.spring.initializr
 
+import io.spring.initializr.support.VersionRange
+
 import static io.spring.initializr.support.GroovyTemplate.template
 
 /**
@@ -42,9 +44,8 @@ class CommandLineHelpGenerator {
 	String generateGenericCapabilities(InitializrMetadata metadata, String serviceUrl) {
 		def model = initializeModel(metadata, serviceUrl)
 		model['hasExamples'] = false
-		doGenerateCapabilities(model)
+		template 'cli-capabilities.txt', model
 	}
-
 
 	/**
 	 * Generate the capabilities of the service using "curl" as a plain text
@@ -54,7 +55,7 @@ class CommandLineHelpGenerator {
 		def model = initializeModel(metadata, serviceUrl)
 		model['examples'] = template 'curl-examples.txt', model
 		model['hasExamples'] = true
-		doGenerateCapabilities(model)
+		template 'cli-capabilities.txt', model
 	}
 
 	/**
@@ -65,43 +66,47 @@ class CommandLineHelpGenerator {
 		def model = initializeModel(metadata, serviceUrl)
 		model['examples'] = template 'httpie-examples.txt', model
 		model['hasExamples'] = true
-		doGenerateCapabilities(model)
-	}
-
-	private doGenerateCapabilities(def model) {
 		template 'cli-capabilities.txt', model
 	}
 
+	/**
+	 * Generate the capabilities of the service using Spring Boot CLI as a plain
+	 * text document.
+	 */
+	String generateSpringBootCliCapabilities(InitializrMetadata metadata, String serviceUrl) {
+		def model = initializeModel(metadata, serviceUrl)
+		model['hasExamples'] = false
+		template('boot-cli-capabilities.txt', model)
+	}
 
 	private Map initializeModel(InitializrMetadata metadata, serviceUrl) {
 		Map model = [:]
 		model['logo'] = logo
 		model['serviceUrl'] = serviceUrl
 
-		Map dependencies = [:]
-		new ArrayList(metadata.allDependencies).sort { a, b -> a.id <=> b.id }.each {
-			String description = it.name
-			if (it.description) {
-				description += ": $it.description"
-			}
-			if (it.versionRange) {
-				String range = it.versionRange.trim()
-				description += " - $range"
-			}
-			dependencies[it.id] = description
+		String[][] dependencyTable = new String[metadata.allDependencies.size() + 1][];
+		dependencyTable[0] = ["Id", "Description", "Required version"]
+		new ArrayList(metadata.allDependencies).sort { a, b -> a.id <=> b.id }
+				.eachWithIndex { dep, i ->
+			String[] data = new String[3]
+			data[0] = dep.id
+			data[1] = dep.description ?: dep.name
+			data[2] = buildVersionRangeRepresentation(dep.versionRange)
+			dependencyTable[i + 1] = data
 		}
-		model['dependencies'] = dependencies
+		model['dependencies'] = TableGenerator.generate(dependencyTable)
 
-		Map types = [:]
 
-		new ArrayList<>(metadata.types).sort { a, b -> a.id <=> b.id }.each {
-			String description = it.description
-			if (!description) {
-				description = it.name
-			}
-			types[it.id] = description
+		String[][] typeTable = new String[metadata.types.size() + 1][];
+		typeTable[0] = ["Id", "Description", "Tags"]
+		new ArrayList<>(metadata.types).sort { a, b -> a.id <=> b.id }.eachWithIndex { type, i ->
+			String[] data = new String[3]
+			data[0] = (metadata.defaults.type.equals(type.id) ? type.id + " *" : type.id)
+			data[1] = type.description ?: type.name
+			data[2] = buildTagRepresentation(type)
+			typeTable[i + 1] = data;
 		}
-		model['types'] = types
+		model['types'] = TableGenerator.generate(typeTable)
 
 		Map defaults = [:]
 		metadata.defaults.properties.sort().each {
@@ -109,11 +114,117 @@ class CommandLineHelpGenerator {
 				defaults[it.key] = it.value
 			}
 		}
+		String[][] parameterTable = new String[defaults.size() + 1][];
+		parameterTable[0] = ["Id", "Default value"]
+		defaults.keySet().eachWithIndex { id, i ->
+			String[] data = new String[2]
+			data[0] = id
+			data[1] = metadata.defaults.properties[id]
+			parameterTable[i + 1] = data
+		}
+		model['parameters'] = TableGenerator.generate(parameterTable)
+
+
 		defaults['applicationName'] = ProjectRequest.generateApplicationName(metadata.defaults.name,
 				ProjectRequest.DEFAULT_APPLICATION_NAME)
 		model['defaults'] = defaults
 
+
 		model
+	}
+
+	private static String buildVersionRangeRepresentation(String range) {
+		if (!range) {
+			return null
+		}
+		VersionRange versionRange = VersionRange.parse(range)
+		if (versionRange.higherVersion == null) {
+			return ">= $range"
+		} else {
+			return range.trim()
+		}
+	}
+
+	private static String buildTagRepresentation(InitializrMetadata.Type type) {
+		if (type.tags.isEmpty()) {
+			return "";
+		}
+		type.tags.collect { key, value ->
+			"$key:$value"
+		}.join(",")
+	}
+
+	private static class TableGenerator {
+
+		static final String NEW_LINE = System.getProperty("line.separator")
+
+		/**
+		 * Generate a table description for the specified {@code content}.
+		 * <p>
+		 * The {@code content} is a two-dimensional array holding the rows
+		 * of the table. The first entry holds the header of the table.
+		 */
+		public static String generate(String[][] content) {
+			StringBuilder sb = new StringBuilder()
+			int[] columnsLength = computeColumnsLength(content)
+			appendTableSeparation(sb, columnsLength)
+			appendRow(sb, content, columnsLength, 0) // Headers
+			appendTableSeparation(sb, columnsLength)
+			for (int i = 1; i < content.length; i++) {
+				appendRow(sb, content, columnsLength, i)
+			}
+			appendTableSeparation(sb, columnsLength)
+			sb.toString()
+		}
+
+
+		private static void appendRow(StringBuilder sb, String[][] content,
+									  int[] columnsLength, int rowIndex) {
+			String[] row = content[rowIndex]
+			for (int i = 0; i < row.length; i++) {
+				sb.append("| ").append(fill(row[i], columnsLength[i])).append(" ")
+			}
+			sb.append("|")
+			sb.append(NEW_LINE)
+		}
+
+		private static void appendTableSeparation(StringBuilder sb, int[] headersLength) {
+			for (int headerLength : headersLength) {
+				sb.append("+").append("-".multiply(headerLength + 2))
+			}
+			sb.append("+")
+			sb.append(NEW_LINE)
+		}
+
+		private static String fill(String data, int columnSize) {
+			if (data == null) {
+				return " ".multiply(columnSize)
+			} else {
+				int i = columnSize - data.length()
+				return data + " ".multiply(i)
+			}
+		}
+
+		private static int[] computeColumnsLength(String[][] content) {
+			int count = content[0].length
+			int[] result = new int[count]
+			for (int i = 0; i < count; i++) {
+				result[i] = largest(content, i)
+			}
+			return result
+		}
+
+		private static int largest(String[][] content, int column) {
+			int max = 0
+			for (String[] rows : content) {
+				String s = rows[column]
+				if (s && s.length() > max) {
+					max = s.length()
+				}
+			}
+			return max
+		}
+
 	}
 
 }

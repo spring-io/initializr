@@ -44,12 +44,19 @@ class VersionRange {
 
 	private static final String RANGE_REGEX = "(\\(|\\[)(.*),(.*)(\\)|\\])"
 
-	private Version lowerVersion
-	private boolean lowerInclusive
-	private Version higherVersion
-	private boolean higherInclusive
+	final Version lowerVersion
+	final boolean lowerInclusive
+	final Version higherVersion
+	final boolean higherInclusive
 
-	/**
+	private VersionRange(Version lowerVersion, boolean lowerInclusive,
+						 Version higherVersion, boolean higherInclusive) {
+		this.lowerVersion = lowerVersion
+		this.lowerInclusive = lowerInclusive
+		this.higherVersion = higherVersion
+		this.higherInclusive = higherInclusive
+	}
+/**
 	 * Specify if the {@link Version} matches this range. Returns {@code true}
 	 * if the version is contained within this range, {@code false} otherwise.
 	 */
@@ -85,14 +92,13 @@ class VersionRange {
 		if (!matcher.matches()) {
 			// Try to read it as simple string
 			Version version = Version.parse(text)
-			return new VersionRange(lowerInclusive: true, lowerVersion: version)
+			return new VersionRange(version, true, null, true)
 		}
-		VersionRange range = new VersionRange()
-		range.lowerInclusive = matcher[0][1].equals('[')
-		range.lowerVersion = Version.parse(matcher[0][2])
-		range.higherVersion = Version.parse(matcher[0][3])
-		range.higherInclusive = matcher[0][4].equals(']')
-		range
+		boolean lowerInclusive = matcher[0][1].equals('[')
+		Version lowerVersion = Version.parse(matcher[0][2])
+		Version higherVersion = Version.parse(matcher[0][3])
+		boolean higherInclusive = matcher[0][4].equals(']')
+		new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive)
 	}
 
 }

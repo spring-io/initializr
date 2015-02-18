@@ -248,6 +248,10 @@ class InitializrMetadata {
 
 		String versionRange
 
+		void setVersionRange(String versionRange) {
+			this.versionRange = versionRange ? versionRange.trim() : null
+		}
+
 		/**
 		 * Specify if the dependency has its coordinates set, i.e. {@code groupId}
 		 * and {@code artifactId}.

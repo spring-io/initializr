@@ -76,6 +76,9 @@ class MainController extends AbstractInitializrController {
 			if (userAgent.startsWith(WebConfig.HTTPIE_USER_AGENT_PREFIX)) {
 				return builder.body(commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl))
 			}
+			if (userAgent.startsWith(WebConfig.SPRING_BOOT_CLI_AGENT_PREFIX)) {
+				return builder.body(commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl))
+			}
 		}
 		builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
 	}

@@ -39,6 +39,8 @@ class WebConfig extends WebMvcConfigurerAdapter {
 
 	static final String HTTPIE_USER_AGENT_PREFIX = 'HTTPie'
 
+	static final String SPRING_BOOT_CLI_AGENT_PREFIX = 'SpringBootCli'
+
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 		configurer.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy())

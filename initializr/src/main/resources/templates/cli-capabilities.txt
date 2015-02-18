@@ -9,15 +9,13 @@ The services uses a HAL based hypermedia format to expose a set of
 resources to interact with. If you access this root resource
 requesting application/json as media type the response will contain
 the following links:
-<% types.each {key, value -> %>
-* ${key} - ${value} <% } %>
+${types}
 
 The URI templates take a set of parameters to customize the result of
 a request to the linked resource.
-
 +-----------------+------------------------------------------+-----------------
 | Parameter       | Description                              | Default
-|-----------------+------------------------------------------+-----------------
++-----------------+------------------------------------------+-----------------
 | groupId         | project coordinates                      | ${defaults.groupId}
 | artifactId      | project coordinates (infer archive name) | ${defaults.artifactId}
 | version         | project version                          | ${defaults.version}
@@ -36,13 +34,9 @@ a request to the linked resource.
 
 The following section has a list of supported identifiers for the comma separated
 list of "dependencies".
-<% dependencies.each {key, value -> %>
-${key} - ${value} <% } %>
-
-
+${dependencies}
 <% if (hasExamples) { %>
 Examples:
 
 ${examples}
-
 <% } %>

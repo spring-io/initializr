@@ -1,0 +1,11 @@
+${logo}
+:: Service capabilities ::  ${serviceUrl}
+
+Supported dependencies
+${dependencies}
+
+Project types (* denotes the default)
+${types}
+
+Parameters
+${parameters}

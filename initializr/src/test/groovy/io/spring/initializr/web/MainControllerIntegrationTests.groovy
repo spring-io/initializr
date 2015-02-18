@@ -252,6 +252,19 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateGenericHelpContent(response)
 	}
 
+	@Test
+	void springBootCliReceivesJsonByDefault() {
+		ResponseEntity<String> response = invokeHome('SpringBootCli/1.2.0', "*/*")
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	@Test
+	void springBootCliWithAcceptHeaderText() {
+		ResponseEntity<String> response = invokeHome('SpringBootCli/1.2.0', "text/plain")
+		validateSpringBootHelpContent(response)
+	}
+
 	@Test // Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
 		def json = getMetadataJson()
@@ -297,6 +310,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateContentType(response, MediaType.TEXT_PLAIN)
 		assertThat(response.body, allOf(
 				containsString("Spring Initializr"),
+				not(containsString('Examples:')),
+				not(containsString("curl"))))
+	}
+
+	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
+		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.body, allOf(
+				containsString("Service capabilities"),
+				containsString("Supported dependencies"),
 				not(containsString('Examples:')),
 				not(containsString("curl"))))
 	}
