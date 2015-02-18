@@ -36,6 +36,7 @@ class CommandLineHelpGeneratorTest {
 				createDependency('id-b', 'depB'),
 				createDependency('id-a', 'depA', 'and some description')).validateAndGet()
 		String content = generator.generateGenericCapabilities(metadata, "https://fake-service")
+		assertCommandLineCapabilities(content)
 		assertThat content, containsString('id-a | and some description |')
 		assertThat content, containsString('id-b | depB')
 		assertThat content, containsString("https://fake-service")
@@ -49,6 +50,7 @@ class CommandLineHelpGeneratorTest {
 				.addType(new InitializrMetadata.Type(id: 'foo', name: 'foo-name', description: 'foo-desc'))
 				.validateAndGet()
 		String content = generator.generateGenericCapabilities(metadata, "https://fake-service")
+		assertCommandLineCapabilities(content)
 		assertThat content, containsString('| foo')
 		assertThat content, containsString('| foo-desc')
 
@@ -60,6 +62,7 @@ class CommandLineHelpGeneratorTest {
 				createDependency('id-b', 'depB'),
 				createDependency('id-a', 'depA', 'and some description')).validateAndGet()
 		String content = generator.generateCurlCapabilities(metadata, "https://fake-service")
+		assertCommandLineCapabilities(content)
 		assertThat content, containsString('id-a | and some description |')
 		assertThat content, containsString('id-b | depB')
 		assertThat content, containsString("https://fake-service")
@@ -73,6 +76,7 @@ class CommandLineHelpGeneratorTest {
 				createDependency('id-b', 'depB'),
 				createDependency('id-a', 'depA', 'and some description')).validateAndGet()
 		String content = generator.generateHttpieCapabilities(metadata, "https://fake-service")
+		assertCommandLineCapabilities(content)
 		assertThat content, containsString('id-a | and some description |')
 		assertThat content, containsString('id-b | depB')
 		assertThat content, containsString("https://fake-service")
@@ -87,11 +91,17 @@ class CommandLineHelpGeneratorTest {
 				createDependency('id-b', 'depB'),
 				createDependency('id-a', 'depA', 'and some description')).validateAndGet()
 		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service")
+		assertThat content, containsString("| Id")
+		assertThat content, containsString("| Tags")
 		assertThat content, containsString('id-a | and some description |')
 		assertThat content, containsString('id-b | depB')
 		assertThat content, containsString("https://fake-service")
 		assertThat content, not(containsString('Examples:'))
 		assertThat content, not(containsString('curl'))
+		assertThat content, not(containsString('| Ref'))
+		assertThat content, not(containsString("| dependencies"))
+		assertThat content, not(containsString("| applicationName"))
+		assertThat content, not(containsString("| baseDir"))
 	}
 
 	@Test
@@ -104,7 +114,14 @@ class CommandLineHelpGeneratorTest {
 		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service")
 		assertThat content, containsString('| first  | first desc  | >= 1.2.0.RELEASE         |')
 		assertThat content, containsString('| second | second desc | [1.2.0.RELEASE,1.3.0.M1) |')
+	}
 
+	private assertCommandLineCapabilities(String content) {
+		assertThat content, containsString("| Ref")
+		assertThat content, containsString("| dependencies")
+		assertThat content, containsString("| applicationName")
+		assertThat content, containsString("| baseDir")
+		assertThat content, not(containsString('| Tags'))
 	}
 
 	private static def createDependency(String id, String name) {

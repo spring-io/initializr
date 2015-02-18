@@ -42,7 +42,7 @@ class CommandLineHelpGenerator {
 	 * document. Used when no particular agent was detected.
 	 */
 	String generateGenericCapabilities(InitializrMetadata metadata, String serviceUrl) {
-		def model = initializeModel(metadata, serviceUrl)
+		def model = initializeCommandLineModel(metadata, serviceUrl)
 		model['hasExamples'] = false
 		template 'cli-capabilities.txt', model
 	}
@@ -52,7 +52,7 @@ class CommandLineHelpGenerator {
 	 * document.
 	 */
 	String generateCurlCapabilities(InitializrMetadata metadata, String serviceUrl) {
-		def model = initializeModel(metadata, serviceUrl)
+		def model = initializeCommandLineModel(metadata, serviceUrl)
 		model['examples'] = template 'curl-examples.txt', model
 		model['hasExamples'] = true
 		template 'cli-capabilities.txt', model
@@ -63,7 +63,7 @@ class CommandLineHelpGenerator {
 	 * document.
 	 */
 	String generateHttpieCapabilities(InitializrMetadata metadata, String serviceUrl) {
-		def model = initializeModel(metadata, serviceUrl)
+		def model = initializeCommandLineModel(metadata, serviceUrl)
 		model['examples'] = template 'httpie-examples.txt', model
 		model['hasExamples'] = true
 		template 'cli-capabilities.txt', model
@@ -74,16 +74,73 @@ class CommandLineHelpGenerator {
 	 * text document.
 	 */
 	String generateSpringBootCliCapabilities(InitializrMetadata metadata, String serviceUrl) {
-		def model = initializeModel(metadata, serviceUrl)
+		def model = initializeSpringBootCliModel(metadata, serviceUrl)
 		model['hasExamples'] = false
 		template('boot-cli-capabilities.txt', model)
 	}
 
-	private Map initializeModel(InitializrMetadata metadata, serviceUrl) {
+	protected Map initializeCommandLineModel(InitializrMetadata metadata, serviceUrl) {
 		Map model = [:]
 		model['logo'] = logo
 		model['serviceUrl'] = serviceUrl
+		model['dependencies'] = generateDependencyTable(metadata)
+		model['types'] = generateTypeTable(metadata, 'Ref', false)
 
+		Map defaults = [:]
+		metadata.defaults.properties.each {
+			if (!(it.key in ['class', 'metaClass', 'DEFAULT_NAME'])) {
+				defaults[it.key] = it.value
+			}
+		}
+		defaults['applicationName'] = ProjectRequest.generateApplicationName(metadata.defaults.name,
+				ProjectRequest.DEFAULT_APPLICATION_NAME)
+		defaults['baseDir'] = 'no base dir'
+		defaults['dependencies'] = 'none'
+
+		Map parametersDescription = buildParametersDescription()
+		String[][] parameterTable = new String[defaults.size() + 1][];
+		parameterTable[0] = ["Parameter", "Description", "Default value"]
+		defaults.sort().keySet().eachWithIndex { id, i ->
+			String[] data = new String[3]
+			data[0] = id
+			data[1] = parametersDescription[id]
+			data[2] = defaults[id]
+			parameterTable[i + 1] = data
+		}
+		model['parameters'] = TableGenerator.generate(parameterTable)
+
+		model
+	}
+
+	protected Map initializeSpringBootCliModel(InitializrMetadata metadata, serviceUrl) {
+		Map model = [:]
+		model['logo'] = logo
+		model['serviceUrl'] = serviceUrl
+		model['dependencies'] = generateDependencyTable(metadata)
+		model['types'] = generateTypeTable(metadata, 'Id', true)
+
+
+		Map defaults = [:]
+		metadata.defaults.properties.sort().each {
+			if (!(it.key in ['class', 'metaClass', 'DEFAULT_NAME'])) {
+				defaults[it.key] = it.value
+			}
+		}
+		Map parametersDescription = buildParametersDescription()
+		String[][] parameterTable = new String[defaults.size() + 1][];
+		parameterTable[0] = ["Id", "Description", "Default value"]
+		defaults.keySet().eachWithIndex { id, i ->
+			String[] data = new String[3]
+			data[0] = id
+			data[1] = parametersDescription[id]
+			data[2] = defaults[id]
+			parameterTable[i + 1] = data
+		}
+		model['parameters'] = TableGenerator.generate(parameterTable)
+		model
+	}
+
+	protected String generateDependencyTable(InitializrMetadata metadata) {
 		String[][] dependencyTable = new String[metadata.allDependencies.size() + 1][];
 		dependencyTable[0] = ["Id", "Description", "Required version"]
 		new ArrayList(metadata.allDependencies).sort { a, b -> a.id <=> b.id }
@@ -94,43 +151,47 @@ class CommandLineHelpGenerator {
 			data[2] = buildVersionRangeRepresentation(dep.versionRange)
 			dependencyTable[i + 1] = data
 		}
-		model['dependencies'] = TableGenerator.generate(dependencyTable)
+		TableGenerator.generate(dependencyTable)
+	}
 
-
+	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
 		String[][] typeTable = new String[metadata.types.size() + 1][];
-		typeTable[0] = ["Id", "Description", "Tags"]
+		if (addTags) {
+			typeTable[0] = [linkHeader, "Description", "Tags"]
+		}
+		else {
+			typeTable[0] = [linkHeader, "Description"]
+		}
 		new ArrayList<>(metadata.types).sort { a, b -> a.id <=> b.id }.eachWithIndex { type, i ->
-			String[] data = new String[3]
+			String[] data = new String[typeTable[0].length]
 			data[0] = (metadata.defaults.type.equals(type.id) ? type.id + " *" : type.id)
 			data[1] = type.description ?: type.name
-			data[2] = buildTagRepresentation(type)
+			if (addTags) {
+				data[2] = buildTagRepresentation(type)
+			}
 			typeTable[i + 1] = data;
 		}
-		model['types'] = TableGenerator.generate(typeTable)
+		TableGenerator.generate(typeTable)
+	}
 
-		Map defaults = [:]
-		metadata.defaults.properties.sort().each {
-			if (!(it.key in ['class', 'metaClass', 'DEFAULT_NAME'])) {
-				defaults[it.key] = it.value
-			}
-		}
-		String[][] parameterTable = new String[defaults.size() + 1][];
-		parameterTable[0] = ["Id", "Default value"]
-		defaults.keySet().eachWithIndex { id, i ->
-			String[] data = new String[2]
-			data[0] = id
-			data[1] = metadata.defaults.properties[id]
-			parameterTable[i + 1] = data
-		}
-		model['parameters'] = TableGenerator.generate(parameterTable)
+	protected Map buildParametersDescription() {
+		Map result = [:]
+		result['groupId'] = 'project coordinates'
+		result['artifactId'] = 'project coordinates (infer archive name)'
+		result['version'] = 'project version'
+		result['name'] = 'project name (infer application name)'
+		result['description'] = 'project description'
+		result['packageName'] = 'root package'
+		result['applicationName'] = 'application name'
+		result['dependencies'] = 'dependency identifiers (comma separated)'
+		result['type'] = 'project type'
+		result['packaging'] = 'project packaging'
+		result['language'] = 'programming language'
+		result['javaVersion'] = 'language level'
+		result['bootVersion'] = 'spring boot version'
+		result['baseDir'] = 'base directory to create in the archive'
+		result
 
-
-		defaults['applicationName'] = ProjectRequest.generateApplicationName(metadata.defaults.name,
-				ProjectRequest.DEFAULT_APPLICATION_NAME)
-		model['defaults'] = defaults
-
-
-		model
 	}
 
 	private static String buildVersionRangeRepresentation(String range) {
