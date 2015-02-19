@@ -166,7 +166,7 @@ initializr:
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
-      description: Generate a Gradle based project archive
+      description: Generate a Gradle build file
       sts-id: build.gradle
       tags:
         build: gradle
@@ -175,7 +175,7 @@ initializr:
       action: /build.gradle
     - name: Gradle Project
       id: gradle-project
-      description: Generate a Gradle build file
+      description: Generate a Gradle based project archive
       sts-id: gradle.zip
       tags:
         build: gradle
