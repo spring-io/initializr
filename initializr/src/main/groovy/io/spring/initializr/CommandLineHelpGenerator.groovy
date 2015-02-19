@@ -84,7 +84,7 @@ class CommandLineHelpGenerator {
 		model['logo'] = logo
 		model['serviceUrl'] = serviceUrl
 		model['dependencies'] = generateDependencyTable(metadata)
-		model['types'] = generateTypeTable(metadata, 'Ref', false)
+		model['types'] = generateTypeTable(metadata, 'Rel', false)
 
 		Map defaults = [:]
 		metadata.defaults.properties.each {

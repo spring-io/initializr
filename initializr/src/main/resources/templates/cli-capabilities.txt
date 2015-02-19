@@ -1,21 +1,20 @@
 ${logo}
 :: Spring Initializr ::  ${serviceUrl}
 
-This service generates quickstart projects and can be customized
-in many ways; the dependencies, java version, build system or
-build structure can be namely customized easily.
+This service generates quickstart projects that can be easily customized.
+Possible customizations include a project's dependencies, Java version, and
+build system or build structure. See below for further details.
 
-The services uses a HAL based hypermedia format to expose a set of
-resources to interact with. If you access this root resource
-requesting application/json as media type the response will contain
-the following links:
+The services uses a HAL based hypermedia format to expose a set of resources
+to interact with. If you access this root resource requesting application/json
+as media type the response will contain the following links:
 ${types}
 
-The URI templates take a set of parameters to customize the result of
-a request to the linked resource.
+The URI templates take a set of parameters to customize the result of a request
+to the linked resource.
 ${parameters}
 
-The following section has a list of supported identifiers for the comma separated
+The following section has a list of supported identifiers for the comma-separated
 list of "dependencies".
 ${dependencies}
 <% if (hasExamples) { %>
