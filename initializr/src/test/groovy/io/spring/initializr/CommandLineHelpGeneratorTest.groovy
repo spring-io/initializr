@@ -98,7 +98,7 @@ class CommandLineHelpGeneratorTest {
 		assertThat content, containsString("https://fake-service")
 		assertThat content, not(containsString('Examples:'))
 		assertThat content, not(containsString('curl'))
-		assertThat content, not(containsString('| Ref'))
+		assertThat content, not(containsString('| Rel'))
 		assertThat content, not(containsString("| dependencies"))
 		assertThat content, not(containsString("| applicationName"))
 		assertThat content, not(containsString("| baseDir"))
@@ -117,7 +117,7 @@ class CommandLineHelpGeneratorTest {
 	}
 
 	private assertCommandLineCapabilities(String content) {
-		assertThat content, containsString("| Ref")
+		assertThat content, containsString("| Rel")
 		assertThat content, containsString("| dependencies")
 		assertThat content, containsString("| applicationName")
 		assertThat content, containsString("| baseDir")
