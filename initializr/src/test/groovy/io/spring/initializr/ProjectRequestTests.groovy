@@ -166,7 +166,7 @@ class ProjectRequestTests {
 		def metadata = InitializrMetadataBuilder.withDefaults().validateAndGet()
 
 		request.resolve(metadata)
-		assertEquals ProjectRequest.DEFAULT_APPLICATION_NAME, request.applicationName
+		assertEquals metadata.env.fallbackApplicationName, request.applicationName
 	}
 
 	@Test
@@ -190,74 +190,6 @@ class ProjectRequestTests {
 		assertEquals 'MyApplicationName', request.applicationName
 	}
 
-	@Test
-	void generateApplicationNameSimple() {
-		assertEquals 'DemoApplication', generateApplicationName('demo')
-	}
-
-	@Test
-	void generateApplicationNameSimpleApplication() {
-		assertEquals 'DemoApplication', generateApplicationName('demoApplication')
-	}
-
-	@Test
-	void generateApplicationNameSimpleCamelCase() {
-		assertEquals 'MyDemoApplication', generateApplicationName('myDemo')
-	}
-
-	@Test
-	void generateApplicationNameSimpleUnderscore() {
-		assertEquals 'MyDemoApplication', generateApplicationName('my_demo')
-	}
-
-	@Test
-	void generateApplicationNameSimpleColon() {
-		assertEquals 'MyDemoApplication', generateApplicationName('my:demo')
-	}
-
-	@Test
-	void generateApplicationNameSimpleSpace() {
-		assertEquals 'MyDemoApplication', generateApplicationName('my demo')
-	}
-
-	@Test
-	void generateApplicationNamSsimpleDash() {
-		assertEquals 'MyDemoApplication', generateApplicationName('my-demo')
-	}
-
-	@Test
-	void generateApplicationNameUpperCaseUnderscore() {
-		assertEquals 'MyDemoApplication', generateApplicationName('MY_DEMO')
-	}
-
-	@Test
-	void generateApplicationNameUpperCaseDash() {
-		assertEquals 'MyDemoApplication', generateApplicationName('MY-DEMO')
-	}
-
-	@Test
-	void generateApplicationNameMultiSpaces() {
-		assertEquals 'MyDemoApplication', generateApplicationName('   my    demo ')
-	}
-
-	@Test
-	void generateApplicationNameMultiSpacesUpperCase() {
-		assertEquals 'MyDemoApplication', generateApplicationName('   MY    DEMO ')
-	}
-
-	@Test
-	void generateApplicationNameInvalidStartCharacter() {
-		assertEquals DEFAULT_APPLICATION_NAME, generateApplicationName('1MyDemo')
-	}
-
-	@Test
-	void generateApplicationNameInvalidPartCharacter() {
-		assertEquals DEFAULT_APPLICATION_NAME, generateApplicationName('MyDe|mo')
-	}
-
-	private static generateApplicationName(String text) {
-		ProjectRequest.generateApplicationName(text, DEFAULT_APPLICATION_NAME)
-	}
 
 	private static void assertBootStarter(InitializrMetadata.Dependency actual, String name) {
 		def expected = new InitializrMetadata.Dependency()

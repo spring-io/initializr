@@ -2,3 +2,6 @@ initializr:
   env:
     artifactRepository: https://repo.spring.io/lib-release
     forceSsl: false
+    fallbackApplicationName: FooBarApplication
+    invalidApplicationNames:
+      - InvalidApplication

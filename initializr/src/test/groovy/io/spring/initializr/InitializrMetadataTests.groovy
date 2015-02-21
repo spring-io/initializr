@@ -230,6 +230,81 @@ class InitializrMetadataTests {
 		assertEquals 'two', InitializrMetadata.getDefault(elements)
 	}
 
+	@Test
+	void generateApplicationNameSimple() {
+		assertEquals 'DemoApplication', this.metadata.generateApplicationName('demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleApplication() {
+		assertEquals 'DemoApplication', this.metadata.generateApplicationName('demoApplication')
+	}
+
+	@Test
+	void generateApplicationNameSimpleCamelCase() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('myDemo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleUnderscore() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('my_demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleColon() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('my:demo')
+	}
+
+	@Test
+	void generateApplicationNameSimpleSpace() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('my demo')
+	}
+
+	@Test
+	void generateApplicationNamSsimpleDash() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('my-demo')
+	}
+
+	@Test
+	void generateApplicationNameUpperCaseUnderscore() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('MY_DEMO')
+	}
+
+	@Test
+	void generateApplicationNameUpperCaseDash() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('MY-DEMO')
+	}
+
+	@Test
+	void generateApplicationNameMultiSpaces() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('   my    demo ')
+	}
+
+	@Test
+	void generateApplicationNameMultiSpacesUpperCase() {
+		assertEquals 'MyDemoApplication', this.metadata.generateApplicationName('   MY    DEMO ')
+	}
+
+	@Test
+	void generateApplicationNameInvalidStartCharacter() {
+		assertEquals this.metadata.env.fallbackApplicationName, this.metadata.generateApplicationName('1MyDemo')
+	}
+
+	@Test
+	void generateApplicationNameInvalidPartCharacter() {
+		assertEquals this.metadata.env.fallbackApplicationName, this.metadata.generateApplicationName('MyDe|mo')
+	}
+
+	@Test
+	void generateApplicationNameInvalidApplicationName() {
+		assertEquals this.metadata.env.fallbackApplicationName, this.metadata.generateApplicationName('SpringBoot')
+	}
+
+	@Test
+	void generateApplicationNameAnotherInvalidApplicationName() {
+		assertEquals this.metadata.env.fallbackApplicationName, this.metadata.generateApplicationName('Spring')
+	}
+
 	private static ProjectRequest doCreateProjectRequest(InitializrMetadata metadata) {
 		def request = new ProjectRequest()
 		metadata.initializeProjectRequest(request)

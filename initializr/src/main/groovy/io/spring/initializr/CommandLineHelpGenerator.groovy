@@ -92,8 +92,7 @@ class CommandLineHelpGenerator {
 				defaults[it.key] = it.value
 			}
 		}
-		defaults['applicationName'] = ProjectRequest.generateApplicationName(metadata.defaults.name,
-				ProjectRequest.DEFAULT_APPLICATION_NAME)
+		defaults['applicationName'] = metadata.generateApplicationName(metadata.defaults.name)
 		defaults['baseDir'] = 'no base dir'
 		defaults['dependencies'] = 'none'
 
