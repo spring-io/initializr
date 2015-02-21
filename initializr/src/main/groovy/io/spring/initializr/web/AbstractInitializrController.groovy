@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 
 package io.spring.initializr.web
 
+import javax.annotation.PostConstruct
+
 import io.spring.initializr.InitializrMetadataProvider
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 import static io.spring.initializr.support.GroovyTemplate.template
 
@@ -33,13 +36,33 @@ abstract class AbstractInitializrController {
 	@Autowired
 	protected InitializrMetadataProvider metadataProvider
 
+	private boolean forceSsl
+
+	@PostConstruct
+	void initialize() {
+		forceSsl = metadataProvider.get().env.forceSsl
+	}
+
 	/**
 	 * Render the home page with the specified template.
 	 */
 	protected String renderHome(String templatePath) {
 		def model = [:]
+		model['serviceUrl'] = generateAppUrl()
 		metadataProvider.get().properties.each { model[it.key] = it.value }
 		template templatePath, model
+	}
+
+	/**
+	 * Generate a full URL of the service, mostly for use in templates.
+	 * @see io.spring.initializr.InitializrMetadata.Env#forceSsl
+	 */
+	protected String generateAppUrl() {
+		def builder = ServletUriComponentsBuilder.fromCurrentServletMapping()
+		if (this.forceSsl) {
+			builder.scheme('https')
+		}
+		builder.build()
 	}
 
 }

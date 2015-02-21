@@ -1,3 +1,4 @@
 initializr:
   env:
     artifactRepository: https://repo.spring.io/lib-release
+    forceSsl: false

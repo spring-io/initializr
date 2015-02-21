@@ -379,6 +379,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void homeIsForm() {
 		def body = htmlHome()
 		assertTrue "Wrong body:\n$body", body.contains('action="/starter.zip"')
+		assertTrue "Must force https", body.contains("https://localhost:$port/install.sh")
+		assertFalse "Must force https", body.contains('http://')
 	}
 
 	@Test

@@ -22,7 +22,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
 
-import static org.junit.Assert.assertEquals
+import static org.junit.Assert.*
 
 /**
  * @author Stephane Nicoll
@@ -36,6 +36,12 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
 		def expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip"
 		assertEquals new URI(expected), entity.getHeaders().getLocation()
+	}
+
+	@Test
+	void doNotForceSsl() {
+		def body = htmlHome()
+		assertTrue "Force SSL should be disabled", body.contains("http://localhost:$port/install.sh")
 	}
 
 }

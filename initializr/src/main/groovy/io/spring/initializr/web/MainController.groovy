@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 /**
  * The main initializr controller provides access to the configured
@@ -46,8 +45,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 @Controller
 @Slf4j
 class MainController extends AbstractInitializrController {
-
-	public static final MediaType META_DATA_V2 = MediaType.parseMediaType("application/vnd.initializr.v2+json")
 
 	@Autowired
 	private ProjectGenerator projectGenerator
@@ -65,7 +62,7 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping(value = "/", produces = ["text/plain"])
 	ResponseEntity<String> serviceCapabilities(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
-		String appUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().build()
+		String appUrl = generateAppUrl()
 		def metadata = metadataProvider.get()
 
 		def builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
@@ -94,7 +91,7 @@ class MainController extends AbstractInitializrController {
 	}
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
-		String appUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().build()
+		String appUrl = generateAppUrl()
 		def content = metadataProvider.get().generateJson(version, appUrl)
 		return ResponseEntity.ok().contentType(version.mediaType).body(content)
 	}

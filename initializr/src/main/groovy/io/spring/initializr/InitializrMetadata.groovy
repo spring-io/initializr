@@ -359,6 +359,8 @@ class InitializrMetadata {
 
 		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
 
+		boolean forceSsl = true
+
 		void validate() {
 			if (!artifactRepository.endsWith('/')) {
 				artifactRepository = artifactRepository + '/'
