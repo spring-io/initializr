@@ -190,7 +190,7 @@ class ProjectGenerator {
 	private File initializerProjectDir(File rootDir, ProjectRequest request) {
 		if (request.baseDir) {
 			File dir = new File(rootDir, request.baseDir)
-			dir.mkdir()
+			dir.mkdirs()
 			return dir
 		} else {
 			return rootDir

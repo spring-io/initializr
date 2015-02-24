@@ -212,6 +212,15 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void customBaseDirectoryNested() {
+		def request = createProjectRequest()
+		request.baseDir = 'foo-bar/my-project'
+		generateProject(request).hasBaseDir('foo-bar/my-project')
+				.isJavaProject()
+				.isMavenProject()
+	}
+
+	@Test
 	void groovyWithMavenUsesJavaDir() {
 		def request = createProjectRequest('web')
 		request.type  = 'maven-project'
