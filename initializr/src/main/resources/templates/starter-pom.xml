@@ -24,7 +24,7 @@
 		<java.version>${javaVersion}</java.version>
 	</properties>
 
-	<dependencies><% resolvedDependencies.each { %>
+	<dependencies><% compileDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
@@ -33,17 +33,36 @@
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
+		</dependency><% } %>
+		<% runtimeDependencies.each { %>
+		<dependency>
+			<groupId>${it.groupId}</groupId>
+			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+			<version>${it.version}</version><% } %>
+			<scope>runtime</scope>
 		</dependency><% } %><%  if (packaging=='war') { %>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency><% } %><% providedDependencies.each { %>
+		<dependency>
+			<groupId>${it.groupId}</groupId>
+			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+			<version>${it.version}</version><% } %>
 			<scope>provided</scope>
 		</dependency><% } %>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency><% testDependencies.each { %>
+		<dependency>
+			<groupId>${it.groupId}</groupId>
+			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+			<version>${it.version}</version><% } %>
+			<scope>test</scope>
+		</dependency><% } %>
 	</dependencies>
 
 	<build>

@@ -19,6 +19,7 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import groovy.json.JsonSlurper
+import io.spring.initializr.InitializrMetadata
 import io.spring.initializr.InitializrMetadataVersion
 import org.json.JSONObject
 import org.junit.Ignore
@@ -56,7 +57,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
 				.hasSpringBootStarterDependency('data-jpa') // alias jpa -> data-jpa
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 	}
 
 	@Test
@@ -69,10 +70,12 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void dependencyInRange() {
+		def biz = new InitializrMetadata.Dependency(id: 'biz', groupId: 'org.acme',
+				artifactId: 'biz', version: '1.3.5', scope: 'runtime')
 		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
-				.hasDependency('org.acme', 'biz', '1.3.5')
+				.hasDependency(biz)
 	}
 
 	@Test
@@ -90,7 +93,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
 				.hasSpringBootStarterRootDependency() // the root dep is added if none is specified
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 	}
 
 	@Test
@@ -100,7 +103,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
 				.hasSpringBootStarterDependency('data-jpa') // alias jpa -> data-jpa
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 	}
 
 	@Test
@@ -110,7 +113,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
 				.hasSpringBootStarterDependency('data-jpa') // alias jpa -> data-jpa
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 	}
 
 	@Test

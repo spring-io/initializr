@@ -130,9 +130,9 @@ class ProjectGeneratorTests {
 		def request = createProjectRequest('thymeleaf')
 		request.packaging = 'war'
 		generateMavenPom(request).hasStartClass('demo.DemoApplication')
-				.hasSpringBootStarterDependency('tomcat')
+				.hasSpringBootStarterTomcat()
 				.hasDependency('org.foo', 'thymeleaf') // This is tagged as web facet so it brings the web one
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 				.hasDependenciesCount(3)
 	}
 
@@ -141,10 +141,10 @@ class ProjectGeneratorTests {
 		def request = createProjectRequest('data-jpa')
 		request.packaging = 'war'
 		generateMavenPom(request).hasStartClass('demo.DemoApplication')
-				.hasSpringBootStarterDependency('tomcat')
+				.hasSpringBootStarterTomcat()
 				.hasSpringBootStarterDependency('data-jpa')
 				.hasSpringBootStarterDependency('web') // Added by war packaging
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 				.hasDependenciesCount(4)
 	}
 
@@ -223,7 +223,7 @@ class ProjectGeneratorTests {
 	@Test
 	void groovyWithMavenUsesJavaDir() {
 		def request = createProjectRequest('web')
-		request.type  = 'maven-project'
+		request.type = 'maven-project'
 		request.language = 'groovy'
 		generateProject(request).isMavenProject().isGroovyProject()
 	}
@@ -231,9 +231,50 @@ class ProjectGeneratorTests {
 	@Test
 	void groovyWithGradleUsesGroovyDir() {
 		def request = createProjectRequest('web')
-		request.type  = 'gradle-project'
+		request.type = 'gradle-project'
 		request.language = 'groovy'
 		generateProject(request).isGradleProject().isGroovyProject()
+	}
+
+	@Test
+	void mavenPomWithCustomScope() {
+		def h2 = new InitializrMetadata.Dependency(id: 'h2', groupId: 'org.h2', artifactId: 'h2', scope: 'runtime')
+		def hamcrest = new InitializrMetadata.Dependency(id: 'hamcrest', groupId: 'org.hamcrest',
+				artifactId: 'hamcrest', scope: 'test')
+		def servlet = new InitializrMetadata.Dependency(id: 'servlet-api', groupId: 'javax.servlet',
+				artifactId: 'servlet-api', scope: 'provided')
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('database', h2)
+				.addDependencyGroup('container', servlet)
+				.addDependencyGroup('test', hamcrest).validateAndGet()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('hamcrest', 'h2', 'servlet-api', 'data-jpa', 'web')
+		generateMavenPom(request).hasDependency(h2).hasDependency(hamcrest).hasDependency(servlet)
+				.hasSpringBootStarterDependency('data-jpa')
+				.hasSpringBootStarterDependency('web')
+	}
+
+	@Test
+	void gradleBuildWithCustomScope() {
+		def h2 = new InitializrMetadata.Dependency(id: 'h2', groupId: 'org.h2', artifactId: 'h2', scope: 'runtime')
+		def hamcrest = new InitializrMetadata.Dependency(id: 'hamcrest', groupId: 'org.hamcrest',
+				artifactId: 'hamcrest', scope: 'test')
+		def servlet = new InitializrMetadata.Dependency(id: 'servlet-api', groupId: 'javax.servlet',
+				artifactId: 'servlet-api', scope: 'provided')
+		def metadata = InitializrMetadataBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('database', h2)
+				.addDependencyGroup('container', servlet)
+				.addDependencyGroup('test', hamcrest).validateAndGet()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('hamcrest', 'h2', 'servlet-api', 'data-jpa', 'web')
+		generateGradleBuild(request)
+				.contains("compile(\"org.springframework.boot:spring-boot-starter-web\")")
+				.contains("compile(\"org.springframework.boot:spring-boot-starter-data-jpa\")")
+				.contains("runtime(\"org.h2:h2\")")
+				.contains("providedRuntime(\"javax.servlet:servlet-api\")")
+				.contains("testCompile(\"org.hamcrest:hamcrest\")")
 	}
 
 	PomAssert generateMavenPom(ProjectRequest request) {

@@ -98,6 +98,14 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void invalidDependencyScope() {
+		def dependency = createDependency('web')
+
+		thrown.expect(InvalidInitializrMetadataException)
+		dependency.setScope('whatever')
+	}
+
+	@Test
 	void invalidSpringBootRange() {
 		def dependency = createDependency('web')
 		dependency.versionRange = 'A.B.C'

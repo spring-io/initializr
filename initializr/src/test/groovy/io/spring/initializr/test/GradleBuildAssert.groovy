@@ -60,7 +60,7 @@ class GradleBuildAssert {
 	}
 
 	GradleBuildAssert contains(String expression) {
-		assertTrue "$expression has not been found in gradle build", content.contains(expression)
+		assertTrue "$expression has not been found in gradle build $content", content.contains(expression)
 		this
 	}
 }

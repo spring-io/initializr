@@ -25,6 +25,7 @@ import org.w3c.dom.Document
 import org.w3c.dom.Element
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
 
 /**
@@ -109,6 +110,14 @@ class PomAssert {
 		this
 	}
 
+	PomAssert hasSpringBootStarterTomcat() {
+		hasDependency(new InitializrMetadata.Dependency(id: 'tomcat', scope: 'provided').asSpringBootStarter('tomcat'))
+	}
+
+	PomAssert hasSpringBootStarterTest() {
+		hasDependency(new InitializrMetadata.Dependency(id: 'test', scope: 'test').asSpringBootStarter('test'))
+	}
+
 	PomAssert hasSpringBootStarterDependency(String dependency) {
 		hasDependency('org.springframework.boot', "spring-boot-starter-$dependency")
 	}
@@ -122,11 +131,18 @@ class PomAssert {
 	}
 
 	PomAssert hasDependency(String groupId, String artifactId, String version) {
-		def id = generateId(groupId, artifactId)
+		hasDependency(new InitializrMetadata.Dependency(groupId: groupId, artifactId: artifactId, version: version))
+	}
+
+	PomAssert hasDependency(InitializrMetadata.Dependency expected) {
+		def id = generateId(expected.groupId, expected.artifactId)
 		def dependency = dependencies[id]
 		assertNotNull "No dependency found with '$id' --> ${dependencies.keySet()}", dependency
-		if (version) {
-			assertEquals "Wrong version for $dependency", version, dependency.version
+		if (expected.version) {
+			assertEquals "Wrong version for $dependency", expected.version, dependency.version
+		}
+		if (expected.scope) {
+			assertEquals "Wrong scope for $dependency", expected.scope, dependency.scope
 		}
 		this
 	}
@@ -189,7 +205,13 @@ class PomAssert {
 				if (version.length > 0) {
 					dependency.version = version.item(0).textContent
 				}
-				dependencies[dependency.generateId()] = dependency
+				def scope = element.getElementsByTagName('scope')
+				if (scope.length > 0) {
+					dependency.scope = scope.item(0).textContent
+				}
+				def id = dependency.generateId()
+				assertFalse("Duplicate dependency with id $id", dependencies.containsKey(id))
+				dependencies[id] = dependency
 			}
 		}
 	}

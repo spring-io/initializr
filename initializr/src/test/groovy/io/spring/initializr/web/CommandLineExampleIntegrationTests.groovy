@@ -38,7 +38,7 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 		downloadZip('/starter.zip').isJavaProject()
 				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
 				.hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 				.hasDependenciesCount(2)
 	}
 
@@ -48,7 +48,7 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert()
 				.hasJavaVersion('1.8')
 				.hasSpringBootStarterDependency('web')
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 				.hasDependenciesCount(2)
 	}
 

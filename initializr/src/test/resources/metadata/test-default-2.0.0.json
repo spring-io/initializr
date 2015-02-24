@@ -48,6 +48,10 @@
           {
             "id": "org.acme:bar",
             "name": "Bar"
+          },
+          {
+            "id": "my-api",
+            "name": "My API"
           }
         ]
       }

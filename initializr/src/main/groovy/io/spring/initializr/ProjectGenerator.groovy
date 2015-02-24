@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.util.Assert
 
+import static io.spring.initializr.InitializrMetadata.Dependency.*
 import static io.spring.initializr.support.GroovyTemplate.template
 
 /**
@@ -167,10 +168,16 @@ class ProjectGenerator {
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested
-		def dependencies = request.resolvedDependencies.collect { it.id }
-		log.info("Processing request{type=$request.type, dependencies=$dependencies}")
+		def dependencies = request.resolvedDependencies
+		def dependencyIds = dependencies.collect { it.id }
+		log.info("Processing request{type=$request.type, dependencies=$dependencyIds}")
 
 		request.properties.each { model[it.key] = it.value }
+
+		model['compileDependencies'] = filterDependencies(dependencies, SCOPE_COMPILE)
+		model['runtimeDependencies'] = filterDependencies(dependencies, SCOPE_RUNTIME)
+		model['providedDependencies'] = filterDependencies(dependencies, SCOPE_PROVIDED)
+		model['testDependencies'] = filterDependencies(dependencies, SCOPE_TEST)
 
 		// @SpringBootApplication available as from 1.2.0.RC1
 		model['useSpringBootApplication'] = VERSION_1_2_0_RC1
@@ -210,6 +217,10 @@ class ProjectGenerator {
 			temporaryFiles[group] = content
 		}
 		content << file
+	}
+
+	private static def filterDependencies(def dependencies, String scope) {
+		dependencies.findAll { dep -> scope.equals(dep.scope) }.sort { a, b -> a.id <=> b.id }
 	}
 
 }

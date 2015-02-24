@@ -74,7 +74,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			projectAssert.hasBaseDir("demo").isMavenProject().isJavaProject()
 					.hasStaticAndTemplatesResources(false)
 					.pomAssert().hasDependenciesCount(2)
-					.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
+					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
 		}
 	}
 
@@ -88,7 +88,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			projectAssert.hasBaseDir('demo').isMavenProject().isGroovyProject()
 					.hasStaticAndTemplatesResources(false)
 					.pomAssert().hasDependenciesCount(3)
-					.hasSpringBootStarterRootDependency().hasSpringBootStarterDependency('test')
+					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
 					.hasDependency('org.codehaus.groovy', 'groovy')
 		}
 	}
@@ -113,7 +113,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.hasName('My project').hasDescription('A description for my project')
 					.hasSpringBootStarterDependency('web')
 					.hasSpringBootStarterDependency('data-jpa')
-					.hasSpringBootStarterDependency('test')
+					.hasSpringBootStarterTest()
 		}
 	}
 
@@ -137,7 +137,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.hasName('My Groovy project').hasDescription('A description for my Groovy project')
 					.hasSpringBootStarterDependency('web')
 					.hasSpringBootStarterDependency('data-jpa')
-					.hasSpringBootStarterDependency('test')
+					.hasSpringBootStarterTest()
 					.hasDependency('org.codehaus.groovy', 'groovy')
 		}
 	}
@@ -167,8 +167,8 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.isJavaWarProject()
 					.pomAssert().hasPackaging('war').hasDependenciesCount(3)
 					.hasSpringBootStarterDependency('web') // Added with war packaging
-					.hasSpringBootStarterDependency('tomcat')
-					.hasSpringBootStarterDependency('test')
+					.hasSpringBootStarterTomcat()
+					.hasSpringBootStarterTest()
 		}
 	}
 

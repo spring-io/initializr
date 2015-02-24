@@ -283,6 +283,12 @@ class InitializrMetadata {
 	@ToString(ignoreNulls = true, includePackage = false)
 	static class Dependency extends IdentifiableElement {
 
+		static final String SCOPE_COMPILE = 'compile'
+		static final String SCOPE_RUNTIME = 'runtime'
+		static final String SCOPE_PROVIDED = 'provided'
+		static final String SCOPE_TEST = 'test'
+		static final List<String> SCOPE_ALL = [SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED, SCOPE_TEST]
+
 		List<String> aliases = []
 
 		List<String> facets = []
@@ -293,9 +299,18 @@ class InitializrMetadata {
 
 		String version
 
+		String scope = SCOPE_COMPILE
+
 		String description
 
 		String versionRange
+
+		void setScope(String scope) {
+			if (!SCOPE_ALL.contains(scope)) {
+				throw new InvalidInitializrMetadataException("Invalid scope $scope must be one of $SCOPE_ALL")
+			}
+			this.scope = scope
+		}
 
 		void setVersionRange(String versionRange) {
 			this.versionRange = versionRange ? versionRange.trim() : null
@@ -313,12 +328,13 @@ class InitializrMetadata {
 		 * Define this dependency as a standard spring boot starter with the specified name
 		 * <p>If no name is specified, the root 'spring-boot-starter' is assumed.
 		 */
-		def asSpringBootStarter(String name) {
+		Dependency asSpringBootStarter(String name) {
 			groupId = 'org.springframework.boot'
 			artifactId = name ? 'spring-boot-starter-' + name : 'spring-boot-starter'
 			if (name) {
 				id = name
 			}
+			this
 		}
 
 		/**

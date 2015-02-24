@@ -52,7 +52,7 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
 				.hasSpringBootStarterDependency('data-jpa')
-				.hasSpringBootStarterDependency('test')
+				.hasSpringBootStarterTest()
 	}
 
 }

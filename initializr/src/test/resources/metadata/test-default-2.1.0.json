@@ -58,6 +58,10 @@
             "id": "org.acme:bur",
             "name": "Bur",
             "versionRange": "[1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)"
+          },
+          {
+            "id": "my-api",
+            "name": "My API"
           }
         ]
       }

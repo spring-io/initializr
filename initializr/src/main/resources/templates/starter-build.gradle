@@ -39,11 +39,14 @@ repositories {
     providedRuntime
 }
 <% } %>
-dependencies {<% resolvedDependencies.each { %>
+dependencies {<% compileDependencies.each { %>
     compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
-    compile("org.codehaus.groovy:groovy")<% } %><% if (packaging=='war') { %>
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %>
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+	compile("org.codehaus.groovy:groovy")<% } %><% runtimeDependencies.each { %>
+	runtime("${it.groupId}:${it.artifactId}")<% } %><% if (packaging=='war') { %>
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %><% providedDependencies.each { %>
+	providedRuntime("${it.groupId}:${it.artifactId}")<% } %>
+    testCompile("org.springframework.boot:spring-boot-starter-test") <% testDependencies.each { %>
+	testCompile("${it.groupId}:${it.artifactId}")<% } %>
 }
 
 eclipse {
