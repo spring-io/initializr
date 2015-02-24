@@ -114,7 +114,6 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.hasSpringBootStarterDependency('web')
 					.hasSpringBootStarterDependency('data-jpa')
 					.hasSpringBootStarterDependency('test')
-
 		}
 	}
 

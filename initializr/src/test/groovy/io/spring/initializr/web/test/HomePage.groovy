@@ -42,7 +42,6 @@ class HomePage extends Page {
 			$("form").find('input', type: "checkbox", name: "style", value: id)
 		}
 		generateProject { $('form').find('button', name: 'generate-project') }
-
 	}
 
 }

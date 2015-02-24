@@ -45,4 +45,5 @@ class TestCounterService implements CounterService {
 	void reset(String metricName) {
 		values[metricName] = 0
 	}
+
 }

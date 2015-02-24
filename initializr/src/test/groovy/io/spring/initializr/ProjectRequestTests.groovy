@@ -29,8 +29,6 @@ import static org.junit.Assert.assertNull
  */
 class ProjectRequestTests {
 
-	private static final String DEFAULT_APPLICATION_NAME = 'FooBarApplication'
-
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none()
 

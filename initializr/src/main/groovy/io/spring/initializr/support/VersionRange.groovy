@@ -56,7 +56,8 @@ class VersionRange {
 		this.higherVersion = higherVersion
 		this.higherInclusive = higherInclusive
 	}
-/**
+
+	/**
 	 * Specify if the {@link Version} matches this range. Returns {@code true}
 	 * if the version is contained within this range, {@code false} otherwise.
 	 */

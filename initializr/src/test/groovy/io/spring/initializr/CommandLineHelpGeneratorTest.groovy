@@ -53,7 +53,6 @@ class CommandLineHelpGeneratorTest {
 		assertCommandLineCapabilities(content)
 		assertThat content, containsString('| foo')
 		assertThat content, containsString('| foo-desc')
-
 	}
 
 	@Test

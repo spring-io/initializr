@@ -40,7 +40,6 @@ class GradleBuildAssert {
 	GradleBuildAssert validateProjectRequest(ProjectRequest request) {
 		hasArtifactId(request.artifactId).hasVersion(request.version).
 				hasBootVersion(request.bootVersion).hasJavaVersion(request.javaVersion)
-
 	}
 
 	GradleBuildAssert hasArtifactId(String artifactId) {

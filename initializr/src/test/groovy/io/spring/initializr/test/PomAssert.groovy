@@ -56,7 +56,6 @@ class PomAssert {
 		hasGroupId(request.groupId).hasArtifactId(request.artifactId).hasVersion(request.version).
 				hasPackaging(request.packaging).hasName(request.name).hasDescription(request.description).
 				hasBootVersion(request.bootVersion).hasJavaVersion(request.javaVersion)
-
 	}
 
 	PomAssert hasGroupId(String groupId) {

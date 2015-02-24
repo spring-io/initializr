@@ -113,7 +113,6 @@ class ProjectGeneratorTests {
 		generateMavenPom(request).hasStartClass('demo.DemoApplication')
 				.hasDependency('org.foo', 'thymeleaf')
 				.hasDependenciesCount(2)
-
 	}
 
 	@Test
@@ -135,7 +134,6 @@ class ProjectGeneratorTests {
 				.hasDependency('org.foo', 'thymeleaf') // This is tagged as web facet so it brings the web one
 				.hasSpringBootStarterDependency('test')
 				.hasDependenciesCount(3)
-
 	}
 
 	@Test
@@ -148,7 +146,6 @@ class ProjectGeneratorTests {
 				.hasSpringBootStarterDependency('web') // Added by war packaging
 				.hasSpringBootStarterDependency('test')
 				.hasDependenciesCount(4)
-
 	}
 
 	@Test

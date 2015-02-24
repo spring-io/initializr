@@ -144,7 +144,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		assertEquals HttpStatus.FOUND, entity.getStatusCode()
 		def expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.$extension"
 		assertEquals new URI(expected), entity.getHeaders().getLocation()
-
 	}
 
 	@Test
