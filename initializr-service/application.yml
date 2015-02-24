@@ -24,49 +24,6 @@ initializr:
           id: jta-bitronix
           description: Support for JTA distributed transactions via Bitronix
           versionRange: 1.2.0.M1
-    - name: Data
-      content:
-        - name: JDBC
-          id: jdbc
-          description: Support for JDBC databases
-        - name: JPA
-          id: data-jpa
-          description: Support for the Java Persistence API including spring-data-jpa, spring-orm and Hibernate
-          aliases:
-            - jpa
-        - name: MongoDB
-          id: data-mongodb
-          description: Support for the MongoDB NoSQL Database, including spring-data-mongodb
-        - name: Redis
-          id: redis
-          description: Support for the REDIS key-value data store, including spring-redis
-        - name: Gemfire
-          id: data-gemfire
-          description: Support for the GemFire distributed data store including spring-data-gemfire
-        - name: Solr
-          id: data-solr
-          description: Support for the Apache Solr search platform, including spring-data-solr
-        - name: Elasticsearch
-          id: data-elasticsearch
-          description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
-    - name: I/O
-      content:
-        - name: Batch
-          id: batch
-          description: Support for Spring Batch including HSQLDB database
-        - name: Integration
-          id: integration
-          description: Support for common spring-integration modules
-        - name: JMS
-          id: hornetq
-          description: Support for Java Message Service API via HornetQ
-        - name: AMQP
-          id: amqp
-          description: Support for the Advanced Message Queuing Protocol via spring-rabbit
-        - name: Mail
-          id: mail
-          description: Support for javax.mail
-          versionRange: 1.2.0.RC1
     - name: Web
       content:
         - name: Web
@@ -122,6 +79,58 @@ initializr:
           versionRange: 1.2.2.BUILD-SNAPSHOT
           facets:
             - web
+    - name: Data
+      content:
+        - name: JDBC
+          id: jdbc
+          description: Support for JDBC databases
+        - name: JPA
+          id: data-jpa
+          description: Support for the Java Persistence API including spring-data-jpa, spring-orm and Hibernate
+          aliases:
+            - jpa
+        - name: MongoDB
+          id: data-mongodb
+          description: Support for the MongoDB NoSQL Database, including spring-data-mongodb
+        - name: Redis
+          id: redis
+          description: Support for the REDIS key-value data store, including spring-redis
+        - name: Gemfire
+          id: data-gemfire
+          description: Support for the GemFire distributed data store including spring-data-gemfire
+        - name: Solr
+          id: data-solr
+          description: Support for the Apache Solr search platform, including spring-data-solr
+        - name: Elasticsearch
+          id: data-elasticsearch
+          description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
+    - name: Database
+      content:
+        - name: H2
+          id: h2
+          description: Support for the H2 database (with embedded support)
+          groupId: com.h2database
+          artifactId: h2
+          scope: runtime
+        - name: HSQLDB
+          id: hsql
+          description: Support for the HSQLDB database (with embedded support)
+          groupId: org.hsqldb
+          artifactId: hsqldb
+          scope: runtime
+        - name: Apache Derby
+          id: derby
+          description: Support for the Apache Derby database (with embedded support)
+          groupId: org.apache.derby
+          artifactId: derby
+          scope: runtime
+          versionRange: 1.2.2.BUILD-SNAPSHOT
+        - name: MySQL
+          id: mysql
+          description: Support for the MySQL jdbc driver
+          groupId: mysql
+          artifactId: mysql-connector-java
+          scope: runtime
     - name: Social
       content:
         - name: Facebook
@@ -133,6 +142,24 @@ initializr:
         - name: Twitter
           id: social-twitter
           description: Support for spring-social-twitter
+    - name: I/O
+      content:
+        - name: Batch
+          id: batch
+          description: Support for Spring Batch including HSQLDB database
+        - name: Integration
+          id: integration
+          description: Support for common spring-integration modules
+        - name: JMS
+          id: hornetq
+          description: Support for Java Message Service API via HornetQ
+        - name: AMQP
+          id: amqp
+          description: Support for the Advanced Message Queuing Protocol via spring-rabbit
+        - name: Mail
+          id: mail
+          description: Support for javax.mail
+          versionRange: 1.2.0.RC1
     - name: Ops
       content:
         - name: Actuator
