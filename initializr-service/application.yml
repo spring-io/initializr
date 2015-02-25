@@ -131,6 +131,13 @@ initializr:
           groupId: mysql
           artifactId: mysql-connector-java
           scope: runtime
+        - name: PostgreSQL
+          id: postgresql
+          description: Support for the PostgreSQL jdbc driver
+          groupId: org.postgresql
+          artifactId: postgresql
+          version: 9.4-1200-jdbc4
+          scope: runtime
     - name: Social
       content:
         - name: Facebook
