@@ -35,6 +35,24 @@ class VersionTests {
 	public final ExpectedException thrown = ExpectedException.none()
 
 	@Test
+	void noQualifierString() {
+		def version = parse('1.2.0')
+		assertThat(version.toString(), equalTo('1.2.0'))
+	}
+
+	@Test
+	void withQualifierString() {
+		def version = parse('1.2.0.RELEASE')
+		assertThat(version.toString(), equalTo('1.2.0.RELEASE'))
+	}
+
+	@Test
+	void withQualifierAndVersionString() {
+		def version = parse('1.2.0.RC2')
+		assertThat(version.toString(), equalTo('1.2.0.RC2'))
+	}
+
+	@Test
 	void equalNoQualifier() {
 		def first = parse('1.2.0')
 		def second = parse('1.2.0')

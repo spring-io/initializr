@@ -36,7 +36,6 @@ import org.springframework.util.Assert
  * @author Stephane Nicoll
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode
 class Version implements Comparable<Version> {
 
@@ -48,6 +47,11 @@ class Version implements Comparable<Version> {
 	Integer minor
 	Integer patch
 	Qualifier qualifier
+	
+	@Override
+	public String toString() {
+		"${major}.${minor}.${patch}" + (qualifier?".${qualifier.qualifier}${qualifier.version?:''}" : '')
+	}
 
 	/**
 	 * Parse the string representation of a {@link Version}. Throws an
