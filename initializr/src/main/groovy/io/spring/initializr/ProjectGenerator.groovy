@@ -162,7 +162,7 @@ class ProjectGenerator {
 		}
 	}
 
-	private Map initializeModel(ProjectRequest request) {
+	protected Map initializeModel(ProjectRequest request) {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
 		request.resolve(metadata)
