@@ -26,6 +26,7 @@ import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
 import io.spring.initializr.support.InvalidVersionException
 import io.spring.initializr.support.VersionRange
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
@@ -65,6 +66,9 @@ class InitializrMetadata {
 	final Env env = new Env()
 
 	private final Map<String, Dependency> indexedDependencies = [:]
+	
+	@Autowired
+	List<InitializrMetadataCustomizer> customizers = []
 
 	/**
 	 * Return the {@link Dependency} with the specified id or {@code null} if
@@ -170,7 +174,12 @@ class InitializrMetadata {
 	 */
 	@PostConstruct
 	void validate() {
-		for (DependencyGroup group : dependencies) {
+
+		customizers.each { customizer ->
+			customizer.customize(this)
+		}
+
+		dependencies.each { group ->
 			group.content.each { dependency ->
 				validateDependency(dependency)
 				indexDependency(dependency.id, dependency)

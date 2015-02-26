@@ -140,6 +140,21 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void addDependencyInCustomizer() {
+		def group = new InitializrMetadata.DependencyGroup()
+		group.name = 'Extra'
+		def dependency = createDependency('com.foo:foo:1.0.0')
+		group.content.add(dependency)
+		metadata.setCustomizers([new InitializrMetadataCustomizer() {
+			void customize(InitializrMetadata metadata) {
+				metadata.dependencies.add(group)
+			}
+		}])
+		metadata.validate()
+		assertEquals 1, metadata.dependencies.size()
+	}
+
+	@Test
 	void indexedDependencies() {
 		def dependency = createDependency('first')
 		def dependency2 = createDependency('second')
