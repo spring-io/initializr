@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * A {@link ServiceCapabilityType#TEXT text} capability.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class TextCapability extends ServiceCapability<String> {
 
-	/**
-	 * Write a json representation of the specified meta-data.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	String content
+
+	TextCapability(String id) {
+		super(id, ServiceCapabilityType.TEXT);
+	}
+
+	TextCapability(String id, String content) {
+		this(id)
+		this.content = content
+	}
 
 }
+

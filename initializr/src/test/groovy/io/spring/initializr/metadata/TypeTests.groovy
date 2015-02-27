@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
+package io.spring.initializr.metadata
 
-import io.spring.initializr.metadata.InitializrMetadata
+import org.junit.Test
+
+import static org.junit.Assert.assertEquals
 
 /**
- * Generate a JSON representation of the metadata.
- *
  * @author Stephane Nicoll
- * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class TypeTests {
 
-	/**
-	 * Write a json representation of the specified meta-data.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	@Test
+	void parseAction() {
+		def type = new Type(id: 'foo', action: 'my-action.zip')
+		assertEquals '/my-action.zip', type.action
+	}
 
 }

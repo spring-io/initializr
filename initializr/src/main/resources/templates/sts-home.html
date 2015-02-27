@@ -35,44 +35,44 @@
     <h1>Spring Initializr</h1>
     <div>
         <form id="form" action="/starter.zip" method="get">
-            <label for="groupId">Group:</label> <input id="groupId" type="text" value="${defaults.groupId}" name="groupId"/>
-            <label for="artifactId">Artifact:</label> <input id="artifactId" type="text" value="${defaults.artifactId}" name="artifactId"/>
-            <label for="name">Name:</label> <input id="name" type="text" value="${defaults.name}" name="name"/>
-            <label for="name">Description:</label> <input id="description" type="text" value="${defaults.description}" name="description"/>
-            <label for="packageName">Package Name:</label> <input id="packageName" type="text" value="${defaults.packageName}" name="packageName"/>
+            <label for="groupId">Group:</label> <input id="groupId" type="text" value="${groupId.content}" name="groupId"/>
+            <label for="artifactId">Artifact:</label> <input id="artifactId" type="text" value="${artifactId.content}" name="artifactId"/>
+            <label for="name">Name:</label> <input id="name" type="text" value="${name.content}" name="name"/>
+            <label for="name">Description:</label> <input id="description" type="text" value="${description.content}" name="description"/>
+            <label for="packageName">Package Name:</label> <input id="packageName" type="text" value="${packageName.content}" name="packageName"/>
             <label>Styles:</label>
-            <% dependencies.each { %>
+            <% dependencies.content.each { %>
             <% it.content.each { %>
             <label class="checkbox">
                 <input type="checkbox" name="style" value="${it.id}"/>
                 ${it.name}
             </label><% } } %>
             <label>Type:</label>
-            <% types.each { %>
+            <% types.content.each { %>
             <label class="radio">
                 <input type="radio" name="type" value="${it.stsId}"${it.default==true ? ' checked="true"' : ''} onclick="javascript:this.form.action='${it.action}'"/>
                 ${it.name}
             </label><% } %>
             <label>Packaging:</label>
-            <% packagings.each { %>
+            <% packagings.content.each { %>
             <label class="radio">
                 <input type="radio" name="packaging" value="${it.id}"${it.default==true ? ' checked="true"' : ''}/>
                 ${it.name}
             </label><% } %>
             <label>Java Version:</label>
-            <% javaVersions.each { %>
+            <% javaVersions.content.each { %>
             <label class="radio">
                 <input type="radio" name="javaVersion" value="${it.id}"${it.default==true ? ' checked="true"' : ''}/>
                 ${it.name}
             </label><% } %>
             <label>Language:</label>
-            <% languages.each { %>
+            <% languages.content.each { %>
             <label class="radio">
                 <input type="radio" name="language" value="${it.id}"${it.default==true ? ' checked="true"' : ''}/>
                 ${it.name}
             </label><% } %>
             <label>Spring Boot Version:</label>
-            <% bootVersions.each { %>
+            <% bootVersions.content.each { %>
             <label class="radio">
                 <input type="radio" name="bootVersion" value="${it.id}"${it.default==true ? ' checked="true"' : ''}/>
                 ${it.name}

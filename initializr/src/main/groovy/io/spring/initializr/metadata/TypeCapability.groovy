@@ -14,21 +14,35 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * An {@link ServiceCapabilityType#ACTION action} capability.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class TypeCapability extends ServiceCapability<List<Type>> {
+
+	final List<Type> content = []
+
+	TypeCapability() {
+		super('type', ServiceCapabilityType.ACTION)
+	}
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Return the {@link Type} with the specified id or {@code null} if no
+	 * such type exists.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	Type get(String id) {
+		return content.find { id.equals(it.id) || id.equals(it.stsId) }
+	}
+
+	/**
+	 * Return the default {@link Type}.
+	 */
+	Type getDefault() {
+		return content.find { it.default }
+	}
 
 }

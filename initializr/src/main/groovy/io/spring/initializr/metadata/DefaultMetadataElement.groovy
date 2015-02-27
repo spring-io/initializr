@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * A {@link MetadataElement} that specifies if its
+ * the default for a given capability.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class DefaultMetadataElement extends MetadataElement {
 
-	/**
-	 * Write a json representation of the specified meta-data.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	private boolean defaultValue
 
+	void setDefault(boolean defaultValue) {
+		this.defaultValue = defaultValue
+	}
+
+	boolean isDefault() {
+		this.defaultValue
+	}
 }

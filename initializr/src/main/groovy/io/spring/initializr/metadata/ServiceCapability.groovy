@@ -14,21 +14,33 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * Defines a capability of the initializr service. Each capability
+ * is defined by a id and a {@link ServiceCapabilityType type}.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+abstract class ServiceCapability<T> {
+
+	final String id
+
+	final ServiceCapabilityType type
+
+	String description
+
+	protected ServiceCapability(String id, ServiceCapabilityType type) {
+		this.id = id
+		this.type = type
+	}
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Return the "content" of this capability. The structure of the content
+	 * vastly depends on the {@link ServiceCapability type} of the capability.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	abstract T getContent()
 
 }
+

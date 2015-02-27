@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
+package io.spring.initializr.metadata
 
-import io.spring.initializr.metadata.InitializrMetadata
+import groovy.transform.InheritConstructors
+import io.spring.initializr.InitializrException
 
 /**
- * Generate a JSON representation of the metadata.
+ * Thrown when the configuration defines invalid metadata.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
-
-	/**
-	 * Write a json representation of the specified meta-data.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
-
+@InheritConstructors
+class InvalidInitializrMetadataException extends InitializrException {
 }
+

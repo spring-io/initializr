@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * Strategy interface used to customize the {@link InitializrMetadata}.
  *
- * @author Stephane Nicoll
+ * @author Dave Syer
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+interface InitializrMetadataCustomizer {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Customize the {@link InitializrMetadata}, updating or moving around
+	 * capabilities before they are validated.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	void customize(InitializrMetadata metadata)
 
 }

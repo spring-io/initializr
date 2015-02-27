@@ -17,8 +17,8 @@
 package io.spring.initializr.mapper
 
 import groovy.json.JsonSlurper
-import io.spring.initializr.InitializrMetadata
-import io.spring.initializr.test.InitializrMetadataBuilder
+import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.test.InitializrMetadataTestBuilder
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -33,8 +33,8 @@ class InitializrMetadataJsonMapperTests {
 
 	@Test
 	void withNoAppUrl() {
-		InitializrMetadata metadata = new InitializrMetadataBuilder().addType('foo', true, '/foo.zip', 'none', 'test')
-				.addDependencyGroup('foo', 'one', 'two').validateAndGet()
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addType('foo', true, '/foo.zip', 'none', 'test')
+				.addDependencyGroup('foo', 'one', 'two').build()
 		def json = jsonMapper.write(metadata, null)
 		def result = slurper.parseText(json)
 		assertEquals '/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,' +
@@ -43,8 +43,8 @@ class InitializrMetadataJsonMapperTests {
 
 	@Test
 	void withAppUrl() {
-		InitializrMetadata metadata = new InitializrMetadataBuilder().addType('foo', true, '/foo.zip', 'none', 'test')
-				.addDependencyGroup('foo', 'one', 'two').validateAndGet()
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addType('foo', true, '/foo.zip', 'none', 'test')
+				.addDependencyGroup('foo', 'one', 'two').build()
 		def json = jsonMapper.write(metadata, 'http://server:8080/my-app')
 		def result = slurper.parseText(json)
 		assertEquals 'http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,' +

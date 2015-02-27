@@ -16,7 +16,7 @@
 
 package io.spring.initializr.test
 
-import io.spring.initializr.ProjectRequest
+import io.spring.initializr.generator.ProjectRequest
 
 import static org.junit.Assert.assertTrue
 

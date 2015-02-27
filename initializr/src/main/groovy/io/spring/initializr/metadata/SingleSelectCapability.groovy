@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * A {@link ServiceCapabilityType#SINGLE_SELECT single select} capability.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataElement>> {
+
+	final List<DefaultMetadataElement> content = []
+
+	SingleSelectCapability(String id) {
+		super(id, ServiceCapabilityType.SINGLE_SELECT)
+	}
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Return the default element of this capability.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	DefaultMetadataElement getDefault() {
+	   return content.find { it.default }
+	}
 
 }

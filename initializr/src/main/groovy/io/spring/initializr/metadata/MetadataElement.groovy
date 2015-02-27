@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * A basic meta-data element
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class MetadataElement {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * A visual representation of this element.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	String name
 
+	/**
+	 * The unique id of this element for a given capability.
+	 */
+	String id
+
+	String getName() {
+		(name ?: id)
+	}
 }

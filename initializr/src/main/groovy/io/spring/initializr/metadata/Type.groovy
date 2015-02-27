@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * Defines a particular project type. Each type is associated to a concrete
+ * action that should be invoked to generate the content of that type.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+class Type extends DefaultMetadataElement {
 
-	/**
-	 * Write a json representation of the specified meta-data.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	String description
+
+	@Deprecated
+	String stsId
+
+	String action
+
+	final Map<String, String> tags = [:]
+
+	void setAction(String action) {
+		String actionToUse = action
+		if (!actionToUse.startsWith("/")) {
+			actionToUse =  "/" +  actionToUse
+		}
+		this.action = actionToUse
+	}
 
 }

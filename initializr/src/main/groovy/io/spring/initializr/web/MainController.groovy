@@ -17,10 +17,13 @@
 package io.spring.initializr.web
 
 import groovy.util.logging.Slf4j
-import io.spring.initializr.CommandLineHelpGenerator
-import io.spring.initializr.InitializrMetadataVersion
-import io.spring.initializr.ProjectGenerator
-import io.spring.initializr.ProjectRequest
+import io.spring.initializr.generator.CommandLineHelpGenerator
+import io.spring.initializr.mapper.InitializrMetadataJsonMapper
+import io.spring.initializr.mapper.InitializrMetadataV21JsonMapper
+import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
+import io.spring.initializr.mapper.InitializrMetadataVersion
+import io.spring.initializr.generator.ProjectGenerator
+import io.spring.initializr.generator.ProjectRequest
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -55,7 +58,7 @@ class MainController extends AbstractInitializrController {
 	@ModelAttribute
 	ProjectRequest projectRequest() {
 		def request = new ProjectRequest()
-		metadataProvider.get().initializeProjectRequest(request)
+		request.initialize(metadataProvider.get())
 		request
 	}
 
@@ -92,8 +95,15 @@ class MainController extends AbstractInitializrController {
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
 		String appUrl = generateAppUrl()
-		def content = metadataProvider.get().generateJson(version, appUrl)
+		def content = getJsonMapper(version).write(metadataProvider.get(), appUrl)
 		return ResponseEntity.ok().contentType(version.mediaType).body(content)
+	}
+
+	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
+		switch(version) {
+			case InitializrMetadataVersion.V2: return new InitializrMetadataV2JsonMapper();
+			default: return new InitializrMetadataV21JsonMapper();
+		}
 	}
 
 	@RequestMapping(value = '/', produces = 'text/html')

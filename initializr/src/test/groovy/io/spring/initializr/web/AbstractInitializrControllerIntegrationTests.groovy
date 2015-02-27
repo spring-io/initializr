@@ -16,9 +16,10 @@
 
 package io.spring.initializr.web
 
-import io.spring.initializr.DefaultInitializrMetadataProvider
-import io.spring.initializr.InitializrMetadata
-import io.spring.initializr.InitializrMetadataProvider
+import io.spring.initializr.metadata.DefaultMetadataElement
+import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.support.DefaultInitializrMetadataProvider
+import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.test.ProjectAssert
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -170,7 +171,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 		InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
 			new DefaultInitializrMetadataProvider(metadata) {
 				@Override
-				protected List<InitializrMetadata.BootVersion> fetchBootVersions() {
+				protected List<DefaultMetadataElement> fetchBootVersions() {
 					null // Disable metadata fetching from spring.io
 				}
 			}

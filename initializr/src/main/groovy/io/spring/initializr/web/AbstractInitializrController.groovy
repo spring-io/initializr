@@ -18,12 +18,12 @@ package io.spring.initializr.web
 
 import javax.annotation.PostConstruct
 
-import io.spring.initializr.InitializrMetadataProvider
+import io.spring.initializr.metadata.InitializrMetadataProvider
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
-import static io.spring.initializr.support.GroovyTemplate.template
+import static io.spring.initializr.util.GroovyTemplate.template
 
 /**
  * A base controller that uses a {@link InitializrMetadataProvider}
@@ -40,7 +40,7 @@ abstract class AbstractInitializrController {
 
 	@PostConstruct
 	void initialize() {
-		forceSsl = metadataProvider.get().env.forceSsl
+		forceSsl = metadataProvider.get().configuration.env.forceSsl
 	}
 
 	/**
@@ -55,7 +55,7 @@ abstract class AbstractInitializrController {
 
 	/**
 	 * Generate a full URL of the service, mostly for use in templates.
-	 * @see io.spring.initializr.InitializrMetadata.Env#forceSsl
+	 * @see io.spring.initializr.InitializrConfiguration.Env#forceSsl
 	 */
 	protected String generateAppUrl() {
 		def builder = ServletUriComponentsBuilder.fromCurrentServletMapping()

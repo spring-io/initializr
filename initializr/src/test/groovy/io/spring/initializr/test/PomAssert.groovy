@@ -16,8 +16,8 @@
 
 package io.spring.initializr.test
 
-import io.spring.initializr.InitializrMetadata
-import io.spring.initializr.ProjectRequest
+import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.Dependency
 import org.custommonkey.xmlunit.SimpleNamespaceContext
 import org.custommonkey.xmlunit.XMLUnit
 import org.custommonkey.xmlunit.XpathEngine
@@ -38,7 +38,7 @@ class PomAssert {
 
 	final XpathEngine eng
 	final Document doc
-	final Map<String, InitializrMetadata.Dependency> dependencies = [:]
+	final Map<String, Dependency> dependencies = [:]
 
 	PomAssert(String content) {
 		eng = XMLUnit.newXpathEngine()
@@ -111,11 +111,11 @@ class PomAssert {
 	}
 
 	PomAssert hasSpringBootStarterTomcat() {
-		hasDependency(new InitializrMetadata.Dependency(id: 'tomcat', scope: 'provided').asSpringBootStarter('tomcat'))
+		hasDependency(new Dependency(id: 'tomcat', scope: 'provided').asSpringBootStarter('tomcat'))
 	}
 
 	PomAssert hasSpringBootStarterTest() {
-		hasDependency(new InitializrMetadata.Dependency(id: 'test', scope: 'test').asSpringBootStarter('test'))
+		hasDependency(new Dependency(id: 'test', scope: 'test').asSpringBootStarter('test'))
 	}
 
 	PomAssert hasSpringBootStarterDependency(String dependency) {
@@ -131,10 +131,10 @@ class PomAssert {
 	}
 
 	PomAssert hasDependency(String groupId, String artifactId, String version) {
-		hasDependency(new InitializrMetadata.Dependency(groupId: groupId, artifactId: artifactId, version: version))
+		hasDependency(new Dependency(groupId: groupId, artifactId: artifactId, version: version))
 	}
 
-	PomAssert hasDependency(InitializrMetadata.Dependency expected) {
+	PomAssert hasDependency(Dependency expected) {
 		def id = generateId(expected.groupId, expected.artifactId)
 		def dependency = dependencies[id]
 		assertNotNull "No dependency found with '$id' --> ${dependencies.keySet()}", dependency
@@ -191,7 +191,7 @@ class PomAssert {
 		for (int i = 0; i < nodes.length; i++) {
 			def item = nodes.item(i)
 			if (item instanceof Element) {
-				def dependency = new InitializrMetadata.Dependency()
+				def dependency = new Dependency()
 				def element = (Element) item
 				def groupId = element.getElementsByTagName('groupId')
 				if (groupId.length > 0) {
@@ -217,7 +217,7 @@ class PomAssert {
 	}
 
 	private static String generateId(String groupId, String artifactId) {
-		def dependency = new InitializrMetadata.Dependency()
+		def dependency = new Dependency()
 		dependency.groupId = groupId
 		dependency.artifactId = artifactId
 		dependency.generateId()

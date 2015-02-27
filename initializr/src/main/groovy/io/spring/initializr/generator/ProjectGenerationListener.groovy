@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.generator
 
 /**
- * Generate a JSON representation of the metadata.
+ * Interface to be implemented by components that need to be aware of project generation
+ * related events.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+public interface ProjectGenerationListener {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Invoked when a project has been generated for the specified {@link ProjectRequest}.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	void onGeneratedProject(ProjectRequest request)
 
 }

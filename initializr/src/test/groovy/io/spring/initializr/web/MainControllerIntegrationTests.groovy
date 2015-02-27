@@ -19,8 +19,8 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import groovy.json.JsonSlurper
-import io.spring.initializr.InitializrMetadata
-import io.spring.initializr.InitializrMetadataVersion
+import io.spring.initializr.mapper.InitializrMetadataVersion
+import io.spring.initializr.metadata.Dependency
 import org.json.JSONObject
 import org.junit.Ignore
 import org.junit.Test
@@ -70,7 +70,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void dependencyInRange() {
-		def biz = new InitializrMetadata.Dependency(id: 'biz', groupId: 'org.acme',
+		def biz = new Dependency(id: 'biz', groupId: 'org.acme',
 				artifactId: 'biz', version: '1.3.5', scope: 'runtime')
 		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
@@ -372,7 +372,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void downloadWithUnknownSpringBootStarter() { // Simple id are accepted as spring-boot-starter
-		 downloadZip('/starter.zip?style=foo').pomAssert().hasSpringBootStarterDependency('foo')
+		downloadZip('/starter.zip?style=foo').pomAssert().hasSpringBootStarterDependency('foo')
 	}
 
 	// Existing tests for backward compatibility

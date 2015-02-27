@@ -14,21 +14,41 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.mapper
-
-import io.spring.initializr.metadata.InitializrMetadata
+package io.spring.initializr.metadata
 
 /**
- * Generate a JSON representation of the metadata.
+ * Defines the supported service capability type.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+enum ServiceCapabilityType {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * A special type that defines the action to use.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	ACTION('action'),
+
+	/**
+	 * A simple text value with no option.
+	 */
+	TEXT('text'),
+
+	/**
+	 * A simple value to be chosen amongst the specified options.
+	 */
+	SINGLE_SELECT('single-select'),
+
+	/**
+	 * A hierarchical set of values (values in values) with the ability to
+	 * select multiple values.
+	 */
+	HIERARCHICAL_MULTI_SELECT('hierarchical-multi-select')
+
+	final String name
+
+	ServiceCapabilityType(String name) {
+		this.name = name
+	}
 
 }

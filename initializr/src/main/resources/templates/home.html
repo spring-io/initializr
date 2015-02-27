@@ -26,45 +26,45 @@
         </div>
     </div>
     <form id="form" class="form-horizontal" action="/starter.zip" method="get" role="form">
-        <input id="baseDir" name="baseDir" type="hidden" value="${defaults.artifactId}">
+        <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
         <div class="row">
             <div class="col-sm-6">
                 <h3>Project metadata</h3>
                 <div class="form-group">
                     <label for="groupId" class="col-md-3 control-label">Group</label>
                     <div class="col-md-8">
-                        <input id="groupId" class="form-control" type="text" value="${defaults.groupId}" name="groupId">
+                        <input id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="artifactId" class="col-md-3 control-label">Artifact</label>
                     <div class="col-md-8">
-                        <input id="artifactId" class="form-control" type="text" value="${defaults.artifactId}" name="artifactId">
+                        <input id="artifactId" class="form-control" type="text" value="${artifactId.content}" name="artifactId">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="name" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input id="name" class="form-control" type="text" value="${defaults.name}" name="name">
+                        <input id="name" class="form-control" type="text" value="${name.content}" name="name">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="description" class="col-md-3 control-label">Description</label>
                     <div class="col-md-8">
-                        <input id="description" class="form-control" type="text" value="${defaults.description}" name="description">
+                        <input id="description" class="form-control" type="text" value="${description.content}" name="description">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="packageName" class="col-md-3 control-label">Package Name</label>
                     <div class="col-md-8">
-                        <input id="packageName" class="form-control" type="text" value="${defaults.packageName}" name="packageName">
+                        <input id="packageName" class="form-control" type="text" value="${packageName.content}" name="packageName">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="type" class="col-md-3 control-label">Type</label>
                     <div class="col-md-8">
                         <select class="form-control" id="type" name="type">
-                            <% types.each { %>
+                            <% types.content.each { %>
                             <option data-action="${it.action}" value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
@@ -74,7 +74,7 @@
                     <label for="packaging" class="col-md-3 control-label">Packaging</label>
                     <div class="col-md-8">
                     <select class="form-control" id="packaging" name="packaging">
-                        <% packagings.each { %>
+                        <% packagings.content.each { %>
                         <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                         <% } %>
                     </select>
@@ -84,7 +84,7 @@
                     <label for="javaVersion" class="col-md-3 control-label">Java Version</label>
                     <div class="col-md-8">
                         <select class="form-control" name="javaVersion" id="javaVersion">
-                            <% javaVersions.each { %>
+                            <% javaVersions.content.each { %>
                             <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
@@ -94,7 +94,7 @@
                     <label for="language" class="col-md-3 control-label">Language</label>
                     <div class="col-md-8">
                         <select class="form-control" name="language" id="language">
-                            <% languages.each { %>
+                            <% languages.content.each { %>
                             <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
@@ -104,7 +104,7 @@
                     <label for="bootVersion" class="col-md-3 control-label">Spring Boot Version</label>
                     <div class="col-md-8">
                         <select class="form-control" name="bootVersion" id="bootVersion">
-                            <% bootVersions.each { %>
+                            <% bootVersions.content.each { %>
                             <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
@@ -113,7 +113,7 @@
             </div>
             <div id="dependencies" class="col-sm-6">
                 <h3>Project dependencies</h3>
-                <% dependencies.each { %>
+                <% dependencies.content.each { %>
                 <div class="form-group col-xs-6">
                 <h4>${it.name}</h4>
                     <% it.content.each { %>

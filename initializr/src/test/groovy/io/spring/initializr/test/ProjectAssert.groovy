@@ -16,8 +16,6 @@
 
 package io.spring.initializr.test
 
-import io.spring.initializr.InitializrMetadata
-
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
@@ -151,7 +149,7 @@ class ProjectAssert {
 	}
 
 	private static generateDefaultApplicationName() {
-		InitializrMetadata.Defaults.DEFAULT_NAME.capitalize() + 'Application'
+		'DemoApplication'
 	}
 
 }

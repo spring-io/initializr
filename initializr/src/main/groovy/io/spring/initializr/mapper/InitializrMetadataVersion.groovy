@@ -16,19 +16,35 @@
 
 package io.spring.initializr.mapper
 
-import io.spring.initializr.metadata.InitializrMetadata
+import org.springframework.http.MediaType
 
 /**
- * Generate a JSON representation of the metadata.
+ * Define the supported meta-data version.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-interface InitializrMetadataJsonMapper {
+enum InitializrMetadataVersion {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * HAL-compliant metadata.
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	V2('application/vnd.initializr.v2+json'),
+
+	/**
+	 * Add 'versionRange' attribute to any dependency to specify which
+	 * Spring Boot versions are compatible with it.
+	 */
+	V2_1('application/vnd.initializr.v2.1+json')
+
+	private final MediaType mediaType;
+
+	InitializrMetadataVersion(String mediaType) {
+		this.mediaType = MediaType.parseMediaType(mediaType)
+	}
+
+	MediaType getMediaType() {
+		return mediaType
+	}
 
 }
