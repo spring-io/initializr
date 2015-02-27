@@ -67,7 +67,7 @@ class InitializrMetadata {
 
 	private final Map<String, Dependency> indexedDependencies = [:]
 	
-	@Autowired
+	@Autowired(required = false)
 	List<InitializrMetadataCustomizer> customizers = []
 
 	/**
