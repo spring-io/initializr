@@ -1,0 +1,143 @@
+{
+  "configuration": {
+    "env": {
+      "forceSsl": false
+    }
+  },
+  "dependencies": {
+    "id": "dependencies",
+    "type": "HIERARCHICAL_MULTI_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "Core",
+        "content": [
+          {
+            "name": "test",
+            "id": "test",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-test"
+          }
+        ]
+      }
+      ]
+  },
+  "types": {
+    "id": "type",
+    "type": "ACTION",
+    "description": null,
+    "content": [
+      {
+        "name": "Maven POM",
+        "id": "maven-build",
+        "description": null,
+        "stsId": "pom.xml",
+        "action": "/pom.xml",
+        "tags": {
+          "build": "maven",
+          "format": "build"
+        },
+        "default": false
+      }
+    ]
+  },
+  "bootVersions": {
+    "id": "bootVersion",
+    "type": "SINGLE_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "1.1.4",
+        "id": "1.1.4.RELEASE",
+        "default": true
+      },
+      {
+        "name": "1.0.2",
+        "id": "1.0.2.RELEASE",
+        "default": false
+      }
+    ]
+  },
+  "packagings": {
+    "id": "packaging",
+    "type": "SINGLE_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "Jar",
+        "id": "jar",
+        "default": true
+      },
+      {
+        "name": "War",
+        "id": "war",
+        "default": false
+      }
+    ]
+  },
+  "javaVersions": {
+    "id": "javaVersion",
+    "type": "SINGLE_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "1.8",
+        "id": "1.8",
+        "default": true
+      }
+    ]
+  },
+  "languages": {
+    "id": "language",
+    "type": "SINGLE_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "Groovy",
+        "id": "groovy",
+        "default": false
+      },
+      {
+        "name": "Java",
+        "id": "java",
+        "default": true
+      }
+    ]
+  },
+  "name": {
+    "id": "name",
+    "type": "TEXT",
+    "description": null,
+    "content": "meta-data-merge"
+  },
+  "description": {
+    "id": "description",
+    "type": "TEXT",
+    "description": null,
+    "content": "Demo project for meta-data merge"
+  },
+  "groupId": {
+    "id": "groupId",
+    "type": "TEXT",
+    "description": null,
+    "content": "org.acme"
+  },
+  "artifactId": {
+    "id": "artifactId",
+    "type": "TEXT",
+    "description": null,
+    "content": "meta-data"
+  },
+  "version": {
+    "id": "version",
+    "type": "TEXT",
+    "description": null,
+    "content": "1.0.0-SNAPSHOT"
+  },
+  "packageName": {
+    "id": "packageName",
+    "type": "TEXT",
+    "description": null,
+    "content": "org.acme.demo"
+  }
+}

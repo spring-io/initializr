@@ -20,6 +20,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertSame
 
@@ -81,6 +83,22 @@ class DependenciesCapabilityTest {
 		thrown.expect(IllegalArgumentException)
 		thrown.expectMessage('alias2')
 		capability.validate()
+	}
+
+	@Test
+	void mergeAddEntry() {
+		DependenciesCapability capability = createDependenciesCapability('foo',
+				new Dependency(id: 'first'), new Dependency(id: 'second'))
+
+		DependenciesCapability anotherCapability = createDependenciesCapability('foo',
+				new Dependency(id: 'bar'), new Dependency(id: 'biz'))
+		anotherCapability.content << createDependencyGroup('bar', new Dependency(id: 'third'))
+
+		capability.merge(anotherCapability)
+		assertEquals 2, capability.content.size()
+		assertNotNull capability.get('first')
+		assertNotNull capability.get('second')
+		assertNotNull capability.get('third')
 	}
 
 	private static DependenciesCapability createDependenciesCapability(String groupName, Dependency... dependencies) {

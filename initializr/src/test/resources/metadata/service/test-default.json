@@ -1,0 +1,296 @@
+{
+  "artifactId": {
+    "content": "demo",
+    "description": null,
+    "id": "artifactId",
+    "type": "TEXT"
+  },
+  "bootVersions": {
+    "content": [
+      {
+        "default": false,
+        "id": "1.2.0.BUILD-SNAPSHOT",
+        "name": "Latest SNAPSHOT"
+      },
+      {
+        "default": true,
+        "id": "1.1.4.RELEASE",
+        "name": "1.1.4"
+      },
+      {
+        "default": false,
+        "id": "1.0.2.RELEASE",
+        "name": "1.0.2"
+      }
+    ],
+    "description": null,
+    "id": "bootVersion",
+    "type": "SINGLE_SELECT"
+  },
+  "configuration": {
+    "env": {
+      "artifactRepository": "https://repo.spring.io/release/",
+      "fallbackApplicationName": "Application",
+      "forceSsl": true,
+      "invalidApplicationNames": [
+        "SpringApplication",
+        "SpringBootApplication"
+      ],
+      "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"
+    }
+  },
+  "dependencies": {
+    "content": [
+      {
+        "content": [
+          {
+            "aliases": [],
+            "artifactId": "spring-boot-starter-web",
+            "description": "Web dependency description",
+            "facets": ["web"],
+            "groupId": "org.springframework.boot",
+            "id": "web",
+            "name": "Web",
+            "scope": "compile",
+            "version": null,
+            "versionRange": null
+          },
+          {
+            "aliases": [],
+            "artifactId": "spring-boot-starter-security",
+            "description": null,
+            "facets": [],
+            "groupId": "org.springframework.boot",
+            "id": "security",
+            "name": "Security",
+            "scope": "compile",
+            "version": null,
+            "versionRange": null
+          },
+          {
+            "aliases": ["jpa"],
+            "artifactId": "spring-boot-starter-data-jpa",
+            "description": null,
+            "facets": [],
+            "groupId": "org.springframework.boot",
+            "id": "data-jpa",
+            "name": "Data JPA",
+            "scope": "compile",
+            "version": null,
+            "versionRange": null
+          }
+        ],
+        "name": "Core"
+      },
+      {
+        "content": [
+          {
+            "aliases": [],
+            "artifactId": "foo",
+            "description": null,
+            "facets": [],
+            "groupId": "org.acme",
+            "id": "org.acme:foo",
+            "name": "Foo",
+            "scope": "compile",
+            "version": "1.3.5",
+            "versionRange": null
+          },
+          {
+            "aliases": [],
+            "artifactId": "bar",
+            "description": null,
+            "facets": [],
+            "groupId": "org.acme",
+            "id": "org.acme:bar",
+            "name": "Bar",
+            "scope": "compile",
+            "version": "2.1.0",
+            "versionRange": null
+          },
+          {
+            "aliases": [],
+            "artifactId": "biz",
+            "description": null,
+            "facets": [],
+            "groupId": "org.acme",
+            "id": "org.acme:biz",
+            "name": "Biz",
+            "scope": "runtime",
+            "version": "1.3.5",
+            "versionRange": "1.2.0.BUILD-SNAPSHOT"
+          },
+          {
+            "aliases": [],
+            "artifactId": "bur",
+            "description": null,
+            "facets": [],
+            "groupId": "org.acme",
+            "id": "org.acme:bur",
+            "name": "Bur",
+            "scope": "test",
+            "version": "2.1.0",
+            "versionRange": "[1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)"
+          },
+          {
+            "aliases": [],
+            "artifactId": "my-api",
+            "description": null,
+            "facets": [],
+            "groupId": "org.acme",
+            "id": "my-api",
+            "name": "My API",
+            "scope": "provided",
+            "version": null,
+            "versionRange": null
+          }
+        ],
+        "name": "Other"
+      }
+    ],
+    "description": null,
+    "id": "dependencies",
+    "type": "HIERARCHICAL_MULTI_SELECT"
+  },
+  "description": {
+    "content": "Demo project for Spring Boot",
+    "description": null,
+    "id": "description",
+    "type": "TEXT"
+  },
+  "groupId": {
+    "content": "org.test",
+    "description": null,
+    "id": "groupId",
+    "type": "TEXT"
+  },
+  "javaVersions": {
+    "content": [
+      {
+        "default": false,
+        "id": "1.6",
+        "name": "1.6"
+      },
+      {
+        "default": true,
+        "id": "1.7",
+        "name": "1.7"
+      },
+      {
+        "default": false,
+        "id": "1.8",
+        "name": "1.8"
+      }
+    ],
+    "description": null,
+    "id": "javaVersion",
+    "type": "SINGLE_SELECT"
+  },
+  "languages": {
+    "content": [
+      {
+        "default": false,
+        "id": "groovy",
+        "name": "Groovy"
+      },
+      {
+        "default": true,
+        "id": "java",
+        "name": "Java"
+      }
+    ],
+    "description": null,
+    "id": "language",
+    "type": "SINGLE_SELECT"
+  },
+  "name": {
+    "content": "demo",
+    "description": null,
+    "id": "name",
+    "type": "TEXT"
+  },
+  "packageName": {
+    "content": "demo",
+    "description": null,
+    "id": "packageName",
+    "type": "TEXT"
+  },
+  "packagings": {
+    "content": [
+      {
+        "default": true,
+        "id": "jar",
+        "name": "Jar"
+      },
+      {
+        "default": false,
+        "id": "war",
+        "name": "War"
+      }
+    ],
+    "description": null,
+    "id": "packaging",
+    "type": "SINGLE_SELECT"
+  },
+  "types": {
+    "content": [
+      {
+        "action": "/pom.xml",
+        "default": false,
+        "description": null,
+        "id": "maven-build",
+        "name": "Maven POM",
+        "stsId": "pom.xml",
+        "tags": {
+          "build": "maven",
+          "format": "build"
+        }
+      },
+      {
+        "action": "/starter.zip",
+        "default": true,
+        "description": null,
+        "id": "maven-project",
+        "name": "Maven Project",
+        "stsId": "starter.zip",
+        "tags": {
+          "build": "maven",
+          "format": "project"
+        }
+      },
+      {
+        "action": "/build.gradle",
+        "default": false,
+        "description": null,
+        "id": "gradle-build",
+        "name": "Gradle Config",
+        "stsId": "build.gradle",
+        "tags": {
+          "build": "gradle",
+          "format": "build"
+        }
+      },
+      {
+        "action": "/starter.zip",
+        "default": false,
+        "description": null,
+        "id": "gradle-project",
+        "name": "Gradle Project",
+        "stsId": "gradle.zip",
+        "tags": {
+          "build": "gradle",
+          "format": "project"
+        }
+      }
+    ],
+    "description": null,
+    "id": "type",
+    "type": "ACTION"
+  },
+  "version": {
+    "content": "0.0.1-SNAPSHOT",
+    "description": null,
+    "id": "version",
+    "type": "TEXT"
+  }
+}

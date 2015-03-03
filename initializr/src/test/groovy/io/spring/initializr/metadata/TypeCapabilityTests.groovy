@@ -48,4 +48,22 @@ class TypeCapabilityTests {
 		assertEquals second, capability.default
 	}
 
+	@Test
+	void mergeAddEntry() {
+		TypeCapability capability = new TypeCapability()
+		def foo = new Type(id: 'foo', default: false)
+		capability.content << foo
+
+		TypeCapability anotherCapability = new TypeCapability()
+		def foo2 =new Type(id: 'foo', default: true)
+		def bar =new Type(id: 'bar', default: true)
+		anotherCapability.content << foo2 << bar
+
+		capability.merge(anotherCapability)
+		assertEquals 2, capability.content.size()
+		assertEquals foo, capability.get('foo')
+		assertEquals bar, capability.get('bar')
+		assertEquals bar, capability.default
+	}
+
 }

@@ -16,8 +16,8 @@
 
 package io.spring.initializr.support
 
-import io.spring.initializr.InitializrConfiguration
 import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataBuilder
 import org.junit.Test
 
 import static org.junit.Assert.assertNotNull
@@ -28,7 +28,7 @@ import static org.junit.Assert.fail
  */
 class SpringBootMetadataReaderTests {
 
-	private final InitializrMetadata metadata = new InitializrMetadata(new InitializrConfiguration())
+	private final InitializrMetadata metadata = InitializrMetadataBuilder.create().build()
 
 	@Test
 	void readAvailableVersions() {

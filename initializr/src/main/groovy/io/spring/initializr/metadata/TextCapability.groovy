@@ -16,6 +16,9 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+
 /**
  * A {@link ServiceCapabilityType#TEXT text} capability.
  *
@@ -26,13 +29,21 @@ class TextCapability extends ServiceCapability<String> {
 
 	String content
 
-	TextCapability(String id) {
+	@JsonCreator
+	TextCapability(@JsonProperty("id") String id) {
 		super(id, ServiceCapabilityType.TEXT);
 	}
 
 	TextCapability(String id, String content) {
 		this(id)
 		this.content = content
+	}
+
+	@Override
+	void merge(String otherContent) {
+		if (otherContent) {
+			this.content = otherContent
+		}
 	}
 
 }

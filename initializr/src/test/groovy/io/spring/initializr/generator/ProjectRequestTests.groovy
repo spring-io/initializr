@@ -16,9 +16,8 @@
 
 package io.spring.initializr.generator
 
-import io.spring.initializr.InitializrConfiguration
 import io.spring.initializr.metadata.Dependency
-import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.test.InitializrMetadataTestBuilder
 import org.junit.Rule
 import org.junit.Test
@@ -37,7 +36,7 @@ class ProjectRequestTests {
 
 	@Test
 	void initializeProjectRequest() {
-		def metadata = new InitializrMetadata(new InitializrConfiguration())
+		def metadata = InitializrMetadataBuilder.create().build()
 		metadata.groupId.content = 'org.acme'
 		metadata.artifactId.content = 'my-project'
 		ProjectRequest request = new ProjectRequest()

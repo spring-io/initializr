@@ -49,6 +49,20 @@ class DependenciesCapability extends ServiceCapability<List<DependencyGroup>> {
 	}
 
 	void validate() {
+		index()
+	}
+
+	@Override
+	void merge(List<DependencyGroup> otherContent) {
+		otherContent.each { group ->
+			if (!content.find { group.name.equals(it.name)}) {
+				content << group
+			}
+		}
+		index()
+	}
+
+	private void index() {
 		indexedDependencies.clear()
 		content.each { group ->
 			group.content.each { dependency ->

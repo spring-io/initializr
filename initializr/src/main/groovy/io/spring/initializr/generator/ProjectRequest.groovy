@@ -66,7 +66,7 @@ class ProjectRequest {
 	 * Initializes this instance with the defaults defined in the specified {@link InitializrMetadata}.
 	 */
 	void initialize(InitializrMetadata metadata) {
-		metadata.defaults().forEach { key, value ->
+		metadata.defaults().each { key, value ->
 			if (owner.hasProperty(key)) {
 				owner.setProperty(key, value)
 			}

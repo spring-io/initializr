@@ -45,4 +45,13 @@ class TypeCapability extends ServiceCapability<List<Type>> {
 		return content.find { it.default }
 	}
 
+	@Override
+	void merge(List<Type> otherContent) {
+		otherContent.each {
+			if (!get(it.id)) {
+				content << it
+			}
+		}
+	}
+
 }

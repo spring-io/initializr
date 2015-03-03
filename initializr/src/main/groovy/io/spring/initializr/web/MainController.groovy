@@ -24,6 +24,7 @@ import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataVersion
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.InitializrMetadata
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -60,6 +61,12 @@ class MainController extends AbstractInitializrController {
 		def request = new ProjectRequest()
 		request.initialize(metadataProvider.get())
 		request
+	}
+
+	@RequestMapping(value = "/metadata/service", produces = ["application/json"])
+	@ResponseBody
+	InitializrMetadata config() {
+		metadataProvider.get()
 	}
 
 	@RequestMapping(value = "/", produces = ["text/plain"])

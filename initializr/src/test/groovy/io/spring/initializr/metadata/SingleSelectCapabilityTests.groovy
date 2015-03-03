@@ -49,4 +49,20 @@ class SingleSelectCapabilityTests {
 		assertEquals second, capability.default
 	}
 
+	@Test
+	void mergeAddEntry() {
+		SingleSelectCapability capability = new SingleSelectCapability('test')
+		def foo = new DefaultMetadataElement(id: 'foo', default: false)
+		capability.content << foo
+
+		SingleSelectCapability anotherCapability = new SingleSelectCapability('test')
+		def bar = new DefaultMetadataElement(id: 'bar', default: false)
+		anotherCapability.content << bar
+
+		capability.merge(anotherCapability)
+		assertEquals 2, capability.content.size()
+		assertEquals foo, capability.get('foo')
+		assertEquals bar, capability.get('bar')
+	}
+
 }

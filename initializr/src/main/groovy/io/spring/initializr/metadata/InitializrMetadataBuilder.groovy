@@ -16,10 +16,18 @@
 
 package io.spring.initializr.metadata
 
+import java.nio.charset.Charset
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.util.logging.Log
 import io.spring.initializr.InitializrConfiguration
 
+import org.springframework.core.io.Resource
+import org.springframework.util.StreamUtils
+
 /**
- * Builder for {@link InitializrMetadata}.
+ * Builder for {@link InitializrMetadata}. Allows to read meta-data from any arbitrary resource,
+ * including remote URLs.
  *
  * @author Stephane Nicoll
  * @since 1.0
@@ -28,19 +36,60 @@ import io.spring.initializr.InitializrConfiguration
 class InitializrMetadataBuilder {
 
 	private final List<InitializrMetadataCustomizer> customizers = []
-	private InitializrConfiguration configuration
+	private final InitializrConfiguration configuration
 
-	/**
-	 * Adds the specified configuration.
-	 * @see InitializrProperties
-	 */
-	InitializrMetadataBuilder fromConfiguration(InitializrProperties configuration) {
+	private InitializrMetadataBuilder(InitializrConfiguration configuration) {
 		this.configuration = configuration
-		withCustomizer(new InitializerPropertiesCustomizer(configuration))
 	}
 
 	/**
-	 * Adds a {@link InitializrMetadataCustomizer}. customizers are invoked in their
+	 * Create a builder instance from the specified {@link InitializrProperties}. Initialize
+	 * the configuration to use.
+	 * @see #withInitializrProperties(InitializrProperties)
+	 */
+	public static InitializrMetadataBuilder fromInitializrProperties(InitializrProperties configuration) {
+		new InitializrMetadataBuilder(configuration).withInitializrProperties(configuration)
+	}
+
+	/**
+	 * Create an empty builder instance with a default {@link InitializrConfiguration}
+	 */
+	public static InitializrMetadataBuilder create() {
+		new InitializrMetadataBuilder(new InitializrConfiguration())
+	}
+
+
+	/**
+	 * Add a {@link InitializrProperties} to be merged with other content. Merges the settings only
+	 * and not the configuration.
+	 * @see #withInitializrProperties(InitializrProperties, boolean)
+	 */
+	InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties) {
+		withInitializrProperties(properties, false)
+	}
+
+	/**
+	 * Add a {@link InitializrProperties} to be merged with other content.
+	 * @param properties the settings to merge onto this instance
+	 * @param mergeConfiguration specify if service configuration should be merged as well
+	 */
+	InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties, boolean mergeConfiguration) {
+		if (mergeConfiguration) {
+			this.configuration.merge(properties)
+		}
+		withCustomizer(new InitializerPropertiesCustomizer(properties))
+	}
+
+	/**
+	 * Add a {@link InitializrMetadata} to be merged with other content.
+	 * @param resource a resource to a json document describing the meta-data to include
+	 */
+	InitializrMetadataBuilder withInitializrMetadata(Resource resource) {
+		withCustomizer(new ResourceInitializrMetadataCustomizer(resource))
+	}
+
+	/**
+	 * Add a {@link InitializrMetadataCustomizer}. customizers are invoked in their
 	 * order of addition.
 	 * @see InitializrMetadataCustomizer
 	 */
@@ -54,12 +103,13 @@ class InitializrMetadataBuilder {
 	 */
 	InitializrMetadata build() {
 		InitializrConfiguration config = this.configuration ?: new InitializrConfiguration()
-		InitializrMetadata instance = createInstance(config)
+		InitializrMetadata metadata = createInstance(config)
 		for (InitializrMetadataCustomizer customizer : customizers) {
-			customizer.customize(instance)
+			customizer.customize(metadata)
 		}
-		instance.validate()
-		instance
+		applyDefaults(metadata)
+		metadata.validate()
+		metadata
 	}
 
 	/**
@@ -69,7 +119,25 @@ class InitializrMetadataBuilder {
 		new InitializrMetadata(configuration)
 	}
 
-	static class InitializerPropertiesCustomizer implements InitializrMetadataCustomizer {
+	/**
+	 * Apply defaults to capabilities that have no value.
+	 */
+	protected applyDefaults(InitializrMetadata metadata) {
+		if (!metadata.name.content) {
+			metadata.name.content = 'demo'
+		}
+		if (!metadata.description.content) {
+			metadata.description.content = 'Demo project for Spring Boot'
+		}
+		if (!metadata.groupId.content) {
+			metadata.groupId.content = 'org.test'
+		}
+		if (!metadata.version.content) {
+			metadata.version.content = '0.0.1-SNAPSHOT'
+		}
+	}
+
+	private static class InitializerPropertiesCustomizer implements InitializrMetadataCustomizer {
 
 		private final InitializrProperties properties
 
@@ -78,21 +146,42 @@ class InitializrMetadataBuilder {
 		}
 
 		@Override
-		void customize(InitializrMetadata metadata) { // NICE: merge
-			metadata.dependencies.content.addAll(properties.dependencies)
-			metadata.types.content.addAll(properties.types)
-			metadata.bootVersions.content.addAll(properties.bootVersions)
-			metadata.packagings.content.addAll(properties.packagings)
-			metadata.javaVersions.content.addAll(properties.javaVersions)
-			metadata.languages.content.addAll(properties.languages)
-			metadata.groupId.content = properties.defaults.groupId
-			metadata.artifactId.content = properties.defaults.artifactId
-			metadata.version.content = properties.defaults.version
-			metadata.name.content = properties.defaults.name
-			metadata.description.content = properties.defaults.description
-			metadata.packageName.content = properties.defaults.packageName
+		void customize(InitializrMetadata metadata) {
+			metadata.dependencies.merge(properties.dependencies)
+			metadata.types.merge(properties.types)
+			metadata.bootVersions.merge(properties.bootVersions)
+			metadata.packagings.merge(properties.packagings)
+			metadata.javaVersions.merge(properties.javaVersions)
+			metadata.languages.merge(properties.languages)
+			metadata.groupId.merge(properties.defaults.groupId)
+			metadata.artifactId.merge(properties.defaults.artifactId)
+			metadata.version.merge(properties.defaults.version)
+			metadata.name.merge(properties.defaults.name)
+			metadata.description.merge(properties.defaults.description)
+			metadata.packageName.merge(properties.defaults.packageName)
 		}
 	}
 
+	@Log
+	private static class ResourceInitializrMetadataCustomizer implements InitializrMetadataCustomizer {
+
+		private static final Charset UTF_8 = Charset.forName('UTF-8')
+
+		private final Resource resource
+
+		ResourceInitializrMetadataCustomizer(Resource resource) {
+			this.resource = resource
+		}
+
+		@Override
+		void customize(InitializrMetadata metadata) {
+			log.info("Loading initializr meta-data from $resource")
+			def content = StreamUtils.copyToString(resource.getInputStream(), UTF_8)
+			ObjectMapper objectMapper = new ObjectMapper()
+			def anotherMetadata = objectMapper.readValue(content, InitializrMetadata)
+			metadata.merge(anotherMetadata)
+		}
+
+	}
 
 }

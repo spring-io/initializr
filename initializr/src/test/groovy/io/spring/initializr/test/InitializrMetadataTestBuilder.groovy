@@ -32,7 +32,7 @@ import io.spring.initializr.metadata.Type
  */
 class InitializrMetadataTestBuilder {
 
-	private final InitializrMetadataBuilder builder = new InitializrMetadataBuilder()
+	private final InitializrMetadataBuilder builder = InitializrMetadataBuilder.create()
 
 	static InitializrMetadataTestBuilder withDefaults() {
 		new InitializrMetadataTestBuilder().addDefaults()

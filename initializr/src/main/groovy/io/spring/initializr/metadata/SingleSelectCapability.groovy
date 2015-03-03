@@ -16,6 +16,9 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+
 /**
  * A {@link ServiceCapabilityType#SINGLE_SELECT single select} capability.
  *
@@ -26,7 +29,8 @@ class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataEleme
 
 	final List<DefaultMetadataElement> content = []
 
-	SingleSelectCapability(String id) {
+	@JsonCreator
+	SingleSelectCapability(@JsonProperty("id") String id) {
 		super(id, ServiceCapabilityType.SINGLE_SELECT)
 	}
 
@@ -35,6 +39,23 @@ class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataEleme
 	 */
 	DefaultMetadataElement getDefault() {
 	   return content.find { it.default }
+	}
+
+	/**
+	 * Return the element with the specified id or {@code null} if no such
+	 * element exists.
+	 */
+	DefaultMetadataElement get(String id) {
+		return content.find { id.equals(it.id)}
+	}
+
+	@Override
+	void merge(List<DefaultMetadataElement> otherContent) {
+		otherContent.each {
+			if (!get(it.id)) {
+				content << it
+			}
+		}
 	}
 
 }

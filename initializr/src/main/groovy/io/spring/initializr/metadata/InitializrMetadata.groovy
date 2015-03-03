@@ -41,20 +41,44 @@ class InitializrMetadata {
 
 	final SingleSelectCapability languages = new SingleSelectCapability('language')
 
-	final TextCapability name = new TextCapability('name', 'demo')
+	final TextCapability name = new TextCapability('name')
 
-	final TextCapability description = new TextCapability('description', 'Demo project for Spring Boot')
+	final TextCapability description = new TextCapability('description')
 
-	final TextCapability groupId = new TextCapability('groupId', 'org.test')
+	final TextCapability groupId = new TextCapability('groupId')
 
 	final TextCapability artifactId = new ArtifactIdCapability(name)
 
-	final TextCapability version = new TextCapability('version', '0.0.1-SNAPSHOT')
+	final TextCapability version = new TextCapability('version')
 
 	final TextCapability packageName = new PackageCapability(name)
 
-	InitializrMetadata(InitializrConfiguration configuration) {
+	InitializrMetadata() {
+		this(new InitializrConfiguration())
+	}
+
+	protected InitializrMetadata(InitializrConfiguration configuration) {
 		this.configuration = configuration
+	}
+
+	/**
+	 * Merge this instance with the specified argument
+	 * @param other
+	 */
+	void merge(InitializrMetadata other) {
+		this.configuration.merge(other.configuration)
+		this.dependencies.merge(other.dependencies)
+		this.types.merge(other.types)
+		this.bootVersions.merge(other.bootVersions)
+		this.packagings.merge(other.packagings)
+		this.javaVersions.merge(other.javaVersions)
+		this.languages.merge(other.languages)
+		this.name.merge(other.name)
+		this.description.merge(other.description)
+		this.groupId.merge(other.groupId)
+		this.artifactId.merge(other.artifactId)
+		this.version.merge(other.version)
+		this.packageName.merge(other.packageName)
 	}
 
 	/**

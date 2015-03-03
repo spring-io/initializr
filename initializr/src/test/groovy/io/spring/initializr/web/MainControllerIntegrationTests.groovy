@@ -449,17 +449,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	private JSONObject readJson(String version) {
-		def resource = new ClassPathResource("metadata/test-default-$version" + ".json")
-		def stream = resource.inputStream
-		try {
-			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
-
-			// Let's parse the port as it is random
-			def content = json.replaceAll('@port@', String.valueOf(this.port))
-			new JSONObject(content)
-		} finally {
-			stream.close()
-		}
+		readJsonFrom("metadata/test-default-$version" + ".json")
 	}
 
 }

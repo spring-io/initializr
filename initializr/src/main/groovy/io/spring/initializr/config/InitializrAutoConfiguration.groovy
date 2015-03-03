@@ -82,7 +82,7 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	InitializrMetadata initializrMetadata(InitializrProperties properties) {
-		new InitializrMetadataBuilder().fromConfiguration(properties).build()
+		InitializrMetadataBuilder.fromInitializrProperties(properties).build()
 	}
 
 	@Bean

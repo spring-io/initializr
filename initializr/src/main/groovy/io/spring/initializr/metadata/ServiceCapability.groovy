@@ -16,6 +16,10 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+import org.springframework.util.Assert
+
 /**
  * Defines a capability of the initializr service. Each capability
  * is defined by a id and a {@link ServiceCapabilityType type}.
@@ -23,6 +27,7 @@ package io.spring.initializr.metadata
  * @author Stephane Nicoll
  * @since 1.0
  */
+@JsonIgnoreProperties(["default", "all"])
 abstract class ServiceCapability<T> {
 
 	final String id
@@ -41,6 +46,27 @@ abstract class ServiceCapability<T> {
 	 * vastly depends on the {@link ServiceCapability type} of the capability.
 	 */
 	abstract T getContent()
+
+	/**
+	 * Merge the content of this instance with the specified content.
+	 * @see #merge(io.spring.initializr.metadata.ServiceCapability)
+	 */
+	abstract void merge(T otherContent)
+
+	/**
+	 * Merge this capability with the specified argument. The service capabilities
+	 * should match (i.e have the same {@code id} and {@code type}). Sub-classes
+	 * may merge additional content.
+	 */
+	void merge(ServiceCapability<T> other) {
+		Assert.notNull(other, "Other must not be null")
+		Assert.state(this.id.equals(other.id))
+		Assert.state(this.type.equals(other.type))
+		if (other.description) {
+			this.description = other.description
+		}
+		merge(other.content)
+	}
 
 }
 

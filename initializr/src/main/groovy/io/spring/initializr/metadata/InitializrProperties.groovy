@@ -16,6 +16,7 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.spring.initializr.InitializrConfiguration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -27,6 +28,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * @since 1.0
  */
 @ConfigurationProperties(prefix = 'initializr', ignoreUnknownFields = false)
+@JsonIgnoreProperties(["dependencies", "types", "packagings", "javaVersions", "languages", "bootVersions", "defaults"])
 class InitializrProperties extends InitializrConfiguration {
 
 	final List<DependencyGroup> dependencies = []

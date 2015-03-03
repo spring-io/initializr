@@ -26,6 +26,10 @@ class InitializrConfiguration {
 
 	final Env env = new Env()
 
+	void merge(InitializrConfiguration other) {
+		env.merge(other.env)
+	}
+
 	/**
 	 * Generate a suitable application mame based on the specified name. If no suitable
 	 * application name can be generated from the specified {@code name}, the
@@ -114,6 +118,14 @@ class InitializrConfiguration {
 				artifactRepository = artifactRepository + '/'
 			}
 			this.artifactRepository = artifactRepository
+		}
+
+		void merge(Env other) {
+			artifactRepository = other.artifactRepository
+			springBootMetadataUrl = other.springBootMetadataUrl
+			fallbackApplicationName = other.fallbackApplicationName
+			invalidApplicationNames = other.invalidApplicationNames
+			forceSsl = other.forceSsl
 		}
 
 	}

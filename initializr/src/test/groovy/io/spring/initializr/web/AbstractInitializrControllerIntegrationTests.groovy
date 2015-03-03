@@ -16,11 +16,14 @@
 
 package io.spring.initializr.web
 
+import java.nio.charset.Charset
+
 import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.test.ProjectAssert
+import org.json.JSONObject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
@@ -30,6 +33,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -37,6 +41,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 
 import static org.junit.Assert.assertEquals
@@ -155,6 +160,20 @@ abstract class AbstractInitializrControllerIntegrationTests {
 			stream.close()
 		}
 		archiveFile
+	}
+
+	protected JSONObject readJsonFrom(String path) {
+		def resource = new ClassPathResource(path)
+		def stream = resource.inputStream
+		try {
+			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
+
+			// Let's parse the port as it is random
+			def content = json.replaceAll('@port@', String.valueOf(this.port))
+			new JSONObject(content)
+		} finally {
+			stream.close()
+		}
 	}
 
 
