@@ -1,7 +1,9 @@
 {
   "artifactId": {
     "content": "demo",
+    "description": "project coordinates (infer archive name)",
     "id": "artifactId",
+    "title": "Artifact",
     "type": "TEXT"
   },
   "bootVersions": {
@@ -22,7 +24,9 @@
         "name": "1.0.2"
       }
     ],
+    "description": "spring boot version",
     "id": "bootVersion",
+    "title": "Spring Boot Version",
     "type": "SINGLE_SELECT"
   },
   "configuration": {
@@ -130,17 +134,23 @@
         "name": "Other"
       }
     ],
+    "description": "dependency identifiers (comma-separated)",
     "id": "dependencies",
+    "title": "Project dependencies",
     "type": "HIERARCHICAL_MULTI_SELECT"
   },
   "description": {
     "content": "Demo project for Spring Boot",
+    "description": "project description",
     "id": "description",
+    "title": "Description",
     "type": "TEXT"
   },
   "groupId": {
     "content": "org.test",
+    "description": "project coordinates",
     "id": "groupId",
+    "title": "Group",
     "type": "TEXT"
   },
   "javaVersions": {
@@ -161,7 +171,9 @@
         "name": "1.8"
       }
     ],
+    "description": "language level",
     "id": "javaVersion",
+    "title": "Java Version",
     "type": "SINGLE_SELECT"
   },
   "languages": {
@@ -177,17 +189,23 @@
         "name": "Java"
       }
     ],
+    "description": "programming language",
     "id": "language",
+    "title": "Language",
     "type": "SINGLE_SELECT"
   },
   "name": {
     "content": "demo",
+    "description": "project name (infer application name)",
     "id": "name",
+    "title": "Name",
     "type": "TEXT"
   },
   "packageName": {
     "content": "demo",
+    "description": "root package",
     "id": "packageName",
+    "title": "Package Name",
     "type": "TEXT"
   },
   "packagings": {
@@ -203,7 +221,9 @@
         "name": "War"
       }
     ],
+    "description": "project packaging",
     "id": "packaging",
+    "title": "Packaging",
     "type": "SINGLE_SELECT"
   },
   "types": {
@@ -257,12 +277,16 @@
         }
       }
     ],
+    "description": "project type",
     "id": "type",
+    "title": "Type",
     "type": "ACTION"
   },
   "version": {
     "content": "0.0.1-SNAPSHOT",
+    "description": "project version",
     "id": "version",
+    "title": "Version",
     "type": "TEXT"
   }
 }

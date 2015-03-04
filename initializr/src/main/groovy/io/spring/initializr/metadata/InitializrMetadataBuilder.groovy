@@ -152,12 +152,12 @@ class InitializrMetadataBuilder {
 			metadata.packagings.merge(properties.packagings)
 			metadata.javaVersions.merge(properties.javaVersions)
 			metadata.languages.merge(properties.languages)
-			metadata.groupId.merge(properties.defaults.groupId)
-			metadata.artifactId.merge(properties.defaults.artifactId)
-			metadata.version.merge(properties.defaults.version)
-			metadata.name.merge(properties.defaults.name)
-			metadata.description.merge(properties.defaults.description)
-			metadata.packageName.merge(properties.defaults.packageName)
+			properties.groupId.apply(metadata.groupId)
+			properties.artifactId.apply(metadata.artifactId)
+			properties.version.apply(metadata.version)
+			properties.name.apply(metadata.name)
+			properties.description.apply(metadata.description)
+			properties.packageName.apply(metadata.packageName)
 		}
 	}
 

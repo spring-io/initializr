@@ -36,11 +36,26 @@ abstract class ServiceCapability<T> {
 
 	final ServiceCapabilityType type
 
+	/**
+	 * A title of the capability, used as a header text or label.
+	 */
+	String title
+
+	/**
+	 * A description of the capability, used in help usage or UI tooltips.
+	 */
 	String description
 
 	protected ServiceCapability(String id, ServiceCapabilityType type) {
 		this.id = id
 		this.type = type
+	}
+
+	protected ServiceCapability(String id, ServiceCapabilityType type, String title, String description) {
+		this.id = id
+		this.type = type
+		this.title = title
+		this.description = description
 	}
 
 	/**
@@ -64,6 +79,9 @@ abstract class ServiceCapability<T> {
 		Assert.notNull(other, "Other must not be null")
 		Assert.state(this.id.equals(other.id))
 		Assert.state(this.type.equals(other.type))
+		if (other.title) {
+			this.title = other.title
+		}
 		if (other.description) {
 			this.description = other.description
 		}

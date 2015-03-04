@@ -31,12 +31,11 @@ class TextCapability extends ServiceCapability<String> {
 
 	@JsonCreator
 	TextCapability(@JsonProperty("id") String id) {
-		super(id, ServiceCapabilityType.TEXT);
+		this(id, null, null)
 	}
 
-	TextCapability(String id, String content) {
-		this(id)
-		this.content = content
+	TextCapability(String id, String title, String description) {
+		super(id, ServiceCapabilityType.TEXT, title, description)
 	}
 
 	@Override

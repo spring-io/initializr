@@ -31,7 +31,11 @@ class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataEleme
 
 	@JsonCreator
 	SingleSelectCapability(@JsonProperty("id") String id) {
-		super(id, ServiceCapabilityType.SINGLE_SELECT)
+		this(id, null, null)
+	}
+
+	SingleSelectCapability(String id, String title, String description) {
+		super(id, ServiceCapabilityType.SINGLE_SELECT, title, description)
 	}
 
 	/**

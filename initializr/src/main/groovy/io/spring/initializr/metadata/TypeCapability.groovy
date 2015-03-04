@@ -27,7 +27,7 @@ class TypeCapability extends ServiceCapability<List<Type>> {
 	final List<Type> content = []
 
 	TypeCapability() {
-		super('type', ServiceCapabilityType.ACTION)
+		super('type', ServiceCapabilityType.ACTION, 'Type', 'project type')
 	}
 
 	/**

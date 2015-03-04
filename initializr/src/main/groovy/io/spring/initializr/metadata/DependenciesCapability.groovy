@@ -30,7 +30,8 @@ class DependenciesCapability extends ServiceCapability<List<DependencyGroup>> {
 	private final Map<String, Dependency> indexedDependencies = [:]
 
 	DependenciesCapability() {
-		super('dependencies', ServiceCapabilityType.HIERARCHICAL_MULTI_SELECT)
+		super('dependencies', ServiceCapabilityType.HIERARCHICAL_MULTI_SELECT,
+				'Project dependencies', 'dependency identifiers (comma-separated)')
 	}
 
 	/**

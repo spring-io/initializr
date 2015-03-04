@@ -93,7 +93,7 @@ class CommandLineHelpGenerator {
 		defaults['baseDir'] = 'no base dir'
 		defaults['dependencies'] = 'none'
 
-		Map parametersDescription = buildParametersDescription()
+		Map parametersDescription = buildParametersDescription(metadata)
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = ["Parameter", "Description", "Default value"]
 		defaults.sort().keySet().eachWithIndex { id, i ->
@@ -117,7 +117,7 @@ class CommandLineHelpGenerator {
 
 
 		Map defaults = metadata.defaults()
-		Map parametersDescription = buildParametersDescription()
+		Map parametersDescription = buildParametersDescription(metadata)
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = ["Id", "Description", "Default value"]
 		defaults.keySet().eachWithIndex { id, i ->
@@ -165,24 +165,16 @@ class CommandLineHelpGenerator {
 		TableGenerator.generate(typeTable)
 	}
 
-	protected Map buildParametersDescription() {
+	protected Map buildParametersDescription(InitializrMetadata metadata) {
 		Map result = [:]
-		result['groupId'] = 'project coordinates'
-		result['artifactId'] = 'project coordinates (infer archive name)'
-		result['version'] = 'project version'
-		result['name'] = 'project name (infer application name)'
-		result['description'] = 'project description'
-		result['packageName'] = 'root package'
+		metadata.properties.each { key, value ->
+			if (value.hasProperty('description') && value.hasProperty('id')) {
+				result[value.id] = value['description']
+			}
+		}
 		result['applicationName'] = 'application name'
-		result['dependencies'] = 'dependency identifiers (comma separated)'
-		result['type'] = 'project type'
-		result['packaging'] = 'project packaging'
-		result['language'] = 'programming language'
-		result['javaVersion'] = 'language level'
-		result['bootVersion'] = 'spring boot version'
 		result['baseDir'] = 'base directory to create in the archive'
 		result
-
 	}
 
 	private static String buildVersionRangeRepresentation(String range) {

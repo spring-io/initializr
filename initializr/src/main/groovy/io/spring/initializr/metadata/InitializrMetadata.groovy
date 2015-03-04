@@ -30,23 +30,27 @@ class InitializrMetadata {
 
 	final TypeCapability types = new TypeCapability()
 
-	final SingleSelectCapability bootVersions = new SingleSelectCapability('bootVersion')
+	final SingleSelectCapability bootVersions =
+			new SingleSelectCapability('bootVersion', 'Spring Boot Version', 'spring boot version')
 
-	final SingleSelectCapability packagings = new SingleSelectCapability('packaging')
+	final SingleSelectCapability packagings =
+			new SingleSelectCapability('packaging', 'Packaging', 'project packaging')
 
-	final SingleSelectCapability javaVersions = new SingleSelectCapability('javaVersion')
+	final SingleSelectCapability javaVersions =
+			new SingleSelectCapability('javaVersion', 'Java Version', 'language level')
 
-	final SingleSelectCapability languages = new SingleSelectCapability('language')
+	final SingleSelectCapability languages =
+			new SingleSelectCapability('language', 'Language', 'programming language')
 
-	final TextCapability name = new TextCapability('name')
+	final TextCapability name = new TextCapability('name', 'Name', 'project name (infer application name)')
 
-	final TextCapability description = new TextCapability('description')
+	final TextCapability description = new TextCapability('description', 'Description', 'project description' )
 
-	final TextCapability groupId = new TextCapability('groupId')
+	final TextCapability groupId = new TextCapability('groupId', 'Group', 'project coordinates')
 
 	final TextCapability artifactId = new ArtifactIdCapability(name)
 
-	final TextCapability version = new TextCapability('version')
+	final TextCapability version = new TextCapability('version', 'Version', 'project version')
 
 	final TextCapability packageName = new PackageCapability(name)
 
@@ -130,7 +134,7 @@ class InitializrMetadata {
 		private final TextCapability nameCapability
 
 		ArtifactIdCapability(TextCapability nameCapability) {
-			super('artifactId')
+			super('artifactId', 'Artifact', 'project coordinates (infer archive name)')
 			this.nameCapability = nameCapability
 		}
 
@@ -145,7 +149,7 @@ class InitializrMetadata {
 		private final TextCapability nameCapability
 
 		PackageCapability(TextCapability nameCapability) {
-			super('packageName')
+			super('packageName', 'Package Name', 'root package')
 			this.nameCapability = nameCapability
 		}
 

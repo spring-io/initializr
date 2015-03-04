@@ -31,37 +31,37 @@
             <div class="col-sm-6">
                 <h3>Project metadata</h3>
                 <div class="form-group">
-                    <label for="groupId" class="col-md-3 control-label">Group</label>
+                    <label for="groupId" class="col-md-3 control-label">${groupId.title}</label>
                     <div class="col-md-8">
                         <input id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="artifactId" class="col-md-3 control-label">Artifact</label>
+                    <label for="artifactId" class="col-md-3 control-label">${artifactId.title}</label>
                     <div class="col-md-8">
                         <input id="artifactId" class="form-control" type="text" value="${artifactId.content}" name="artifactId">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="col-md-3 control-label">Name</label>
+                    <label for="name" class="col-md-3 control-label">${name.title}</label>
                     <div class="col-md-8">
                         <input id="name" class="form-control" type="text" value="${name.content}" name="name">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="description" class="col-md-3 control-label">Description</label>
+                    <label for="description" class="col-md-3 control-label">${description.title}</label>
                     <div class="col-md-8">
                         <input id="description" class="form-control" type="text" value="${description.content}" name="description">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="packageName" class="col-md-3 control-label">Package Name</label>
+                    <label for="packageName" class="col-md-3 control-label">${packageName.title}</label>
                     <div class="col-md-8">
                         <input id="packageName" class="form-control" type="text" value="${packageName.content}" name="packageName">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="type" class="col-md-3 control-label">Type</label>
+                    <label for="type" class="col-md-3 control-label">${types.title}</label>
                     <div class="col-md-8">
                         <select class="form-control" id="type" name="type">
                             <% types.content.each { %>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="packaging" class="col-md-3 control-label">Packaging</label>
+                    <label for="packaging" class="col-md-3 control-label">${packagings.title}</label>
                     <div class="col-md-8">
                     <select class="form-control" id="packaging" name="packaging">
                         <% packagings.content.each { %>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="javaVersion" class="col-md-3 control-label">Java Version</label>
+                    <label for="javaVersion" class="col-md-3 control-label">${javaVersions.title}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="javaVersion" id="javaVersion">
                             <% javaVersions.content.each { %>
@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="language" class="col-md-3 control-label">Language</label>
+                    <label for="language" class="col-md-3 control-label">${languages.title}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="language" id="language">
                             <% languages.content.each { %>
@@ -101,7 +101,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="bootVersion" class="col-md-3 control-label">Spring Boot Version</label>
+                    <label for="bootVersion" class="col-md-3 control-label">${bootVersions.title}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="bootVersion" id="bootVersion">
                             <% bootVersions.content.each { %>
@@ -112,7 +112,7 @@
                 </div>
             </div>
             <div id="dependencies" class="col-sm-6">
-                <h3>Project dependencies</h3>
+                <h3>${dependencies.title}</h3>
                 <% dependencies.content.each { %>
                 <div class="form-group col-xs-6">
                 <h4>${it.name}</h4>

@@ -26,24 +26,35 @@ import static org.junit.Assert.assertEquals
 class TextCapabilityTests {
 
 	@Test
-	void mergeContent() {
-		TextCapability capability = new TextCapability('foo', '1234')
-		capability.merge(new TextCapability('foo', '4567'))
+	void mergeValue() {
+		TextCapability capability = new TextCapability('foo')
+		capability.content = '1234'
+		def another = new TextCapability('foo')
+		another.content = '4567'
+		capability.merge(another)
 		assertEquals 'foo', capability.id
 		assertEquals ServiceCapabilityType.TEXT, capability.type
 		assertEquals '4567', capability.content
 	}
 
 	@Test
-	void mergeDescription() {
-		TextCapability capability = new TextCapability('foo', '1234')
-		def other = new TextCapability('foo', '')
-		other.description = 'my description'
-		capability.merge(other)
+	void mergeTitle() {
+		TextCapability capability = new TextCapability('foo', 'Foo', 'my desc')
+		capability.merge(new TextCapability('foo', 'AnotherFoo', ''))
 		assertEquals 'foo', capability.id
 		assertEquals ServiceCapabilityType.TEXT, capability.type
-		assertEquals '1234', capability.content
-		assertEquals 'my description', capability.description
+		assertEquals 'AnotherFoo', capability.title
+		assertEquals 'my desc', capability.description
+	}
+
+	@Test
+	void mergeDescription() {
+		TextCapability capability = new TextCapability('foo', 'Foo', 'my desc')
+		capability.merge(new TextCapability('foo', '', 'another desc'))
+		assertEquals 'foo', capability.id
+		assertEquals ServiceCapabilityType.TEXT, capability.type
+		assertEquals 'Foo', capability.title
+		assertEquals 'another desc', capability.description
 	}
 
 }
