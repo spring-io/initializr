@@ -7,6 +7,9 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/88[#88]: expose service meta-data so that another
+service can use that as a base configuration.
+* https://github.com/spring-io/initializr/issues/87[#87]: more flexible meta-data.
 * https://github.com/spring-io/initializr/issues/83[#83]: add dependency scope support.
 * https://github.com/spring-io/initializr/issues/81[#81]: allow baseDir parameter with sub-directories.
 * https://github.com/spring-io/initializr/issues/80[#80]: upgrade to Gradle 2.3.
