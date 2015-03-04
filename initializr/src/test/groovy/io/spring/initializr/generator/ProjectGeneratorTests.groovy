@@ -233,6 +233,33 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void mavenPomWithCustomVersion() {
+		def whatever = new Dependency(id: 'whatever', groupId: 'org.acme', artifactId: 'whatever', version: '1.2.3')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('foo', whatever).build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('whatever', 'data-jpa', 'web')
+		generateMavenPom(request).hasDependency(whatever)
+				.hasSpringBootStarterDependency('data-jpa')
+				.hasSpringBootStarterDependency('web')
+	}
+
+	@Test
+	void gradleBuildWithCustomVersion() {
+		def whatever = new Dependency(id: 'whatever', groupId: 'org.acme', artifactId: 'whatever', version: '1.2.3')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('foo', whatever).build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('whatever', 'data-jpa', 'web')
+		generateGradleBuild(request)
+				.contains("compile(\"org.springframework.boot:spring-boot-starter-web\")")
+				.contains("compile(\"org.springframework.boot:spring-boot-starter-data-jpa\")")
+				.contains("compile(\"org.acme:whatever:1.2.3\")")
+	}
+
+	@Test
 	void mavenPomWithCustomScope() {
 		def h2 = new Dependency(id: 'h2', groupId: 'org.h2', artifactId: 'h2', scope: 'runtime')
 		def hamcrest = new Dependency(id: 'hamcrest', groupId: 'org.hamcrest',

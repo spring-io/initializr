@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/82[#82]: fix version support for gradle build
 * https://github.com/spring-io/initializr/issues/88[#88]: expose service meta-data so that another
 service can use that as a base configuration.
 * https://github.com/spring-io/initializr/issues/87[#87]: more flexible meta-data.

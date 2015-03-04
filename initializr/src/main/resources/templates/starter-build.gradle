@@ -40,13 +40,13 @@ repositories {
 }
 <% } %>
 dependencies {<% compileDependencies.each { %>
-    compile("${it.groupId}:${it.artifactId}")<% } %><% if (language=='groovy') { %>
-	compile("org.codehaus.groovy:groovy")<% } %><% runtimeDependencies.each { %>
-	runtime("${it.groupId}:${it.artifactId}")<% } %><% if (packaging=='war') { %>
+    compile("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %><% if (language=='groovy') { %>
+    compile("org.codehaus.groovy:groovy")<% } %><% runtimeDependencies.each { %>
+    runtime("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %><% if (packaging=='war') { %>
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %><% providedDependencies.each { %>
-	providedRuntime("${it.groupId}:${it.artifactId}")<% } %>
+    providedRuntime("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %>
     testCompile("org.springframework.boot:spring-boot-starter-test") <% testDependencies.each { %>
-	testCompile("${it.groupId}:${it.artifactId}")<% } %>
+    testCompile("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %>
 }
 
 eclipse {
