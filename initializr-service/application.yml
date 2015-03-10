@@ -2,9 +2,9 @@ info:
   project:
     name: Spring Start
     version: 0.3.1
-# remember to update static/install.sh as well:
+  # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.2.1.RELEASE
+    version: 1.2.2.RELEASE
 
 initializr:
   dependencies:
@@ -47,7 +47,7 @@ initializr:
         - name: HATEOAS
           id: hateoas
           description: Support for HATEOAS-based RESTful services
-          versionRange: 1.2.2.BUILD-SNAPSHOT
+          versionRange: 1.2.2.RELEASE
         - name: Mobile
           id: mobile
           description: Support for spring-mobile
@@ -76,7 +76,7 @@ initializr:
         - name: Mustache
           id: mustache
           description: Support for the Mustache templating engine
-          versionRange: 1.2.2.BUILD-SNAPSHOT
+          versionRange: 1.2.2.RELEASE
           facets:
             - web
     - name: Data
@@ -124,7 +124,7 @@ initializr:
           groupId: org.apache.derby
           artifactId: derby
           scope: runtime
-          versionRange: 1.2.2.BUILD-SNAPSHOT
+          versionRange: 1.2.2.RELEASE
         - name: MySQL
           id: mysql
           description: Support for the MySQL jdbc driver
@@ -232,12 +232,12 @@ initializr:
       default: true
   bootVersions:
     - name : Latest SNAPSHOT
-      id: 1.2.2.BUILD-SNAPSHOT
+      id: 1.2.3.BUILD-SNAPSHOT
       default: false
-    - name: 1.2.1
-      id: 1.2.1.RELEASE
+    - name: 1.2.2
+      id: 1.2.2.RELEASE
       default: true
-    - name: 1.1.10
-      id: 1.1.10.RELEASE
+    - name: 1.1.11
+      id: 1.1.11.RELEASE
       default: false
 
