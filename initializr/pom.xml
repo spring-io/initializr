@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.spring.initalizr</groupId>
@@ -12,6 +12,7 @@
 		<selenium.version>2.43.1</selenium.version>
 		<spring.boot.version>1.2.2.RELEASE</spring.boot.version>
 		<java.version>1.7</java.version>
+		<gmavenplus.version>1.4</gmavenplus.version>
 	</properties>
 
 	<dependencies>
@@ -143,6 +144,13 @@
 				<artifactId>selenium-firefox-driver</artifactId>
 				<version>${selenium.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>${gmavenplus.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -199,8 +207,43 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.16</version>
 				</plugin>
+				<!-- gmavenplus -->
+				<plugin>
+					<groupId>org.codehaus.gmavenplus</groupId>
+					<artifactId>gmavenplus-plugin</artifactId>
+					<version>${gmavenplus.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>testCompile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<invokeDynamic>false</invokeDynamic>
+						<sources>
+							<!-- here /src/main/groovy -->
+							<source>
+								<directory>%{project.basedir}/src/main/groovy</directory>
+								<includes>
+									<include>**/*.groovy</include>
+								</includes>
+							</source>
+						</sources>
+						<testSources>
+							<testSource>
+								<directory>${project.basedir}/src/test/groovy</directory>
+								<includes>
+									<include>**/*.groovy</include>
+								</includes>
+							</testSource>
+						</testSources>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
 	</build>
 
 	<profiles>
