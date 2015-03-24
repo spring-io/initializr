@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.spring.initializr.config.InitializrAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.spring.initializr.config.InitializrAutoConfiguration,\
+io.spring.initializr.config.InitializrMetricsExporterAutoConfiguration

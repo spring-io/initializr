@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
 /**
  * Configuration of the initializr service.
  *

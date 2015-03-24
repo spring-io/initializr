@@ -16,6 +16,7 @@ tmp*
 initializer-service/spring
 grapes
 spring.zip
+*.jar
 repository/
 .idea
 *.iml
