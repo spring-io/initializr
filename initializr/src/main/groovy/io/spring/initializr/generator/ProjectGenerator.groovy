@@ -91,7 +91,8 @@ class ProjectGenerator {
 			def pom = new String(doGenerateMavenPom(model))
 			new File(dir, 'pom.xml').write(pom)
 		}
-
+		write(new File(dir, 'README.md'), 'README.md', model)
+		
 		def applicationName = request.applicationName
 		def language = request.language
 

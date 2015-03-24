@@ -148,6 +148,9 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping('/starter.zip')
 	@ResponseBody
 	ResponseEntity<byte[]> springZip(ProjectRequest request) {
+		if (!request.serviceUrl) {
+			request.serviceUrl = generateAppUrl()
+		}
 		def dir = projectGenerator.generateProjectStructure(request)
 
 		def download = projectGenerator.createDistributionFile(dir, '.zip')
@@ -161,6 +164,9 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping(value = '/starter.tgz', produces = 'application/x-compress')
 	@ResponseBody
 	ResponseEntity<byte[]> springTgz(ProjectRequest request) {
+		if (!request.serviceUrl) {
+			request.serviceUrl = generateAppUrl()
+		}
 		def dir = projectGenerator.generateProjectStructure(request)
 
 		def download = projectGenerator.createDistributionFile(dir, '.tgz')

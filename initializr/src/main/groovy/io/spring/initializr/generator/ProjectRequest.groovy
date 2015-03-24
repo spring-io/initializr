@@ -55,6 +55,9 @@ class ProjectRequest {
 
 	// The base directory to create in the archive - no baseDir by default
 	String baseDir
+	
+	// The url of the request
+	String serviceUrl
 
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<Dependency> resolvedDependencies
