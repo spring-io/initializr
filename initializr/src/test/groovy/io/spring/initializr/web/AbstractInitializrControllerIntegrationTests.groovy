@@ -16,18 +16,20 @@
 
 package io.spring.initializr.web
 
-import java.nio.charset.Charset
-
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.InitializrMetadata
-import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.test.ProjectAssert
+
+import java.nio.charset.Charset
+
 import org.json.JSONObject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
-
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.IntegrationTest
@@ -44,14 +46,11 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertTrue
-
 /**
  * @author Stephane Nicoll
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Config.class)
+@RunWith(SpringJUnit4ClassRunner)
+@SpringApplicationConfiguration(classes = Config)
 @WebAppConfiguration
 @IntegrationTest('server.port=0')
 abstract class AbstractInitializrControllerIntegrationTests {

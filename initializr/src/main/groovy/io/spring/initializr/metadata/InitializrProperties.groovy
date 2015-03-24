@@ -20,13 +20,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
 /**
  * Configuration of the initializr service.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-@ConfigurationProperties(prefix = 'initializr', ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = 'initializr')
 @JsonIgnoreProperties(["dependencies", "types", "packagings", "javaVersions", "languages", "bootVersions", "defaults"])
 class InitializrProperties extends InitializrConfiguration {
 
