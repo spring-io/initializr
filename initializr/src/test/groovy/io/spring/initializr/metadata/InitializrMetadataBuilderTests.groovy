@@ -16,7 +16,6 @@
 
 package io.spring.initializr.metadata
 
-import io.spring.initializr.InitializrConfiguration
 import org.junit.Test
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
@@ -87,6 +86,26 @@ class InitializrMetadataBuilderTests {
 	}
 
 	@Test
+	void mergeMetadataWithBom() {
+		def metadata = InitializrMetadataBuilder.create().withInitializrMetadata(
+				new ClassPathResource('metadata/service/test-bom.json')).build()
+
+		def boms = metadata.configuration.env.boms
+		assertEquals 2, boms.size()
+		BillOfMaterials myBom = boms['my-bom']
+		assertNotNull myBom
+		assertEquals 'org.acme', myBom.groupId
+		assertEquals 'my-bom', myBom.artifactId
+		assertEquals '1.2.3.RELEASE', myBom.version
+
+		BillOfMaterials anotherBom = boms['another-bom']
+		assertNotNull anotherBom
+		assertEquals 'org.acme', anotherBom.groupId
+		assertEquals 'another-bom', anotherBom.artifactId
+		assertEquals '4.5.6.RELEASE', anotherBom.version
+	}
+
+	@Test
 	void mergeConfigurationDisabledByDefault() {
 		def config = load(new ClassPathResource("application-test-default.yml"))
 		def customDefaultsConfig = load(new ClassPathResource("application-test-custom-env.yml"))
@@ -116,13 +135,6 @@ class InitializrMetadataBuilderTests {
 		assertEquals false, actualEnv.forceSsl
 	}
 
-	private static assertDefaultConfig(InitializrMetadata metadata) {
-		assertNotNull metadata
-		assertEquals "Wrong number of dependencies", 9, metadata.dependencies.all.size()
-		assertEquals "Wrong number of dependency group", 2, metadata.dependencies.content.size()
-		assertEquals "Wrong number of types", 4, metadata.types.content.size()
-	}
-
 	@Test
 	void addDependencyInCustomizer() {
 		def group = new DependencyGroup(name: 'Extra')
@@ -138,6 +150,12 @@ class InitializrMetadataBuilderTests {
 		assertEquals group, metadata.dependencies.content[0]
 	}
 
+	private static assertDefaultConfig(InitializrMetadata metadata) {
+		assertNotNull metadata
+		assertEquals "Wrong number of dependencies", 9, metadata.dependencies.all.size()
+		assertEquals "Wrong number of dependency group", 2, metadata.dependencies.content.size()
+		assertEquals "Wrong number of types", 4, metadata.types.content.size()
+	}
 
 	private static InitializrProperties load(Resource resource) {
 		PropertiesConfigurationFactory<InitializrProperties> factory =

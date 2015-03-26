@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr
-
+package io.spring.initializr.metadata
 /**
  * Various configuration options used by the service.
  *
@@ -113,6 +112,11 @@ class InitializrConfiguration {
 		 */
 		boolean forceSsl = true
 
+		/**
+		 * The {@link BillOfMaterials} that are referenced in this instance.
+		 */
+		final Map<String, BillOfMaterials> boms = [:]
+
 		void setArtifactRepository(String artifactRepository) {
 			if (!artifactRepository.endsWith('/')) {
 				artifactRepository = artifactRepository + '/'
@@ -126,7 +130,13 @@ class InitializrConfiguration {
 			fallbackApplicationName = other.fallbackApplicationName
 			invalidApplicationNames = other.invalidApplicationNames
 			forceSsl = other.forceSsl
+			other.boms.each { id, bom ->
+				if (!boms[id]) {
+					boms[id] = bom
+				}
+			}
 		}
 
 	}
+
 }

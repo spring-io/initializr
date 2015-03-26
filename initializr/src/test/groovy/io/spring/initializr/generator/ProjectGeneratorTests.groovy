@@ -326,6 +326,46 @@ class ProjectGeneratorTests {
 				.doesNotContain("apply plugin: 'io.spring.dependency-management'")
 	}
 
+	@Test
+	void mavenBom() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'foo-bom')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('foo-bom', 'org.acme', 'foo-bom', '1.2.3').build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo')
+		generateMavenPom(request).hasDependency(foo)
+				.hasBom('org.acme', 'foo-bom', '1.2.3')
+	}
+
+	@Test
+	void mavenBomWithSeveralDependenciesOnSameBom() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'the-bom')
+		def bar = new Dependency(id: 'bar', groupId: 'org.acme', artifactId: 'bar', bom: 'the-bom')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('group', foo, bar)
+				.addBom('the-bom', 'org.acme', 'the-bom', '1.2.3').build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo', 'bar')
+		generateMavenPom(request).hasDependency(foo)
+				.hasBom('org.acme', 'the-bom', '1.2.3')
+				.hasBomsCount(1)
+	}
+
+	@Test
+	void gradleBom() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'foo-bom')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('foo-bom', 'org.acme', 'foo-bom', '1.2.3').build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo')
+		generateGradleBuild(request)
+				.contains("dependencyManagement {")
+				.contains("imports {")
+				.contains("mavenBom \"org.acme:foo-bom:1.2.3\"")
+	}
+
 	PomAssert generateMavenPom(ProjectRequest request) {
 		def content = new String(projectGenerator.generateMavenPom(request))
 		new PomAssert(content).validateProjectRequest(request)

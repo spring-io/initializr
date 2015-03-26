@@ -17,6 +17,7 @@
 package io.spring.initializr.metadata
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 
 import org.springframework.util.Assert
 
@@ -28,6 +29,7 @@ import org.springframework.util.Assert
  * @since 1.0
  */
 @JsonIgnoreProperties(["default", "all"])
+@JsonInclude(JsonInclude.Include.NON_NULL)
 abstract class ServiceCapability<T> {
 
 	final String id

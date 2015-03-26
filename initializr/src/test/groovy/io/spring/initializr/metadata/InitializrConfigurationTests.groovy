@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.spring.initializr
+package io.spring.initializr.metadata
 
+import io.spring.initializr.metadata.InitializrConfiguration
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

@@ -17,7 +17,6 @@
 package io.spring.initializr.metadata
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import io.spring.initializr.InitializrConfiguration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

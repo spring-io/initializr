@@ -20,7 +20,6 @@ import java.nio.charset.Charset
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Log
-import io.spring.initializr.InitializrConfiguration
 
 import org.springframework.core.io.Resource
 import org.springframework.util.StreamUtils

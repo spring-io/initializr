@@ -1,0 +1,19 @@
+{
+  "configuration": {
+    "env": {
+      "forceSsl": false,
+      "boms": {
+        "my-bom": {
+          "groupId": "org.acme",
+          "artifactId": "my-bom",
+          "version": "1.2.3.RELEASE"
+        },
+        "another-bom": {
+          "groupId": "org.acme",
+          "artifactId": "another-bom",
+          "version": "4.5.6.RELEASE"
+        }
+      }
+    }
+  }
+}

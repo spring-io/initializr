@@ -17,6 +17,7 @@
 package io.spring.initializr.test
 
 import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import org.custommonkey.xmlunit.SimpleNamespaceContext
 import org.custommonkey.xmlunit.XMLUnit
@@ -39,6 +40,7 @@ class PomAssert {
 	final XpathEngine eng
 	final Document doc
 	final Map<String, Dependency> dependencies = [:]
+	final Map<String, BillOfMaterials> boms = [:]
 
 	PomAssert(String content) {
 		eng = XMLUnit.newXpathEngine()
@@ -48,6 +50,7 @@ class PomAssert {
 		eng.namespaceContext = namespaceContext
 		doc = XMLUnit.buildControlDocument(content)
 		parseDependencies()
+		parseBoms()
 	}
 
 	/**
@@ -135,7 +138,7 @@ class PomAssert {
 	}
 
 	PomAssert hasDependency(Dependency expected) {
-		def id = generateId(expected.groupId, expected.artifactId)
+		def id = generateDependencyId(expected.groupId, expected.artifactId)
 		def dependency = dependencies[id]
 		assertNotNull "No dependency found with '$id' --> ${dependencies.keySet()}", dependency
 		if (expected.version) {
@@ -144,6 +147,20 @@ class PomAssert {
 		if (expected.scope) {
 			assertEquals "Wrong scope for $dependency", expected.scope, dependency.scope
 		}
+		this
+	}
+
+	PomAssert hasBom(String groupId, String artifactId, String version) {
+		def id = generateBomId(groupId, artifactId)
+		def bom = boms[id]
+		assertNotNull "No BOM found with '$id' --> ${boms.keySet()}", bom
+		assertEquals "Wrong version for $bom", version, bom.version
+		this
+	}
+
+	PomAssert hasBomsCount(int count) {
+		assertEquals "Wrong number of declared boms -->'${boms.keySet()}",
+				count, boms.size()
 		this
 	}
 
@@ -216,7 +233,50 @@ class PomAssert {
 		}
 	}
 
-	private static String generateId(String groupId, String artifactId) {
+	private def parseBoms() {
+		def nodes = eng.getMatchingNodes(createRootNodeXPath('dependencyManagement/pom:dependencies/pom:dependency'), doc)
+		for (int i = 0; i < nodes.length; i++) {
+			def item = nodes.item(i)
+			if (item instanceof Element) {
+				def element = (Element) item
+				def type = element.getElementsByTagName('type')
+				def scope = element.getElementsByTagName('scope')
+				if (isBom(type, scope)) {
+					def bom = new BillOfMaterials()
+					def groupId = element.getElementsByTagName('groupId')
+					if (groupId.length > 0) {
+						bom.groupId = groupId.item(0).textContent
+					}
+					def artifactId = element.getElementsByTagName('artifactId')
+					if (artifactId.length > 0) {
+						bom.artifactId = artifactId.item(0).textContent
+					}
+					def version = element.getElementsByTagName('version')
+					if (version.length > 0) {
+						bom.version = version.item(0).textContent
+					}
+					def id = generateBomId(bom.groupId, bom.artifactId)
+					assertFalse("Duplicate BOM with id $id", boms.containsKey(id))
+					boms[id] = bom
+				}
+			}
+		}
+	}
+
+	private static boolean isBom(def type, def scope) {
+		if (type.length == 0 || scope.length == 0) {
+			return false
+		}
+		String typeValue = type.item(0).textContent
+		String scopeValue = scope.item(0).textContent
+		return "pom".equals(typeValue) && "import".equals(scopeValue)
+	}
+
+	private static String generateBomId(def groupId, def artifactId) {
+		"$groupId:$artifactId"
+	}
+
+	private static String generateDependencyId(String groupId, String artifactId) {
 		def dependency = new Dependency()
 		dependency.groupId = groupId
 		dependency.artifactId = artifactId

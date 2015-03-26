@@ -17,6 +17,7 @@
 package io.spring.initializr.generator
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.Type
@@ -59,6 +60,8 @@ class ProjectRequest {
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<Dependency> resolvedDependencies
 
+	final List<BillOfMaterials> boms = []
+
 	def facets = []
 	def build
 
@@ -92,6 +95,7 @@ class ProjectRequest {
 		}
 		String actualBootVersion = bootVersion ?: metadata.bootVersions.default.id
 		Version requestedVersion = Version.parse(actualBootVersion)
+		Set<String> bomIds = []
 		resolvedDependencies.each {
 			it.facets.each {
 				if (!facets.contains(it)) {
@@ -103,6 +107,13 @@ class ProjectRequest {
 				if (!range.match(requestedVersion)) {
 					throw new InvalidProjectRequestException("Dependency '$it.id' is not compatible " +
 							"with Spring Boot $bootVersion")
+				}
+			}
+			if (it.bom) {
+				String bomId = it.bom
+				if (!bomIds.contains(bomId)) {
+					bomIds << bomId
+					boms << metadata.configuration.env.boms[bomId]
 				}
 			}
 		}

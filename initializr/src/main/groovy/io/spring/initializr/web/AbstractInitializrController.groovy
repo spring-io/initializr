@@ -55,7 +55,7 @@ abstract class AbstractInitializrController {
 
 	/**
 	 * Generate a full URL of the service, mostly for use in templates.
-	 * @see io.spring.initializr.InitializrConfiguration.Env#forceSsl
+	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#forceSsl
 	 */
 	protected String generateAppUrl() {
 		def builder = ServletUriComponentsBuilder.fromCurrentServletMapping()

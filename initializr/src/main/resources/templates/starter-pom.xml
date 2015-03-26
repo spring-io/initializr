@@ -64,7 +64,19 @@
 			<scope>test</scope>
 		</dependency><% } %>
 	</dependencies>
-
+	<% if (boms) { %>
+	<dependencyManagement>
+		<dependencies><% boms.each { %>
+			<dependency>
+				<groupId>${it.groupId}</groupId>
+				<artifactId>${it.artifactId}</artifactId>
+				<version>${it.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency><% } %>
+		</dependencies>
+	</dependencyManagement>
+	<% } %>
 	<build>
 		<plugins>
 			<plugin>

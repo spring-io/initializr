@@ -1,7 +1,6 @@
 {
   "artifactId": {
     "content": "demo",
-    "description": null,
     "id": "artifactId",
     "type": "TEXT"
   },
@@ -23,13 +22,13 @@
         "name": "1.0.2"
       }
     ],
-    "description": null,
     "id": "bootVersion",
     "type": "SINGLE_SELECT"
   },
   "configuration": {
     "env": {
       "artifactRepository": "https://repo.spring.io/release/",
+      "boms": {},
       "fallbackApplicationName": "Application",
       "forceSsl": true,
       "invalidApplicationNames": [
@@ -51,33 +50,25 @@
             "groupId": "org.springframework.boot",
             "id": "web",
             "name": "Web",
-            "scope": "compile",
-            "version": null,
-            "versionRange": null
+            "scope": "compile"
           },
           {
             "aliases": [],
             "artifactId": "spring-boot-starter-security",
-            "description": null,
             "facets": [],
             "groupId": "org.springframework.boot",
             "id": "security",
             "name": "Security",
-            "scope": "compile",
-            "version": null,
-            "versionRange": null
+            "scope": "compile"
           },
           {
             "aliases": ["jpa"],
             "artifactId": "spring-boot-starter-data-jpa",
-            "description": null,
             "facets": [],
             "groupId": "org.springframework.boot",
             "id": "data-jpa",
             "name": "Data JPA",
-            "scope": "compile",
-            "version": null,
-            "versionRange": null
+            "scope": "compile"
           }
         ],
         "name": "Core"
@@ -87,31 +78,26 @@
           {
             "aliases": [],
             "artifactId": "foo",
-            "description": null,
             "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:foo",
             "name": "Foo",
             "scope": "compile",
-            "version": "1.3.5",
-            "versionRange": null
+            "version": "1.3.5"
           },
           {
             "aliases": [],
             "artifactId": "bar",
-            "description": null,
             "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:bar",
             "name": "Bar",
             "scope": "compile",
-            "version": "2.1.0",
-            "versionRange": null
+            "version": "2.1.0"
           },
           {
             "aliases": [],
             "artifactId": "biz",
-            "description": null,
             "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:biz",
@@ -123,7 +109,6 @@
           {
             "aliases": [],
             "artifactId": "bur",
-            "description": null,
             "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:bur",
@@ -135,32 +120,26 @@
           {
             "aliases": [],
             "artifactId": "my-api",
-            "description": null,
             "facets": [],
             "groupId": "org.acme",
             "id": "my-api",
             "name": "My API",
-            "scope": "provided",
-            "version": null,
-            "versionRange": null
+            "scope": "provided"
           }
         ],
         "name": "Other"
       }
     ],
-    "description": null,
     "id": "dependencies",
     "type": "HIERARCHICAL_MULTI_SELECT"
   },
   "description": {
     "content": "Demo project for Spring Boot",
-    "description": null,
     "id": "description",
     "type": "TEXT"
   },
   "groupId": {
     "content": "org.test",
-    "description": null,
     "id": "groupId",
     "type": "TEXT"
   },
@@ -182,7 +161,6 @@
         "name": "1.8"
       }
     ],
-    "description": null,
     "id": "javaVersion",
     "type": "SINGLE_SELECT"
   },
@@ -199,19 +177,16 @@
         "name": "Java"
       }
     ],
-    "description": null,
     "id": "language",
     "type": "SINGLE_SELECT"
   },
   "name": {
     "content": "demo",
-    "description": null,
     "id": "name",
     "type": "TEXT"
   },
   "packageName": {
     "content": "demo",
-    "description": null,
     "id": "packageName",
     "type": "TEXT"
   },
@@ -228,7 +203,6 @@
         "name": "War"
       }
     ],
-    "description": null,
     "id": "packaging",
     "type": "SINGLE_SELECT"
   },
@@ -283,13 +257,11 @@
         }
       }
     ],
-    "description": null,
     "id": "type",
     "type": "ACTION"
   },
   "version": {
     "content": "0.0.1-SNAPSHOT",
-    "description": null,
     "id": "version",
     "type": "TEXT"
   }

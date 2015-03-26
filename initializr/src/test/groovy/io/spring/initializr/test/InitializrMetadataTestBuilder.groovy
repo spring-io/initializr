@@ -16,13 +16,13 @@
 
 package io.spring.initializr.test
 
+import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.DependencyGroup
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.Type
-
 
 /**
  * Easily create a {@link InitializrMetadata} instance for testing purposes.
@@ -136,6 +136,15 @@ class InitializrMetadataTestBuilder {
 		builder.withCustomizer {
 			def bootVersion = new DefaultMetadataElement(id: id, name: id, default: defaultValue)
 			it.bootVersions.content << bootVersion
+		}
+		this
+	}
+
+	InitializrMetadataTestBuilder addBom(String id, String groupId, String artifactId, String version) {
+		builder.withCustomizer {
+			BillOfMaterials bom = new BillOfMaterials(
+					groupId: groupId, artifactId: artifactId, version: version)
+			it.configuration.env.boms[id] = bom
 		}
 		this
 	}

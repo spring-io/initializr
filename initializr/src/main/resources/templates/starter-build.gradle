@@ -49,6 +49,13 @@ dependencies {<% compileDependencies.each { %>
     testCompile("org.springframework.boot:spring-boot-starter-test") <% testDependencies.each { %>
     testCompile("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %>
 }
+<% if (boms) { %>
+dependencyManagement {
+	imports { <% boms.each { %>
+		mavenBom "${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}" <% } %>
+	}
+}
+<% } %>
 
 eclipse {
     classpath {

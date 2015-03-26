@@ -15,9 +15,6 @@
  */
 
 package io.spring.initializr.metadata
-
-import io.spring.initializr.InitializrConfiguration
-
 /**
  * Meta-data used to generate a project.
  *
@@ -86,6 +83,14 @@ class InitializrMetadata {
 	 */
 	void validate() {
 		dependencies.validate()
+
+		for (Dependency dependency : dependencies.all) {
+			def boms = configuration.env.boms
+			if (dependency.bom && !boms[dependency.bom]) {
+				throw new InvalidInitializrMetadataException("Dependency $dependency " +
+						"defines an invalid BOM id $dependency.bom, available boms $boms")
+			}
+		}
 	}
 
 	/**
@@ -147,7 +152,7 @@ class InitializrMetadata {
 		@Override
 		String getContent() {
 			String value = super.getContent()
-			value == null ? nameCapability.content.replace('-', '.') : value
+			value ?: (nameCapability.content != null ? nameCapability.content.replace('-', '.') : null)
 		}
 	}
 

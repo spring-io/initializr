@@ -16,6 +16,7 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
 import io.spring.initializr.util.InvalidVersionException
 import io.spring.initializr.util.VersionRange
@@ -28,6 +29,7 @@ import io.spring.initializr.util.VersionRange
  * @since 1.0
  */
 @ToString(ignoreNulls = true, includePackage = false)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class Dependency extends MetadataElement {
 
 	static final String SCOPE_COMPILE = 'compile'
@@ -56,6 +58,8 @@ class Dependency extends MetadataElement {
 	String description
 
 	String versionRange
+
+	String bom
 
 	void setScope(String scope) {
 		if (!SCOPE_ALL.contains(scope)) {
