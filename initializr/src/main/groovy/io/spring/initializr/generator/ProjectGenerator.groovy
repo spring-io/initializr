@@ -39,6 +39,8 @@ class ProjectGenerator {
 
 	private static final VERSION_1_2_0_RC1 = Version.parse('1.2.0.RC1')
 
+	private static final VERSION_1_3_0_M1 = Version.parse('1.3.0.M1')
+
 	@Autowired
 	InitializrMetadata metadata
 
@@ -183,6 +185,11 @@ class ProjectGenerator {
 		// @SpringBootApplication available as from 1.2.0.RC1
 		model['useSpringBootApplication'] = VERSION_1_2_0_RC1
 				.compareTo(Version.safeParse(request.bootVersion)) <= 0
+
+		// Gradle plugin has changed as from 1.3.0
+		model['bootOneThreeAvailable'] = VERSION_1_3_0_M1
+				.compareTo(Version.safeParse(request.bootVersion)) <= 0
+
 		model
 	}
 

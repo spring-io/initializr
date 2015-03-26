@@ -128,8 +128,8 @@ class InitializrMetadataTestBuilder {
 	}
 
 	InitializrMetadataTestBuilder addDefaultBootVersions() {
-		addBootVersion('1.0.2.RELEASE', false).addBootVersion('1.1.5.RELEASE', true)
-				.addBootVersion('1.2.0.BUILD-SNAPSHOT', false)
+		addBootVersion('1.1.2.RELEASE', false).addBootVersion('1.2.3.RELEASE', true)
+				.addBootVersion('1.3.0.BUILD-SNAPSHOT', false)
 	}
 
 	InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {

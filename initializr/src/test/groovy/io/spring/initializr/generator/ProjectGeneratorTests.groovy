@@ -31,7 +31,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
-import static org.mockito.Mockito.*
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.times
+import static org.mockito.Mockito.verify
 
 /**
  * @author Stephane Nicoll
@@ -298,6 +300,30 @@ class ProjectGeneratorTests {
 				.contains("runtime(\"org.h2:h2\")")
 				.contains("providedRuntime(\"javax.servlet:servlet-api\")")
 				.contains("testCompile(\"org.hamcrest:hamcrest\")")
+	}
+
+	@Test
+	void gradleBuildBeforeWithSpringBoot13() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.2.3.RELEASE'
+		generateGradleBuild(request)
+				.contains("springBootVersion = '1.2.3.RELEASE'")
+				.contains('classpath("io.spring.gradle:dependency-management-plugin:0.4.1.RELEASE")')
+				.contains("apply plugin: 'spring-boot'")
+				.contains("apply plugin: 'io.spring.dependency-management'")
+				.doesNotContain("apply plugin: 'org.springframework.boot.spring-boot'")
+	}
+
+	@Test
+	void gradleBuildAsFromSpringBoot13() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.3.0.BUILD-SNAPSHOT'
+		generateGradleBuild(request)
+				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
+				.contains("apply plugin: 'org.springframework.boot.spring-boot'")
+				.doesNotContain('classpath("io.spring.gradle:dependency-management-plugin:0.4.1.RELEASE")')
+				.doesNotContain("apply plugin: 'spring-boot'")
+				.doesNotContain("apply plugin: 'io.spring.dependency-management'")
 	}
 
 	PomAssert generateMavenPom(ProjectRequest request) {

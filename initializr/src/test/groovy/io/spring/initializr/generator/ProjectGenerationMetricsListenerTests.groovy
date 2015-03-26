@@ -168,7 +168,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
-		metricsAssert.hasValue(1, 'initializr.boot_version.1_1_5_RELEASE')
+		metricsAssert.hasValue(1, 'initializr.boot_version.1_2_3_RELEASE')
 	}
 
 	@Test
