@@ -101,6 +101,37 @@ class DependenciesCapabilityTest {
 		assertNotNull capability.get('third')
 	}
 
+	@Test
+	void addDefaultVersionRange() {
+		def first = new Dependency(id: 'first')
+		def second = new Dependency(id: 'second', versionRange: '1.2.3.RELEASE')
+		def group = createDependencyGroup('test', first, second)
+		group.versionRange = '1.2.0.RELEASE'
+
+		DependenciesCapability capability = new DependenciesCapability()
+		capability.content << group
+		capability.validate()
+
+		assertEquals '1.2.0.RELEASE', capability.get('first').versionRange
+		assertEquals '1.2.3.RELEASE', capability.get('second').versionRange
+	}
+
+	@Test
+	void addDefaultBom() {
+		def first = new Dependency(id: 'first')
+		def second = new Dependency(id: 'second', bom: 'da-bom')
+		def group = createDependencyGroup('test', first, second)
+		group.bom = 'test-bom'
+
+		DependenciesCapability capability = new DependenciesCapability()
+		capability.content << group
+		capability.validate()
+
+		assertEquals 'test-bom', capability.get('first').bom
+		assertEquals 'da-bom', capability.get('second').bom
+	}
+
+
 	private static DependenciesCapability createDependenciesCapability(String groupName, Dependency... dependencies) {
 		DependenciesCapability capability = new DependenciesCapability()
 		DependencyGroup group = createDependencyGroup(groupName, dependencies)

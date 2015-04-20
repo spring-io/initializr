@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/105[#105]: support for dependencies group defaults
 * https://github.com/spring-io/initializr/issues/82[#99]: support for Bill Of Materials (BOM)
 * https://github.com/spring-io/initializr/issues/98[#98]: support for the gradle dependency management plugin
 * https://github.com/spring-io/initializr/issues/82[#82]: fix version support for gradle build

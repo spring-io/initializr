@@ -66,6 +66,14 @@ class DependenciesCapability extends ServiceCapability<List<DependencyGroup>> {
 		indexedDependencies.clear()
 		content.each { group ->
 			group.content.each { dependency ->
+				// Apply defaults
+				if (!dependency.versionRange && group.versionRange) {
+					dependency.versionRange = group.versionRange
+				}
+				if (!dependency.bom && group.bom) {
+					dependency.bom = group.bom
+				}
+
 				dependency.resolve()
 				indexDependency(dependency.id, dependency)
 				for (String alias : dependency.aliases) {

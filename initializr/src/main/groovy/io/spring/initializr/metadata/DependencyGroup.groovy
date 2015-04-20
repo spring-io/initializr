@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 /**
  * A group of {@link Dependency} instances identified by a name.
  *
@@ -24,7 +26,24 @@ package io.spring.initializr.metadata
  */
 class DependencyGroup {
 
+	/**
+	 * Name of this group.
+	 */
 	String name
+
+	/**
+	 * The default version range to apply to all dependencies of this group unless
+	 * specified otherwise.
+	 */
+	@JsonIgnore
+	String versionRange
+
+	/**
+	 * The default bom to associate to all dependencies of this group unless
+	 * specified otherwise.
+	 */
+	@JsonIgnore
+	String bom
 
 	final List<Dependency> content = []
 
