@@ -13,6 +13,10 @@ initializr:
         groupId: com.vaadin
         artifactId: vaadin-bom
         version: 7.4.4
+      cloud-bom:
+        groupId: org.springframework.cloud
+        artifactId: spring-cloud-versions
+        version: 1.0.0.RELEASE
   dependencies:
     - name: Core
       content:
@@ -119,6 +123,94 @@ initializr:
         - name: Elasticsearch
           id: data-elasticsearch
           description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
+    - name: Cloud
+      bom: cloud-bom
+      versionRange: 1.2.3.RELEASE
+      content:
+        - name: Cloud Connectors
+          id: cloud-connectors
+          description: Simplifies connecting to services in cloud platforms
+          versionRange: 1.2.0.RELEASE
+        - name: Config Server
+          id: cloud-server
+          description: Support for spring-cloud-config Server
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-config-server
+        - name: Eureka
+          id: cloud-eureka
+          description: Support for spring-cloud-netflix Eureka
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-eureka
+        - name: Eureka Server
+          id: cloud-eureka-server
+          description: Support for spring-cloud-netflix Eureka Server
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-eureka-server
+        - name: AWS
+          id: cloud-aws
+          description: Support for spring-cloud-aws
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-aws
+        - name: Feign
+          id: cloud-feign
+          description: Support for spring-cloud-netflix Feign
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-feign
+        - name: Hystrix
+          id: cloud-hystrix
+          description: Support for spring-cloud-netflix Hystrix
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-hystrix
+        - name: Hystrix Dashboard
+          id: cloud-hystrix-dashboard
+          description: Support for spring-cloud-netflix Hystrix Dashboard
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-hystrix-dashboard
+        - name: OAuth2
+          id: cloud-oauth2
+          description: Support for spring-cloud-security OAuth2
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-oauth2
+        - name: Ribbon
+          id: cloud-ribbon
+          description: Support for spring-cloud-netflix Ribbon
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-ribbon
+        - name: Turbine
+          id: cloud-turbine
+          description: Support for spring-cloud-netflix Turbine
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-turbine
+        - name: Turbine AMQP
+          id: cloud-turbine-amqp
+          description: Support for spring-cloud-netflix Turbine AMQP
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-turbine-amqp
+        - name: Zuul
+          id: cloud-zuul
+          description: Support for spring-cloud-netflix Zuul
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zuul
+        - name: AWS JDBC
+          id: cloud-aws-jdbc
+          description: Support for spring-cloud-aws-jdbc
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-aws-jdbc
+        - name: AWS Messaging
+          id: cloud-aws-messaging
+          description: Support for spring-cloud-aws-messaging
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-aws-messaging
+        - name: Cloud Bus AMQP
+          id: cloud-bus-amqp
+          description: Support for spring-cloud-bus-amqp
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-bus-amqp
+        - name: Cloud Security
+          id: cloud-security
+          description: Support for spring-cloud-security
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-security
     - name: Database
       content:
         - name: H2
@@ -187,10 +279,6 @@ initializr:
         - name: Actuator
           id: actuator
           description: Production ready features to help you monitor and manage your application
-        - name: Cloud Connectors
-          id: cloud-connectors
-          description: Simplifies connecting to services in cloud platforms
-          versionRange: 1.2.0.RELEASE
         - name: Remote Shell
           id: remote-shell
           description: Support for CRaSH
