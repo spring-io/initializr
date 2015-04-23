@@ -311,7 +311,6 @@ class ProjectGeneratorTests {
 				.contains('classpath("io.spring.gradle:dependency-management-plugin:0.5.0.RELEASE")')
 				.contains("apply plugin: 'spring-boot'")
 				.contains("apply plugin: 'io.spring.dependency-management'")
-				.doesNotContain("apply plugin: 'org.springframework.boot.spring-boot'")
 	}
 
 	@Test
@@ -320,9 +319,8 @@ class ProjectGeneratorTests {
 		request.bootVersion = '1.3.0.BUILD-SNAPSHOT'
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
-				.contains("apply plugin: 'org.springframework.boot.spring-boot'")
+				.contains("apply plugin: 'spring-boot'")
 				.doesNotContain('classpath("io.spring.gradle:dependency-management-plugin:0.5.0.RELEASE")')
-				.doesNotContain("apply plugin: 'spring-boot'")
 				.doesNotContain("apply plugin: 'io.spring.dependency-management'")
 	}
 
