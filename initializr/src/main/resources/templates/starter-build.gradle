@@ -16,10 +16,9 @@ buildscript {
 apply plugin: '${language}'<% if (packaging=='war') {  %>
 apply plugin: 'eclipse-wtp'<% } else { %>
 apply plugin: 'eclipse'<% } %>
-apply plugin: 'idea' <% if (bootOneThreeAvailable) { %>
-apply plugin: 'org.springframework.boot.spring-boot' <% } else { %>
-apply plugin: 'spring-boot'
-apply plugin: 'io.spring.dependency-management'<% } %><% if (packaging=='war') {  %>
+apply plugin: 'idea'
+apply plugin: 'spring-boot' <% if (!bootOneThreeAvailable) { %>
+apply plugin: 'io.spring.dependency-management' <% } %><% if (packaging=='war') {  %>
 apply plugin: 'war'
 <% } %>
 
