@@ -12,7 +12,7 @@ initializr:
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
-        version: 7.4.2
+        version: 7.4.4
   dependencies:
     - name: Core
       content:
@@ -53,7 +53,7 @@ initializr:
             - web
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
-          version: 1.0.0.beta2
+          version: 1.0.0.beta3
           description: Support for Vaadin
           bom: vaadin-bom
         - name: Rest Repositories
