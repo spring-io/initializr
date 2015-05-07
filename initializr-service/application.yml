@@ -15,8 +15,8 @@ initializr:
         version: 7.4.4
       cloud-bom:
         groupId: org.springframework.cloud
-        artifactId: spring-cloud-versions
-        version: 1.0.0.RELEASE
+        artifactId: spring-cloud-starter-parent
+        version: 1.0.1.RELEASE
   dependencies:
     - name: Core
       content:
