@@ -45,7 +45,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
  */
 @RunWith(SpringJUnit4ClassRunner)
 @SpringApplicationConfiguration(classes = Config)
-@IntegrationTest(['initializr.metrics.rateMillis:500','initializr.metrics.prefix:test.prefix','initializr.metrics.key:key.test'])
+@IntegrationTest(['spring.metrics.export.default.delayMillis:500','initializr.metrics.prefix:test.prefix','initializr.metrics.key:key.test'])
 public class MetricsExportTests {
 
 	@Rule
@@ -63,7 +63,7 @@ public class MetricsExportTests {
 	@Before
 	void init() {
 		repository = (RedisMetricRepository) writer
-		repository.findAll().forEach {
+		repository.findAll().each {
 			repository.reset(it.name)
 		}
 		assertTrue("Metrics not empty", repository.findAll().size()==0)

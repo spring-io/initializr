@@ -48,6 +48,7 @@ class MetricsProperties {
 	 * The rate (in milliseconds) at which metrics are exported to Redis. If the value is
 	 * <=0 then the export is disabled.
 	 */
+	@Value('${spring.metrics.export.default.delayMillis:5000}')
 	long rateMillis = 5000L
 
 	boolean isEnabled() {
