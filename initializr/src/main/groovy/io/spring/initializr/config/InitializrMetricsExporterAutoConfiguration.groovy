@@ -26,6 +26,7 @@ import org.springframework.boot.actuate.metrics.writer.MetricWriter
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.redis.RedisAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext
@@ -46,7 +47,7 @@ import org.springframework.util.ObjectUtils
 @ConditionalOnExpression('${initializr.metrics.rateMillis:5000}>0')
 @EnableScheduling
 @EnableConfigurationProperties(MetricsProperties)
-@AutoConfigureAfter(RedisAutoConfiguration)
+@AutoConfigureAfter(value=RedisAutoConfiguration, name="org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration")
 class InitializrMetricsExporterAutoConfiguration {
 
 	@Autowired
@@ -73,6 +74,7 @@ class InitializrMetricsExporterAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(name="metricWritersMetricExporter")
 	Exporter exporter(InMemoryMetricRepository reader) {
 		new MetricCopyExporter(reader, writer()) {
 					@Override
