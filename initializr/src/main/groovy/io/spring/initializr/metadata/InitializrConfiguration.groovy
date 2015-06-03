@@ -30,7 +30,7 @@ class InitializrConfiguration {
 	}
 
 	/**
-	 * Generate a suitable application mame based on the specified name. If no suitable
+	 * Generate a suitable application name based on the specified name. If no suitable
 	 * application name can be generated from the specified {@code name}, the
 	 * {@link Env#fallbackApplicationName} is used instead.
 	 * <p>No suitable application name can be generated if the name is {@code null} or
