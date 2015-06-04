@@ -16,29 +16,28 @@
 
 package io.spring.initializr.web
 
-import java.nio.charset.Charset
-
 import groovy.json.JsonSlurper
 import io.spring.initializr.mapper.InitializrMetadataVersion
 import io.spring.initializr.metadata.Dependency
 import org.json.JSONObject
 import org.junit.Ignore
 import org.junit.Test
-import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
-import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.util.StreamUtils
 import org.springframework.web.client.HttpClientErrorException
 
 import static org.hamcrest.CoreMatchers.allOf
 import static org.hamcrest.CoreMatchers.containsString
 import static org.hamcrest.core.IsNot.not
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertThat
+import static org.junit.Assert.assertTrue
 
 /**
  * @author Stephane Nicoll
@@ -46,7 +45,6 @@ import static org.junit.Assert.*
 @ActiveProfiles('test-default')
 class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	private static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.mediaType
 
 	private final def slurper = new JsonSlurper()
 
@@ -210,7 +208,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		tgzProjectAssert(response.body).isMavenProject().isJavaProject()
 	}
 
-	@Test // make sure curl can still receive metadata with json
+	@Test
+	// make sure curl can still receive metadata with json
 	void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome('curl/1.2.4', "application/json")
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
@@ -235,7 +234,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateHttpIeHelpContent(response)
 	}
 
-	@Test // make sure curl can still receive metadata with json
+	@Test
+	// make sure curl can still receive metadata with json
 	void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome('HTTPie/0.8.0', "application/json")
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
@@ -273,23 +273,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		validateCurrentMetadata(json)
 	}
 
-	private void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
-								  String version, JSONCompareMode compareMode) {
-		validateContentType(response, mediaType)
-		def json = new JSONObject(response.body)
-		def expected = readJson(version)
-		JSONAssert.assertEquals(expected, json, compareMode)
-	}
-
-	private void validateCurrentMetadata(ResponseEntity<String> response) {
-		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
-		validateCurrentMetadata(new JSONObject(response.body))
-	}
-
-	private void validateCurrentMetadata(JSONObject json) {
-		def expected = readJson('2.1.0')
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
-	}
 
 	private void validateCurlHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN)
@@ -448,8 +431,5 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		return new JSONObject(json)
 	}
 
-	private JSONObject readJson(String version) {
-		readJsonFrom("metadata/test-default-$version" + ".json")
-	}
 
 }

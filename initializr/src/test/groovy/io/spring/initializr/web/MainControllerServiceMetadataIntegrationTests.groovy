@@ -47,7 +47,7 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractInitializrCo
 	void initializeRemoteConfig() {
 		InitializrMetadata localMetadata = metadataProvider.get()
 		InitializrMetadata metadata = InitializrMetadataBuilder.create().withInitializrMetadata(
-				new UrlResource(createUrl('/metadata/service'))).build()
+				new UrlResource(createUrl('/metadata/config'))).build()
 		// Basic assertions
 		assertEquals(localMetadata.dependencies.content.size(), metadata.dependencies.content.size())
 		assertEquals(localMetadata.types.content.size(), metadata.types.content.size())
@@ -60,7 +60,7 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractInitializrCo
 	@Test
 	void textPlainNotAccepted() {
 		try {
-			execute('/metadata/service', String, null, 'text/plain')
+			execute('/metadata/config', String, null, 'text/plain')
 		} catch (HttpClientErrorException ex) {
 			assertEquals HttpStatus.NOT_ACCEPTABLE, ex.statusCode
 		}
@@ -68,11 +68,17 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractInitializrCo
 
 	@Test
 	void validateJson() {
-		ResponseEntity<String> response = execute('/metadata/service', String, null, 'application/json')
+		ResponseEntity<String> response = execute('/metadata/config', String, null, 'application/json')
 		validateContentType(response, MediaType.APPLICATION_JSON)
 		JSONObject json =  new JSONObject(response.body)
-		def expected = readJsonFrom("metadata/service/test-default.json")
+		def expected = readJsonFrom("metadata/config/test-default.json")
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
+	}
+
+	@Test
+	void metadataClientRedirect() {
+		ResponseEntity<String> response = execute('/metadata/client', String, null, 'application/json')
+		validateCurrentMetadata(response)
 	}
 
 }

@@ -18,6 +18,7 @@ package io.spring.initializr.web
 
 import java.nio.charset.Charset
 
+import io.spring.initializr.mapper.InitializrMetadataVersion
 import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.support.DefaultInitializrMetadataProvider
@@ -27,6 +28,8 @@ import org.json.JSONObject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
+import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -56,6 +59,9 @@ import static org.junit.Assert.assertTrue
 @IntegrationTest('server.port=0')
 abstract class AbstractInitializrControllerIntegrationTests {
 
+	static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.mediaType
+
+
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder()
 
@@ -83,6 +89,29 @@ abstract class AbstractInitializrControllerIntegrationTests {
 				actual.isCompatibleWith(expected)
 		assertEquals 'All text content should be UTF-8 encoded',
 				'UTF-8', actual.getParameter('charset')
+	}
+
+
+	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
+								  String version, JSONCompareMode compareMode) {
+		validateContentType(response, mediaType)
+		def json = new JSONObject(response.body)
+		def expected = readMetadataJson(version)
+		JSONAssert.assertEquals(expected, json, compareMode)
+	}
+
+	protected void validateCurrentMetadata(ResponseEntity<String> response) {
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateCurrentMetadata(new JSONObject(response.body))
+	}
+
+	protected void validateCurrentMetadata(JSONObject json) {
+		def expected = readMetadataJson('2.1.0')
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
+	}
+
+	private JSONObject readMetadataJson(String version) {
+		readJsonFrom("metadata/test-default-$version" + ".json")
 	}
 
 	/**

@@ -66,7 +66,7 @@ class InitializrMetadataBuilderTests {
 	@Test
 	void mergeMetadata() {
 		def metadata = InitializrMetadataBuilder.create().withInitializrMetadata(
-				new ClassPathResource('metadata/service/test-min.json')).build()
+				new ClassPathResource('metadata/config/test-min.json')).build()
 		assertEquals false, metadata.configuration.env.forceSsl
 		assertEquals 1, metadata.dependencies.content.size()
 		Dependency dependency = metadata.dependencies.get('test')
@@ -88,7 +88,7 @@ class InitializrMetadataBuilderTests {
 	@Test
 	void mergeMetadataWithBom() {
 		def metadata = InitializrMetadataBuilder.create().withInitializrMetadata(
-				new ClassPathResource('metadata/service/test-bom.json')).build()
+				new ClassPathResource('metadata/config/test-bom.json')).build()
 
 		def boms = metadata.configuration.env.boms
 		assertEquals 2, boms.size()

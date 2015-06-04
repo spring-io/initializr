@@ -63,11 +63,17 @@ class MainController extends AbstractInitializrController {
 		request
 	}
 
-	@RequestMapping(value = "/metadata/service", produces = ["application/json"])
+	@RequestMapping(value = "/metadata/config", produces = ["application/json"])
 	@ResponseBody
 	InitializrMetadata config() {
 		metadataProvider.get()
 	}
+
+	@RequestMapping(value = "/metadata/client")
+	String client() {
+		'redirect:/'
+	}
+
 
 	@RequestMapping(value = "/", produces = ["text/plain"])
 	ResponseEntity<String> serviceCapabilities(
