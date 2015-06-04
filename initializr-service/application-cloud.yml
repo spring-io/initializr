@@ -1,3 +1,4 @@
 spring:
   metrics:
-    export: enabled
+    export:
+     enabled: true
