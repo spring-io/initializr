@@ -39,15 +39,19 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.util.ObjectUtils
 
 /**
- * @author Dave Syer
+ * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
+ * Auto-configuration} to export the metrics of an initializr instnace.
  *
+ * @author Dave Syer
+ * @since 1.0
  */
 @Configuration
 @ConditionalOnBean(RedisConnectionFactory)
-@ConditionalOnProperty(value='spring.metrics.export.enabled', matchIfMissing=true)
+@ConditionalOnProperty(value = 'spring.metrics.export.enabled')
 @EnableScheduling
 @EnableConfigurationProperties(MetricsProperties)
-@AutoConfigureAfter(value=RedisAutoConfiguration, name="org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration")
+@AutoConfigureAfter(value = RedisAutoConfiguration,
+		name = "org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration")
 class InitializrMetricsExporterAutoConfiguration {
 
 	@Autowired
@@ -58,19 +62,19 @@ class InitializrMetricsExporterAutoConfiguration {
 
 	@Autowired
 	ApplicationContext context
-	
+
 	@Bean
 	// @ExportMetricWriter // Add this when upgrading to Boot 1.3
 	MetricWriter writer() {
 		new RedisMetricRepository(connectionFactory,
 				metrics.prefix + metrics.getId(context.getId()) + '.'
-				+ ObjectUtils.getIdentityHexString(context) + '.',
+						+ ObjectUtils.getIdentityHexString(context) + '.',
 				metrics.key)
 	}
 
 	// Remove this when upgrading to Boot 1.3
 	@Bean
-	@ConditionalOnMissingClass(name='org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
+	@ConditionalOnMissingClass(name = 'org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
 	@Primary
 	MetricRepository reader() {
 		new InMemoryMetricRepository()
@@ -78,15 +82,15 @@ class InitializrMetricsExporterAutoConfiguration {
 
 	// Remove this when upgrading to Boot 1.3
 	@Bean
-	@ConditionalOnMissingClass(name='org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
+	@ConditionalOnMissingClass(name = 'org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
 	Exporter exporter(InMemoryMetricRepository reader) {
 		new MetricCopyExporter(reader, writer()) {
-					@Override
-					@Scheduled(fixedRateString = '${spring.metrics.export.default.delayMillis:5000}')
-					void export() {
-						super.export()
-					}
-				}
+			@Override
+			@Scheduled(fixedRateString = '${spring.metrics.export.default.delayMillis:5000}')
+			void export() {
+				super.export()
+			}
+		}
 	}
 
 }

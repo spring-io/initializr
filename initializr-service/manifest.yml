@@ -6,3 +6,5 @@ applications:
   host: start-development
   domain: cfapps.io
   path: .
+  services:
+    start-redis

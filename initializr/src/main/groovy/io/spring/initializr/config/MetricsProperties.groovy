@@ -16,12 +16,14 @@
 
 package io.spring.initializr.config
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
- * @author Dave Syer
+ * Metrics-related configuration.
  *
+ * @author Dave Syer
+ * @since 1.0
  */
 @ConfigurationProperties('initializr.metrics')
 class MetricsProperties {
@@ -50,10 +52,6 @@ class MetricsProperties {
 	 */
 	@Value('${spring.metrics.export.default.delayMillis:5000}')
 	long rateMillis = 5000L
-
-	boolean isEnabled() {
-		rateMillis > 0
-	}
 
 	String getPrefix() {
 		if (prefix.endsWith('.')) {

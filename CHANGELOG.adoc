@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/96[#96]: export service metrics to redis
 * https://github.com/spring-io/initializr/issues/115[#115]: rename /metadata/service to /metadata/config
 * https://github.com/spring-io/initializr/issues/89[#89]: better describe service capability
 * https://github.com/spring-io/initializr/issues/105[#105]: support for dependencies group defaults

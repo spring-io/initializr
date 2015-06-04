@@ -20,19 +20,22 @@ import org.junit.Assume
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
 
 /**
- * @author Dave Syer
+ * A {@link org.junit.rules.TestRule} that validates Redis is available.
  *
+ * @author Dave Syer
+ * @since 1.0
  */
 class RedisRunning extends TestWatcher {
-	
-	JedisConnectionFactory connectionFactory; 
+
+	JedisConnectionFactory connectionFactory;
 
 	@Override
 	Statement apply(Statement base, Description description) {
-		if (connectionFactory==null) {
+		if (connectionFactory == null) {
 			connectionFactory = new JedisConnectionFactory()
 			connectionFactory.afterPropertiesSet()
 		}
