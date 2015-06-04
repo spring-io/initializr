@@ -7,4 +7,4 @@ applications:
   domain: cfapps.io
   path: .
   services:
-    start-redis
+    - start-redis
