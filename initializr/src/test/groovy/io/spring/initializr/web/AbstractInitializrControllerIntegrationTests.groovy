@@ -19,10 +19,9 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import io.spring.initializr.mapper.InitializrMetadataVersion
-import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.InitializrMetadata
-import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.test.OfflineInitializrMetadataProvider
 import io.spring.initializr.test.ProjectAssert
 import org.json.JSONObject
 import org.junit.Rule
@@ -85,7 +84,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	 */
 	protected void validateContentType(ResponseEntity<String> response, MediaType expected) {
 		def actual = response.headers.getContentType()
-		assertTrue "Non compatible media-type, expected $expected, got $actual" ,
+		assertTrue "Non compatible media-type, expected $expected, got $actual",
 				actual.isCompatibleWith(expected)
 		assertEquals 'All text content should be UTF-8 encoded',
 				'UTF-8', actual.getParameter('charset')
@@ -93,7 +92,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 
 
 	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
-								  String version, JSONCompareMode compareMode) {
+									String version, JSONCompareMode compareMode) {
 		validateContentType(response, mediaType)
 		def json = new JSONObject(response.body)
 		def expected = readMetadataJson(version)
@@ -147,7 +146,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	}
 
 	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
-										  String userAgentHeader, String... acceptHeaders) {
+											String userAgentHeader, String... acceptHeaders) {
 		HttpHeaders headers = new HttpHeaders();
 		if (userAgentHeader) {
 			headers.set("User-Agent", userAgentHeader);
@@ -217,12 +216,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 
 		@Bean
 		InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
-			new DefaultInitializrMetadataProvider(metadata) {
-				@Override
-				protected List<DefaultMetadataElement> fetchBootVersions() {
-					null // Disable metadata fetching from spring.io
-				}
-			}
+			new OfflineInitializrMetadataProvider(metadata)
 		}
 
 	}

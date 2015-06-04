@@ -26,7 +26,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * @author Stephane Nicoll
  * @since 1.0
  */
-@ConfigurationProperties(prefix = 'initializr', ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = 'initializr')
 class InitializrProperties extends InitializrConfiguration {
 
 	@JsonIgnore
