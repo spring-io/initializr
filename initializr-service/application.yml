@@ -16,7 +16,7 @@ initializr:
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-starter-parent
-        version: 1.0.1.RELEASE
+        version: 1.0.2.RELEASE
   dependencies:
     - name: Core
       content:
@@ -135,6 +135,16 @@ initializr:
           id: cloud-connectors
           description: Simplifies connecting to services in cloud platforms
           versionRange: 1.2.0.RELEASE
+        - name: Cloud Bootstrap
+          id: cloud-starter
+          description: Support for spring-cloud-context (e.g. Bootstrap context and @RefreshScope)
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter
+        - name: Config Client
+          id: cloud-config
+          description: Support for spring-cloud-config Client
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-config
         - name: Config Server
           id: cloud-server
           description: Support for spring-cloud-config Server
