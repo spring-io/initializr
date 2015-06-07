@@ -5,6 +5,9 @@ info:
   # remember to update static/install.sh as well:
   spring-boot:
     version: 1.2.4.RELEASE
+endpoints:
+  env:
+    keysToSanitize: key,secret,password,VCAP_SERVICES
 
 initializr:
   env:
