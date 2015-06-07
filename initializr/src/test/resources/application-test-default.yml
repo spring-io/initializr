@@ -87,9 +87,9 @@ initializr:
     - id: 1.6
       default: false
     - id: 1.7
-      default: true
-    - id: 1.8
       default: false
+    - id: 1.8
+      default: true
   languages:
     - name: Groovy
       id: groovy
