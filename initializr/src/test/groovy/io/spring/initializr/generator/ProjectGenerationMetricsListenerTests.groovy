@@ -134,16 +134,16 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
-		metricsAssert.hasValue(1, 'initializr.java_version.1_7')
+		metricsAssert.hasValue(1, 'initializr.java_version.1_8')
 	}
 
 	@Test
 	void explicitJavaVersion() {
 		def request = initialize()
-		request.javaVersion = '1.8'
+		request.javaVersion = '1.7'
 		request.resolve(metadata)
 		listener.onGeneratedProject(request)
-		metricsAssert.hasValue(1, 'initializr.java_version.1_8')
+		metricsAssert.hasValue(1, 'initializr.java_version.1_7')
 	}
 
 	@Test

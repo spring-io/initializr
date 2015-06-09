@@ -104,7 +104,7 @@ class InitializrMetadataTestBuilder {
 	}
 
 	InitializrMetadataTestBuilder addDefaultJavaVersions() {
-		addJavaVersion('1.6', false).addJavaVersion('1.7', true).addJavaVersion('1.8', false)
+		addJavaVersion('1.6', false).addJavaVersion('1.7', false).addJavaVersion('1.8', true)
 	}
 
 	InitializrMetadataTestBuilder addJavaVersion(String version, boolean defaultValue) {
