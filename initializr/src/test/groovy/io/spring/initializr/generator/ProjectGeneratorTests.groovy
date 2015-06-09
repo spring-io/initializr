@@ -59,8 +59,8 @@ class ProjectGeneratorTests {
 		projectGenerator.listeners << listener
 
 		def request = createProjectRequest('web')
-		generateMavenPom(request).hasStartClass('demo.DemoApplication')
-				.hasNoRepository().hasSpringBootStarterDependency('web')
+		generateMavenPom(request).hasNoRepository()
+				.hasSpringBootStarterDependency('web')
 		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
@@ -81,7 +81,7 @@ class ProjectGeneratorTests {
 
 		def request = createProjectRequest('web')
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
-				.hasStartClass('demo.DemoApplication').hasNoRepository().hasSpringBootStarterDependency('web')
+				.hasNoRepository().hasSpringBootStarterDependency('web')
 		verify(listener, times(1)).onGeneratedProject(request)
 	}
 
@@ -96,8 +96,8 @@ class ProjectGeneratorTests {
 	void mavenPomWithBootSnapshot() {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
-		generateMavenPom(request).hasStartClass('demo.DemoApplication')
-				.hasSnapshotRepository().hasSpringBootStarterDependency('web')
+		generateMavenPom(request).hasSnapshotRepository()
+				.hasSpringBootStarterDependency('web')
 	}
 
 	@Test
@@ -110,7 +110,7 @@ class ProjectGeneratorTests {
 		projectGenerator.metadata = metadata
 
 		def request = createProjectRequest('thymeleaf')
-		generateMavenPom(request).hasStartClass('demo.DemoApplication')
+		generateMavenPom(request)
 				.hasDependency('org.foo', 'thymeleaf')
 				.hasDependenciesCount(2)
 	}
@@ -127,7 +127,7 @@ class ProjectGeneratorTests {
 		def request = createProjectRequest('thymeleaf')
 		request.packaging = 'war'
 		generateProject(request).isJavaWarProject().isMavenProject().
-				pomAssert().hasStartClass('demo.DemoApplication')
+				pomAssert()
 				.hasSpringBootStarterTomcat()
 				.hasDependency('org.foo', 'thymeleaf') // This is tagged as web facet so it brings the web one
 				.hasSpringBootStarterTest()
@@ -138,7 +138,7 @@ class ProjectGeneratorTests {
 	void mavenWarPomWithoutWebFacet() {
 		def request = createProjectRequest('data-jpa')
 		request.packaging = 'war'
-		generateMavenPom(request).hasStartClass('demo.DemoApplication')
+		generateMavenPom(request)
 				.hasSpringBootStarterTomcat()
 				.hasSpringBootStarterDependency('data-jpa')
 				.hasSpringBootStarterDependency('web') // Added by war packaging

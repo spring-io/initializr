@@ -102,11 +102,6 @@ class PomAssert {
 		this
 	}
 
-	PomAssert hasStartClass(String fqn) {
-		assertEquals fqn, eng.evaluate(createPropertyNodeXpath('start-class'), doc)
-		this
-	}
-
 	PomAssert hasDependenciesCount(int count) {
 		assertEquals "Wrong number of declared dependencies -->'${dependencies.keySet()}",
 				count, dependencies.size()

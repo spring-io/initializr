@@ -36,7 +36,7 @@ class MainControllerDefaultsIntegrationTests extends AbstractInitializrControlle
 		def content = restTemplate.getForObject(createUrl('/pom.xml?style=web'), String)
 		def pomAssert = new PomAssert(content)
 		pomAssert.hasGroupId('org.foo').hasArtifactId('foo-bar').hasVersion('1.2.4-SNAPSHOT').hasPackaging('jar')
-				.hasName('FooBar').hasDescription('FooBar Project').hasStartClass('org.foo.demo.FooBarApplication')
+				.hasName('FooBar').hasDescription('FooBar Project')
 	}
 
 	@Test
