@@ -41,6 +41,12 @@ initializr:
           id: cache
           description: Support for Spring's Cache abstraction
           versionRange: 1.3.0.BUILD-SNAPSHOT
+        - name: DevTools
+          id: devtools
+          groupId: org.springframework.boot
+          artifactId: spring-boot-devtools
+          description: Support for Spring Boot Development Tools.
+          versionRange: 1.3.0.BUILD-SNAPSHOT
     - name: Web
       content:
         - name: Web
