@@ -19,7 +19,7 @@ initializr:
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-starter-parent
-        version: 1.0.2.RELEASE
+        version: Angel.SR3
   dependencies:
     - name: Core
       content:
