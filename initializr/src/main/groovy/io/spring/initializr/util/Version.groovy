@@ -66,7 +66,7 @@ class Version implements Comparable<Version> {
 		def matcher = (text.trim() =~ VERSION_REGEX)
 		if (!matcher.matches()) {
 			throw new InvalidVersionException("Could not determine version based on '$text': version format " +
-					"is Minor.Major.Patch.Qualifier (i.e. 1.0.5.RELEASE")
+					"is Minor.Major.Patch.Qualifier (i.e. 1.0.5.RELEASE)")
 		}
 		Version version = new Version()
 		version.major = Integer.valueOf(matcher[0][1])
