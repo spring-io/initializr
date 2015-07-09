@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator
 
+import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.test.GradleBuildAssert
 import io.spring.initializr.test.InitializrMetadataTestBuilder
@@ -355,6 +356,53 @@ class ProjectGeneratorTests {
 		generateMavenPom(request).hasDependency(foo)
 				.hasBom('org.acme', 'the-bom', '1.2.3')
 				.hasBomsCount(1)
+	}
+
+	@Test
+	void mavenBomWithVersionMapping() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'the-bom')
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '1.3.0.M1', version: '1.2.0')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('the-bom', bom).build()
+		projectGenerator.metadata = metadata
+
+		// First version
+		def request = createProjectRequest('foo')
+		request.bootVersion = '1.2.5.RELEASE'
+		generateMavenPom(request).hasDependency(foo)
+				.hasBom('org.acme', 'foo-bom', '1.0.0')
+
+		// Second version
+		def request2 = createProjectRequest('foo')
+		request2.bootVersion = '1.3.0.M1'
+		generateMavenPom(request2).hasDependency(foo)
+				.hasBom('org.acme', 'foo-bom', '1.2.0')
+	}
+
+	@Test
+	void mavenBomWithVersionMappingAndExtraRepositories() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'the-bom')
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom', repositories: ['foo-repo'])
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '1.3.0.M1', version: '1.2.0', repositories: ['foo-repo', 'bar-repo'])
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('the-bom', bom)
+				.addRepository('foo-repo', 'repo', 'http://example.com/foo', true)
+				.addRepository('bar-repo', 'repo', 'http://example.com/bar', false).build()
+		projectGenerator.metadata = metadata
+
+		// Second version
+		def request = createProjectRequest('foo')
+		request.bootVersion = '1.3.0.RELEASE'
+		generateMavenPom(request).hasDependency(foo)
+				.hasBom('org.acme', 'foo-bom', '1.2.0')
+				.hasRepository('foo-repo', 'repo', 'http://example.com/foo', true)
+				.hasRepository('bar-repo', 'repo', 'http://example.com/bar', false)
+				.hasRepositoriesCount(2)
 	}
 
 	@Test

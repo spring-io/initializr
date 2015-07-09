@@ -55,4 +55,32 @@ class InitializrMetadataTests {
 		builder.build()
 	}
 
+	@Test
+	void invalidBomNoVersion() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("No version")
+		thrown.expectMessage("foo-bom")
+		builder.build()
+	}
+
+	@Test
+	void invalidBomVersionRangeMapping() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: 'FOO_BAR', version: '1.2.0')
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("FOO_BAR")
+		thrown.expectMessage("foo-bom")
+		builder.build()
+	}
+
 }

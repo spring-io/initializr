@@ -26,6 +26,10 @@ class InitializrConfiguration {
 
 	final Env env = new Env()
 
+	void validate() {
+		env.validate()
+	}
+
 	void merge(InitializrConfiguration other) {
 		env.merge(other.env)
 	}
@@ -135,6 +139,12 @@ class InitializrConfiguration {
 				artifactRepository = artifactRepository + '/'
 			}
 			this.artifactRepository = artifactRepository
+		}
+
+		void validate() {
+			boms.each {
+				it.value.validate()
+			}
 		}
 
 		void merge(Env other) {

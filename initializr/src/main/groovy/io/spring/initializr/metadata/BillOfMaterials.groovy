@@ -16,7 +16,11 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
+import io.spring.initializr.util.InvalidVersionException
+import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionRange
 
 /**
  * Define a Bill Of Materials to be represented in the generated project
@@ -26,10 +30,65 @@ import groovy.transform.ToString
  * @since 1.0
  */
 @ToString(ignoreNulls = true, includePackage = false)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class BillOfMaterials {
 
 	String groupId
 	String artifactId
+
+	/**
+	 * The version of the BOM. Can be {@code null} if it is provided via
+	 * a mapping.
+	 */
 	String version
+
+	List<String> repositories = []
+	final List<Mapping> mappings = []
+
+	void validate() {
+		if (!version && !mappings) {
+			throw new InvalidInitializrMetadataException("No version available for $this");
+		}
+		mappings.each {
+			try {
+				it.range = VersionRange.parse(it.versionRange)
+			} catch (InvalidVersionException ex) {
+				throw new InvalidInitializrMetadataException("Invalid version range $it.versionRange for $this", ex)
+			}
+		}
+	}
+
+	/**
+	 * Resolve this instance according to the specified Spring Boot {@link Version}. Return
+	 * a {@link BillOfMaterials} instance that holds the version and repositories to use, if
+	 * any.
+	 */
+	BillOfMaterials resolve(Version bootVersion) {
+		if (!mappings) {
+			return this
+		}
+
+		for (Mapping mapping : mappings) {
+			if (mapping.range.match(bootVersion)) {
+				def resolvedBom = new BillOfMaterials(groupId: groupId, artifactId: artifactId,
+						version: mapping.version, repositories: repositories)
+				resolvedBom.repositories += mapping.repositories
+				return resolvedBom
+			}
+		}
+		throw new IllegalStateException("No suitable mapping was found for $this and version $bootVersion")
+	}
+
+	static class Mapping {
+
+		String versionRange
+
+		String version
+
+		List<String> repositories = []
+
+		private VersionRange range
+
+	}
 
 }

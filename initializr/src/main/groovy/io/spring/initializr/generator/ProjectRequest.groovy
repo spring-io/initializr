@@ -116,7 +116,7 @@ class ProjectRequest {
 				String bomId = it.bom
 				if (!bomIds.contains(bomId)) {
 					bomIds << bomId
-					boms << metadata.configuration.env.boms[bomId]
+					boms << metadata.configuration.env.boms[bomId].resolve(requestedVersion)
 				}
 			}
 			if (it.repository) {
@@ -142,12 +142,27 @@ class ProjectRequest {
 			this.applicationName = metadata.configuration.generateApplicationName(this.name)
 		}
 
+		initializeRepositories(metadata, requestedVersion)
+
+		afterResolution(metadata)
+	}
+
+	/**
+	 * Set the repositories that this instance should use based on the {@link InitializrMetadata}
+	 * and the requested Spring Boot {@link Version}.
+	 */
+	protected void initializeRepositories(InitializrMetadata metadata, Version requestedVersion) {
 		if (!'RELEASE'.equals(requestedVersion.qualifier.qualifier)) {
 			repositories['spring-snapshots'] = metadata.configuration.env.repositories['spring-snapshots']
 			repositories['spring-milestones'] = metadata.configuration.env.repositories['spring-milestones']
 		}
-
-		afterResolution(metadata)
+		boms.each {
+			it.repositories.each {
+				if (!repositories[it]) {
+					repositories[it] = metadata.configuration.env.repositories[it]
+				}
+			}
+		}
 	}
 
 	/**

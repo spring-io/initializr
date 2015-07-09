@@ -86,6 +86,7 @@ class InitializrMetadata {
 	 * Validate the meta-data.
 	 */
 	void validate() {
+		this.configuration.validate()
 		dependencies.validate()
 
 		for (Dependency dependency : dependencies.all) {

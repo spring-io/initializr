@@ -142,9 +142,11 @@ class InitializrMetadataTestBuilder {
 	}
 
 	InitializrMetadataTestBuilder addBom(String id, String groupId, String artifactId, String version) {
+		addBom(id, new BillOfMaterials(groupId: groupId, artifactId: artifactId, version: version))
+	}
+
+	InitializrMetadataTestBuilder addBom(String id, BillOfMaterials bom) {
 		builder.withCustomizer {
-			BillOfMaterials bom = new BillOfMaterials(
-					groupId: groupId, artifactId: artifactId, version: version)
 			it.configuration.env.boms[id] = bom
 		}
 		this
