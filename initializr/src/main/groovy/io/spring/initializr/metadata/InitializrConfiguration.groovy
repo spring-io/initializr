@@ -15,6 +15,7 @@
  */
 
 package io.spring.initializr.metadata
+
 /**
  * Various configuration options used by the service.
  *
@@ -117,6 +118,18 @@ class InitializrConfiguration {
 		 */
 		final Map<String, BillOfMaterials> boms = [:]
 
+		/**
+		 * The {@link Repository} instances that are referenced in this instance.
+		 */
+		final Map<String, Repository> repositories = [:]
+
+		Env() {
+			repositories['spring-snapshots'] = new Repository(name: 'Spring Snapshots',
+					url: new URL('https://repo.spring.io/snapshot'), snapshotsEnabled: true)
+			repositories['spring-milestones'] = new Repository(name: 'Spring Milestones',
+					url: new URL('https://repo.spring.io/milestone'), snapshotsEnabled: false)
+		}
+
 		void setArtifactRepository(String artifactRepository) {
 			if (!artifactRepository.endsWith('/')) {
 				artifactRepository = artifactRepository + '/'
@@ -133,6 +146,11 @@ class InitializrConfiguration {
 			other.boms.each { id, bom ->
 				if (!boms[id]) {
 					boms[id] = bom
+				}
+			}
+			other.repositories.each { id, repo ->
+				if (!repositories[id]) {
+					repositories[id] = repo
 				}
 			}
 		}

@@ -20,6 +20,7 @@ import groovy.util.logging.Slf4j
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.Repository
 import io.spring.initializr.metadata.Type
 import io.spring.initializr.util.Version
 import io.spring.initializr.util.VersionRange
@@ -61,6 +62,8 @@ class ProjectRequest {
 	List<Dependency> resolvedDependencies
 
 	final List<BillOfMaterials> boms = []
+
+	final Map<String, Repository> repositories = [:]
 
 	def facets = []
 	def build
@@ -116,6 +119,12 @@ class ProjectRequest {
 					boms << metadata.configuration.env.boms[bomId]
 				}
 			}
+			if (it.repository) {
+				String repositoryId = it.repository
+				if (!repositories[repositoryId]) {
+					repositories[repositoryId] = metadata.configuration.env.repositories[repositoryId]
+				}
+			}
 		}
 
 		if (this.type) {
@@ -131,6 +140,11 @@ class ProjectRequest {
 
 		if (!applicationName) {
 			this.applicationName = metadata.configuration.generateApplicationName(this.name)
+		}
+
+		if (!'RELEASE'.equals(requestedVersion.qualifier.qualifier)) {
+			repositories['spring-snapshots'] = metadata.configuration.env.repositories['spring-snapshots']
+			repositories['spring-milestones'] = metadata.configuration.env.repositories['spring-milestones']
 		}
 
 		afterResolution(metadata)

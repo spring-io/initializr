@@ -106,6 +106,26 @@ class InitializrMetadataBuilderTests {
 	}
 
 	@Test
+	void mergeMetadataWithRepository() {
+		def metadata = InitializrMetadataBuilder.create().withInitializrMetadata(
+				new ClassPathResource('metadata/config/test-repository.json')).build()
+
+		def repositories = metadata.configuration.env.repositories
+		assertEquals 4, repositories.size() // 2 standard repos
+		Repository myRepo = repositories['my-repo']
+		assertNotNull myRepo
+		assertEquals 'my repo', myRepo.name
+		assertEquals new URL('http://example.com/my'), myRepo.url
+		assertEquals true, myRepo.snapshotsEnabled
+
+		Repository anotherRepo = repositories['another-repo']
+		assertNotNull anotherRepo
+		assertEquals 'another repo', anotherRepo.name
+		assertEquals new URL('http://example.com/another'), anotherRepo.url
+		assertEquals false, anotherRepo.snapshotsEnabled
+	}
+
+	@Test
 	void mergeConfigurationDisabledByDefault() {
 		def config = load(new ClassPathResource("application-test-default.yml"))
 		def customDefaultsConfig = load(new ClassPathResource("application-test-custom-env.yml"))

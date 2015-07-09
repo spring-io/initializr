@@ -19,6 +19,7 @@ package io.spring.initializr.test
 import io.spring.initializr.generator.ProjectRequest
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
+import io.spring.initializr.metadata.Repository
 import org.custommonkey.xmlunit.SimpleNamespaceContext
 import org.custommonkey.xmlunit.XMLUnit
 import org.custommonkey.xmlunit.XpathEngine
@@ -41,6 +42,7 @@ class PomAssert {
 	final Document doc
 	final Map<String, Dependency> dependencies = [:]
 	final Map<String, BillOfMaterials> boms = [:]
+	final Map<String, Repository> repositories = [:]
 
 	PomAssert(String content) {
 		eng = XMLUnit.newXpathEngine()
@@ -51,6 +53,7 @@ class PomAssert {
 		doc = XMLUnit.buildControlDocument(content)
 		parseDependencies()
 		parseBoms()
+		parseRepositories()
 	}
 
 	/**
@@ -165,20 +168,33 @@ class PomAssert {
 	}
 
 	PomAssert hasSnapshotRepository() {
-		hasRepository('spring-snapshots')
+		hasRepository('spring-snapshots', 'Spring Snapshots',
+				'https://repo.spring.io/snapshot', true)
 		hasPluginRepository('spring-snapshots')
 		this
 	}
 
-	def hasRepository(String name) {
-		def nodes = eng.getMatchingNodes(createRootNodeXPath('repositories/pom:repository/pom:id'), doc)
-		for (int i = 0; i < nodes.length; i++) {
-			if (name.equals(nodes.item(i).textContent)) {
-				return
-			}
+	PomAssert hasRepository(String id, String name, String url, Boolean snapshotsEnabled) {
+		Repository repository = repositories[id]
+		assertNotNull "No repository found with '$id' --> ${repositories.keySet()}", repository
+		if (name) {
+			assertEquals "Wrong name for $repository", name, repository.name
 		}
-		throw new IllegalArgumentException("No repository found with id $name")
+		if (url) {
+			assertEquals "Wrong url for $repository", new URL(url), repository.url
+		}
+		if (snapshotsEnabled) {
+			assertEquals "Wrong snapshots enabled flag for $repository", snapshotsEnabled, repository.snapshotsEnabled
+		}
+		this
 	}
+
+	PomAssert hasRepositoriesCount(int count) {
+		assertEquals "Wrong number of declared repositories -->'${repositories.keySet()}",
+				count, repositories.size()
+		this
+	}
+
 
 	def hasPluginRepository(String name) {
 		def nodes = eng.getMatchingNodes(createRootNodeXPath('pluginRepositories/pom:pluginRepository/pom:id'), doc)
@@ -254,6 +270,37 @@ class PomAssert {
 					assertFalse("Duplicate BOM with id $id", boms.containsKey(id))
 					boms[id] = bom
 				}
+			}
+		}
+	}
+
+	private def parseRepositories() {
+		def nodes = eng.getMatchingNodes(createRootNodeXPath('repositories/pom:repository'), doc)
+		for (int i = 0; i < nodes.length; i++) {
+			def item = nodes.item(i)
+			if (item instanceof Element) {
+				def repository = new Repository()
+				def element = (Element) item
+				def type = element.getElementsByTagName('id')
+				def id = type.item(0).textContent
+				def name = element.getElementsByTagName('name')
+				if (name.length > 0) {
+					repository.name = name.item(0).textContent
+				}
+				def url = element.getElementsByTagName('url')
+				if (url.length > 0) {
+					repository.url = new URL(url.item(0).textContent)
+				}
+				def snapshots = element.getElementsByTagName('snapshots')
+				if (snapshots.length > 0) {
+					Element snapshotsElement = (Element) snapshots.item(0);
+					def snapshotsEnabled = snapshotsElement.getElementsByTagName('enabled')
+					if (snapshotsEnabled.length > 0) {
+						repository.snapshotsEnabled = snapshotsEnabled.item(0).textContent
+					}
+				}
+				assertFalse("Duplicate Repository with id $id", repositories.containsKey(id))
+				repositories[id] = repository
 			}
 		}
 	}

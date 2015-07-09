@@ -60,6 +60,14 @@ class GradleBuildAssert {
 		contains("targetCompatibility = $javaVersion")
 	}
 
+	GradleBuildAssert hasSnapshotRepository() {
+		contains('https://repo.spring.io/snapshot')
+	}
+
+	GradleBuildAssert hasRepository(String url) {
+		contains("maven { url \"$url\" }")
+	}
+
 	GradleBuildAssert contains(String expression) {
 		assertTrue "$expression has not been found in gradle build $content", content.contains(expression)
 		this

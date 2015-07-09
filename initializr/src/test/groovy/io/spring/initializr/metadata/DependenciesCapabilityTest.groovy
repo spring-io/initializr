@@ -131,6 +131,21 @@ class DependenciesCapabilityTest {
 		assertEquals 'da-bom', capability.get('second').bom
 	}
 
+	@Test
+	void addDefaultRepository() {
+		def first = new Dependency(id: 'first')
+		def second = new Dependency(id: 'second', repository: 'da-repo')
+		def group = createDependencyGroup('test', first, second)
+		group.repository = 'test-repo'
+
+		DependenciesCapability capability = new DependenciesCapability()
+		capability.content << group
+		capability.validate()
+
+		assertEquals 'test-repo', capability.get('first').repository
+		assertEquals 'da-repo', capability.get('second').repository
+	}
+
 
 	private static DependenciesCapability createDependenciesCapability(String groupName, Dependency... dependencies) {
 		DependenciesCapability capability = new DependenciesCapability()

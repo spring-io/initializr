@@ -29,19 +29,29 @@
     "title": "Spring Boot Version",
     "type": "SINGLE_SELECT"
   },
-  "configuration": {
-    "env": {
-      "artifactRepository": "https://repo.spring.io/release/",
-      "boms": {},
-      "fallbackApplicationName": "Application",
-      "forceSsl": true,
-      "invalidApplicationNames": [
-        "SpringApplication",
-        "SpringBootApplication"
-      ],
-      "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"
-    }
-  },
+  "configuration": {"env": {
+    "artifactRepository": "https://repo.spring.io/release/",
+    "boms": {},
+    "fallbackApplicationName": "Application",
+    "forceSsl": true,
+    "invalidApplicationNames": [
+      "SpringApplication",
+      "SpringBootApplication"
+    ],
+    "repositories": {
+      "spring-milestones": {
+        "name": "Spring Milestones",
+        "snapshotsEnabled": false,
+        "url": "https://repo.spring.io/milestone"
+      },
+      "spring-snapshots": {
+        "name": "Spring Snapshots",
+        "snapshotsEnabled": true,
+        "url": "https://repo.spring.io/snapshot"
+      }
+    },
+    "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"
+  }},
   "dependencies": {
     "content": [
       {

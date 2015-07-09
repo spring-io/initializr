@@ -248,6 +248,13 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void gradleBuildWithBootSnapshot() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
+		generateGradleBuild(request).hasSnapshotRepository()
+	}
+
+	@Test
 	void gradleBuildWithCustomVersion() {
 		def whatever = new Dependency(id: 'whatever', groupId: 'org.acme', artifactId: 'whatever', version: '1.2.3')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -362,6 +369,44 @@ class ProjectGeneratorTests {
 				.contains("dependencyManagement {")
 				.contains("imports {")
 				.contains("mavenBom \"org.acme:foo-bom:1.2.3\"")
+	}
+
+	@Test
+	void mavenRepository() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', repository: 'foo-repo')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addRepository('foo-repo', 'foo', 'http://example.com/repo', false).build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo')
+		generateMavenPom(request).hasDependency(foo)
+				.hasRepository('foo-repo', 'foo', 'http://example.com/repo', false)
+	}
+
+	@Test
+	void mavenRepositoryWithSeveralDependenciesOnSameRepository() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', repository: 'the-repo')
+		def bar = new Dependency(id: 'bar', groupId: 'org.acme', artifactId: 'bar', repository: 'the-repo')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('group', foo, bar)
+				.addRepository('the-repo', 'repo', 'http://example.com/repo', true).build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo', 'bar')
+		generateMavenPom(request).hasDependency(foo)
+				.hasRepository('the-repo', 'repo', 'http://example.com/repo', true)
+				.hasRepositoriesCount(1)
+	}
+
+	@Test
+	void gradleRepository() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', repository: 'foo-repo')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addRepository('foo-repo', 'foo', 'http://example.com/repo', false).build()
+		projectGenerator.metadata = metadata
+		def request = createProjectRequest('foo')
+		generateGradleBuild(request)
+				.hasRepository('http://example.com/repo')
 	}
 
 	PomAssert generateMavenPom(ProjectRequest request) {

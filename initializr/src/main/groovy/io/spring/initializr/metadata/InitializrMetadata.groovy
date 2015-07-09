@@ -94,6 +94,11 @@ class InitializrMetadata {
 				throw new InvalidInitializrMetadataException("Dependency $dependency " +
 						"defines an invalid BOM id $dependency.bom, available boms $boms")
 			}
+			def repositories = configuration.env.repositories
+			if (dependency.repository && !repositories[dependency.repository]) {
+				throw new InvalidInitializrMetadataException("Dependency $dependency " +
+						"defines an invalid repository id $dependency.repository, available repositores $repositories")
+			}
 		}
 	}
 

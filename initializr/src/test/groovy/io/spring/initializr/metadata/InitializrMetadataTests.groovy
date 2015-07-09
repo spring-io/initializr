@@ -42,4 +42,17 @@ class InitializrMetadataTests {
 		builder.build()
 	}
 
+	@Test
+	void invalidRepository() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', repository: 'foo-repo')
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addRepository('my-repo', 'repo', 'http://example.com/repo', true)
+				.addDependencyGroup('test', foo);
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("foo-repo")
+		thrown.expectMessage("my-repo")
+		builder.build()
+	}
+
 }

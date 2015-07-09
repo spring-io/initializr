@@ -16,42 +16,17 @@
 
 package io.spring.initializr.metadata
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-
 /**
- * A group of {@link Dependency} instances identified by a name.
+ * Define a repository to be represented in the generated project
+ * if a dependency refers to it.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-class DependencyGroup {
+class Repository {
 
-	/**
-	 * Name of this group.
-	 */
 	String name
-
-	/**
-	 * The default version range to apply to all dependencies of this group unless
-	 * specified otherwise.
-	 */
-	@JsonIgnore
-	String versionRange
-
-	/**
-	 * The default bom to associate to all dependencies of this group unless
-	 * specified otherwise.
-	 */
-	@JsonIgnore
-	String bom
-
-	/**
-	 * The default repository to associate to all dependencies of this group unless
-	 * specified otherwise.
-	 */
-	@JsonIgnore
-	String repository
-
-	final List<Dependency> content = []
+	URL url
+	boolean snapshotsEnabled
 
 }

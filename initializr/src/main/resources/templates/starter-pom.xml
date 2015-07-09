@@ -107,26 +107,18 @@
 				<extensions>true</extensions>
 			</plugin><% } %>
 		</plugins>
-	</build><% if (!bootVersion.contains("RELEASE")) { %>
-
-	<repositories>
+	</build>
+	<% if (repositories) { %>
+	<repositories><% repositories.each { key, repo -> %>
 		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
+			<id>${key}</id>
+			<name>${repo.name}</name>
+			<url>${repo.url}</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>${repo.snapshotsEnabled}</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+		</repository><% } %>
+	</repositories><% } %><% if (!bootVersion.contains("RELEASE")) { %>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-snapshots</id>
@@ -144,7 +136,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories>
-<% } %>
+	</pluginRepositories><% } %>
 
 </project>

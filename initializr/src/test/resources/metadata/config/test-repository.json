@@ -1,0 +1,18 @@
+{
+  "configuration": {
+    "env": {
+      "repositories": {
+        "my-repo": {
+          "name": "my repo",
+          "url": "http://example.com/my",
+          "snapshotsEnabled": true
+        },
+        "another-repo": {
+          "name": "another repo",
+          "url": "http://example.com/another",
+          "snapshotsEnabled": false
+        }
+      }
+    }
+  }
+}
