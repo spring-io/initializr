@@ -98,7 +98,7 @@ class InitializrMetadataBuilder {
 	}
 
 	/**
-	 * Build a {@link InitializrMetadata} baed on the state of this builder.
+	 * Build a {@link InitializrMetadata} based on the state of this builder.
 	 */
 	InitializrMetadata build() {
 		InitializrConfiguration config = this.configuration ?: new InitializrConfiguration()
