@@ -155,12 +155,12 @@ initializr:
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter
         - name: Config Client
-          id: cloud-config
+          id: cloud-config-client
           description: Support for spring-cloud-config Client
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-config
         - name: Config Server
-          id: cloud-server
+          id: cloud-config-server
           description: Support for spring-cloud-config Server
           groupId: org.springframework.cloud
           artifactId: spring-cloud-config-server
