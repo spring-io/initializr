@@ -23,7 +23,7 @@ import org.springframework.util.Assert
 
 /**
  * Define the version number of a module. A typical version is represented
- * as {@code MAJOR.MINOR.PATCH.QUALIFER} where the qualifier can have an
+ * as {@code MAJOR.MINOR.PATCH.QUALIFIER} where the qualifier can have an
  * extra version.
  * <p>
  * For example: {@code 1.2.0.RC1} is the first release candidate of 1.2.0
