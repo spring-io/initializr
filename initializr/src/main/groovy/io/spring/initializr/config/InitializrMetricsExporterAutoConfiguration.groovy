@@ -17,25 +17,20 @@
 package io.spring.initializr.config
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.actuate.metrics.export.Exporter
-import org.springframework.boot.actuate.metrics.export.MetricCopyExporter
-import org.springframework.boot.actuate.metrics.repository.InMemoryMetricRepository
-import org.springframework.boot.actuate.metrics.repository.MetricRepository
+import org.springframework.boot.actuate.autoconfigure.ExportMetricWriter
+import org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration
 import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository
 import org.springframework.boot.actuate.metrics.writer.MetricWriter
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.autoconfigure.redis.RedisAutoConfiguration
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.util.ObjectUtils
 
 /**
@@ -50,8 +45,7 @@ import org.springframework.util.ObjectUtils
 @ConditionalOnProperty(value = 'spring.metrics.export.enabled')
 @EnableScheduling
 @EnableConfigurationProperties(MetricsProperties)
-@AutoConfigureAfter(value = RedisAutoConfiguration,
-		name = "org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration")
+@AutoConfigureAfter([RedisAutoConfiguration, MetricExportAutoConfiguration])
 class InitializrMetricsExporterAutoConfiguration {
 
 	@Autowired
@@ -64,33 +58,12 @@ class InitializrMetricsExporterAutoConfiguration {
 	ApplicationContext context
 
 	@Bean
-	// @ExportMetricWriter // Add this when upgrading to Boot 1.3
+	@ExportMetricWriter
 	MetricWriter writer() {
 		new RedisMetricRepository(connectionFactory,
 				metrics.prefix + metrics.getId(context.getId()) + '.'
 						+ ObjectUtils.getIdentityHexString(context) + '.',
 				metrics.key)
-	}
-
-	// Remove this when upgrading to Boot 1.3
-	@Bean
-	@ConditionalOnMissingClass(name = 'org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
-	@Primary
-	MetricRepository reader() {
-		new InMemoryMetricRepository()
-	}
-
-	// Remove this when upgrading to Boot 1.3
-	@Bean
-	@ConditionalOnMissingClass(name = 'org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter')
-	Exporter exporter(InMemoryMetricRepository reader) {
-		new MetricCopyExporter(reader, writer()) {
-			@Override
-			@Scheduled(fixedRateString = '${spring.metrics.export.default.delayMillis:5000}')
-			void export() {
-				super.export()
-			}
-		}
 	}
 
 }

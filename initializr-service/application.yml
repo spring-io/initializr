@@ -1,13 +1,10 @@
 info:
   project:
     name: Spring Start
-    version: 0.3.1
+    version: 0.4.0
   # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.2.5.RELEASE
-endpoints:
-  env:
-    keysToSanitize: key,secret,password,VCAP_SERVICES
+    version: 1.3.0.RELEASE
 
 initializr:
   env:

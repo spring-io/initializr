@@ -2,7 +2,6 @@ info:
   spring-boot:
     version: 1.1.4.RELEASE
 
-
 initializr:
   dependencies:
     - name: Core
@@ -111,3 +110,4 @@ initializr:
     - name: 1.0.2
       id: 1.0.2.RELEASE
       default: false
+
