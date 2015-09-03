@@ -275,12 +275,6 @@ initializr:
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-kafka
-        - name: Stream Local
-          id: cloud-stream-binder-local
-          description: Support for spring-cloud-stream-binder-local (messaging microservices with local message channels)
-          versionRange: 1.3.0.M4
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-stream-local
         - name: Consul Discovery
           id: cloud-starter-consul-discovery
           description: Support for spring-cloud-consul-discovery (service discovery with Hashicorp Consul)
