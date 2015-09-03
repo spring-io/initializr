@@ -239,6 +239,78 @@ initializr:
           description: Support for spring-cloud-security
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-security
+        - name: Cloud Foundry Service Discovery
+          id: cloud-cloudfoundry-discovery
+          description: Support for spring-cloud-cloudfoundry-discovery (service discovery with Cloud Foundry)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-cloudfoundry-discovery
+        - name: Sleuth
+          id: cloud-starter-sleuth
+          description: Support for spring-cloud-sleuth (distributed tracing via logs)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-sleuth
+        - name: Zipkin
+          id: cloud-starter-sleuth-zipkin
+          description: Support for spring-cloud-sleuth-zipkin (distributed tracing via Zipkin)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-sleuth-zipkin
+        - name: Stream Rabbit
+          id: cloud-stream-binder-rabbit
+          description: Support for spring-cloud-stream-binder-rabbit (messaging microservices with RabbitMQ)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-binder-rabbit
+        - name: Stream Redis
+          id: cloud-stream-binder-redis
+          description: Support for spring-cloud-stream-binder-redis (messaging microservices with Redis)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-binder-redis
+        - name: Stream Kafka
+          id: cloud-stream-binder-kafka
+          description: Support for spring-cloud-stream-binder-kafka (messaging microservices with Kafka)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-binder-kafka
+        - name: Stream Local
+          id: cloud-stream-binder-local
+          description: Support for spring-cloud-stream-binder-local (messaging microservices with local message channels)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-binder-local
+        - name: Consul Discovery
+          id: cloud-starter-consul-discovery
+          description: Support for spring-cloud-consul-discovery (service discovery with Hashicorp Consul)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-discovery
+        - name: Consul Configuration
+          id: cloud-starter-consul-config
+          description: Support for spring-cloud-consul-config (configuration management with Hashicorp Consul)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-config
+        - name: Consul Bus
+          id: cloud-starter-consul-bus
+          description: Support for spring-cloud-consul-bus (inter instance control events with Hashicorp Consul)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-bus
+        - name: Zookeeper Discovery
+          id: cloud-starter-zookeeper-discovery
+          description: Support for spring-cloud-zookeeper-discovery (service discovery with Zookeeper)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zookeeper-discovery
+        - name: Zookeeper Configuration
+          id: cloud-starter-zookeeper-config
+          description: Support for spring-cloud-zookeeper-config (configuration management with Zookeeper)
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zookeeper-config
     - name: Database
       content:
         - name: H2
