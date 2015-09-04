@@ -52,6 +52,13 @@ initializr:
           artifactId: spring-boot-devtools
           description: Support for Spring Boot Development Tools.
           versionRange: 1.3.0.M1
+        - name: Lombok
+          id: lombok
+          groupId: org.projectlombok
+          artifactId: lombok
+          description: Support for Lombok
+          versionRange: 1.3.0.M4 # same as Cloud because the version is defined there
+          bom: cloud-bom
     - name: Web
       content:
         - name: Web
@@ -94,6 +101,13 @@ initializr:
         - name: Mobile
           id: mobile
           description: Support for spring-mobile
+        - name: Rest Docs
+          id: restdocs
+          description: Support for Spring Rest Docs for building API documentation in tests
+          groupId: org.springframework.restdocs
+          artifactId: spring-restdocs
+          version: 1.0.0.M1
+          scope: test
     - name: Template Engines
       content:
         - name: Freemarker
