@@ -101,12 +101,12 @@ initializr:
         - name: Mobile
           id: mobile
           description: Support for spring-mobile
-        - name: Rest Docs
+        - name: REST Docs
           id: restdocs
-          description: Support for Spring Rest Docs for building API documentation in tests
+          description: Support for Spring REST Docs for building API documentation in tests
           groupId: org.springframework.restdocs
-          artifactId: spring-restdocs
-          version: 1.0.0.M1
+          artifactId: spring-restdocs-mockmvc
+          version: 1.0.0.RC1
           scope: test
     - name: Template Engines
       content:
