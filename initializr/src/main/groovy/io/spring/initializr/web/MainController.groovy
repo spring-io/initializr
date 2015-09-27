@@ -24,6 +24,7 @@ import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataVersion
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadata
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -123,6 +124,12 @@ class MainController extends AbstractInitializrController {
 	@ResponseBody
 	String home() {
 		renderHome('home.html')
+	}
+
+	@RequestMapping(value = '/dependencies.json', produces = 'application/json')
+	@ResponseBody
+	List<Dependency> dependencies() {
+		metadataProvider.get().dependencies.content.collectMany {it.content}
 	}
 
 	@RequestMapping('/spring')

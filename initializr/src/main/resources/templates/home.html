@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Spring Initializr</title>
+    <title>start.spring.io</title>
     <link href="//fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
@@ -11,174 +11,167 @@
 </head>
 <body>
 <div class="container-fluid">
-
     <div class="row">
-        <div class="initializr-header">
+        <div class="start-header">
             <div class="container">
-                <h1>Spring Initializr</h1>
-                <p>Bootstrap your application now</p>
+                <h1>start.spring.io</h1>
+
+                <p>Generate your Spring Boot project in seconds!</p>
             </div>
             <a href="https://github.com/spring-io/initializr" target="_blank">
                 <img style="position: absolute; top: 0; right: 0; border: 0;"
                      src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
-                     alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
+                     alt="Fork me on GitHub"
+                     data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
             </a>
         </div>
     </div>
-    <form id="form" class="form-horizontal" action="/starter.zip" method="get" role="form">
-        <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
-        <div class="row">
-            <div class="col-sm-6">
-                <h3>Project metadata</h3>
-                <div class="form-group">
-                    <label for="groupId" class="col-md-3 control-label">${groupId.title}</label>
-                    <div class="col-md-8">
-                        <input id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="artifactId" class="col-md-3 control-label">${artifactId.title}</label>
-                    <div class="col-md-8">
-                        <input id="artifactId" class="form-control" type="text" value="${artifactId.content}" name="artifactId">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="name" class="col-md-3 control-label">${name.title}</label>
-                    <div class="col-md-8">
-                        <input id="name" class="form-control" type="text" value="${name.content}" name="name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="description" class="col-md-3 control-label">${description.title}</label>
-                    <div class="col-md-8">
-                        <input id="description" class="form-control" type="text" value="${description.content}" name="description">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="packageName" class="col-md-3 control-label">${packageName.title}</label>
-                    <div class="col-md-8">
-                        <input id="packageName" class="form-control" type="text" value="${packageName.content}" name="packageName">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="type" class="col-md-3 control-label">${types.title}</label>
-                    <div class="col-md-8">
-                        <select class="form-control" id="type" name="type">
-                            <% types.content.each { %>
-                            <option data-action="${it.action}" value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
-                            <% } %>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="packaging" class="col-md-3 control-label">${packagings.title}</label>
-                    <div class="col-md-8">
-                    <select class="form-control" id="packaging" name="packaging">
-                        <% packagings.content.each { %>
-                        <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
+    <div class="container">
+        <form id="form" action="/starter.zip" method="get" role="form">
+            <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
+
+            <div class="row baseline form-inline">
+                <div class="form-group">Generate a
+                    <select class="form-control" id="type" name="type">
+                        <% types.content.each { %>
+                        <option data-action="${it.action}" value="${it.id}" ${it.default==true ?
+                        ' selected' : ''}>${it.name}</option>
                         <% } %>
                     </select>
+                    with Spring Boot
+                    <select class="form-control" name="bootVersion" id="bootVersion">
+                        <% bootVersions.content.each { %>
+                        <option value="${it.id}" ${it.default==true ?
+                        ' selected' : ''}>${it.name}</option>
+                        <% } %>
+                    </select>
+                    and JDK
+                    <select class="form-control" name="javaVersion" id="javaVersion">
+                        <% javaVersions.content.each { %>
+                        <option value="${it.id}" ${it.default==true ?
+                        ' selected' : ''}>${it.name}</option>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Project Metadata</h2>
+
+                <p>Artifact coordinates and packaging</p>
+
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="groupId" class="control-label">${groupId.title}</label>
+                        <input id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
+                    </div>
+                    <div class="form-group">
+                        <label for="artifactId" class="control-label">${artifactId.title}</label>
+                        <input id="artifactId" class="form-control" type="text" value="${artifactId.content}"
+                               name="artifactId">
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="control-label">${name.title}</label>
+                        <input id="name" class="form-control" type="text" value="${name.content}" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="control-label">${description.title}</label>
+                        <input id="description" class="form-control" type="text"
+                               value="${description.content}" name="description">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="javaVersion" class="col-md-3 control-label">${javaVersions.title}</label>
-                    <div class="col-md-8">
-                        <select class="form-control" name="javaVersion" id="javaVersion">
-                            <% javaVersions.content.each { %>
-                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="packageName" class="control-label">${packageName.title}</label>
+                        <input id="packageName" class="form-control" type="text" value="${packageName.content}"
+                               name="packageName">
+                    </div>
+                    <div class="form-group">
+                        <label for="packaging" class="control-label">${packagings.title}</label>
+                        <select class="form-control" id="packaging" name="packaging">
+                            <% packagings.content.each { %>
+                            <option value="${it.id}" ${it.default==true ?
+                            ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="language" class="col-md-3 control-label">${languages.title}</label>
-                    <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="language" class="control-label">${languages.title}</label>
                         <select class="form-control" name="language" id="language">
                             <% languages.content.each { %>
-                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
-                            <% } %>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="bootVersion" class="col-md-3 control-label">${bootVersions.title}</label>
-                    <div class="col-md-8">
-                        <select class="form-control" name="bootVersion" id="bootVersion">
-                            <% bootVersions.content.each { %>
-                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
+                            <option value="${it.id}" ${it.default==true ?
+                            ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
                 </div>
             </div>
-            <div id="dependencies" class="col-sm-6">
-                <h3>${dependencies.title}</h3>
-                <% dependencies.content.each { %>
-                <div class="form-group col-xs-6">
-                <h4>${it.name}</h4>
-                    <% it.content.each { %>
-                    <div class="checkbox" data-range="${it.versionRange}">
-                        <label>
-                            <input type="checkbox" name="style" value="${it.id}">
-                            ${it.name}
-                        </label>
-                    </div><% } %>
+            <div class="row">
+                <h2>Quick add dependencies</h2>
+
+                <p>Add Spring Boot Starters and dependencies to your application</p>
+
+                <div class="form-group col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <input id="autocomplete" class="form-control" type="text" placeholder="Search for Starters"
+                               name="autocomplete">
+                    </div>
+                    <div class="message">
+                        <div class="alert alert-warning invisible" role="alert">This dependency is not available for the
+                            chosen Boot version.
+                        </div>
+                    </div>
+                    <p class="text-center">
+                        Or check out <a href="#starters-list">the complete list of Dependencies.</a>
+                    </p>
                 </div>
-                <% } %>
+                <div class="form-group col-md-6 col-sm-12">
+                    <div id="starters">
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <p class="text-center">
-                <button name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
-                    <span class="glyphicon glyphicon-download"></span> Generate Project
-                </button>
-            </p>
-        </div>
-        <div class="page-header top10">
-            <h1>Spring CLI <small>Quickly prototype with Spring</small></h1>
-        </div>
-        <div class="row">
-            <div class="col-sm-offset-1 col-sm-5">
-                <h3>Spring CLI Zip</h3>
-                <p>
-                    <a href="/spring.zip" class="btn btn-lg btn-primary" role="button">
-                        <span class="glyphicon glyphicon-download-alt"></span> Download Spring CLI Zip
-                    </a>
-                </p>
-                <p>
-                    Download the spring CLI as a zip distribution (unpack and run bin/spring on a command line).
+            <div class="row">
+                <p class="text-center">
+                    <button name="generate-project" type="submit" class="btn btn-lg btn-primary generate" role="button">
+                        <span class="glyphicon glyphicon-download"></span> Generate Project
+                    </button>
                 </p>
             </div>
-            <div class="col-sm-5">
-                <h3>Spring CLI Installer</h3>
-                <p>
-                    <a href="/install.sh" class="btn btn-lg btn-primary" role="button">
-                        <span class="glyphicon glyphicon-download-alt"></span> Download Spring Installer
-                    </a>
-                </p>
-                <p>Installer for the spring CLI command on Un*x-like system (should work on Linux, Mac or Cygwin).</p>
-                <p>You can <kbd class="curl">curl ${serviceUrl}/install.sh | sh</kbd>, or download the script and run it.</p>
+            <div class="row">
+
+                <div id="starters-list" class="page-header">
+                    <h2>${dependencies.title}</h2>
+                </div>
+
+                <div id="dependencies">
+
+                    <% dependencies.content.each { %>
+                    <div class="form-group col-sm-6">
+                        <h3>${it.name}</h3>
+                        <% it.content.each { %>
+                        <div class="checkbox" data-range="${it.versionRange}">
+                            <label>
+                                <input type="checkbox" name="style" value="${it.id}">
+                                ${it.name}
+                                <p class="help-block">${it.description}</p>
+                            </label>
+                        </div>
+                        <% } %>
+                    </div>
+                    <% } %>
+                </div>
             </div>
-        </div>
-    </form>
+            <div class="row">
+                <p class="text-center">
+                    <button name="generate-project" type="submit" class="btn btn-lg btn-primary generate" role="button">
+                        <span class="glyphicon glyphicon-download"></span> Generate Project
+                    </button>
+                </p>
+            </div>
+        </form>
+    </div>
 </div>
-<script src="/js/zepto.min.js"></script>
+<script src="/js/jquery-1.11.3.min.js"></script>
+<script src="/js/typeahead.bundle.min.js"></script>
 <script src="/js/start.js"></script>
-<script>
-    var refreshDependencies = function(versionRange) {
-        var versions = new Versions();
-        \$("#dependencies div.checkbox").forEach(function(item) {
-            if(!\$(item).data('range') || versions.matchRange(\$(item).data('range'))(versionRange)) {
-                \$(item).show();
-            } else {
-                \$(item).hide();
-            }
-        });
-    };
-    refreshDependencies(\$("#bootVersion").attr('value'));
-    \$("#type").on('change', function() {\$("#form").attr('action', \$(this.options[this.selectedIndex]).data('action'))});
-    \$("#artifactId").on('change', function() {\$("#baseDir").attr('value', this.value)});
-    \$("#bootVersion").on("change", function(e){refreshDependencies(this.value);});
-</script>
 </body>
 </html>
