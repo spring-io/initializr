@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")<% } %>
+        classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')<% } %>
     }
 }
 
@@ -39,13 +39,13 @@ repositories {
 }
 <% } %>
 dependencies {<% compileDependencies.each { %>
-    compile("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %><% if (language=='groovy') { %>
-    compile("org.codehaus.groovy:groovy")<% } %><% runtimeDependencies.each { %>
-    runtime("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %><% if (packaging=='war') { %>
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")<% } %><% providedDependencies.each { %>
-    providedRuntime("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %>
-    testCompile("org.springframework.boot:spring-boot-starter-test") <% testDependencies.each { %>
-    testCompile("${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}")<% } %>
+    compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (language=='groovy') { %>
+    compile('org.codehaus.groovy:groovy')<% } %><% runtimeDependencies.each { %>
+    runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (packaging=='war') { %>
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')<% } %><% providedDependencies.each { %>
+    providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
+    testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
+    testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
 }
 <% if (boms) { %>
 dependencyManagement {
