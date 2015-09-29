@@ -96,6 +96,7 @@ class ProjectGenerator {
 		} else {
 			def pom = new String(doGenerateMavenPom(model))
 			new File(dir, 'pom.xml').write(pom)
+			writeMavenWrapper(dir)
 		}
 
 		def applicationName = request.applicationName
@@ -216,6 +217,18 @@ class ProjectGenerator {
 				'gradle/gradle/wrapper/gradle-wrapper.properties')
 		writeBinaryResource(wrapperDir, 'gradle-wrapper.jar',
 				'gradle/gradle/wrapper/gradle-wrapper.jar')
+	}
+
+	private void writeMavenWrapper(File dir) {
+		writeTextResource(dir, 'mvnw.cmd', 'maven/mvnw.cmd')
+		writeTextResource(dir, 'mvnw', 'maven/mvnw')
+
+		def wrapperDir = new File(dir, '.mvn/wrapper')
+		wrapperDir.mkdirs()
+		writeTextResource(wrapperDir, 'maven-wrapper.properties',
+				'maven/wrapper/maven-wrapper.properties')
+		writeBinaryResource(wrapperDir, 'maven-wrapper.jar',
+				'maven/wrapper/maven-wrapper.jar')
 	}
 
 	private File writeBinaryResource(File dir, String name, String location) {

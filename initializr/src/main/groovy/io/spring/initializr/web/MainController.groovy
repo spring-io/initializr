@@ -158,7 +158,7 @@ class MainController extends AbstractInitializrController {
 
 		def download = projectGenerator.createDistributionFile(dir, '.zip')
 
-		def wrapperScript = request.baseDir ? "$request.baseDir/gradlew" : 'gradlew'
+		def wrapperScript = getWrapperScript(request)
 
 		new AntBuilder().zip(destfile: download) {
 			zipfileset(dir: dir, includes: wrapperScript, filemode: 755)
@@ -183,6 +183,12 @@ class MainController extends AbstractInitializrController {
 	private static String generateFileName(ProjectRequest request, String extension) {
 		String tmp = request.artifactId.replaceAll(' ', '_')
 		URLEncoder.encode(tmp, 'UTF-8') + '.' + extension
+	}
+
+	private static String getWrapperScript(ProjectRequest request) {
+		def script = 'gradle'.equals(request.build) ? 'gradlew' : 'mvnw'
+		def wrapperScript = request.baseDir ? "$request.baseDir/$script" : script
+		wrapperScript
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName, String contentType) {

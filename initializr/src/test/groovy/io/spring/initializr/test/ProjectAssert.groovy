@@ -79,6 +79,9 @@ class ProjectAssert {
 
 	ProjectAssert isMavenProject() {
 		hasFile('pom.xml').hasNoFile('build.gradle')
+		hasFile('mvnw', 'mvnw.cmd',
+				'.mvn/wrapper/maven-wrapper.properties',
+				'.mvn/wrapper/maven-wrapper.jar')
 		mavenProject = true
 		this
 	}
