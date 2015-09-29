@@ -44,6 +44,9 @@ class ProjectGenerator {
 	@Autowired
 	InitializrMetadata metadata
 
+	@Autowired
+	ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator()
+
 	@Value('${TMPDIR:.}')
 	String tmpdir
 
@@ -89,6 +92,7 @@ class ProjectGenerator {
 		if (gradleBuild) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
+			writeGradleWrapper(dir)
 		} else {
 			def pom = new String(doGenerateMavenPom(model))
 			new File(dir, 'pom.xml').write(pom)
@@ -200,6 +204,37 @@ class ProjectGenerator {
 
 	private byte[] doGenerateGradleBuild(Map model) {
 		template 'starter-build.gradle', model
+	}
+
+	private void writeGradleWrapper(File dir) {
+		writeTextResource(dir, 'gradlew.bat', 'gradle/gradlew.bat')
+		writeTextResource(dir, 'gradlew', 'gradle/gradlew')
+
+		def wrapperDir = new File(dir, 'gradle/wrapper')
+		wrapperDir.mkdirs()
+		writeTextResource(wrapperDir, 'gradle-wrapper.properties',
+				'gradle/gradle/wrapper/gradle-wrapper.properties')
+		writeBinaryResource(wrapperDir, 'gradle-wrapper.jar',
+				'gradle/gradle/wrapper/gradle-wrapper.jar')
+	}
+
+	private File writeBinaryResource(File dir, String name, String location) {
+		doWriteProjectResource(dir, name, location, true)
+	}
+
+	private File writeTextResource(File dir, String name, String location) {
+		doWriteProjectResource(dir, name, location, false)
+	}
+
+	private File doWriteProjectResource(File dir, String name, String location, boolean binary) {
+		def target = new File(dir, name)
+		if (binary) {
+			target << projectResourceLocator.getBinaryResource("classpath:project/$location")
+		}
+		else {
+			target.write(projectResourceLocator.getTextResource("classpath:project/$location"))
+		}
+		target
 	}
 
 	private File initializerProjectDir(File rootDir, ProjectRequest request) {

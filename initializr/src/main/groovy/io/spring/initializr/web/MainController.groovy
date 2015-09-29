@@ -158,8 +158,11 @@ class MainController extends AbstractInitializrController {
 
 		def download = projectGenerator.createDistributionFile(dir, '.zip')
 
+		def wrapperScript = request.baseDir ? "$request.baseDir/gradlew" : 'gradlew'
+
 		new AntBuilder().zip(destfile: download) {
-			zipfileset(dir: dir, includes: '**')
+			zipfileset(dir: dir, includes: wrapperScript, filemode: 755)
+			zipfileset(dir: dir, includes: '**', excludes: wrapperScript)
 		}
 		upload(download, dir, generateFileName(request, 'zip'), 'application/zip')
 	}

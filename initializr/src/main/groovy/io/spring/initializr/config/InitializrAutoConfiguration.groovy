@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import com.google.common.cache.CacheBuilder
 import io.spring.initializr.generator.ProjectGenerationMetricsListener
 import io.spring.initializr.generator.ProjectGenerator
+import io.spring.initializr.generator.ProjectResourceLocator
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
@@ -80,6 +81,11 @@ class InitializrAutoConfiguration {
 	}
 
 	@Bean
+	ProjectResourceLocator projectResourceLocator() {
+		return new ProjectResourceLocator()
+	}
+
+	@Bean
 	@ConditionalOnMissingBean
 	InitializrMetadata initializrMetadata(InitializrProperties properties) {
 		InitializrMetadataBuilder.fromInitializrProperties(properties).build()
@@ -101,7 +107,8 @@ class InitializrAutoConfiguration {
 	CacheManager cacheManager() {
 		def cacheManager = new SimpleCacheManager()
 		cacheManager.caches = Arrays.asList(
-				createConcurrentMapCache(600, 'initializr'))
+				createConcurrentMapCache(600, 'initializr'),
+				new ConcurrentMapCache("project-resources"))
 		cacheManager
 	}
 

@@ -85,6 +85,9 @@ class ProjectAssert {
 
 	ProjectAssert isGradleProject() {
 		hasFile('build.gradle').hasNoFile('pom.xml')
+		hasFile('gradlew', 'gradlew.bat',
+				'gradle/wrapper/gradle-wrapper.properties',
+				'gradle/wrapper/gradle-wrapper.jar')
 		mavenProject = false
 		this
 	}
