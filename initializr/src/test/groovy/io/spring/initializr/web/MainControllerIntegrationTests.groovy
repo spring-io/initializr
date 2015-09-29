@@ -34,7 +34,6 @@ import static org.hamcrest.CoreMatchers.allOf
 import static org.hamcrest.CoreMatchers.containsString
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertThat
 import static org.junit.Assert.assertTrue
@@ -364,8 +363,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void homeIsForm() {
 		def body = htmlHome()
 		assertTrue "Wrong body:\n$body", body.contains('action="/starter.zip"')
-		assertTrue "Must force https", body.contains("https://localhost:$port/install.sh")
-		assertFalse "Must force https", body.contains('http://')
 	}
 
 	@Test

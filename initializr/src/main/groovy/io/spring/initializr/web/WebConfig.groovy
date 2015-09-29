@@ -16,6 +16,9 @@
 
 package io.spring.initializr.web
 
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
+import org.springframework.web.servlet.resource.VersionResourceResolver
+
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.http.HttpHeaders
