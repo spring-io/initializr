@@ -4,37 +4,57 @@ body, h1, h2, h3 {
 }
 
 .start-header {
-    color: #f1f1f1;
-    background-color: #6db33f;
+    color: #eee;
+    background-color: #34302d;
     height: auto;
-    padding: 30px;
-    background-size: 300px;
+    padding: 1.5em 0 0 0;
     font-size: 20px;
-    margin-bottom: 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    font-size: 25px;
+    text-align: center;
 }
 
-.start-header h1 {
-    font-family: Montserrat, sans-serif;
-    font-size: 40px;
-    line-height: 30px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
+.start-header select {
+    font-size: 18px;
 }
 
-@media (min-width: 768px) {
-    .start-header {
-        background: #6db33f 90% 50% no-repeat;
+.start-header .help-block {
+    font-size: 0.6em;
+}
+
+.start-header kbd {
+    color: #333;
+    background-color: #ddd;
+}
+
+.start-header button {
+    margin-top: 1em;
+}
+
+@media (min-width: 992px) {
+    .start-header button {
+        margin-top: 0;
     }
 }
 
-.baseline {
-    font-size: 32px;
-    text-align: center;
-    margin-bottom: 1em;
+.start-main {
+    margin-top: 300px;
 }
 
-.baseline select {
-    font-size: 20px;
+@media (min-width: 768px) {
+    .start-main {
+        margin-top: 210px;
+    }
+}
+
+@media (min-width: 992px) {
+    .start-main {
+        margin-top: 140px;
+    }
 }
 
 input[type=text] {
@@ -55,14 +75,6 @@ input[type=text] {
 .tag .close {
     float: none;
     margin-left: 0.2em;
-}
-
-#starters-list {
-    margin-top: 8em;
-}
-
-.generate {
-    margin-top: 3em;
 }
 
 /* autocomplete */

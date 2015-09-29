@@ -10,50 +10,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="start-header">
-            <div class="container">
-                <h1>Spring Initializr</h1>
-
-                <p>Bootstrap your application now</p>
-            </div>
-            <a href="https://github.com/spring-io/initializr" target="_blank">
-                <img style="position: absolute; top: 0; right: 0; border: 0;"
-                     src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
-                     alt="Fork me on GitHub"
-                     data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
-            </a>
-        </div>
-    </div>
-    <div class="container">
-        <form id="form" action="/starter.zip" method="get" role="form">
-            <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
-
-            <div class="row baseline form-inline">
-                <div class="form-group">Generate a
-                    <select class="form-control" id="type" name="type">
-                        <% types.content.each { %>
-                        <option data-action="${it.action}" value="${it.id}" ${it.default==true ?
-                        ' selected' : ''}>${it.name}</option>
-                        <% } %>
-                    </select>
-                    with Spring Boot
-                    <select class="form-control" name="bootVersion" id="bootVersion">
-                        <% bootVersions.content.each { %>
-                        <option value="${it.id}" ${it.default==true ?
-                        ' selected' : ''}>${it.name}</option>
-                        <% } %>
-                    </select>
-                    and JDK
-                    <select class="form-control" name="javaVersion" id="javaVersion">
-                        <% javaVersions.content.each { %>
-                        <option value="${it.id}" ${it.default==true ?
-                        ' selected' : ''}>${it.name}</option>
-                        <% } %>
-                    </select>
+<form id="form" action="/starter.zip" method="get" role="form">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="start-header">
+                <div class="row baseline form-inline">
+                    <div class="form-group col-md-9">Generate a
+                        <select class="form-control" id="type" name="type">
+                            <% types.content.each { %>
+                            <option data-action="${it.action}" value="${it.id}" ${it.default==true ?
+                            ' selected' : ''}>${it.name}</option>
+                            <% } %>
+                        </select>
+                        with Spring Boot
+                        <select class="form-control" name="bootVersion" id="bootVersion">
+                            <% bootVersions.content.each { %>
+                            <option value="${it.id}" ${it.default==true ?
+                            ' selected' : ''}>${it.name}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
+                            <span class="glyphicon glyphicon-download"></span> Generate Project
+                        </button>
+                        <p class="help-block" id="shortcut"></p>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="container start-main">
+
+            <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
+
             <div class="row">
                 <h2>Project Metadata</h2>
 
@@ -95,6 +84,14 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="javaVersion" class="control-label">${javaVersions.title}</label>
+                        <select class="form-control" name="javaVersion" id="javaVersion">
+                            <% javaVersions.content.each { %>
+                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="language" class="control-label">${languages.title}</label>
                         <select class="form-control" name="language" id="language">
                             <% languages.content.each { %>
@@ -115,14 +112,6 @@
                         <input id="autocomplete" class="form-control" type="text" placeholder="Search for Starters"
                                name="autocomplete">
                     </div>
-                    <div class="message">
-                        <div class="alert alert-warning invisible" role="alert">This dependency is not available for the
-                            chosen Boot version.
-                        </div>
-                    </div>
-                    <p class="text-center">
-                        Or check out <a href="#starters-list">the complete list of dependencies.</a>
-                    </p>
                 </div>
                 <div class="form-group col-md-6 col-sm-12">
                     <div id="starters">
@@ -130,20 +119,7 @@
                 </div>
             </div>
             <div class="row">
-                <p class="text-center">
-                    <button name="generate-project" type="submit" class="btn btn-lg btn-primary generate" role="button">
-                        <span class="glyphicon glyphicon-download"></span> Generate Project
-                    </button>
-                </p>
-            </div>
-            <div class="row">
-
-                <div id="starters-list" class="page-header">
-                    <h2>${dependencies.title}</h2>
-                </div>
-
                 <div id="dependencies">
-
                     <% dependencies.content.each { %>
                     <div class="form-group col-sm-6">
                         <h3>${it.name}</h3>
@@ -160,18 +136,12 @@
                     <% } %>
                 </div>
             </div>
-            <div class="row">
-                <p class="text-center">
-                    <button name="generate-project" type="submit" class="btn btn-lg btn-primary generate" role="button">
-                        <span class="glyphicon glyphicon-download"></span> Generate Project
-                    </button>
-                </p>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 <script src="/js/jquery-1.11.3.min.js"></script>
 <script src="/js/typeahead.bundle.min.js"></script>
+<script src="/js/mousetrap.min.js"></script>
 <script src="/js/start.js"></script>
 </body>
 </html>

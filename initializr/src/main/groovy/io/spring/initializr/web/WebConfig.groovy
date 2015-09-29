@@ -16,11 +16,6 @@
 
 package io.spring.initializr.web
 
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.resource.VersionResourceResolver
-
-import javax.servlet.http.HttpServletRequest
-
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.HttpMediaTypeNotAcceptableException
@@ -29,6 +24,8 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.util.UrlPathHelper
+
+import javax.servlet.http.HttpServletRequest
 
 /**
  * Spring Initializr web configuration.
