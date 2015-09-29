@@ -20,6 +20,7 @@ import org.junit.Test
 
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 
 import static org.junit.Assert.*
@@ -40,8 +41,10 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 
 	@Test
 	void doNotForceSsl() {
-		def body = htmlHome()
-		assertTrue "Force SSL should be disabled", body.contains("http://localhost:$port/install.sh")
+		ResponseEntity<String> response = invokeHome('curl/1.2.4', "*/*")
+		String body = response.getBody()
+		assertTrue "Must not force https", body.contains("http://localhost:$port/")
+		assertFalse "Must not force https", body.contains('https://')
 	}
 
 	@Test
