@@ -9,7 +9,7 @@ order.
 
 * https://github.com/spring-io/initializr/issues/137[#137]: include maven wrapper in generated projects
 * https://github.com/spring-io/initializr/issues/100[#100]: include gradle wrapper in generated projects
-* https://github.com/spring-io/initializr/issues/130[#130]: Upgrade to Gradle 2.7
+* https://github.com/spring-io/initializr/issues/130[#130]: upgrade to Gradle 2.7
 * https://github.com/spring-io/initializr/issues/125[#121]: support for BOM versions mapping
 * https://github.com/spring-io/initializr/issues/125[#125]: support for custom repository per dependency
 * https://github.com/spring-io/initializr/issues/120[#120]: remove start-class property from Maven build
