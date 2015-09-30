@@ -421,6 +421,15 @@ initializr:
           id: remote-shell
           description: Support for CRaSH
   types:
+    - name: Maven Project
+      id: maven-project
+      description: Generate a Maven based project archive
+      sts-id: starter.zip
+      tags:
+        build: maven
+        format: project
+      default: true
+      action: /starter.zip
     - name: Maven POM
       id: maven-build
       description: Generate a Maven pom.xml
@@ -430,14 +439,14 @@ initializr:
         format: build
       default: false
       action: /pom.xml
-    - name: Maven Project
-      id: maven-project
-      description: Generate a Maven based project archive
-      sts-id: starter.zip
+    - name: Gradle Project
+      id: gradle-project
+      description: Generate a Gradle based project archive
+      sts-id: gradle.zip
       tags:
-        build: maven
+        build: gradle
         format: project
-      default: true
+      default: false
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
@@ -448,15 +457,6 @@ initializr:
         format: build
       default: false
       action: /build.gradle
-    - name: Gradle Project
-      id: gradle-project
-      description: Generate a Gradle based project archive
-      sts-id: gradle.zip
-      tags:
-        build: gradle
-        format: project
-      default: false
-      action: /starter.zip
   packagings:
     - name: Jar
       id: jar
@@ -465,19 +465,19 @@ initializr:
       id: war
       default: false
   javaVersions:
-    - id: 1.6
-      default: false
-    - id: 1.7
-      default: false
     - id: 1.8
       default: true
-  languages:
-    - name: Groovy
-      id: groovy
+    - id: 1.7
       default: false
+    - id: 1.6
+      default: false
+  languages:
     - name: Java
       id: java
       default: true
+    - name: Groovy
+      id: groovy
+      default: false
   bootVersions:
     - name : Latest SNAPSHOT
       id: 1.2.4.BUILD-SNAPSHOT
