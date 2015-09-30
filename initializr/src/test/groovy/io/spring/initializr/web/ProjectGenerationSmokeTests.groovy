@@ -17,8 +17,6 @@
 package io.spring.initializr.web
 
 import geb.Browser
-import io.spring.initializr.test.GradleBuildAssert
-import io.spring.initializr.test.PomAssert
 import io.spring.initializr.web.test.HomePage
 import org.junit.After
 import org.junit.Before
@@ -173,33 +171,6 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	}
 
 	@Test
-	void createMavenBuild() {
-		toHome {
-			page.type = 'maven-build'
-			page.dependency('data-jpa').click()
-			page.artifactId = 'my-maven-project'
-			page.generateProject.click()
-			at HomePage
-
-			pomAssert().hasArtifactId('my-maven-project')
-					.hasSpringBootStarterDependency('data-jpa')
-		}
-	}
-
-	@Test
-	void createGradleBuild() {
-		toHome {
-			page.type = 'gradle-build'
-			page.javaVersion = '1.6'
-			page.artifactId = 'my-gradle-project'
-			page.generateProject.click()
-			at HomePage
-
-			gradleBuildAssert().hasArtifactId('my-gradle-project').hasJavaVersion('1.6')
-		}
-	}
-
-	@Test
 	void dependencyHiddenAccordingToRange() {
 		toHome { // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
 			page.dependency('org.acme:bur').displayed == true
@@ -234,14 +205,6 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		script.delegate = browser
 		script()
 		browser
-	}
-
-	private GradleBuildAssert gradleBuildAssert() {
-		new GradleBuildAssert(getArchive('build.gradle').text)
-	}
-
-	private PomAssert pomAssert() {
-		new PomAssert(getArchive('pom.xml').text)
 	}
 
 	private byte[] from(String fileName) {

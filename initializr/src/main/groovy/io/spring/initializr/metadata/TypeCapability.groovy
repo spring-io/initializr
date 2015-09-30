@@ -16,12 +16,16 @@
 
 package io.spring.initializr.metadata
 
+import groovy.transform.AutoClone
+import groovy.transform.AutoCloneStyle
+
 /**
  * An {@link ServiceCapabilityType#ACTION action} capability.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
+@AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 class TypeCapability extends ServiceCapability<List<Type>> {
 
 	final List<Type> content = []

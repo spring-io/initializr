@@ -49,7 +49,17 @@ abstract class AbstractInitializrController {
 	protected String renderHome(String templatePath) {
 		def model = [:]
 		model['serviceUrl'] = generateAppUrl()
-		metadataProvider.get().properties.each { model[it.key] = it.value }
+		metadataProvider.get().properties.each {
+			if (it.key.equals('types')) {
+				model['types'] = it.value.clone()
+			} else {
+				model[it.key] = it.value
+			}
+		}
+
+		// Only keep project type
+		model['types'].content.removeAll { t -> !'project'.equals(t.tags['format']) }
+
 		template templatePath, model
 	}
 

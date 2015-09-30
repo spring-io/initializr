@@ -18,6 +18,8 @@ package io.spring.initializr.metadata
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import groovy.transform.AutoClone
+import groovy.transform.AutoCloneStyle
 
 import org.springframework.util.Assert
 
@@ -30,6 +32,7 @@ import org.springframework.util.Assert
  */
 @JsonIgnoreProperties(["default", "all"])
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 abstract class ServiceCapability<T> {
 
 	final String id

@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.allOf
 import static org.hamcrest.CoreMatchers.containsString
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertThat
 import static org.junit.Assert.assertTrue
@@ -357,8 +358,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		downloadZip('/starter.zip?style=foo').pomAssert().hasSpringBootStarterDependency('foo')
 	}
 
-	// Existing tests for backward compatibility
-
 	@Test
 	void homeIsForm() {
 		def body = htmlHome()
@@ -403,6 +402,13 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		def body = htmlHome()
 		assertTrue("Wrong body:\n$body", body.contains('name="bootVersion"'))
 		assertTrue("Wrong body:\n$body", body.contains('1.2.0.BUILD-SNAPSHOT"'))
+	}
+
+	@Test
+	void homeHasOnlyProjectFormatTypes() {
+		def body = htmlHome()
+		assertTrue 'maven project not found', body.contains('Maven Project')
+		assertFalse 'maven pom type should have been filtered', body.contains('Maven POM')
 	}
 
 	@Test
