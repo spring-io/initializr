@@ -1,0 +1,44 @@
+{
+  "dependencies": [
+    {
+      "id": "web",
+      "name": "Web",
+      "description": "Web dependency description"
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "description": null
+    },
+    {
+      "id": "data-jpa",
+      "name": "Data JPA",
+      "description": null
+    },
+    {
+      "id": "org.acme:foo",
+      "name": "Foo",
+      "description": null
+    },
+    {
+      "id": "org.acme:bar",
+      "name": "Bar",
+      "description": null
+    },
+    {
+      "id": "org.acme:biz",
+      "name": "Biz",
+      "description": null
+    },
+    {
+      "id": "org.acme:bur",
+      "name": "Bur",
+      "description": null
+    },
+    {
+      "id": "my-api",
+      "name": "My API",
+      "description": null
+    }
+  ]
+}

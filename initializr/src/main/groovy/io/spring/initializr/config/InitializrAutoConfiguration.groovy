@@ -28,6 +28,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.web.MainController
+import io.spring.initializr.web.UiController
 import io.spring.initializr.web.WebConfig
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,6 +71,12 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean(MainController)
 	MainController initializrMainController() {
 		new MainController()
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(UiController)
+	UiController initializrUiController() {
+		new UiController()
 	}
 
 	@Bean

@@ -92,9 +92,9 @@ $(function () {
         $("#starters div[data-id='" + id + "']").remove();
     };
     var initializeSearchEngine = function (engine, bootVersion) {
-        $.getJSON("/dependencies.json?version=" + bootVersion, function (data) {
+        $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
             engine.clear();
-            engine.add(data);
+            engine.add(data.dependencies);
         });
     };
     refreshDependencies($("#bootVersion").val());
