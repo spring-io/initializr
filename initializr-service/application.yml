@@ -30,51 +30,51 @@ initializr:
       content:
         - name: Security
           id: security
-          description: Support for spring-security
+          description: Secure your application via spring-security
         - name: AOP
           id: aop
-          description: Support for aspect-oriented programming including spring-aop and AspectJ
+          description: Aspect-oriented programming including spring-aop and AspectJ
         - name: Atomikos (JTA)
           id: jta-atomikos
-          description: Support for JTA distributed transactions via Atomikos
+          description: JTA distributed transactions via Atomikos
           versionRange: 1.2.0.M1
         - name: Bitronix (JTA)
           id: jta-bitronix
-          description: Support for JTA distributed transactions via Bitronix
+          description: JTA distributed transactions via Bitronix
           versionRange: 1.2.0.M1
         - name: Cache
           id: cache
-          description: Support for Spring's Cache abstraction
+          description: Spring's Cache abstraction
           versionRange: 1.3.0.M1
         - name: DevTools
           id: devtools
           groupId: org.springframework.boot
           artifactId: spring-boot-devtools
-          description: Support for Spring Boot Development Tools.
+          description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
         - name: Lombok
           id: lombok
           groupId: org.projectlombok
           artifactId: lombok
-          description: Support for Lombok
+          description: Lombok
           versionRange: 1.3.0.M4 # same as Cloud because the version is defined there
           bom: cloud-bom
     - name: Web
       content:
         - name: Web
           id: web
-          description: Support for full-stack web development, including Tomcat and spring-webmvc
+          description: Full-stack web development with Tomcat and Spring MVC
           facets:
             - web
         - name: Websocket
           id: websocket
-          description: Support for websocket development with Tomcat
+          description: Websocket development with SockJS and STOMP
         - name: WS
           id: ws
-          description: Support for Spring Web Services
+          description: Contract-first SOAP service development with Spring Web Services
         - name: Jersey (JAX-RS)
           id: jersey
-          description: Support for the Jersey RESTful Web Services framework
+          description: the Jersey RESTful Web Services framework
           versionRange: 1.2.0.RELEASE
         - name: Vaadin
           id: vaadin
@@ -83,27 +83,27 @@ initializr:
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
           version: 1.0.0
-          description: Support for Vaadin
+          description: Vaadin
           bom: vaadin-bom
         - name: Rest Repositories
           id: data-rest
-          description: Support for exposing Spring Data repositories over REST via spring-data-rest-webmvc
+          description: Exposing Spring Data repositories over REST via spring-data-rest-webmvc
         - name: HATEOAS
           id: hateoas
-          description: Support for HATEOAS-based RESTful services
+          description: HATEOAS-based RESTful services
           versionRange: 1.2.2.RELEASE
         - name: Rest Repositories HAL Browser
           id: data-rest-hal
-          description: Support for browsing Spring Data REST repositories with an HTML UI
+          description: Browsing Spring Data REST repositories with an HTML UI
           groupId: org.springframework.data
           artifactId: spring-data-rest-hal-browser
           versionRange: 1.3.0.M1
         - name: Mobile
           id: mobile
-          description: Support for spring-mobile
+          description: Simplify the development of mobile web applications with spring-mobile
         - name: REST Docs
           id: restdocs
-          description: Support for Spring REST Docs for building API documentation in tests
+          description: Document RESTful services by combining hand-written and auto-generated documentation
           groupId: org.springframework.restdocs
           artifactId: spring-restdocs-mockmvc
           version: 1.0.0.RC1
@@ -112,27 +112,27 @@ initializr:
       content:
         - name: Freemarker
           id: freemarker
-          description: Support for the FreeMarker templating engine
+          description: FreeMarker templating engine
           facets:
             - web
         - name: Velocity
           id: velocity
-          description: Support for the Velocity templating engine
+          description: Velocity templating engine
           facets:
             - web
         - name: Groovy Templates
           id: groovy-templates
-          description: Support for the Groovy templating engine
+          description: Groovy templating engine
           facets:
             - web
         - name: Thymeleaf
           id: thymeleaf
-          description: Support for the Thymeleaf templating engine, including integration with Spring
+          description: Thymeleaf templating engine, including integration with Spring
           facets:
             - web
         - name: Mustache
           id: mustache
-          description: Support for the Mustache templating engine
+          description: Mustache templating engine
           versionRange: 1.2.2.RELEASE
           facets:
             - web
@@ -140,27 +140,27 @@ initializr:
       content:
         - name: JDBC
           id: jdbc
-          description: Support for JDBC databases
+          description: JDBC databases
         - name: JPA
           id: data-jpa
-          description: Support for the Java Persistence API including spring-data-jpa, spring-orm and Hibernate
+          description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           aliases:
             - jpa
         - name: MongoDB
           id: data-mongodb
-          description: Support for the MongoDB NoSQL Database, including spring-data-mongodb
+          description: MongoDB NoSQL Database, including spring-data-mongodb
         - name: Redis
           id: redis
-          description: Support for the REDIS key-value data store, including spring-redis
+          description: REDIS key-value data store, including spring-redis
         - name: Gemfire
           id: data-gemfire
-          description: Support for the GemFire distributed data store including spring-data-gemfire
+          description: GemFire distributed data store including spring-data-gemfire
         - name: Solr
           id: data-solr
-          description: Support for the Apache Solr search platform, including spring-data-solr
+          description: Apache Solr search platform, including spring-data-solr
         - name: Elasticsearch
           id: data-elasticsearch
-          description: Support for the Elasticsearch search and analytics engine including spring-data-elasticsearch
+          description: Elasticsearch search and analytics engine including spring-data-elasticsearch
     - name: Cloud
       bom: cloud-bom
       versionRange: "1.2.3.RELEASE"
@@ -171,175 +171,175 @@ initializr:
           versionRange: 1.2.0.RELEASE
         - name: Cloud Bootstrap
           id: cloud-starter
-          description: Support for spring-cloud-context (e.g. Bootstrap context and @RefreshScope)
+          description: spring-cloud-context (e.g. Bootstrap context and @RefreshScope)
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter
         - name: Config Client
           id: cloud-config-client
-          description: Support for spring-cloud-config Client
+          description: spring-cloud-config Client
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-config
         - name: Config Server
           id: cloud-config-server
-          description: Support for spring-cloud-config Server, central management for configuration via a git or svn backend
+          description: Central management for configuration via a git or svn backend
           groupId: org.springframework.cloud
           artifactId: spring-cloud-config-server
         - name: Eureka Discovery
           id: cloud-eureka
-          description: Support for service discovery using spring-cloud-netflix and Eureka
+          description: Service discovery using spring-cloud-netflix and Eureka
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-eureka
         - name: Eureka Server
           id: cloud-eureka-server
-          description: Support for spring-cloud-netflix Eureka Server
+          description: spring-cloud-netflix Eureka Server
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-eureka-server
         - name: AWS
           id: cloud-aws
-          description: Support for AWS native services from spring-cloud-aws
+          description: AWS native services from spring-cloud-aws
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws
         - name: Feign
           id: cloud-feign
-          description: Support for declarative REST clients with spring-cloud-netflix Feign
+          description: Declarative REST clients with spring-cloud-netflix Feign
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-feign
         - name: Hystrix
           id: cloud-hystrix
-          description: Support for circuit breaker with spring-cloud-netflix Hystrix
+          description: Circuit breaker with spring-cloud-netflix Hystrix
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-hystrix
         - name: Hystrix Dashboard
           id: cloud-hystrix-dashboard
-          description: Support for circuit breaker dashboard with spring-cloud-netflix Hystrix
+          description: Circuit breaker dashboard with spring-cloud-netflix Hystrix
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-hystrix-dashboard
         - name: OAuth2
           id: cloud-oauth2
-          description: Support for OAuth2 and distributed application patterns with spring-cloud-security
+          description: OAuth2 and distributed application patterns with spring-cloud-security
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-oauth2
         - name: Ribbon
           id: cloud-ribbon
-          description: Support for client side load balancing with spring-cloud-netflix and Ribbon
+          description: Client side load balancing with spring-cloud-netflix and Ribbon
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-ribbon
         - name: Turbine
           id: cloud-turbine
-          description: Support for circuit breaker metric aggregation using spring-cloud-netflix with Turbine and server-sent events
+          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and server-sent events
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine
         - name: Turbine AMQP
           id: cloud-turbine-amqp
-          description: Support for circuit breaker metric aggregation using spring-cloud-netflix with Turbine and AMQP
+          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and AMQP
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-amqp
         - name: Zuul
           id: cloud-zuul
-          description: Support for intelligent and programmable routing with spring-cloud-netflix Zuul
+          description: Intelligent and programmable routing with spring-cloud-netflix Zuul
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zuul
         - name: AWS JDBC
           id: cloud-aws-jdbc
-          description: Support for relational databases on AWS with RDS and spring-cloud-aws-jdbc
+          description: Relational databases on AWS with RDS and spring-cloud-aws-jdbc
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws-jdbc
         - name: AWS Messaging
           id: cloud-aws-messaging
-          description: Support for messaging on AWS with SQS and spring-cloud-aws-messaging
+          description: Messaging on AWS with SQS and spring-cloud-aws-messaging
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws-messaging
         - name: Cloud Bus AMQP
           id: cloud-bus-amqp
-          description: Support for a simple control bus with AMQP with spring-cloud-bus-amqp
+          description: A simple control bus with AMQP with spring-cloud-bus-amqp
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-bus-amqp
         - name: Cloud Security
           id: cloud-security
-          description: Support for secure load balancing and routing with spring-cloud-security
+          description: Secure load balancing and routing with spring-cloud-security
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-security
         - name: Cloud Foundry Discovery
           id: cloud-cloudfoundry-discovery
-          description: Support for spring-cloud-cloudfoundry-discovery (service discovery with Cloud Foundry)
+          description: Service discovery with Cloud Foundry
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cloudfoundry-discovery
         - name: Sleuth
           id: cloud-starter-sleuth
-          description: Support for distributed tracing via logs with spring-cloud-sleuth
+          description: Distributed tracing via logs with spring-cloud-sleuth
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-sleuth
         - name: Zipkin
           id: cloud-starter-zipkin
-          description: Support for distributed tracing via Zipkin and spring-cloud-sleuth-zipkin
+          description: Distributed tracing via Zipkin and spring-cloud-sleuth-zipkin
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
-          description: Support for messaging microservices with RabbitMQ with spring-cloud-stream-binder-rabbit
+          description: Messaging microservices with RabbitMQ 
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-rabbit
         - name: Stream Redis
           id: cloud-stream-binder-redis
-          description: Support for messaging microservices with Redis with spring-cloud-stream-binder-redis
+          description: Messaging microservices with Redis
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-redis
         - name: Stream Kafka
           id: cloud-stream-binder-kafka
-          description: Support for messaging microservices with Kafka spring-cloud-stream-binder-kafka
+          description: Messaging microservices with Kafka
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-kafka
         - name: Consul Discovery
           id: cloud-starter-consul-discovery
-          description: Support for service discovery with Hashicorp Consul and spring-cloud-consul-discovery
+          description: Service discovery with Hashicorp Consul
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-discovery
         - name: Consul Configuration
           id: cloud-starter-consul-config
-          description: Support for configuration management with Hashicorp Consul and spring-cloud-consul-config
+          description: Configuration management with Hashicorp Consul
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-config
         - name: Consul Bus
           id: cloud-starter-consul-bus
-          description: Support for control bus with Hashicorp Consul and spring-cloud-consul-bus
+          description: Inter instance control events with Hashicorp Consul
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-bus
         - name: Zookeeper Discovery
           id: cloud-starter-zookeeper-discovery
-          description: Support for service discovery with Zookeeper and spring-cloud-zookeeper-discovery
+          description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-discovery
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
-          description: Support for configuration management with Zookeeper and spring-cloud-zookeeper-config
+          description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-config
         - name: Cluster Redis
           id: cloud-cluster-redis
-          description: Support for leadership election and global state with Redis and spring-cloud-cluster-redis
+          description: Leadership election and global state with Redis and spring-cloud-cluster-redis
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-redis
         - name: Cluster Zookeeper
           id: cloud-cluster-zookeeper
-          description: Support for leadership election and global state with Zookeeper and spring-cloud-cluster-zookeeper
+          description: Leadership election and global state with Zookeeper and spring-cloud-cluster-zookeeper
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-zookeeper
         - name: Cluster Hazelcast
           id: cloud-cluster-hazelcast
-          description: Support for leadership election and global state with Hazelcast and spring-cloud-cluster-hazelcast
+          description: Leadership election and global state with Hazelcast and spring-cloud-cluster-hazelcast
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-hazelcast
@@ -347,32 +347,32 @@ initializr:
       content:
         - name: H2
           id: h2
-          description: Support for the H2 database (with embedded support)
+          description: H2 database (with embedded support)
           groupId: com.h2database
           artifactId: h2
           scope: runtime
         - name: HSQLDB
           id: hsql
-          description: Support for the HSQLDB database (with embedded support)
+          description: HSQLDB database (with embedded support)
           groupId: org.hsqldb
           artifactId: hsqldb
           scope: runtime
         - name: Apache Derby
           id: derby
-          description: Support for the Apache Derby database (with embedded support)
+          description: Apache Derby database (with embedded support)
           groupId: org.apache.derby
           artifactId: derby
           scope: runtime
           versionRange: 1.2.2.RELEASE
         - name: MySQL
           id: mysql
-          description: Support for the MySQL jdbc driver
+          description: MySQL jdbc driver
           groupId: mysql
           artifactId: mysql-connector-java
           scope: runtime
         - name: PostgreSQL
           id: postgresql
-          description: Support for the PostgreSQL jdbc driver
+          description: PostgreSQL jdbc driver
           groupId: org.postgresql
           artifactId: postgresql
           version: 9.4-1201-jdbc41
@@ -381,30 +381,30 @@ initializr:
       content:
         - name: Facebook
           id: social-facebook
-          description: Support for spring-social-facebook
+          description: spring-social-facebook
         - name: LinkedIn
           id: social-linkedin
-          description: Support for spring-social-linkedin
+          description: spring-social-linkedin
         - name: Twitter
           id: social-twitter
-          description: Support for spring-social-twitter
+          description: spring-social-twitter
     - name: I/O
       content:
         - name: Batch
           id: batch
-          description: Support for Spring Batch including HSQLDB database
+          description: Spring Batch including HSQLDB database
         - name: Integration
           id: integration
-          description: Support for common spring-integration modules
+          description: Common spring-integration modules
         - name: JMS
           id: hornetq
-          description: Support for Java Message Service API via HornetQ
+          description: Java Message Service API via HornetQ
         - name: AMQP
           id: amqp
-          description: Support for the Advanced Message Queuing Protocol via spring-rabbit
+          description: Advanced Message Queuing Protocol via spring-rabbit
         - name: Mail
           id: mail
-          description: Support for javax.mail
+          description: javax.mail
           versionRange: 1.2.0.RC1
     - name: Ops
       content:
@@ -419,7 +419,7 @@ initializr:
           artifactId: spring-boot-actuator-docs
         - name: Remote Shell
           id: remote-shell
-          description: Support for CRaSH
+          description: CRaSH shell integration
   types:
     - name: Maven Project
       id: maven-project

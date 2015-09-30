@@ -16,14 +16,14 @@
             <div class="start-header">
                 <div class="row baseline form-inline">
                     <div class="form-group col-md-9">Generate a
-                        <select class="form-control" id="type" name="type">
+                        <select tabindex="1" class="form-control" id="type" name="type">
                             <% types.content.each { %>
                             <option data-action="${it.action}" value="${it.id}" ${it.default==true ?
                             ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                         with Spring Boot
-                        <select class="form-control" name="bootVersion" id="bootVersion">
+                        <select tabindex="2" class="form-control" name="bootVersion" id="bootVersion">
                             <% bootVersions.content.each { %>
                             <option value="${it.id}" ${it.default==true ?
                             ' selected' : ''}>${it.name}</option>
@@ -31,10 +31,9 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <button name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
-                            <span class="glyphicon glyphicon-download"></span> Generate Project
+                        <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
+                            Generate Project
                         </button>
-                        <p class="help-block" id="shortcut"></p>
                     </div>
                 </div>
             </div>
@@ -51,32 +50,32 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group">
                         <label for="groupId" class="control-label">${groupId.title}</label>
-                        <input id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
+                        <input tabindex="3" id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
                     </div>
                     <div class="form-group">
                         <label for="artifactId" class="control-label">${artifactId.title}</label>
-                        <input id="artifactId" class="form-control" type="text" value="${artifactId.content}"
+                        <input tabindex="4" id="artifactId" class="form-control" type="text" value="${artifactId.content}"
                                name="artifactId">
                     </div>
                     <div class="form-group">
                         <label for="name" class="control-label">${name.title}</label>
-                        <input id="name" class="form-control" type="text" value="${name.content}" name="name">
+                        <input tabindex="5" id="name" class="form-control" type="text" value="${name.content}" name="name">
                     </div>
                     <div class="form-group">
                         <label for="description" class="control-label">${description.title}</label>
-                        <input id="description" class="form-control" type="text"
+                        <input tabindex="6" id="description" class="form-control" type="text"
                                value="${description.content}" name="description">
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group">
                         <label for="packageName" class="control-label">${packageName.title}</label>
-                        <input id="packageName" class="form-control" type="text" value="${packageName.content}"
+                        <input tabindex="7" id="packageName" class="form-control" type="text" value="${packageName.content}"
                                name="packageName">
                     </div>
                     <div class="form-group">
                         <label for="packaging" class="control-label">${packagings.title}</label>
-                        <select class="form-control" id="packaging" name="packaging">
+                        <select tabindex="8" class="form-control" id="packaging" name="packaging">
                             <% packagings.content.each { %>
                             <option value="${it.id}" ${it.default==true ?
                             ' selected' : ''}>${it.name}</option>
@@ -85,7 +84,7 @@
                     </div>
                     <div class="form-group">
                         <label for="javaVersion" class="control-label">${javaVersions.title}</label>
-                        <select class="form-control" name="javaVersion" id="javaVersion">
+                        <select tabindex="9" class="form-control" name="javaVersion" id="javaVersion">
                             <% javaVersions.content.each { %>
                             <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
                             <% } %>
@@ -93,7 +92,7 @@
                     </div>
                     <div class="form-group">
                         <label for="language" class="control-label">${languages.title}</label>
-                        <select class="form-control" name="language" id="language">
+                        <select tabindex="10" class="form-control" name="language" id="language">
                             <% languages.content.each { %>
                             <option value="${it.id}" ${it.default==true ?
                             ' selected' : ''}>${it.name}</option>
@@ -109,7 +108,7 @@
 
                 <div class="form-group col-md-6 col-sm-12">
                     <div class="form-group">
-                        <input id="autocomplete" class="form-control" type="text" placeholder="Search for Starters"
+                        <input tabindex="11" id="autocomplete" class="form-control" type="text" placeholder="Search for Starters"
                                name="autocomplete">
                     </div>
                 </div>
@@ -126,7 +125,7 @@
                         <% it.content.each { %>
                         <div class="checkbox" data-range="${it.versionRange}">
                             <label>
-                                <input type="checkbox" name="style" value="${it.id}">
+                                <input tabindex="13" type="checkbox" name="style" value="${it.id}">
                                 ${it.name}
                                 <p class="help-block">${it.description}</p>
                             </label>
@@ -135,6 +134,13 @@
                     </div>
                     <% } %>
                 </div>
+            </div>
+            <div class="row">
+                <p class="text-center">
+                    <button tabindex="14" name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
+                        Generate Project
+                    </button>
+                </p>
             </div>
         </div>
     </div>

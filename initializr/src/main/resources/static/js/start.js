@@ -65,10 +65,10 @@
 
 $(function () {
     if (navigator.appVersion.indexOf("Mac") != -1) {
-        $("#shortcut").html("or <kbd>command</kbd> + <kbd>enter</kbd>")
+        $(".btn-primary").append("<kbd>&#8984; + &#9166;</kbd>");
     }
     else {
-        $("#shortcut").html("or <kbd>ctrl</kbd> + <kbd>enter</kbd>")
+        $(".btn-primary").append("<kbd>alt + &#9166;</kbd>");
     }
 
     var refreshDependencies = function (versionRange) {
@@ -134,17 +134,14 @@ $(function () {
             }
         });
     $('#autocomplete').bind('typeahead:select', function (ev, suggestion) {
-        var versions = new Versions();
-        var bootVersion = $("#bootVersion").val();
-        if (!suggestion.versionRange || versions.matchRange(suggestion.versionRange)(bootVersion)) {
-            addTag(suggestion.id, suggestion.name);
-            $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
+        var alreadySelected = $("#dependencies input[value='" + suggestion.id + "']").prop('checked');
+        if(alreadySelected) {
+            removeTag(suggestion.id);
+            $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
         }
         else {
-            $(".message div").removeClass("invisible");
-            window.setTimeout(function () {
-                $(".message div").addClass("invisible");
-            }, 3000);
+            addTag(suggestion.id, suggestion.name);
+            $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
         }
         $('#autocomplete').typeahead('val', '');
     });
@@ -152,6 +149,12 @@ $(function () {
         var id = $(this).parent().attr("data-id");
         $("#dependencies input[value='" + id + "']").prop('checked', false);
         removeTag(id);
+    });
+    $("#groupId").on("change", function() {
+        $("#packageName").val($(this).val());
+    });
+    $("#artifactId").on("change", function() {
+        $("#name").val($(this).val());
     });
     $("#dependencies input").bind("change", function () {
         var value = $(this).val()
@@ -162,12 +165,12 @@ $(function () {
             removeTag(value);
         }
     });
-    Mousetrap.bind(['command+enter', 'ctrl+enter'], function (e) {
+    Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
         $("#form").submit();
         return false;
     });
     var autocompleteTrap = new Mousetrap($("#autocomplete").get(0));
-    autocompleteTrap.bind(['command+enter', 'ctrl+enter'], function (e) {
+    autocompleteTrap.bind(['command+enter', 'alt+enter'], function (e) {
         $("#form").submit();
         return false;
     });

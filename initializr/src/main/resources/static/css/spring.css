@@ -7,8 +7,7 @@ body, h1, h2, h3 {
     color: #eee;
     background-color: #34302d;
     height: auto;
-    padding: 1.5em 0 0 0;
-    font-size: 20px;
+    padding: 0.8em 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -26,9 +25,10 @@ body, h1, h2, h3 {
     font-size: 0.6em;
 }
 
-.start-header kbd {
-    color: #333;
-    background-color: #ddd;
+button kbd {
+    background: none;
+    margin-left: 0.5em;
+    box-shadow: none;
 }
 
 .start-header button {
@@ -42,18 +42,18 @@ body, h1, h2, h3 {
 }
 
 .start-main {
-    margin-top: 300px;
+    margin-top: 270px;
 }
 
 @media (min-width: 768px) {
     .start-main {
-        margin-top: 210px;
+        margin-top: 160px;
     }
 }
 
 @media (min-width: 992px) {
     .start-main {
-        margin-top: 140px;
+        margin-top: 110px;
     }
 }
 
