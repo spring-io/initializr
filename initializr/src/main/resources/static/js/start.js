@@ -94,6 +94,11 @@ $(function () {
     var initializeSearchEngine = function (engine, bootVersion) {
         $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
             engine.clear();
+            $.each(data.dependencies, function(idx, item) {
+                if(item.weight === undefined) {
+                    item.weight = 0;
+                }
+            });
             engine.add(data.dependencies);
         });
     };
@@ -108,14 +113,28 @@ $(function () {
         refreshDependencies(this.value);
         initializeSearchEngine(starters, this.value);
     });
+    $(".tofullversion a").on("click", function() {
+        $(".full").removeClass("hidden");
+        $(".tofullversion").addClass("hidden");
+        $(".tosimpleversion").removeClass("hidden");
+        $("body").scrollTop(0);
+        return false;
+    });
+    $(".tosimpleversion a").on("click", function() {
+        $(".full").addClass("hidden");
+        $(".tofullversion").removeClass("hidden");
+        $(".tosimpleversion").addClass("hidden");
+        $("body").scrollTop(0);
+        return false;
+    });
     var starters = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'description'),
+        datumTokenizer: Bloodhound.tokenizers.obj.nonword('name', 'description', 'keywords', 'group'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         identify: function (obj) {
             return obj.id;
         },
         sorter: function(a,b) {
-            return 0;
+            return b.weight - a.weight;
         },
         cache: false
     });

@@ -12,10 +12,15 @@
 <body>
 <form id="form" action="/starter.zip" method="get" role="form">
     <div class="container-fluid">
-        <div class="row">
-            <div class="start-header">
-                <div class="row baseline form-inline">
-                    <div class="form-group col-md-9">Generate a
+        <div class="row start-header">
+            <div class="container">
+                <h1>Spring Initializr <small>bootstrap your application now</small></h1>
+            </div>
+        </div>
+        <div class="container start-main">
+            <div class="row form-inline text-center">
+                <div class="form-group project-choice">
+                    <h2>Generate a
                         <select tabindex="1" class="form-control" id="type" name="type">
                             <% types.content.each { %>
                             <option data-action="${it.action}" value="${it.id}" ${it.default==true ?
@@ -29,51 +34,46 @@
                             ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
-                            Generate Project
-                        </button>
-                    </div>
+                    </h2>
                 </div>
             </div>
-        </div>
-        <div class="container start-main">
 
             <input id="baseDir" name="baseDir" type="hidden" value="${artifactId.content}">
 
             <div class="row">
-                <h2>Project Metadata</h2>
-
-                <p>Artifact coordinates and packaging</p>
-
                 <div class="col-sm-12 col-md-6">
+                    <h2>Project Metadata</h2>
+
+                    <p>Artifact coordinates</p>
+
                     <div class="form-group">
                         <label for="groupId" class="control-label">${groupId.title}</label>
-                        <input tabindex="3" id="groupId" class="form-control" type="text" value="${groupId.content}" name="groupId">
+                        <input tabindex="3" id="groupId" class="form-control" type="text" value="${groupId.content}"
+                               name="groupId">
                     </div>
                     <div class="form-group">
                         <label for="artifactId" class="control-label">${artifactId.title}</label>
-                        <input tabindex="4" id="artifactId" class="form-control" type="text" value="${artifactId.content}"
+                        <input tabindex="4" id="artifactId" class="form-control" type="text"
+                               value="${artifactId.content}"
                                name="artifactId">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="name" class="control-label">${name.title}</label>
-                        <input tabindex="5" id="name" class="form-control" type="text" value="${name.content}" name="name">
+                        <input tabindex="5" id="name" class="form-control" type="text" value="${name.content}"
+                               name="name">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="description" class="control-label">${description.title}</label>
                         <input tabindex="6" id="description" class="form-control" type="text"
                                value="${description.content}" name="description">
                     </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="packageName" class="control-label">${packageName.title}</label>
-                        <input tabindex="7" id="packageName" class="form-control" type="text" value="${packageName.content}"
+                        <input tabindex="7" id="packageName" class="form-control" type="text"
+                               value="${packageName.content}"
                                name="packageName">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="packaging" class="control-label">${packagings.title}</label>
                         <select tabindex="8" class="form-control" id="packaging" name="packaging">
                             <% packagings.content.each { %>
@@ -82,15 +82,16 @@
                             <% } %>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="javaVersion" class="control-label">${javaVersions.title}</label>
                         <select tabindex="9" class="form-control" name="javaVersion" id="javaVersion">
                             <% javaVersions.content.each { %>
-                            <option value="${it.id}" ${it.default==true ? ' selected' : ''}>${it.name}</option>
+                            <option value="${it.id}" ${it.default==true ?
+                            ' selected' : ''}>${it.name}</option>
                             <% } %>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full hidden">
                         <label for="language" class="control-label">${languages.title}</label>
                         <select tabindex="10" class="form-control" name="language" id="language">
                             <% languages.content.each { %>
@@ -100,25 +101,40 @@
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <h2>Dependencies</h2>
+                <div class="col-sm-12 col-md-6">
+                    <h2>Dependencies</h2>
 
-                <p>Add Spring Boot Starters and dependencies to your application</p>
+                    <p>Add Spring Boot Starters and dependencies to your application</p>
 
-                <div class="form-group col-md-6 col-sm-12">
                     <div class="form-group">
-                        <input tabindex="11" id="autocomplete" class="form-control" type="text" placeholder="Search for Starters"
+                        <label for="autocomplete" class="control-label">Search for dependencies</label>
+                        <input tabindex="11" id="autocomplete" class="form-control" type="text"
+                               placeholder="Web, Security, JPA, Actuator, Devtools..."
                                name="autocomplete">
                     </div>
-                </div>
-                <div class="form-group col-md-6 col-sm-12">
-                    <div id="starters">
+                    <div class="form-group">
+                        <label for="starters" class="control-label">Selected Starters</label>
+                        <div id="starters">
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="row hidden tosimpleversion">
+                <p>Too many options? <a href="#">Switch back to the simple version.</a></p>
+            </div>
             <div class="row">
-                <div id="dependencies">
+                <p class="text-center">
+                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary"
+                            role="button">
+                        Generate Project
+                    </button>
+                </p>
+            </div>
+            <div class="row tofullversion">
+                <p>Don't know what to look for? Want more options? <a href="#">Switch to the full version.</a></p>
+            </div>
+            <div class="row">
+                <div id="dependencies" class="full hidden">
                     <% dependencies.content.each { %>
                     <div class="form-group col-sm-6">
                         <h3>${it.name}</h3>
@@ -135,9 +151,10 @@
                     <% } %>
                 </div>
             </div>
-            <div class="row">
+            <div class="row full hidden">
                 <p class="text-center">
-                    <button tabindex="14" name="generate-project" type="submit" class="btn btn-lg btn-primary" role="button">
+                    <button tabindex="14" name="generate-project" type="submit" class="btn btn-lg btn-primary"
+                            role="button">
                         Generate Project
                     </button>
                 </p>

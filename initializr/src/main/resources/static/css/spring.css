@@ -6,55 +6,40 @@ body, h1, h2, h3 {
 .start-header {
     color: #eee;
     background-color: #34302d;
-    height: auto;
-    padding: 0.8em 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
     font-size: 25px;
-    text-align: center;
+    padding: 0.5em 0;
+    border-top: 4px solid #6db33f;
 }
 
-.start-header select {
-    font-size: 18px;
+.start-header h1 {
+    text-transform: uppercase;
 }
 
-.start-header .help-block {
-    font-size: 0.6em;
+.start-header small {
+    text-transform: none;
+    font-size: 50%;
+}
+
+.project-choice {
+    margin: 1em 0;
+}
+
+.project-choice select {
+    font-size: 22px;
+}
+
+#starters {
+    min-height: 3em;
+}
+
+button.btn-primary {
+    margin-top: 1em;
 }
 
 button kbd {
     background: none;
     margin-left: 0.5em;
     box-shadow: none;
-}
-
-.start-header button {
-    margin-top: 1em;
-}
-
-@media (min-width: 992px) {
-    .start-header button {
-        margin-top: 0;
-    }
-}
-
-.start-main {
-    margin-top: 270px;
-}
-
-@media (min-width: 768px) {
-    .start-main {
-        margin-top: 160px;
-    }
-}
-
-@media (min-width: 992px) {
-    .start-main {
-        margin-top: 110px;
-    }
 }
 
 input[type=text] {
@@ -75,6 +60,10 @@ input[type=text] {
 .tag .close {
     float: none;
     margin-left: 0.2em;
+}
+
+.advanced {
+    margin: 1em 0;
 }
 
 /* autocomplete */
