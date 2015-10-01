@@ -175,7 +175,7 @@ initializr:
           id: data-elasticsearch
           description: Elasticsearch search and analytics engine including spring-data-elasticsearch
           weight: 10
-    - name: Cloud
+    - name: Cloud Core
       bom: cloud-bom
       versionRange: "1.2.3.RELEASE"
       content:
@@ -188,36 +188,100 @@ initializr:
           description: spring-cloud-context (e.g. Bootstrap context and @RefreshScope)
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter
+          weight: 100
+        - name: Cloud Security
+          id: cloud-security
+          description: Secure load balancing and routing with spring-cloud-security
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-security
+        - name: OAuth2
+          id: cloud-oauth2
+          description: OAuth2 and distributed application patterns with spring-cloud-security
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-oauth2
+    - name: Cloud Config
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
         - name: Config Client
           id: cloud-config-client
           description: spring-cloud-config Client
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-config
+          weight: 100
         - name: Config Server
           id: cloud-config-server
           description: Central management for configuration via a git or svn backend
           groupId: org.springframework.cloud
           artifactId: spring-cloud-config-server
+        - name: Zookeeper Configuration
+          id: cloud-starter-zookeeper-config
+          description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zookeeper-config
+        - name: Consul Configuration
+          id: cloud-starter-consul-config
+          description: Configuration management with Hashicorp Consul
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-config
+    - name: Cloud Discovery
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
         - name: Eureka Discovery
           id: cloud-eureka
           description: Service discovery using spring-cloud-netflix and Eureka
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-eureka
+          weight: 100
         - name: Eureka Server
           id: cloud-eureka-server
           description: spring-cloud-netflix Eureka Server
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-eureka-server
-        - name: AWS
-          id: cloud-aws
-          description: AWS native services from spring-cloud-aws
+        - name: Zookeeper Discovery
+          id: cloud-starter-zookeeper-discovery
+          description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
+          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-aws
+          artifactId: spring-cloud-starter-zookeeper-discovery
+        - name: Cloud Foundry Discovery
+          id: cloud-cloudfoundry-discovery
+          description: Service discovery with Cloud Foundry
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-cloudfoundry-discovery
+        - name: Consul Discovery
+          id: cloud-starter-consul-discovery
+          description: Service discovery with Hashicorp Consul
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-discovery
+    - name: Cloud Routing
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
+        - name: Zuul
+          id: cloud-zuul
+          description: Intelligent and programmable routing with spring-cloud-netflix Zuul
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zuul
+        - name: Ribbon
+          id: cloud-ribbon
+          description: Client side load balancing with spring-cloud-netflix and Ribbon
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-ribbon
         - name: Feign
           id: cloud-feign
           description: Declarative REST clients with spring-cloud-netflix Feign
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-feign
+    - name: Cloud Circuit Breaker
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
         - name: Hystrix
           id: cloud-hystrix
           description: Circuit breaker with spring-cloud-netflix Hystrix
@@ -228,16 +292,6 @@ initializr:
           description: Circuit breaker dashboard with spring-cloud-netflix Hystrix
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-hystrix-dashboard
-        - name: OAuth2
-          id: cloud-oauth2
-          description: OAuth2 and distributed application patterns with spring-cloud-security
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-oauth2
-        - name: Ribbon
-          id: cloud-ribbon
-          description: Client side load balancing with spring-cloud-netflix and Ribbon
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-ribbon
         - name: Turbine
           id: cloud-turbine
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and server-sent events
@@ -246,39 +300,20 @@ initializr:
         - name: Turbine AMQP
           id: cloud-turbine-amqp
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and AMQP
+          versionRange: "[0.0.0.RELEASE,1.3.0.M5]"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-amqp
-        - name: Zuul
-          id: cloud-zuul
-          description: Intelligent and programmable routing with spring-cloud-netflix Zuul
+        - name: Turbine Stream
+          id: cloud-turbine-stream
+          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
+          versionRange: "(1.3.0.M5,999.9.9.RELEASE]"
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-zuul
-        - name: AWS JDBC
-          id: cloud-aws-jdbc
-          description: Relational databases on AWS with RDS and spring-cloud-aws-jdbc
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-aws-jdbc
-        - name: AWS Messaging
-          id: cloud-aws-messaging
-          description: Messaging on AWS with SQS and spring-cloud-aws-messaging
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-aws-messaging
-        - name: Cloud Bus AMQP
-          id: cloud-bus-amqp
-          description: A simple control bus with AMQP with spring-cloud-bus-amqp
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-amqp
-        - name: Cloud Security
-          id: cloud-security
-          description: Secure load balancing and routing with spring-cloud-security
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-security
-        - name: Cloud Foundry Discovery
-          id: cloud-cloudfoundry-discovery
-          description: Service discovery with Cloud Foundry
-          versionRange: 1.3.0.M4
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-cloudfoundry-discovery
+          artifactId: spring-cloud-starter-turbine-stream
+          weight: -1
+    - name: Cloud Tracing
+      bom: cloud-bom
+      versionRange: "1.3.0.M4"
+      content:
         - name: Sleuth
           id: cloud-starter-sleuth
           description: Distributed tracing via logs with spring-cloud-sleuth
@@ -291,6 +326,40 @@ initializr:
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
+    - name: Cloud Messaging
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
+        - name: Cloud Bus AMQP
+          id: cloud-bus-amqp
+          description: A simple control bus with AMQP and spring-cloud-bus-amqp
+          versionRange: "[0.0.0.RELEASE,1.3.0.M5]"
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-bus-amqp
+        - name: Cloud Bus Rabbit
+          id: cloud-bus-rabbit
+          description: A simple control bus with Rabbit and spring-cloud-bus
+          versionRange: "(1.3.0.M5,9999.9.9.RELEASE]"
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-bus-rabbit
+        - name: Cloud Bus Redis
+          id: cloud-bus-redis
+          description: A simple control bus with Redis and spring-cloud-bus
+          versionRange: "(1.3.0.M5,9999.9.9.RELEASE]"
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-bus-redis
+        - name: Cloud Bus Kafka
+          id: cloud-bus-kafka
+          description: A simple control bus with Kafka and spring-cloud-bus
+          versionRange: "(1.3.0.M5,9999.9.9.RELEASE]"
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-bus-kafka
+        - name: Consul Bus
+          id: cloud-starter-consul-bus
+          description: Inter instance control events with Hashicorp Consul
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-consul-bus
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
           description: Messaging microservices with RabbitMQ 
@@ -309,36 +378,29 @@ initializr:
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-kafka
-        - name: Consul Discovery
-          id: cloud-starter-consul-discovery
-          description: Service discovery with Hashicorp Consul
-          versionRange: 1.3.0.M4
+    - name: Cloud AWS
+      bom: cloud-bom
+      versionRange: "1.2.3.RELEASE"
+      content:
+        - name: AWS Core
+          id: cloud-aws
+          description: AWS native services from spring-cloud-aws
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-consul-discovery
-        - name: Consul Configuration
-          id: cloud-starter-consul-config
-          description: Configuration management with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          artifactId: spring-cloud-starter-aws
+        - name: AWS JDBC
+          id: cloud-aws-jdbc
+          description: Relational databases on AWS with RDS and spring-cloud-aws-jdbc
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-consul-config
-        - name: Consul Bus
-          id: cloud-starter-consul-bus
-          description: Inter instance control events with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          artifactId: spring-cloud-starter-aws-jdbc
+        - name: AWS Messaging
+          id: cloud-aws-messaging
+          description: Messaging on AWS with SQS and spring-cloud-aws-messaging
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-consul-bus
-        - name: Zookeeper Discovery
-          id: cloud-starter-zookeeper-discovery
-          description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
-          versionRange: 1.3.0.M4
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-zookeeper-discovery
-        - name: Zookeeper Configuration
-          id: cloud-starter-zookeeper-config
-          description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
-          versionRange: 1.3.0.M4
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-zookeeper-config
+          artifactId: spring-cloud-starter-aws-messaging
+    - name: Cloud Cluster
+      bom: cloud-bom
+      versionRange: "1.3.0.M4"
+      content:
         - name: Cluster Redis
           id: cloud-cluster-redis
           description: Leadership election and global state with Redis and spring-cloud-cluster-redis
