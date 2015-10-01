@@ -7,28 +7,25 @@
     },
     {
       "id": "security",
-      "name": "Security",
-      "description": null
+      "name": "Security"
     },
     {
       "id": "data-jpa",
-      "name": "Data JPA",
-      "description": null
+      "name": "Data JPA"
     },
     {
       "id": "org.acme:foo",
       "name": "Foo",
-      "description": null
+      "keywords": "thefoo,dafoo",
+      "weight": 42
     },
     {
       "id": "org.acme:bar",
-      "name": "Bar",
-      "description": null
+      "name": "Bar"
     },
     {
       "id": "my-api",
-      "name": "My API",
-      "description": null
+      "name": "My API"
     }
   ]
 }

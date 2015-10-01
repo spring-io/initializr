@@ -58,6 +58,8 @@
         "content": [
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "spring-boot-starter-web",
             "description": "Web dependency description",
             "facets": ["web"],
@@ -68,6 +70,8 @@
           },
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "spring-boot-starter-security",
             "facets": [],
             "groupId": "org.springframework.boot",
@@ -77,6 +81,8 @@
           },
           {
             "aliases": ["jpa"],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "spring-boot-starter-data-jpa",
             "facets": [],
             "groupId": "org.springframework.boot",
@@ -96,11 +102,15 @@
             "groupId": "org.acme",
             "id": "org.acme:foo",
             "name": "Foo",
+            "weight": 42,
+            "keywords": ["thefoo", "dafoo"],
             "scope": "compile",
             "version": "1.3.5"
           },
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "bar",
             "facets": [],
             "groupId": "org.acme",
@@ -111,6 +121,8 @@
           },
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "biz",
             "facets": [],
             "groupId": "org.acme",
@@ -122,6 +134,8 @@
           },
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "bur",
             "facets": [],
             "groupId": "org.acme",
@@ -133,6 +147,8 @@
           },
           {
             "aliases": [],
+            "keywords": [],
+            "weight": 0,
             "artifactId": "my-api",
             "facets": [],
             "groupId": "org.acme",

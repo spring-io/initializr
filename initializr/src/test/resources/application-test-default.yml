@@ -24,6 +24,10 @@ initializr:
           groupId: org.acme
           artifactId: foo
           version: 1.3.5
+          weight: 42
+          keywords:
+            - thefoo
+            - dafoo
         - name: Bar
           id: org.acme:bar
           version: 2.1.0

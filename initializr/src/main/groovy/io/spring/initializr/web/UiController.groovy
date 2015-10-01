@@ -72,7 +72,15 @@ class UiController {
 		def result = [:]
 		result.id = d.id
 		result.name = d.name
-		result.description = d.description
+		if (d.description) {
+			result.description = d.description
+		}
+		if (d.weight) {
+			result.weight = d.weight
+		}
+		if (d.keywords) {
+			result.keywords = d.keywords.join(',')
+		}
 		result
 	}
 

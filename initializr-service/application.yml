@@ -31,6 +31,7 @@ initializr:
         - name: Security
           id: security
           description: Secure your application via spring-security
+          weight: 100
         - name: AOP
           id: aop
           description: Aspect-oriented programming including spring-aop and AspectJ
@@ -64,6 +65,7 @@ initializr:
         - name: Web
           id: web
           description: Full-stack web development with Tomcat and Spring MVC
+          weight: 100
           facets:
             - web
         - name: Websocket
@@ -87,6 +89,7 @@ initializr:
           bom: vaadin-bom
         - name: Rest Repositories
           id: data-rest
+          weight: 10
           description: Exposing Spring Data repositories over REST via spring-data-rest-webmvc
         - name: HATEOAS
           id: hateoas
@@ -115,11 +118,15 @@ initializr:
           description: FreeMarker templating engine
           facets:
             - web
+          keywords:
+            - template
         - name: Velocity
           id: velocity
           description: Velocity templating engine
           facets:
             - web
+          keywords:
+            - template
         - name: Groovy Templates
           id: groovy-templates
           description: Groovy templating engine
@@ -130,12 +137,16 @@ initializr:
           description: Thymeleaf templating engine, including integration with Spring
           facets:
             - web
+          keywords:
+            - template
         - name: Mustache
           id: mustache
           description: Mustache templating engine
           versionRange: 1.2.2.RELEASE
           facets:
             - web
+          keywords:
+            - template
     - name: Data
       content:
         - name: JDBC
@@ -144,11 +155,13 @@ initializr:
         - name: JPA
           id: data-jpa
           description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
+          weight: 100
           aliases:
             - jpa
         - name: MongoDB
           id: data-mongodb
           description: MongoDB NoSQL Database, including spring-data-mongodb
+          weight: 50
         - name: Redis
           id: redis
           description: REDIS key-value data store, including spring-redis
@@ -161,6 +174,7 @@ initializr:
         - name: Elasticsearch
           id: data-elasticsearch
           description: Elasticsearch search and analytics engine including spring-data-elasticsearch
+          weight: 10
     - name: Cloud
       bom: cloud-bom
       versionRange: "1.2.3.RELEASE"
@@ -382,6 +396,7 @@ initializr:
         - name: Facebook
           id: social-facebook
           description: spring-social-facebook
+          weight: 25
         - name: LinkedIn
           id: social-linkedin
           description: spring-social-linkedin

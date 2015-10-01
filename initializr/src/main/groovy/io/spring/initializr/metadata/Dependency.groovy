@@ -63,6 +63,10 @@ class Dependency extends MetadataElement {
 
 	String repository
 
+	int weight
+
+	List<String> keywords = []
+
 	void setScope(String scope) {
 		if (!SCOPE_ALL.contains(scope)) {
 			throw new InvalidInitializrMetadataException("Invalid scope $scope must be one of $SCOPE_ALL")
