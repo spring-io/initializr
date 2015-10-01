@@ -17,7 +17,6 @@
 package io.spring.initializr.web
 
 import groovy.json.JsonBuilder
-import io.spring.initializr.metadata.DependenciesCapability
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
@@ -40,38 +39,41 @@ class UiController {
 	@Autowired
 	protected InitializrMetadataProvider metadataProvider
 
-	@RequestMapping(value = "/ui/dependencies" , produces = ["application/json"])
+	@RequestMapping(value = "/ui/dependencies", produces = ["application/json"])
 	String dependencies(@RequestParam(required = false) String version) {
-		DependenciesCapability dependenciesCapability = metadataProvider.get().dependencies
-		List<Dependency> allDependencies = dependenciesCapability.content.collectMany { it.content }
-		if (version) {
-			Version v = Version.parse(version)
-			def filteredDependencies = allDependencies.findAll { d ->
-				if (d.versionRange) {
-					return VersionRange.parse(d.versionRange).match(v)
+		def dependencyGroups = metadataProvider.get().dependencies.content
+		def content = []
+		Version v = version ? Version.parse(version) : null
+		dependencyGroups.each { g ->
+			g.content.each { d ->
+				if (v && d.versionRange) {
+					if (VersionRange.parse(d.versionRange).match(v)) {
+						content << new DependencyItem(g.name, d)
+					}
+				} else {
+					content << new DependencyItem(g.name, d)
 				}
-				return true
 			}
-			writeDependencies(filteredDependencies)
-		} else {
-			writeDependencies(allDependencies)
 		}
+		writeDependencies(content)
 	}
 
-	private static String writeDependencies(List<Dependency> deps) {
+	private static String writeDependencies(List<DependencyItem> items) {
 		JsonBuilder json = new JsonBuilder();
 		json {
-			dependencies deps.collect { d ->
+			dependencies items.collect { d ->
 				mapDependency(d)
 			}
 		}
 		json.toString()
 	}
 
-	private static mapDependency(Dependency d) {
+	private static mapDependency(DependencyItem item) {
 		def result = [:]
+		Dependency d = item.dependency
 		result.id = d.id
 		result.name = d.name
+		result.group = item.group
 		if (d.description) {
 			result.description = d.description
 		}
@@ -82,6 +84,16 @@ class UiController {
 			result.keywords = d.keywords.join(',')
 		}
 		result
+	}
+
+	private static class DependencyItem {
+		private final String group
+		private final Dependency dependency
+
+		DependencyItem(String group, Dependency dependency) {
+			this.group = group
+			this.dependency = dependency
+		}
 	}
 
 }

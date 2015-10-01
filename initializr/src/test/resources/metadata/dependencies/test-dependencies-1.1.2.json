@@ -3,29 +3,35 @@
     {
       "id": "web",
       "name": "Web",
-      "description": "Web dependency description"
+      "description": "Web dependency description",
+      "group": "Core"
     },
     {
       "id": "security",
-      "name": "Security"
+      "name": "Security",
+      "group": "Core"
     },
     {
       "id": "data-jpa",
-      "name": "Data JPA"
+      "name": "Data JPA",
+      "group": "Core"
     },
     {
       "id": "org.acme:foo",
       "name": "Foo",
+      "group": "Other",
       "keywords": "thefoo,dafoo",
       "weight": 42
     },
     {
       "id": "org.acme:bar",
-      "name": "Bar"
+      "name": "Bar",
+      "group": "Other"
     },
     {
       "id": "my-api",
-      "name": "My API"
+      "name": "My API",
+      "group": "Other"
     }
   ]
 }
