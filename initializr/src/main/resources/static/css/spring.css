@@ -24,10 +24,6 @@ body, h1, h2, h3 {
     margin: 1em 0;
 }
 
-.project-choice select {
-    font-size: 22px;
-}
-
 #starters {
     min-height: 3em;
 }
