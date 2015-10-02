@@ -48,7 +48,7 @@ class InitializrProperties extends InitializrConfiguration {
 	final List<DefaultMetadataElement> bootVersions = []
 
 	@JsonIgnore
-	final SimpleElement groupId = new SimpleElement(value: 'org.test')
+	final SimpleElement groupId = new SimpleElement(value: 'com.example')
 
 	@JsonIgnore
 	final SimpleElement artifactId = new SimpleElement()

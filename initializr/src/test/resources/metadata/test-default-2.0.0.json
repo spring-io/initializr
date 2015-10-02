@@ -165,7 +165,7 @@
   },
   "groupId": {
     "type": "text",
-    "default": "org.test"
+    "default": "com.example"
   },
   "artifactId": {
     "type": "text",
@@ -185,6 +185,6 @@
   },
   "packageName": {
     "type": "text",
-    "default": "demo"
+    "default": "com.example"
   }
 }

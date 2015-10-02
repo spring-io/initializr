@@ -96,8 +96,8 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isJavaProject(String expectedApplicationName) {
-		hasFile("src/main/java/demo/${expectedApplicationName}.java",
-				"src/test/java/demo/${expectedApplicationName}Tests.java",
+		hasFile("src/main/java/com/example/${expectedApplicationName}.java",
+				"src/test/java/com/example/${expectedApplicationName}Tests.java",
 				'src/main/resources/application.properties')
 	}
 
@@ -107,8 +107,8 @@ class ProjectAssert {
 
 	ProjectAssert isGroovyProject(String expectedApplicationName) {
 		String codeLocation = (mavenProject ? 'java' : 'groovy')
-		hasFile("src/main/$codeLocation/demo/${expectedApplicationName}.groovy",
-				"src/test/$codeLocation/demo/${expectedApplicationName}Tests.groovy",
+		hasFile("src/main/$codeLocation/com/example/${expectedApplicationName}.groovy",
+				"src/test/$codeLocation/com/example/${expectedApplicationName}Tests.groovy",
 				'src/main/resources/application.properties')
 	}
 
@@ -118,7 +118,7 @@ class ProjectAssert {
 
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {
 		isJavaProject(expectedApplicationName).hasStaticAndTemplatesResources(true)
-				.hasFile('src/main/java/demo/ServletInitializer.java')
+				.hasFile('src/main/java/com/example/ServletInitializer.java')
 	}
 
 	ProjectAssert isJavaWarProject() {

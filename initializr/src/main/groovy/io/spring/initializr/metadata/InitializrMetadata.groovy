@@ -52,7 +52,7 @@ class InitializrMetadata {
 
 	final TextCapability version = new TextCapability('version', 'Version', 'project version')
 
-	final TextCapability packageName = new PackageCapability(name)
+	final TextCapability packageName = new PackageCapability(groupId)
 
 	InitializrMetadata() {
 		this(new InitializrConfiguration())

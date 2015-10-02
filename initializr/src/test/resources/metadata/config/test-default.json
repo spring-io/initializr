@@ -173,7 +173,7 @@
     "type": "TEXT"
   },
   "groupId": {
-    "content": "org.test",
+    "content": "com.example",
     "description": "project coordinates",
     "id": "groupId",
     "title": "Group",
@@ -228,7 +228,7 @@
     "type": "TEXT"
   },
   "packageName": {
-    "content": "demo",
+    "content": "com.example",
     "description": "root package",
     "id": "packageName",
     "title": "Package Name",
