@@ -141,7 +141,8 @@ $(function () {
     initializeSearchEngine(starters, $("#bootVersion").val());
     $('#autocomplete').typeahead(
         {
-            minLength: 2
+            minLength: 2,
+            autoSelect: true
         }, {
             name: 'starters',
             display: 'name',
