@@ -24,6 +24,9 @@ package io.spring.initializr.metadata
  */
 class InitializrConfiguration {
 
+	/**
+	 * Environment options.
+	 */
 	final Env env = new Env()
 
 	void validate() {
@@ -84,17 +87,17 @@ class InitializrConfiguration {
 	}
 
 	/**
-	 * Defines additional environment settings
+	 * Defines additional environment settings.
 	 */
 	static class Env {
 
 		/**
-		 * The url of the repository servicing distribution bundle
+		 * The url of the repository servicing distribution bundle.
 		 */
 		String artifactRepository = 'https://repo.spring.io/release/'
 
 		/**
-		 * The meta-data url of the Spring Boot project
+		 * The meta-data url of the Spring Boot project.
 		 */
 		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
 
@@ -105,7 +108,7 @@ class InitializrConfiguration {
 
 		/**
 		 * The list of invalid application names. If such name is chosen or generated,
-		 * the {@link #fallbackApplicationName} should be used instead.
+		 * the "fallbackApplicationName" should be used instead.
 		 */
 		List<String> invalidApplicationNames = [
 				'SpringApplication',
@@ -118,12 +121,14 @@ class InitializrConfiguration {
 		boolean forceSsl = true
 
 		/**
-		 * The {@link BillOfMaterials} that are referenced in this instance.
+		 * The "BillOfMaterials" that are referenced in this instance, identified by an
+		 * arbitrary identifier that can be used in the dependencies definition.
 		 */
 		final Map<String, BillOfMaterials> boms = [:]
 
 		/**
-		 * The {@link Repository} instances that are referenced in this instance.
+		 * The "Repository" instances that are referenced in this instance, identified by
+		 * an arbitrary identifier that can be used in the dependencies definition.
 		 */
 		final Map<String, Repository> repositories = [:]
 

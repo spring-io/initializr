@@ -29,46 +29,93 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = 'initializr')
 class InitializrProperties extends InitializrConfiguration {
 
+	/**
+	 * Dependencies, organized in groups (i.e. themes).
+	 */
 	@JsonIgnore
 	final List<DependencyGroup> dependencies = []
 
+	/**
+	 * Available project types.
+	 */
 	@JsonIgnore
 	final List<Type> types = []
 
+	/**
+	 * Available packaging types.
+	 */
 	@JsonIgnore
 	final List<DefaultMetadataElement> packagings = []
 
+	/**
+	 * Available java versions.
+	 */
 	@JsonIgnore
 	final List<DefaultMetadataElement> javaVersions = []
 
+	/**
+	 * Available programming languages.
+	 */
 	@JsonIgnore
 	final List<DefaultMetadataElement> languages = []
 
+	/**
+	 * Available Spring Boot versions.
+	 */
 	@JsonIgnore
 	final List<DefaultMetadataElement> bootVersions = []
 
+	/**
+	 * GroupId meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement groupId = new SimpleElement(value: 'com.example')
 
+	/**
+	 * ArtifactId meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement artifactId = new SimpleElement()
 
+	/**
+	 * Version meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement version = new SimpleElement(value: '0.0.1-SNAPSHOT')
 
+	/**
+	 * Name meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement name = new SimpleElement(value: 'demo')
 
+	/**
+	 * Description meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement description = new SimpleElement(value: 'Demo project for Spring Boot')
 
+	/**
+	 * Package name meta-data.
+	 */
 	@JsonIgnore
 	final SimpleElement packageName = new SimpleElement()
 
 
 	static class SimpleElement {
+		/**
+		 * Element title.
+		 */
 		String title
+
+		/**
+		 * Element description.
+		 */
 		String description
+
+		/**
+		 * Element default value.
+		 */
 		String value
 
 		void apply(TextCapability capability) {
