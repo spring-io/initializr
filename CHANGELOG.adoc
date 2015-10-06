@@ -7,6 +7,8 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/145[#145]: new UI design
+* https://github.com/spring-io/initializr/issues/141[#141]: harmonize package and groupId
 * https://github.com/spring-io/initializr/issues/137[#137]: include maven wrapper in generated projects
 * https://github.com/spring-io/initializr/issues/100[#100]: include gradle wrapper in generated projects
 * https://github.com/spring-io/initializr/issues/130[#130]: upgrade to Gradle 2.7
