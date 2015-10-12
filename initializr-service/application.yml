@@ -53,6 +53,12 @@ initializr:
           artifactId: spring-boot-devtools
           description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
+        - name: Retry
+          id: spring-retry
+          groupId: org.springframework.retry
+          artifactId: spring-retry
+          description: Spring Retry
+          versionRange: 1.3.0.M1
         - name: Lombok
           id: lombok
           groupId: org.projectlombok
