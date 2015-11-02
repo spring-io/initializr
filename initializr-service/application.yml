@@ -53,6 +53,10 @@ initializr:
           artifactId: spring-boot-devtools
           description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
+        - name: Validation
+          id: validation
+          description: JSR-303 validation infrastructure (already included with web)
+          versionRange: 1.3.0.M1
         - name: Lombok
           id: lombok
           groupId: org.projectlombok
@@ -158,10 +162,18 @@ initializr:
           weight: 100
           aliases:
             - jpa
+        - name: JOOQ
+          id: jooq
+          description: Persistence support using Java Object Oriented Querying
+          versionRange: 1.3.0.M2
         - name: MongoDB
           id: data-mongodb
           description: MongoDB NoSQL Database, including spring-data-mongodb
           weight: 50
+        - name: Cassandra
+          id: data-cassandra
+          description: Cassandra NoSQL Database, including spring-data-cassandra
+          versionRange: 1.3.0.RC1
         - name: Redis
           id: redis
           description: REDIS key-value data store, including spring-redis
@@ -473,7 +485,11 @@ initializr:
         - name: Integration
           id: integration
           description: Common spring-integration modules
-        - name: JMS
+        - name: JMS (Artemis)
+          id: artemis
+          description: Java Message Service API via Apache Artemis
+          versionRange: 1.3.0.M2
+        - name: JMS (HornetQ)
           id: hornetq
           description: Java Message Service API via HornetQ
         - name: AMQP
