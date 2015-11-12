@@ -488,6 +488,12 @@ initializr:
         - name: Integration
           id: integration
           description: Common spring-integration modules
+        - name: Activiti
+          id: activiti-basic
+          description: Activiti BPMN workflow engine
+          groupId: org.activiti
+          artifactId: activiti-spring-boot-starter-basic
+          version: 5.19.0
         - name: JMS (Artemis)
           id: artemis
           description: Java Message Service API via Apache Artemis
