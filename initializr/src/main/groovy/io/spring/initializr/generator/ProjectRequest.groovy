@@ -174,7 +174,8 @@ class ProjectRequest {
 			resolvedDependencies << metadata.dependencies.get('web')
 			facets << 'web'
 		}
-		if (resolvedDependencies.isEmpty()) {
+		if (!resolvedDependencies.find { it.artifactId.startsWith('spring-boot-starter') }) {
+			// There's no spring-boot-* dependency so we add the default one
 			addDefaultDependency()
 		}
 	}
