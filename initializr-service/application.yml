@@ -209,7 +209,7 @@ initializr:
           description: Secure load balancing and routing with spring-cloud-security
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-security
-        - name: OAuth2
+        - name: Cloud OAuth2
           id: cloud-oauth2
           description: OAuth2 and distributed application patterns with spring-cloud-security
           groupId: org.springframework.cloud
