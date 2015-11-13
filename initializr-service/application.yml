@@ -85,6 +85,13 @@ initializr:
           id: jersey
           description: the Jersey RESTful Web Services framework
           versionRange: 1.2.0.RELEASE
+        - name: Ratpack
+          id: ratpack
+          description: Spring Boot integration for the Ratpack framework
+          versionRange: 1.2.0.RELEASE
+          version: 1.1.1
+          groupId: io.ratpack
+          artifactId: ratpack-spring-boot
         - name: Vaadin
           id: vaadin
           facets:
