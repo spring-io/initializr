@@ -356,15 +356,8 @@ initializr:
         - name: Cloud Bus AMQP
           id: cloud-bus-amqp
           description: A simple control bus with AMQP and spring-cloud-bus-amqp
-          versionRange: "[0.0.0.RELEASE,1.3.0.M5]"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-bus-amqp
-        - name: Cloud Bus Rabbit
-          id: cloud-bus-rabbit
-          description: A simple control bus with Rabbit and spring-cloud-bus
-          versionRange: "(1.3.0.M5,9999.9.9.RELEASE]"
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-rabbit
         - name: Cloud Bus Redis
           id: cloud-bus-redis
           description: A simple control bus with Redis and spring-cloud-bus
