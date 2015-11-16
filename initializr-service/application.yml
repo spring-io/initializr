@@ -88,10 +88,11 @@ initializr:
         - name: Ratpack
           id: ratpack
           description: Spring Boot integration for the Ratpack framework
-          versionRange: 1.2.0.RELEASE
-          version: 1.1.1
           groupId: io.ratpack
           artifactId: ratpack-spring-boot
+          version: 1.1.1
+          versionRange: 1.2.0.RELEASE
+          starter: false
         - name: Vaadin
           id: vaadin
           facets:
@@ -449,12 +450,14 @@ initializr:
           groupId: com.h2database
           artifactId: h2
           scope: runtime
+          starter: false
         - name: HSQLDB
           id: hsql
           description: HSQLDB database (with embedded support)
           groupId: org.hsqldb
           artifactId: hsqldb
           scope: runtime
+          starter: false
         - name: Apache Derby
           id: derby
           description: Apache Derby database (with embedded support)
@@ -462,12 +465,14 @@ initializr:
           artifactId: derby
           scope: runtime
           versionRange: 1.2.2.RELEASE
+          starter: false
         - name: MySQL
           id: mysql
           description: MySQL jdbc driver
           groupId: mysql
           artifactId: mysql-connector-java
           scope: runtime
+          starter: false
         - name: PostgreSQL
           id: postgresql
           description: PostgreSQL jdbc driver
@@ -475,6 +480,7 @@ initializr:
           artifactId: postgresql
           version: 9.4-1201-jdbc41
           scope: runtime
+          starter: false
     - name: Social
       content:
         - name: Facebook

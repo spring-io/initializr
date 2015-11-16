@@ -457,6 +457,37 @@ class ProjectGeneratorTests {
 				.hasRepository('http://example.com/repo')
 	}
 
+	@Test
+	void projectWithOnlyStarterDependency() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.foo', artifactId: 'custom-my-starter')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo).build()
+		projectGenerator.metadata = metadata
+
+		def request = createProjectRequest('foo')
+		generateMavenPom(request)
+				.hasDependency('org.foo', 'custom-my-starter')
+				.hasSpringBootStarterTest()
+				.hasDependenciesCount(2)
+	}
+
+	@Test
+	void projectWithOnlyNonStarterDependency() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.foo', artifactId: 'foo')
+		foo.starter = false
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo).build()
+		projectGenerator.metadata = metadata
+
+		def request = createProjectRequest('foo')
+		generateMavenPom(request)
+				.hasDependency('org.foo', 'foo')
+				.hasSpringBootStarterRootDependency()
+				.hasSpringBootStarterTest()
+				.hasDependenciesCount(3)
+	}
+
+
 	PomAssert generateMavenPom(ProjectRequest request) {
 		def content = new String(projectGenerator.generateMavenPom(request))
 		new PomAssert(content).validateProjectRequest(request)

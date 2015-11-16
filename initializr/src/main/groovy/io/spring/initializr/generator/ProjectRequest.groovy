@@ -174,7 +174,8 @@ class ProjectRequest {
 			resolvedDependencies << metadata.dependencies.get('web')
 			facets << 'web'
 		}
-		if (resolvedDependencies.isEmpty()) {
+		if (!resolvedDependencies.find { it.starter }) {
+			// There's no starter so we add the default one
 			addDefaultDependency()
 		}
 	}
