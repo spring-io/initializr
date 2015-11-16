@@ -16,24 +16,25 @@
 
 package io.spring.initializr.generator
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.times
-import static org.mockito.Mockito.verify
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.test.GradleBuildAssert
 import io.spring.initializr.test.InitializrMetadataTestBuilder
 import io.spring.initializr.test.PomAssert
 import io.spring.initializr.test.ProjectAssert
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.times
+import static org.mockito.Mockito.verify
 
 /**
  * @author Stephane Nicoll
@@ -112,7 +113,7 @@ class ProjectGeneratorTests {
 		def request = createProjectRequest('thymeleaf')
 		generateMavenPom(request)
 				.hasDependency('org.foo', 'thymeleaf')
-				.hasDependenciesCount(3)
+				.hasDependenciesCount(2)
 	}
 
 	@Test
@@ -131,7 +132,7 @@ class ProjectGeneratorTests {
 				.hasSpringBootStarterTomcat()
 				.hasDependency('org.foo', 'thymeleaf') // This is tagged as web facet so it brings the web one
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(4)
+				.hasDependenciesCount(3)
 	}
 
 	@Test
@@ -272,9 +273,9 @@ class ProjectGeneratorTests {
 	void mavenPomWithCustomScope() {
 		def h2 = new Dependency(id: 'h2', groupId: 'org.h2', artifactId: 'h2', scope: 'runtime')
 		def hamcrest = new Dependency(id: 'hamcrest', groupId: 'org.hamcrest',
-		artifactId: 'hamcrest', scope: 'test')
+				artifactId: 'hamcrest', scope: 'test')
 		def servlet = new Dependency(id: 'servlet-api', groupId: 'javax.servlet',
-		artifactId: 'servlet-api', scope: 'provided')
+				artifactId: 'servlet-api', scope: 'provided')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('database', h2)
@@ -291,9 +292,9 @@ class ProjectGeneratorTests {
 	void gradleBuildWithCustomScope() {
 		def h2 = new Dependency(id: 'h2', groupId: 'org.h2', artifactId: 'h2', scope: 'runtime')
 		def hamcrest = new Dependency(id: 'hamcrest', groupId: 'org.hamcrest',
-		artifactId: 'hamcrest', scope: 'test')
+				artifactId: 'hamcrest', scope: 'test')
 		def servlet = new Dependency(id: 'servlet-api', groupId: 'javax.servlet',
-		artifactId: 'servlet-api', scope: 'provided')
+				artifactId: 'servlet-api', scope: 'provided')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('database', h2)
@@ -477,4 +478,5 @@ class ProjectGeneratorTests {
 		request.style.addAll Arrays.asList(styles)
 		request
 	}
+
 }

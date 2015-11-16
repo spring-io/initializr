@@ -62,7 +62,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void simpleTgzProject() {
 		downloadTgz('/starter.tgz?style=org.acme:foo').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(3)
+				.hasDependenciesCount(2)
 				.hasDependency('org.acme', 'foo', '1.3.5')
 	}
 
@@ -72,7 +72,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 				artifactId: 'biz', version: '1.3.5', scope: 'runtime')
 		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(3)
+				.hasDependenciesCount(2)
 				.hasDependency(biz)
 	}
 
