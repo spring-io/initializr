@@ -124,7 +124,7 @@ initializr:
           description: Document RESTful services by combining hand-written and auto-generated documentation
           groupId: org.springframework.restdocs
           artifactId: spring-restdocs-mockmvc
-          version: 1.0.0.RC1
+          version: 1.0.0.RELEASE
           scope: test
     - name: Template Engines
       content:
