@@ -29,7 +29,7 @@ import io.spring.initializr.util.VersionRange
  * @author Stephane Nicoll
  * @since 1.0
  */
-@ToString(ignoreNulls = true, includePackage = false)
+@ToString(ignoreNulls = true, excludes = 'mappings', includePackage = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class BillOfMaterials {
 
@@ -79,6 +79,7 @@ class BillOfMaterials {
 		throw new IllegalStateException("No suitable mapping was found for $this and version $bootVersion")
 	}
 
+	@ToString(ignoreNulls = true, includePackage = false)
 	static class Mapping {
 
 		String versionRange

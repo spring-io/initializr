@@ -37,7 +37,8 @@ import org.springframework.util.Assert
  * @since 1.0
  */
 @EqualsAndHashCode
-class Version implements Comparable<Version> {
+@SuppressWarnings("serial")
+final class Version implements Serializable, Comparable<Version> {
 
 	private static final String VERSION_REGEX = '^(\\d+)\\.(\\d+)\\.(\\d+)(?:\\.([^0-9]+)(\\d+)?)?$'
 

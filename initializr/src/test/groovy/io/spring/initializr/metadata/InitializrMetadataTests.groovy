@@ -69,6 +69,20 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void invalidBomUnknownRepository() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom',
+				version: '1.0.0.RELEASE', repositories: ['foo-repo'])
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("invalid repository id foo-repo")
+		thrown.expectMessage("foo-bom")
+		builder.build()
+	}
+
+	@Test
 	void invalidBomVersionRangeMapping() {
 		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
 		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
@@ -79,6 +93,22 @@ class InitializrMetadataTests {
 
 		thrown.expect(InvalidInitializrMetadataException)
 		thrown.expectMessage("FOO_BAR")
+		thrown.expectMessage("foo-bom")
+		builder.build()
+	}
+
+	@Test
+	void invalidBomVersionRangeMappingUnknownRepo() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.0.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '1.3.0.M2', version: '1.2.0', repositories: ['foo-repo'])
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("invalid repository id foo-repo")
+		thrown.expectMessage('1.3.0.M2')
 		thrown.expectMessage("foo-bom")
 		builder.build()
 	}

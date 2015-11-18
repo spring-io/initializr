@@ -21,13 +21,16 @@ import java.util.concurrent.TimeUnit
 
 import groovy.util.logging.Slf4j
 import io.spring.initializr.generator.CommandLineHelpGenerator
+import io.spring.initializr.generator.ProjectGenerator
+import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.mapper.DependencyMetadataV21JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataJsonMapper
 import io.spring.initializr.mapper.InitializrMetadataV21JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataVersion
-import io.spring.initializr.generator.ProjectGenerator
-import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.util.Version
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.CacheControl
@@ -40,6 +43,7 @@ import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
 /**
@@ -59,6 +63,9 @@ class MainController extends AbstractInitializrController {
 
 	@Autowired
 	private ProjectGenerator projectGenerator
+
+	@Autowired
+	private DependencyMetadataProvider dependencyMetadataProvider
 
 	private CommandLineHelpGenerator commandLineHelpGenerator = new CommandLineHelpGenerator()
 
@@ -138,6 +145,21 @@ class MainController extends AbstractInitializrController {
 			case InitializrMetadataVersion.V2: return new InitializrMetadataV2JsonMapper();
 			default: return new InitializrMetadataV21JsonMapper();
 		}
+	}
+
+	@RequestMapping(value = "/dependencies", produces = ["application/vnd.initializr.v2.1+json", "application/json"])
+	ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
+		dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion)
+	}
+
+	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version, String bootVersion) {
+		def metadata = metadataProvider.get()
+		Version v = bootVersion != null ? Version.parse(bootVersion) :
+				Version.parse(metadata.bootVersions.getDefault().id);
+		def dependencyMetadata = dependencyMetadataProvider.get(metadata, v)
+		def content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata)
+		return ResponseEntity.ok().contentType(version.mediaType).eTag(createUniqueId(content))
+				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content)
 	}
 
 	@RequestMapping(value = '/', produces = 'text/html')

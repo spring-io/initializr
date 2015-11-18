@@ -180,6 +180,16 @@ class Dependency extends MetadataElement {
 	}
 
 	/**
+	 * Specify if this dependency is available for the specified Spring Boot version.
+	 */
+	boolean match(Version version) {
+		if (versionRange) {
+			return VersionRange.parse(versionRange).match(version)
+		}
+		true
+	}
+
+	/**
 	 * Generate an id using the groupId and artifactId
 	 */
 	def generateId() {

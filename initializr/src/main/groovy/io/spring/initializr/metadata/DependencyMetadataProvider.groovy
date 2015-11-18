@@ -16,22 +16,18 @@
 
 package io.spring.initializr.metadata
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
+import io.spring.initializr.util.Version
 
 /**
- * Define a repository to be represented in the generated project
- * if a dependency refers to it.
+ * Provide the {@link DependencyMetadata} for a given spring boot version.
  *
  * @author Stephane Nicoll
- * @since 1.0
  */
-@EqualsAndHashCode
-@ToString(includePackage = false)
-class Repository {
+interface DependencyMetadataProvider {
 
-	String name
-	URL url
-	boolean snapshotsEnabled
+	/**
+	 * Return the dependency metadata to use for the specified {@code bootVersion}.
+	 */
+	DependencyMetadata get(InitializrMetadata metadata, Version bootVersion)
 
 }

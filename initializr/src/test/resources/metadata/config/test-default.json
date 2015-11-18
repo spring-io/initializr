@@ -31,7 +31,6 @@
   },
   "configuration": {"env": {
     "artifactRepository": "https://repo.spring.io/release/",
-    "boms": {},
     "fallbackApplicationName": "Application",
     "forceSsl": true,
     "invalidApplicationNames": [
@@ -39,6 +38,16 @@
       "SpringBootApplication"
     ],
     "repositories": {
+      "my-api-repo-1": {
+        "name": "repo1",
+        "url": "http://example.com/repo1",
+        "snapshotsEnabled": false
+      },
+      "my-api-repo-2": {
+        "name": "repo2",
+        "url": "http://example.com/repo2",
+        "snapshotsEnabled": false
+      },
       "spring-milestones": {
         "name": "Spring Milestones",
         "snapshotsEnabled": false,
@@ -48,6 +57,29 @@
         "name": "Spring Snapshots",
         "snapshotsEnabled": true,
         "url": "https://repo.spring.io/snapshot"
+      }
+    },
+    "boms": {
+      "my-api-bom": {
+        "groupId": "org.acme",
+        "artifactId": "my-api-bom",
+        "repositories": [],
+        "mappings": [
+          {
+            "versionRange": "[1.0.0.RELEASE,1.1.6.RELEASE)",
+            "repositories": [
+              "my-api-repo-1"
+            ],
+            "version": "1.0.0.RELEASE"
+          },
+          {
+            "versionRange": "1.2.1.RELEASE",
+            "repositories": [
+              "my-api-repo-2"
+            ],
+            "version": "2.0.0.RELEASE"
+          }
+        ]
       }
     },
     "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"
@@ -134,7 +166,8 @@
             "groupId": "org.acme",
             "id": "my-api",
             "name": "My API",
-            "scope": "provided"
+            "scope": "provided",
+            "bom": "my-api-bom"
           }
         ],
         "name": "Other"

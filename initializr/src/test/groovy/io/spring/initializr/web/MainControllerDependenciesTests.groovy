@@ -21,32 +21,39 @@ import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
-import org.springframework.http.MediaType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
+
+import static org.hamcrest.CoreMatchers.nullValue
+import static org.hamcrest.core.IsNot.not
+import static org.junit.Assert.assertThat
 
 /**
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class MainControllerDependenciesTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	void dependenciesNoVersion() {
-		ResponseEntity<String> response = execute('/ui/dependencies', String, null, null)
-		validateContentType(response, MediaType.APPLICATION_JSON)
-		validateDependenciesOutput('all', new JSONObject(response.body))
+	void noBootVersion() {
+		ResponseEntity<String> response = execute('/dependencies', String, null, 'application/json')
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateDependenciesOutput('1.1.4', new JSONObject(response.body))
 	}
 
 	@Test
-	void dependenciesSpecificVersion() {
-		ResponseEntity<String> response = execute('/ui/dependencies?version=1.1.2.RELEASE', String, null, null)
-		validateContentType(response, MediaType.APPLICATION_JSON)
-		validateDependenciesOutput('1.1.2', new JSONObject(response.body))
+	void filteredDependencies() {
+		ResponseEntity<String> response = execute('/dependencies?bootVersion=1.2.1.RELEASE',
+				String, null, 'application/json')
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
+		validateDependenciesOutput('1.2.1', new JSONObject(response.body))
 	}
 
 	protected void validateDependenciesOutput(String version, JSONObject actual) {
-		def expected = readJsonFrom("metadata/ui/test-dependencies-$version" + ".json")
+		def expected = readJsonFrom("metadata/dependencies/test-dependencies-$version" + ".json")
 		JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT)
 	}
 

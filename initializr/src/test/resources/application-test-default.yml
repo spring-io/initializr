@@ -3,6 +3,25 @@ info:
     version: 1.1.4.RELEASE
 
 initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-bom
+        mappings:
+          - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+            version: 1.0.0.RELEASE
+            repositories: my-api-repo-1
+          - versionRange: "1.2.1.RELEASE"
+            version: 2.0.0.RELEASE
+            repositories: my-api-repo-2
+    repositories:
+      my-api-repo-1:
+        name: repo1
+        url: http://example.com/repo1
+      my-api-repo-2:
+        name: repo2
+        url: http://example.com/repo2
   dependencies:
     - name: Core
       content:
@@ -46,6 +65,7 @@ initializr:
           groupId: org.acme
           artifactId: my-api
           scope: provided
+          bom: my-api-bom
   types:
     - name: Maven POM
       id: maven-build

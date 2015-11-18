@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.metadata
+package io.spring.initializr.mapper
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
+import io.spring.initializr.metadata.DependencyMetadata
 
 /**
- * Define a repository to be represented in the generated project
- * if a dependency refers to it.
+ * Generate a JSON representation of a set of dependencies.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-@EqualsAndHashCode
-@ToString(includePackage = false)
-class Repository {
+interface DependencyMetadataJsonMapper {
 
-	String name
-	URL url
-	boolean snapshotsEnabled
+	/**
+	 * Write a json representation of the specified meta-data.
+	 */
+	String write(DependencyMetadata metadata);
 
 }

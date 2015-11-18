@@ -16,16 +16,36 @@
 
 package io.spring.initializr.mapper
 
+import org.springframework.hateoas.TemplateVariable
+import org.springframework.hateoas.TemplateVariables
+import org.springframework.hateoas.UriTemplate
+
 /**
  * A {@link InitializrMetadataJsonMapper} handling the meta-data format for v2.1
  * <p>
  * Version 2.1 brings the 'versionRange' attribute for a dependency to restrict
- * the Spring Boot versions that can be used against it.
+ * the Spring Boot versions that can be used against it. That version also adds
+ * an additional `dependencies` endpoint.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
 class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMapper {
+
+	private final TemplateVariables dependenciesVariables
+
+	InitializrMetadataV21JsonMapper() {
+		this.dependenciesVariables = new TemplateVariables(
+				new TemplateVariable('bootVersion', TemplateVariable.VariableType.REQUEST_PARAM)
+		)
+	}
+
+	@Override
+	protected links(parent, types, appUrl) {
+		def links = super.links(parent, types, appUrl)
+		links['dependencies'] = dependenciesLink(appUrl)
+		links
+	}
 
 	@Override
 	protected mapDependency(dependency) {
@@ -34,5 +54,14 @@ class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMapper {
 			content['versionRange'] = dependency.versionRange
 		}
 		content
+	}
+
+	private dependenciesLink(appUrl) {
+		String uri = appUrl != null ? appUrl + '/dependencies' : '/dependencies'
+		UriTemplate uriTemplate = new UriTemplate(uri, this.dependenciesVariables)
+		def result = [:]
+		result.href = uriTemplate.toString()
+		result.templated = true
+		result
 	}
 }

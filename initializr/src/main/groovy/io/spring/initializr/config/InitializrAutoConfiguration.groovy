@@ -22,9 +22,11 @@ import com.google.common.cache.CacheBuilder
 import io.spring.initializr.generator.ProjectGenerationMetricsListener
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectResourceLocator
+import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
+import io.spring.initializr.support.DefaultDependencyMetadataProvider
 import io.spring.initializr.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.web.MainController
 import io.spring.initializr.web.UiController
@@ -67,19 +69,19 @@ class InitializrAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(MainController)
+	@ConditionalOnMissingBean
 	MainController initializrMainController() {
 		new MainController()
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(UiController)
+	@ConditionalOnMissingBean
 	UiController initializrUiController() {
 		new UiController()
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(ProjectGenerator)
+	@ConditionalOnMissingBean
 	ProjectGenerator projectGenerator() {
 		def generator = new ProjectGenerator()
 		generator.listeners << metricsListener()
@@ -99,16 +101,23 @@ class InitializrAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean
+	DependencyMetadataProvider dependencyMetadataProvider() {
+		new DefaultDependencyMetadataProvider()
+	}
+
+	@Bean
 	ProjectGenerationMetricsListener metricsListener() {
 		new ProjectGenerationMetricsListener(counterService)
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(CacheManager)
+	@ConditionalOnMissingBean
 	CacheManager cacheManager() {
 		def cacheManager = new SimpleCacheManager()
 		cacheManager.caches = Arrays.asList(
 				createConcurrentMapCache(600, 'initializr'),
+				new ConcurrentMapCache('dependency-metadata'),
 				new ConcurrentMapCache("project-resources"))
 		cacheManager
 	}

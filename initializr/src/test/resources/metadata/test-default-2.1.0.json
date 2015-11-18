@@ -1,5 +1,9 @@
 {
   "_links": {
+    "dependencies": {
+      "href": "https://localhost:@port@/dependencies{?bootVersion}",
+      "templated": true
+    },
     "maven-build": {
       "href": "https://localhost:@port@/pom.xml?type=maven-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true

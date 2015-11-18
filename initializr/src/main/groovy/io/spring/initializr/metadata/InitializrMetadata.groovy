@@ -15,6 +15,7 @@
  */
 
 package io.spring.initializr.metadata
+
 /**
  * Meta-data used to generate a project.
  *
@@ -44,7 +45,7 @@ class InitializrMetadata {
 
 	final TextCapability name = new TextCapability('name', 'Name', 'project name (infer application name)')
 
-	final TextCapability description = new TextCapability('description', 'Description', 'project description' )
+	final TextCapability description = new TextCapability('description', 'Description', 'project description')
 
 	final TextCapability groupId = new TextCapability('groupId', 'Group', 'project coordinates')
 
@@ -89,18 +90,36 @@ class InitializrMetadata {
 		this.configuration.validate()
 		dependencies.validate()
 
-		for (Dependency dependency : dependencies.all) {
+		def repositories = configuration.env.repositories
+		dependencies.all.forEach { dependency ->
 			def boms = configuration.env.boms
 			if (dependency.bom && !boms[dependency.bom]) {
 				throw new InvalidInitializrMetadataException("Dependency $dependency " +
 						"defines an invalid BOM id $dependency.bom, available boms $boms")
 			}
-			def repositories = configuration.env.repositories
+
 			if (dependency.repository && !repositories[dependency.repository]) {
 				throw new InvalidInitializrMetadataException("Dependency $dependency " +
 						"defines an invalid repository id $dependency.repository, available repositores $repositories")
 			}
 		}
+		configuration.env.boms.values().forEach { bom ->
+			bom.repositories.forEach { r ->
+				if (!repositories[r]) {
+					throw new InvalidInitializrMetadataException("$bom " +
+							"defines an invalid repository id $r, available repositores $repositories")
+				}
+			}
+			bom.mappings.forEach{  m ->
+				m.repositories.forEach { r ->
+					if (!repositories[r]) {
+						throw new InvalidInitializrMetadataException("$m of $bom " +
+								"defines an invalid repository id $r, available repositores $repositories")
+					}
+				}
+			}
+		}
+
 	}
 
 	/**
