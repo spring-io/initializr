@@ -21,11 +21,11 @@ initializr:
         artifactId: spring-cloud-starter-parent
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
-            version: Angel.SR3
-          - versionRange: "[1.3.0.M2,1.3.0.RC1]"
-            version: Brixton.M2
+            version: Angel.SR4
+          - versionRange: "[1.3.0.M2,1.3.0.RELEASE]"
+            version: Brixton.M3
             repositories: spring-snapshots,spring-milestones
-          - versionRange: 1.3.0.BUILD-SNAPSHOT
+          - versionRange: 1.3.1.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
   dependencies:
