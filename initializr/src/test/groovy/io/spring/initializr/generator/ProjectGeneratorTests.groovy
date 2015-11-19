@@ -239,6 +239,34 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void springBoot11UseEnableAutoConfigurationKotlin() {
+		def request = createProjectRequest('web')
+		request.language = 'kotlin'
+		request.bootVersion = '1.1.9.RELEASE'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/kotlin/foo/MyDemoApplication.kt')
+				.hasImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.doesNotHaveImports(SpringBootApplication.class.name)
+				.contains('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+				.doesNotContain('@SpringBootApplication')
+	}
+
+	@Test
+	void springBootUseSpringBootApplicationKotlin() {
+		def request = createProjectRequest('web')
+		request.language = 'kotlin'
+		request.bootVersion = '1.2.0.RC1'
+		request.name = 'MyDemo'
+		request.packageName = 'foo'
+		generateProject(request).sourceCodeAssert('src/main/kotlin/foo/MyDemoApplication.kt')
+				.hasImports(SpringBootApplication.class.name)
+				.doesNotHaveImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
+				.contains('@SpringBootApplication')
+				.doesNotContain('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+	}
+
+	@Test
 	void customBaseDirectory() {
 		def request = createProjectRequest()
 		request.baseDir = 'my-project'

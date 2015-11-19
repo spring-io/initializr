@@ -141,6 +141,8 @@ class ProjectRequest extends BasicProjectRequest {
 
 		initializeRepositories(metadata, requestedVersion)
 
+		kotlinVersion = metadata.configuration.env.kotlinVersion
+
 		afterResolution(metadata)
 	}
 

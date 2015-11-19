@@ -34,6 +34,7 @@ initializr:
         version: 1.0.0.BUILD-SNAPSHOT
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
+    kotlinVersion: 1.0.0-beta-2423
   dependencies:
     - name: Core
       content:
@@ -629,6 +630,9 @@ initializr:
       default: true
     - name: Groovy
       id: groovy
+      default: false
+    - name: Kotlin
+      id: kotlin
       default: false
   bootVersions:
     - name : Latest SNAPSHOT

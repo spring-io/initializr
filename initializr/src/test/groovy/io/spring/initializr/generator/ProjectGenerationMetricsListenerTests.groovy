@@ -164,12 +164,21 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	void explicitLanguage() {
+	void explicitGroovyLanguage() {
 		def request = initialize()
 		request.language = 'groovy'
 		request.resolve(metadata)
 		fireProjectGeneratedEvent(request)
 		metricsAssert.hasValue(1, 'initializr.language.groovy')
+	}
+
+	@Test
+	void explicitKotlinLanguage() {
+		def request = initialize()
+		request.language = 'kotlin'
+		request.resolve(metadata)
+		listener.onGeneratedProject(request)
+		metricsAssert.hasValue(1, 'initializr.language.kotlin')
 	}
 
 	@Test

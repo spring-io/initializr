@@ -1,6 +1,7 @@
 buildscript {
 	ext {
-		springBootVersion = '${bootVersion}'
+		springBootVersion = '${bootVersion}'<% if (language=='kotlin') { %>
+			kotlinVersion = '${kotlinVersion}'<% } %>
 	}
 	repositories {
 		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
@@ -9,7 +10,8 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
-		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')<% } %>
+		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')<% } %><% if (language=='kotlin') { %>
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")<% } %>
 	}
 }
 
@@ -39,8 +41,10 @@ repositories {
 <% } %>
 dependencies {<% compileDependencies.each { %>
 	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (language=='groovy') { %>
-	compile('org.codehaus.groovy:groovy')<% } %><% runtimeDependencies.each { %>
-	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% providedDependencies.each { %>
+	compile('org.codehaus.groovy:groovy')<% } %><% if (language=='kotlin') { %>
+	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
+	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (packaging=='war') { %>
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')<% } %><% providedDependencies.each { %>
 	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
 	testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
 	testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>

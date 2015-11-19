@@ -124,10 +124,11 @@ class ProjectGenerator {
 		def applicationName = request.applicationName
 		def language = request.language
 
-		String codeLocation = language.equals("groovy") ? 'groovy': 'java'
+		String codeLocation = language
 		def src = new File(new File(dir, "src/main/$codeLocation"), request.packageName.replace('.', '/'))
 		src.mkdirs()
-		write(new File(src, "${applicationName}.${language}"), "Application.$language", model)
+		def extension = (language.equals('kotlin') ? 'kt' : language)
+		write(new File(src, "${applicationName}.${extension}"), "Application.$extension", model)
 
 		if (request.packaging == 'war') {
 			def fileName = "ServletInitializer.$language"
@@ -143,7 +144,7 @@ class ProjectGenerator {
 			model.testAnnotations = ''
 			model.testImports = ''
 		}
-		write(new File(test, "${applicationName}Tests.${language}"), "ApplicationTests.$language", model)
+		write(new File(test, "${applicationName}Tests.${extension}"), "ApplicationTests.$extension", model)
 
 		def resources = new File(dir, 'src/main/resources')
 		resources.mkdirs()
