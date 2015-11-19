@@ -54,6 +54,7 @@ class ProjectRequest {
 	String language
 	String packageName
 	String javaVersion
+	String kotlinVersion
 
 	// The base directory to create in the archive - no baseDir by default
 	String baseDir
@@ -143,6 +144,8 @@ class ProjectRequest {
 		}
 
 		initializeRepositories(metadata, requestedVersion)
+
+		kotlinVersion = metadata.configuration.env.kotlinVersion
 
 		afterResolution(metadata)
 	}

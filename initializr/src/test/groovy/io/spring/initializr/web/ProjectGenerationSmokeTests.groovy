@@ -91,6 +91,21 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		}
 	}
 
+	@Test
+	void createDefaultKotlinProject() {
+		toHome {
+			page.language = 'kotlin'
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('demo.zip'))
+			projectAssert.hasBaseDir('demo').isMavenProject().isKotlinProject()
+					.hasStaticAndTemplatesResources(false)
+					.pomAssert().hasDependenciesCount(3)
+					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+					.hasDependency('org.jetbrains.kotlin', 'kotlin-stdlib')
+		}
+	}
+
 
 	@Test
 	void createJavaProjectWithCustomDefaults() {
@@ -137,6 +152,31 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.hasSpringBootStarterDependency('data-jpa')
 					.hasSpringBootStarterTest()
 					.hasDependency('org.codehaus.groovy', 'groovy')
+		}
+	}
+
+	@Test
+	void createKotlinProjectWithCustomDefaults() {
+		toHome {
+			page.language = 'kotlin'
+			page.groupId = 'org.biz'
+			page.artifactId = 'kotlin-project'
+			page.name = 'My Kotlin project'
+			page.description = 'A description for my Kotlin project'
+			page.dependency('web').click()
+			page.dependency('data-jpa').click()
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('kotlin-project.zip'))
+			projectAssert.hasBaseDir("kotlin-project").isMavenProject()
+					.isGroovyProject('MyKotlinProjectApplication')
+					.hasStaticAndTemplatesResources(true)
+					.pomAssert().hasGroupId('org.biz').hasArtifactId('kotlin-project')
+					.hasName('My Kotlin project').hasDescription('A description for my Kotlin project')
+					.hasSpringBootStarterDependency('web')
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterTest()
+					.hasDependency('org.jetbrains.kotlin', 'kotlin-stdlib')
 		}
 	}
 

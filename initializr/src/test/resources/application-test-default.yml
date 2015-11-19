@@ -101,6 +101,9 @@ initializr:
     - name: Java
       id: java
       default: true
+    - name: Kotlin
+      id: kotlin
+      default: false
   bootVersions:
     - name : Latest SNAPSHOT
       id: 1.2.0.BUILD-SNAPSHOT

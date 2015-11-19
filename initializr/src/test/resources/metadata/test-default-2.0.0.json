@@ -142,6 +142,10 @@
       {
         "id": "java",
         "name": "Java"
+      },
+      {
+        "id": "kotlin",
+        "name": "Kotlin"
       }
     ]
   },

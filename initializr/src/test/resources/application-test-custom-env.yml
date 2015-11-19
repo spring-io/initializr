@@ -5,3 +5,4 @@ initializr:
     fallbackApplicationName: FooBarApplication
     invalidApplicationNames:
       - InvalidApplication
+    kotlinVersion: 1.0.0-beta-2423
