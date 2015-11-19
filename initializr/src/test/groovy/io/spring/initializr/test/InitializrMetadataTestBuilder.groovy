@@ -117,7 +117,7 @@ class InitializrMetadataTestBuilder {
 	}
 
 	InitializrMetadataTestBuilder addDefaultLanguages() {
-		addLanguage('java', true).addPackaging('groovy', false)
+		addLanguage('java', true).addLanguage('groovy', false)
 	}
 
 	InitializrMetadataTestBuilder addLanguage(String id, boolean defaultValue) {
