@@ -174,8 +174,11 @@ class MainController extends AbstractInitializrController {
 
 		def download = projectGenerator.createDistributionFile(dir, '.tgz')
 
+		def wrapperScript = getWrapperScript(request)
+
 		new AntBuilder().tar(destfile: download, compression: 'gzip') {
-			zipfileset(dir: dir, includes: '**')
+			zipfileset(dir: dir, includes: wrapperScript, filemode: 755)
+			zipfileset(dir: dir, includes: '**', excludes: wrapperScript)
 		}
 		upload(download, dir, generateFileName(request, 'tgz'), 'application/x-compress')
 	}
