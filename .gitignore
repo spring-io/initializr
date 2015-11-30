@@ -19,5 +19,6 @@ spring.zip
 repository/
 *.jar
 *.jar.orig
+*.jar.original
 .idea
 *.iml
