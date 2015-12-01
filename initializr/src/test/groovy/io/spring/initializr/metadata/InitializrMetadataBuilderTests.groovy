@@ -76,7 +76,7 @@ class InitializrMetadataBuilderTests {
 		assertEquals 2, metadata.bootVersions.content.size()
 		assertEquals 2, metadata.packagings.content.size()
 		assertEquals 1, metadata.javaVersions.content.size()
-		assertEquals 2, metadata.languages.content.size()
+		assertEquals 3, metadata.languages.content.size()
 		assertEquals 'meta-data-merge', metadata.name.content
 		assertEquals 'Demo project for meta-data merge', metadata.description.content
 		assertEquals 'org.acme', metadata.groupId.content
@@ -138,6 +138,7 @@ class InitializrMetadataBuilderTests {
 		assertEquals defaultEnv.springBootMetadataUrl, actualEnv.springBootMetadataUrl
 		assertEquals defaultEnv.fallbackApplicationName, actualEnv.fallbackApplicationName
 		assertEquals defaultEnv.forceSsl, actualEnv.forceSsl
+		assertEquals defaultEnv.kotlinVersion, actualEnv.kotlinVersion
 	}
 
 	@Test
@@ -153,6 +154,7 @@ class InitializrMetadataBuilderTests {
 		assertEquals defaultEnv.springBootMetadataUrl, actualEnv.springBootMetadataUrl
 		assertEquals 'FooBarApplication', actualEnv.fallbackApplicationName
 		assertEquals false, actualEnv.forceSsl
+		assertEquals '1.0.0-beta-2423', actualEnv.kotlinVersion
 	}
 
 	@Test

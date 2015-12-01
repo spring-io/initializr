@@ -112,8 +112,18 @@ class ProjectAssert {
 				'src/main/resources/application.properties')
 	}
 
+	ProjectAssert isKotlinProject(String expectedApplicationName) {
+		hasFile("src/main/kotlin/com/example/${expectedApplicationName}.kt",
+				"src/test/kotlin/com/example/${expectedApplicationName}Tests.kt",
+				'src/main/resources/application.properties')
+	}
+
 	ProjectAssert isGroovyProject() {
 		isGroovyProject(DEFAULT_APPLICATION_NAME)
+	}
+
+	ProjectAssert isKotlinProject() {
+		isKotlinProject(DEFAULT_APPLICATION_NAME)
 	}
 
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {
