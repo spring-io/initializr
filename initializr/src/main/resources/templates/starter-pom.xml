@@ -1,141 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>${groupId}</groupId>
-	<artifactId>${artifactId}</artifactId>
-	<version>${version}</version>
-	<packaging>${packaging}</packaging>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>${packaging}</packaging>
 
-	<name>${name}</name>
-	<description>${description}</description>
+    <name>${name}</name>
+    <description>${description}</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>${bootVersion}</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${bootVersion}</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>${javaVersion}</java.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>${javaVersion}</java.version>
+    </properties>
 
-	<dependencies><% compileDependencies.each { %>
-		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-		</dependency><% } %><% if (language=='groovy') { %>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy</artifactId>
-		</dependency><% } %>
-		<% runtimeDependencies.each { %>
-		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>runtime</scope>
-		</dependency><% } %><%  if (packaging=='war') { %>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency><% } %><% providedDependencies.each { %>
-		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>provided</scope>
-		</dependency><% } %>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency><% testDependencies.each { %>
-		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>test</scope>
-		</dependency><% } %>
-	</dependencies>
-	<% if (boms) { %>
-	<dependencyManagement>
-		<dependencies><% boms.each { %>
-			<dependency>
-				<groupId>${it.groupId}</groupId>
-				<artifactId>${it.artifactId}</artifactId>
-				<version>${it.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency><% } %>
-		</dependencies>
-	</dependencyManagement>
-	<% } %>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin><% if (language=='groovy') { %>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-				<compilerId>groovy-eclipse-compiler</compilerId>
-				</configuration>
-				<dependencies>
-				<dependency>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy-eclipse-compiler</artifactId>
-					<version>2.9.1-01</version>
-				</dependency>
-				<dependency>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy-eclipse-batch</artifactId>
-					<version>2.3.7-01</version>
-				</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.groovy</groupId>
-				<artifactId>groovy-eclipse-compiler</artifactId>
-				<version>2.9.1-01</version>
-				<extensions>true</extensions>
-			</plugin><% } %>
-		</plugins>
-	</build>
-	<% if (repositories) { %>
-	<repositories><% repositories.each { key, repo -> %>
-		<repository>
-			<id>${key}</id>
-			<name>${repo.name}</name>
-			<url>${repo.url}</url>
-			<snapshots>
-				<enabled>${repo.snapshotsEnabled}</enabled>
-			</snapshots>
-		</repository><% } %>
-	</repositories><% } %><% if (!bootVersion.contains("RELEASE")) { %>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories><% } %>
+    <dependencies><% compileDependencies.each { %>
+        <dependency>
+            <groupId>${it.groupId}</groupId>
+            <artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+            <version>${it.version}</version><% } %>
+        </dependency><% } %><% if (language=='groovy') { %>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency><% } %>
+        <% runtimeDependencies.each { %>
+        <dependency>
+            <groupId>${it.groupId}</groupId>
+            <artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+            <version>${it.version}</version><% } %>
+            <scope>runtime</scope>
+        </dependency><% } %><%  if (packaging=='war') { %>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency><% } %><% providedDependencies.each { %>
+        <dependency>
+            <groupId>${it.groupId}</groupId>
+            <artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+            <version>${it.version}</version><% } %>
+            <scope>provided</scope>
+        </dependency><% } %>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency><% testDependencies.each { %>
+        <dependency>
+            <groupId>${it.groupId}</groupId>
+            <artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+            <version>${it.version}</version><% } %>
+            <scope>test</scope>
+        </dependency><% } %>
+    </dependencies>
+    <% if (boms) { %>
+    <dependencyManagement>
+        <dependencies><% boms.each { %>
+            <dependency>
+                <groupId>${it.groupId}</groupId>
+                <artifactId>${it.artifactId}</artifactId>
+                <version>${it.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency><% } %>
+        </dependencies>
+    </dependencyManagement>
+    <% } %>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin><% if (language=='groovy') { %>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                <compilerId>groovy-eclipse-compiler</compilerId>
+                </configuration>
+                <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-eclipse-compiler</artifactId>
+                    <version>2.9.1-01</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-eclipse-batch</artifactId>
+                    <version>2.3.7-01</version>
+                </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-eclipse-compiler</artifactId>
+                <version>2.9.1-01</version>
+                <extensions>true</extensions>
+            </plugin><% } %>
+        </plugins>
+    </build>
+    <% if (repositories) { %>
+    <repositories><% repositories.each { key, repo -> %>
+        <repository>
+            <id>${key}</id>
+            <name>${repo.name}</name>
+            <url>${repo.url}</url>
+            <snapshots>
+                <enabled>${repo.snapshotsEnabled}</enabled>
+            </snapshots>
+        </repository><% } %>
+    </repositories><% } %><% if (!bootVersion.contains("RELEASE")) { %>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories><% } %>
 
 </project>
