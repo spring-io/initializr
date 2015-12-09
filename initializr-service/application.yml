@@ -57,6 +57,13 @@ initializr:
           id: validation
           description: JSR-303 validation infrastructure (already included with web)
           versionRange: 1.3.0.M1
+        - name: Retry
+          id: retry
+          groupId: org.springframework.retry
+          artifactId: spring-retry
+          description: Provide declarative retry support via spring-retry
+          versionRange: 1.3.0.M2
+          starter: false
         - name: Lombok
           id: lombok
           groupId: org.projectlombok
