@@ -39,11 +39,6 @@
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
 			<version>${it.version}</version><% } %>
 			<scope>runtime</scope>
-		</dependency><% } %><%  if (packaging=='war') { %>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
 		</dependency><% } %><% providedDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>

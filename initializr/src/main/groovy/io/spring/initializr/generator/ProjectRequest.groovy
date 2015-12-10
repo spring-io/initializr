@@ -169,10 +169,16 @@ class ProjectRequest {
 	 * Update this request once it has been resolved with the specified {@link InitializrMetadata}.
 	 */
 	protected afterResolution(InitializrMetadata metadata) {
-		if (packaging == 'war' && !hasWebFacet()) {
-			// Need to be able to bootstrap the web app
-			resolvedDependencies << metadata.dependencies.get('web')
-			facets << 'web'
+		if (packaging == 'war') {
+			if (!hasWebFacet()) {
+				// Need to be able to bootstrap the web app
+				resolvedDependencies << metadata.dependencies.get('web')
+				facets << 'web'
+			}
+			// Add the tomcat starter in provided scope
+			def tomcat = new Dependency().asSpringBootStarter('tomcat')
+			tomcat.scope = Dependency.SCOPE_PROVIDED
+			resolvedDependencies << tomcat
 		}
 		if (!resolvedDependencies.find { it.starter }) {
 			// There's no starter so we add the default one

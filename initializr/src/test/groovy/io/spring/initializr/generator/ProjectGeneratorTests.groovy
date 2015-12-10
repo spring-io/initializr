@@ -148,6 +148,41 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void gradleWarWithWebFacet() {
+		def dependency = new Dependency(id: 'thymeleaf', groupId: 'org.foo', artifactId: 'thymeleaf')
+		dependency.facets << 'web'
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.addDependencyGroup('test', dependency).build()
+		projectGenerator.metadata = metadata
+
+		def request = createProjectRequest('thymeleaf')
+		request.packaging = 'war'
+		request.type = 'gradle-project'
+		generateProject(request).isJavaWarProject().isGradleProject().
+				gradleBuildAssert()
+				.contains("compile('org.foo:thymeleaf')") // This is tagged as web facet so it brings the web one
+				.doesNotContain("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains("testCompile('org.springframework.boot:spring-boot-starter-test')")
+				.contains("configurations {") // declare providedRuntime config
+				.contains("providedRuntime")
+				.contains("providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')")
+	}
+
+	@Test
+	void gradleWarPomWithoutWebFacet() {
+		def request = createProjectRequest('data-jpa')
+		request.packaging = 'war'
+		generateGradleBuild(request)
+				.contains("compile('org.springframework.boot:spring-boot-starter-data-jpa')")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')") // Added by war packaging
+				.contains("testCompile('org.springframework.boot:spring-boot-starter-test')")
+				.contains("configurations {") // declare providedRuntime config
+				.contains("providedRuntime")
+				.contains("providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')")
+	}
+
+	@Test
 	void springBoot11UseEnableAutoConfigurationJava() {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.1.9.RELEASE'
@@ -306,6 +341,8 @@ class ProjectGeneratorTests {
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains("compile('org.springframework.boot:spring-boot-starter-data-jpa')")
 				.contains("runtime('org.h2:h2')")
+				.contains("configurations {") // declare providedRuntime config
+				.contains("providedRuntime")
 				.contains("providedRuntime('javax.servlet:servlet-api')")
 				.contains("testCompile('org.hamcrest:hamcrest')")
 	}
