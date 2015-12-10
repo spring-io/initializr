@@ -50,6 +50,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Slf4j
 class MainController extends AbstractInitializrController {
 
+	static final MediaType HAL_JSON_CONTENT_TYPE = MediaType.parseMediaType('application/hal+json')
+
 	@Autowired
 	private ProjectGenerator projectGenerator
 
@@ -76,7 +78,7 @@ class MainController extends AbstractInitializrController {
 
 
 	@RequestMapping(value = "/", produces = ["text/plain"])
-	ResponseEntity<String> serviceCapabilities(
+	ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
 		String appUrl = generateAppUrl()
 		def metadata = metadataProvider.get()
@@ -96,6 +98,11 @@ class MainController extends AbstractInitializrController {
 		builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
 	}
 
+	@RequestMapping(value = "/", produces = ["application/hal+json"])
+	ResponseEntity<String> serviceCapabilitiesHal() {
+		serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE)
+	}
+
 	@RequestMapping(value = "/", produces = ["application/vnd.initializr.v2.1+json", "application/json"])
 	ResponseEntity<String> serviceCapabilitiesV21() {
 		serviceCapabilitiesFor(InitializrMetadataVersion.V2_1)
@@ -107,9 +114,13 @@ class MainController extends AbstractInitializrController {
 	}
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
+		serviceCapabilitiesFor(version, version.mediaType)
+	}
+
+	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl()
 		def content = getJsonMapper(version).write(metadataProvider.get(), appUrl)
-		return ResponseEntity.ok().contentType(version.mediaType).body(content)
+		return ResponseEntity.ok().contentType(contentType).body(content)
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
