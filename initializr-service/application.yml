@@ -6,6 +6,12 @@ info:
   spring-boot:
     version: 1.3.0.RELEASE
 
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,text/css,text/html
+    min-response-size: 2048
+
 initializr:
   env:
     boms:

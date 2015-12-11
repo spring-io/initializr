@@ -24,6 +24,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONCompareMode
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -32,6 +33,7 @@ import org.springframework.web.client.HttpClientErrorException
 
 import static org.hamcrest.CoreMatchers.allOf
 import static org.hamcrest.CoreMatchers.containsString
+import static org.hamcrest.CoreMatchers.nullValue
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
@@ -169,6 +171,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void metadataWithCurrentAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2.1+json')
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
@@ -184,6 +187,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void metadataWithHalAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, 'application/hal+json')
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		validateContentType(response, MainController.HAL_JSON_CONTENT_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
@@ -283,6 +287,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	private void validateCurlHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		assertThat(response.body, allOf(
 				containsString("Spring Initializr"),
 				containsString('Examples:'),
@@ -291,6 +296,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		assertThat(response.body, allOf(
 				containsString("Spring Initializr"),
 				containsString('Examples:'),
@@ -300,6 +306,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	private void validateGenericHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		assertThat(response.body, allOf(
 				containsString("Spring Initializr"),
 				not(containsString('Examples:')),
@@ -308,6 +315,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN)
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		assertThat(response.body, allOf(
 				containsString("Service capabilities"),
 				containsString("Supported dependencies"),

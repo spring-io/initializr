@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web
 
+import java.nio.charset.StandardCharsets
+
 import groovy.json.JsonBuilder
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
@@ -23,6 +25,9 @@ import io.spring.initializr.util.Version
 import io.spring.initializr.util.VersionRange
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -40,7 +45,7 @@ class UiController {
 	protected InitializrMetadataProvider metadataProvider
 
 	@RequestMapping(value = "/ui/dependencies", produces = ["application/json"])
-	String dependencies(@RequestParam(required = false) String version) {
+	ResponseEntity<String> dependencies(@RequestParam(required = false) String version) {
 		def dependencyGroups = metadataProvider.get().dependencies.content
 		def content = []
 		Version v = version ? Version.parse(version) : null
@@ -55,7 +60,9 @@ class UiController {
 				}
 			}
 		}
-		writeDependencies(content)
+		def json = writeDependencies(content)
+		ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).
+				eTag(createUniqueId(json)).body(json)
 	}
 
 	private static String writeDependencies(List<DependencyItem> items) {
@@ -94,6 +101,12 @@ class UiController {
 			this.group = group
 			this.dependency = dependency
 		}
+	}
+
+	private String createUniqueId(String content) {
+		StringBuilder builder = new StringBuilder()
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder)
+		builder.toString()
 	}
 
 }

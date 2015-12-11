@@ -16,6 +16,9 @@
 
 package io.spring.initializr.web
 
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
+
 import groovy.util.logging.Slf4j
 import io.spring.initializr.generator.CommandLineHelpGenerator
 import io.spring.initializr.mapper.InitializrMetadataJsonMapper
@@ -27,11 +30,13 @@ import io.spring.initializr.generator.ProjectRequest
 import io.spring.initializr.metadata.InitializrMetadata
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.CacheControl
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -86,16 +91,20 @@ class MainController extends AbstractInitializrController {
 		def builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
 		if (userAgent) {
 			if (userAgent.startsWith(WebConfig.CURL_USER_AGENT_PREFIX)) {
-				return builder.body(commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl))
+				def content = commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl)
+				return builder.eTag(createUniqueId(content)).body(content)
 			}
 			if (userAgent.startsWith(WebConfig.HTTPIE_USER_AGENT_PREFIX)) {
-				return builder.body(commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl))
+				def content = commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl)
+				return builder.eTag(createUniqueId(content)).body(content)
 			}
 			if (userAgent.startsWith(WebConfig.SPRING_BOOT_CLI_AGENT_PREFIX)) {
-				return builder.body(commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl))
+				def content = commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl)
+				return builder.eTag(createUniqueId(content)).body(content)
 			}
 		}
-		builder.body(commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl))
+		def content = commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl)
+		builder.eTag(createUniqueId(content)).body(content)
 	}
 
 	@RequestMapping(value = "/", produces = ["application/hal+json"])
@@ -120,7 +129,8 @@ class MainController extends AbstractInitializrController {
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl()
 		def content = getJsonMapper(version).write(metadataProvider.get(), appUrl)
-		return ResponseEntity.ok().contentType(contentType).body(content)
+		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content))
+				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content)
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
@@ -218,6 +228,12 @@ class MainController extends AbstractInitializrController {
 				['Content-Type'       : contentType,
 				 'Content-Disposition': contentDispositionValue] as HttpHeaders, HttpStatus.OK)
 		result
+	}
+
+	private String createUniqueId(String content) {
+		StringBuilder builder = new StringBuilder()
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder)
+		builder.toString()
 	}
 
 }
