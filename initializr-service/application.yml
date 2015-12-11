@@ -491,7 +491,9 @@ initializr:
           description: PostgreSQL jdbc driver
           groupId: org.postgresql
           artifactId: postgresql
-          version: 9.4-1201-jdbc41
+          versions:
+            - versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
+              version: 9.4-1201-jdbc41
           scope: runtime
           starter: false
     - name: Social
