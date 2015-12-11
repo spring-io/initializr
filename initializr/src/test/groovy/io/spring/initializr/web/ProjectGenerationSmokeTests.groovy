@@ -17,13 +17,16 @@
 package io.spring.initializr.web
 
 import geb.Browser
+import io.spring.initializr.test.ProjectAssert
 import io.spring.initializr.web.test.HomePage
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.openqa.selenium.Keys
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.interactions.Actions
 
 import org.springframework.test.context.ActiveProfiles
 
@@ -39,6 +42,9 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	private File downloadDir
 	private WebDriver driver
 	private Browser browser
+	private Actions actions
+
+	private def enterAction
 
 	@Before
 	void setup() {
@@ -52,8 +58,11 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 				"application/zip,application/x-compress,application/octet-stream");
 
 		driver = new FirefoxDriver(fxProfile);
+		actions = new Actions(driver)
 		browser = new Browser()
 		browser.driver = driver
+
+		enterAction = actions.sendKeys(Keys.ENTER).build()
 	}
 
 	@After
@@ -64,26 +73,126 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	}
 
 	@Test
-	void createDefaultJavaProject() {
+	void createSimpleProject() {
 		toHome {
 			page.generateProject.click()
 			at HomePage
-			def projectAssert = zipProjectAssert(from('demo.zip'))
-			projectAssert.hasBaseDir("demo").isMavenProject().isJavaProject()
-					.hasStaticAndTemplatesResources(false)
-					.pomAssert().hasDependenciesCount(2)
-					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+			assertSimpleProject()
+					.isMavenProject()
+					.pomAssert()
+					.hasDependenciesCount(2)
+					.hasSpringBootStarterRootDependency()
+					.hasSpringBootStarterTest()
 		}
 	}
 
 	@Test
-	void createDefaultGroovyProject() {
+	void createSimpleProjectWithGradle() {
 		toHome {
+			page.type = 'gradle-project'
+			page.generateProject.click()
+			at HomePage
+			assertSimpleProject()
+					.isGradleProject()
+					.gradleBuildAssert()
+					.contains("compile('org.springframework.boot:spring-boot-starter')")
+					.contains("testCompile('org.springframework.boot:spring-boot-starter-test')")
+		}
+	}
+
+	@Test
+	void createSimpleProjectWithDifferentBootVersion() {
+		toHome {
+			page.bootVersion = '1.0.2.RELEASE'
+			page.generateProject.click()
+			at HomePage
+			assertSimpleProject()
+					.isMavenProject()
+					.pomAssert()
+					.hasBootVersion('1.0.2.RELEASE')
+					.hasDependenciesCount(2)
+					.hasSpringBootStarterRootDependency()
+					.hasSpringBootStarterTest()
+
+		}
+	}
+
+	@Test
+	void createSimpleProjectWithDependencies() {
+		toHome {
+			selectDependency(page, 'Data JPA')
+			selectDependency(page, 'Security')
+			page.generateProject.click()
+			at HomePage
+			assertSimpleProject()
+					.isMavenProject()
+					.pomAssert()
+					.hasDependenciesCount(3)
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterDependency('security')
+					.hasSpringBootStarterTest()
+		}
+	}
+
+	@Test
+	void selectDependencyTwiceRemovesIt() {
+		toHome {
+			selectDependency(page, 'Data JPA')
+			selectDependency(page, 'Security')
+			selectDependency(page, 'Security') // remove
+			page.generateProject.click()
+			at HomePage
+			assertSimpleProject()
+					.isMavenProject()
+					.pomAssert()
+					.hasDependenciesCount(2)
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterTest()
+		}
+	}
+
+	ProjectAssert assertSimpleProject() {
+		zipProjectAssert(from('demo.zip'))
+				.hasBaseDir("demo")
+				.isJavaProject()
+				.hasStaticAndTemplatesResources(false)
+	}
+
+	@Test
+	void customArtifactIdUpdateNameAutomatically() {
+		toHome {
+			page.groupId = 'org.foo'
+			page.generateProject.click()
+			at HomePage
+			zipProjectAssert(from('demo.zip'))
+					.hasBaseDir("demo")
+					.isJavaProject('org.foo', 'DemoApplication')
+		}
+	}
+
+	@Test
+	void customGroupIdIdUpdatePackageAutomatically() {
+		toHome {
+			page.artifactId = 'my-project'
+			page.generateProject.click()
+			at HomePage
+			zipProjectAssert(from('my-project.zip'))
+					.hasBaseDir("my-project")
+					.isJavaProject('com.example', 'MyProjectApplication')
+		}
+	}
+
+	@Test
+	void createGroovyProject() {
+		toHome {
+			page.advanced.click()
 			page.language = 'groovy'
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('demo.zip'))
-			projectAssert.hasBaseDir('demo').isMavenProject().isGroovyProject()
+			projectAssert.hasBaseDir('demo')
+					.isMavenProject()
+					.isGroovyProject()
 					.hasStaticAndTemplatesResources(false)
 					.pomAssert().hasDependenciesCount(3)
 					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
@@ -93,75 +202,15 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 
 
 	@Test
-	void createJavaProjectWithCustomDefaults() {
-		toHome {
-			page.groupId = 'com.acme'
-			page.artifactId = 'foo-bar'
-			page.name = 'My project'
-			page.description = 'A description for my project'
-			page.dependency('web').click()
-			page.dependency('data-jpa').click()
-			page.generateProject.click()
-			at HomePage
-			def projectAssert = zipProjectAssert(from('foo-bar.zip'))
-			projectAssert.hasBaseDir("foo-bar").isMavenProject()
-					.isJavaProject('MyProjectApplication')
-					.hasStaticAndTemplatesResources(true)
-					.pomAssert().hasGroupId('com.acme').hasArtifactId('foo-bar')
-					.hasName('My project').hasDescription('A description for my project')
-					.hasSpringBootStarterDependency('web')
-					.hasSpringBootStarterDependency('data-jpa')
-					.hasSpringBootStarterTest()
-		}
-	}
-
-	@Test
-	void createGroovyProjectWithCustomDefaults() {
-		toHome {
-			page.language = 'groovy'
-			page.groupId = 'org.biz'
-			page.artifactId = 'groovy-project'
-			page.name = 'My Groovy project'
-			page.description = 'A description for my Groovy project'
-			page.dependency('web').click()
-			page.dependency('data-jpa').click()
-			page.generateProject.click()
-			at HomePage
-			def projectAssert = zipProjectAssert(from('groovy-project.zip'))
-			projectAssert.hasBaseDir("groovy-project").isMavenProject()
-					.isGroovyProject('MyGroovyProjectApplication')
-					.hasStaticAndTemplatesResources(true)
-					.pomAssert().hasGroupId('org.biz').hasArtifactId('groovy-project')
-					.hasName('My Groovy project').hasDescription('A description for my Groovy project')
-					.hasSpringBootStarterDependency('web')
-					.hasSpringBootStarterDependency('data-jpa')
-					.hasSpringBootStarterTest()
-					.hasDependency('org.codehaus.groovy', 'groovy')
-		}
-	}
-
-	@Test
-	void createSimpleGradleProject() {
-		toHome {
-			page.type = 'gradle-project'
-			page.dependency('data-jpa').click()
-			page.generateProject.click()
-			at HomePage
-			def projectAssert = zipProjectAssert(from('demo.zip'))
-			projectAssert.hasBaseDir("demo").isGradleProject()
-					.isJavaProject()
-					.hasStaticAndTemplatesResources(false)
-		}
-	}
-
-	@Test
 	void createWarProject() {
 		toHome {
+			page.advanced.click()
 			page.packaging = 'war'
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('demo.zip'))
-			projectAssert.hasBaseDir("demo").isMavenProject()
+			projectAssert.hasBaseDir("demo")
+					.isMavenProject()
 					.isJavaWarProject()
 					.pomAssert().hasPackaging('war').hasDependenciesCount(3)
 					.hasSpringBootStarterDependency('web') // Added with war packaging
@@ -171,8 +220,69 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	}
 
 	@Test
+	void createJavaProjectWithCustomDefaults() {
+		toHome {
+			page.groupId = 'com.acme'
+			page.artifactId = 'foo-bar'
+			page.advanced.click()
+			page.name = 'My project'
+			page.description = 'A description for my project'
+			page.packageName = 'com.example.foo'
+			page.dependency('web').click()
+			page.dependency('data-jpa').click()
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('foo-bar.zip'))
+			projectAssert.hasBaseDir("foo-bar")
+					.isMavenProject()
+					.isJavaProject('com.example.foo', 'MyProjectApplication')
+					.hasStaticAndTemplatesResources(true)
+					.pomAssert()
+					.hasGroupId('com.acme')
+					.hasArtifactId('foo-bar')
+					.hasName('My project')
+					.hasDescription('A description for my project')
+					.hasSpringBootStarterDependency('web')
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterTest()
+		}
+	}
+
+	@Test
+	void createGroovyProjectWithCustomDefaults() {
+		toHome {
+			page.groupId = 'org.biz'
+			page.artifactId = 'groovy-project'
+			page.advanced.click()
+			page.language = 'groovy'
+			page.name = 'My Groovy project'
+			page.description = 'A description for my Groovy project'
+			page.packageName = 'com.example.biz'
+			page.dependency('web').click()
+			page.dependency('data-jpa').click()
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('groovy-project.zip'))
+			projectAssert.hasBaseDir("groovy-project")
+					.isMavenProject()
+					.isGroovyProject('com.example.biz', 'MyGroovyProjectApplication')
+					.hasStaticAndTemplatesResources(true)
+					.pomAssert()
+					.hasGroupId('org.biz')
+					.hasArtifactId('groovy-project')
+					.hasName('My Groovy project')
+					.hasDescription('A description for my Groovy project')
+					.hasSpringBootStarterDependency('web')
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterTest()
+					.hasDependency('org.codehaus.groovy', 'groovy')
+		}
+	}
+
+	@Test
 	void dependencyHiddenAccordingToRange() {
 		toHome { // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
+			page.advanced.click()
 			page.dependency('org.acme:bur').displayed == true
 
 			page.bootVersion = '1.0.2.RELEASE'
@@ -190,6 +300,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	@Test
 	void dependencyUncheckedWhenHidden() {
 		toHome {
+			page.advanced.click()
 			page.dependency('org.acme:bur').value() == 'org.acme:bur'
 			page.bootVersion = '1.0.2.RELEASE'
 			page.dependency('org.acme:bur').displayed == false
@@ -205,6 +316,11 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		script.delegate = browser
 		script()
 		browser
+	}
+
+	private selectDependency(def page, String text) {
+		page.autocomplete = text
+		enterAction.perform()
 	}
 
 	private byte[] from(String fileName) {

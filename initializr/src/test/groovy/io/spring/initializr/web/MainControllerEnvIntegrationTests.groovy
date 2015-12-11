@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web
 
+import io.spring.initializr.test.ProjectAssert
 import org.junit.Test
 
 import org.springframework.http.HttpEntity
@@ -50,7 +51,7 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 	@Test
 	void generateProjectWithInvalidName() {
 		downloadZip('/starter.zip?style=data-jpa&name=Invalid')
-				.isJavaProject('FooBarApplication')
+				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, 'FooBarApplication')
 				.isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)

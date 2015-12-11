@@ -28,8 +28,15 @@ class HomePage extends Page {
 
 	static at = { title == 'Spring Initializr' }
 	static content = {
+		advanced { $('.tofullversion  a') }
+		simple { $('tosimpleversion a') }
+
+		// Simple view
 		groupId { $('form').groupId() }
 		artifactId { $('form').artifactId() }
+		autocomplete { $('form').autocomplete() }
+
+		// Advanced view
 		name { $('form').name() }
 		description { $('form').description() }
 		packageName { $('form').packageName() }

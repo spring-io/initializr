@@ -27,6 +27,8 @@ import static org.junit.Assert.assertTrue
  */
 class ProjectAssert {
 
+	public static final DEFAULT_PACKAGE_NAME = 'com.example'
+
 	private static final DEFAULT_APPLICATION_NAME = generateDefaultApplicationName()
 
 	final File dir
@@ -95,29 +97,32 @@ class ProjectAssert {
 		this
 	}
 
-	ProjectAssert isJavaProject(String expectedApplicationName) {
-		hasFile("src/main/java/com/example/${expectedApplicationName}.java",
-				"src/test/java/com/example/${expectedApplicationName}Tests.java",
+	ProjectAssert isJavaProject(String expectedPackageName, String expectedApplicationName) {
+		String packageName = expectedPackageName.replace('.', '/')
+		hasFile("src/main/java/$packageName/${expectedApplicationName}.java",
+				"src/test/java/$packageName/${expectedApplicationName}Tests.java",
 				'src/main/resources/application.properties')
 	}
 
 	ProjectAssert isJavaProject() {
-		isJavaProject(DEFAULT_APPLICATION_NAME)
+		isJavaProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME)
 	}
 
-	ProjectAssert isGroovyProject(String expectedApplicationName) {
+	ProjectAssert isGroovyProject(String expectedPackageName, String expectedApplicationName) {
 		String codeLocation = (mavenProject ? 'java' : 'groovy')
-		hasFile("src/main/$codeLocation/com/example/${expectedApplicationName}.groovy",
-				"src/test/$codeLocation/com/example/${expectedApplicationName}Tests.groovy",
+		String packageName = expectedPackageName.replace('.', '/')
+		hasFile("src/main/$codeLocation/$packageName/${expectedApplicationName}.groovy",
+				"src/test/$codeLocation/$packageName/${expectedApplicationName}Tests.groovy",
 				'src/main/resources/application.properties')
 	}
 
 	ProjectAssert isGroovyProject() {
-		isGroovyProject(DEFAULT_APPLICATION_NAME)
+		isGroovyProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME)
 	}
 
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {
-		isJavaProject(expectedApplicationName).hasStaticAndTemplatesResources(true)
+		isJavaProject(DEFAULT_PACKAGE_NAME, expectedApplicationName)
+				.hasStaticAndTemplatesResources(true)
 				.hasFile('src/main/java/com/example/ServletInitializer.java')
 	}
 
