@@ -18,6 +18,8 @@ package io.spring.initializr.generator
 
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
+import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.test.GradleBuildAssert
 import io.spring.initializr.test.InitializrMetadataTestBuilder
 import io.spring.initializr.test.PomAssert
@@ -50,7 +52,7 @@ class ProjectGeneratorTests {
 	void setup() {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		projectGenerator.tmpdir = folder.newFolder().absolutePath
 	}
 
@@ -108,7 +110,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('test', dependency).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		def request = createProjectRequest('thymeleaf')
 		generateMavenPom(request)
@@ -123,7 +125,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('test', dependency).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		def request = createProjectRequest('thymeleaf')
 		request.packaging = 'war'
@@ -154,7 +156,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('test', dependency).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		def request = createProjectRequest('thymeleaf')
 		request.packaging = 'war'
@@ -276,7 +278,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('foo', whatever).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('whatever', 'data-jpa', 'web')
 		generateMavenPom(request).hasDependency(whatever)
 				.hasSpringBootStarterDependency('data-jpa')
@@ -296,7 +298,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
 				.addDependencyGroup('foo', whatever).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('whatever', 'data-jpa', 'web')
 		generateGradleBuild(request)
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
@@ -316,7 +318,7 @@ class ProjectGeneratorTests {
 				.addDependencyGroup('database', h2)
 				.addDependencyGroup('container', servlet)
 				.addDependencyGroup('test', hamcrest).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('hamcrest', 'h2', 'servlet-api', 'data-jpa', 'web')
 		generateMavenPom(request).hasDependency(h2).hasDependency(hamcrest).hasDependency(servlet)
 				.hasSpringBootStarterDependency('data-jpa')
@@ -335,7 +337,7 @@ class ProjectGeneratorTests {
 				.addDependencyGroup('database', h2)
 				.addDependencyGroup('container', servlet)
 				.addDependencyGroup('test', hamcrest).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('hamcrest', 'h2', 'servlet-api', 'data-jpa', 'web')
 		generateGradleBuild(request)
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
@@ -375,7 +377,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo)
 				.addBom('foo-bom', 'org.acme', 'foo-bom', '1.2.3').build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo')
 		generateMavenPom(request).hasDependency(foo)
 				.hasBom('org.acme', 'foo-bom', '1.2.3')
@@ -388,7 +390,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('group', foo, bar)
 				.addBom('the-bom', 'org.acme', 'the-bom', '1.2.3').build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo', 'bar')
 		generateMavenPom(request).hasDependency(foo)
 				.hasBom('org.acme', 'the-bom', '1.2.3')
@@ -404,7 +406,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo)
 				.addBom('the-bom', bom).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		// First version
 		def request = createProjectRequest('foo')
@@ -430,7 +432,7 @@ class ProjectGeneratorTests {
 				.addBom('the-bom', bom)
 				.addRepository('foo-repo', 'repo', 'http://example.com/foo', true)
 				.addRepository('bar-repo', 'repo', 'http://example.com/bar', false).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		// Second version
 		def request = createProjectRequest('foo')
@@ -448,7 +450,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo)
 				.addBom('foo-bom', 'org.acme', 'foo-bom', '1.2.3').build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo')
 		generateGradleBuild(request)
 				.contains("dependencyManagement {")
@@ -462,7 +464,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo)
 				.addRepository('foo-repo', 'foo', 'http://example.com/repo', false).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo')
 		generateMavenPom(request).hasDependency(foo)
 				.hasRepository('foo-repo', 'foo', 'http://example.com/repo', false)
@@ -475,7 +477,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('group', foo, bar)
 				.addRepository('the-repo', 'repo', 'http://example.com/repo', true).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo', 'bar')
 		generateMavenPom(request).hasDependency(foo)
 				.hasRepository('the-repo', 'repo', 'http://example.com/repo', true)
@@ -488,7 +490,7 @@ class ProjectGeneratorTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo)
 				.addRepository('foo-repo', 'foo', 'http://example.com/repo', false).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 		def request = createProjectRequest('foo')
 		generateGradleBuild(request)
 				.hasRepository('http://example.com/repo')
@@ -499,7 +501,7 @@ class ProjectGeneratorTests {
 		def foo = new Dependency(id: 'foo', groupId: 'org.foo', artifactId: 'custom-my-starter')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		def request = createProjectRequest('foo')
 		generateMavenPom(request)
@@ -514,7 +516,7 @@ class ProjectGeneratorTests {
 		foo.starter = false
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('foo', foo).build()
-		projectGenerator.metadata = metadata
+		applyMetadata(metadata)
 
 		def request = createProjectRequest('foo')
 		generateMavenPom(request)
@@ -542,9 +544,18 @@ class ProjectGeneratorTests {
 
 	ProjectRequest createProjectRequest(String... styles) {
 		def request = new ProjectRequest()
-		request.initialize(projectGenerator.metadata)
+		request.initialize(projectGenerator.metadataProvider.get())
 		request.style.addAll Arrays.asList(styles)
 		request
+	}
+
+	private void applyMetadata(InitializrMetadata metadata) {
+		projectGenerator.metadataProvider = new InitializrMetadataProvider() {
+			@Override
+			InitializrMetadata get() {
+				return metadata
+			}
+		}
 	}
 
 }

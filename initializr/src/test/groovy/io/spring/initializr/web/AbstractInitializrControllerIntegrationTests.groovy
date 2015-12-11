@@ -19,8 +19,9 @@ package io.spring.initializr.web
 import java.nio.charset.Charset
 
 import io.spring.initializr.mapper.InitializrMetadataVersion
-import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.test.OfflineInitializrMetadataProvider
 import io.spring.initializr.test.ProjectAssert
 import org.json.JSONObject
@@ -215,7 +216,8 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	static class Config {
 
 		@Bean
-		InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
+		InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
+			def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
 			new OfflineInitializrMetadataProvider(metadata)
 		}
 

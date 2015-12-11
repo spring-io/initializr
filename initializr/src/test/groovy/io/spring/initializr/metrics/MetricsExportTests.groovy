@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package io.spring.initializr.metrics
 
 import io.spring.initializr.generator.ProjectGenerationMetricsListener
 import io.spring.initializr.generator.ProjectRequest
-import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.test.OfflineInitializrMetadataProvider
 import io.spring.initializr.test.RedisRunning
 import org.junit.Before
@@ -81,7 +82,8 @@ public class MetricsExportTests {
 	static class Config {
 
 		@Bean
-		InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
+		InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
+			def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
 			new OfflineInitializrMetadataProvider(metadata)
 		}
 	}

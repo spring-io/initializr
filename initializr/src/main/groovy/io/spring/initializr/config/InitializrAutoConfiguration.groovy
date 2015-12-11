@@ -22,7 +22,6 @@ import com.google.common.cache.CacheBuilder
 import io.spring.initializr.generator.ProjectGenerationMetricsListener
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectResourceLocator
-import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
@@ -93,14 +92,9 @@ class InitializrAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean
-	InitializrMetadata initializrMetadata(InitializrProperties properties) {
-		InitializrMetadataBuilder.fromInitializrProperties(properties).build()
-	}
-
-	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider)
-	InitializrMetadataProvider initializrMetadataProvider(InitializrMetadata metadata) {
+	InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
+		def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
 		new DefaultInitializrMetadataProvider(metadata)
 	}
 

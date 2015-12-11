@@ -18,7 +18,7 @@ package io.spring.initializr.generator
 
 import groovy.util.logging.Slf4j
 import io.spring.initializr.metadata.Dependency
-import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,7 +42,7 @@ class ProjectGenerator {
 	private static final VERSION_1_3_0_M1 = Version.parse('1.3.0.M1')
 
 	@Autowired
-	InitializrMetadata metadata
+	InitializrMetadataProvider metadataProvider
 
 	@Autowired
 	ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator()
@@ -173,7 +173,7 @@ class ProjectGenerator {
 	protected Map initializeModel(ProjectRequest request) {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
-		request.resolve(metadata)
+		request.resolve(metadataProvider.get())
 
 		// request resolved so we can log what has been requested
 		def dependencies = request.resolvedDependencies
