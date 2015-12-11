@@ -84,6 +84,8 @@ class ProjectRequest {
 	 */
 	void resolve(InitializrMetadata metadata) {
 		List<String> depIds = style ? style : dependencies
+		String actualBootVersion = bootVersion ?: metadata.bootVersions.default.id
+		Version requestedVersion = Version.parse(actualBootVersion)
 		resolvedDependencies = depIds.collect {
 			def dependency = metadata.dependencies.get(it)
 			if (dependency == null) {
@@ -94,10 +96,8 @@ class ProjectRequest {
 				dependency = new Dependency()
 				dependency.asSpringBootStarter(it)
 			}
-			dependency
+			dependency.resolve(requestedVersion)
 		}
-		String actualBootVersion = bootVersion ?: metadata.bootVersions.default.id
-		Version requestedVersion = Version.parse(actualBootVersion)
 		Set<String> bomIds = []
 		resolvedDependencies.each {
 			it.facets.each {

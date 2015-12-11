@@ -17,8 +17,11 @@
 package io.spring.initializr.metadata
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import groovy.transform.AutoClone
+import groovy.transform.AutoCloneStyle
 import groovy.transform.ToString
 import io.spring.initializr.util.InvalidVersionException
+import io.spring.initializr.util.Version
 import io.spring.initializr.util.VersionRange
 
 /**
@@ -29,7 +32,8 @@ import io.spring.initializr.util.VersionRange
  * @since 1.0
  */
 @ToString(ignoreNulls = true, includePackage = false)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 class Dependency extends MetadataElement {
 
 	static final String SCOPE_COMPILE = 'compile'
@@ -51,7 +55,17 @@ class Dependency extends MetadataElement {
 
 	String artifactId
 
+	/**
+	 * The default version, can be {@code null} to indicate that the
+	 * version is managed by the project and does not need to be specified.
+	 */
 	String version
+
+	/**
+	 * Versions mapping if the version differs according to the Spring Boot
+	 * version. If no mapping matches, {@code version} is used.
+	 */
+	List<Mapping> versions = []
 
 	String scope = SCOPE_COMPILE
 
@@ -140,6 +154,29 @@ class Dependency extends MetadataElement {
 						"dependency with id '$id'")
 			}
 		}
+		versions.each {
+			try {
+				it.range = VersionRange.parse(it.versionRange)
+			} catch (InvalidVersionException ex) {
+				throw new InvalidInitializrMetadataException("Invalid version range $it.versionRange for $this", ex)
+			}
+		}
+	}
+
+	/**
+	 * Resolve this instance according to the specified Spring Boot {@link Version}. Return
+	 * a {@link Dependency} instance that has its state resolved against the specified version.
+	 */
+	Dependency resolve(Version bootVersion) {
+		for (Mapping mapping : versions) {
+			if (mapping.range.match(bootVersion)) {
+				def dependency = new Dependency(this)
+				dependency.version = mapping.version ? mapping.version : this.version
+				dependency.versions = null
+				return dependency
+			}
+		}
+		return this
 	}
 
 	/**
@@ -153,6 +190,16 @@ class Dependency extends MetadataElement {
 		StringBuilder sb = new StringBuilder()
 		sb.append(groupId).append(':').append(artifactId)
 		id = sb.toString()
+	}
+
+	static class Mapping {
+
+		String versionRange
+
+		String version
+
+		private VersionRange range
+
 	}
 
 }

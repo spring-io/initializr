@@ -57,9 +57,6 @@
       {
         "content": [
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "spring-boot-starter-web",
             "description": "Web dependency description",
@@ -70,12 +67,8 @@
             "scope": "compile"
           },
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "spring-boot-starter-security",
-            "facets": [],
             "groupId": "org.springframework.boot",
             "id": "security",
             "name": "Security",
@@ -83,11 +76,8 @@
           },
           {
             "aliases": ["jpa"],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "spring-boot-starter-data-jpa",
-            "facets": [],
             "groupId": "org.springframework.boot",
             "id": "data-jpa",
             "name": "Data JPA",
@@ -99,9 +89,7 @@
       {
         "content": [
           {
-            "aliases": [],
             "artifactId": "foo",
-            "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:foo",
             "name": "Foo",
@@ -112,12 +100,8 @@
             "version": "1.3.5"
           },
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "bar",
-            "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:bar",
             "name": "Bar",
@@ -125,12 +109,8 @@
             "version": "2.1.0"
           },
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "biz",
-            "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:biz",
             "name": "Biz",
@@ -139,12 +119,8 @@
             "versionRange": "1.2.0.BUILD-SNAPSHOT"
           },
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "bur",
-            "facets": [],
             "groupId": "org.acme",
             "id": "org.acme:bur",
             "name": "Bur",
@@ -153,12 +129,8 @@
             "versionRange": "[1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)"
           },
           {
-            "aliases": [],
-            "keywords": [],
-            "weight": 0,
             "starter": true,
             "artifactId": "my-api",
-            "facets": [],
             "groupId": "org.acme",
             "id": "my-api",
             "name": "My API",

@@ -16,12 +16,14 @@
 
 package io.spring.initializr.metadata
 
+import io.spring.initializr.util.Version
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNull
+import static org.junit.Assert.assertSame
 
 /**
  * @author Stephane Nicoll
@@ -134,6 +136,49 @@ class DependencyTests {
 		dependency.groupId = 'foo'
 		thrown.expect(IllegalArgumentException)
 		dependency.generateId()
+	}
+
+	@Test
+	void resolveNoMapping() {
+		def dependency = new Dependency(id: 'web')
+		dependency.resolve()
+		assertSame dependency, dependency.resolve(Version.parse('1.2.0.RELEASE'))
+	}
+
+	@Test
+	void resolveInvalidMapping() {
+		def dependency = new Dependency(id: 'web')
+		dependency.versions << new Dependency.Mapping(
+				versionRange: 'foo-bar', version: '0.1.0.RELEASE')
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage('foo-bar')
+		dependency.resolve()
+	}
+
+	@Test
+	void resolveMatchingMapping() {
+		def dependency = new Dependency(id: 'web', description: 'A web dependency', version: '0.3.0.RELEASE',
+				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'] )
+		dependency.versions << new Dependency.Mapping(
+				versionRange: '[1.1.0.RELEASE, 1.2.0.RELEASE)', version: '0.1.0.RELEASE')
+		dependency.versions << new Dependency.Mapping(
+				versionRange: '[1.2.0.RELEASE, 1.3.0.RELEASE)', version: '0.2.0.RELEASE')
+		dependency.resolve()
+
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')), '0.1.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.2.0.RELEASE')), '0.2.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')), '0.3.0.RELEASE') // default
+	}
+
+	static void validateResolvedWebDependency(def dependency, def expectedVersion) {
+		assertEquals expectedVersion, dependency.version
+		assertEquals 'web', dependency.id
+		assertEquals 'org.springframework.boot', dependency.groupId
+		assertEquals 'spring-boot-starter-web', dependency.artifactId
+		assertEquals 2, dependency.keywords.size()
+		assertEquals 1, dependency.aliases.size()
+		assertEquals 1, dependency.facets.size()
+
 	}
 
 }

@@ -16,12 +16,16 @@
 
 package io.spring.initializr.metadata
 
+import groovy.transform.AutoClone
+import groovy.transform.AutoCloneStyle
+
 /**
  * A basic meta-data element
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
+@AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 class MetadataElement {
 
 	/**

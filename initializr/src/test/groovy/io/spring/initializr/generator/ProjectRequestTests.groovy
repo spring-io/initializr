@@ -116,7 +116,7 @@ class ProjectRequestTests {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('code', 'org.foo:bar').build()
 
-		request.style << 'org.foo:acme' // does not exist and
+		request.style << 'org.foo:acme' // does not exist
 
 		thrown.expect(InvalidProjectRequestException)
 		thrown.expectMessage('org.foo:acme')
@@ -152,6 +152,29 @@ class ProjectRequestTests {
 		thrown.expectMessage('org.foo:bar')
 		thrown.expectMessage('0.9.9.RELEASE')
 		request.resolve(metadata)
+	}
+
+	@Test
+	void resolveDependencyVersion() {
+		def dependency = createDependency('org.foo', 'bar', '1.2.0.RELEASE')
+		dependency.versions << new Dependency.Mapping(
+				version: '0.1.0.RELEASE', versionRange: '[1.0.0.RELEASE, 1.1.0.RELEASE)')
+		dependency.versions << new Dependency.Mapping(
+				version: '0.2.0.RELEASE', versionRange: '1.1.0.RELEASE')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('code', dependency).build()
+
+		def request = new ProjectRequest()
+		request.bootVersion = '1.0.5.RELEASE'
+		request.style << 'org.foo:bar'
+		request.resolve(metadata)
+		assertDependency(request.resolvedDependencies[0], 'org.foo', 'bar', '0.1.0.RELEASE')
+
+		def anotherRequest = new ProjectRequest()
+		anotherRequest.bootVersion = '1.1.0.RELEASE'
+		anotherRequest.style << 'org.foo:bar'
+		anotherRequest.resolve(metadata)
+		assertDependency(anotherRequest.resolvedDependencies[0], 'org.foo', 'bar', '0.2.0.RELEASE')
 	}
 
 	@Test
