@@ -91,7 +91,7 @@ class InitializrMetadata {
 		dependencies.validate()
 
 		def repositories = configuration.env.repositories
-		dependencies.all.forEach { dependency ->
+		for (Dependency dependency : dependencies.all) {
 			def boms = configuration.env.boms
 			if (dependency.bom && !boms[dependency.bom]) {
 				throw new InvalidInitializrMetadataException("Dependency $dependency " +
@@ -103,15 +103,15 @@ class InitializrMetadata {
 						"defines an invalid repository id $dependency.repository, available repositores $repositories")
 			}
 		}
-		configuration.env.boms.values().forEach { bom ->
-			bom.repositories.forEach { r ->
+		for (BillOfMaterials bom : configuration.env.boms.values()) {
+			for (String r : bom.repositories) {
 				if (!repositories[r]) {
 					throw new InvalidInitializrMetadataException("$bom " +
 							"defines an invalid repository id $r, available repositores $repositories")
 				}
 			}
-			bom.mappings.forEach{  m ->
-				m.repositories.forEach { r ->
+			for (BillOfMaterials.Mapping m : bom.mappings) {
+				for (String r : m.repositories) {
 					if (!repositories[r]) {
 						throw new InvalidInitializrMetadataException("$m of $bom " +
 								"defines an invalid repository id $r, available repositores $repositories")

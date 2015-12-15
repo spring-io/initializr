@@ -38,28 +38,28 @@ class DefaultDependencyMetadataProvider implements DependencyMetadataProvider {
 	@Cacheable(cacheNames = "dependency-metadata", key = "#p1")
 	DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
 		Map<String, Dependency> dependencies = [:]
-		metadata.dependencies.getAll().forEach { d ->
+		for (Dependency d : metadata.dependencies.getAll()) {
 			if (d.match(bootVersion)) {
 				dependencies[d.id] = d.resolve(bootVersion)
 			}
 		}
 
 		Map<String, Repository> repositories = [:]
-		dependencies.values().forEach { d ->
+		for (Dependency d : dependencies.values()) {
 			if (d.repository) {
 				repositories[d.repository] = metadata.configuration.env.repositories[d.repository]
 			}
 		}
 
 		Map<String, BillOfMaterials> boms = [:]
-		dependencies.values().forEach { d ->
+		for (Dependency d : dependencies.values()) {
 			if (d.bom) {
 				boms[d.bom] = metadata.configuration.env.boms.get(d.bom).resolve(bootVersion)
 			}
 		}
 		// Each resolved bom may require additional repositories
-		boms.values().forEach { b ->
-			b.repositories.forEach { id ->
+		for (BillOfMaterials b : boms.values()) {
+			for (String id : b.repositories) {
 				repositories[id] = metadata.configuration.env.repositories[id]
 			}
 		}
