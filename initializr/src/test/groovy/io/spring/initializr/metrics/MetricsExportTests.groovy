@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue
  */
 @RunWith(SpringJUnit4ClassRunner)
 @SpringApplicationConfiguration(classes = Config)
-@IntegrationTest(['spring.metrics.export.default.delayMillis:500',
+@IntegrationTest(['spring.metrics.export.delayMillis:500',
 		'spring.metrics.export.enabled:true',
 		'initializr.metrics.prefix:test.prefix', 'initializr.metrics.key:key.test'])
 public class MetricsExportTests {
