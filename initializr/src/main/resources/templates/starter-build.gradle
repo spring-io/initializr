@@ -1,16 +1,16 @@
 buildscript {
-    ext {
-        springBootVersion = '${bootVersion}'
-    }
-    repositories {
-        mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }<% } %>
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
-        classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')<% } %>
-    }
+	ext {
+		springBootVersion = '${bootVersion}'
+	}
+	repositories {
+		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }<% } %>
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
+		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')<% } %>
+	}
 }
 
 apply plugin: '${language}'<% if (packaging=='war') {  %>
@@ -23,28 +23,28 @@ apply plugin: 'war'
 <% } %>
 
 <% if (packaging=='war') {  %>war<% } else { %>jar<% } %> {
-    baseName = '${artifactId}'
-    version = '${version}'
+	baseName = '${artifactId}'
+	version = '${version}'
 }
 sourceCompatibility = ${javaVersion}
 targetCompatibility = ${javaVersion}
 
 repositories {
-    mavenCentral()<% if (repositories) { repositories.each { key, repo -> %>
-    maven { url "${repo.url}" }<% }} %>
+	mavenCentral()<% if (repositories) { repositories.each { key, repo -> %>
+	maven { url "${repo.url}" }<% }} %>
 }
 
 <% if (providedDependencies) { %>configurations {
-    providedRuntime
+	providedRuntime
 }
 <% } %>
 dependencies {<% compileDependencies.each { %>
-    compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (language=='groovy') { %>
-    compile('org.codehaus.groovy:groovy')<% } %><% runtimeDependencies.each { %>
-    runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% providedDependencies.each { %>
-    providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
-    testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
-    testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
+	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (language=='groovy') { %>
+	compile('org.codehaus.groovy:groovy')<% } %><% runtimeDependencies.each { %>
+	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% providedDependencies.each { %>
+	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
+	testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
+	testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
 }
 <% if (boms) { %>
 dependencyManagement {
@@ -55,12 +55,12 @@ dependencyManagement {
 <% } %>
 
 eclipse {
-    classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
-    }
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
+	}
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+	gradleVersion = '2.9'
 }
