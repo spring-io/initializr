@@ -98,7 +98,8 @@ class ProjectGenerator {
 			new File(dir, 'pom.xml').write(pom)
 			writeMavenWrapper(dir)
 		}
-
+		write(new File(dir, 'README.md'), 'README.md', model)
+		
 		def applicationName = request.applicationName
 		def language = request.language
 
