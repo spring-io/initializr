@@ -141,6 +141,7 @@ class ProjectRequest {
 		if (!applicationName) {
 			this.applicationName = metadata.configuration.generateApplicationName(this.name)
 		}
+		packageName = metadata.configuration.cleanPackageName(this.packageName, metadata.packageName.content)
 
 		initializeRepositories(metadata, requestedVersion)
 

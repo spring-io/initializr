@@ -16,7 +16,6 @@
 
 package io.spring.initializr.metadata
 
-import io.spring.initializr.metadata.InitializrConfiguration
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -59,7 +58,7 @@ class InitializrConfigurationTests {
 	}
 
 	@Test
-	void generateApplicationNamSsimpleDash() {
+	void generateApplicationNamSimpleDash() {
 		assertEquals 'MyDemoApplication', this.properties.generateApplicationName('my-demo')
 	}
 
@@ -106,6 +105,46 @@ class InitializrConfigurationTests {
 	@Test
 	void generateApplicationNameAnotherInvalidApplicationName() {
 		assertEquals this.properties.env.fallbackApplicationName, this.properties.generateApplicationName('Spring')
+	}
+
+	@Test
+	void generatePackageNameSimple() {
+		assertEquals 'com.foo', this.properties.cleanPackageName('com.foo', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameSimpleUnderscore() {
+		assertEquals 'com.my_foo', this.properties.cleanPackageName('com.my_foo', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameSimpleColon() {
+		assertEquals 'com.foo', this.properties.cleanPackageName('com:foo', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameMultipleDashers() {
+		assertEquals 'com.foo', this.properties.cleanPackageName('com--foo', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameMultipleSpaces() {
+		assertEquals 'com.foo', this.properties.cleanPackageName('  com   foo  ', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameNull() {
+		assertEquals 'com.example', this.properties.cleanPackageName(null, 'com.example')
+	}
+
+	@Test
+	void generatePackageNameInvalidStartCharacter() {
+		assertEquals 'com.example', this.properties.cleanPackageName('0om.foo', 'com.example')
+	}
+
+	@Test
+	void generatePackageNameInvalidPackageName() {
+		assertEquals 'com.example', this.properties.cleanPackageName('org.springframework', 'com.example')
 	}
 
 	@Test

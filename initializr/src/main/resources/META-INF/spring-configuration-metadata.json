@@ -134,6 +134,13 @@
       "defaultValue": ["SpringApplication", "SpringBootApplication"]
     },
     {
+      "name": "initializr.env.invalid-package-names",
+      "type": "java.util.List<java.lang.String>",
+      "description": "The list of invalid package names. If such name is chosen or generated, the default package name should be used instead.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
+      "defaultValue": ["org.springframework"]
+    },
+    {
       "name": "initializr.env.repositories",
       "type": "java.util.Map<java.lang.String,io.spring.initializr.metadata.Repository>",
       "description": "The \"Repository\" instances that are referenced in this instance, identified by\n an arbitrary identifier that can be used in the dependencies definition.",

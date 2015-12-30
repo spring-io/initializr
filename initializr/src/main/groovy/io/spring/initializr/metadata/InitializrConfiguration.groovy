@@ -65,6 +65,27 @@ class InitializrConfiguration {
 		}
 	}
 
+	/**
+	 * Clean the specified package name if necessary. If the package name cannot
+	 * be transformed to a valid package name, the {@code defaultPackageName}
+	 * is used instead.
+	 * <p>The package name cannot be cleaned if the  specified {@code packageName}
+	 * is {@code null} or if it contains an invalid character for a class identifier.
+	 * @see Env#invalidPackageNames
+	 */
+	String cleanPackageName(String packageName, String defaultPackageName) {
+		if (!packageName) {
+			return defaultPackageName
+		}
+		String candidate = packageName.trim().split('\\W+').join('.')
+		if (hasInvalidChar(candidate.replace('.', '')) || env.invalidPackageNames.contains(candidate)) {
+			return defaultPackageName
+		}
+		else {
+			candidate
+		}
+	}
+
 	private static String splitCamelCase(String text) {
 		text.split('(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])').collect {
 			String s = it.toLowerCase()
@@ -113,6 +134,14 @@ class InitializrConfiguration {
 		List<String> invalidApplicationNames = [
 				'SpringApplication',
 				'SpringBootApplication'
+		]
+
+		/**
+		 * The list of invalid package names. If such name is chosen or generated,
+		 * the the default package name should be used instead.
+		 */
+		List<String> invalidPackageNames = [
+				'org.springframework'
 		]
 
 		/**

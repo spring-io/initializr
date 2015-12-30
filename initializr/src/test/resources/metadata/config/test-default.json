@@ -37,6 +37,9 @@
       "SpringApplication",
       "SpringBootApplication"
     ],
+    "invalidPackageNames": [
+      "org.springframework"
+    ],
     "repositories": {
       "my-api-repo-1": {
         "name": "repo1",

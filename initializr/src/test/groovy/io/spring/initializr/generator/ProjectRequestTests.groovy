@@ -239,6 +239,24 @@ class ProjectRequestTests {
 		assertEquals 'MyApplicationName', request.applicationName
 	}
 
+	@Test
+	void cleanPackageNameWithNoName() {
+		def request = new ProjectRequest()
+		def metadata = InitializrMetadataTestBuilder.withDefaults().build()
+
+		request.resolve(metadata)
+		assertEquals metadata.packageName.content, request.packageName
+	}
+
+	@Test
+	void cleanPackageName() {
+		def request = new ProjectRequest()
+		request.packageName = 'com:foo  bar'
+		def metadata = InitializrMetadataTestBuilder.withDefaults().build()
+
+		request.resolve(metadata)
+		assertEquals 'com.foo.bar', request.packageName
+	}
 
 	private static void assertBootStarter(Dependency actual, String name) {
 		def expected = new Dependency()
