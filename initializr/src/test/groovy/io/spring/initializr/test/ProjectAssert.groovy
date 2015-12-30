@@ -98,10 +98,7 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isJavaProject(String expectedPackageName, String expectedApplicationName) {
-		String packageName = expectedPackageName.replace('.', '/')
-		hasFile("src/main/java/$packageName/${expectedApplicationName}.java",
-				"src/test/java/$packageName/${expectedApplicationName}Tests.java",
-				'src/main/resources/application.properties')
+		isGenericProject(expectedPackageName, expectedApplicationName, 'java', 'java')
 	}
 
 	ProjectAssert isJavaProject() {
@@ -109,16 +106,11 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isGroovyProject(String expectedPackageName, String expectedApplicationName) {
-		String packageName = expectedPackageName.replace('.', '/')
-		hasFile("src/main/groovy/$packageName/${expectedApplicationName}.groovy",
-				"src/test/groovy/$packageName/${expectedApplicationName}Tests.groovy",
-				'src/main/resources/application.properties')
+		isGenericProject(expectedPackageName, expectedApplicationName, 'groovy', 'groovy')
 	}
 
-	ProjectAssert isKotlinProject(String expectedApplicationName) {
-		hasFile("src/main/kotlin/com/example/${expectedApplicationName}.kt",
-				"src/test/kotlin/com/example/${expectedApplicationName}Tests.kt",
-				'src/main/resources/application.properties')
+	ProjectAssert isKotlinProject(String expectedPackageName, String expectedApplicationName) {
+		isGenericProject(expectedPackageName, expectedApplicationName, 'kotlin', 'kt')
 	}
 
 	ProjectAssert isGroovyProject() {
@@ -126,7 +118,15 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isKotlinProject() {
-		isKotlinProject(DEFAULT_APPLICATION_NAME)
+		isKotlinProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME)
+	}
+
+	private ProjectAssert isGenericProject(String expectedPackageName, String expectedApplicationName,
+										   String codeLocation, String extension) {
+		String packageName = expectedPackageName.replace('.', '/')
+		hasFile("src/main/$codeLocation/$packageName/${expectedApplicationName}.$extension",
+				"src/test/$codeLocation/$packageName/${expectedApplicationName}Tests.$extension",
+				'src/main/resources/application.properties')
 	}
 
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {

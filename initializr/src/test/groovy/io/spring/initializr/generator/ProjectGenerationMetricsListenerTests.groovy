@@ -177,7 +177,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.language = 'kotlin'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireProjectGeneratedEvent(request)
 		metricsAssert.hasValue(1, 'initializr.language.kotlin')
 	}
 

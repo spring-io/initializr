@@ -24,6 +24,12 @@
       "sourceMethod": "getEnv()"
     },
     {
+      "name": "initializr.env.kotlin",
+      "type": "io.spring.initializr.metadata.InitializrConfiguration$Env$Kotlin",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
+      "sourceMethod": "getKotlin()"
+    },
+    {
       "name": "initializr.group-id",
       "type": "io.spring.initializr.metadata.InitializrProperties$SimpleElement",
       "sourceType": "io.spring.initializr.metadata.InitializrProperties",
@@ -156,6 +162,12 @@
       "description": "The list of invalid package names. If such name is chosen or generated, the default package name should be used instead.",
       "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
       "defaultValue": ["org.springframework"]
+    },
+    {
+      "name": "initializr.env.kotlin.version",
+      "type": "java.lang.String",
+      "description": "Kotlin version to use.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Kotlin"
     },
     {
       "name": "initializr.env.repositories",

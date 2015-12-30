@@ -138,7 +138,7 @@ class InitializrMetadataBuilderTests {
 		assertEquals defaultEnv.springBootMetadataUrl, actualEnv.springBootMetadataUrl
 		assertEquals defaultEnv.fallbackApplicationName, actualEnv.fallbackApplicationName
 		assertEquals defaultEnv.forceSsl, actualEnv.forceSsl
-		assertEquals defaultEnv.kotlinVersion, actualEnv.kotlinVersion
+		assertEquals defaultEnv.kotlin.version, actualEnv.kotlin.version
 	}
 
 	@Test
@@ -154,7 +154,7 @@ class InitializrMetadataBuilderTests {
 		assertEquals defaultEnv.springBootMetadataUrl, actualEnv.springBootMetadataUrl
 		assertEquals 'FooBarApplication', actualEnv.fallbackApplicationName
 		assertEquals false, actualEnv.forceSsl
-		assertEquals '1.0.0-beta-2423', actualEnv.kotlinVersion
+		assertEquals '1.0.0-beta-2423', actualEnv.kotlin.version
 	}
 
 	@Test

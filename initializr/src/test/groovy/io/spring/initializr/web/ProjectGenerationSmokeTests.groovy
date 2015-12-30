@@ -202,8 +202,9 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	}
 
 	@Test
-	void createDefaultKotlinProject() {
+	void createKotlinProject() {
 		toHome {
+			page.advanced.click()
 			page.language = 'kotlin'
 			page.generateProject.click()
 			at HomePage
@@ -215,7 +216,6 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 					.hasDependency('org.jetbrains.kotlin', 'kotlin-stdlib')
 		}
 	}
-
 
 	@Test
 	void createWarProject() {
@@ -298,18 +298,20 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 	@Test
 	void createKotlinProjectWithCustomDefaults() {
 		toHome {
-			page.language = 'kotlin'
 			page.groupId = 'org.biz'
 			page.artifactId = 'kotlin-project'
+			page.advanced.click()
+			page.language = 'kotlin'
 			page.name = 'My Kotlin project'
 			page.description = 'A description for my Kotlin project'
+			page.packageName = 'com.example.biz'
 			page.dependency('web').click()
 			page.dependency('data-jpa').click()
 			page.generateProject.click()
 			at HomePage
 			def projectAssert = zipProjectAssert(from('kotlin-project.zip'))
 			projectAssert.hasBaseDir("kotlin-project").isMavenProject()
-					.isGroovyProject('MyKotlinProjectApplication')
+					.isKotlinProject('com.example.biz', 'MyKotlinProjectApplication')
 					.hasStaticAndTemplatesResources(true)
 					.pomAssert().hasGroupId('org.biz').hasArtifactId('kotlin-project')
 					.hasName('My Kotlin project').hasDescription('A description for my Kotlin project')

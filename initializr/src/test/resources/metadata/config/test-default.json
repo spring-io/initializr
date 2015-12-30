@@ -33,7 +33,9 @@
     "artifactRepository": "https://repo.spring.io/release/",
     "fallbackApplicationName": "Application",
     "forceSsl": true,
-    "kotlinVersion": null,
+    "kotlin": {
+      "version": null
+    },
     "googleAnalyticsTrackingCode": null,
     "invalidApplicationNames": [
       "SpringApplication",
