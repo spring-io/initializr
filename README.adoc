@@ -80,6 +80,19 @@ a compressed tarball instead.
 You could use this infrastructure to create your own client since the project is generated
 via a plain HTTP call.
 
+[[customize-form]]
+== Customize form inputs
+
+You can share or bookmark URL that will customize automatically form inputs with this kind of hashbang parameters:
+
+[source,bash]
+----
+https://start.spring.io/#!language=groovy&name=Groovy%20Sample
+----
+
+`type`, `groupId`, `artifactId`, `name`, `description`, `packageName`,
+`packaging`, `javaVersion` and `language` parameters are supported.
+
 [[meta-data]]
 == Service meta-data
 
