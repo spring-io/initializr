@@ -61,6 +61,55 @@
         return versionA[3].localeCompare(versionB[3]);
     }
 
+    /**
+     * Parse hash bang parameters from a URL as key value object.
+     * For repeated parameters the last parameter is effective.
+     * If = syntax is not used the value is set to null.
+     * #!x&y=3 -> { x:null, y:3 }
+     * @param url URL to parse or null if window.location is used
+     * @return Object of key -> value mappings.
+     * @source https://gist.github.com/zaus/5201739
+     */
+    hashbang = function (url, i, hash) {
+        url = url || window.location.href;
+
+        var pos = url.indexOf('#!');
+        if( pos < 0 ) return [];
+        var vars = [], hashes = url.slice(pos + 2).split('&');
+
+        for(i = hashes.length; i--;) {
+            hash = hashes[i].split('=');
+
+            vars.push({ name: hash[0], value: hash.length > 1 ? hash[1] : null});
+        }
+
+        return vars;
+    }
+
+    applyParams = function() {
+        var params = hashbang();
+        $.each(params, function( index, param ) {
+            var value = decodeURIComponent(param.value);
+            switch(param.name)  {
+                case 'type':
+                case 'packaging':
+                case 'javaVersion':
+                case 'language':
+                    $('.' + param.name.toLowerCase() + '-form-group').removeClass("hidden");
+                    $('#' + param.name+ ' option[value="' + value + '"]').prop('selected', true);
+                    break;
+                case 'groupId':
+                case 'artifactId':
+                case 'name':
+                case 'description':
+                case 'packageName':
+                    $('.' + param.name.toLowerCase() + '-form-group').removeClass("hidden");
+                    $('#' + param.name).val(value);
+                    break;
+            }
+        });
+    }
+
 }());
 
 $(function () {
@@ -124,6 +173,7 @@ $(function () {
         $(".full").addClass("hidden");
         $(".tofullversion").removeClass("hidden");
         $(".tosimpleversion").addClass("hidden");
+        applyParams();
         $("body").scrollTop(0);
         return false;
     });
@@ -201,4 +251,15 @@ $(function () {
             e.returnValue = false;
         }
     });
+
+    applyParams();
+    if ("onhashchange" in window) {
+        window.onhashchange = function() {
+            $(".full").addClass("hidden");
+            $(".tofullversion").removeClass("hidden");
+            $(".tosimpleversion").addClass("hidden");
+            applyParams();
+        }
+    }
+
 });
