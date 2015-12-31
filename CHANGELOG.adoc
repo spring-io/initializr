@@ -8,7 +8,6 @@ order.
 === Release 1.0.0 (In progress)
 
 * https://github.com/spring-io/initializr/issues/114[#114]: clean package name if necessary
-* https://github.com/spring-io/initializr/issues/90[#90]: migrate Groovy maven-based builds to GMavenPlus
 * https://github.com/spring-io/initializr/issues/140[#140]: expose dependencies meta-data
 * https://github.com/spring-io/initializr/issues/168[#168]: support for dependency versions mapping
 * https://github.com/spring-io/initializr/issues/165[#165]: improve resources caching

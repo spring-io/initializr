@@ -102,7 +102,7 @@ class ProjectGenerator {
 		def applicationName = request.applicationName
 		def language = request.language
 
-		String codeLocation = language.equals("groovy") ? 'groovy': 'java'
+		String codeLocation = ((language.equals("groovy") && gradleBuild) ? 'groovy': 'java')
 		def src = new File(new File(dir, "src/main/$codeLocation"), request.packageName.replace('.', '/'))
 		src.mkdirs()
 		write(new File(src, "${applicationName}.${language}"), "Application.$language", model)
