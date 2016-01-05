@@ -83,15 +83,18 @@ via a plain HTTP call.
 [[customize-form]]
 == Customize form inputs
 
-You can share or bookmark URL that will customize automatically form inputs with this kind of hashbang parameters:
+You can share or bookmark URLs that will automatically customize form inputs. For instance,
+the following URL from the default instance uses `groovy` by default and set the name
+to `Groovy Sample`:
 
 [source,bash]
 ----
 https://start.spring.io/#!language=groovy&name=Groovy%20Sample
 ----
 
-`type`, `groupId`, `artifactId`, `name`, `description`, `packageName`,
-`packaging`, `javaVersion` and `language` parameters are supported.
+The following hashbang parameters are supported: `type`, `groupId`, `artifactId`, `name`,
+`description`, `packageName`, `packaging`, `javaVersion` and `language`. Review the section
+above for a description of each of them.
 
 [[meta-data]]
 == Service meta-data
