@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.openqa.selenium.interactions.Actions
 
 import org.springframework.test.context.ActiveProfiles
 
+import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 /**
@@ -310,8 +311,45 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		}
 	}
 
+	@Test
+	void customizationShowsUpInDefaultView() {
+		toHome('/#!language=groovy&packageName=com.example.acme') {
+			assertEquals 'groovy', page.language.value()
+			assertEquals 'com.example.acme', page.packageName.value()
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('demo.zip'))
+			projectAssert.hasBaseDir('demo')
+					.isMavenProject()
+					.isGroovyProject('com.example.acme', ProjectAssert.DEFAULT_APPLICATION_NAME )
+					.hasStaticAndTemplatesResources(false)
+					.pomAssert().hasDependenciesCount(3)
+					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+					.hasDependency('org.codehaus.groovy', 'groovy')
+
+		}
+	}
+
+	@Test
+	void customizationsShowsUpWhenViewIsSwitched() {
+		toHome('/#!packaging=war&javaVersion=1.7') {
+			assertEquals 'war', page.packaging.value()
+			assertEquals '1.7', page.javaVersion.value()
+			page.advanced().click()
+			assertEquals 'war', page.packaging.value()
+			assertEquals '1.7', page.javaVersion.value()
+			page.simple().click()
+			assertEquals 'war', page.packaging.value()
+			assertEquals '1.7', page.javaVersion.value()
+		}
+	}
+
 	private Browser toHome(Closure script) {
-		browser.go("http://localhost:" + port + "/")
+		toHome('/', script)
+	}
+
+	private Browser toHome(String uri, Closure script) {
+		browser.go("http://localhost:$port$uri")
 		browser.at HomePage
 		script.delegate = browser
 		script()
