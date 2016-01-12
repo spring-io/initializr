@@ -97,6 +97,7 @@
                 case 'language':
                     $('.' + param.name.toLowerCase() + '-form-group').removeClass("hidden");
                     $('#' + param.name+ ' option[value="' + value + '"]').prop('selected', true);
+                    $('#' + param.name).change();
                     break;
                 case 'groupId':
                 case 'artifactId':
@@ -105,6 +106,7 @@
                 case 'packageName':
                     $('.' + param.name.toLowerCase() + '-form-group').removeClass("hidden");
                     $('#' + param.name).val(value);
+                    $('#' + param.name).change();
                     break;
             }
         });
