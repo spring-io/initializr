@@ -9,9 +9,7 @@ configure the project to generate and endpoints that you can use via plain HTTP.
 
 Spring Initializr also exposes an endpoint that serves its
 {wiki}/Metadata-format[meta-data] in a well-known format to allow third-party
-clients to provide the necessary assistance. {boot-doc}/#cli-init[Spring Boot CLI] is
-using this mechanism to offer a command-line project generator; STS uses it in a similar
-way to offer a project creation wizard.
+clients to provide the necessary assistance.
 
 Finally, Initializr offers a configuration structure to define all the aspects related
 to the project to generate: list of dependencies, supported java and boot versions, etc. Check
@@ -21,14 +19,20 @@ configuration is {wiki}/Configuration-format[also described in details on the wi
 NOTE: We use the continuous deployment technique to manage our instance; check the
 link:CHANGELOG.adoc[changelog] for an overview of changes
 
-== Generating a project
+== Supported interfaces
 
-There are many ways you can use to generate a project using Spring Initializr. You can
-obviously use the https://start.spring.io[embedded web UI] available from the root
-context. Recent versions of STS provide a wizard to assist you in the creation
-of your new project. As from Spring Boot 1.2, the CLI has an `init` command to create
-a new project from the command-line. Using the <<meta-data,meta-data>>, one can easily create
-its own client.
+Spring Initializr can be used as follows:
+
+* With your browser (i.e. link:https://start.spring.io[])
+* In your IDE if you are using STS or IntelliJ IDEA
+* On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with [cURL] or [HTTPie]
+
+[TIP]
+====
+You can "curl" an instance to get a usage page with examples (try `curl start.spring.io`)
+====
+
+== Generating a project
 
 If you click on "Generate Project" on the web ui of our instance, it will download a project
 archive with a Maven-based project and the necessary infrastructure to start a basic Spring
@@ -41,7 +45,8 @@ You could achieve the same result with a simple `curl` command
 $ curl https://start.spring.io/starter.zip -o demo.zip
 ----
 
-The following request attributes are supported:
+The web ui exposes a bunch of options that you can configure. These are mapped to the following
+request attributes:
 
 * Basic information for the generated project: `groupId`, `artifactId`, `version`, `name`,
 `description` and `packageName`
