@@ -36,6 +36,14 @@ initializr:
         version: 1.0.0.BUILD-SNAPSHOT
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
+      scs-bom:
+        groupId: io.pivotal.spring.cloud
+        artifactId: spring-cloud-services-dependencies
+        mappings:
+          - versionRange: "[1.3.0.M2,1.3.5.RELEASE]"
+            version: 1.1.0.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+        additionalBoms: [cloud-bom]
     kotlin:
       version: 1.0.2
   dependencies:
@@ -551,6 +559,25 @@ initializr:
           description: Leadership election and global state with Etcd and spring-cloud-cluster-etcd
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-etcd
+    - name: Spring Cloud Services for Pivotal Cloud Foundry
+      bom: scs-bom
+      versionRange: 1.3.0.RELEASE
+      content:
+        - name: Config Client (Spring Cloud Services)
+          id: scs-config-client
+          description: Config client for Spring Cloud Services on Pivotal Cloud Foundry
+          groupId: io.pivotal.spring.cloud
+          artifactId: spring-cloud-services-starter-config-client
+        - name: Service Registry (Spring Cloud Services)
+          id: scs-service-registry
+          description: Eureka service discovery for Spring Cloud Services on Pivotal Cloud Foundry
+          groupId: io.pivotal.spring.cloud
+          artifactId: spring-cloud-services-starter-service-registry
+        - name: Circuit Breaker (Spring Cloud Services)
+          id: scs-circuit-breaker
+          description: Hystrix circuit breaker for Spring Cloud Services on Pivotal Cloud Foundry
+          groupId: io.pivotal.spring.cloud
+          artifactId: spring-cloud-services-starter-circuit-breaker
     - name: Social
       content:
         - name: Facebook
