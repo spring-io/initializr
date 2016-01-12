@@ -344,6 +344,25 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		}
 	}
 
+	@Test
+	void customizationsOnGroupIdAndArtifactId() {
+		toHome('/#!groupId=com.example.acme&artifactId=my-project') {
+			page.generateProject.click()
+			at HomePage
+			def projectAssert = zipProjectAssert(from('my-project.zip'))
+			projectAssert.hasBaseDir('my-project')
+					.isMavenProject()
+					.isJavaProject('com.example.acme', 'MyProjectApplication' )
+					.hasStaticAndTemplatesResources(false)
+					.pomAssert()
+					.hasGroupId('com.example.acme')
+					.hasArtifactId('my-project')
+					.hasDependenciesCount(2)
+					.hasSpringBootStarterRootDependency()
+					.hasSpringBootStarterTest()
+		}
+	}
+
 	private Browser toHome(Closure script) {
 		toHome('/', script)
 	}
