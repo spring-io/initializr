@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -438,6 +438,12 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		def response = restTemplate.getForEntity(createUrl('install.sh'), String)
 		assertEquals(HttpStatus.OK, response.getStatusCode())
 		assertNotNull(response.body)
+	}
+
+	@Test
+	void googleAnalyticsDisabledByDefault() {
+		def body = htmlHome()
+		assertFalse 'google analytics should be disabled', body.contains('GoogleAnalyticsObject')
 	}
 
 	private JSONObject getMetadataJson() {

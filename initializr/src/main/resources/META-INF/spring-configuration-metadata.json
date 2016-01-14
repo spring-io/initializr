@@ -127,6 +127,12 @@
       "defaultValue": true
     },
     {
+      "name": "initializr.env.google-analytics-tracking-code",
+      "type": "java.lang.String",
+      "description": "Tracking code for Google Analytics.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env"
+    },
+    {
       "name": "initializr.env.invalid-application-names",
       "type": "java.util.List<java.lang.String>",
       "description": "The list of invalid application names. If such name is chosen or generated,\n the \"fallbackApplicationName\" should be used instead.",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,12 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 				.hasDependenciesCount(2)
 				.hasSpringBootStarterDependency('data-jpa')
 				.hasSpringBootStarterTest()
+	}
+
+	@Test
+	void googleAnalytics() {
+		def body = htmlHome()
+		assertTrue 'google analytics should be enabled', body.contains("ga('create', 'UA-1234567-89', 'auto');")
 	}
 
 }

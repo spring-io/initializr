@@ -33,6 +33,7 @@
     "artifactRepository": "https://repo.spring.io/release/",
     "fallbackApplicationName": "Application",
     "forceSsl": true,
+    "googleAnalyticsTrackingCode": null,
     "invalidApplicationNames": [
       "SpringApplication",
       "SpringBootApplication"

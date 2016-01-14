@@ -1,6 +1,7 @@
 initializr:
   env:
     artifactRepository: https://repo.spring.io/lib-release
+    google-analytics-tracking-code: UA-1234567-89
     forceSsl: false
     fallbackApplicationName: FooBarApplication
     invalidApplicationNames:

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,11 @@ abstract class AbstractInitializrController {
 	 * Render the home page with the specified template.
 	 */
 	protected String renderHome(String templatePath) {
+		def metadata = metadataProvider.get()
+
 		def model = [:]
 		model['serviceUrl'] = generateAppUrl()
-		metadataProvider.get().properties.each {
+		metadata.properties.each {
 			if (it.key.equals('types')) {
 				model['types'] = it.value.clone()
 			} else {
@@ -59,6 +61,9 @@ abstract class AbstractInitializrController {
 
 		// Only keep project type
 		model['types'].content.removeAll { t -> !'project'.equals(t.tags['format']) }
+
+		// Google analytics support
+		model['trackingCode'] = metadata.configuration.env.googleAnalyticsTrackingCode
 
 		template templatePath, model
 	}
