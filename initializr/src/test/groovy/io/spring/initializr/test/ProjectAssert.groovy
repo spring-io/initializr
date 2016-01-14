@@ -109,10 +109,9 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isGroovyProject(String expectedPackageName, String expectedApplicationName) {
-		String codeLocation = (mavenProject ? 'java' : 'groovy')
 		String packageName = expectedPackageName.replace('.', '/')
-		hasFile("src/main/$codeLocation/$packageName/${expectedApplicationName}.groovy",
-				"src/test/$codeLocation/$packageName/${expectedApplicationName}Tests.groovy",
+		hasFile("src/main/groovy/$packageName/${expectedApplicationName}.groovy",
+				"src/test/groovy/$packageName/${expectedApplicationName}Tests.groovy",
 				'src/main/resources/application.properties')
 	}
 

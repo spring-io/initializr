@@ -78,28 +78,23 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin><% if (language=='groovy') { %>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-				<compilerId>groovy-eclipse-compiler</compilerId>
-				</configuration>
-				<dependencies>
-				<dependency>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy-eclipse-compiler</artifactId>
-					<version>2.9.1-01</version>
-				</dependency>
-				<dependency>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy-eclipse-batch</artifactId>
-					<version>2.3.7-01</version>
-				</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.groovy</groupId>
-				<artifactId>groovy-eclipse-compiler</artifactId>
-				<version>2.9.1-01</version>
-				<extensions>true</extensions>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>addSources</goal>
+							<goal>addTestSources</goal>
+							<goal>generateStubs</goal>
+							<goal>compile</goal>
+							<goal>testGenerateStubs</goal>
+							<goal>testCompile</goal>
+							<goal>removeStubs</goal>
+							<goal>removeTestStubs</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin><% } %>
 		</plugins>
 	</build>
