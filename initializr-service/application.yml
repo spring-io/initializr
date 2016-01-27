@@ -82,8 +82,10 @@ initializr:
           id: lombok
           groupId: org.projectlombok
           artifactId: lombok
-          version: 1.16.6
           description: Java annotation library which help to reduce boilerplate code and code faster
+          versions:
+            - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
+              version: 1.16.6
           starter: false
     - name: Web
       content:
