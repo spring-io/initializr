@@ -207,8 +207,13 @@ initializr:
           description: Cassandra NoSQL Database, including spring-data-cassandra
           versionRange: 1.3.0.RC1
         - name: Redis
+          id: data-redis
+          description: REDIS key-value data store, including spring-redis
+          versionRange: 1.4.0.M1
+        - name: Redis
           id: redis
           description: REDIS key-value data store, including spring-redis
+          versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
         - name: Gemfire
           id: data-gemfire
           description: GemFire distributed data store including spring-data-gemfire
