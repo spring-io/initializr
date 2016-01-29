@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.spring.initializr.util.Version
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.util.Assert
 
 import static io.spring.initializr.util.GroovyTemplate.template
@@ -42,6 +43,9 @@ class ProjectGenerator {
 	private static final VERSION_1_3_0_M1 = Version.parse('1.3.0.M1')
 
 	@Autowired
+	ApplicationEventPublisher eventPublisher
+
+	@Autowired
 	InitializrMetadataProvider metadataProvider
 
 	@Autowired
@@ -49,8 +53,6 @@ class ProjectGenerator {
 
 	@Value('${TMPDIR:.}')
 	String tmpdir
-
-	final Set<ProjectGenerationListener> listeners = []
 
 	private transient Map<String, List<File>> temporaryFiles = [:]
 
@@ -60,7 +62,7 @@ class ProjectGenerator {
 	byte[] generateMavenPom(ProjectRequest request) {
 		def model = initializeModel(request)
 		def content = doGenerateMavenPom(model)
-		invokeListeners(request)
+		publishProjectGeneratedEvent(request)
 		content
 	}
 
@@ -70,7 +72,7 @@ class ProjectGenerator {
 	byte[] generateGradleBuild(ProjectRequest request) {
 		def model = initializeModel(request)
 		def content = doGenerateGradleBuild(model)
-		invokeListeners(request)
+		publishProjectGeneratedEvent(request)
 		content
 	}
 
@@ -131,7 +133,7 @@ class ProjectGenerator {
 			new File(dir, 'src/main/resources/templates').mkdirs()
 			new File(dir, 'src/main/resources/static').mkdirs()
 		}
-		invokeListeners(request)
+		publishProjectGeneratedEvent(request)
 		rootDir
 
 	}
@@ -164,10 +166,9 @@ class ProjectGenerator {
 		}
 	}
 
-	private void invokeListeners(ProjectRequest request) {
-		listeners.each {
-			it.onGeneratedProject(request)
-		}
+	private void publishProjectGeneratedEvent(ProjectRequest request) {
+		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request)
+		eventPublisher.publishEvent(event)
 	}
 
 	protected Map initializeModel(ProjectRequest request) {

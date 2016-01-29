@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.mockito.ArgumentMatcher
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
+import static org.mockito.Matchers.argThat
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
@@ -48,44 +51,38 @@ class ProjectGeneratorTests {
 
 	private final ProjectGenerator projectGenerator = new ProjectGenerator()
 
+	private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher)
+
 	@Before
 	void setup() {
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
 		applyMetadata(metadata)
+		projectGenerator.eventPublisher = eventPublisher
 		projectGenerator.tmpdir = folder.newFolder().absolutePath
 	}
 
 	@Test
 	void defaultMavenPom() {
-		def listener = mock(ProjectGenerationListener)
-		projectGenerator.listeners << listener
-
 		def request = createProjectRequest('web')
 		generateMavenPom(request).hasNoRepository()
 				.hasSpringBootStarterDependency('web')
-		verify(listener, times(1)).onGeneratedProject(request)
+		verify(eventPublisher, times(1)).publishEvent(argThat(new EventMatcher(request)))
 	}
 
 	@Test
 	void defaultGradleBuild() {
-		def listener = mock(ProjectGenerationListener)
-		projectGenerator.listeners << listener
-
 		def request = createProjectRequest('web')
 		generateGradleBuild(request)
-		verify(listener, times(1)).onGeneratedProject(request)
+		verify(eventPublisher, times(1)).publishEvent(argThat(new EventMatcher(request)))
 	}
 
 	@Test
 	void defaultProject() {
-		def listener = mock(ProjectGenerationListener)
-		projectGenerator.listeners << listener
-
 		def request = createProjectRequest('web')
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
 				.hasNoRepository().hasSpringBootStarterDependency('web')
-		verify(listener, times(1)).onGeneratedProject(request)
+		verify(eventPublisher, times(1)).publishEvent(argThat(new EventMatcher(request)))
 	}
 
 	@Test
@@ -555,6 +552,21 @@ class ProjectGeneratorTests {
 			InitializrMetadata get() {
 				return metadata
 			}
+		}
+	}
+
+	private static class EventMatcher extends ArgumentMatcher<ProjectGeneratedEvent> {
+
+		private final ProjectRequest request
+
+		EventMatcher(ProjectRequest request) {
+			this.request = request
+		}
+
+		@Override
+		boolean matches(Object argument) {
+			ProjectGeneratedEvent event = (ProjectGeneratedEvent) argument
+			return request.equals(event.getProjectRequest())
 		}
 	}
 

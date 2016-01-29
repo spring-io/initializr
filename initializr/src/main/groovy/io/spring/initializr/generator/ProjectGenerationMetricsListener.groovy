@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,17 @@ package io.spring.initializr.generator
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.metrics.CounterService
+import org.springframework.context.event.EventListener
 import org.springframework.util.StringUtils
 
 /**
- * A {@link ProjectGenerationListener} implementation that uses a {@link CounterService}
- * to update various project related metrics.
+ * A {@link ProjectGeneratedEvent} listener that uses a {@link CounterService} to update
+ * various project related metrics.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-class ProjectGenerationMetricsListener implements ProjectGenerationListener {
+class ProjectGenerationMetricsListener {
 
 	private final CounterService counterService
 
@@ -36,8 +37,9 @@ class ProjectGenerationMetricsListener implements ProjectGenerationListener {
 		this.counterService = counterService
 	}
 
-	@Override
-	void onGeneratedProject(ProjectRequest request) {
+	@EventListener
+	void onGeneratedProject(ProjectGeneratedEvent event) {
+		def request = event.projectRequest
 		increment(key('requests')) // Total number of requests
 		handleDependencies(request)
 		handleType(request)

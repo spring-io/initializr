@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,26 @@
 package io.spring.initializr.generator
 
 /**
- * Interface to be implemented by components that need to be aware of project generation
- * related events.
+ * Event fired when a new project has been generated successfully.
  *
  * @author Stephane Nicoll
  * @since 1.0
  */
-public interface ProjectGenerationListener {
+class ProjectGeneratedEvent {
 
 	/**
-	 * Invoked when a project has been generated for the specified {@link ProjectRequest}.
+	 * The {@link ProjectRequest} used to generate the project.
 	 */
-	void onGeneratedProject(ProjectRequest request)
+	final ProjectRequest projectRequest
+
+	/**
+	 * The timestamp at which the project was generated
+	 */
+	final long timestamp
+
+	ProjectGeneratedEvent(ProjectRequest projectRequest) {
+		this.projectRequest = projectRequest
+		this.timestamp = System.currentTimeMillis()
+	}
 
 }

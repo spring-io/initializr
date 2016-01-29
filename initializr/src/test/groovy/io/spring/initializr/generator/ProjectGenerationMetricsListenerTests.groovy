@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class ProjectGenerationMetricsListenerTests {
 	void projectGenerationCount() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.requests')
 	}
 
@@ -56,7 +56,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.dependency.security',
 				'initializr.dependency.spring-data')
 	}
@@ -65,7 +65,7 @@ class ProjectGenerationMetricsListenerTests {
 	void noDependencies() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasNoValue('initializr.dependency.')
 	}
 
@@ -75,7 +75,7 @@ class ProjectGenerationMetricsListenerTests {
 		request.style << 'spring-data'
 		request.packaging = 'war'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.dependency.web',
 				'initializr.dependency.spring-data')
 	}
@@ -91,7 +91,7 @@ class ProjectGenerationMetricsListenerTests {
 		request.initialize(metadata)
 		request.style << 'foo-old'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.dependency.foo') // standard id is used
 	}
 
@@ -99,7 +99,7 @@ class ProjectGenerationMetricsListenerTests {
 	void defaultType() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.type.maven-project')
 	}
 
@@ -108,7 +108,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.type = 'gradle-build'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.type.gradle-build')
 	}
 
@@ -116,7 +116,7 @@ class ProjectGenerationMetricsListenerTests {
 	void defaultPackaging() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.packaging.jar')
 	}
 
@@ -125,7 +125,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.packaging = 'war'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.packaging.war')
 	}
 
@@ -133,7 +133,7 @@ class ProjectGenerationMetricsListenerTests {
 	void defaultJavaVersion() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.java_version.1_8')
 	}
 
@@ -142,7 +142,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.javaVersion = '1.7'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.java_version.1_7')
 	}
 
@@ -150,7 +150,7 @@ class ProjectGenerationMetricsListenerTests {
 	void defaultLanguage() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.language.java')
 	}
 
@@ -159,7 +159,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.language = 'groovy'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.language.groovy')
 	}
 
@@ -167,7 +167,7 @@ class ProjectGenerationMetricsListenerTests {
 	void defaultBootVersion() {
 		def request = initialize()
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.boot_version.1_2_3_RELEASE')
 	}
 
@@ -176,7 +176,7 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.bootVersion = '1.0.2.RELEASE'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.boot_version.1_0_2_RELEASE')
 	}
 
@@ -191,7 +191,7 @@ class ProjectGenerationMetricsListenerTests {
 		request.bootVersion = '1.0.2.RELEASE'
 
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.requests',
 				'initializr.dependency.web', 'initializr.dependency.security',
 				'initializr.type.gradle-project', 'initializr.packaging.jar',
@@ -204,18 +204,22 @@ class ProjectGenerationMetricsListenerTests {
 		def request = initialize()
 		request.style << 'security' << 'spring-data'
 		request.resolve(metadata)
-		listener.onGeneratedProject(request)
+		fireEvent(request)
 		metricsAssert.hasValue(1, 'initializr.requests',
 				'initializr.dependency.security', 'initializr.dependency.spring-data')
 
 		def anotherRequest = initialize()
 		anotherRequest.style << 'web' << 'spring-data'
 		anotherRequest.resolve(metadata)
-		listener.onGeneratedProject(anotherRequest)
+		fireEvent(anotherRequest)
 		metricsAssert.hasValue(2, 'initializr.dependency.spring-data',
 				'initializr.dependency.spring-data')
 		metricsAssert.hasValue(1, 'initializr.dependency.web',
 				'initializr.dependency.security')
+	}
+
+	private fireEvent(ProjectRequest projectRequest) {
+		listener.onGeneratedProject(new ProjectGeneratedEvent(projectRequest))
 	}
 
 	private ProjectRequest initialize() {
