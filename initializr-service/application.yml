@@ -406,7 +406,7 @@ initializr:
           artifactId: spring-cloud-starter-consul-bus
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
-          description: Messaging microservices with RabbitMQ 
+          description: Messaging microservices with RabbitMQ
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-rabbit
@@ -441,6 +441,16 @@ initializr:
           description: Messaging on AWS with SQS and spring-cloud-aws-messaging
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws-messaging
+    - name: Cloud Dataflow
+      bom: cloud-bom
+      versionRange: "1.1.0.BUILD-SNAPSHOT"
+      content:
+        - name: Local Dataflow Server
+          id: cloud-dataflow-server-local
+          description: Local Dataflow Server implementation
+          versionRange: 1.0.0.SNAPSHOT
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-dataflow-server-local
     - name: Cloud Cluster
       bom: cloud-bom
       versionRange: "1.3.0.M4"
@@ -626,4 +636,3 @@ initializr:
     - name: 1.1.12
       id: 1.1.12.RELEASE
       default: false
-
