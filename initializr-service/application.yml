@@ -441,13 +441,13 @@ initializr:
           description: Messaging on AWS with SQS and spring-cloud-aws-messaging
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws-messaging
-    - name: Cloud Dataflow
+    - name: Cloud Data Flow
       bom: cloud-bom
       versionRange: "1.1.0.BUILD-SNAPSHOT"
       content:
-        - name: Local Dataflow Server
+        - name: Local Data Flow Server
           id: cloud-dataflow-server-local
-          description: Local Dataflow Server implementation
+          description: Local Data Flow Server implementation
           versionRange: 1.0.0.SNAPSHOT
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-dataflow-server-local
