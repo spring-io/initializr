@@ -1,0 +1,9 @@
+initializr:
+  stats:
+    elastic:
+      uri: http://localhost:${server.port}/elastic
+      indexName: test
+      entityName: my-entity
+      username: test-user
+      password: test-password
+      max-attempts: 1

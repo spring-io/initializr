@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator
 
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
@@ -33,6 +34,7 @@ import io.spring.initializr.util.VersionRange
  * @since 1.0
  */
 @Slf4j
+@ToString(ignoreNulls = true, includePackage = false, includeNames = true)
 class ProjectRequest extends BasicProjectRequest {
 
 	/**

@@ -42,6 +42,17 @@
       "sourceMethod": "getPackageName()"
     },
     {
+      "name": "initializr.stats",
+      "type": "io.spring.initializr.config.StatsProperties",
+      "sourceType": "io.spring.initializr.config.StatsProperties"
+    },
+    {
+      "name": "initializr.stats.elastic",
+      "type": "io.spring.initializr.config.StatsProperties$Elastic",
+      "sourceType": "io.spring.initializr.config.StatsProperties",
+      "sourceMethod": "getElastic()"
+    },
+    {
       "name": "initializr.version",
       "type": "io.spring.initializr.metadata.InitializrProperties$SimpleElement",
       "sourceType": "io.spring.initializr.metadata.InitializrProperties",
@@ -233,6 +244,43 @@
       "type": "java.util.List<io.spring.initializr.metadata.DefaultMetadataElement>",
       "description": "Available packaging types.",
       "sourceType": "io.spring.initializr.metadata.InitializrProperties"
+    },
+    {
+      "name": "initializr.stats.elastic.uri",
+      "type": "java.lang.String",
+      "description": "Elastic service uri.",
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.username",
+      "type": "java.lang.String",
+      "description": "Elastic service username.",
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.password",
+      "type": "java.lang.String",
+      "description": "Elastic service password.",
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.index-name",
+      "type": "java.lang.String",
+      "description": "Name of the index.",
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.entity-name",
+      "type": "java.lang.String",
+      "description": "Name of the entity to use to publish stats.",
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.max-attempts",
+      "type": "java.lang.Integer",
+      "description": "Number of attempts before giving up.",
+      "defaultValue": 3,
+      "sourceType": "io.spring.initializr.config.StatsProperties$Elastic"
     },
     {
       "name": "initializr.types",

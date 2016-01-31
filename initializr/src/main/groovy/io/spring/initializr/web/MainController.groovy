@@ -145,7 +145,7 @@ class MainController extends AbstractInitializrController {
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
-		switch(version) {
+		switch (version) {
 			case InitializrMetadataVersion.V2: return new InitializrMetadataV2JsonMapper();
 			default: return new InitializrMetadataV21JsonMapper();
 		}
