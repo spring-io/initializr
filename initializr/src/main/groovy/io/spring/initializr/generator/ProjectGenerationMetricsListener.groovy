@@ -39,7 +39,16 @@ class ProjectGenerationMetricsListener {
 
 	@EventListener
 	void onGeneratedProject(ProjectGeneratedEvent event) {
-		def request = event.projectRequest
+		handleProjectRequest(event.projectRequest)
+	}
+
+	@EventListener
+	void onFailedProject(ProjectFailedEvent event) {
+		handleProjectRequest(event.projectRequest)
+		increment(key('failures'))
+	}
+
+	protected void handleProjectRequest(ProjectRequest request) {
 		increment(key('requests')) // Total number of requests
 		handleDependencies(request)
 		handleType(request)

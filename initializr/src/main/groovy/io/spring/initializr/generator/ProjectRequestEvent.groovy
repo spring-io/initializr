@@ -17,15 +17,28 @@
 package io.spring.initializr.generator
 
 /**
- * Event published when a new project has been generated successfully.
+ * Event published when a {@link ProjectRequest} has been processed.
  *
  * @author Stephane Nicoll
  * @since 1.0
+ * @see ProjectGeneratedEvent
+ * @see ProjectFailedEvent
  */
-class ProjectGeneratedEvent extends ProjectRequestEvent {
+abstract class ProjectRequestEvent {
 
-	ProjectGeneratedEvent(ProjectRequest projectRequest) {
-		super(projectRequest)
+	/**
+	 * The {@link ProjectRequest} used to generate the project.
+	 */
+	final ProjectRequest projectRequest
+
+	/**
+	 * The timestamp at which the request was processed.
+	 */
+	final long timestamp
+
+	protected ProjectRequestEvent(ProjectRequest projectRequest) {
+		this.projectRequest = projectRequest
+		this.timestamp = System.currentTimeMillis()
 	}
 
 }

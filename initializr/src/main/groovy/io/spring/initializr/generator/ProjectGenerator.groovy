@@ -17,6 +17,7 @@
 package io.spring.initializr.generator
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.InitializrException
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
@@ -60,20 +61,30 @@ class ProjectGenerator {
 	 * Generate a Maven pom for the specified {@link ProjectRequest}.
 	 */
 	byte[] generateMavenPom(ProjectRequest request) {
-		def model = initializeModel(request)
-		def content = doGenerateMavenPom(model)
-		publishProjectGeneratedEvent(request)
-		content
+		try {
+			def model = initializeModel(request)
+			def content = doGenerateMavenPom(model)
+			publishProjectGeneratedEvent(request)
+			content
+		} catch (InitializrException ex) {
+			publishProjectFailedEvent(request, ex)
+			throw ex
+		}
 	}
 
 	/**
 	 * Generate a Gradle build file for the specified {@link ProjectRequest}.
 	 */
 	byte[] generateGradleBuild(ProjectRequest request) {
-		def model = initializeModel(request)
-		def content = doGenerateGradleBuild(model)
-		publishProjectGeneratedEvent(request)
-		content
+		try {
+			def model = initializeModel(request)
+			def content = doGenerateGradleBuild(model)
+			publishProjectGeneratedEvent(request)
+			content
+		} catch (InitializrException ex) {
+			publishProjectFailedEvent(request, ex)
+			throw ex
+		}
 	}
 
 	/**
@@ -81,6 +92,15 @@ class ProjectGenerator {
 	 * a directory containing the project.
 	 */
 	File generateProjectStructure(ProjectRequest request) {
+		try {
+			doGenerateProjectStructure(request)
+		} catch (InitializrException ex) {
+			publishProjectFailedEvent(request, ex)
+			throw ex
+		}
+	}
+
+	protected File doGenerateProjectStructure(ProjectRequest request) {
 		def model = initializeModel(request)
 
 		def rootDir = File.createTempFile('tmp', '', new File(tmpdir))
@@ -168,6 +188,11 @@ class ProjectGenerator {
 
 	private void publishProjectGeneratedEvent(ProjectRequest request) {
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request)
+		eventPublisher.publishEvent(event)
+	}
+
+	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
+		ProjectFailedEvent event = new ProjectFailedEvent(request, cause)
 		eventPublisher.publishEvent(event)
 	}
 

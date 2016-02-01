@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,6 +135,18 @@ class ProjectRequest {
 			String buildTag = type.tags['build']
 			if (buildTag) {
 				this.build = buildTag
+			}
+		}
+		if (this.packaging) {
+			def packaging = metadata.packagings.get(this.packaging)
+			if (!packaging) {
+				throw new InvalidProjectRequestException("Unknown packaging '${this.packaging}' check project metadata")
+			}
+		}
+		if (this.language) {
+			def language = metadata.languages.get(this.language)
+			if (!language) {
+				throw new InvalidProjectRequestException("Unknown language '${this.language}' check project metadata")
 			}
 		}
 
