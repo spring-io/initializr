@@ -7,9 +7,12 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/184[#188]: fire an exception occurs trying to generate a project
+* https://github.com/spring-io/initializr/issues/184[#184]: fire an event when a project is generated
+* https://github.com/spring-io/initializr/issues/180[#180]: support for Google Analytics
+* https://github.com/spring-io/initializr/issues/90[#90]: migrate Groovy maven-based builds to GMavenPlus
 * https://github.com/spring-io/initializr/issues/107[#107]: pre-fill form based on URL parameters
 * https://github.com/spring-io/initializr/issues/114[#114]: clean package name if necessary
-* https://github.com/spring-io/initializr/issues/90[#90]: migrate Groovy maven-based builds to GMavenPlus
 * https://github.com/spring-io/initializr/issues/140[#140]: expose dependencies meta-data
 * https://github.com/spring-io/initializr/issues/168[#168]: support for dependency versions mapping
 * https://github.com/spring-io/initializr/issues/165[#165]: improve resources caching
