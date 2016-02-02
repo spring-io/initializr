@@ -52,6 +52,11 @@
         "url": "http://example.com/repo2",
         "snapshotsEnabled": false
       },
+      "my-api-repo-3": {
+        "name": "repo3",
+        "url": "http://example.com/repo3",
+        "snapshotsEnabled": false
+      },
       "spring-milestones": {
         "name": "Spring Milestones",
         "snapshotsEnabled": false,
@@ -68,12 +73,16 @@
         "groupId": "org.acme",
         "artifactId": "my-api-bom",
         "repositories": [],
+        "additionalBoms": [
+          "my-api-dependencies-bom"
+        ],
         "mappings": [
           {
             "versionRange": "[1.0.0.RELEASE,1.1.6.RELEASE)",
             "repositories": [
               "my-api-repo-1"
             ],
+            "additionalBoms": [],
             "version": "1.0.0.RELEASE"
           },
           {
@@ -81,9 +90,20 @@
             "repositories": [
               "my-api-repo-2"
             ],
+            "additionalBoms": [],
             "version": "2.0.0.RELEASE"
           }
         ]
+      },
+      "my-api-dependencies-bom": {
+        "groupId": "org.acme",
+        "repositories": [
+          "my-api-repo-3"
+        ],
+        "mappings": [],
+        "artifactId": "my-api-dependencies-bom",
+        "additionalBoms": [],
+        "version": "1.0.0.RELEASE"
       }
     },
     "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"

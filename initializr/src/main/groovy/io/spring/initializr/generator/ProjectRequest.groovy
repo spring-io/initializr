@@ -61,7 +61,7 @@ class ProjectRequest {
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<Dependency> resolvedDependencies
 
-	final List<BillOfMaterials> boms = []
+	final Map<String, BillOfMaterials> boms = [:]
 
 	final Map<String, Repository> repositories = [:]
 
@@ -98,7 +98,6 @@ class ProjectRequest {
 			}
 			dependency.resolve(requestedVersion)
 		}
-		Set<String> bomIds = []
 		resolvedDependencies.each {
 			it.facets.each {
 				if (!facets.contains(it)) {
@@ -113,11 +112,7 @@ class ProjectRequest {
 				}
 			}
 			if (it.bom) {
-				String bomId = it.bom
-				if (!bomIds.contains(bomId)) {
-					bomIds << bomId
-					boms << metadata.configuration.env.boms[bomId].resolve(requestedVersion)
-				}
+				resolveBom(metadata, it.bom, requestedVersion)
 			}
 			if (it.repository) {
 				String repositoryId = it.repository
@@ -169,11 +164,21 @@ class ProjectRequest {
 			repositories['spring-snapshots'] = metadata.configuration.env.repositories['spring-snapshots']
 			repositories['spring-milestones'] = metadata.configuration.env.repositories['spring-milestones']
 		}
-		boms.each {
+		boms.values().each {
 			it.repositories.each {
 				if (!repositories[it]) {
 					repositories[it] = metadata.configuration.env.repositories[it]
 				}
+			}
+		}
+	}
+
+	private void resolveBom(InitializrMetadata metadata, String bomId, Version requestedVersion) {
+		if (!boms[bomId]) {
+			def bom = metadata.configuration.env.boms[bomId].resolve(requestedVersion)
+			boms[bomId] = bom
+			bom.additionalBoms.each { id ->
+				resolveBom(metadata, id, requestedVersion)
 			}
 		}
 	}

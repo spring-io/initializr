@@ -8,6 +8,7 @@ initializr:
       my-api-bom:
         groupId: org.acme
         artifactId: my-api-bom
+        additionalBoms: ['my-api-dependencies-bom']
         mappings:
           - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
             version: 1.0.0.RELEASE
@@ -15,6 +16,11 @@ initializr:
           - versionRange: "1.2.1.RELEASE"
             version: 2.0.0.RELEASE
             repositories: my-api-repo-2
+      my-api-dependencies-bom:
+        groupId: org.acme
+        artifactId: my-api-dependencies-bom
+        version: 1.0.0.RELEASE
+        repositories: my-api-repo-3
     repositories:
       my-api-repo-1:
         name: repo1
@@ -22,6 +28,9 @@ initializr:
       my-api-repo-2:
         name: repo2
         url: http://example.com/repo2
+      my-api-repo-3:
+        name: repo3
+        url: http://example.com/repo3
   dependencies:
     - name: Core
       content:

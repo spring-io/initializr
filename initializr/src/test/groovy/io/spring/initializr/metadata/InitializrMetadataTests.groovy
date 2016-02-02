@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +83,22 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void invalidBomUnknownAdditionalBom() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom',
+				version: '1.0.0.RELEASE', additionalBoms: ['bar-bom', 'biz-bom'])
+		def barBom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'bar-bom',
+				version: '1.0.0.RELEASE')
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom).addBom('bar-bom', barBom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("invalid additional bom")
+		thrown.expectMessage("biz-bom")
+		builder.build()
+	}
+
+	@Test
 	void invalidBomVersionRangeMapping() {
 		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
 		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
@@ -110,6 +126,23 @@ class InitializrMetadataTests {
 		thrown.expectMessage("invalid repository id foo-repo")
 		thrown.expectMessage('1.3.0.M2')
 		thrown.expectMessage("foo-bom")
+		builder.build()
+	}
+
+	@Test
+	void invalidBomVersionRangeMappingUnknownAdditionalBom() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.0.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '1.3.0.M2', version: '1.2.0',
+				additionalBoms: ['bar-bom'])
+
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults().addBom('foo-bom', bom)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("invalid additional bom")
+		thrown.expectMessage('1.3.0.M2')
+		thrown.expectMessage("bar-bom")
 		builder.build()
 	}
 

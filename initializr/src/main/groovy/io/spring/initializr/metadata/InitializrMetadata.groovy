@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,8 +91,8 @@ class InitializrMetadata {
 		dependencies.validate()
 
 		def repositories = configuration.env.repositories
+		def boms = configuration.env.boms
 		for (Dependency dependency : dependencies.all) {
-			def boms = configuration.env.boms
 			if (dependency.bom && !boms[dependency.bom]) {
 				throw new InvalidInitializrMetadataException("Dependency $dependency " +
 						"defines an invalid BOM id $dependency.bom, available boms $boms")
@@ -103,11 +103,17 @@ class InitializrMetadata {
 						"defines an invalid repository id $dependency.repository, available repositores $repositories")
 			}
 		}
-		for (BillOfMaterials bom : configuration.env.boms.values()) {
+		for (BillOfMaterials bom : boms.values()) {
 			for (String r : bom.repositories) {
 				if (!repositories[r]) {
 					throw new InvalidInitializrMetadataException("$bom " +
 							"defines an invalid repository id $r, available repositores $repositories")
+				}
+			}
+			for (String b : bom.additionalBoms) {
+				if (!boms[b]) {
+					throw new InvalidInitializrMetadataException("$bom defines an invalid " +
+							"additional bom id $b, available boms $boms")
 				}
 			}
 			for (BillOfMaterials.Mapping m : bom.mappings) {
@@ -115,6 +121,13 @@ class InitializrMetadata {
 					if (!repositories[r]) {
 						throw new InvalidInitializrMetadataException("$m of $bom " +
 								"defines an invalid repository id $r, available repositores $repositories")
+					}
+
+				}
+				for (String b : m.additionalBoms) {
+					if (!boms[b]) {
+						throw new InvalidInitializrMetadataException("$m of $bom defines " +
+								"an invalid additional bom id $b, available boms $boms")
 					}
 				}
 			}

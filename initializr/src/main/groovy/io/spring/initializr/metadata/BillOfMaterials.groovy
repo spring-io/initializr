@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,22 @@ class BillOfMaterials {
 	String artifactId
 
 	/**
-	 * The version of the BOM. Can be {@code null} if it is provided via
-	 * a mapping.
+	 * The version of the BOM. Can be {@code null} if it is provided via a mapping.
 	 */
 	String version
 
+	/**
+	 * The BOM(s) that should be automatically included if this BOM is required. Can be
+	 * {@code null} if it is provided via a mapping.
+	 */
+	List<String> additionalBoms = []
+
+	/**
+	 * The repositories that are required if this BOM is required. Can be {@code null} if
+	 * it is provided via a mapping.
+	 */
 	List<String> repositories = []
+
 	final List<Mapping> mappings = []
 
 	void validate() {
@@ -60,8 +70,8 @@ class BillOfMaterials {
 
 	/**
 	 * Resolve this instance according to the specified Spring Boot {@link Version}. Return
-	 * a {@link BillOfMaterials} instance that holds the version and repositories to use, if
-	 * any.
+	 * a {@link BillOfMaterials} instance that holds the version, repositories and
+	 * additional BOMs to use, if any.
 	 */
 	BillOfMaterials resolve(Version bootVersion) {
 		if (!mappings) {
@@ -71,8 +81,9 @@ class BillOfMaterials {
 		for (Mapping mapping : mappings) {
 			if (mapping.range.match(bootVersion)) {
 				def resolvedBom = new BillOfMaterials(groupId: groupId, artifactId: artifactId,
-						version: mapping.version, repositories: repositories)
-				resolvedBom.repositories += mapping.repositories
+						version: mapping.version)
+				resolvedBom.repositories += mapping.repositories ?: repositories
+				resolvedBom.additionalBoms += mapping.additionalBoms ?: additionalBoms
 				return resolvedBom
 			}
 		}
@@ -87,6 +98,8 @@ class BillOfMaterials {
 		String version
 
 		List<String> repositories = []
+
+		List<String> additionalBoms = []
 
 		private VersionRange range
 
