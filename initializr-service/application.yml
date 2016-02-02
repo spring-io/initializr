@@ -368,25 +368,21 @@ initializr:
         - name: Sleuth
           id: cloud-starter-sleuth
           description: Distributed tracing via logs with spring-cloud-sleuth
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-sleuth
         - name: Zipkin
           id: cloud-starter-zipkin
           description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Zipkin Stream and Sleuth Stream.
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
         - name: Sleuth Stream
           id: cloud-sleuth-stream
           description: Marshals Spring Cloud Sleuth Spans over a Spring Cloud Stream binder
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-stream
         - name: Zipkin Stream
           id: cloud-sleuth-zipkin-stream
           description:  Consumes messages from Spring Cloud Sleuth Stream delivered over a Spring Cloud Stream binder and writes them to a Zipkin store
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-zipkin-stream
     - name: Cloud Messaging
@@ -638,3 +634,4 @@ initializr:
     - name: 1.1.12
       id: 1.1.12.RELEASE
       default: false
+
