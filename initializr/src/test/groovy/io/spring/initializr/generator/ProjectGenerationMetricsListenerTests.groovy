@@ -190,6 +190,15 @@ class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
+	void userAgentAvailable() {
+		def request = initialize()
+		request.parameters['user-agent'] = 'HTTPie/0.9.2'
+		request.resolve(metadata)
+		fireProjectGeneratedEvent(request)
+		metricsAssert.hasValue(1, 'initializr.client_id.httpie')
+	}
+
+	@Test
 	void collectAllMetrics() {
 		def request = initialize()
 		request.style << 'web' << 'security'
@@ -198,6 +207,7 @@ class ProjectGenerationMetricsListenerTests {
 		request.javaVersion = '1.6'
 		request.language = 'groovy'
 		request.bootVersion = '1.0.2.RELEASE'
+		request.parameters['user-agent'] = 'SpringBootCli/1.3.0.RELEASE'
 
 		request.resolve(metadata)
 		fireProjectGeneratedEvent(request)
@@ -205,7 +215,8 @@ class ProjectGenerationMetricsListenerTests {
 				'initializr.dependency.web', 'initializr.dependency.security',
 				'initializr.type.gradle-project', 'initializr.packaging.jar',
 				'initializr.java_version.1_6', 'initializr.language.groovy',
-				'initializr.boot_version.1_0_2_RELEASE').metricsCount(8)
+				'initializr.boot_version.1_0_2_RELEASE',
+				'initializr.client_id.spring').metricsCount(9)
 	}
 
 	@Test

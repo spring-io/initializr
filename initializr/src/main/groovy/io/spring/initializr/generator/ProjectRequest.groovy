@@ -33,30 +33,17 @@ import io.spring.initializr.util.VersionRange
  * @since 1.0
  */
 @Slf4j
-class ProjectRequest {
+class ProjectRequest extends BasicProjectRequest {
 
 	/**
 	 * The id of the starter to use if no dependency is defined.
 	 */
 	static final DEFAULT_STARTER = 'root_starter'
 
-	List<String> style = []
-	List<String> dependencies = []
-	String name
-	String type
-	String description
-	String groupId
-	String artifactId
-	String version
-	String bootVersion
-	String packaging
-	String applicationName
-	String language
-	String packageName
-	String javaVersion
-
-	// The base directory to create in the archive - no baseDir by default
-	String baseDir
+	/**
+	 * Additional parameters that can be used to further identify the request.
+	 */
+	final Map<String,Object> parameters = [:]
 
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<Dependency> resolvedDependencies

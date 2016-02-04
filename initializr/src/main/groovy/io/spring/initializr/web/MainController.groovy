@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 import groovy.util.logging.Slf4j
+import io.spring.initializr.generator.BasicProjectRequest
 import io.spring.initializr.generator.CommandLineHelpGenerator
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectRequest
@@ -30,6 +31,7 @@ import io.spring.initializr.mapper.InitializrMetadataV2JsonMapper
 import io.spring.initializr.mapper.InitializrMetadataVersion
 import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.util.UserAgentWrapper
 import io.spring.initializr.util.Version
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,8 +73,9 @@ class MainController extends AbstractInitializrController {
 
 
 	@ModelAttribute
-	ProjectRequest projectRequest() {
+	BasicProjectRequest projectRequest(@RequestHeader Map<String,String> headers) {
 		def request = new ProjectRequest()
+		request.parameters << headers
 		request.initialize(metadataProvider.get())
 		request
 	}
@@ -97,15 +100,16 @@ class MainController extends AbstractInitializrController {
 
 		def builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
 		if (userAgent) {
-			if (userAgent.startsWith(WebConfig.CURL_USER_AGENT_PREFIX)) {
+			UserAgentWrapper wrapper = new UserAgentWrapper(userAgent)
+			if (wrapper.isCurl()) {
 				def content = commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl)
 				return builder.eTag(createUniqueId(content)).body(content)
 			}
-			if (userAgent.startsWith(WebConfig.HTTPIE_USER_AGENT_PREFIX)) {
+			if (wrapper.isHttpie()) {
 				def content = commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl)
 				return builder.eTag(createUniqueId(content)).body(content)
 			}
-			if (userAgent.startsWith(WebConfig.SPRING_BOOT_CLI_AGENT_PREFIX)) {
+			if (wrapper.isSpringBootCli()) {
 				def content = commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl)
 				return builder.eTag(createUniqueId(content)).body(content)
 			}
@@ -182,21 +186,22 @@ class MainController extends AbstractInitializrController {
 
 	@RequestMapping('/pom')
 	@ResponseBody
-	ResponseEntity<byte[]> pom(ProjectRequest request) {
-		def mavenPom = projectGenerator.generateMavenPom(request)
+	ResponseEntity<byte[]> pom(BasicProjectRequest request) {
+		def mavenPom = projectGenerator.generateMavenPom((ProjectRequest) request)
 		createResponseEntity(mavenPom, 'application/octet-stream', 'pom.xml')
 	}
 
 	@RequestMapping('/build')
 	@ResponseBody
-	ResponseEntity<byte[]> gradle(ProjectRequest request) {
-		def gradleBuild = projectGenerator.generateGradleBuild(request)
+	ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
+		def gradleBuild = projectGenerator.generateGradleBuild((ProjectRequest) request)
 		createResponseEntity(gradleBuild, 'application/octet-stream', 'build.gradle')
 	}
 
 	@RequestMapping('/starter.zip')
 	@ResponseBody
-	ResponseEntity<byte[]> springZip(ProjectRequest request) {
+	ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest) {
+		ProjectRequest request = (ProjectRequest) basicRequest
 		def dir = projectGenerator.generateProjectStructure(request)
 
 		def download = projectGenerator.createDistributionFile(dir, '.zip')
@@ -212,7 +217,8 @@ class MainController extends AbstractInitializrController {
 
 	@RequestMapping(value = '/starter.tgz', produces = 'application/x-compress')
 	@ResponseBody
-	ResponseEntity<byte[]> springTgz(ProjectRequest request) {
+	ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest) {
+		ProjectRequest request = (ProjectRequest) basicRequest
 		def dir = projectGenerator.generateProjectStructure(request)
 
 		def download = projectGenerator.createDistributionFile(dir, '.tgz')

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator
 
+import io.spring.initializr.util.UserAgentWrapper
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.metrics.CounterService
 import org.springframework.context.event.EventListener
@@ -56,6 +58,7 @@ class ProjectGenerationMetricsListener {
 		handlePackaging(request)
 		handleLanguage(request)
 		handleBootVersion(request)
+		handleUserAgent(request)
 	}
 
 	protected void handleDependencies(ProjectRequest request) {
@@ -99,6 +102,17 @@ class ProjectGenerationMetricsListener {
 		if (StringUtils.hasText(request.bootVersion)) {
 			def bootVersion = sanitize(request.bootVersion)
 			increment(key("boot_version.$bootVersion"))
+		}
+	}
+
+	protected void handleUserAgent(ProjectRequest request) {
+		String userAgent = request.parameters['user-agent']
+		if (userAgent) {
+			UserAgentWrapper wrapper = new UserAgentWrapper(userAgent)
+			def information = wrapper.extractAgentInformation()
+			if (information) {
+				increment(key("client_id.$information.id.id"))
+			}
 		}
 	}
 
