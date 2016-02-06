@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/190[#190]: support for additional BOMs
 * https://github.com/spring-io/initializr/issues/184[#188]: fire an exception occurs trying to generate a project
 * https://github.com/spring-io/initializr/issues/184[#184]: fire an event when a project is generated
 * https://github.com/spring-io/initializr/issues/180[#180]: support for Google Analytics
