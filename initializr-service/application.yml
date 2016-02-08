@@ -409,12 +409,6 @@ initializr:
           versionRange: "(1.3.0.M5,9999.9.9.RELEASE]"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-bus-kafka
-        - name: Consul Bus
-          id: cloud-starter-consul-bus
-          description: Inter instance control events with Hashicorp Consul
-          versionRange: 1.3.0.M4
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-consul-bus
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
           description: Messaging microservices with RabbitMQ
