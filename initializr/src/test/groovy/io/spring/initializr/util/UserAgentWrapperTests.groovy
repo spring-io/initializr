@@ -84,6 +84,17 @@ class UserAgentWrapperTests {
 	}
 
 	@Test
+	void checkIntelliJIDEAWithVersion() {
+		UserAgentWrapper userAgent = new UserAgentWrapper('IntelliJ IDEA/144.2 (Community edition; en-us)')
+		assertThat(userAgent.isCurl(), is(false))
+		assertThat(userAgent.isHttpie(), is(false))
+		assertThat(userAgent.isSpringBootCli(), is(false))
+		def information = userAgent.extractAgentInformation()
+		assertThat(information.id, equalTo(UserAgentWrapper.AgentId.INTELLIJ_IDEA))
+		assertThat(information.version, is('144.2'))
+	}
+
+	@Test
 	void checkGenericBrowser() {
 		UserAgentWrapper userAgent =
 				new UserAgentWrapper('Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ')

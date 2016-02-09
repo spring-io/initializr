@@ -26,7 +26,7 @@ import org.springframework.util.Assert
  */
 class UserAgentWrapper {
 
-	private static final TOOL_REGEX = '(.*)\\/(.*)'
+	private static final TOOL_REGEX = '([^\\/]*)\\/([^ ]*).*'
 
 	private static final STS_REGEX = 'STS (.*)'
 
