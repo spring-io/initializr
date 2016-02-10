@@ -2,9 +2,6 @@
 applications:
 - name: start
   memory: 1024M
-  instances: 1
   host: start-development
   domain: cfapps.io
   path: .
-  services:
-    - start-redis
