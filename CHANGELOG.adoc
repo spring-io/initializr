@@ -7,6 +7,7 @@ order.
 
 === Release 1.0.0 (In progress)
 
+* https://github.com/spring-io/initializr/issues/147[#147]: support for Kotlin
 * https://github.com/spring-io/initializr/issues/185[#185]: support for project stats
 * https://github.com/spring-io/initializr/issues/190[#190]: support for additional BOMs
 * https://github.com/spring-io/initializr/issues/184[#188]: fire an exception occurs trying to generate a project
