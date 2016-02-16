@@ -254,6 +254,10 @@ initializr:
           id: data-cassandra
           description: Cassandra NoSQL Database, including spring-data-cassandra
           versionRange: 1.3.0.RC1
+        - name: Couchbase
+          id: data-couchbase
+          description: Couchbase NoSQL database, including spring-data-couchbase
+          versionRange: 1.4.0.M1
         - name: Redis
           id: data-redis
           description: REDIS key-value data store, including spring-redis
