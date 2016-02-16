@@ -190,11 +190,8 @@ initializr:
             - web
           keywords:
             - template
-    - name: Data
+    - name: SQL
       content:
-        - name: JDBC
-          id: jdbc
-          description: JDBC databases
         - name: JPA
           id: data-jpa
           description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
@@ -205,6 +202,50 @@ initializr:
           id: jooq
           description: Persistence support using Java Object Oriented Querying
           versionRange: 1.3.0.M2
+        - name: JDBC
+          id: jdbc
+          description: JDBC databases
+        - name: H2
+          id: h2
+          description: H2 database (with embedded support)
+          groupId: com.h2database
+          artifactId: h2
+          scope: runtime
+          starter: false
+        - name: HSQLDB
+          id: hsql
+          description: HSQLDB database (with embedded support)
+          groupId: org.hsqldb
+          artifactId: hsqldb
+          scope: runtime
+          starter: false
+        - name: Apache Derby
+          id: derby
+          description: Apache Derby database (with embedded support)
+          groupId: org.apache.derby
+          artifactId: derby
+          scope: runtime
+          versionRange: 1.2.2.RELEASE
+          starter: false
+        - name: MySQL
+          id: mysql
+          description: MySQL jdbc driver
+          groupId: mysql
+          artifactId: mysql-connector-java
+          scope: runtime
+          starter: false
+        - name: PostgreSQL
+          id: postgresql
+          description: PostgreSQL jdbc driver
+          groupId: org.postgresql
+          artifactId: postgresql
+          versions:
+            - versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
+              version: 9.4-1201-jdbc41
+          scope: runtime
+          starter: false
+    - name: NoSQL
+      content:
         - name: MongoDB
           id: data-mongodb
           description: MongoDB NoSQL Database, including spring-data-mongodb
@@ -479,47 +520,6 @@ initializr:
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-hazelcast
-    - name: Database
-      content:
-        - name: H2
-          id: h2
-          description: H2 database (with embedded support)
-          groupId: com.h2database
-          artifactId: h2
-          scope: runtime
-          starter: false
-        - name: HSQLDB
-          id: hsql
-          description: HSQLDB database (with embedded support)
-          groupId: org.hsqldb
-          artifactId: hsqldb
-          scope: runtime
-          starter: false
-        - name: Apache Derby
-          id: derby
-          description: Apache Derby database (with embedded support)
-          groupId: org.apache.derby
-          artifactId: derby
-          scope: runtime
-          versionRange: 1.2.2.RELEASE
-          starter: false
-        - name: MySQL
-          id: mysql
-          description: MySQL jdbc driver
-          groupId: mysql
-          artifactId: mysql-connector-java
-          scope: runtime
-          starter: false
-        - name: PostgreSQL
-          id: postgresql
-          description: PostgreSQL jdbc driver
-          groupId: org.postgresql
-          artifactId: postgresql
-          versions:
-            - versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
-              version: 9.4-1201-jdbc41
-          scope: runtime
-          starter: false
     - name: Social
       content:
         - name: Facebook
