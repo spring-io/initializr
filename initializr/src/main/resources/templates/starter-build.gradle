@@ -10,7 +10,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
-		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')<% } %><% if (language=='kotlin') { %>
+		classpath('io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE')<% } %><% if (language=='kotlin') { %>
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")<% } %>
 	}
 }
