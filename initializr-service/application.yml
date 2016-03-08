@@ -169,6 +169,7 @@ initializr:
         - name: Velocity
           id: velocity
           description: Velocity templating engine
+          versionRange: "[1.1.6.RELEASE,1.4.0.M2)"
           facets:
             - web
           keywords:
