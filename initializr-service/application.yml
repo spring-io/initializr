@@ -528,6 +528,12 @@ initializr:
           versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-hazelcast
+        - name: Cluster Etcd
+          id: cloud-cluster-etcd
+          description: Leadership election and global state with Etcd and spring-cloud-cluster-etcd
+          versionRange: 1.3.0.M4
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-cluster-etcd
     - name: Social
       content:
         - name: Facebook
