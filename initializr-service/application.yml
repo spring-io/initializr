@@ -25,10 +25,10 @@ initializr:
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
             version: Angel.SR6
-          - versionRange: "[1.3.0.M2,1.3.2.RELEASE]"
+          - versionRange: "[1.3.0.M2,1.3.3.RELEASE]"
             version: Brixton.M5
             repositories: spring-snapshots,spring-milestones
-          - versionRange: 1.3.3.BUILD-SNAPSHOT
+          - versionRange: 1.3.4.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
@@ -282,7 +282,7 @@ initializr:
           weight: 10
     - name: Cloud Core
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Cloud Connectors
           id: cloud-connectors
@@ -306,7 +306,7 @@ initializr:
           artifactId: spring-cloud-starter-oauth2
     - name: Cloud Config
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Config Client
           id: cloud-config-client
@@ -333,7 +333,7 @@ initializr:
           artifactId: spring-cloud-starter-consul-config
     - name: Cloud Discovery
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Eureka Discovery
           id: cloud-eureka
@@ -366,7 +366,7 @@ initializr:
           artifactId: spring-cloud-starter-consul-discovery
     - name: Cloud Routing
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Zuul
           id: cloud-zuul
@@ -385,7 +385,7 @@ initializr:
           artifactId: spring-cloud-starter-feign
     - name: Cloud Circuit Breaker
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Hystrix
           id: cloud-hystrix
@@ -405,19 +405,19 @@ initializr:
         - name: Turbine AMQP
           id: cloud-turbine-amqp
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and AMQP
-          versionRange: "[0.0.0.RELEASE,1.3.0.M5]"
+          versionRange: "[1.2.0.RELEASE,1.3.0.M5]"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-amqp
         - name: Turbine Stream
           id: cloud-turbine-stream
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
-          versionRange: "(1.3.0.M5,999.9.9.RELEASE]"
+          versionRange: 1.3.0.M5
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-stream
           weight: -1
     - name: Cloud Tracing
       bom: cloud-bom
-      versionRange: "1.3.0.M4"
+      versionRange: 1.3.0.M4
       content:
         - name: Sleuth
           id: cloud-starter-sleuth
@@ -441,7 +441,7 @@ initializr:
           artifactId: spring-cloud-sleuth-zipkin-stream
     - name: Cloud Messaging
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: Cloud Bus AMQP
           id: cloud-bus-amqp
@@ -480,7 +480,7 @@ initializr:
           artifactId: spring-cloud-starter-stream-kafka
     - name: Cloud AWS
       bom: cloud-bom
-      versionRange: "1.2.3.RELEASE"
+      versionRange: 1.2.3.RELEASE
       content:
         - name: AWS Core
           id: cloud-aws
@@ -499,7 +499,7 @@ initializr:
           artifactId: spring-cloud-starter-aws-messaging
     - name: Cloud Data Flow
       bom: cloud-dataflow-bom
-      versionRange: "1.3.2.RELEASE"
+      versionRange: 1.3.2.RELEASE
       content:
         - name: Local Data Flow Server
           id: cloud-dataflow-server-local
@@ -508,30 +508,26 @@ initializr:
           artifactId: spring-cloud-starter-dataflow-server-local
     - name: Cloud Cluster
       bom: cloud-bom
-      versionRange: "1.3.0.M4"
+      versionRange: 1.3.0.M4
       content:
         - name: Cluster Redis
           id: cloud-cluster-redis
           description: Leadership election and global state with Redis and spring-cloud-cluster-redis
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-redis
         - name: Cluster Zookeeper
           id: cloud-cluster-zookeeper
           description: Leadership election and global state with Zookeeper and spring-cloud-cluster-zookeeper
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-zookeeper
         - name: Cluster Hazelcast
           id: cloud-cluster-hazelcast
           description: Leadership election and global state with Hazelcast and spring-cloud-cluster-hazelcast
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-hazelcast
         - name: Cluster Etcd
           id: cloud-cluster-etcd
           description: Leadership election and global state with Etcd and spring-cloud-cluster-etcd
-          versionRange: 1.3.0.M4
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-etcd
     - name: Social
