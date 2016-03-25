@@ -262,6 +262,10 @@ initializr:
           id: data-couchbase
           description: Couchbase NoSQL database, including spring-data-couchbase
           versionRange: 1.4.0.M1
+        - name: Neo4j
+          id: data-neo4j
+          description: Neo4j NoSQL graph database, including spring-data-neo4j
+          versionRange: 1.4.0.BUILD-SNAPSHOT
         - name: Redis
           id: data-redis
           description: REDIS key-value data store, including spring-redis
