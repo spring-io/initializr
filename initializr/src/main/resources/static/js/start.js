@@ -181,7 +181,7 @@ $(function () {
     });
     var starters = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.nonword('name', 'description', 'keywords', 'group'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.nonword,
         identify: function (obj) {
             return obj.id;
         },
