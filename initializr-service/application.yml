@@ -443,6 +443,14 @@ initializr:
           description:  Consumes messages from Spring Cloud Sleuth Stream delivered over a Spring Cloud Stream binder and writes them to a Zipkin store
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-zipkin-stream
+        - name: Zipkin UI
+          id: zipkin-ui
+          description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
+          groupId: io.zipkin
+          artifactId: zipkin-ui
+          scope: runtime
+          version: 1.38.1
+          starter: false
     - name: Cloud Messaging
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
