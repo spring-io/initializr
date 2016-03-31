@@ -428,9 +428,9 @@ initializr:
           description: Distributed tracing via logs with spring-cloud-sleuth
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-sleuth
-        - name: Zipkin
+        - name: Zipkin Client
           id: cloud-starter-zipkin
-          description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Zipkin Stream and Sleuth Stream.
+          description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Sleuth Stream.
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
         - name: Sleuth Stream
@@ -440,9 +440,23 @@ initializr:
           artifactId: spring-cloud-sleuth-stream
         - name: Zipkin Stream
           id: cloud-sleuth-zipkin-stream
-          description:  Consumes messages from Spring Cloud Sleuth Stream delivered over a Spring Cloud Stream binder and writes them to a Zipkin store
+          description:  Consumes span data in messages from Spring Cloud Sleuth Stream and writes them to a Zipkin store
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-zipkin-stream
+        - name: Zipkin UI
+          id: zipkin-ui
+          description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
+          groupId: io.zipkin
+          artifactId: zipkin-ui
+          scope: runtime
+          versionRange: 1.3.4.BUILD-SNAPSHOT
+          starter: false
+        - name: Zipkin Server
+          id: zipkin-server
+          description: Consumes span data over HTTP and writes them to a span store
+          groupId: io.zipkin.java
+          artifactId: zipkin-server
+          starter: false
     - name: Cloud Messaging
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
