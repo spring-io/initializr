@@ -504,6 +504,11 @@ initializr:
           description: Local Data Flow Server implementation
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-dataflow-server-local
+        - name: Data Flow Shell
+          id: cloud-dataflow-shell
+          description: Data Flow Shell
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-dataflow-shell
     - name: Cloud Cluster
       bom: cloud-bom
       versionRange: 1.3.0.M4
