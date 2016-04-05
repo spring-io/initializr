@@ -1,0 +1,55 @@
+{
+  "groups": [
+    {
+      "name": "initializr.stats",
+      "type": "io.spring.initializr.actuate.stat.StatsProperties",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties"
+    },
+    {
+      "name": "initializr.stats.elastic",
+      "type": "io.spring.initializr.actuate.stat.StatsProperties$Elastic",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties",
+      "sourceMethod": "getElastic()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "initializr.stats.elastic.uri",
+      "type": "java.lang.String",
+      "description": "Elastic service uri.",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.username",
+      "type": "java.lang.String",
+      "description": "Elastic service username.",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.password",
+      "type": "java.lang.String",
+      "description": "Elastic service password.",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.index-name",
+      "type": "java.lang.String",
+      "description": "Name of the index.",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.entity-name",
+      "type": "java.lang.String",
+      "description": "Name of the entity to use to publish stats.",
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    },
+    {
+      "name": "initializr.stats.elastic.max-attempts",
+      "type": "java.lang.Integer",
+      "description": "Number of attempts before giving up.",
+      "defaultValue": 3,
+      "sourceType": "io.spring.initializr.actuate.stat.StatsProperties$Elastic"
+    }
+  ],
+  "hints": []
+}

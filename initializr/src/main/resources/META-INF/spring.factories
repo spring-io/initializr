@@ -1,7 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.spring.initializr.config.InitializrAutoConfiguration,\
-io.spring.initializr.config.InitializrMetricsExporterAutoConfiguration,\
-io.spring.initializr.config.InitializrStatsAutoConfiguration
-
-org.springframework.boot.env.EnvironmentPostProcessor=\
-io.spring.initializr.config.CloudfoundryEnvironmentPostProcessor

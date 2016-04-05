@@ -1,0 +1,70 @@
+package project.templates
+
+buildscript {
+	ext {
+		springBootVersion = '${bootVersion}'<% if (language=='kotlin') { %>
+		kotlinVersion = '${kotlinVersion}'<% } %>
+	}
+	repositories {
+		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }<% } %>
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
+		classpath('io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE')<% } %><% if (language=='kotlin') { %>
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")<% } %>
+	}
+}
+
+apply plugin: '${language}'<% if (packaging=='war') {  %>
+apply plugin: 'eclipse-wtp'<% } else { %>
+apply plugin: 'eclipse'<% } %>
+apply plugin: 'spring-boot' <% if (!bootOneThreeAvailable) { %>
+apply plugin: 'io.spring.dependency-management' <% } %><% if (packaging=='war') {  %>
+apply plugin: 'war'
+<% } %>
+
+<% if (packaging=='war') {  %>war<% } else { %>jar<% } %> {
+	baseName = '${artifactId}'
+	version = '${version}'
+}
+sourceCompatibility = ${javaVersion}
+targetCompatibility = ${javaVersion}
+
+repositories {
+	mavenCentral()<% if (repositories) { repositories.each { key, repo -> %>
+	maven { url "${repo.url}" }<% }} %>
+}
+
+<% if (providedDependencies) { %>configurations {
+	providedRuntime
+}
+<% } %>
+dependencies {<% compileDependencies.each { %>
+	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% if (language=='groovy') { %>
+	compile('org.codehaus.groovy:groovy')<% } %><% if (language=='kotlin') { %>
+	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
+	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %><% providedDependencies.each { %>
+	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
+	testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
+	testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}')<% } %>
+}
+<% if (boms) { %>
+dependencyManagement {
+	imports { <% boms.values().each { %>
+		mavenBom "${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}" <% } %>
+	}
+}
+<% } %>
+
+eclipse {
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.12'
+}
