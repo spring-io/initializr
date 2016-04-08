@@ -18,66 +18,38 @@ package io.spring.initializr.generator
 
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
-import io.spring.initializr.metadata.InitializrMetadata
-import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
-import io.spring.initializr.test.generator.GradleBuildAssert
-import io.spring.initializr.test.generator.PomAssert
-import io.spring.initializr.test.generator.ProjectAssert
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
-import org.mockito.ArgumentMatcher
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 import static org.hamcrest.CoreMatchers.containsString
 import static org.junit.Assert.assertThat
 import static org.junit.Assert.fail
-import static org.mockito.Matchers.argThat
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.times
-import static org.mockito.Mockito.verify
 
 /**
+ * Tests for {@link ProjectGenerator}
+ *
  * @author Stephane Nicoll
  */
-class ProjectGeneratorTests {
-
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder()
-
-	private final ProjectGenerator projectGenerator = new ProjectGenerator()
-
-	private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher)
-
-	@Before
-	void setup() {
-		def metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
-		applyMetadata(metadata)
-		projectGenerator.eventPublisher = eventPublisher
-		projectGenerator.tmpdir = folder.newFolder().absolutePath
-	}
+class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 	@Test
 	void defaultMavenPom() {
 		def request = createProjectRequest('web')
 		generateMavenPom(request).hasNoRepository()
 				.hasSpringBootStarterDependency('web')
-		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectGeneratedEventMatcher(request)))
+		verifyProjectSuccessfulEventFor(request)
 	}
 
 	@Test
 	void defaultGradleBuild() {
 		def request = createProjectRequest('web')
 		generateGradleBuild(request)
-		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectGeneratedEventMatcher(request)))
+		verifyProjectSuccessfulEventFor(request)
 	}
 
 	@Test
@@ -85,7 +57,7 @@ class ProjectGeneratorTests {
 		def request = createProjectRequest('web')
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
 				.hasNoRepository().hasSpringBootStarterDependency('web')
-		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectGeneratedEventMatcher(request)))
+		verifyProjectSuccessfulEventFor(request)
 	}
 
 	@Test
@@ -555,14 +527,6 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
-	void kotlinWar() {
-		def request = createProjectRequest('web')
-		request.language = 'kotlin'
-		request.packaging = 'war'
-		generateProject(request).isKotlinWarProject()
-	}
-
-	@Test
 	void invalidType() {
 		def request = createProjectRequest('web')
 		request.type = 'foo-bar'
@@ -571,7 +535,7 @@ class ProjectGeneratorTests {
 			fail("Should have failed to generate project")
 		} catch (InvalidProjectRequestException ex) {
 			assertThat ex.message, containsString('foo-bar')
-			verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)))
+			verifyProjectFailedEventFor(request, ex)
 		}
 	}
 
@@ -584,7 +548,7 @@ class ProjectGeneratorTests {
 			fail("Should have failed to generate project")
 		} catch (InvalidProjectRequestException ex) {
 			assertThat ex.message, containsString('foo-bar')
-			verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)))
+			verifyProjectFailedEventFor(request, ex)
 		}
 	}
 
@@ -597,66 +561,7 @@ class ProjectGeneratorTests {
 			fail("Should have failed to generate project")
 		} catch (InvalidProjectRequestException ex) {
 			assertThat ex.message, containsString('foo-bar')
-			verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)))
-		}
-	}
-
-
-	PomAssert generateMavenPom(ProjectRequest request) {
-		def content = new String(projectGenerator.generateMavenPom(request))
-		new PomAssert(content).validateProjectRequest(request)
-	}
-
-	GradleBuildAssert generateGradleBuild(ProjectRequest request) {
-		def content = new String(projectGenerator.generateGradleBuild(request))
-		new GradleBuildAssert(content).validateProjectRequest(request)
-	}
-
-	ProjectAssert generateProject(ProjectRequest request) {
-		def dir = projectGenerator.generateProjectStructure(request)
-		new ProjectAssert(dir)
-	}
-
-	ProjectRequest createProjectRequest(String... styles) {
-		def request = new ProjectRequest()
-		request.initialize(projectGenerator.metadataProvider.get())
-		request.style.addAll Arrays.asList(styles)
-		request
-	}
-
-	private void applyMetadata(InitializrMetadata metadata) {
-		projectGenerator.metadataProvider = new SimpleInitializrMetadataProvider(metadata)
-	}
-
-	private static class ProjectGeneratedEventMatcher extends ArgumentMatcher<ProjectGeneratedEvent> {
-
-		private final ProjectRequest request
-
-		ProjectGeneratedEventMatcher(ProjectRequest request) {
-			this.request = request
-		}
-
-		@Override
-		boolean matches(Object argument) {
-			ProjectGeneratedEvent event = (ProjectGeneratedEvent) argument
-			return request.equals(event.projectRequest)
-		}
-	}
-
-	private static class ProjectFailedEventMatcher extends ArgumentMatcher<ProjectFailedEvent> {
-
-		private final ProjectRequest request
-		private final Exception cause
-
-		ProjectFailedEventMatcher(ProjectRequest request, Exception cause) {
-			this.request = request
-			this.cause = cause
-		}
-
-		@Override
-		boolean matches(Object argument) {
-			ProjectFailedEvent event = (ProjectFailedEvent) argument
-			return request.equals(event.projectRequest) && cause.equals(event.cause)
+			verifyProjectFailedEventFor(request, ex)
 		}
 	}
 

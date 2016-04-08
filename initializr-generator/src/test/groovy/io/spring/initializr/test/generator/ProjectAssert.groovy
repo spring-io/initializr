@@ -121,8 +121,8 @@ class ProjectAssert {
 		isKotlinProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME)
 	}
 
-	private ProjectAssert isGenericProject(String expectedPackageName, String expectedApplicationName,
-										   String codeLocation, String extension) {
+	ProjectAssert isGenericProject(String expectedPackageName, String expectedApplicationName,
+								   String codeLocation, String extension) {
 		String packageName = expectedPackageName.replace('.', '/')
 		hasFile("src/main/$codeLocation/$packageName/${expectedApplicationName}.$extension",
 				"src/test/$codeLocation/$packageName/${expectedApplicationName}Tests.$extension",
@@ -135,14 +135,6 @@ class ProjectAssert {
 
 	ProjectAssert isJavaWarProject() {
 		isJavaWarProject(DEFAULT_APPLICATION_NAME)
-	}
-
-	ProjectAssert isGroovyWarProject() {
-		isGenericWarProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME, 'groovy', 'groovy')
-	}
-
-	ProjectAssert isKotlinWarProject() {
-		isGenericWarProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME, 'kotlin', 'kt')
 	}
 
 	ProjectAssert isGenericWarProject(String expectedPackageName, String expectedApplicationName,

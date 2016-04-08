@@ -16,6 +16,12 @@
 
 package io.spring.initializr.test.generator
 
+import java.nio.charset.Charset
+
+import org.springframework.core.io.Resource
+import org.springframework.util.StreamUtils
+
+import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
 
@@ -33,6 +39,17 @@ class SourceCodeAssert {
 	SourceCodeAssert(String name, String content) {
 		this.name = name
 		this.content = content
+	}
+
+	SourceCodeAssert equalsTo(Resource expected) {
+		def stream = expected.inputStream
+		try {
+			String expectedContent = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
+			assertEquals "Unexpected content for $name", expectedContent, content
+		} finally {
+			stream.close()
+		}
+		this
 	}
 
 	SourceCodeAssert hasImports(String... classNames) {
