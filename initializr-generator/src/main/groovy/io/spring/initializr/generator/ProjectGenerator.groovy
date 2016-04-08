@@ -44,6 +44,8 @@ class ProjectGenerator {
 
 	private static final VERSION_1_3_0_M1 = Version.parse('1.3.0.M1')
 
+	private static final VERSION_1_4_0_M2 = Version.parse('1.4.0.M2')
+
 	@Autowired
 	ApplicationEventPublisher eventPublisher
 
@@ -138,13 +140,7 @@ class ProjectGenerator {
 
 		def test = new File(new File(dir, "src/test/$codeLocation"), request.packageName.replace('.', '/'))
 		test.mkdirs()
-		if (request.hasWebFacet()) {
-			model.testAnnotations = '@WebAppConfiguration\n'
-			model.testImports = 'import org.springframework.test.context.web.WebAppConfiguration;\n'
-		} else {
-			model.testAnnotations = ''
-			model.testImports = ''
-		}
+		setupTestModel(request, model)
 		write(new File(test, "${applicationName}Tests.${extension}"), "ApplicationTests.$extension", model)
 
 		def resources = new File(dir, 'src/main/resources')
@@ -228,7 +224,44 @@ class ProjectGenerator {
 		model['bootOneThreeAvailable'] = VERSION_1_3_0_M1
 				.compareTo(Version.safeParse(request.bootVersion)) <= 0
 
+		// New testing stuff
+		model['newTestInfrastructure'] = isNewTestInfrastructureAvailable(request)
+
 		model
+	}
+
+	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {
+		String imports = ''
+		String testAnnotations = ''
+		def newTestInfrastructure = isNewTestInfrastructureAvailable(request)
+		if (newTestInfrastructure) {
+			imports += String.format(generateImport('org.springframework.boot.test.context.SpringBootTest',
+					request.language) + "%n")
+			imports += String.format(generateImport('org.springframework.test.context.junit4.SpringRunner',
+					request.language) + "%n")
+		} else {
+			imports += String.format(generateImport('org.springframework.boot.test.SpringApplicationConfiguration',
+					request.language) + "%n")
+			imports += String.format(generateImport('org.springframework.test.context.junit4.SpringJUnit4ClassRunner',
+					request.language) + "%n")
+		}
+		if (request.hasWebFacet() && !newTestInfrastructure) {
+			imports += String.format(generateImport('org.springframework.test.context.web.WebAppConfiguration',
+					request.language) + "%n")
+			testAnnotations = String.format('@WebAppConfiguration%n')
+		}
+		model.testImports = imports
+		model.testAnnotations = testAnnotations
+	}
+
+	protected String generateImport(String type, String language) {
+		String end = (language.equals("groovy") || language.equals("kotlin")) ? '' : ';'
+		"import $type$end"
+	}
+
+	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
+		VERSION_1_4_0_M2
+				.compareTo(Version.safeParse(request.bootVersion)) <= 0
 	}
 
 	private byte[] doGenerateMavenPom(Map model) {

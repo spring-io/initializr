@@ -90,6 +90,16 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void standardTestClassWeb() {
+		def request = createProjectRequest('web')
+		request.language = language
+
+		def project = generateProject(request)
+		project.sourceCodeAssert("src/test/$language/com/example/DemoApplicationTests.$extension")
+				.equalsTo(new ClassPathResource("project/$language/standard/DemoApplicationTestsWeb.$expectedExtension"))
+	}
+
+	@Test
 	public void standardServletInitializer() {
 		def request = createProjectRequest()
 		request.language = language
@@ -97,6 +107,28 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 		def project = generateProject(request)
 		project.sourceCodeAssert("src/main/$language/com/example/ServletInitializer.$extension")
 				.equalsTo(new ClassPathResource("project/$language/standard/ServletInitializer.$expectedExtension"))
+	}
+
+	@Test
+	public void test14TestClass() {
+		def request = createProjectRequest()
+		request.language = language
+		request.bootVersion = '1.4.0.M2'
+
+		def project = generateProject(request)
+		project.sourceCodeAssert("src/test/$language/com/example/DemoApplicationTests.$extension")
+				.equalsTo(new ClassPathResource("project/$language/test-1.4/DemoApplicationTests.$expectedExtension"))
+	}
+
+	@Test
+	public void test14TestClassWeb() {
+		def request = createProjectRequest('web')
+		request.language = language
+		request.bootVersion = '1.4.0.M2'
+
+		def project = generateProject(request)
+		project.sourceCodeAssert("src/test/$language/com/example/DemoApplicationTests.$extension")
+				.equalsTo(new ClassPathResource("project/$language/test-1.4/DemoApplicationTests.$expectedExtension"))
 	}
 
 }

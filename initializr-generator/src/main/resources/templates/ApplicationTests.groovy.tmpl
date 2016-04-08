@@ -2,11 +2,11 @@ package ${packageName}
 
 import org.junit.Test
 import org.junit.runner.RunWith
-${testImports}import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-
+${testImports}<% if (newTestInfrastructure) { %>
+@RunWith(SpringRunner)
+@SpringBootTest<% } else { %>
 @RunWith(SpringJUnit4ClassRunner)
-@SpringApplicationConfiguration(classes = ${applicationName})
+@SpringApplicationConfiguration(classes = ${applicationName})<% } %>
 ${testAnnotations}class ${applicationName}Tests {
 
 	@Test

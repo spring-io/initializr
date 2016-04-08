@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator
 
+import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
 import io.spring.initializr.test.generator.GradleBuildAssert
@@ -49,8 +50,11 @@ abstract class AbstractProjectGeneratorTests {
 
 	@Before
 	void setup() {
+		def web = new Dependency(id: 'web')
+		web.facets << 'web'
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup('test', 'web', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
+				.addDependencyGroup('web', web)
+				.addDependencyGroup('test', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
 		applyMetadata(metadata)
 		projectGenerator.eventPublisher = eventPublisher
 		projectGenerator.tmpdir = folder.newFolder().absolutePath
