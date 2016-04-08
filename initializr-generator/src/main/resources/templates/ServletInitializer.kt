@@ -1,4 +1,4 @@
-packageproject.templates ${packageName}
+package ${packageName}
 
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.context.web.SpringBootServletInitializer

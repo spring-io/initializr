@@ -1,4 +1,4 @@
-packageproject.templates ${packageName}
+package ${packageName}
 
 import org.springframework.boot.SpringApplication<% if (useSpringBootApplication) { %>
 import org.springframework.boot.autoconfigure.SpringBootApplication<% } else { %>

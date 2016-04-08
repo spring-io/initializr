@@ -1,5 +1,3 @@
-package project.templates
-
 buildscript {
 	ext {
 		springBootVersion = '${bootVersion}'<% if (language=='kotlin') { %>
