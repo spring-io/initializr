@@ -132,7 +132,7 @@ class ProjectGenerator {
 		write(new File(src, "${applicationName}.${extension}"), "Application.$extension", model)
 
 		if (request.packaging == 'war') {
-			def fileName = "ServletInitializer.$language"
+			def fileName = "ServletInitializer.$extension"
 			write(new File(src, fileName), fileName, model)
 		}
 

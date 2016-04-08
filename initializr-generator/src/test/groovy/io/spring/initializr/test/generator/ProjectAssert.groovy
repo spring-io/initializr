@@ -130,13 +130,27 @@ class ProjectAssert {
 	}
 
 	ProjectAssert isJavaWarProject(String expectedApplicationName) {
-		isJavaProject(DEFAULT_PACKAGE_NAME, expectedApplicationName)
-				.hasStaticAndTemplatesResources(true)
-				.hasFile('src/main/java/com/example/ServletInitializer.java')
+		isGenericWarProject(DEFAULT_PACKAGE_NAME, expectedApplicationName, 'java', 'java')
 	}
 
 	ProjectAssert isJavaWarProject() {
 		isJavaWarProject(DEFAULT_APPLICATION_NAME)
+	}
+
+	ProjectAssert isGroovyWarProject() {
+		isGenericWarProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME, 'groovy', 'groovy')
+	}
+
+	ProjectAssert isKotlinWarProject() {
+		isGenericWarProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME, 'kotlin', 'kt')
+	}
+
+	ProjectAssert isGenericWarProject(String expectedPackageName, String expectedApplicationName,
+									  String codeLocation, String extension) {
+		String packageName = expectedPackageName.replace('.', '/')
+		isGenericProject(expectedPackageName, expectedApplicationName, codeLocation, extension)
+				.hasStaticAndTemplatesResources(true)
+				.hasFile("src/main/$codeLocation/$packageName/ServletInitializer.$extension")
 	}
 
 	ProjectAssert hasStaticAndTemplatesResources(boolean web) {

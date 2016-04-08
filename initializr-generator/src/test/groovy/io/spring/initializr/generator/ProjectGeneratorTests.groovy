@@ -555,6 +555,14 @@ class ProjectGeneratorTests {
 	}
 
 	@Test
+	void kotlinWar() {
+		def request = createProjectRequest('web')
+		request.language = 'kotlin'
+		request.packaging = 'war'
+		generateProject(request).isKotlinWarProject()
+	}
+
+	@Test
 	void invalidType() {
 		def request = createProjectRequest('web')
 		request.type = 'foo-bar'
