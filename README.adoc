@@ -4,9 +4,10 @@
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
 :code: https://github.com/spring-io/initializr/blob/master
 
-Spring Initializr is a configurable service to generate a quickstart project. You can see
-our default instance at link:https://start.spring.io[]. It provides a simple web UI to
-configure the project to generate and endpoints that you can use via plain HTTP.
+Spring Initializr provides an extensible API to generate quickstrat project. It also
+provides a configurable service: you can see our default instance at
+link:https://start.spring.io[]. It provides a simple web UI to configure the project
+to generate and endpoints that you can use via plain HTTP.
 
 Spring Initializr also exposes an endpoint that serves its
 {wiki}/Metadata-format[meta-data] in a well-known format to allow third-party
@@ -19,6 +20,16 @@ configuration is {wiki}/Configuration-format[also described in details on the wi
 
 NOTE: We use the continuous deployment technique to manage our instance; check the
 link:CHANGELOG.adoc[changelog] for an overview of changes
+
+== Modules
+
+Spring Initializr has the following modules:
+
+* `initializr-generator`: standalone project generation library that can be reused in
+many environments (including embedded in your own project)
+* `initializr-web`: REST endpoints and web interface
+* `initializr-actuator`: optional module to provide statistics and metrics on project
+generation
 
 == Supported interfaces
 
@@ -129,9 +140,8 @@ on the wiki].
 
 == Running your own instance
 
-You can easily run your own instance. Spring Initializr defines a _library_ that provides all
-the default features. The library uses Spring Boot so when it is added to a project, it will
-trigger the necessary auto-configuration to deploy the service.
+You can easily run your own instance. The `initializr-web` modules uses Spring Boot so when it
+is added to a project, it will trigger the necessary auto-configuration to deploy the service.
 
 You first need to create or update your configuration to define the necessary attributes that
 your instance will use. Again, check the wiki for a {wiki}/Configuration-format[description
@@ -145,12 +155,13 @@ script below
 ----
 package org.acme.myapp
 
-@Grab('io.spring.initalizr:initializr:1.0.0.BUILD-SNAPSHOT')
+@Grab('io.spring.initalizr:initializr-web:1.0.0.BUILD-SNAPSHOT')
+@Grab('spring-boot-starter-web')
 class YourInitializrApplication { }
 ----
 
 NOTE: Spring Initializr is not available on Maven central yet so you will have to build
-the library <<build,from source>> in order to use it in your own environment.
+it <<build,from source>> in order to use it in your own environment.
 
 Once you have created that script (`my-instance.groovy`), place your configuration in the same
 directory and simply execute this command to start the service:
@@ -207,20 +218,18 @@ it yourself.
 [[building]]
 === Building
 
-The library is located in the `initializr` directory.
+Just invoke the build at the root of the project
 
 [indent=0]
 ----
-    $ cd initializr
     $ mvn clean install
 ----
 
 If you want to run the smoke tests using Geb, you need to enable the
-`smokeTests` profile. Firefox should also be installed on your machine
+`smokeTests` profile. Firefox should also be installed on your machine:
 
 [indent=0]
 ----
-    $ cd initializr
     $ mvn verify -PsmokeTests
 ----
 
