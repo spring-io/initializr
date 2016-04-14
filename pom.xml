@@ -5,9 +5,36 @@
 	<groupId>io.spring.initalizr</groupId>
 	<artifactId>initializr</artifactId>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>Spring Initializr</name>
 	<description>A web-based quickstart generator for Spring projects</description>
-	<packaging>pom</packaging>
+	<url>https://github.com/spring-io/initializr</url>
+	<organization>
+		<name>Pivotal Software, Inc.</name>
+		<url>http://www.spring.io</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:https://github.com/spring-io/initializr</connection>
+		<url>https://github.com/spring-io/initializr</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>snicoll</id>
+			<name>Stephane Nicoll</name>
+			<email>snicoll at pivotal.io</email>
+			<organization>Pivotal Software, Inc.</organization>
+			<organizationUrl>http://www.spring.io</organizationUrl>
+			<roles>
+				<role>Project lead</role>
+			</roles>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -147,6 +174,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 
 </project>
