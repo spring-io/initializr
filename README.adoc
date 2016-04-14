@@ -155,7 +155,7 @@ script below
 ----
 package org.acme.myapp
 
-@Grab('io.spring.initalizr:initializr-web:1.0.0.BUILD-SNAPSHOT')
+@Grab('io.spring.initializr:initializr-web:1.0.0.BUILD-SNAPSHOT')
 @Grab('spring-boot-starter-web')
 class YourInitializrApplication { }
 ----

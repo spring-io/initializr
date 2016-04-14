@@ -3,7 +3,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>io.spring.initalizr</groupId>
+		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr</artifactId>
 		<version>1.0.0.BUILD-SNAPSHOT</version>
 	</parent>
@@ -12,7 +12,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.spring.initalizr</groupId>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-generator</artifactId>
 		</dependency>
 
@@ -40,18 +40,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.spring.initalizr</groupId>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-generator</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.spring.initalizr</groupId>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.spring.initalizr</groupId>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>

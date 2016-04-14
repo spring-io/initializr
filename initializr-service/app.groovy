@@ -9,8 +9,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 import io.spring.initializr.web.project.LegacyStsController
 
-@Grab('io.spring.initalizr:initializr-actuator:1.0.0.BUILD-SNAPSHOT')
-@Grab('io.spring.initalizr:initializr-web:1.0.0.BUILD-SNAPSHOT')
+@Grab('io.spring.initializr:initializr-actuator:1.0.0.BUILD-SNAPSHOT')
+@Grab('io.spring.initializr:initializr-web:1.0.0.BUILD-SNAPSHOT')
 @Grab('spring-boot-starter-web')
 @Grab('spring-boot-starter-redis')
 class InitializerService {
