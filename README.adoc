@@ -19,7 +19,7 @@ the {code}/initializr-service/application.yml[configuration of our instance] for
 configuration is {wiki}/Configuration-format[also described in details on the wiki].
 
 NOTE: We use the continuous deployment technique to manage our instance; check the
-link:CHANGELOG.adoc[changelog] for an overview of changes
+https://github.com/spring-io/initializr/milestones[milestones page] for an overview of changes
 
 == Modules
 
