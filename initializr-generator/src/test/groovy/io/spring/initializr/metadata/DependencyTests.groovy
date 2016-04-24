@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ class DependencyTests {
 	@Test
 	void resolveInvalidMapping() {
 		def dependency = new Dependency(id: 'web')
-		dependency.versions << new Dependency.Mapping(
+		dependency.mappings << new Dependency.Mapping(
 				versionRange: 'foo-bar', version: '0.1.0.RELEASE')
 		thrown.expect(InvalidInitializrMetadataException)
 		thrown.expectMessage('foo-bar')
@@ -156,25 +156,47 @@ class DependencyTests {
 	}
 
 	@Test
-	void resolveMatchingMapping() {
+	void resolveMatchingVersionMapping() {
 		def dependency = new Dependency(id: 'web', description: 'A web dependency', version: '0.3.0.RELEASE',
-				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'] )
-		dependency.versions << new Dependency.Mapping(
+				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'])
+		dependency.mappings << new Dependency.Mapping(
 				versionRange: '[1.1.0.RELEASE, 1.2.0.RELEASE)', version: '0.1.0.RELEASE')
-		dependency.versions << new Dependency.Mapping(
+		dependency.mappings << new Dependency.Mapping(
 				versionRange: '[1.2.0.RELEASE, 1.3.0.RELEASE)', version: '0.2.0.RELEASE')
 		dependency.resolve()
 
-		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')), '0.1.0.RELEASE')
-		validateResolvedWebDependency(dependency.resolve(Version.parse('1.2.0.RELEASE')), '0.2.0.RELEASE')
-		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')), '0.3.0.RELEASE') // default
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.1.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.2.0.RELEASE')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.2.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.3.0.RELEASE') // default
 	}
 
-	static void validateResolvedWebDependency(def dependency, def expectedVersion) {
+	@Test
+	void resolveMatchArtifactMapping() {
+		def dependency = new Dependency(id: 'web', description: 'A web dependency', version: '0.3.0.RELEASE',
+				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'])
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.1.0.RELEASE, 1.2.0.RELEASE)', groupId: 'org.spring.boot')
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.2.0.RELEASE, 1.3.0.RELEASE)', artifactId: 'starter-web')
+		dependency.resolve()
+
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')),
+				'org.spring.boot', 'spring-boot-starter-web', '0.3.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.2.0.RELEASE')),
+				'org.springframework.boot', 'starter-web', '0.3.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.3.0.RELEASE') // default
+	}
+
+	static void validateResolvedWebDependency(
+			def dependency, def expectedGroupId, def expectedArtifactId, def expectedVersion) {
 		assertEquals expectedVersion, dependency.version
 		assertEquals 'web', dependency.id
-		assertEquals 'org.springframework.boot', dependency.groupId
-		assertEquals 'spring-boot-starter-web', dependency.artifactId
+		assertEquals expectedGroupId, dependency.groupId
+		assertEquals expectedArtifactId, dependency.artifactId
 		assertEquals 2, dependency.keywords.size()
 		assertEquals 1, dependency.aliases.size()
 		assertEquals 1, dependency.facets.size()

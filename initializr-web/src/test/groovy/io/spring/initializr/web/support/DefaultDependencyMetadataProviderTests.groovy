@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,20 +54,24 @@ class DefaultDependencyMetadataProviderTests {
 	@Test
 	void resolveDependencies() {
 		def first = new Dependency(id: 'first', groupId: 'org.foo', artifactId: 'first')
-		first.versions << new Dependency.Mapping(versionRange: '[1.0.0.RELEASE, 1.1.0.RELEASE)',
-				version: '0.1.0.RELEASE')
-		first.versions << new Dependency.Mapping(versionRange: '1.1.0.RELEASE',
-				version: '0.2.0.RELEASE')
+		first.mappings << new Dependency.Mapping(versionRange: '[1.0.0.RELEASE, 1.1.0.RELEASE)',
+				version: '0.1.0.RELEASE', groupId: 'org.bar', artifactId: 'second')
+		first.mappings << new Dependency.Mapping(versionRange: '1.1.0.RELEASE',
+				version: '0.2.0.RELEASE', groupId: 'org.biz', artifactId: 'third')
 		def second = new Dependency(id: 'second', groupId: 'org.foo', artifactId: 'second')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('test', first, second).build()
 
 		def dependencyMetadata = provider.get(metadata, Version.parse('1.0.5.RELEASE'))
 		assertEquals 2, dependencyMetadata.dependencies.size()
+		assertEquals('org.bar', dependencyMetadata.dependencies['first'].groupId)
+		assertEquals('second', dependencyMetadata.dependencies['first'].artifactId)
 		assertEquals('0.1.0.RELEASE', dependencyMetadata.dependencies['first'].version)
 
 		def anotherDependencyMetadata = provider.get(metadata, Version.parse('1.1.0.RELEASE'))
 		assertEquals 2, anotherDependencyMetadata.dependencies.size()
+		assertEquals('org.biz', anotherDependencyMetadata.dependencies['first'].groupId)
+		assertEquals('third', anotherDependencyMetadata.dependencies['first'].artifactId)
 		assertEquals('0.2.0.RELEASE', anotherDependencyMetadata.dependencies['first'].version)
 	}
 

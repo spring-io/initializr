@@ -91,7 +91,7 @@ initializr:
           groupId: org.projectlombok
           artifactId: lombok
           description: Java annotation library which help to reduce boilerplate code and code faster
-          versions:
+          mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
               version: 1.16.6
           starter: false
@@ -153,7 +153,7 @@ initializr:
           description: Document RESTful services by combining hand-written and auto-generated documentation
           groupId: org.springframework.restdocs
           artifactId: spring-restdocs-mockmvc
-          versions:
+          mappings:
             - versionRange: "[1.2.0.RELEASE,1.3.0.RC1)"
               version: 1.0.1.RELEASE
           scope: test
@@ -243,7 +243,7 @@ initializr:
           description: PostgreSQL jdbc driver
           groupId: org.postgresql
           artifactId: postgresql
-          versions:
+          mappings:
             - versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
               version: 9.4-1201-jdbc41
           scope: runtime
@@ -269,11 +269,13 @@ initializr:
         - name: Redis
           id: data-redis
           description: REDIS key-value data store, including spring-redis
-          versionRange: 1.4.0.M1
-        - name: Redis
-          id: redis
-          description: REDIS key-value data store, including spring-redis
-          versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
+          aliases:
+            - redis
+          mappings:
+            - versionRange: 1.4.0.M1
+              artifactId: spring-boot-starter-data-redis
+            - versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
+              artifactId: spring-boot-starter-redis
         - name: Gemfire
           id: data-gemfire
           description: GemFire distributed data store including spring-data-gemfire

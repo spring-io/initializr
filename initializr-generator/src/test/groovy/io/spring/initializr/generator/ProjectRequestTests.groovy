@@ -158,9 +158,9 @@ class ProjectRequestTests {
 	@Test
 	void resolveDependencyVersion() {
 		def dependency = createDependency('org.foo', 'bar', '1.2.0.RELEASE')
-		dependency.versions << new Dependency.Mapping(
+		dependency.mappings << new Dependency.Mapping(
 				version: '0.1.0.RELEASE', versionRange: '[1.0.0.RELEASE, 1.1.0.RELEASE)')
-		dependency.versions << new Dependency.Mapping(
+		dependency.mappings << new Dependency.Mapping(
 				version: '0.2.0.RELEASE', versionRange: '1.1.0.RELEASE')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('code', dependency).build()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,10 +62,10 @@ class Dependency extends MetadataElement {
 	String version
 
 	/**
-	 * Versions mapping if the version differs according to the Spring Boot
-	 * version. If no mapping matches, {@code version} is used.
+	 * Dependency mapping if an attribute of the dependency differs according to the
+	 * Spring Boot version. If no mapping matches, default attributes are used.
 	 */
-	List<Mapping> versions = []
+	List<Mapping> mappings = []
 
 	String scope = SCOPE_COMPILE
 
@@ -154,7 +154,7 @@ class Dependency extends MetadataElement {
 						"dependency with id '$id'")
 			}
 		}
-		versions.each {
+		mappings.each {
 			try {
 				it.range = VersionRange.parse(it.versionRange)
 			} catch (InvalidVersionException ex) {
@@ -168,11 +168,13 @@ class Dependency extends MetadataElement {
 	 * a {@link Dependency} instance that has its state resolved against the specified version.
 	 */
 	Dependency resolve(Version bootVersion) {
-		for (Mapping mapping : versions) {
+		for (Mapping mapping : mappings) {
 			if (mapping.range.match(bootVersion)) {
 				def dependency = new Dependency(this)
+				dependency.groupId = mapping.groupId ? mapping.groupId : this.groupId
+				dependency.artifactId = mapping.artifactId ? mapping.artifactId : this.artifactId
 				dependency.version = mapping.version ? mapping.version : this.version
-				dependency.versions = null
+				dependency.mappings = null
 				return dependency
 			}
 		}
@@ -202,10 +204,29 @@ class Dependency extends MetadataElement {
 		id = sb.toString()
 	}
 
+	/**
+	 * Map several attribute of the dependency for a given version range.
+	 */
 	static class Mapping {
 
+		/**
+		 * The version range of this mapping.
+		 */
 		String versionRange
 
+		/**
+		 * The version to use for this mapping or {@code null} to use the default.
+		 */
+		String groupId;
+
+		/**
+		 * The groupId to use for this mapping or {@code null} to use the default.
+		 */
+		String artifactId;
+
+		/**
+		 * The artifactId to use for this mapping or {@code null} to use the default.
+		 */
 		String version
 
 		private VersionRange range
