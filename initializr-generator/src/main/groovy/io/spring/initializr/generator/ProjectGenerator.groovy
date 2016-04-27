@@ -18,6 +18,7 @@ package io.spring.initializr.generator
 
 import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrException
+import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
@@ -201,6 +202,15 @@ class ProjectGenerator {
 		def model = [:]
 		def metadata = metadataProvider.get()
 
+		def useCustomParent = metadata.configuration.env.customParentPomGAV
+		model['useCustomParentPom'] = useCustomParent != null
+		if (useCustomParent) {
+			def gavParts = useCustomParent.split(':')
+			model['customParentPomGroup'] = gavParts[0]
+			model['customParentPomArtifact'] = gavParts[1]
+			model['customParentPomVersion'] = gavParts[2]
+			request.boms.put("spring-boot", new BillOfMaterials(groupId: "org.springframework.boot", artifactId: "spring-boot-dependencies", version: request.bootVersion))
+		}
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested

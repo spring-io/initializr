@@ -36,6 +36,7 @@
     "kotlin": {
       "version": null
     },
+    "customParentPomGAV": null,
     "googleAnalyticsTrackingCode": null,
     "invalidApplicationNames": [
       "SpringApplication",
