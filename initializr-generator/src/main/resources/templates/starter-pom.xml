@@ -12,16 +12,24 @@
 	<description>${description}</description>
 
 	<parent>
+		<% if (useCustomParentPom) { %>
+		<groupId><% customParentPomGroup %></groupId>
+		<artifactId><% customParentPomArtifact %></artifactId>
+		<artifactId><% customParentPomVersion %></artifactId>
+		<% } else { %>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>${bootVersion}</version>
+		<% } %>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>${javaVersion}</java.version><% if (language=='kotlin') { %>
-		<kotlin.version>${kotlinVersion}</kotlin.version><% } %>
+		<kotlin.version>${kotlinVersion}</kotlin.version><% } %><% if (useCustomParentPom) { %>
+        <spring-boot.version>${bootVersion}</spring-boot.version><%}%>
 	</properties>
 
 	<dependencies><% compileDependencies.each { %>
