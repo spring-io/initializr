@@ -206,9 +206,11 @@ class ProjectGenerator {
 		def dependencyIds = dependencies.collect { it.id }
 		log.info("Processing request{type=$request.type, dependencies=$dependencyIds}")
 
-		if (metadata.configuration.env.customParentPomGAV) {
-			model['useCustomparentPom'] = true
-			def gavParts = metadata.configuration.env.customParentPomGAV.split(':')
+
+		def useCustomParent = metadata.configuration.env.customParentPomGAV
+		model['useCustomParentPom'] = useCustomParent != null
+		if (useCustomParent) {
+			def gavParts = useCustomParent.split(':')
 			model['customParentPomGroup'] = gavParts[0]
 			model['customParentPomArtifact'] = gavParts[1]
 			model['customParentPomVersion'] = gavParts[2]
