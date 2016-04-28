@@ -97,13 +97,13 @@ class PomAssert {
 	}
 
 	PomAssert hasBootVersion(String bootVersion) {
-		// if using a custom parent, the bootVersion would come from a bom, not the parent
+		// when using a custom parent, the bootVersion comes from a bom entry and not the parent pom version
 		if (!eng.evaluate(createRootNodeXPath('parent/pom:artifactId'), doc).equals("spring-boot-starter-parent")) {
 			hasBom("org.springframework.boot", "spring-boot-dependencies", bootVersion)
 		} else {
 			assertEquals bootVersion, eng.evaluate(createRootNodeXPath('parent/pom:version'), doc)
-			this
 		}
+		this
 	}
 
 	PomAssert hasJavaVersion(String javaVersion) {
