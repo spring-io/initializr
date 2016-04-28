@@ -62,7 +62,3 @@ eclipse {
 		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${javaVersion}'
 	}
 }
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '2.12'
-}
