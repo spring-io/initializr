@@ -29,7 +29,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>${javaVersion}</java.version><% if (language=='kotlin') { %>
 		<kotlin.version>${kotlinVersion}</kotlin.version><% } %><% if (useCustomParentPom) { %>
-        <spring-boot.version>${bootVersion}</spring-boot.version><%}%>
+		<spring-boot.version>${bootVersion}</spring-boot.version><%}%>
 	</properties>
 
 	<dependencies><% compileDependencies.each { %>
