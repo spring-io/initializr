@@ -286,6 +286,24 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void defaultMavenPomHasSpringBootParent() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults().build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('whatever', 'web')
+		generateMavenPom(request).hasParent("org.springframework.boot", "spring-boot-starter-parent", request.bootVersion)
+	}
+
+	@Test
+	void mavenPomWithCustomParentPom() {
+		def customGAV = "com.foo:foo-parent:1.0.0-SNAPSHOT"
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addCustomParentPomGAV(customGAV).build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('whatever', 'web')
+		generateMavenPom(request).hasParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT")
+	}
+
+	@Test
 	void gradleBuildWithBootSnapshot() {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'

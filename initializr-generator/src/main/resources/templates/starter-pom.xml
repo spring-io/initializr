@@ -13,9 +13,9 @@
 
 	<parent>
 		<% if (useCustomParentPom) { %>
-		<groupId><% customParentPomGroup %></groupId>
-		<artifactId><% customParentPomArtifact %></artifactId>
-		<artifactId><% customParentPomVersion %></artifactId>
+		<groupId>${customParentPomGroup}</groupId>
+		<artifactId>${customParentPomArtifact}</artifactId>
+		<version>${customParentPomVersion}</version>
 		<% } else { %>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
