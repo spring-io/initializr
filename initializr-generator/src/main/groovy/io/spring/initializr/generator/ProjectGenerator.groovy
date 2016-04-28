@@ -216,8 +216,6 @@ class ProjectGenerator {
 		def dependencyIds = dependencies.collect { it.id }
 		log.info("Processing request{type=$request.type, dependencies=$dependencyIds}")
 
-
-
 		request.properties.each { model[it.key] = it.value }
 
 		model['compileDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE)
