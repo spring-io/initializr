@@ -38,7 +38,7 @@ initializr:
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
     kotlin:
-      version: 1.0.0
+      version: 1.0.1-2
   dependencies:
     - name: Core
       content:
