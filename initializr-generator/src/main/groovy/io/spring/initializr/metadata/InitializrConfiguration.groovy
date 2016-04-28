@@ -203,9 +203,8 @@ class InitializrConfiguration {
 		}
 
 		/**
-		 * validate that the GAV has 3 components
-		 * @param s
-         */
+		 * validate that the GAV has 3 components in the format expected
+		 */
 		void validateGAV(String gav) {
 			if (gav.split(':').length != 3)
 				throw new InvalidInitializrMetadataException("The group:artifact:version of ${gav} is not a valid GAV (does not have exactly 3 components")
