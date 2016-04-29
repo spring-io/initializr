@@ -144,7 +144,6 @@ class ProjectAssert {
 		isGenericProject(expectedPackageName, expectedApplicationName, codeLocation, extension)
 				.hasStaticAndTemplatesResources(true)
 				.hasFile("src/main/$codeLocation/$packageName/ServletInitializer.$extension")
-		hasApplicationNameProperty(expectedApplicationName)
 	}
 
 	ProjectAssert hasApplicationNameProperty(String expectedApplicationName) {
