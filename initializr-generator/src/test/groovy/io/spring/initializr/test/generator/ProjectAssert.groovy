@@ -146,8 +146,8 @@ class ProjectAssert {
 				.hasFile("src/main/$codeLocation/$packageName/ServletInitializer.$extension")
 	}
 
-	ProjectAssert hasApplicationNameProperty(String expectedApplicationName) {
-		hasApplicationProperty('spring.application.name', expectedApplicationName)
+	ProjectAssert hasApplicationNameProperty(String name) {
+		hasApplicationProperty('spring.application.name', name)
 	}
 
 	ProjectAssert hasApplicationProperty(String propertyName, String propertyValue) {
