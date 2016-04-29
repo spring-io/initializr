@@ -145,7 +145,8 @@ class ProjectGenerator {
 
 		def resources = new File(dir, 'src/main/resources')
 		resources.mkdirs()
-		new File(resources, 'application.properties').write('')
+		def appProperties = new String(doGenerateApplicationProperties(model))
+		new File(resources, 'application.properties').write(appProperties)
 
 		if (request.hasWebFacet()) {
 			new File(dir, 'src/main/resources/templates').mkdirs()
@@ -271,6 +272,11 @@ class ProjectGenerator {
 
 	private byte[] doGenerateGradleBuild(Map model) {
 		template 'starter-build.gradle', model
+	}
+
+
+	private byte[] doGenerateApplicationProperties(Map model) {
+		template 'application.properties', model
 	}
 
 	private void writeGradleWrapper(File dir) {
