@@ -76,6 +76,30 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void mavenPomWithTarDependency() {
+		def dependency = new Dependency(id: 'custom-artifact', groupId: 'org.foo', artifactId: 'custom-artifact', type: "tar.gz")
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('test', dependency).build()
+		applyMetadata(metadata)
+
+		def request = createProjectRequest('custom-artifact')
+		generateMavenPom(request).hasDependency(dependency)
+				.hasDependenciesCount(2)
+	}
+
+	@Test
+	void gradleBuildWithTarDependency() {
+		def dependency = new Dependency(id: 'custom-artifact', groupId: 'org.foo', artifactId: 'custom-artifact', type: "tar.gz")
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('test', dependency).build()
+		applyMetadata(metadata)
+
+		def request = createProjectRequest('custom-artifact')
+		generateGradleBuild(request)
+				.contains("compile('org.foo:custom-artifact@tar.gz')")
+	}
+
+	@Test
 	void mavenPomWithWebFacet() {
 		def dependency = new Dependency(id: 'thymeleaf', groupId: 'org.foo', artifactId: 'thymeleaf')
 		dependency.facets << 'web'
