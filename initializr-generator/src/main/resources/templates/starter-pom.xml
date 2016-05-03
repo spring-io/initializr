@@ -28,7 +28,8 @@
 		<dependency>
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
+			<version>${it.version}</version><% } %><% if (it.type != null) { %>
+			<type>${it.type}</type><% } %>
 		</dependency><% } %><% if (language=='groovy') { %>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
@@ -44,13 +45,15 @@
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
 			<version>${it.version}</version><% } %>
-			<scope>runtime</scope>
+			<scope>runtime</scope><% if (it.type != null) { %>
+			<type>${it.type}</type><% } %>
 		</dependency><% } %><% providedDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
 			<version>${it.version}</version><% } %>
-			<scope>provided</scope>
+			<scope>provided</scope><% if (it.type != null) { %>
+			<type>${it.type}</type><% } %>
 		</dependency><% } %>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -61,7 +64,8 @@
 			<groupId>${it.groupId}</groupId>
 			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
 			<version>${it.version}</version><% } %>
-			<scope>test</scope>
+			<scope>test</scope><% if (it.type != null) { %>
+			<type>${it.type}</type><% } %>
 		</dependency><% } %>
 	</dependencies>
 	<% if (boms) { %>
