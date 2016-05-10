@@ -4,7 +4,7 @@ info:
     version: 0.4.0
   # remember to update static/install.sh as well:
   spring-boot:
-    version: 1.3.4.RELEASE
+    version: 1.3.5.RELEASE
 
 server:
   compression:
@@ -25,10 +25,10 @@ initializr:
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
             version: Angel.SR6
-          - versionRange: "[1.3.0.M2,1.3.4.RELEASE]"
+          - versionRange: "[1.3.0.M2,1.3.5.RELEASE]"
             version: Brixton.RC2
             repositories: spring-snapshots,spring-milestones
-          - versionRange: 1.3.5.BUILD-SNAPSHOT
+          - versionRange: 1.3.6.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
