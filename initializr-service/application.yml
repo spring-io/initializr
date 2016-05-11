@@ -26,8 +26,7 @@ initializr:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
             version: Angel.SR6
           - versionRange: "[1.3.0.M2,1.3.5.RELEASE]"
-            version: Brixton.RC2
-            repositories: spring-snapshots,spring-milestones
+            version: Brixton.RELEASE
           - versionRange: 1.3.6.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
