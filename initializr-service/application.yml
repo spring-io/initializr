@@ -105,9 +105,18 @@ initializr:
         - name: Websocket
           id: websocket
           description: Websocket development with SockJS and STOMP
-        - name: WS
-          id: ws
+        - name: Web Services
+          id: web-services
           description: Contract-first SOAP service development with Spring Web Services
+          alias:
+            - ws
+          mappings:
+            - versionRange: 1.4.0.M3
+              artifactId: spring-boot-starter-web-services
+            - versionRange: "[1.1.0.RELEASE,1.4.0.M3)"
+              artifactId: spring-boot-starter-ws
+          keywords:
+            - ws
         - name: Jersey (JAX-RS)
           id: jersey
           description: the Jersey RESTful Web Services framework
