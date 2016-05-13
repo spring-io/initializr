@@ -108,7 +108,7 @@ initializr:
         - name: Web Services
           id: web-services
           description: Contract-first SOAP service development with Spring Web Services
-          alias:
+          aliases:
             - ws
           mappings:
             - versionRange: 1.4.0.M3
