@@ -273,7 +273,7 @@ initializr:
         - name: Neo4j
           id: data-neo4j
           description: Neo4j NoSQL graph database, including spring-data-neo4j
-          versionRange: 1.4.0.BUILD-SNAPSHOT
+          versionRange: 1.4.0.M2
         - name: Redis
           id: data-redis
           description: REDIS key-value data store, including spring-redis
