@@ -583,6 +583,10 @@ initializr:
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
           version: 2.17.1
+        - name: JMS (ActiveMQ)
+          id: activemq
+          description: Java Message Service API via Apache ActiveMQ
+          versionRange: 1.4.0.BUILD-SNAPSHOT
         - name: JMS (Artemis)
           id: artemis
           description: Java Message Service API via Apache Artemis
@@ -590,6 +594,7 @@ initializr:
         - name: JMS (HornetQ)
           id: hornetq
           description: Java Message Service API via HornetQ
+          versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
         - name: AMQP
           id: amqp
           description: Advanced Message Queuing Protocol via spring-rabbit
