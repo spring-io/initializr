@@ -7,14 +7,14 @@ import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
 import org.junit.Test
 
-import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.core.annotation.Order
 import org.springframework.test.context.ActiveProfiles
 
 @ActiveProfiles('test-default')
-@SpringApplicationConfiguration(classes = [Config, ProjectRequestPostProcessorConfiguration])
+@Import(ProjectRequestPostProcessorConfiguration)
 class ProjectGenerationPostProcessorTests extends AbstractInitializrControllerIntegrationTests {
 
 

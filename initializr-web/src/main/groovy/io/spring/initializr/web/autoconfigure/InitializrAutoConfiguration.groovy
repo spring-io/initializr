@@ -18,7 +18,7 @@ package io.spring.initializr.web.autoconfigure
 
 import java.util.concurrent.TimeUnit
 
-import com.google.common.cache.CacheBuilder
+import com.github.benmanes.caffeine.cache.Caffeine
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectRequestPostProcessor
 import io.spring.initializr.generator.ProjectRequestResolver
@@ -35,8 +35,10 @@ import io.spring.initializr.web.ui.UiController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
+import org.springframework.cache.caffeine.CaffeineCache
 import org.springframework.cache.concurrent.ConcurrentMapCache
 import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
@@ -121,12 +123,11 @@ class InitializrAutoConfiguration {
 		cacheManager
 	}
 
-	private static ConcurrentMapCache createConcurrentMapCache(Long timeToLive, String name) {
-		def cacheBuilder = CacheBuilder.newBuilder()
+	private static Cache createConcurrentMapCache(Long timeToLive, String name) {
+		new CaffeineCache(name, Caffeine
+				.newBuilder()
 				.expireAfterWrite(timeToLive, TimeUnit.SECONDS)
-
-		def map = cacheBuilder.build().asMap()
-		new ConcurrentMapCache(name, map, false)
+				.build())
 	}
 
 }

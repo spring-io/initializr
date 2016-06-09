@@ -32,10 +32,9 @@ import org.junit.runner.RunWith
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.context.embedded.LocalServerPort
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
@@ -43,20 +42,18 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 
 import static org.junit.Assert.assertTrue
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 
 /**
  * @author Stephane Nicoll
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Config.class)
-@WebAppConfiguration
-@IntegrationTest('server.port=0')
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
 abstract class AbstractInitializrControllerIntegrationTests {
 
 	static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.mediaType
@@ -65,7 +62,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder()
 
-	@Value('${local.server.port}')
+	@LocalServerPort
 	protected int port
 
 	final RestTemplate restTemplate = new RestTemplate()

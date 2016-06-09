@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
 import io.spring.initializr.generator.ProjectRequestEvent
 
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.event.EventListener
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
@@ -51,8 +52,8 @@ class ProjectGenerationStatPublisher {
 		this.documentFactory = documentFactory
 		this.statsProperties = statsProperties
 		this.objectMapper = createObjectMapper()
-		this.restTemplate = new BasicAuthRestTemplate(
-				statsProperties.elastic.username, statsProperties.elastic.password)
+		this.restTemplate = new RestTemplateBuilder().basicAuthorization(
+				statsProperties.elastic.username, statsProperties.elastic.password).build()
 		this.retryTemplate = retryTemplate
 	}
 

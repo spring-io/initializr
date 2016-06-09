@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Test
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
@@ -44,7 +44,7 @@ import static org.junit.Assert.fail
  *
  * @author Stephane Nicoll
  */
-@SpringApplicationConfiguration(StatsMockController.class)
+@Import(StatsMockController)
 @ActiveProfiles(['test-default', 'test-custom-stats'])
 class MainControllerStatsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
