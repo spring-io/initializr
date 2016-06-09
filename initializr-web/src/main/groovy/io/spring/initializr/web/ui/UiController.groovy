@@ -44,7 +44,7 @@ class UiController {
 	@Autowired
 	protected InitializrMetadataProvider metadataProvider
 
-	@RequestMapping(value = "/ui/dependencies", produces = ["application/json"])
+	@RequestMapping(value = "/ui/dependencies", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
 	ResponseEntity<String> dependencies(@RequestParam(required = false) String version) {
 		def dependencyGroups = metadataProvider.get().dependencies.content
 		def content = []
@@ -61,8 +61,7 @@ class UiController {
 			}
 		}
 		def json = writeDependencies(content)
-		ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).
-				eTag(createUniqueId(json)).body(json)
+		ResponseEntity.ok().eTag(createUniqueId(json)).body(json)
 	}
 
 	private static String writeDependencies(List<DependencyItem> items) {
