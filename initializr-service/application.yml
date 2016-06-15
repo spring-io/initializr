@@ -462,8 +462,8 @@ initializr:
         - name: Zipkin UI
           id: zipkin-ui
           description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
-          groupId: io.zipkin
-          artifactId: zipkin-ui
+          groupId: io.zipkin.java
+          artifactId: zipkin-autoconfigure-ui
           scope: runtime
           versionRange: 1.3.3.RELEASE
           starter: false
