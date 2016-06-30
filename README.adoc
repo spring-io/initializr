@@ -4,7 +4,7 @@
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
 :code: https://github.com/spring-io/initializr/blob/master
 
-Spring Initializr provides an extensible API to generate quickstrat project. It also
+Spring Initializr provides an extensible API to generate quickstart projects. It also
 provides a configurable service: you can see our default instance at
 link:https://start.spring.io[]. It provides a simple web UI to configure the project
 to generate and endpoints that you can use via plain HTTP.
