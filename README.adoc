@@ -31,6 +31,10 @@ many environments (including embedded in your own project)
 * `initializr-actuator`: optional module to provide statistics and metrics on project
 generation
 
+`initializr-service` is an additional module that represents the production instance that
+is available at link:https://start.spring.io[]. It is not enabled by default but you can
+enable the `full` profile in your IDE to easily run it locally.
+
 == Supported interfaces
 
 Spring Initializr can be used as follows:
@@ -91,7 +95,7 @@ $ curl https://start.spring.io/starter.tgz -d dependencies=web,actuator \
 -d language=groovy -d type=gradle-project -d baseDir=another-project | tar -xzvf -
 ----
 
-NOTE: The `/starter.tgz` endpoint offers the same feature as `/starter.zip` but  generates
+NOTE: The `/starter.tgz` endpoint offers the same feature as `/starter.zip` but generates
 a compressed tarball instead.
 
 You could use this infrastructure to create your own client since the project is generated
@@ -177,43 +181,7 @@ You may also want to <<run-app,run the default instance locally>>.
 [[build]]
 == Building from Source
 
-You need Java (1.6 or better) and a bash-like shell.
-
-If you are on a Mac and using http://brew.sh/[homebrew], all you need to do to install it is:
-
-[indent=0]
-----
-    $ brew tap pivotal/tap
-    $ brew install springboot
-----
-
-It will install `/usr/local/bin/spring`. You can jump right to <<run-app>>.
-
-An alternative way to install the `spring` command line interface can be installed like this:
-
-[indent=0]
-----
-    $ curl start.spring.io/install.sh | bash
-----
-
-After running that command you should see a `spring` directory:
-
-[indent=0]
-----
-    $ ./spring/bin/spring --help
-
-    usage: spring [--help] [--version]
-       <command> [<args>]
-    ...
-----
-
-You could add that `bin` directory to your `PATH` (the examples below
-assume you did that).
-
-If you don't have `curl` or `zip` you can probably get them (for
-Windows users we recommend http://cygwin.org[cygwin]), or you can
-download the http://start.spring.io/spring.zip[zip file] and unpack
-it yourself.
+You need Java (1.7 or better), Maven 3.2+ and a bash-like shell.
 
 [[building]]
 === Building
@@ -237,13 +205,13 @@ If you want to run the smoke tests using Geb, you need to enable the
 [[run-app]]
 === Running the app locally
 
-Once you have <<building, built the library>>, you can easily start the app using the `spring` command
-from the `initializr-service` directory:
+Once you have <<building, built the library>>, you can easily start the app as any other
+Spring Boot app from the `initializr-service` directory:
 
 [indent=0]
 ----
 	$ cd initializr-service
-    $ spring run app.groovy
+    $ mvn spring-boot:run
 ----
 
 ## Deploying to Cloud Foundry
@@ -258,28 +226,22 @@ If you are on a Mac and using http://brew.sh/[homebrew], install the Cloud Found
 Alternatively, download a suitable binary for your platform from 
 https://console.run.pivotal.io/tools[Pivotal Web Services].
 
-An example Cloud Foundry `manifest.yml` file is provided. You should ensure that
-the application name and URL (name and host values) are suitable for your environment
-before running `cf push`.
+You should ensure that the application name and URL (name and host values) are suitable for
+your environment before running `cf push`.
 
-You can jar up the app and make it executable in any environment.
+Make sure first that the jar has been created:
 
 [indent=0]
 ----
-    $ spring jar start.jar app.groovy
+    $ mvn package
 ----
 
 Once the jar has been created, you can push the application:
 
 [indent=0]
 ----
-    $ cf push start -p start.jar -n start-<space>
+    $ cf push your-initializr -p target/initializr-service-1.0.0.BUILD-SNAPSHOT
 ----
-
-Where `<space>` is the name of the space. As a failsafe, and a
-reminder to be explicit, the deployment will fail in production
-without the `-n`. It is needed to select the route because there is a
-manifest that defaults it to `start-development`.
 
 == License
 Spring Initializr is Open Source software released under the

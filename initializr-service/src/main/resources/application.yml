@@ -6,6 +6,11 @@ info:
   spring-boot:
     version: 1.3.6.RELEASE
 
+logging:
+  level:
+    org.springframework.core.env: warn
+    org.springframework.jndi: warn
+
 server:
   compression:
     enabled: true

@@ -194,4 +194,13 @@
 		</pluginManagement>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>full</id>
+			<modules>
+				<module>initializr-service</module>
+			</modules>
+		</profile>
+	</profiles>
+
 </project>

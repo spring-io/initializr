@@ -13,12 +13,4 @@ build
 target
 .springBeans
 tmp*
-initializer-service/spring
 grapes
-spring.zip
-repository/
-*.jar
-*.jar.orig
-*.jar.original
-.idea
-*.iml

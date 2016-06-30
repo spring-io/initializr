@@ -1,7 +1,0 @@
----
-applications:
-- name: start
-  memory: 1024M
-  host: start-development
-  domain: cfapps.io
-  path: .
