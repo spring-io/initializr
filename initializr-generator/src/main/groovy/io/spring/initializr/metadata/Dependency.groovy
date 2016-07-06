@@ -62,6 +62,12 @@ class Dependency extends MetadataElement {
 	String version
 
 	/**
+	 * The type, can be {@code null} to indicate that the default type
+	 * should be used (i.e. {@code jar}).
+	 */
+	String type
+
+	/**
 	 * Dependency mapping if an attribute of the dependency differs according to the
 	 * Spring Boot version. If no mapping matches, default attributes are used.
 	 */
@@ -76,8 +82,6 @@ class Dependency extends MetadataElement {
 	String bom
 
 	String repository
-
-	String type
 
 	int weight
 
