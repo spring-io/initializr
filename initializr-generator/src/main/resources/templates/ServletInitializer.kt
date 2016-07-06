@@ -1,7 +1,8 @@
 package ${packageName}
 
-import org.springframework.boot.builder.SpringApplicationBuilder
-import org.springframework.boot.context.web.SpringBootServletInitializer
+import org.springframework.boot.builder.SpringApplicationBuilder<% if (newTestInfrastructure) { %>
+import org.springframework.boot.web.support.SpringBootServletInitializer<% } else { %>
+import org.springframework.boot.context.web.SpringBootServletInitializer<% } %>
 
 class ServletInitializer : SpringBootServletInitializer() {
 

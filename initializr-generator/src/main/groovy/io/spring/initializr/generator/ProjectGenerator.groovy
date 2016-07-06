@@ -46,6 +46,8 @@ class ProjectGenerator {
 
 	private static final VERSION_1_4_0_M2 = Version.parse('1.4.0.M2')
 
+	private static final VERSION_1_4_0_M3 = Version.parse('1.4.0.M3')
+
 	@Autowired
 	ApplicationEventPublisher eventPublisher
 
@@ -227,6 +229,9 @@ class ProjectGenerator {
 		// New testing stuff
 		model['newTestInfrastructure'] = isNewTestInfrastructureAvailable(request)
 
+		// New Servlet Initializer location
+		model['newServletInitializer']  = isNewServletInitializerAvailable(request)
+
 		model
 	}
 
@@ -261,6 +266,11 @@ class ProjectGenerator {
 
 	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
 		VERSION_1_4_0_M2
+				.compareTo(Version.safeParse(request.bootVersion)) <= 0
+	}
+
+	private static boolean isNewServletInitializerAvailable(ProjectRequest request) {
+		VERSION_1_4_0_M3
 				.compareTo(Version.safeParse(request.bootVersion)) <= 0
 	}
 

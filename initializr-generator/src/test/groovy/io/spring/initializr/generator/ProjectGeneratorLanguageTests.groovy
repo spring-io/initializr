@@ -110,25 +110,36 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void test14TestClass() {
+	public void springBoot14ServletInitializer() {
+		def request = createProjectRequest()
+		request.language = language
+		request.packaging = 'war'
+		request.bootVersion = '1.4.0.M3'
+		def project = generateProject(request)
+		project.sourceCodeAssert("src/main/$language/com/example/ServletInitializer.$extension")
+				.equalsTo(new ClassPathResource("project/$language/spring-boot-1.4/ServletInitializer.$expectedExtension"))
+	}
+
+	@Test
+	public void springBoot14TestClass() {
 		def request = createProjectRequest()
 		request.language = language
 		request.bootVersion = '1.4.0.M2'
 
 		def project = generateProject(request)
 		project.sourceCodeAssert("src/test/$language/com/example/DemoApplicationTests.$extension")
-				.equalsTo(new ClassPathResource("project/$language/test-1.4/DemoApplicationTests.$expectedExtension"))
+				.equalsTo(new ClassPathResource("project/$language/spring-boot-1.4/DemoApplicationTests.$expectedExtension"))
 	}
 
 	@Test
-	public void test14TestClassWeb() {
+	public void springBoot14TestClassWeb() {
 		def request = createProjectRequest('web')
 		request.language = language
 		request.bootVersion = '1.4.0.M2'
 
 		def project = generateProject(request)
 		project.sourceCodeAssert("src/test/$language/com/example/DemoApplicationTests.$extension")
-				.equalsTo(new ClassPathResource("project/$language/test-1.4/DemoApplicationTests.$expectedExtension"))
+				.equalsTo(new ClassPathResource("project/$language/spring-boot-1.4/DemoApplicationTests.$expectedExtension"))
 	}
 
 }
