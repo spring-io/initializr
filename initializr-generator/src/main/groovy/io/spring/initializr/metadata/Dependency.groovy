@@ -83,6 +83,8 @@ class Dependency extends MetadataElement {
 
 	String repository
 
+	String type
+
 	int weight
 
 	/**
