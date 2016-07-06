@@ -146,6 +146,9 @@ class PomAssert {
 		if (expected.scope) {
 			assertEquals "Wrong scope for $dependency", expected.scope, dependency.scope
 		}
+		if (expected.type) {
+			assertEquals "Wrong type for $dependency", expected.type, dependency.type
+		}
 		this
 	}
 
@@ -237,6 +240,10 @@ class PomAssert {
 				def scope = element.getElementsByTagName('scope')
 				if (scope.length > 0) {
 					dependency.scope = scope.item(0).textContent
+				}
+				def type = element.getElementsByTagName('type')
+				if (type.length > 0) {
+					dependency.type = type.item(0).textContent
 				}
 				def id = dependency.generateId()
 				assertFalse("Duplicate dependency with id $id", dependencies.containsKey(id))
