@@ -88,8 +88,6 @@ abstract class AbstractInitializrControllerIntegrationTests {
 		def actual = response.headers.getContentType()
 		assertTrue "Non compatible media-type, expected $expected, got $actual",
 				actual.isCompatibleWith(expected)
-		assertEquals 'All text content should be UTF-8 encoded',
-				'UTF-8', actual.getParameter('charset')
 	}
 
 
