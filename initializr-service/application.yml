@@ -606,7 +606,7 @@ initializr:
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
-          version: 2.17.1
+          version: 2.17.2
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
