@@ -38,14 +38,14 @@ class SourceCodeAssert {
 
 	SourceCodeAssert(String name, String content) {
 		this.name = name
-		this.content = content
+		this.content = content.normalize()
 	}
 
 	SourceCodeAssert equalsTo(Resource expected) {
 		def stream = expected.inputStream
 		try {
 			String expectedContent = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
-			assertEquals "Unexpected content for $name", expectedContent, content
+			assertEquals "Unexpected content for $name", expectedContent.normalize(), content
 		} finally {
 			stream.close()
 		}
