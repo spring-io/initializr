@@ -87,8 +87,9 @@ class UiController {
 		if (d.weight) {
 			result.weight = d.weight
 		}
-		if (d.keywords) {
-			result.keywords = d.keywords.join(',')
+		if (d.keywords || d.aliases) {
+			def all = d.keywords + d.aliases
+			result.keywords = all.join(',')
 		}
 		result
 	}

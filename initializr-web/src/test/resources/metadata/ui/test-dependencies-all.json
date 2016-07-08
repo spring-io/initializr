@@ -14,7 +14,8 @@
     {
       "id": "data-jpa",
       "name": "Data JPA",
-      "group": "Core"
+      "group": "Core",
+      "keywords": "jpa"
     },
     {
       "id": "org.acme:foo",
