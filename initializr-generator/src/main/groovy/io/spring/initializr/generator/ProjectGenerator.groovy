@@ -18,7 +18,6 @@ package io.spring.initializr.generator
 
 import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrException
-import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.util.Assert
 
+import static io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom
 import static io.spring.initializr.util.GroovyTemplate.template
 
 /**
@@ -201,16 +201,11 @@ class ProjectGenerator {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
 		def metadata = metadataProvider.get()
-
-		def useCustomParent = metadata.configuration.env.customParentPomGAV
-		model['useCustomParentPom'] = useCustomParent != null
-		if (useCustomParent) {
-			def gavParts = useCustomParent.split(':')
-			model['customParentPomGroup'] = gavParts[0]
-			model['customParentPomArtifact'] = gavParts[1]
-			model['customParentPomVersion'] = gavParts[2]
-			request.boms.put("spring-boot", new BillOfMaterials(groupId: "org.springframework.boot", artifactId: "spring-boot-dependencies", version: request.bootVersion))
+		ParentPom parentPom = metadata.configuration.env.maven.resolveParentPom(request.bootVersion)
+		if (parentPom.includeSpringBootBom && !request.boms['spring-boot']) {
+			request.boms['spring-boot'] = metadata.createSpringBootBom('${spring-boot.version}')
 		}
+
 		request.resolve(metadata)
 
 		// request resolved so we can log what has been requested
@@ -219,6 +214,11 @@ class ProjectGenerator {
 		log.info("Processing request{type=$request.type, dependencies=$dependencyIds}")
 
 		request.properties.each { model[it.key] = it.value }
+
+		model['mavenParentGroupId'] = parentPom.groupId
+		model['mavenParentArtifactId'] = parentPom.artifactId
+		model['mavenParentVersion'] = parentPom.version
+		model['includeSpringBootBom'] = parentPom.includeSpringBootBom
 
 		model['compileDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE)
 		model['runtimeDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_RUNTIME)

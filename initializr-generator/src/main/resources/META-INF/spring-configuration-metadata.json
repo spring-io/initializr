@@ -30,6 +30,18 @@
       "sourceMethod": "getKotlin()"
     },
     {
+      "name": "initializr.env.maven",
+      "type": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
+      "sourceMethod": "getMaven()"
+    },
+    {
+      "name": "initializr.env.maven.parent",
+      "type": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven$ParentPom",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven",
+      "sourceMethod": "getParent()"
+    },
+    {
       "name": "initializr.group-id",
       "type": "io.spring.initializr.metadata.InitializrProperties$SimpleElement",
       "sourceType": "io.spring.initializr.metadata.InitializrProperties",
@@ -168,6 +180,31 @@
       "type": "java.lang.String",
       "description": "Kotlin version to use.",
       "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Kotlin"
+    },
+    {
+      "name": "initializr.env.maven.parent.artifact-id",
+      "type": "java.lang.String",
+      "description": "Parent pom artifactId.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven$ParentPom"
+    },
+    {
+      "name": "initializr.env.maven.parent.include-spring-boot-bom",
+      "type": "java.lang.Boolean",
+      "description": "Add the \"spring-boot-dependencies\" BOM to the project.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven$ParentPom",
+      "defaultValue": false
+    },
+    {
+      "name": "initializr.env.maven.parent.group-id",
+      "type": "java.lang.String",
+      "description": "Parent pom groupId.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven$ParentPom"
+    },
+    {
+      "name": "initializr.env.maven.parent.version",
+      "type": "java.lang.String",
+      "description": "Parent pom version.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Maven$ParentPom"
     },
     {
       "name": "initializr.env.repositories",

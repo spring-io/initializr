@@ -80,8 +80,7 @@ class InitializrConfiguration {
 		String candidate = packageName.trim().split('\\W+').join('.')
 		if (hasInvalidChar(candidate.replace('.', '')) || env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName
-		}
-		else {
+		} else {
 			candidate
 		}
 	}
@@ -121,14 +120,6 @@ class InitializrConfiguration {
 		 * The meta-data url of the Spring Boot project.
 		 */
 		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
-
-		/**
-		 * The group / artifact / version of a custom parent pom to use for generated projects.
-		 * This is only enabled if a value is expliclty provided.
-		 *
-		 * The value must be specified in "groupid:artifactId:versionNumber" format
-		 */
-		String customParentPomGAV
 
 		/**
 		 * Tracking code for Google Analytics. Only enabled if a value is explicitly provided.
@@ -179,6 +170,11 @@ class InitializrConfiguration {
 		 */
 		final Kotlin kotlin = new Kotlin()
 
+		/**
+		 * Maven-specific settings.
+		 */
+		final Maven maven = new Maven()
+
 		Env() {
 			repositories['spring-snapshots'] = new Repository(name: 'Spring Snapshots',
 					url: new URL('https://repo.spring.io/snapshot'), snapshotsEnabled: true)
@@ -194,31 +190,21 @@ class InitializrConfiguration {
 		}
 
 		void validate() {
-			if (customParentPomGAV) {
-				validateGAV(customParentPomGAV);
-			}
+			maven.parent.validate()
 			boms.each {
 				it.value.validate()
 			}
-		}
-
-		/**
-		 * validate that the GAV has 3 components in the format expected
-		 */
-		void validateGAV(String gav) {
-			if (gav.split(':').length != 3)
-				throw new InvalidInitializrMetadataException("The group:artifact:version of ${gav} is not a valid GAV (does not have exactly 3 components")
 		}
 
 		void merge(Env other) {
 			artifactRepository = other.artifactRepository
 			springBootMetadataUrl = other.springBootMetadataUrl
 			googleAnalyticsTrackingCode = other.googleAnalyticsTrackingCode
-			customParentPomGAV = other.customParentPomGAV
 			fallbackApplicationName = other.fallbackApplicationName
 			invalidApplicationNames = other.invalidApplicationNames
 			forceSsl = other.forceSsl
 			kotlin.version = other.kotlin.version
+			maven.merge(other.maven)
 			other.boms.each { id, bom ->
 				if (!boms[id]) {
 					boms[id] = bom
@@ -237,6 +223,65 @@ class InitializrConfiguration {
 			 * Kotlin version to use.
 			 */
 			String version
+		}
+
+		static class Maven {
+
+			/**
+			 * Custom parent pom to use for generated projects.
+			 */
+			final ParentPom parent = new ParentPom()
+
+			private void merge(Maven other) {
+				parent.groupId = other.parent.groupId
+				parent.artifactId = other.parent.artifactId
+				parent.version = other.parent.version
+				parent.includeSpringBootBom = other.parent.includeSpringBootBom
+			}
+
+			/**
+			 * Resolve the parent pom to use. If no custom parent pom is set,
+			 * the standard spring boot parent pom with the specified {@code bootVersion}
+			 * is used.
+			 */
+			ParentPom resolveParentPom(String bootVersion) {
+				return parent.groupId ? parent :
+						new ParentPom(groupId: "org.springframework.boot",
+								artifactId: "spring-boot-starter-parent", version: bootVersion)
+			}
+
+			static class ParentPom {
+
+				/**
+				 * Parent pom groupId.
+				 */
+				String groupId
+
+				/**
+				 * Parent pom artifactId.
+				 */
+				String artifactId
+
+				/**
+				 * Parent pom version.
+				 */
+				String version
+
+				/**
+				 * Add the "spring-boot-dependencies" BOM to the project.
+				 */
+				boolean includeSpringBootBom
+
+				void validate() {
+					if (!((!groupId && !artifactId && !version) ||
+							(groupId && artifactId && version))) {
+						throw new InvalidInitializrMetadataException("Custom maven pom " +
+								"requires groupId, artifactId and version")
+					}
+				}
+
+			}
+
 		}
 
 	}

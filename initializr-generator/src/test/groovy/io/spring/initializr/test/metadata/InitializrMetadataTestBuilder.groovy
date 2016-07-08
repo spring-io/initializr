@@ -152,9 +152,14 @@ class InitializrMetadataTestBuilder {
 		this
 	}
 
-	InitializrMetadataTestBuilder addCustomParentPomGAV(String customGAV) {
+	InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId,
+												 String version, boolean includeSpringBootBom) {
 		builder.withCustomizer {
-			it.configuration.env.customParentPomGAV = customGAV
+			def parent = it.configuration.env.maven.parent
+			parent.groupId = groupId
+			parent.artifactId = artifactId
+			parent.version = version
+			parent.includeSpringBootBom = includeSpringBootBom
 		}
 		this
 	}

@@ -111,7 +111,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			assertSimpleProject()
 					.isMavenProject()
 					.pomAssert()
-					.hasBootVersion('1.0.2.RELEASE')
+					.hasSpringBootParent('1.0.2.RELEASE')
 					.hasDependenciesCount(2)
 					.hasSpringBootStarterRootDependency()
 					.hasSpringBootStarterTest()

@@ -19,6 +19,7 @@ package io.spring.initializr.test.generator
 import io.spring.initializr.generator.ProjectRequest
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom
 import io.spring.initializr.metadata.Repository
 import org.custommonkey.xmlunit.SimpleNamespaceContext
 import org.custommonkey.xmlunit.XMLUnit
@@ -30,6 +31,7 @@ import org.w3c.dom.Element
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertTrue
 
 /**
  * XPath assertions that are specific to a standard Maven POM.
@@ -41,6 +43,8 @@ class PomAssert {
 
 	final XpathEngine eng
 	final Document doc
+	final ParentPom parentPom
+	final Map<String, String> properties = [:]
 	final Map<String, Dependency> dependencies = [:]
 	final Map<String, BillOfMaterials> boms = [:]
 	final Map<String, Repository> repositories = [:]
@@ -52,6 +56,8 @@ class PomAssert {
 		def namespaceContext = new SimpleNamespaceContext(context)
 		eng.namespaceContext = namespaceContext
 		doc = XMLUnit.buildControlDocument(content)
+		this.parentPom = parseParent()
+		parseProperties()
 		parseDependencies()
 		parseBoms()
 		parseRepositories()
@@ -63,7 +69,7 @@ class PomAssert {
 	PomAssert validateProjectRequest(ProjectRequest request) {
 		hasGroupId(request.groupId).hasArtifactId(request.artifactId).hasVersion(request.version).
 				hasPackaging(request.packaging).hasName(request.name).hasDescription(request.description).
-				hasBootVersion(request.bootVersion).hasJavaVersion(request.javaVersion)
+				hasJavaVersion(request.javaVersion)
 	}
 
 	PomAssert hasGroupId(String groupId) {
@@ -96,18 +102,14 @@ class PomAssert {
 		this
 	}
 
-	PomAssert hasBootVersion(String bootVersion) {
-		// when using a custom parent, the bootVersion comes from a bom entry and not the parent pom version
-		if (!eng.evaluate(createRootNodeXPath('parent/pom:artifactId'), doc).equals("spring-boot-starter-parent")) {
-			hasBom("org.springframework.boot", "spring-boot-dependencies", bootVersion)
-		} else {
-			assertEquals bootVersion, eng.evaluate(createRootNodeXPath('parent/pom:version'), doc)
-		}
+	PomAssert hasJavaVersion(String javaVersion) {
+		assertEquals javaVersion, eng.evaluate(createPropertyNodeXpath('java.version'), doc)
 		this
 	}
 
-	PomAssert hasJavaVersion(String javaVersion) {
-		assertEquals javaVersion, eng.evaluate(createPropertyNodeXpath('java.version'), doc)
+	PomAssert hasProperty(String name, String value) {
+		assertTrue "No property $name found", properties.containsKey(name)
+		assertEquals "Wrong value for property $name", value, properties[name]
 		this
 	}
 
@@ -142,10 +144,14 @@ class PomAssert {
 	}
 
 	PomAssert hasParent(String groupId, String artifactId, String version) {
-		assertEquals version, eng.evaluate(createRootNodeXPath('parent/pom:version'), doc)
-		assertEquals groupId, eng.evaluate(createRootNodeXPath('parent/pom:groupId'), doc)
-		assertEquals artifactId, eng.evaluate(createRootNodeXPath('parent/pom:artifactId'), doc)
+		assertEquals groupId, this.parentPom.groupId
+		assertEquals artifactId, this.parentPom.artifactId
+		assertEquals version, this.parentPom.version
 		this
+	}
+
+	PomAssert hasSpringBootParent(String version) {
+		hasParent('org.springframework.boot', 'spring-boot-starter-parent', version)
 	}
 
 	PomAssert hasDependency(Dependency expected) {
@@ -228,6 +234,24 @@ class PomAssert {
 
 	static String createRootNodeXPath(String node) {
 		"/pom:project/pom:$node"
+	}
+
+	private ParentPom parseParent() {
+		new ParentPom(
+				groupId: eng.evaluate(createRootNodeXPath('parent/pom:groupId'), doc),
+				artifactId: eng.evaluate(createRootNodeXPath('parent/pom:artifactId'), doc),
+				version: eng.evaluate(createRootNodeXPath('parent/pom:version'), doc))
+	}
+
+	private def parseProperties() {
+		def nodes = eng.getMatchingNodes(createRootNodeXPath('properties/*'), doc)
+		for (int i = 0; i < nodes.length; i++) {
+			def item = nodes.item(i)
+			if (item instanceof Element) {
+				def element = (Element) item
+				properties[element.tagName] = element.textContent
+			}
+		}
 	}
 
 	private def parseDependencies() {
