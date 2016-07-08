@@ -133,6 +133,12 @@
       "defaultValue": true
     },
     {
+      "name": "initializr.env.custom-parent-pom-gav",
+      "type": "java.lang.String",
+      "description": "The group:artifactId:version of a custom parent pom to use when generating a project",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env"
+    },
+    {
       "name": "initializr.env.google-analytics-tracking-code",
       "type": "java.lang.String",
       "description": "Tracking code for Google Analytics.",

@@ -152,6 +152,13 @@ class InitializrMetadataTestBuilder {
 		this
 	}
 
+	InitializrMetadataTestBuilder addCustomParentPomGAV(String customGAV) {
+		builder.withCustomizer {
+			it.configuration.env.customParentPomGAV = customGAV
+		}
+		this
+	}
+
 	InitializrMetadataTestBuilder addRepository(String id, String name, String url, boolean snapshotsEnabled) {
 		builder.withCustomizer {
 			Repository repo = new Repository(

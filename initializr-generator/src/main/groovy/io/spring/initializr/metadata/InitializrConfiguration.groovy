@@ -123,6 +123,14 @@ class InitializrConfiguration {
 		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
 
 		/**
+		 * The group / artifact / version of a custom parent pom to use for generated projects.
+		 * This is only enabled if a value is expliclty provided.
+		 *
+		 * The value must be specified in "groupid:artifactId:versionNumber" format
+		 */
+		String customParentPomGAV
+
+		/**
 		 * Tracking code for Google Analytics. Only enabled if a value is explicitly provided.
 		 */
 		String googleAnalyticsTrackingCode
@@ -186,15 +194,27 @@ class InitializrConfiguration {
 		}
 
 		void validate() {
+			if (customParentPomGAV) {
+				validateGAV(customParentPomGAV);
+			}
 			boms.each {
 				it.value.validate()
 			}
+		}
+
+		/**
+		 * validate that the GAV has 3 components in the format expected
+		 */
+		void validateGAV(String gav) {
+			if (gav.split(':').length != 3)
+				throw new InvalidInitializrMetadataException("The group:artifact:version of ${gav} is not a valid GAV (does not have exactly 3 components")
 		}
 
 		void merge(Env other) {
 			artifactRepository = other.artifactRepository
 			springBootMetadataUrl = other.springBootMetadataUrl
 			googleAnalyticsTrackingCode = other.googleAnalyticsTrackingCode
+			customParentPomGAV = other.customParentPomGAV
 			fallbackApplicationName = other.fallbackApplicationName
 			invalidApplicationNames = other.invalidApplicationNames
 			forceSsl = other.forceSsl
