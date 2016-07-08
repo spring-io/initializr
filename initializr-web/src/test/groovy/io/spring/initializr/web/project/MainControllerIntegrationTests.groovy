@@ -16,10 +16,10 @@
 
 package io.spring.initializr.web.project
 
+import groovy.json.JsonSlurper
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
 import io.spring.initializr.web.mapper.InitializrMetadataVersion
-import io.spring.initializr.web.project.MainController
 import org.json.JSONObject
 import org.junit.Ignore
 import org.junit.Test
@@ -41,6 +41,7 @@ import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertThat
 import static org.junit.Assert.assertTrue
+import static org.junit.Assert.fail
 
 /**
  * @author Stephane Nicoll
@@ -326,15 +327,24 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void missingDependencyProperException() {
 		try {
 			downloadArchive('/starter.zip?style=foo:bar')
+			fail("Should have failed")
 		} catch (HttpClientErrorException ex) {
 			assertEquals HttpStatus.BAD_REQUEST, ex.getStatusCode()
+			assertStandardErrorBody(ex.getResponseBodyAsString(),
+					"Unknown dependency 'foo:bar' check project metadata")
 		}
-
 	}
 
 	@Test
-	void downloadWithUnknownSpringBootStarter() { // Simple id are accepted as spring-boot-starter
-		downloadZip('/starter.zip?style=foo').pomAssert().hasSpringBootStarterDependency('foo')
+	void invalidDependencyProperException() {
+		try {
+			downloadArchive('/starter.zip?style=foo')
+			fail("Should have failed")
+		} catch (HttpClientErrorException ex) {
+			assertEquals HttpStatus.BAD_REQUEST, ex.getStatusCode()
+			assertStandardErrorBody(ex.getResponseBodyAsString(),
+					"Unknown dependency 'foo' check project metadata")
+		}
 	}
 
 	@Test
@@ -412,5 +422,10 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 		return new JSONObject(json)
 	}
 
+	private static void assertStandardErrorBody(String body, String message) {
+		assertNotNull "error body must be available", body
+		def model = new JsonSlurper().parseText(body)
+		assertEquals message, model.message
+	}
 
 }

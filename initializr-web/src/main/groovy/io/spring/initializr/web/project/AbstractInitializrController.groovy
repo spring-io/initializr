@@ -17,6 +17,7 @@
 package io.spring.initializr.web.project
 
 import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletResponse
 
 import io.spring.initializr.generator.InvalidProjectRequestException
 import io.spring.initializr.metadata.InitializrMetadataProvider
@@ -24,7 +25,6 @@ import io.spring.initializr.metadata.InitializrMetadataProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 import static io.spring.initializr.util.GroovyTemplate.template
@@ -47,10 +47,9 @@ abstract class AbstractInitializrController {
 		forceSsl = metadataProvider.get().configuration.env.forceSsl
 	}
 
-	@ExceptionHandler(InvalidProjectRequestException)
-	@ResponseStatus(value= HttpStatus.BAD_REQUEST)
-	public void invalidProjectVersion() {
-		// Nothing to do
+	@ExceptionHandler
+	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex) {
+		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
 	/**

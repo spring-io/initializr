@@ -551,6 +551,18 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void invalidDependency() {
+		def request = createProjectRequest('foo-bar')
+		try {
+			generateMavenPom(request)
+			fail("Should have failed to generate project")
+		} catch (InvalidProjectRequestException ex) {
+			assertThat ex.message, containsString('foo-bar')
+			verifyProjectFailedEventFor(request, ex)
+		}
+	}
+
+	@Test
 	void invalidType() {
 		def request = createProjectRequest('web')
 		request.type = 'foo-bar'

@@ -78,12 +78,7 @@ class ProjectRequest extends BasicProjectRequest {
 		resolvedDependencies = depIds.collect {
 			def dependency = metadata.dependencies.get(it)
 			if (dependency == null) {
-				if (it.contains(':')) {
-					throw new InvalidProjectRequestException("Unknown dependency '$it' check project metadata")
-				}
-				log.warn("No known dependency for style '$it' assuming spring-boot-starter")
-				dependency = new Dependency()
-				dependency.asSpringBootStarter(it)
+				throw new InvalidProjectRequestException("Unknown dependency '$it' check project metadata")
 			}
 			dependency.resolve(requestedVersion)
 		}

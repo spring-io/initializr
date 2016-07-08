@@ -100,15 +100,17 @@ class ProjectRequestTests {
 	}
 
 	@Test
-	void resolveUnknownSimpleIdAsSpringBootStarter() {
+	void resolveUnknownSimpleId() {
 		def request = new ProjectRequest()
 		def metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup('code', 'org.foo:bar').build()
 
 		request.style << 'org.foo:bar' << 'foo-bar'
+
+		thrown.expect(InvalidProjectRequestException)
+		thrown.expectMessage('foo-bar')
 		request.resolve(metadata)
-		assertDependency(request.resolvedDependencies[0], 'org.foo', 'bar', null)
-		assertBootStarter(request.resolvedDependencies[1], 'foo-bar')
+		assertEquals(1, request.resolvedDependencies.size())
 	}
 
 	@Test
