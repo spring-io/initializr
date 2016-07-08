@@ -146,4 +146,15 @@ class InitializrMetadataTests {
 		builder.build()
 	}
 
+	@Test
+	void invalidParentMissingVersion() {
+		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
+				.withDefaults()
+				.setMavenParent('org.foo', 'foo-parent', null, false)
+
+		thrown.expect(InvalidInitializrMetadataException)
+		thrown.expectMessage("Custom maven pom requires groupId, artifactId and version")
+		builder.build()
+	}
+
 }

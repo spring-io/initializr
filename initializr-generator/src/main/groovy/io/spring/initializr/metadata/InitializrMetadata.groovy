@@ -145,6 +145,14 @@ class InitializrMetadata {
 	}
 
 	/**
+	 * Create a {@link BillOfMaterials} for the spring boot BOM.
+	 */
+	BillOfMaterials createSpringBootBom(String bootVersion) {
+		new BillOfMaterials(groupId: 'org.springframework.boot', artifactId: 'spring-boot-dependencies',
+				version: bootVersion)
+	}
+
+	/**
 	 * Return the defaults for the capabilities defined on this instance.
 	 */
 	Map<String, ?> defaults() {

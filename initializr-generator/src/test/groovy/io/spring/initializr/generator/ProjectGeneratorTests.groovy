@@ -72,6 +72,7 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
 		generateMavenPom(request).hasSnapshotRepository()
+				.hasSpringBootParent('1.0.1.BUILD-SNAPSHOT')
 				.hasSpringBootStarterDependency('web')
 	}
 
@@ -310,6 +311,41 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void defaultMavenPomHasSpringBootParent() {
+		def request = createProjectRequest('web')
+		generateMavenPom(request).hasSpringBootParent(request.bootVersion)
+	}
+
+	@Test
+	void mavenPomWithCustomParentPom() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.setMavenParent('com.foo', 'foo-parent', '1.0.0-SNAPSHOT', false)
+				.build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('web')
+		generateMavenPom(request)
+				.hasParent('com.foo', 'foo-parent', '1.0.0-SNAPSHOT')
+				.hasBomsCount(0)
+	}
+
+	@Test
+	void mavenPomWithCustomParentPomAndSpringBootBom() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.setMavenParent('com.foo', 'foo-parent', '1.0.0-SNAPSHOT', true)
+				.build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.0.2.RELEASE'
+		generateMavenPom(request)
+				.hasParent('com.foo', 'foo-parent', '1.0.0-SNAPSHOT')
+				.hasProperty('spring-boot.version', '1.0.2.RELEASE')
+				.hasBom('org.springframework.boot', 'spring-boot-dependencies', '${spring-boot.version}')
+				.hasBomsCount(1)
+	}
+
+	@Test
 	void gradleBuildWithBootSnapshot() {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
@@ -436,12 +472,14 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		def request = createProjectRequest('foo')
 		request.bootVersion = '1.2.5.RELEASE'
 		generateMavenPom(request).hasDependency(foo)
+				.hasSpringBootParent('1.2.5.RELEASE')
 				.hasBom('org.acme', 'foo-bom', '1.0.0')
 
 		// Second version
 		def request2 = createProjectRequest('foo')
 		request2.bootVersion = '1.3.0.M1'
 		generateMavenPom(request2).hasDependency(foo)
+				.hasSpringBootParent('1.3.0.M1')
 				.hasBom('org.acme', 'foo-bom', '1.2.0')
 	}
 
@@ -462,6 +500,7 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		def request = createProjectRequest('foo')
 		request.bootVersion = '1.3.0.RELEASE'
 		generateMavenPom(request).hasDependency(foo)
+				.hasSpringBootParent('1.3.0.RELEASE')
 				.hasBom('org.acme', 'foo-bom', '1.2.0')
 				.hasRepository('foo-repo', 'repo', 'http://example.com/foo', true)
 				.hasRepository('bar-repo', 'repo', 'http://example.com/bar', false)

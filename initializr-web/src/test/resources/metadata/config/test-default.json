@@ -36,6 +36,14 @@
     "kotlin": {
       "version": null
     },
+    "maven": {
+      "parent": {
+        "groupId": null,
+        "artifactId": null,
+        "version": null,
+        "includeSpringBootBom": false
+      }
+    },
     "googleAnalyticsTrackingCode": null,
     "invalidApplicationNames": [
       "SpringApplication",

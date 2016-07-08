@@ -152,6 +152,18 @@ class InitializrMetadataTestBuilder {
 		this
 	}
 
+	InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId,
+												 String version, boolean includeSpringBootBom) {
+		builder.withCustomizer {
+			def parent = it.configuration.env.maven.parent
+			parent.groupId = groupId
+			parent.artifactId = artifactId
+			parent.version = version
+			parent.includeSpringBootBom = includeSpringBootBom
+		}
+		this
+	}
+
 	InitializrMetadataTestBuilder addRepository(String id, String name, String url, boolean snapshotsEnabled) {
 		builder.withCustomizer {
 			Repository repo = new Repository(
