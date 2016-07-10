@@ -608,7 +608,7 @@ initializr:
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
-          versionRange: 1.4.0.BUILD-SNAPSHOT
+          versionRange: 1.4.0.RC1
         - name: JMS (Artemis)
           id: artemis
           description: Java Message Service API via Apache Artemis
