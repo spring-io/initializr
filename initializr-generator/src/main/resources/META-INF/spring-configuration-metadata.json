@@ -24,6 +24,12 @@
       "sourceMethod": "getEnv()"
     },
     {
+      "name": "initializr.env.gradle",
+      "type": "io.spring.initializr.metadata.InitializrConfiguration$Env$Gradle",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
+      "sourceMethod": "getGradle()"
+    },
+    {
       "name": "initializr.env.kotlin",
       "type": "io.spring.initializr.metadata.InitializrConfiguration$Env$Kotlin",
       "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
@@ -174,6 +180,12 @@
       "defaultValue": [
         "org.springframework"
       ]
+    },
+    {
+      "name": "initializr.env.gradle.dependency-management-plugin-version",
+      "type": "java.lang.String",
+      "description": "Version of the \"dependency-management-plugin\" to use.",
+      "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env$Gradle"
     },
     {
       "name": "initializr.env.kotlin.version",

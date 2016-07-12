@@ -166,6 +166,11 @@ class InitializrConfiguration {
 		final Map<String, Repository> repositories = [:]
 
 		/**
+		 * Gradle-specific settings.
+		 */
+		final Gradle gradle = new Gradle()
+
+		/**
 		 * Kotlin-specific settings.
 		 */
 		final Kotlin kotlin = new Kotlin()
@@ -203,6 +208,7 @@ class InitializrConfiguration {
 			fallbackApplicationName = other.fallbackApplicationName
 			invalidApplicationNames = other.invalidApplicationNames
 			forceSsl = other.forceSsl
+			gradle.merge(other.gradle)
 			kotlin.version = other.kotlin.version
 			maven.merge(other.maven)
 			other.boms.each { id, bom ->
@@ -215,6 +221,19 @@ class InitializrConfiguration {
 					repositories[id] = repo
 				}
 			}
+		}
+
+		static class Gradle {
+
+			/**
+			 * Version of the "dependency-management-plugin" to use.
+			 */
+			String dependencyManagementPluginVersion
+
+			private void merge(Gradle other) {
+				dependencyManagementPluginVersion = other.dependencyManagementPluginVersion
+			}
+
 		}
 
 		static class Kotlin {

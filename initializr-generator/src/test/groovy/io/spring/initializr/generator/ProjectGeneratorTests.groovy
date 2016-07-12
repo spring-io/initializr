@@ -411,23 +411,31 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 	@Test
 	void gradleBuildBeforeWithSpringBoot13() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'jpa')
+				.setGradleEnv('0.5.9.RELEASE').build()
+		applyMetadata(metadata)
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.2.3.RELEASE'
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.2.3.RELEASE'")
-				.contains("classpath('io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE')")
+				.contains("classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.contains("apply plugin: 'spring-boot'")
 				.contains("apply plugin: 'io.spring.dependency-management'")
 	}
 
 	@Test
 	void gradleBuildAsFromSpringBoot13() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'jpa')
+				.setGradleEnv('0.5.9.RELEASE').build()
+		applyMetadata(metadata)
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.3.0.BUILD-SNAPSHOT'
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'spring-boot'")
-				.doesNotContain("classpath('io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE')")
+				.doesNotContain("classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.doesNotContain("apply plugin: 'io.spring.dependency-management'")
 	}
 

@@ -67,6 +67,7 @@ class InitializrMetadataTestBuilder {
 	InitializrMetadataTestBuilder addDefaults() {
 		addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions()
 				.addDefaultLanguages().addDefaultBootVersions()
+				.setGradleEnv('0.5.1.RELEASE').setKotlinEnv('1.0.1')
 	}
 
 	InitializrMetadataTestBuilder addDefaultTypes() {
@@ -148,6 +149,20 @@ class InitializrMetadataTestBuilder {
 	InitializrMetadataTestBuilder addBom(String id, BillOfMaterials bom) {
 		builder.withCustomizer {
 			it.configuration.env.boms[id] = bom
+		}
+		this
+	}
+
+	InitializrMetadataTestBuilder setGradleEnv(String dependencyManagementPluginVersion) {
+		builder.withCustomizer {
+			it.configuration.env.gradle.dependencyManagementPluginVersion = dependencyManagementPluginVersion
+		}
+		this
+	}
+
+	InitializrMetadataTestBuilder setKotlinEnv(String kotlinVersion) {
+		builder.withCustomizer {
+			it.configuration.env.kotlin.version = kotlinVersion
 		}
 		this
 	}

@@ -9,8 +9,8 @@ buildscript {
 		maven { url "https://repo.spring.io/milestone" }<% } %>
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}") <% if (!bootOneThreeAvailable) { %>
-		classpath('io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE')<% } %><% if (language=='kotlin') { %>
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}")<% if (!bootOneThreeAvailable) { %>
+		classpath('io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}')<% } %><% if (language=='kotlin') { %>
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")<% } %>
 	}
 }
@@ -18,8 +18,8 @@ buildscript {
 apply plugin: '${language}'<% if (packaging=='war') {  %>
 apply plugin: 'eclipse-wtp'<% } else { %>
 apply plugin: 'eclipse'<% } %>
-apply plugin: 'spring-boot' <% if (!bootOneThreeAvailable) { %>
-apply plugin: 'io.spring.dependency-management' <% } %><% if (packaging=='war') {  %>
+apply plugin: 'spring-boot'<% if (!bootOneThreeAvailable) { %>
+apply plugin: 'io.spring.dependency-management'<% } %><% if (packaging=='war') {  %>
 apply plugin: 'war'
 <% } %>
 
@@ -45,7 +45,7 @@ dependencies {<% compileDependencies.each { %>
 	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
 	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% providedDependencies.each { %>
 	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %>
-	testCompile('org.springframework.boot:spring-boot-starter-test') <% testDependencies.each { %>
+	testCompile('org.springframework.boot:spring-boot-starter-test')<% testDependencies.each { %>
 	testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %>
 }
 <% if (boms) { %>

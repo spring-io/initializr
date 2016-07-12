@@ -225,7 +225,8 @@ class ProjectGenerator {
 		model['providedDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_PROVIDED)
 		model['testDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_TEST)
 
-		// Add kotlinVersion
+		// Add various versions
+		model['dependencyManagementPluginVersion'] = metadata.configuration.env.gradle.dependencyManagementPluginVersion
 		model['kotlinVersion'] = metadata.configuration.env.kotlin.version
 
 		// @SpringBootApplication available as from 1.2.0.RC1
