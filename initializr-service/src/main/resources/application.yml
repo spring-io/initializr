@@ -477,6 +477,16 @@ initializr:
           groupId: io.zipkin.java
           artifactId: zipkin-server
           starter: false
+    - name: Cloud Task
+      bom: cloud-bom
+      versionRange: 1.3.2.RELEASE
+      content:
+        - name: Tasks
+          id: tasks
+          description: task result tracking along with integration with batch and streams
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-task-starter
+          version: 1.0.1.RELEASE
     - name: Cloud Messaging
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
