@@ -20,6 +20,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<java.version>${javaVersion}</java.version><% if (language=='kotlin') { %>
 		<kotlin.version>${kotlinVersion}</kotlin.version><% } %><% if (includeSpringBootBom) { %>
 		<spring-boot.version>${bootVersion}</spring-boot.version><%}%>
