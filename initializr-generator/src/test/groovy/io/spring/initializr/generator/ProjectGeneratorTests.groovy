@@ -346,6 +346,20 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void gradleBuildWithCustomParentPomAndSpringBootBom() {
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'security', 'data-jpa')
+				.setMavenParent('com.foo', 'foo-parent', '1.0.0-SNAPSHOT', true)
+				.build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.0.2.RELEASE'
+		generateGradleBuild(request)
+				.doesNotContain("ext['spring-boot.version'] = '1.0.2.RELEASE'")
+				.doesNotContain("mavenBom \"org.springframework.boot:spring-boot-dependencies:1.0.2.RELEASE\"")
+	}
+
+	@Test
 	void gradleBuildWithBootSnapshot() {
 		def request = createProjectRequest('web')
 		request.bootVersion = '1.0.1.BUILD-SNAPSHOT'
@@ -614,7 +628,7 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		def request = createProjectRequest('web')
 		request.type = 'foo-bar'
 		try {
-			generateMavenPom(request)
+			generateProject(request)
 			fail("Should have failed to generate project")
 		} catch (InvalidProjectRequestException ex) {
 			assertThat ex.message, containsString('foo-bar')

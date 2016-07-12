@@ -116,8 +116,7 @@ class ProjectGenerator {
 
 		def dir = initializerProjectDir(rootDir, request)
 
-		boolean gradleBuild = 'gradle'.equals(request.build)
-		if (gradleBuild) {
+		if (isGradleBuild(request)) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
 			writeGradleWrapper(dir)
@@ -201,10 +200,6 @@ class ProjectGenerator {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
 		def metadata = metadataProvider.get()
-		ParentPom parentPom = metadata.configuration.env.maven.resolveParentPom(request.bootVersion)
-		if (parentPom.includeSpringBootBom && !request.boms['spring-boot']) {
-			request.boms['spring-boot'] = metadata.createSpringBootBom('${spring-boot.version}')
-		}
 
 		request.resolve(metadata)
 
@@ -215,10 +210,17 @@ class ProjectGenerator {
 
 		request.properties.each { model[it.key] = it.value }
 
-		model['mavenParentGroupId'] = parentPom.groupId
-		model['mavenParentArtifactId'] = parentPom.artifactId
-		model['mavenParentVersion'] = parentPom.version
-		model['includeSpringBootBom'] = parentPom.includeSpringBootBom
+		if (isMavenBuild(request)) {
+			ParentPom parentPom = metadata.configuration.env.maven.resolveParentPom(request.bootVersion)
+			if (parentPom.includeSpringBootBom && !request.boms['spring-boot']) {
+				request.boms['spring-boot'] = metadata.createSpringBootBom('${spring-boot.version}')
+			}
+
+			model['mavenParentGroupId'] = parentPom.groupId
+			model['mavenParentArtifactId'] = parentPom.artifactId
+			model['mavenParentVersion'] = parentPom.version
+			model['includeSpringBootBom'] = parentPom.includeSpringBootBom
+		}
 
 		model['compileDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE)
 		model['runtimeDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_RUNTIME)
@@ -273,6 +275,14 @@ class ProjectGenerator {
 	protected String generateImport(String type, String language) {
 		String end = (language.equals("groovy") || language.equals("kotlin")) ? '' : ';'
 		"import $type$end"
+	}
+
+	private static isGradleBuild(ProjectRequest request) {
+		return 'gradle'.equals(request.build)
+	}
+
+	private static isMavenBuild(ProjectRequest request) {
+		return 'maven'.equals(request.build)
 	}
 
 	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {

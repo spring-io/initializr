@@ -62,11 +62,13 @@ abstract class AbstractProjectGeneratorTests {
 
 
 	protected PomAssert generateMavenPom(ProjectRequest request) {
+		request.type = 'maven-build'
 		def content = new String(projectGenerator.generateMavenPom(request))
 		new PomAssert(content).validateProjectRequest(request)
 	}
 
 	protected GradleBuildAssert generateGradleBuild(ProjectRequest request) {
+		request.type = 'gradle-build'
 		def content = new String(projectGenerator.generateGradleBuild(request))
 		new GradleBuildAssert(content).validateProjectRequest(request)
 	}
