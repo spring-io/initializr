@@ -479,7 +479,7 @@ initializr:
           starter: false
     - name: Cloud Task
       bom: cloud-bom
-      versionRange: 1.3.6.RELEASE
+      versionRange: 1.3.2.RELEASE
       content:
         - name: Tasks
           id: tasks
