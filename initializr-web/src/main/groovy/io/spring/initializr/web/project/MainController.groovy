@@ -191,6 +191,7 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping('/pom')
 	@ResponseBody
 	ResponseEntity<byte[]> pom(BasicProjectRequest request) {
+		request.type = 'maven-build'
 		def mavenPom = projectGenerator.generateMavenPom((ProjectRequest) request)
 		createResponseEntity(mavenPom, 'application/octet-stream', 'pom.xml')
 	}
@@ -198,6 +199,7 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping('/build')
 	@ResponseBody
 	ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
+		request.type = 'gradle-build'
 		def gradleBuild = projectGenerator.generateGradleBuild((ProjectRequest) request)
 		createResponseEntity(gradleBuild, 'application/octet-stream', 'build.gradle')
 	}

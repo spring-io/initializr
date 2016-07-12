@@ -113,6 +113,11 @@ class PomAssert {
 		this
 	}
 
+	PomAssert hasNoProperty(String name) {
+		assertFalse "No property $name should have been found", properties.containsKey(name)
+		this
+	}
+
 	PomAssert hasDependenciesCount(int count) {
 		assertEquals "Wrong number of declared dependencies -->'${dependencies.keySet()}",
 				count, dependencies.size()

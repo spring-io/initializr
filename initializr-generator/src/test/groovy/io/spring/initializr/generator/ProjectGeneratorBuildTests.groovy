@@ -33,32 +33,40 @@ import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_
 @RunWith(Parameterized.class)
 class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 
-	@Parameterized.Parameters(name = "{0} with {1}")
+	@Parameterized.Parameters(name = "{0}")
 	public static Object[] parameters() {
-		Object[] javaMaven = ["java", "maven", "pom.xml"]
-		Object[] javaGradle = ["java", "gradle", "build.gradle"]
-		Object[] groovyMaven = ["groovy", "maven", "pom.xml"]
-		Object[] groovyGradle = ["groovy", "gradle", "build.gradle"]
-		Object[] kotlinMaven = ["kotlin", "maven", "pom.xml"]
-		Object[] kotlinGradle = ["kotlin", "gradle", "build.gradle"]
-		Object[] parameters = [javaMaven, javaGradle, groovyMaven, groovyGradle, kotlinMaven, kotlinGradle]
+		Object[] maven = ["maven", "pom.xml"]
+		Object[] gradle = ["gradle", "build.gradle"]
+		Object[] parameters = [maven, gradle]
 		parameters
 	}
 
-	private final String language
 	private final String build
 	private final String fileName
 	private final String assertFileName
 
-	ProjectGeneratorBuildTests(String language, String build, String fileName) {
-		this.language = language
+	ProjectGeneratorBuildTests(String build, String fileName) {
 		this.build = build
 		this.fileName = fileName
 		this.assertFileName = fileName + ".gen"
 	}
 
 	@Test
-	public void standardJar() {
+	public void standardJarJava() {
+		testStandardJar('java')
+	}
+
+	@Test
+	public void standardJarGroovy() {
+		testStandardJar('groovy')
+	}
+
+	@Test
+	public void standardJarKotlin() {
+		testStandardJar('kotlin')
+	}
+
+	private void testStandardJar(def language) {
 		def request = createProjectRequest()
 		request.language = language
 		request.type = "$build-project"
@@ -68,7 +76,21 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardWar() {
+	public void standardWarJava() {
+		testStandardWar('java')
+	}
+
+	@Test
+	public void standardWarGroovy() {
+		testStandardWar('java')
+	}
+
+	@Test
+	public void standardWarKotlin() {
+		testStandardWar('kotlin')
+	}
+
+	private void testStandardWar(def language) {
 		def request = createProjectRequest('web')
 		request.packaging = 'war'
 		request.language = language
@@ -76,6 +98,17 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$language/war/$assertFileName"))
+	}
+
+	@Test
+	public void versionOverride() {
+		def request = createProjectRequest('web')
+		request.type = "$build-project"
+		request.buildProperties.versions['spring-foo.version'] = {'0.1.0.RELEASE'}
+		request.buildProperties.versions['spring-bar.version'] = {'0.2.0.RELEASE'}
+		def project = generateProject(request)
+		project.sourceCodeAssert("$fileName")
+				.equalsTo(new ClassPathResource("project/$build/version-override-$assertFileName"))
 	}
 
 }

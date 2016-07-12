@@ -18,12 +18,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>${javaVersion}</java.version><% if (language=='kotlin') { %>
-		<kotlin.version>${kotlinVersion}</kotlin.version><% } %><% if (includeSpringBootBom) { %>
-		<spring-boot.version>${bootVersion}</spring-boot.version><%}%>
+	<properties><% buildProperties.maven.each { %>
+		<${it.key}>${it.value()}</${it.key}><% } %><%buildProperties.versions.each { %>
+		<${it.key}>${it.value()}</${it.key}><%}%>
 	</properties>
 
 	<dependencies><% compileDependencies.each { %>

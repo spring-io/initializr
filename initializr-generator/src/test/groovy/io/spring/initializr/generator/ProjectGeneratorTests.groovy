@@ -19,7 +19,9 @@ package io.spring.initializr.generator
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -36,6 +38,9 @@ import static org.junit.Assert.fail
  * @author Stephane Nicoll
  */
 class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
+
+	@Rule
+	public final ExpectedException thrown = ExpectedException.none()
 
 	@Test
 	void defaultMavenPom() {
@@ -609,6 +614,50 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.hasSpringBootStarterRootDependency()
 				.hasSpringBootStarterTest()
 				.hasDependenciesCount(3)
+	}
+
+	@Test
+	void buildPropertiesMaven() {
+		def request = createProjectRequest('web')
+		request.buildProperties.maven['name'] = { 'test' }
+		request.buildProperties.versions['foo.version'] = { '1.2.3' }
+		request.buildProperties.gradle['ignore.property'] = { 'yes' }
+
+		generateMavenPom(request)
+				.hasProperty('name', 'test')
+				.hasProperty('foo.version', '1.2.3')
+				.hasNoProperty('ignore.property')
+	}
+
+	@Test
+	void buildPropertiesGradle() {
+		def request = createProjectRequest('web')
+		request.buildProperties.gradle['name'] = { 'test' }
+		request.buildProperties.versions['foo.version'] = { '1.2.3' }
+		request.buildProperties.maven['ignore.property'] = { 'yes' }
+
+		generateGradleBuild(request)
+				.contains("name = 'test'")
+				.contains("ext['foo.version'] = '1.2.3'")
+				.doesNotContain('ignore.property')
+	}
+
+	@Test
+	void invalidProjectTypeMavenPom() {
+		def request = createProjectRequest('web')
+		request.type = 'gradle-build'
+		this.thrown.expect(InvalidProjectRequestException)
+		this.thrown.expectMessage('gradle-build')
+		projectGenerator.generateMavenPom(request)
+	}
+
+	@Test
+	void invalidProjectTypeGradleBuild() {
+		def request = createProjectRequest('web')
+		request.type = 'maven-build'
+		this.thrown.expect(InvalidProjectRequestException)
+		this.thrown.expectMessage('maven-build')
+		projectGenerator.generateGradleBuild(request)
 	}
 
 	@Test

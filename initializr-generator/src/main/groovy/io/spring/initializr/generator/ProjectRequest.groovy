@@ -45,7 +45,7 @@ class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * Additional parameters that can be used to further identify the request.
 	 */
-	final Map<String,Object> parameters = [:]
+	final Map<String, Object> parameters = [:]
 
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	List<Dependency> resolvedDependencies
@@ -53,6 +53,11 @@ class ProjectRequest extends BasicProjectRequest {
 	final Map<String, BillOfMaterials> boms = [:]
 
 	final Map<String, Repository> repositories = [:]
+
+	/**
+	 * Build properties.
+	 */
+	final BuildProperties buildProperties = new BuildProperties()
 
 	def facets = []
 	def build
@@ -136,6 +141,8 @@ class ProjectRequest extends BasicProjectRequest {
 
 		initializeRepositories(metadata, requestedVersion)
 
+		initializeProperties(metadata)
+
 		afterResolution(metadata)
 	}
 
@@ -153,6 +160,22 @@ class ProjectRequest extends BasicProjectRequest {
 				if (!repositories[it]) {
 					repositories[it] = metadata.configuration.env.repositories[it]
 				}
+			}
+		}
+	}
+
+	protected void initializeProperties(InitializrMetadata metadata) {
+		if ('gradle'.equals(build)) {
+			buildProperties.gradle['springBootVersion'] = { getBootVersion() }
+			if ('kotlin'.equals(language)) {
+				buildProperties.gradle['kotlinVersion'] = { metadata.configuration.env.kotlin.version }
+			}
+		} else {
+			buildProperties.maven['project.build.sourceEncoding'] = { 'UTF-8' }
+			buildProperties.maven['project.reporting.outputEncoding'] = { 'UTF-8' }
+			buildProperties.versions['java.version'] = { getJavaVersion() }
+			if ('kotlin'.equals(language)) {
+				buildProperties.versions['kotlin.version'] = { metadata.configuration.env.kotlin.version }
 			}
 		}
 	}

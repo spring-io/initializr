@@ -68,7 +68,11 @@ class ProjectGenerator {
 	 */
 	byte[] generateMavenPom(ProjectRequest request) {
 		try {
-			def model = initializeModel(request)
+			def model = resolveModel(request)
+			if (!isMavenBuild(request)) {
+				throw new InvalidProjectRequestException("Could not generate Maven pom, " +
+						"invalid project type $request.type")
+			}
 			def content = doGenerateMavenPom(model)
 			publishProjectGeneratedEvent(request)
 			content
@@ -83,7 +87,11 @@ class ProjectGenerator {
 	 */
 	byte[] generateGradleBuild(ProjectRequest request) {
 		try {
-			def model = initializeModel(request)
+			def model = resolveModel(request)
+			if (!isGradleBuild(request)) {
+				throw new InvalidProjectRequestException("Could not generate Gradle build, " +
+						"invalid project type $request.type")
+			}
 			def content = doGenerateGradleBuild(model)
 			publishProjectGeneratedEvent(request)
 			content
@@ -107,7 +115,7 @@ class ProjectGenerator {
 	}
 
 	protected File doGenerateProjectStructure(ProjectRequest request) {
-		def model = initializeModel(request)
+		def model = resolveModel(request)
 
 		def rootDir = File.createTempFile('tmp', '', new File(tmpdir))
 		addTempFile(rootDir.name, rootDir)
@@ -196,7 +204,13 @@ class ProjectGenerator {
 		eventPublisher.publishEvent(event)
 	}
 
-	protected Map initializeModel(ProjectRequest request) {
+	/**
+	 * Resolve the specified {@link ProjectRequest} and return the model to use
+	 * to generate the project
+	 * @param request the request to handle
+	 * @return a model for that request
+	 */
+	protected Map resolveModel(ProjectRequest request) {
 		Assert.notNull request.bootVersion, 'boot version must not be null'
 		def model = [:]
 		def metadata = metadataProvider.get()
@@ -213,6 +227,7 @@ class ProjectGenerator {
 		if (isMavenBuild(request)) {
 			ParentPom parentPom = metadata.configuration.env.maven.resolveParentPom(request.bootVersion)
 			if (parentPom.includeSpringBootBom && !request.boms['spring-boot']) {
+				request.buildProperties.versions['spring-boot.version'] = { request.bootVersion }
 				request.boms['spring-boot'] = metadata.createSpringBootBom('${spring-boot.version}')
 			}
 

@@ -1,7 +1,6 @@
 buildscript {
-	ext {
-		springBootVersion = '${bootVersion}'<% if (language=='kotlin') { %>
-		kotlinVersion = '${kotlinVersion}'<% } %>
+	ext {<% buildProperties.gradle.each { %>
+		${it.key} = '${it.value.call()}'<% } %>
 	}
 	repositories {
 		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
@@ -38,6 +37,8 @@ repositories {
 <% if (providedDependencies) { %>configurations {
 	providedRuntime
 }
+<% } %><% if (buildProperties.versions) { %><%buildProperties.versions.each { %>
+ext['${it.key}'] = '${it.value.call()}'<% } %>
 <% } %>
 dependencies {<% compileDependencies.each { %>
 	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% if (language=='groovy') { %>
