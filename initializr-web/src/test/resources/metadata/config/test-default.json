@@ -33,6 +33,9 @@
     "artifactRepository": "https://repo.spring.io/release/",
     "fallbackApplicationName": "Application",
     "forceSsl": true,
+    "gradle": {
+      "dependencyManagementPluginVersion": null
+    },
     "kotlin": {
       "version": null
     },
