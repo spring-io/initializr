@@ -328,6 +328,13 @@ initializr:
           description: OAuth2 and distributed application patterns with spring-cloud-security
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-oauth2
+        - name: Cloud Task
+          id: cloud-task
+          description: Task result tracking along with integration with batch and streams
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-task-starter
+          version: 1.0.1.RELEASE
+          versionRange: 1.3.2.RELEASE
     - name: Cloud Config
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
