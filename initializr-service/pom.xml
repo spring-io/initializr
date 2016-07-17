@@ -27,6 +27,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>initializr-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.gmavenplus</groupId>

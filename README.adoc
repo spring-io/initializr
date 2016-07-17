@@ -240,7 +240,7 @@ Once the jar has been created, you can push the application:
 
 [indent=0]
 ----
-    $ cf push your-initializr -p target/initializr-service-1.0.0.BUILD-SNAPSHOT
+    $ cf push your-initializr -p target/initializr-service.jar
 ----
 
 == License
