@@ -57,6 +57,7 @@ abstract class AbstractProjectGeneratorTests {
 				.addDependencyGroup('test', 'security', 'data-jpa', 'aop', 'batch', 'integration').build()
 		applyMetadata(metadata)
 		projectGenerator.eventPublisher = eventPublisher
+		projectGenerator.requestResolver = new ProjectRequestResolver([])
 		projectGenerator.tmpdir = folder.newFolder().absolutePath
 	}
 

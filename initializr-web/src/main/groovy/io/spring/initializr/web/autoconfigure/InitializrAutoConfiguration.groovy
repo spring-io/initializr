@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit
 
 import com.google.common.cache.CacheBuilder
 import io.spring.initializr.generator.ProjectGenerator
+import io.spring.initializr.generator.ProjectRequestPostProcessor
+import io.spring.initializr.generator.ProjectRequestResolver
 import io.spring.initializr.generator.ProjectResourceLocator
 import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataBuilder
@@ -30,6 +32,7 @@ import io.spring.initializr.web.support.DefaultDependencyMetadataProvider
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider
 import io.spring.initializr.web.ui.UiController
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.CacheManager
@@ -56,6 +59,9 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(InitializrProperties)
 class InitializrAutoConfiguration {
 
+	@Autowired(required = false)
+	List<ProjectRequestPostProcessor> postProcessors = []
+
 	@Bean
 	WebConfig webConfig() {
 		new WebConfig()
@@ -77,6 +83,12 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean
 	ProjectGenerator projectGenerator() {
 		new ProjectGenerator()
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	ProjectRequestResolver projectRequestResolver() {
+		new ProjectRequestResolver(postProcessors)
 	}
 
 	@Bean

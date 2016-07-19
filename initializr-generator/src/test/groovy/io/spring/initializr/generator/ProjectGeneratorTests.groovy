@@ -18,6 +18,7 @@ package io.spring.initializr.generator
 
 import io.spring.initializr.metadata.BillOfMaterials
 import io.spring.initializr.metadata.Dependency
+import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
 import org.junit.Rule
 import org.junit.Test
@@ -640,6 +641,34 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains("name = 'test'")
 				.contains("ext['foo.version'] = '1.2.3'")
 				.doesNotContain('ignore.property')
+	}
+
+	@Test
+	void versionRangeWithPostProcessor() {
+		Dependency foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo')
+		foo.mappings << new Dependency.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)', version: '1.0.0')
+		foo.mappings << new Dependency.Mapping(versionRange: '1.3.0.M1', version: '1.2.0')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo).build()
+		applyMetadata(metadata)
+
+		// First without processor, get the correct version
+		def request = createProjectRequest('foo')
+		request.bootVersion = '1.2.5.RELEASE'
+		generateMavenPom(request).hasDependency(
+				new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', version: '1.0.0'))
+
+		// First after processor that flips Spring Boot version
+		projectGenerator.requestResolver = new ProjectRequestResolver(Collections.singletonList(
+				new ProjectRequestPostProcessorAdapter() {
+					@Override
+					void postProcessBeforeResolution(ProjectRequest r, InitializrMetadata m) {
+						r.bootVersion = '1.3.0.M2'
+					}
+				}
+		))
+		generateMavenPom(request).hasDependency(
+				new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', version: '1.2.0'))
 	}
 
 	@Test

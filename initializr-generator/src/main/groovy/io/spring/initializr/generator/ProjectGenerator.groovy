@@ -56,6 +56,9 @@ class ProjectGenerator {
 	InitializrMetadataProvider metadataProvider
 
 	@Autowired
+	ProjectRequestResolver requestResolver
+
+	@Autowired
 	ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator()
 
 	@Value('${TMPDIR:.}')
@@ -210,12 +213,12 @@ class ProjectGenerator {
 	 * @param request the request to handle
 	 * @return a model for that request
 	 */
-	protected Map resolveModel(ProjectRequest request) {
-		Assert.notNull request.bootVersion, 'boot version must not be null'
+	protected Map resolveModel(ProjectRequest originalRequest) {
+		Assert.notNull originalRequest.bootVersion, 'boot version must not be null'
 		def model = [:]
 		def metadata = metadataProvider.get()
 
-		request.resolve(metadata)
+		ProjectRequest request = requestResolver.resolve(originalRequest, metadata)
 
 		// request resolved so we can log what has been requested
 		def dependencies = request.resolvedDependencies
