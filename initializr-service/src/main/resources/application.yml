@@ -43,6 +43,10 @@ initializr:
         version: 1.0.0.BUILD-SNAPSHOT
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
+      experimental-reactive-bom:
+        groupId: org.springframework.boot.experimental
+        artifactId: spring-boot-dependencies-web-reactive
+        version: 0.1.0.BUILD-SNAPSHOT
       scs-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
@@ -53,6 +57,16 @@ initializr:
     kotlin:
       version: 1.0.3
   dependencies:
+    - name: Experimental
+      content:
+        - name: Reactive Web
+          id: experimental-web-reactive
+          groupId: org.springframework.boot.experimental
+          artifactId: spring-boot-starter-web-reactive
+          bom: experimental-reactive-bom
+          versionRange: 1.4.0.RC1
+          repository: spring-snapshots
+          description: Reactive web development with Tomcat and Spring Reactive (experimental)
     - name: Core
       content:
         - name: Security
