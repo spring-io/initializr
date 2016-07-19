@@ -35,6 +35,14 @@ initializr:
           - versionRange: 1.3.7.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
+      cloud-contract-bom:
+        groupId: org.springframework.cloud
+        artifactId: spring-cloud-contract-dependencies
+        additionalBoms: [cloud-bom]
+        mappings:
+          - versionRange: 1.0.0.BUILD-SNAPSHOT
+            version: Camden.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
@@ -568,6 +576,34 @@ initializr:
           description: Leadership election and global state with Etcd and spring-cloud-cluster-etcd
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-etcd
+    - name: Cloud Contract
+      bom: cloud-contract-bom
+      versionRange: 1.0.0.BUILD-SNAPSHOT
+      content:
+        - name: Cloud Contract Stub Runner HTTP
+          id: cloud-contract-stub-runner-spring
+          description: Spring Cloud Contract Stub Runner for HTTP based communication (allows for the client side automated server stubs downloading and running)
+          versionRange: 1.0.0.BUILD-SNAPSHOT
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-contract-stub-runner-spring
+        - name: Cloud Contract Stub Runner Stream
+          id: cloud-contract-stub-runner-stream
+          description: Spring Cloud Contract Stub Runner for Spring Cloud Stream based communication (allows for the client side automated server stubs downloading and running)
+          versionRange: 1.0.0.BUILD-SNAPSHOT
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-contract-stub-runner-stream
+        - name: Cloud Contract Stub Runner Integration
+          id: cloud-contract-stub-runner-integration
+          description: Spring Cloud Contract Stub Runner for Spring Integration based communication (allows for the client side automated server stubs downloading and running)
+          versionRange: 1.0.0.BUILD-SNAPSHOT
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-contract-stub-runner-integration
+        - name: Cloud Contract Stub Runner Camel
+          id: cloud-contract-stub-runner-camel
+          description: Spring Cloud Contract Stub Runner for Apache Camel based communication (allows for the client side automated server stubs downloading and running)
+          versionRange: 1.0.0.BUILD-SNAPSHOT
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-contract-stub-runner-camel
     - name: Pivotal Cloud Foundry
       bom: scs-bom
       versionRange: 1.3.0.RELEASE
