@@ -51,8 +51,8 @@ dependencies {<% compileDependencies.each { %>
 }
 <% if (boms) { %>
 dependencyManagement {
-	imports { <% boms.values().each { %>
-		mavenBom "${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}" <% } %>
+	imports {<% boms.values().each { %>
+		mavenBom "${it.groupId}:${it.artifactId}:${it.determineVersionToken()}"<% } %>
 	}
 }
 <% } %>

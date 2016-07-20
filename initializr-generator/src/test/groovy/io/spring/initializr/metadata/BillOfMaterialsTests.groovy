@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 
 import static org.hamcrest.CoreMatchers.equalTo
+import static org.hamcrest.CoreMatchers.nullValue
 import static org.hamcrest.CoreMatchers.sameInstance
 import static org.junit.Assert.assertThat
 
@@ -45,7 +46,8 @@ class BillOfMaterialsTests {
 	@Test
 	void resolveSimpleRange() {
 		BillOfMaterials bom = new BillOfMaterials(groupId: 'com.example', artifactId: 'bom',
-				version: '1.0.0', repositories: ['repo-main'], additionalBoms: ['bom-main'])
+				version: '1.0.0', versionProperty: "bom.version",
+				repositories: ['repo-main'], additionalBoms: ['bom-main'])
 		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)',
 				version: '1.1.0')
 		bom.validate()
@@ -53,6 +55,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.groupId, equalTo('com.example'))
 		assertThat(resolved.artifactId, equalTo('bom'))
 		assertThat(resolved.version, equalTo('1.1.0'))
+		assertThat(resolved.versionProperty, equalTo('bom.version'))
 		assertThat(resolved.repositories.size(), equalTo(1))
 		assertThat(resolved.repositories[0], equalTo('repo-main'))
 		assertThat(resolved.additionalBoms.size(), equalTo(1))
@@ -70,10 +73,25 @@ class BillOfMaterialsTests {
 		assertThat(resolved.groupId, equalTo('com.example'))
 		assertThat(resolved.artifactId, equalTo('bom'))
 		assertThat(resolved.version, equalTo('1.1.0'))
+		assertThat(resolved.versionProperty, nullValue())
 		assertThat(resolved.repositories.size(), equalTo(1))
 		assertThat(resolved.repositories[0], equalTo('repo-foo'))
 		assertThat(resolved.additionalBoms.size(), equalTo(1))
 		assertThat(resolved.additionalBoms[0], equalTo('bom-foo'))
+	}
+
+	@Test
+	void resolveRangeOverrideAndMapping() {
+		BillOfMaterials bom = new BillOfMaterials(groupId: 'com.example',
+				artifactId: 'bom', version: '1.0.0', versionProperty: 'example.version')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.2.0.RELEASE,1.3.0.M1)',
+				version: '1.1.0')
+		bom.validate()
+		BillOfMaterials resolved = bom.resolve(Version.parse('1.2.3.RELEASE'))
+		assertThat(resolved.groupId, equalTo('com.example'))
+		assertThat(resolved.artifactId, equalTo('bom'))
+		assertThat(resolved.version, equalTo('1.1.0'))
+		assertThat(resolved.versionProperty, equalTo('example.version'))
 	}
 
 	@Test

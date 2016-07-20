@@ -16,6 +16,9 @@
 
 package io.spring.initializr.generator
 
+import io.spring.initializr.metadata.BillOfMaterials
+import io.spring.initializr.metadata.Dependency
+import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -69,7 +72,6 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	private void testStandardJar(def language) {
 		def request = createProjectRequest()
 		request.language = language
-		request.type = "$build-project"
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$language/standard/$assertFileName"))
@@ -94,7 +96,6 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		def request = createProjectRequest('web')
 		request.packaging = 'war'
 		request.language = language
-		request.type = "$build-project"
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$language/war/$assertFileName"))
@@ -103,12 +104,33 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void versionOverride() {
 		def request = createProjectRequest('web')
-		request.type = "$build-project"
 		request.buildProperties.versions['spring-foo.version'] = {'0.1.0.RELEASE'}
 		request.buildProperties.versions['spring-bar.version'] = {'0.2.0.RELEASE'}
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$build/version-override-$assertFileName"))
+	}
+
+	@Test
+	public void bomWithVersionProperty() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'the-bom')
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom',
+				version: '1.3.3', versionProperty: 'foo.version')
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('the-bom', bom).build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('foo')
+		def project = generateProject(request)
+		project.sourceCodeAssert("$fileName")
+				.equalsTo(new ClassPathResource("project/$build/bom-property-$assertFileName"))
+	}
+
+	@Override
+	ProjectRequest createProjectRequest(String... styles) {
+		def request = super.createProjectRequest(styles)
+		request.type = "$build-project"
+		request
 	}
 
 }

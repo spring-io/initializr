@@ -42,6 +42,13 @@ class BillOfMaterials {
 	String version
 
 	/**
+	 * The property to use to externalize the version of the BOM. When this is set,
+	 * a version property is automatically added rather than setting the version
+	 * in the bom declaration itself.
+     */
+	String versionProperty
+
+	/**
 	 * The BOM(s) that should be automatically included if this BOM is required. Can be
 	 * {@code null} if it is provided via a mapping.
 	 */
@@ -54,6 +61,15 @@ class BillOfMaterials {
 	List<String> repositories = []
 
 	final List<Mapping> mappings = []
+
+	/**
+	 * Determine the version placeholder to use for this instance. If a version
+	 * property is defined, this returns the reference for the property. Otherwise
+	 * this returns the plain {@link #version}
+	 */
+	String determineVersionToken() {
+		return (versionProperty ? '${' + versionProperty + '}' : version)
+	}
 
 	void validate() {
 		if (!version && !mappings) {
@@ -81,7 +97,7 @@ class BillOfMaterials {
 		for (Mapping mapping : mappings) {
 			if (mapping.range.match(bootVersion)) {
 				def resolvedBom = new BillOfMaterials(groupId: groupId, artifactId: artifactId,
-						version: mapping.version)
+						version: mapping.version, versionProperty: versionProperty)
 				resolvedBom.repositories += mapping.repositories ?: repositories
 				resolvedBom.additionalBoms += mapping.additionalBoms ?: additionalBoms
 				return resolvedBom

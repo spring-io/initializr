@@ -222,13 +222,11 @@ class ProjectGenerator {
 		def dependencyIds = dependencies.collect { it.id }
 		log.info("Processing request{type=$request.type, dependencies=$dependencyIds}")
 
-		request.properties.each { model[it.key] = it.value }
-
 		if (isMavenBuild(request)) {
 			ParentPom parentPom = metadata.configuration.env.maven.resolveParentPom(request.bootVersion)
 			if (parentPom.includeSpringBootBom && !request.boms['spring-boot']) {
-				request.buildProperties.versions['spring-boot.version'] = { request.bootVersion }
-				request.boms['spring-boot'] = metadata.createSpringBootBom('${spring-boot.version}')
+				request.boms['spring-boot'] = metadata.createSpringBootBom(
+						request.bootVersion, 'spring-boot.version')
 			}
 
 			model['mavenParentGroupId'] = parentPom.groupId
@@ -241,6 +239,12 @@ class ProjectGenerator {
 		model['runtimeDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_RUNTIME)
 		model['providedDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_PROVIDED)
 		model['testDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_TEST)
+
+		request.boms.each { k, v ->
+			if (v.versionProperty) {
+				request.buildProperties.versions[v.versionProperty] = { v.version }
+			}
+		}
 
 		// Add various versions
 		model['dependencyManagementPluginVersion'] = metadata.configuration.env.gradle.dependencyManagementPluginVersion
@@ -259,6 +263,9 @@ class ProjectGenerator {
 
 		// New Servlet Initializer location
 		model['newServletInitializer']  = isNewServletInitializerAvailable(request)
+
+		// Append the project request to the model
+		request.properties.each { model[it.key] = it.value }
 
 		model
 	}

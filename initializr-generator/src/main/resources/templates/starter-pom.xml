@@ -73,13 +73,13 @@
 			<dependency>
 				<groupId>${it.groupId}</groupId>
 				<artifactId>${it.artifactId}</artifactId>
-				<version>${it.version}</version>
+				<version>${it.determineVersionToken()}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency><% } %>
 		</dependencies>
 	</dependencyManagement>
-	<% } %>
+<% } %>
 	<build><% if (language=='kotlin') { %>
 		<sourceDirectory>\${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>\${project.basedir}/src/test/kotlin</testSourceDirectory><% } %>
