@@ -38,7 +38,7 @@ initializr:
       cloud-contract-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-contract-dependencies
-        version: 1.0.0.BUILD-SNAPSHOT
+        version: 1.0.0.M1
         repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
