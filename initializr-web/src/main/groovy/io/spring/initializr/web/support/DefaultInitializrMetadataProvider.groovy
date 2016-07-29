@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import io.spring.initializr.metadata.DefaultMetadataElement
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataProvider
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.web.client.RestTemplate
 
 /**
  * A default {@link InitializrMetadataProvider} that is able to refresh
@@ -35,21 +35,29 @@ import org.springframework.cache.annotation.Cacheable
 class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
 	private final InitializrMetadata metadata
+	private final RestTemplate restTemplate
 
-	@Autowired
-	DefaultInitializrMetadataProvider(InitializrMetadata metadata) {
+	DefaultInitializrMetadataProvider(InitializrMetadata metadata, RestTemplate restTemplate) {
 		this.metadata = metadata
+		this.restTemplate = restTemplate
 	}
 
 	@Override
 	@Cacheable(value = 'initializr', key = "'metadata'")
 	InitializrMetadata get() {
+		updateInitializrMetadata(metadata)
+		metadata
+	}
+
+	protected void updateInitializrMetadata(InitializrMetadata metadata) {
 		def bootVersions = fetchBootVersions()
 		if (bootVersions) {
+			if (!bootVersions.find { it.default }) { // No default specified
+				bootVersions[0].default = true
+			}
 			metadata.bootVersions.content.clear()
 			metadata.bootVersions.content.addAll(bootVersions)
 		}
-		metadata
 	}
 
 	protected List<DefaultMetadataElement> fetchBootVersions() {
@@ -57,7 +65,7 @@ class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 		if (url) {
 			try {
 				log.info("Fetching boot metadata from $url")
-				return new SpringBootMetadataReader(url).bootVersions
+				return new SpringBootMetadataReader(restTemplate, url).bootVersions
 			} catch (Exception e) {
 				log.warn('Failed to fetch spring boot metadata', e)
 			}

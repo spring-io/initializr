@@ -41,6 +41,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCache
 import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.client.RestTemplate
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -100,7 +101,7 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean(InitializrMetadataProvider)
 	InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
 		def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
-		new DefaultInitializrMetadataProvider(metadata)
+		new DefaultInitializrMetadataProvider(metadata, new RestTemplate())
 	}
 
 	@Bean

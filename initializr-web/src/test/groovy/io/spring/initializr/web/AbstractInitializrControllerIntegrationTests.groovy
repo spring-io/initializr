@@ -18,7 +18,7 @@ package io.spring.initializr.web
 
 import java.nio.charset.Charset
 
-import io.spring.initializr.metadata.DefaultMetadataElement
+import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
@@ -48,7 +48,6 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 
-import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 /**
@@ -216,10 +215,11 @@ abstract class AbstractInitializrControllerIntegrationTests {
 
 		@Bean
 		InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
-			def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
-			new DefaultInitializrMetadataProvider(metadata) {
+			new DefaultInitializrMetadataProvider(
+					InitializrMetadataBuilder.fromInitializrProperties(properties).build(),
+					new RestTemplate()) {
 				@Override
-				protected List<DefaultMetadataElement> fetchBootVersions() {
+				protected void updateInitializrMetadata(InitializrMetadata metadata) {
 					null // Disable metadata fetching from spring.io
 				}
 			}
