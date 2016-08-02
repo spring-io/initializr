@@ -27,9 +27,9 @@ initializr:
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
             version: Angel.SR6
-          - versionRange: "[1.3.0.M2,1.3.7.RELEASE]"
+          - versionRange: "[1.3.0.M2,1.4.0.RELEASE]"
             version: Brixton.SR4
-          - versionRange: 1.3.8.BUILD-SNAPSHOT
+          - versionRange: 1.4.1.BUILD-SNAPSHOT
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-contract-bom:
