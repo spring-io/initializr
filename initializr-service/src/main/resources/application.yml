@@ -47,6 +47,7 @@ initializr:
         groupId: org.springframework.boot.experimental
         artifactId: spring-boot-dependencies-web-reactive
         version: 0.1.0.BUILD-SNAPSHOT
+        repositories: spring-snapshots,spring-milestones
       scs-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
@@ -65,7 +66,6 @@ initializr:
           artifactId: spring-boot-starter-web-reactive
           bom: experimental-reactive-bom
           versionRange: 1.4.0.RC1
-          repository: spring-snapshots
           description: Reactive web development with Tomcat and Spring Reactive (experimental)
     - name: Core
       content:
