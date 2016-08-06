@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "id": "dependencies",
+    "type": "HIERARCHICAL_MULTI_SELECT",
+    "description": null,
+    "content": [
+      {
+        "name": "Extra",
+        "content": [
+          {
+            "name": "Apache Commons Lang",
+            "id": "apacheLang",
+            "groupId": "org.apache.commons",
+            "artifactId": "commons-lang3",
+            "version": "3.4",
+            "scope": "compile"
+          }
+        ]
+      },
+      {
+        "name": "Core",
+        "content": [
+          {
+            "name": "Apache Commons IO",
+            "id": "apacheio",
+            "groupId": "org.apache.commons",
+            "artifactId": "commons-io",
+            "version": "1.3.2",
+            "scope": "compile"
+          }
+        ]
+      }
+    ]
+  }
+}
