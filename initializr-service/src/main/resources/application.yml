@@ -46,8 +46,14 @@ initializr:
       experimental-reactive-bom:
         groupId: org.springframework.boot.experimental
         artifactId: spring-boot-dependencies-web-reactive
-        version: 0.1.0.BUILD-SNAPSHOT
         repositories: spring-snapshots,spring-milestones
+        mappings:
+          - versionRange: "[1.4.0.M1, 1.4.1.M1)"
+            version: 0.1.0.M1
+            repositories: spring-milestones
+          - versionRange: "1.4.1.BUILD-SNAPSHOT"
+            version: 0.1.0.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
       scs-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies

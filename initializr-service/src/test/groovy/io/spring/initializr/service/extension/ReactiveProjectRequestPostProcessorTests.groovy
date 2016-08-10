@@ -53,7 +53,16 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void versionsAreOverriddenMaven() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.0.BUILD-SNAPSHOT'
+		request.bootVersion = '1.4.0.RELEASE'
+		generateMavenPom(request)
+				.hasProperty('spring.version', '5.0.0.M1')
+				.hasProperty('reactor.version', '3.0.0.RC1')
+	}
+
+	@Test
+	void versionsAreOverriddenWithSnapshotMaven() {
+		ProjectRequest request = createProjectRequest('experimental-web-reactive')
+		request.bootVersion = '1.4.1.BUILD-SNAPSHOT'
 		generateMavenPom(request)
 				.hasProperty('spring.version', '5.0.0.BUILD-SNAPSHOT')
 				.hasProperty('reactor.version', '3.0.0.BUILD-SNAPSHOT')
@@ -71,7 +80,15 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void bomIsAddedMaven() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.0.BUILD-SNAPSHOT'
+		request.bootVersion = '1.4.0.RELEASE'
+		generateMavenPom(request).hasBom('org.springframework.boot.experimental',
+				'spring-boot-dependencies-web-reactive', '0.1.0.M1')
+	}
+
+	@Test
+	void bomIsAddedWithSnapshotMaven() {
+		ProjectRequest request = createProjectRequest('experimental-web-reactive')
+		request.bootVersion = '1.4.1.BUILD-SNAPSHOT'
 		generateMavenPom(request).hasBom('org.springframework.boot.experimental',
 				'spring-boot-dependencies-web-reactive', '0.1.0.BUILD-SNAPSHOT')
 	}
@@ -79,7 +96,16 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void bomIsAddedGradle() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.0.BUILD-SNAPSHOT'
+		request.bootVersion = '1.4.0.RELEASE'
+		generateGradleBuild(request).contains("dependencyManagement {")
+				.contains("imports {")
+				.contains("mavenBom \"org.springframework.boot.experimental:spring-boot-dependencies-web-reactive:0.1.0.M1\"")
+	}
+
+	@Test
+	void bomIsAddedWithSnapshotGradle() {
+		ProjectRequest request = createProjectRequest('experimental-web-reactive')
+		request.bootVersion = '1.4.1.BUILD-SNAPSHOT'
 		generateGradleBuild(request).contains("dependencyManagement {")
 				.contains("imports {")
 				.contains("mavenBom \"org.springframework.boot.experimental:spring-boot-dependencies-web-reactive:0.1.0.BUILD-SNAPSHOT\"")
