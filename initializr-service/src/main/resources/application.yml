@@ -73,6 +73,15 @@ initializr:
           id: security
           description: Secure your application via spring-security
           weight: 100
+          additional:
+            - securitytest
+        - name: Security Test
+          id: securitytest
+          description: Testing package for spring-security
+          groupId: org.springframework.security
+          artifactId: spring-security-test
+          scope: test
+          starter: false
         - name: AOP
           id: aop
           description: Aspect-oriented programming including spring-aop and AspectJ

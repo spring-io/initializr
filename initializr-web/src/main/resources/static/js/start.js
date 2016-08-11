@@ -142,6 +142,26 @@ $(function () {
     var removeTag = function (id) {
         $("#starters div[data-id='" + id + "']").remove();
     };
+    var addAdditionalDependencies = function (depIds) {
+        if(depIds != undefined) {
+            var ids = depIds.split(',');
+            for (x in ids) {
+                var starter = starters.get(ids[x]);
+                addTag(starter[0].id, starter[0].name);
+                $("#dependencies input[value='" + starter[0].id + "']").prop('checked', true);
+            }
+        }
+    };
+    var removeAdditionalDependencies = function (depIds) {
+        if(depIds != undefined) {
+            var ids = depIds.split(',');
+            for (x in ids) {
+                var starter = starters.get(ids[x]);
+                removeTag(starter[0].id);
+                $("#dependencies input[value='" + starter[0].id + "']").prop('checked', false);
+            }
+        }
+    };
     var initializeSearchEngine = function (engine, bootVersion) {
         $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
             engine.clear();
@@ -210,10 +230,12 @@ $(function () {
         if(alreadySelected) {
             removeTag(suggestion.id);
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
+            removeAdditionalDependencies(suggestion.additional);
         }
         else {
             addTag(suggestion.id, suggestion.name);
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
+            addAdditionalDependencies(suggestion.additional);
         }
         $('#autocomplete').typeahead('val', '');
     });
@@ -221,6 +243,9 @@ $(function () {
         var id = $(this).parent().attr("data-id");
         $("#dependencies input[value='" + id + "']").prop('checked', false);
         removeTag(id);
+        var starter = starters.get(id);
+        removeAdditionalDependencies(starter[0].additional);
+
     });
     $("#groupId").on("change", function() {
         $("#packageName").val($(this).val());
@@ -229,12 +254,15 @@ $(function () {
         $("#name").val($(this).val());
     });
     $("#dependencies input").bind("change", function () {
-        var value = $(this).val()
+        var value = $(this).val();
         if ($(this).prop('checked')) {
             var results = starters.get(value);
             addTag(results[0].id, results[0].name);
+            addAdditionalDependencies(results[0].additional);
         } else {
             removeTag(value);
+            var starter = starters.get(value);
+            removeAdditionalDependencies(starter[0].additional);
         }
     });
     Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {

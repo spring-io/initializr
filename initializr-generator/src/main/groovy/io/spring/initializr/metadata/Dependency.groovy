@@ -94,6 +94,8 @@ class Dependency extends MetadataElement {
 
 	List<String> keywords = []
 
+	List<String> additional = []
+
 	void setScope(String scope) {
 		if (!SCOPE_ALL.contains(scope)) {
 			throw new InvalidInitializrMetadataException("Invalid scope $scope must be one of $SCOPE_ALL")
@@ -140,7 +142,7 @@ class Dependency extends MetadataElement {
 		} else if (!hasCoordinates()) {
 			// Let's build the coordinates from the id
 			def st = new StringTokenizer(id, ':')
-			if (st.countTokens() == 1) { // assume spring-boot-starter
+			if (st.countTokens() == 1 && starter) { // assume spring-boot-starter
 				asSpringBootStarter(id)
 			} else if (st.countTokens() == 2 || st.countTokens() == 3) {
 				groupId = st.nextToken()

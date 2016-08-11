@@ -78,6 +78,7 @@ class ProjectRequest extends BasicProjectRequest {
 	 */
 	void resolve(InitializrMetadata metadata) {
 		List<String> depIds = style ? style : dependencies
+		List<String> additionalDepIds = new ArrayList<>()
 		String actualBootVersion = bootVersion ?: metadata.bootVersions.default.id
 		Version requestedVersion = Version.parse(actualBootVersion)
 		resolvedDependencies = depIds.collect {
@@ -85,7 +86,22 @@ class ProjectRequest extends BasicProjectRequest {
 			if (dependency == null) {
 				throw new InvalidProjectRequestException("Unknown dependency '$it' check project metadata")
 			}
-			dependency.resolve(requestedVersion)
+			dependency = dependency.resolve(requestedVersion)
+			dependency.additional.each {
+				if (!additionalDepIds.contains(it)) {
+					additionalDepIds.add(it)
+				}
+			}
+			dependency
+		}
+		additionalDepIds.each {
+			def dependency = metadata.dependencies.get(it)
+			if (dependency == null) {
+				throw new InvalidProjectRequestException("Unknown dependency '$it' check project metadata")
+			}
+			if (!resolvedDependencies.contains(dependency)) {
+				resolvedDependencies.add(dependency.resolve(requestedVersion))
+			}
 		}
 		resolvedDependencies.each {
 			it.facets.each {
