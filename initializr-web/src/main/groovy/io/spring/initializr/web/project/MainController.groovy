@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.project
 
+import org.springframework.util.Assert
+
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
@@ -75,6 +77,12 @@ class MainController extends AbstractInitializrController {
 
 	private CommandLineHelpGenerator commandLineHelpGenerator = new CommandLineHelpGenerator()
 
+	private final String home
+
+	MainController(String home) {
+		Assert.notNull(home, "Home page may not be null")
+		this.home = home
+	}
 
 	@ModelAttribute
 	BasicProjectRequest projectRequest(@RequestHeader Map<String,String> headers) {
@@ -173,7 +181,7 @@ class MainController extends AbstractInitializrController {
 	@RequestMapping(value = '/', produces = 'text/html')
 	@ResponseBody
 	String home() {
-		renderHome('home.html')
+		renderHome(home)
 	}
 
 	@RequestMapping('/spring')
