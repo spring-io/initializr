@@ -229,10 +229,13 @@ https://console.run.pivotal.io/tools[Pivotal Web Services].
 You should ensure that the application name and URL (name and host values) are suitable for
 your environment before running `cf push`.
 
+First, make sure that you have <<building, built the library>>, the build the service from
+the `initializr-service` directory:
 Make sure first that the jar has been created:
 
 [indent=0]
 ----
+    $ cd initializr-service
     $ mvn package
 ----
 
