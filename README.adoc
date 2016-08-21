@@ -40,8 +40,9 @@ enable the `full` profile in your IDE to easily run it locally.
 Spring Initializr can be used as follows:
 
 * With your browser (i.e. link:https://start.spring.io[])
-* In your IDE if you are using STS or IntelliJ IDEA
-* On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with [cURL] or [HTTPie]
+* In your IDE if you are using STS, IntelliJ IDEA Ultimate or NetBeans (with
+https://github.com/AlexFalappa/nb-springboot[this plugin])
+* On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with `cURL` or `HTTPie`
 
 [TIP]
 ====
