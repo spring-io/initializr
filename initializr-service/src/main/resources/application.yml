@@ -57,7 +57,7 @@ initializr:
       scs-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
-        version: 1.1.1.RELEASE
+        version: 1.1.2.RELEASE
         additionalBoms: [cloud-bom]
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
@@ -770,4 +770,3 @@ initializr:
     - name: 1.1.12
       id: 1.1.12.RELEASE
       default: false
-
