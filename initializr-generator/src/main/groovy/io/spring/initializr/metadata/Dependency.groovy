@@ -85,7 +85,7 @@ class Dependency extends MetadataElement {
 
 	String repository
 
-	URL url
+	List<Link> links = []
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	int weight
