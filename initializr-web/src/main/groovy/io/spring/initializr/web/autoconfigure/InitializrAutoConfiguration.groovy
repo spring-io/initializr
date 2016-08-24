@@ -73,7 +73,7 @@ class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	MainController initializrMainController() {
-		new MainController()
+		new MainController('home.html')
 	}
 
 	@Bean

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.project
 
+import io.spring.initializr.metadata.InitializrMetadata
+
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
@@ -56,8 +58,12 @@ abstract class AbstractInitializrController {
 	 * Render the home page with the specified template.
 	 */
 	protected String renderHome(String templatePath) {
-		def metadata = metadataProvider.get()
+		def model = generateDefaultModel(metadataProvider.get())
 
+		template templatePath, model
+	}
+
+	protected LinkedHashMap generateDefaultModel(InitializrMetadata metadata) {
 		def model = [:]
 		model['serviceUrl'] = generateAppUrl()
 		metadata.properties.each {
@@ -73,8 +79,7 @@ abstract class AbstractInitializrController {
 
 		// Google analytics support
 		model['trackingCode'] = metadata.configuration.env.googleAnalyticsTrackingCode
-
-		template templatePath, model
+		model
 	}
 
 	/**
