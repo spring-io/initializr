@@ -84,12 +84,14 @@ class Dependency extends MetadataElement {
 
 	@JsonIgnore
 	String versionRequirement
-	
+
 	private VersionRange range
 
 	String bom
 
 	String repository
+
+	List<Link> links = []
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	int weight
