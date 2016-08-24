@@ -143,7 +143,7 @@
                             <label>
                                 <input tabindex="13" type="checkbox" name="style" value="${it.id}">
                                 ${it.name}
-                                <p class="help-block">${it.description}</p>
+                                <% if (it.url) { %><a href="${it.url}" class="help-block">${it.description}</p><% } else {%><p class="help-block">${it.description}</p><% } %>
                             </label>
                         </div>
                         <% } %>

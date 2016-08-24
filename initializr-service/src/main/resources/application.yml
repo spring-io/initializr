@@ -132,6 +132,7 @@ initializr:
       content:
         - name: Web
           id: web
+          url: https://spring.io/guides/gs/rest-service/
           description: Full-stack web development with Tomcat and Spring MVC
           weight: 100
           facets:

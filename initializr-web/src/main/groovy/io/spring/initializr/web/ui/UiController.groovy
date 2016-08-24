@@ -84,6 +84,9 @@ class UiController {
 		if (d.description) {
 			result.description = d.description
 		}
+		if (d.url) {
+			result.url = d.url
+		}
 		if (d.weight) {
 			result.weight = d.weight
 		}

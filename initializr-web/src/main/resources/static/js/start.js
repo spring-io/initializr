@@ -133,9 +133,10 @@ $(function () {
             }
         });
     };
-    var addTag = function (id, name) {
+    var addTag = function (id, name, url) {
         if ($("#starters div[data-id='" + id + "']").length == 0) {
-            $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
+            var link = url ? "<a href='" + url + "'>" + name + "</a>" : name;
+            $("#starters").append("<div class='tag' data-id='" + id + "'>" + link +
                 "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
         }
     };
@@ -212,7 +213,7 @@ $(function () {
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
         }
         else {
-            addTag(suggestion.id, suggestion.name);
+            addTag(suggestion.id, suggestion.name, suggestion.url);
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
         }
         $('#autocomplete').typeahead('val', '');
@@ -232,7 +233,7 @@ $(function () {
         var value = $(this).val()
         if ($(this).prop('checked')) {
             var results = starters.get(value);
-            addTag(results[0].id, results[0].name);
+            addTag(results[0].id, results[0].name, results[0].url);
         } else {
             removeTag(value);
         }
