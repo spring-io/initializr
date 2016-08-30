@@ -659,7 +659,7 @@ initializr:
           description: Activiti BPMN workflow engine
           groupId: org.activiti
           artifactId: activiti-spring-boot-starter-basic
-          version: 5.19.0
+          version: 5.21.0
         - name: Apache Camel
           id: camel
           description: Integration using Apache Camel
