@@ -90,6 +90,10 @@ initializr:
           id: jta-bitronix
           description: JTA distributed transactions via Bitronix
           versionRange: 1.2.0.M1
+        - name: Narayana (JTA)
+          id: jta-narayana
+          description: JTA distributed transactions via Narayana
+          versionRange: 1.4.0.M2
         - name: Cache
           id: cache
           description: Spring's Cache abstraction
