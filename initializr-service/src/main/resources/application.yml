@@ -146,7 +146,7 @@ initializr:
               artifactId: spring-boot-starter-ws
         - name: Jersey (JAX-RS)
           id: jersey
-          description: the Jersey RESTful Web Services framework
+          description: RESTful Web Services framework
           versionRange: 1.2.0.RELEASE
         - name: Ratpack
           id: ratpack
@@ -163,7 +163,7 @@ initializr:
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
           version: 1.0.0
-          description: Vaadin
+          description: Vaadin java web application framework
           bom: vaadin-bom
         - name: Rest Repositories
           id: data-rest
@@ -175,7 +175,7 @@ initializr:
           versionRange: 1.2.2.RELEASE
         - name: Rest Repositories HAL Browser
           id: data-rest-hal
-          description: Browsing Spring Data REST repositories with an HTML UI
+          description: Browsing Spring Data REST repositories in your browser
           groupId: org.springframework.data
           artifactId: spring-data-rest-hal-browser
           versionRange: 1.3.0.M1
@@ -702,7 +702,7 @@ initializr:
           artifactId: spring-boot-starter-web-reactive
           bom: experimental-reactive-bom
           versionRange: 1.4.0.RC1
-          description: Reactive web development with Tomcat and Spring Reactive (experimental)
+          description: Reactive web development with Apache Tomcat and Spring Reactive (experimental)
   types:
     - name: Maven Project
       id: maven-project
