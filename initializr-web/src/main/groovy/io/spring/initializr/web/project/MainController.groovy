@@ -24,7 +24,9 @@ import io.spring.initializr.generator.BasicProjectRequest
 import io.spring.initializr.generator.CommandLineHelpGenerator
 import io.spring.initializr.generator.ProjectGenerator
 import io.spring.initializr.generator.ProjectRequest
+import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Agent
+import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper
@@ -67,14 +69,17 @@ class MainController extends AbstractInitializrController {
 
 	static final MediaType HAL_JSON_CONTENT_TYPE = MediaType.parseMediaType('application/hal+json')
 
-	@Autowired
-	private ProjectGenerator projectGenerator
+	private final ProjectGenerator projectGenerator
+	private final DependencyMetadataProvider dependencyMetadataProvider
+	private final CommandLineHelpGenerator commandLineHelpGenerator
 
-	@Autowired
-	private DependencyMetadataProvider dependencyMetadataProvider
-
-	private CommandLineHelpGenerator commandLineHelpGenerator = new CommandLineHelpGenerator()
-
+	MainController(InitializrMetadataProvider metadataProvider, GroovyTemplate groovyTemplate,
+				   ProjectGenerator projectGenerator, DependencyMetadataProvider dependencyMetadataProvider) {
+		super(metadataProvider, groovyTemplate)
+		this.projectGenerator = projectGenerator
+		this.dependencyMetadataProvider = dependencyMetadataProvider
+		this.commandLineHelpGenerator = new CommandLineHelpGenerator(groovyTemplate)
+	}
 
 	@ModelAttribute
 	BasicProjectRequest projectRequest(@RequestHeader Map<String,String> headers) {

@@ -20,6 +20,7 @@ import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrException
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.util.Version
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,7 +29,6 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.util.Assert
 
 import static io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom
-import static io.spring.initializr.util.GroovyTemplate.template
 
 /**
  * Generate a project based on the configured metadata.
@@ -57,6 +57,9 @@ class ProjectGenerator {
 
 	@Autowired
 	ProjectRequestResolver requestResolver
+
+	@Autowired
+	GroovyTemplate groovyTemplate = new GroovyTemplate()
 
 	@Autowired
 	ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator()
@@ -321,12 +324,12 @@ class ProjectGenerator {
 	}
 
 	private byte[] doGenerateMavenPom(Map model) {
-		template 'starter-pom.xml', model
+		groovyTemplate.process 'starter-pom.xml', model
 	}
 
 
 	private byte[] doGenerateGradleBuild(Map model) {
-		template 'starter-build.gradle', model
+		groovyTemplate.process 'starter-build.gradle', model
 	}
 
 	private void writeGradleWrapper(File dir) {
@@ -384,7 +387,7 @@ class ProjectGenerator {
 
 	def write(File target, String templateName, def model) {
 		def tmpl = templateName.endsWith('.groovy') ? templateName + '.tmpl' : templateName
-		def body = template tmpl, model
+		def body = groovyTemplate.process tmpl, model
 		target.write(body)
 	}
 

@@ -16,6 +16,9 @@
 
 package io.spring.initializr.web.project
 
+import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.util.GroovyTemplate
+
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -29,6 +32,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 @Deprecated
 class LegacyStsController extends AbstractInitializrController {
+
+	LegacyStsController(InitializrMetadataProvider metadataProvider, GroovyTemplate groovyTemplate) {
+		super(metadataProvider, groovyTemplate)
+	}
 
 	@RequestMapping(value = '/sts', produces = 'text/html')
 	@ResponseBody

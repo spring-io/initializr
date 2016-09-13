@@ -21,13 +21,11 @@ import javax.servlet.http.HttpServletResponse
 
 import io.spring.initializr.generator.InvalidProjectRequestException
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.util.GroovyTemplate
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-
-import static io.spring.initializr.util.GroovyTemplate.template
 
 /**
  * A base controller that uses a {@link InitializrMetadataProvider}
@@ -37,10 +35,15 @@ import static io.spring.initializr.util.GroovyTemplate.template
  */
 abstract class AbstractInitializrController {
 
-	@Autowired
-	protected InitializrMetadataProvider metadataProvider
-
+	protected final InitializrMetadataProvider metadataProvider
+	private final GroovyTemplate groovyTemplate
 	private boolean forceSsl
+
+	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
+										   GroovyTemplate groovyTemplate) {
+		this.metadataProvider = metadataProvider
+		this.groovyTemplate = groovyTemplate
+	}
 
 	@PostConstruct
 	void initialize() {
@@ -74,7 +77,7 @@ abstract class AbstractInitializrController {
 		// Google analytics support
 		model['trackingCode'] = metadata.configuration.env.googleAnalyticsTrackingCode
 
-		template templatePath, model
+		groovyTemplate.process templatePath, model
 	}
 
 	/**

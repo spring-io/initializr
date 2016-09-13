@@ -18,6 +18,8 @@ package io.spring.initializr.service
 
 import java.util.concurrent.Executor
 
+import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.web.project.LegacyStsController
 
 import org.springframework.boot.SpringApplication
@@ -44,8 +46,9 @@ class InitializrService {
 
 	@Bean
 	@SuppressWarnings("deprecation")
-	LegacyStsController legacyStsController() {
-		new LegacyStsController()
+	LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
+											GroovyTemplate groovyTemplate) {
+		new LegacyStsController(metadataProvider, groovyTemplate)
 	}
 
 	@Configuration

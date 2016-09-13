@@ -16,10 +16,14 @@
 
 package io.spring.initializr.util
 
+import java.util.concurrent.ConcurrentMap
+
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
 import groovy.text.TemplateEngine
 import org.codehaus.groovy.control.CompilationFailedException
+
+import org.springframework.util.ConcurrentReferenceHashMap
 
 /**
  * @author Dave Syer
@@ -27,25 +31,37 @@ import org.codehaus.groovy.control.CompilationFailedException
  */
 class GroovyTemplate {
 
-	// This is a copy/paste from GroovyTemplate in spring-boot-cli. We should migrate
-	// to Spring's native support available in 4.1
+	boolean cache = true
 
-	static String template(String name, Map<String, ?> model) throws IOException,
-			CompilationFailedException, ClassNotFoundException {
-		template(new GStringTemplateEngine(), name, model)
+	private final TemplateEngine engine
+	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>()
+
+	GroovyTemplate(TemplateEngine engine) {
+		this.engine = engine
 	}
 
-	static String template(TemplateEngine engine, String name, Map<String, ?> model)
+	GroovyTemplate() {
+		this(new GStringTemplateEngine())
+	}
+
+	String process(String name, Map<String, ?> model)
 			throws IOException, CompilationFailedException, ClassNotFoundException {
-		def writable = getTemplate(engine, name).make(model)
+		def template = getTemplate(name)
+		def writable = template.make(model)
 		def result = new StringWriter()
 		writable.writeTo(result)
 		result.toString()
 	}
 
-	static Template getTemplate(TemplateEngine engine, String name)
+	Template getTemplate(String name)
 			throws CompilationFailedException, ClassNotFoundException, IOException {
+		if (cache) {
+			return this.templateCaches.computeIfAbsent(name, { n -> loadTemplate(n) })
+		}
+		return loadTemplate(name)
+	}
 
+	protected Template loadTemplate(String name) {
 		def file = new File("templates", name)
 		if (file.exists()) {
 			return engine.createTemplate(file)
@@ -59,4 +75,5 @@ class GroovyTemplate {
 
 		return engine.createTemplate(name)
 	}
+
 }

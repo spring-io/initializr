@@ -19,6 +19,7 @@ package io.spring.initializr.generator
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.Type
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
+import io.spring.initializr.util.GroovyTemplate
 import org.junit.Test
 
 import static org.hamcrest.CoreMatchers.containsString
@@ -30,7 +31,7 @@ import static org.junit.Assert.assertThat
  */
 class CommandLineHelpGeneratorTests {
 
-	private CommandLineHelpGenerator generator = new CommandLineHelpGenerator()
+	private CommandLineHelpGenerator generator = new CommandLineHelpGenerator(new GroovyTemplate())
 
 	@Test
 	void generateGenericCapabilities() {

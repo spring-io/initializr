@@ -27,6 +27,7 @@ import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
+import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.web.project.MainController
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider
@@ -34,6 +35,7 @@ import io.spring.initializr.web.ui.UiController
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.bind.RelaxedPropertyResolver
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
@@ -43,6 +45,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCache
 import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -72,8 +75,11 @@ class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	MainController initializrMainController() {
-		new MainController()
+	MainController initializrMainController(InitializrMetadataProvider metadataProvider,
+											GroovyTemplate groovyTemplate,
+											ProjectGenerator projectGenerator,
+											DependencyMetadataProvider dependencyMetadataProvider) {
+		new MainController(metadataProvider, groovyTemplate, projectGenerator, dependencyMetadataProvider)
 	}
 
 	@Bean
@@ -86,6 +92,16 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean
 	ProjectGenerator projectGenerator() {
 		new ProjectGenerator()
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	GroovyTemplate groovyTemplate(Environment environment) {
+		def resolver = new RelaxedPropertyResolver(environment, 'spring.groovy.template.')
+		boolean cache = resolver.getProperty('cache', Boolean.class, true)
+		def groovyTemplate = new GroovyTemplate()
+		groovyTemplate.cache = cache
+		groovyTemplate
 	}
 
 	@Bean

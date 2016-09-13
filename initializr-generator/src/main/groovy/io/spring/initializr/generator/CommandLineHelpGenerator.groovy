@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@ package io.spring.initializr.generator
 
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.Type
+import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.util.VersionRange
-
-import static io.spring.initializr.util.GroovyTemplate.template
 
 /**
  * Generate help pages for command-line clients.
@@ -39,6 +38,12 @@ class CommandLineHelpGenerator {
  =========|_|==============|___/=/_/_/_/
  '''
 
+ 	private final GroovyTemplate template
+
+	CommandLineHelpGenerator(GroovyTemplate template) {
+		this.template = template
+	}
+
 	/**
 	 * Generate the capabilities of the service as a generic plain text
 	 * document. Used when no particular agent was detected.
@@ -46,7 +51,7 @@ class CommandLineHelpGenerator {
 	String generateGenericCapabilities(InitializrMetadata metadata, String serviceUrl) {
 		def model = initializeCommandLineModel(metadata, serviceUrl)
 		model['hasExamples'] = false
-		template 'cli-capabilities.txt', model
+		template.process 'cli-capabilities.txt', model
 	}
 
 	/**
@@ -55,9 +60,9 @@ class CommandLineHelpGenerator {
 	 */
 	String generateCurlCapabilities(InitializrMetadata metadata, String serviceUrl) {
 		def model = initializeCommandLineModel(metadata, serviceUrl)
-		model['examples'] = template 'curl-examples.txt', model
+		model['examples'] = template.process 'curl-examples.txt', model
 		model['hasExamples'] = true
-		template 'cli-capabilities.txt', model
+		template.process 'cli-capabilities.txt', model
 	}
 
 	/**
@@ -66,9 +71,9 @@ class CommandLineHelpGenerator {
 	 */
 	String generateHttpieCapabilities(InitializrMetadata metadata, String serviceUrl) {
 		def model = initializeCommandLineModel(metadata, serviceUrl)
-		model['examples'] = template 'httpie-examples.txt', model
+		model['examples'] = template.process 'httpie-examples.txt', model
 		model['hasExamples'] = true
-		template 'cli-capabilities.txt', model
+		template.process 'cli-capabilities.txt', model
 	}
 
 	/**
@@ -78,7 +83,7 @@ class CommandLineHelpGenerator {
 	String generateSpringBootCliCapabilities(InitializrMetadata metadata, String serviceUrl) {
 		def model = initializeSpringBootCliModel(metadata, serviceUrl)
 		model['hasExamples'] = false
-		template('boot-cli-capabilities.txt', model)
+		template.process('boot-cli-capabilities.txt', model)
 	}
 
 	protected Map initializeCommandLineModel(InitializrMetadata metadata, serviceUrl) {
