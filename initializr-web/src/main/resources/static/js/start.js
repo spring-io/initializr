@@ -126,10 +126,13 @@ $(function () {
         var versions = new Versions();
         $("#dependencies div.checkbox").each(function (idx, item) {
             if ($(item).attr('data-range') === 'null' || versions.matchRange($(item).attr('data-range'))(versionRange)) {
-                $(item).show();
+                $("input", item).removeAttr("disabled");
+                $(item).removeClass("disabled");
             } else {
-                $(item).hide();
                 $("input", item).prop('checked', false);
+                $(item).addClass("disabled");
+                $("input", item).attr("disabled", true);
+                removeTag($("input", item).val());
             }
         });
     };
