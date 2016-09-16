@@ -153,6 +153,25 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 		}
 	}
 
+	@Test
+	void selectDependencyAndChangeToIncompatibleVersionRemovesIt() {
+		toHome {
+			selectDependency(page, 'Data JPA')
+			selectDependency(page, 'org.acme:bur')
+			page.bootVersion = '1.0.2.RELEASE' // Bur isn't available anymore
+
+			page.generateProject.click()
+			at HomePage
+			assertSimpleProject()
+					.isMavenProject()
+					.pomAssert()
+					.hasSpringBootParent('1.0.2.RELEASE')
+					.hasDependenciesCount(2)
+					.hasSpringBootStarterDependency('data-jpa')
+					.hasSpringBootStarterTest()
+		}
+	}
+
 	ProjectAssert assertSimpleProject() {
 		zipProjectAssert(from('demo.zip'))
 				.hasBaseDir("demo")
