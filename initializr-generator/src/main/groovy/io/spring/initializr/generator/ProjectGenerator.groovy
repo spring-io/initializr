@@ -20,6 +20,7 @@ import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrException
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
+import io.spring.initializr.util.Agent
 import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.util.Version
 
@@ -140,6 +141,8 @@ class ProjectGenerator {
 			writeMavenWrapper(dir)
 		}
 
+		generateGitIgnore(dir, request)
+
 		def applicationName = request.applicationName
 		def language = request.language
 
@@ -208,6 +211,19 @@ class ProjectGenerator {
 	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, cause)
 		eventPublisher.publishEvent(event)
+	}
+
+	/**
+	 * Generate a {@code .gitignore} file for the specified {@link ProjectRequest}
+	 * @param dir the root directory of the project
+	 * @param request the request to handle
+	 */
+	protected void generateGitIgnore(File dir, ProjectRequest request) {
+		def model = [:]
+		def agent = extractAgent(request)
+		model['agent'] = agent ? agent.id.id : null
+		model['build'] = isGradleBuild(request) ? 'gradle' : 'maven'
+		write(new File(dir, '.gitignore'), 'gitignore.tmpl', model)
 	}
 
 	/**
@@ -303,6 +319,16 @@ class ProjectGenerator {
 	protected String generateImport(String type, String language) {
 		String end = (language.equals("groovy") || language.equals("kotlin")) ? '' : ';'
 		"import $type$end"
+	}
+
+	private static Agent extractAgent(ProjectRequest request) {
+		if (request.parameters['user-agent']) {
+			Agent agent = Agent.fromUserAgent(request.parameters['user-agent'])
+			if (agent) {
+				return agent
+			}
+		}
+		null
 	}
 
 	private static isGradleBuild(ProjectRequest request) {

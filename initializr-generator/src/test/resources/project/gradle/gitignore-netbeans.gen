@@ -1,0 +1,11 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/

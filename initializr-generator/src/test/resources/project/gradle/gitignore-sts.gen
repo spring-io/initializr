@@ -1,0 +1,8 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.classpath
+.project
+.settings

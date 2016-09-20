@@ -1,0 +1,23 @@
+<% if (build=='maven') {  %>target/
+!.mvn/wrapper/maven-wrapper.jar<% } else { %>.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar<% } %><% if ('sts'==agent) { %>
+
+### STS ###
+.classpath
+.project
+.settings<% } %><% if ('intellijidea'==agent) { %>
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr<% } %><% if ('netbeans'==agent) { %>
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/<% } %>

@@ -51,7 +51,9 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void simpleZipProject() {
-		downloadZip('/starter.zip?style=web&style=jpa').isJavaProject().isMavenProject()
+		downloadZip('/starter.zip?style=web&style=jpa').isJavaProject()
+				.hasFile('.gitignore')
+				.isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert()
 				.hasDependenciesCount(3)
 				.hasSpringBootStarterDependency('web')
@@ -61,7 +63,9 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void simpleTgzProject() {
-		downloadTgz('/starter.tgz?style=org.acme:foo').isJavaProject().isMavenProject()
+		downloadTgz('/starter.tgz?style=org.acme:foo').isJavaProject()
+				.hasFile('.gitignore')
+				.isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
 				.hasDependency('org.acme', 'foo', '1.3.5')

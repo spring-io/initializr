@@ -221,7 +221,7 @@ class MainController extends AbstractInitializrController {
 
 		new AntBuilder().zip(destfile: download) {
 			zipfileset(dir: dir, includes: wrapperScript, filemode: 755)
-			zipfileset(dir: dir, includes: '**', excludes: wrapperScript)
+			zipfileset(dir: dir, includes: '**,', excludes: wrapperScript, defaultexcludes: 'no')
 		}
 		upload(download, dir, generateFileName(request, 'zip'), 'application/zip')
 	}
@@ -238,7 +238,7 @@ class MainController extends AbstractInitializrController {
 
 		new AntBuilder().tar(destfile: download, compression: 'gzip') {
 			zipfileset(dir: dir, includes: wrapperScript, filemode: 755)
-			zipfileset(dir: dir, includes: '**', excludes: wrapperScript)
+			zipfileset(dir: dir, includes: '**', excludes: wrapperScript, defaultexcludes: 'no')
 		}
 		upload(download, dir, generateFileName(request, 'tgz'), 'application/x-compress')
 	}
