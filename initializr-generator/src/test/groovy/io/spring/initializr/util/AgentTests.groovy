@@ -73,6 +73,13 @@ class AgentTests {
 	}
 
 	@Test
+	void checkNetBeans() {
+		Agent agent = Agent.fromUserAgent('nb-springboot-plugin/0.1')
+		assertThat(agent.id, equalTo(Agent.AgentId.NETBEANS))
+		assertThat(agent.version, is('0.1'))
+	}
+
+	@Test
 	void checkGenericBrowser() {
 		Agent agent = Agent.fromUserAgent(
 				'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ')

@@ -63,6 +63,8 @@ class Agent {
 
 		INTELLIJ_IDEA('intellijidea', 'IntelliJ IDEA'),
 
+		NETBEANS('netbeans', 'NetBeans'),
+
 		BROWSER('browser', 'Browser')
 
 		final String id
@@ -80,6 +82,8 @@ class Agent {
 
 		private static final STS_REGEX = 'STS (.*)'
 
+		private static final NETBEANS_REGEX = 'nb-springboot-plugin\\/(.*)'
+
 		static Agent parse(String userAgent) {
 			def matcher = (userAgent =~ TOOL_REGEX)
 			if (matcher.matches()) {
@@ -95,6 +99,11 @@ class Agent {
 			if (matcher.matches()) {
 				return new Agent(AgentId.STS, matcher.group(1))
 			}
+			matcher = userAgent =~ NETBEANS_REGEX
+			if (matcher.matches()) {
+				return new Agent(AgentId.NETBEANS, matcher.group(1))
+			}
+
 			if (userAgent.equals(AgentId.INTELLIJ_IDEA.name)) {
 				return new Agent(AgentId.INTELLIJ_IDEA, null)
 			}
