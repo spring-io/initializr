@@ -37,7 +37,7 @@ import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_
 class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 
 	@Parameterized.Parameters(name = "{0}")
-	public static Object[] parameters() {
+	static Object[] parameters() {
 		Object[] maven = ["maven", "pom.xml"]
 		Object[] gradle = ["gradle", "build.gradle"]
 		Object[] parameters = [maven, gradle]
@@ -55,17 +55,17 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardJarJava() {
+	void standardJarJava() {
 		testStandardJar('java')
 	}
 
 	@Test
-	public void standardJarGroovy() {
+	void standardJarGroovy() {
 		testStandardJar('groovy')
 	}
 
 	@Test
-	public void standardJarKotlin() {
+	void standardJarKotlin() {
 		testStandardJar('kotlin')
 	}
 
@@ -78,17 +78,17 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardWarJava() {
+	void standardWarJava() {
 		testStandardWar('java')
 	}
 
 	@Test
-	public void standardWarGroovy() {
+	void standardWarGroovy() {
 		testStandardWar('java')
 	}
 
 	@Test
-	public void standardWarKotlin() {
+	void standardWarKotlin() {
 		testStandardWar('kotlin')
 	}
 
@@ -102,7 +102,7 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void versionOverride() {
+	void versionOverride() {
 		def request = createProjectRequest('web')
 		request.buildProperties.versions['spring-foo.version'] = {'0.1.0.RELEASE'}
 		request.buildProperties.versions['spring-bar.version'] = {'0.2.0.RELEASE'}
@@ -112,7 +112,7 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void bomWithVersionProperty() {
+	void bomWithVersionProperty() {
 		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'the-bom')
 		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom',
 				version: '1.3.3', versionProperty: 'foo.version')

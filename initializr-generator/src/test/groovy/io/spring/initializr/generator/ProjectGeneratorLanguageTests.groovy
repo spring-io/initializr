@@ -34,7 +34,7 @@ import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_
 class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 
 	@Parameterized.Parameters(name = "{0}")
-	public static Object[] parameters() {
+	static Object[] parameters() {
 		Object[] java = ["java", "java"]
 		Object[] groovy = ["groovy", "groovy"]
 		Object[] kotlin = ["kotlin", "kt"]
@@ -53,7 +53,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardJar() {
+	void standardJar() {
 		def request = createProjectRequest()
 		request.language = language
 		generateProject(request).isGenericProject(DEFAULT_PACKAGE_NAME, DEFAULT_APPLICATION_NAME,
@@ -61,7 +61,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardWar() {
+	void standardWar() {
 		def request = createProjectRequest('web')
 		request.language = language
 		request.packaging = 'war'
@@ -70,7 +70,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardMainClass() {
+	void standardMainClass() {
 		def request = createProjectRequest()
 		request.language = language
 
@@ -80,7 +80,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardTestClass() {
+	void standardTestClass() {
 		def request = createProjectRequest()
 		request.language = language
 
@@ -90,7 +90,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardTestClassWeb() {
+	void standardTestClassWeb() {
 		def request = createProjectRequest('web')
 		request.language = language
 
@@ -100,17 +100,17 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardServletInitializer() {
+	void standardServletInitializer() {
 		testServletInitializr(null, 'standard')
 	}
 
 	@Test
-	public void springBoot14M2ServletInitializer() {
+	void springBoot14M2ServletInitializer() {
 		testServletInitializr('1.4.0.M2', 'standard')
 	}
 
 	@Test
-	public void springBoot14ServletInitializer() {
+	void springBoot14ServletInitializer() {
 		testServletInitializr('1.4.0.M3', 'spring-boot-1.4')
 	}
 
@@ -127,7 +127,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot14M1TestClass() {
+	void springBoot14M1TestClass() {
 		def request = createProjectRequest()
 		request.language = language
 		request.bootVersion = '1.4.0.M1'
@@ -138,7 +138,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot14TestClass() {
+	void springBoot14TestClass() {
 		def request = createProjectRequest()
 		request.language = language
 		request.bootVersion = '1.4.0.M2'
@@ -149,7 +149,7 @@ class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot14TestClassWeb() {
+	void springBoot14TestClassWeb() {
 		def request = createProjectRequest('web')
 		request.language = language
 		request.bootVersion = '1.4.0.M2'
