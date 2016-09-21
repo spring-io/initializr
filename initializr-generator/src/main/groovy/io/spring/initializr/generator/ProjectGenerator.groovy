@@ -220,8 +220,6 @@ class ProjectGenerator {
 	 */
 	protected void generateGitIgnore(File dir, ProjectRequest request) {
 		def model = [:]
-		def agent = extractAgent(request)
-		model['agent'] = agent ? agent.id.id : null
 		model['build'] = isGradleBuild(request) ? 'gradle' : 'maven'
 		write(new File(dir, '.gitignore'), 'gitignore.tmpl', model)
 	}
@@ -319,16 +317,6 @@ class ProjectGenerator {
 	protected String generateImport(String type, String language) {
 		String end = (language.equals("groovy") || language.equals("kotlin")) ? '' : ';'
 		"import $type$end"
-	}
-
-	private static Agent extractAgent(ProjectRequest request) {
-		if (request.parameters['user-agent']) {
-			Agent agent = Agent.fromUserAgent(request.parameters['user-agent'])
-			if (agent) {
-				return agent
-			}
-		}
-		null
 	}
 
 	private static isGradleBuild(ProjectRequest request) {

@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.ClassPathResource
 
 import static org.hamcrest.CoreMatchers.containsString
 import static org.junit.Assert.assertThat
@@ -669,6 +670,24 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		))
 		generateMavenPom(request).hasDependency(
 				new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', version: '1.2.0'))
+	}
+
+	@Test
+	void gitIgnoreMaven() {
+		def request = createProjectRequest()
+		request.type = 'maven-project'
+		def project = generateProject(request)
+		project.sourceCodeAssert(".gitignore")
+				.equalsTo(new ClassPathResource("project/maven/gitignore.gen"))
+	}
+
+	@Test
+	void gitIgnoreGradle() {
+		def request = createProjectRequest()
+		request.type = 'gradle-project'
+		def project = generateProject(request)
+		project.sourceCodeAssert(".gitignore")
+				.equalsTo(new ClassPathResource("project/gradle/gitignore.gen"))
 	}
 
 	@Test

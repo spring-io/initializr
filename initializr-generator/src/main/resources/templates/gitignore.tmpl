@@ -1,18 +1,20 @@
 <% if (build=='maven') {  %>target/
 !.mvn/wrapper/maven-wrapper.jar<% } else { %>.gradle
 /build/
-!gradle/wrapper/gradle-wrapper.jar<% } %><% if ('sts'==agent) { %>
+!gradle/wrapper/gradle-wrapper.jar<% } %>
 
 ### STS ###
 .classpath
+.factorypath
 .project
-.settings<% } %><% if ('intellijidea'==agent) { %>
+.settings
+.springBeans
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
-*.ipr<% } %><% if ('netbeans'==agent) { %>
+*.ipr
 
 ### NetBeans ###
 nbproject/private/
@@ -20,4 +22,4 @@ build/
 nbbuild/
 dist/
 nbdist/
-.nb-gradle/<% } %>
+.nb-gradle/

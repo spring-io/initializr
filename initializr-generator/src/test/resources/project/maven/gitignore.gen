@@ -1,6 +1,19 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+### STS ###
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
 ### NetBeans ###
 nbproject/private/
 build/
