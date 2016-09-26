@@ -27,8 +27,11 @@ initializr:
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.M1)"
             version: Angel.SR6
-          - versionRange: "[1.3.0.M2,1.4.1.RELEASE]"
+          - versionRange: "[1.3.0.M2,1.4.0.RELEASE)"
             version: Brixton.SR6
+          - versionRange: 1.4.0.RELEASE
+            version: Camden.RELEASE
+            repositories: spring-snapshots,spring-milestones
           - versionRange: 1.4.2.BUILD-SNAPSHOT
             version: Camden.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
@@ -350,8 +353,6 @@ initializr:
           description: Task result tracking along with integration with batch and streams
           groupId: org.springframework.cloud
           artifactId: spring-cloud-task-starter
-          version: 1.0.1.RELEASE
-          versionRange: 1.3.2.RELEASE
     - name: Cloud Config
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
