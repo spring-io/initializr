@@ -23,7 +23,7 @@ class ReactiveProjectRequestPostProcessor extends ProjectRequestPostProcessorAda
 
 			// No need to override those versions with Gradle
 			if ('maven'.equals(request.build)) {
-				request.buildProperties.versions['reactor.version'] = { '3.0.0.BUILD-SNAPSHOT' }
+				request.buildProperties.versions['reactor.version'] = { '3.0.3.BUILD-SNAPSHOT' }
 			}
 		}
 	}

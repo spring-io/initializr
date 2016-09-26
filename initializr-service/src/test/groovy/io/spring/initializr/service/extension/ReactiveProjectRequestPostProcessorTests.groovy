@@ -55,7 +55,7 @@ class ReactiveProjectRequestPostProcessorTests {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
 		request.bootVersion = '2.0.0.BUILD-SNAPSHOT'
 		generateMavenPom(request)
-				.hasProperty('reactor.version', '3.0.0.BUILD-SNAPSHOT')
+				.hasProperty('reactor.version', '3.0.3.BUILD-SNAPSHOT')
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class ReactiveProjectRequestPostProcessorTests {
 		request.bootVersion = '2.0.0.BUILD-SNAPSHOT'
 		generateGradleBuild(request)
 				.doesNotContain("ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'")
-				.doesNotContain("ext['reactor.version'] = '3.0.0.BUILD-SNAPSHOT'")
+				.doesNotContain("ext['reactor.version'] = '3.0.3.BUILD-SNAPSHOT'")
 	}
 
 	@Test
