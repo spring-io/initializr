@@ -20,7 +20,7 @@ initializr:
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
-        version: 7.6.3
+        version: 7.7.3
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -162,7 +162,7 @@ initializr:
             - web
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
-          version: 1.0.0
+          version: 1.0.1
           description: Vaadin java web application framework
           bom: vaadin-bom
         - name: Rest Repositories
