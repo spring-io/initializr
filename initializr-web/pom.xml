@@ -136,6 +136,9 @@
 									<goal>test</goal>
 								</goals>
 								<configuration>
+									<systemProperties>
+										<smoke.test>true</smoke.test>
+									</systemProperties>
 									<includes>
 										<include>**/*SmokeTests.java</include>
 									</includes>
