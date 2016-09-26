@@ -18,8 +18,8 @@ package io.spring.initializr.web.support
 
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.fail
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*
-import static org.springframework.test.web.client.response.MockRestResponseCreators.*
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 
