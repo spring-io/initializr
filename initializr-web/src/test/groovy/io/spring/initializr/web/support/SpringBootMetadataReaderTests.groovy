@@ -16,25 +16,36 @@
 
 package io.spring.initializr.web.support
 
-import io.spring.initializr.metadata.InitializrMetadata
-import io.spring.initializr.metadata.InitializrMetadataBuilder
-import org.junit.Test
-
-import org.springframework.web.client.RestTemplate
-
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.fail
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*
+import static org.springframework.test.web.client.response.MockRestResponseCreators.*
+import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadataBuilder
+
+import org.junit.Test
+import org.springframework.core.io.ClassPathResource
+import org.springframework.http.MediaType
+import org.springframework.test.web.client.MockRestServiceServer
+import org.springframework.web.client.RestTemplate
 
 /**
  * @author Stephane Nicoll
+ * @author Dave Syer
  */
 class SpringBootMetadataReaderTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataBuilder.create().build()
 
+	private final RestTemplate restTemplate = new RestTemplate()
+
+	private final MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build()
+
 	@Test
 	void readAvailableVersions() {
-		def versions = new SpringBootMetadataReader(new RestTemplate(),
+		server.expect(requestTo("https://spring.io/project_metadata/spring-boot")).andRespond(
+			withSuccess(new ClassPathResource('metadata/sagan/spring-boot.json'), MediaType.APPLICATION_JSON))
+		def versions = new SpringBootMetadataReader(restTemplate,
 				metadata.configuration.env.springBootMetadataUrl).bootVersions
 		assertNotNull "spring boot versions should not be null", versions
 		boolean defaultFound
@@ -48,6 +59,6 @@ class SpringBootMetadataReaderTests {
 				defaultFound = true
 			}
 		}
+		server.verify()
 	}
-
 }
