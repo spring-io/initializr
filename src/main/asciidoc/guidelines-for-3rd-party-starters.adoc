@@ -1,0 +1,36 @@
+# Third Party Starters
+
+Spring Initializr (start.spring.io) provides an opinionated, web based generator for Spring Boot-based projects. start.spring.io provides a number of core starters as well as 3rd party contributed starters. While it’s possible to create 3rd party starter POMs without having them listed on start.spring.io, members of the community have asked for guidelines to be considered for inclusion in our production instance. 
+
+These guidelines aim to balance:
+
+. An opinionated getting started experience
+. Alignment with the overall direction of the Spring ecosystem 
+. Community contributions
+. Community confidence in the long term viability and support for 3rd party starters
+
+## Guidelines
+
+. Code of Conduct
+* Anyone contributing to any of the projects in the Spring portfolio, including Spring Initializr, must adhere to our Code of Conduct
+. Open sourced and available on Maven central
+* The library must be open sourced and available in Maven Central repository. Please see the Maven Central requirements for more details
+* The project must be made available with an appropriate OSS license which is deemed compatible with the Apache 2.0 license
+. Community
+* There should be a sizeable community that are actively using and maintaining the library
+* An established support forum such as Stack Overflow and issue tracker
+. Spring Boot Compliance:
+* The starter should comply with http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-custom-starter-naming[the rules of a 3rd party starter].
+* If the starter provides configuration entries, they should have proper meta-data (including documentation)
+* start.spring.io will host one starter POM per 3rd party library
+* The starter should be actively maintained and upgraded to the newest version of Spring Boot if necessary 
+. Dependencies:
+* The 3rd party starter POM should not bring in any supporting dependencies that aren’t compatible with the Apache 2.0 license
+* All of these supporting dependencies must be available in Maven Central
+* Dependencies should be compatible with Spring Boot’s core starters 
+. Test Coverage:
+* The 3rd party starter should have proper test coverage to validate that it works properly with Spring Boot
+Testing should encompass combinations of optional dependencies using standalone sample projects
+. Spring Engineering Review:
+* The Spring Boot team periodically reviews starter statistics and may decide to remove 3rd party starters from start.spring.io if they are not being used. The main driver is to help keep Spring Boot opinionated and remove choices that aren’t being used by large audiences. 
+* Even if these requirements are met, the Spring Boot team may decide that a proposed 3rd party starter does not meet the strategic direction of Spring Boot and the overall portfolio. In this case, it’s still possible to create and share a 3rd party starters but they won’t be listed on start.spring.io.
