@@ -16,18 +16,18 @@
 
 package io.spring.initializr.web.support
 
-import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.fail
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
-
 import org.junit.Test
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.web.client.RestTemplate
+
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.fail
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 
 /**
  * @author Stephane Nicoll
@@ -61,4 +61,5 @@ class SpringBootMetadataReaderTests {
 		}
 		server.verify()
 	}
+
 }

@@ -16,13 +16,10 @@
 
 package io.spring.initializr.web.project
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertTrue
 import geb.Browser
 import io.spring.initializr.test.generator.ProjectAssert
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
 import io.spring.initializr.web.project.test.HomePage
-
 import org.junit.After
 import org.junit.Assume
 import org.junit.Before
@@ -32,7 +29,11 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.interactions.Actions
+
 import org.springframework.test.context.ActiveProfiles
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 
 /**
  *
@@ -50,7 +51,8 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 
 	@Before
 	void setup() {
-		Assume.assumeTrue("Not in smoke test (System property smoke.test not set)", Boolean.getBoolean("smoke.test"))
+		Assume.assumeTrue("Smoke tests disabled (set System property 'smoke.test')",
+				Boolean.getBoolean("smoke.test"))
 		downloadDir = folder.newFolder()
 		FirefoxProfile fxProfile = new FirefoxProfile();
 
