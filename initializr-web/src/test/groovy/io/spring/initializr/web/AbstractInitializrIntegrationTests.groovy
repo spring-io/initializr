@@ -195,13 +195,16 @@ abstract class AbstractInitializrIntegrationTests {
 		def stream = resource.inputStream
 		try {
 			def json = StreamUtils.copyToString(stream, Charset.forName('UTF-8'))
-			String placeholder = ":8080"
+			String placeholder = ""
+			if (this.hasProperty("host")) {
+				placeholder = "$host"
+			}
 			if (this.hasProperty("port")) {
-				placeholder = ":$port"
+				placeholder = "$host:$port"
 			}
 			// Let's parse the port as it is random
 			// TODO: put the port back somehow so it appears in stubs
-			def content = json.replaceAll(':@port@', placeholder)
+			def content = json.replaceAll('@host@', placeholder)
 			new JSONObject(content)
 		} finally {
 			stream.close()

@@ -36,9 +36,11 @@ abstract class AbstractFullStackInitializrIntegrationTests extends AbstractIniti
 	
 	@LocalServerPort
 	int port
+	
+	String host = "localhost"
 
 	String createUrl(String context) {
-		"http://localhost:${port}" + (context.startsWith('/') ? context : '/' + context)
+		"http://${host}:${port}" + (context.startsWith('/') ? context : '/' + context)
 	}
 
 }

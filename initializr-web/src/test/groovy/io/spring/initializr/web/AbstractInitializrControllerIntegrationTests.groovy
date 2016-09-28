@@ -16,9 +16,11 @@
 
 package io.spring.initializr.web
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.web.client.RestTemplateCustomizer
+import org.springframework.cloud.contract.wiremock.restdocs.WireMockRestDocsConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ContextConfiguration
@@ -32,8 +34,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ContextConfiguration(classes = RestTemplateConfig.class)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir="target/snippets")
+@AutoConfigureRestDocs(outputDir="target/snippets", uriPort=80, uriHost="start.spring.io")
 abstract class AbstractInitializrControllerIntegrationTests extends AbstractInitializrIntegrationTests {
+
+	String host = "start.spring.io"
 
 	String createUrl(String context) {
 		context.startsWith('/') ? context : '/' + context

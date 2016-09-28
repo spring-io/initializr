@@ -43,6 +43,8 @@ import javax.servlet.RequestDispatcher;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 /**
  * @author Dave Syer
@@ -72,7 +74,9 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 					requestBuilder.headers(getHeaders());
 					String label = label(httpMethod, uri.toString(), getHeaders());
 					MvcResult mvcResult = MockMvcClientHttpRequestFactory.this.mockMvc
-							.perform(requestBuilder).andDo(document(label)).andReturn();
+							.perform(requestBuilder)
+							.andDo(document(label, preprocessResponse(prettyPrint())))
+							.andReturn();
 					MockHttpServletResponse servletResponse = mvcResult.getResponse();
 					HttpStatus status = HttpStatus.valueOf(servletResponse.getStatus());
 					if (status.value() >= 400) {
@@ -88,7 +92,9 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 						}
 						// Overwrites the snippets from the first request
 						mvcResult = MockMvcClientHttpRequestFactory.this.mockMvc
-								.perform(request).andDo(document(label)).andReturn();
+								.perform(request)
+								.andDo(document(label, preprocessResponse(prettyPrint())))
+								.andReturn();
 						servletResponse = mvcResult.getResponse();
 					}
 					byte[] body = servletResponse.getContentAsByteArray();
