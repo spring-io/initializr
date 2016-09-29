@@ -9,10 +9,10 @@ Any third party client can retrieve the capabilities of the service by issuing a
 This is a full example of an output for a service running at `https://start.spring.io`:
 
 .request
-include::{snippets}/get/ROOT/headers/Accept-application_vnd.initializr.v2+json/http-request.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/http-request.adoc[]
 
 .response
-include::{snippets}/get/ROOT/headers/Accept-application_vnd.initializr.v2+json/http-response.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/http-response.adoc[]
 
 The current capabilities are the following:
 

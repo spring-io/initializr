@@ -16,15 +16,18 @@
 
 package io.spring.initializr.web
 
-import org.springframework.beans.factory.annotation.Autowired
+import io.spring.initializr.web.test.MockMvcClientHttpRequestFactory
+import io.spring.initializr.web.test.MockMvcClientHttpRequestFactoryTestExecutionListener
+
+import org.springframework.beans.factory.BeanFactory
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.web.client.RestTemplateCustomizer
-import org.springframework.cloud.contract.wiremock.restdocs.WireMockRestDocsConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.context.TestExecutionListeners
+import org.springframework.test.context.TestExecutionListeners.MergeMode
 
 import static org.junit.Assert.assertTrue
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment
@@ -32,7 +35,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * @author Stephane Nicoll
  */
-@ContextConfiguration(classes = RestTemplateConfig.class)
+@ContextConfiguration(classes = RestTemplateConfig)
+@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS, listeners = MockMvcClientHttpRequestFactoryTestExecutionListener)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir="target/snippets", uriPort=80, uriHost="start.spring.io")
 abstract class AbstractInitializrControllerIntegrationTests extends AbstractInitializrIntegrationTests {
@@ -47,9 +51,9 @@ abstract class AbstractInitializrControllerIntegrationTests extends AbstractInit
 	static class RestTemplateConfig {
 		
 		@Bean
-		RestTemplateCustomizer mockMvcCustomizer(MockMvc mockMvc) {
+		RestTemplateCustomizer mockMvcCustomizer(BeanFactory beanFactory) {
 			{ template ->
-				template.setRequestFactory(new MockMvcClientHttpRequestFactory(mockMvc))
+				template.setRequestFactory(beanFactory.getBean(MockMvcClientHttpRequestFactory))
 			}
 		}
 	}

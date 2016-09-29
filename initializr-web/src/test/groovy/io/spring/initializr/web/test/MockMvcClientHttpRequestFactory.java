@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web;
+package io.spring.initializr.web.test;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,12 +29,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.Assert;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -42,9 +39,9 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
 /**
  * @author Dave Syer
@@ -55,6 +52,8 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
 	private final MockMvc mockMvc;
+
+	private String label = "UNKNOWN";
 
 	public MockMvcClientHttpRequestFactory(MockMvc mockMvc) {
 		Assert.notNull(mockMvc, "MockMvc must not be null");
@@ -72,7 +71,6 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 							uri.toString());
 					requestBuilder.content(getBodyAsBytes());
 					requestBuilder.headers(getHeaders());
-					String label = label(httpMethod, uri.toString(), getHeaders());
 					MvcResult mvcResult = MockMvcClientHttpRequestFactory.this.mockMvc
 							.perform(requestBuilder)
 							.andDo(document(label, preprocessResponse(prettyPrint())))
@@ -113,56 +111,6 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 		};
 	}
 
-	private String label(HttpMethod method, String path, HttpHeaders headers) {
-		StringBuilder label = new StringBuilder();
-		String query = null;
-		if (path.contains("?")) {
-			query = path.substring(path.indexOf("?") + 1);
-			path = path.substring(0, path.indexOf("?"));
-		}
-		UriComponents uri = UriComponentsBuilder.fromPath(path).query(query).build();
-		if (method != null) {
-			label.append(method.toString().toLowerCase());
-		}
-		if ("/".equals(uri.getPath())) {
-			label.append("/ROOT");
-		}
-		else {
-			label.append(uri.getPath());
-		}
-		if (query != null) {
-			label.append("/queries");
-			MultiValueMap<String, String> params = uri.getQueryParams();
-			for (String name : params.keySet()) {
-				label.append("/").append(name).append("-").append(params.getFirst(name));
-			}
-		}
-		if (headers != null && !headers.isEmpty()) {
-			label.append("/headers");
-			for (String name : headers.keySet()) {
-				if (name.equals("Content-Length")) {
-					continue;
-				}
-				String value = headers.getFirst(name);
-				if (value.contains("*")) {
-					value = value.replace("*", "ALL");
-				}
-				if (value.contains("/")) {
-					value = value.replace("/", "_");
-				}
-				if (value.contains(", ")) {
-					value = value.substring(0, value.indexOf(", ")) + ".MORE";
-				}
-				if (!StringUtils.hasText(value)) {
-					value = "EMPTY";
-				}
-				label.append("/").append(name);
-				label.append("-").append(value);
-			}
-		}
-		return label.toString();
-	}
-
 	private HttpHeaders getResponseHeaders(MockHttpServletResponse response) {
 		HttpHeaders headers = new HttpHeaders();
 		for (String name : response.getHeaderNames()) {
@@ -172,6 +120,10 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 			}
 		}
 		return headers;
+	}
+
+	public void setTest(Class<?> testClass, Method testMethod) {
+		this.label = testMethod.getName();
 	}
 
 }
