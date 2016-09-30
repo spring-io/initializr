@@ -20,6 +20,7 @@ import io.spring.initializr.web.test.MockMvcClientHttpRequestFactory
 import io.spring.initializr.web.test.MockMvcClientHttpRequestFactoryTestExecutionListener
 
 import org.springframework.beans.factory.BeanFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.web.client.RestTemplateCustomizer
@@ -42,6 +43,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 abstract class AbstractInitializrControllerIntegrationTests extends AbstractInitializrIntegrationTests {
 
 	String host = "start.spring.io"
+	
+	@Autowired
+	MockMvcClientHttpRequestFactory requests
 
 	String createUrl(String context) {
 		context.startsWith('/') ? context : '/' + context

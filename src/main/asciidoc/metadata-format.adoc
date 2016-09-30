@@ -39,12 +39,8 @@ The following attribute `type` are supported:
 
 Each action is defined as a HAL-compliant URL. For instance, the `maven-project` type templated URL is defined as follows:
 
-```json
-"maven-project": {
-  "href": "https://start.spring.io/starter.zip?type=maven-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
-  "templated": true
-}
-```
+._links.maven-project
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/_links.maven-project.adoc[]
 
 You can use Spring HATEOAS and the `UriTemplate` helper in particular to generate an URI from template variables. Note that the variables match the name of top-level attribute in the metadata document. If you can't parse such URI, the `action` attribute of each type gives you the root action to invoke on the server. This requires more manual handling on your end.
 
@@ -62,39 +58,17 @@ A dependency is usually the coordinates of a _starter_ module but it can be just
 
 The name is used as a display name to be shown in whatever UI used by the remote client. The id can be anything, really as the actual dependency definition is defined through configuration. If no id is defined, a default one is built using the `groupId` and `artifactId` of the dependency. Note in particular that the version is **never** used as part of an automatic id.
 
-Each dependency belongs to a group. The idea of the group is to gather similar dependencies and order them. Here is a `core` group that illustrates this feature:
+Each dependency belongs to a group. The idea of the group is to gather similar dependencies and order them. Here is a value containing the `core` group to illustrates the feature:
 
-```json
-{
-  "name": "Core",
-  "values": [
-    {
-      "name": "Security",
-      "id": "security"
-    },
-    {
-      "name": "Web",
-      "id": "web"
-    }
-  ]
-}
-```
+.dependencies.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/dependencies.values.adoc[]
 
 === Project types
 
-The `types` element defines what kind of project can be generated and how. For instance, if the service exposes the capability to generate a Maven project, this would look like this:
+The `type` element defines what kind of project can be generated and how. For instance, if the service exposes the capability to generate a Maven project, this would look like this:
 
-```json
-{
-  "id": "maven-project",
-  "name": "Maven Project",
-  "action": "/starter.zip",
-  "tags": {
-    "build": "maven",
-    "format": "project"
-  }
-}
-```
+.type.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/type.values.adoc[]
 
 You should not rely on the output format depending that information. Always use the response headers that define a `Content-Type` and also a `Content-Disposition` header.
 
@@ -108,12 +82,8 @@ The `tags` object is used to categorize the project type and give _hints_ to 3rd
 
 The `packaging` element defines the kind of project that should be generated. 
 
-```json
-{
-  "name": "jar",
-  "id": "java"
-}
-```
+.packaging.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/packaging.values.adoc[]
 
 The obvious values for this element are `jar` and `war`.
 
@@ -121,34 +91,22 @@ The obvious values for this element are `jar` and `war`.
 
 The `javaVersion` element provides a list of possible java versions for the project:
 
-```json
-{
-  "id": "1.7",
-  "name": "1.7"
-}
-```
+.javaVersion.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/javaVersion.values.adoc[]
 
 === Languages
 
 The `language` element provides a list of possible languages for the project:
 
-```json
-{
-  "id": "java",
-  "name": "Java"
-}
-```
+.language.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/language.values.adoc[]
 
 === Boot version
 
 The `bootVersion` element provides the list of available boot versions
 
-```json
-{
-  "id": "1.1.3.RELEASE",
-  "name": "1.1.3"
-}
-```
+.bootVersion.values[0]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/bootVersion.values.adoc[]
 
 == Defaults
 

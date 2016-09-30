@@ -25,15 +25,17 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.mock.http.client.MockClientHttpResponse;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.restdocs.snippet.Snippet;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -49,11 +51,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory {
 
-	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
 	private final MockMvc mockMvc;
 
 	private String label = "UNKNOWN";
+
+	private List<String> fields = new ArrayList<>();
 
 	public MockMvcClientHttpRequestFactory(MockMvc mockMvc) {
 		Assert.notNull(mockMvc, "MockMvc must not be null");
@@ -71,29 +73,22 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 							uri.toString());
 					requestBuilder.content(getBodyAsBytes());
 					requestBuilder.headers(getHeaders());
-					MvcResult mvcResult = MockMvcClientHttpRequestFactory.this.mockMvc
-							.perform(requestBuilder)
-							.andDo(document(label, preprocessResponse(prettyPrint())))
-							.andReturn();
-					MockHttpServletResponse servletResponse = mvcResult.getResponse();
+					MockHttpServletResponse servletResponse = actions(requestBuilder)
+							.andReturn().getResponse();
 					HttpStatus status = HttpStatus.valueOf(servletResponse.getStatus());
 					if (status.value() >= 400) {
-						MockHttpServletRequestBuilder request = request(HttpMethod.GET,
-								"/error")
-										.requestAttr(RequestDispatcher.ERROR_STATUS_CODE,
-												status.value())
-										.requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
-												uri.toString());
+						requestBuilder = request(HttpMethod.GET, "/error")
+								.requestAttr(RequestDispatcher.ERROR_STATUS_CODE,
+										status.value())
+								.requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
+										uri.toString());
 						if (servletResponse.getErrorMessage() != null) {
-							request.requestAttr(RequestDispatcher.ERROR_MESSAGE,
+							requestBuilder.requestAttr(RequestDispatcher.ERROR_MESSAGE,
 									servletResponse.getErrorMessage());
 						}
 						// Overwrites the snippets from the first request
-						mvcResult = MockMvcClientHttpRequestFactory.this.mockMvc
-								.perform(request)
-								.andDo(document(label, preprocessResponse(prettyPrint())))
-								.andReturn();
-						servletResponse = mvcResult.getResponse();
+						servletResponse = actions(requestBuilder).andReturn()
+								.getResponse();
 					}
 					byte[] body = servletResponse.getContentAsByteArray();
 					HttpHeaders headers = getResponseHeaders(servletResponse);
@@ -103,12 +98,24 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 					return clientResponse;
 				}
 				catch (Exception ex) {
-					byte[] body = ex.toString().getBytes(UTF8_CHARSET);
-					return new MockClientHttpResponse(body,
-							HttpStatus.INTERNAL_SERVER_ERROR);
+					throw new IllegalStateException(ex);
 				}
 			}
+
 		};
+	}
+
+	private ResultActions actions(MockHttpServletRequestBuilder requestBuilder)
+			throws Exception {
+		ResultActions actions = MockMvcClientHttpRequestFactory.this.mockMvc
+				.perform(requestBuilder);
+		List<Snippet> snippets = new ArrayList<>();
+		for (String field : this.fields) {
+			snippets.add(new ResponseFieldSnippet(field));
+		}
+		actions.andDo(document(label, preprocessResponse(prettyPrint()), snippets.toArray(new Snippet[0])));
+		this.fields = new ArrayList<>();
+		return actions;
 	}
 
 	private HttpHeaders getResponseHeaders(MockHttpServletResponse response) {
@@ -124,6 +131,10 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 
 	public void setTest(Class<?> testClass, Method testMethod) {
 		this.label = testMethod.getName();
+	}
+	
+	public void setFields(String... fields) {
+		this.fields = Arrays.asList(fields);
 	}
 
 }
