@@ -37,11 +37,6 @@ initializr:
           - versionRange: 1.4.2.BUILD-SNAPSHOT
             version: Camden.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
-      cloud-contract-bom:
-        groupId: org.springframework.cloud
-        artifactId: spring-cloud-contract-dependencies
-        version: 1.0.0.M1
-        repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
@@ -584,7 +579,7 @@ initializr:
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cluster-etcd
     - name: Cloud Contract
-      bom: cloud-contract-bom
+      bom: cloud-bom
       versionRange: 1.4.0.RC1
       content:
         - name: Cloud Contract Verifier
