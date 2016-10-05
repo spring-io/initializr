@@ -23,30 +23,28 @@ import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository
 import org.springframework.boot.actuate.metrics.writer.MetricWriter
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import org.springframework.test.context.junit4.SpringRunner
 
 import static org.junit.Assert.assertTrue
 
 /**
  * @author Dave Syer
  */
-@RunWith(SpringJUnit4ClassRunner)
-@SpringApplicationConfiguration(classes = Config)
-@IntegrationTest(['spring.metrics.export.delayMillis:500',
+@RunWith(SpringRunner)
+@SpringBootTest(classes = Config, properties=['spring.metrics.export.delayMillis:500',
 		'spring.metrics.export.enabled:true',
 		'initializr.metrics.prefix:test.prefix', 'initializr.metrics.key:key.test'])
 public class MetricsExportTests {
