@@ -9,7 +9,7 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>initializr-web/target/snippets/stubs</directory>
+			<directory>${basedir}/../initializr-web/target/snippets/stubs</directory>
 			<outputDirectory>META-INF/${project.groupId}/${project.artifactId}/${project.version}/mappings</outputDirectory>
 			<includes>
 				<include>**/*</include>

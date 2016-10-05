@@ -46,6 +46,7 @@
 		<module>initializr-actuator</module>
 		<module>initializr-generator</module>
 		<module>initializr-web</module>
+		<module>initializr-stubs</module>
 	</modules>
 
 	<dependencyManagement>
@@ -115,24 +116,6 @@
 						<goals>
 							<goal>jar-no-fork</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>stub</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<inherited>false</inherited>
-						<configuration>
-							<attach>true</attach>
-							<descriptor>${basedir}/src/assembly/stub.xml</descriptor>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
