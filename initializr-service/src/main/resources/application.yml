@@ -157,7 +157,7 @@ initializr:
             - web
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
-          version: 1.0.1
+          version: 1.0.2
           description: Vaadin java web application framework
           bom: vaadin-bom
         - name: Rest Repositories
