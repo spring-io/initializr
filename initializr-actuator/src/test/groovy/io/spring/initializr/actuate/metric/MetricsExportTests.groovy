@@ -23,11 +23,11 @@ import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository
@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue
  * @author Dave Syer
  */
 @RunWith(SpringRunner)
-@SpringBootTest(classes = Config, properties=['spring.metrics.export.delayMillis:500',
+@SpringBootTest(classes = Config, properties = ['spring.metrics.export.delayMillis:500',
 		'spring.metrics.export.enabled:true',
 		'initializr.metrics.prefix:test.prefix', 'initializr.metrics.key:key.test'])
 public class MetricsExportTests {
