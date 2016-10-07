@@ -461,6 +461,16 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void gradleBuildAsFromSpringBoot142() {
+		def request = createProjectRequest('web')
+		request.bootVersion = '1.4.2.BUILD-SNAPSHOT'
+		generateGradleBuild(request)
+				.contains("springBootVersion = '1.4.2.BUILD-SNAPSHOT'")
+				.contains("apply plugin: 'org.springframework.boot'")
+				.doesNotContain("apply plugin: 'spring-boot'")
+	}
+
+	@Test
 	void mavenBom() {
 		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'foo-bom')
 		def metadata = InitializrMetadataTestBuilder.withDefaults()

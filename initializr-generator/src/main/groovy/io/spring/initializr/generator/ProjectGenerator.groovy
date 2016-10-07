@@ -50,6 +50,8 @@ class ProjectGenerator {
 
 	private static final VERSION_1_4_0_M3 = Version.parse('1.4.0.M3')
 
+	private static final VERSION_1_4_2_M1 = Version.parse('1.4.2.M1')
+
 	@Autowired
 	ApplicationEventPublisher eventPublisher
 
@@ -277,6 +279,10 @@ class ProjectGenerator {
 		// Gradle plugin has changed as from 1.3.0
 		model['bootOneThreeAvailable'] = VERSION_1_3_0_M1
 				.compareTo(Version.safeParse(request.bootVersion)) <= 0
+
+		// Gradle plugin has changed again as from 1.4.2
+		model['springBootPluginName'] = (VERSION_1_4_2_M1.compareTo(
+				Version.safeParse(request.bootVersion)) <= 0 ? 'org.springframework.boot' : 'spring-boot')
 
 		// New testing stuff
 		model['newTestInfrastructure'] = isNewTestInfrastructureAvailable(request)
