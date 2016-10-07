@@ -47,7 +47,7 @@ import static org.junit.Assert.assertTrue
 @SpringBootTest(classes = Config, properties = ['spring.metrics.export.delayMillis:500',
 		'spring.metrics.export.enabled:true',
 		'initializr.metrics.prefix:test.prefix', 'initializr.metrics.key:key.test'])
-public class MetricsExportTests {
+class MetricsExportTests {
 
 	@Rule
 	public RedisRunning running = new RedisRunning()
