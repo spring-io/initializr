@@ -63,14 +63,14 @@ The name is used as a display name to be shown in whatever UI used by the remote
 Each dependency belongs to a group. The idea of the group is to gather similar dependencies and order them. Here is a value containing the `core` group to illustrates the feature:
 
 .dependencies.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/dependencies.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/dependencies.values.0.adoc[]
 
 === Project types
 
 The `type` element defines what kind of project can be generated and how. For instance, if the service exposes the capability to generate a Maven project, this would look like this:
 
 .type.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/type.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/type.values.0.adoc[]
 
 You should not rely on the output format depending that information. Always use the response headers that define a `Content-Type` and also a `Content-Disposition` header.
 
@@ -85,7 +85,7 @@ The `tags` object is used to categorize the project type and give _hints_ to 3rd
 The `packaging` element defines the kind of project that should be generated. 
 
 .packaging.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/packaging.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/packaging.values.0.adoc[]
 
 The obvious values for this element are `jar` and `war`.
 
@@ -94,21 +94,21 @@ The obvious values for this element are `jar` and `war`.
 The `javaVersion` element provides a list of possible java versions for the project:
 
 .javaVersion.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/javaVersion.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/javaVersion.values.0.adoc[]
 
 === Languages
 
 The `language` element provides a list of possible languages for the project:
 
 .language.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/language.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/language.values.0.adoc[]
 
 === Boot version
 
 The `bootVersion` element provides the list of available boot versions
 
 .bootVersion.values[0]
-include::{snippets}/metadataWithV2AcceptHeader/response-fields/bootVersion.values.adoc[]
+include::{snippets}/metadataWithV2AcceptHeader/response-fields/bootVersion.values.0.adoc[]
 
 == Defaults
 

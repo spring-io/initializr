@@ -50,16 +50,26 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	private Integer index;
+	private final Integer index;
+	
+	private final String file;
 
 	public ResponseFieldSnippet(String path) {
 		super("response-fields", Collections.emptyMap());
+		String file = path;
 		if (path.endsWith("]")) {
+			// In this project we actually only need snippets whose last segment is an
+			// array index, so we can deal with it as a special case here. Ideally the
+			// restdocs implementation of JsonField would support this use case as well.
 			String index = path.substring(path.lastIndexOf("[") + 1);
 			index = index.substring(0, index.length() - 1);
 			this.index = Integer.valueOf(index);
 			path = path.substring(0, path.lastIndexOf("["));
+			file = file.replace("]", "").replace("[", ".");
+		} else {
+			this.index = null;
 		}
+		this.file = file;
 		this.path = path;
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
@@ -75,7 +85,7 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 		WriterResolver writerResolver = (WriterResolver) operation.getAttributes()
 				.get(WriterResolver.class.getName());
 		try (Writer writer = writerResolver
-				.resolve(operation.getName() + "/" + getSnippetName(), path, context)) {
+				.resolve(operation.getName() + "/" + getSnippetName(), file, context)) {
 			Map<String, Object> model = createModel(operation);
 			model.putAll(getAttributes());
 			TemplateEngine templateEngine = (TemplateEngine) operation.getAttributes()
