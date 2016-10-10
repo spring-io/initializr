@@ -78,7 +78,7 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void bomIsAddedWithSnapshotMaven() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.1.BUILD-SNAPSHOT'
+		request.bootVersion = '2.0.0.BUILD-SNAPSHOT'
 		generateMavenPom(request).hasBom('org.springframework.boot.experimental',
 				'spring-boot-dependencies-web-reactive', '0.1.0.BUILD-SNAPSHOT')
 	}
@@ -95,7 +95,7 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void bomIsAddedWithSnapshotGradle() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.1.BUILD-SNAPSHOT'
+		request.bootVersion = '2.0.0.BUILD-SNAPSHOT'
 		generateGradleBuild(request).contains("dependencyManagement {")
 				.contains("imports {")
 				.contains("mavenBom \"org.springframework.boot.experimental:spring-boot-dependencies-web-reactive:0.1.0.BUILD-SNAPSHOT\"")
@@ -104,7 +104,7 @@ class ReactiveProjectRequestPostProcessorTests {
 	@Test
 	void snapshotRepoIsAddedIfNecessary() {
 		ProjectRequest request = createProjectRequest('experimental-web-reactive')
-		request.bootVersion = '1.4.1.RELEASE'
+		request.bootVersion = '2.0.0.RELEASE'
 		generateMavenPom(request).hasRepository('spring-snapshots', 'Spring Snapshots',
 				'https://repo.spring.io/snapshot', true)
 	}
