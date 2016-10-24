@@ -33,7 +33,7 @@ initializr:
             version: Brixton.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
           - versionRange: "[1.4.0.RELEASE,1.4.2.BUILD-SNAPSHOT)"
-            version: Camden.RELEASE
+            version: Camden.SR1
           - versionRange: 1.4.2.BUILD-SNAPSHOT
             version: Camden.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
