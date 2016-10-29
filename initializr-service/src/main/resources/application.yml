@@ -40,7 +40,7 @@ initializr:
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
-        version: 1.0.0.BUILD-SNAPSHOT
+        version: 1.1.0.M2
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
       experimental-reactive-bom:
