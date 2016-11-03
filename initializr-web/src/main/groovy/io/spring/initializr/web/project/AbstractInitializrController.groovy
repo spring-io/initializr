@@ -16,7 +16,6 @@
 
 package io.spring.initializr.web.project
 
-import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
 import io.spring.initializr.generator.InvalidProjectRequestException
@@ -37,7 +36,7 @@ abstract class AbstractInitializrController {
 
 	protected final InitializrMetadataProvider metadataProvider
 	private final GroovyTemplate groovyTemplate
-	private boolean forceSsl
+	private Boolean forceSsl
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
 										   GroovyTemplate groovyTemplate) {
@@ -45,9 +44,12 @@ abstract class AbstractInitializrController {
 		this.groovyTemplate = groovyTemplate
 	}
 
-	@PostConstruct
-	void initialize() {
-		forceSsl = metadataProvider.get().configuration.env.forceSsl
+	boolean isForceSsl() {
+		if (this.forceSsl == null) {
+			this.forceSsl = metadataProvider.get().configuration.env.forceSsl
+		}
+		return this.forceSsl;
+
 	}
 
 	@ExceptionHandler
@@ -86,7 +88,7 @@ abstract class AbstractInitializrController {
 	 */
 	protected String generateAppUrl() {
 		def builder = ServletUriComponentsBuilder.fromCurrentServletMapping()
-		if (this.forceSsl) {
+		if (isForceSsl()) {
 			builder.scheme('https')
 		}
 		builder.build()
