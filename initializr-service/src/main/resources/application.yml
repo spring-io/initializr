@@ -90,6 +90,14 @@ initializr:
           description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
           starter: false
+        - name: Configuration Processor
+          id: configuration-processor
+          groupId: org.springframework.boot
+          artifactId: spring-boot-configuration-processor
+          scope: compileOnly
+          description: Generate metadata for your custom configuration keys
+          versionRange: 1.2.0.RELEASE
+          starter: false
         - name: Validation
           id: validation
           description: JSR-303 validation infrastructure (already included with web)
