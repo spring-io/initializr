@@ -20,7 +20,6 @@ import groovy.util.logging.Slf4j
 import io.spring.initializr.InitializrException
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.util.Agent
 import io.spring.initializr.util.GroovyTemplate
 import io.spring.initializr.util.Version
 
@@ -259,6 +258,7 @@ class ProjectGenerator {
 
 		model['compileDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE)
 		model['runtimeDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_RUNTIME)
+		model['compileOnlyDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE_ONLY)
 		model['providedDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_PROVIDED)
 		model['testDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_TEST)
 

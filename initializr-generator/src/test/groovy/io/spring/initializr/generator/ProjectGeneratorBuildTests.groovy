@@ -25,9 +25,6 @@ import org.junit.runners.Parameterized
 
 import org.springframework.core.io.ClassPathResource
 
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME
-
 /**
  * Project generator tests for supported build systems.
  *
@@ -124,6 +121,21 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$build/bom-property-$assertFileName"))
+	}
+
+	@Test
+	void compileOnlyDependency() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo',
+				scope: Dependency.SCOPE_COMPILE_ONLY)
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('core', 'web', 'data-jpa')
+				.addDependencyGroup('foo', foo)
+				.build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('foo', 'web', 'data-jpa')
+		def project = generateProject(request)
+		project.sourceCodeAssert("$fileName")
+				.equalsTo(new ClassPathResource("project/$build/compile-only-dependency-$assertFileName"))
 	}
 
 	@Override

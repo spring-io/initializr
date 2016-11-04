@@ -112,6 +112,7 @@ initializr:
           id: lombok
           groupId: org.projectlombok
           artifactId: lombok
+          scope: compileOnly
           description: Java annotation library which helps to reduce boilerplate code and code faster
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"

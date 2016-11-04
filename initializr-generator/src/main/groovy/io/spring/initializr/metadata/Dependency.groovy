@@ -37,12 +37,14 @@ import io.spring.initializr.util.VersionRange
 class Dependency extends MetadataElement {
 
 	static final String SCOPE_COMPILE = 'compile'
+	static final String SCOPE_COMPILE_ONLY = 'compileOnly'
 	static final String SCOPE_RUNTIME = 'runtime'
 	static final String SCOPE_PROVIDED = 'provided'
 	static final String SCOPE_TEST = 'test'
 	static final List<String> SCOPE_ALL = [
 			SCOPE_COMPILE,
 			SCOPE_RUNTIME,
+			SCOPE_COMPILE_ONLY,
 			SCOPE_PROVIDED,
 			SCOPE_TEST
 	]

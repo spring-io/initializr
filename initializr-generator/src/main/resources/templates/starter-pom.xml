@@ -46,6 +46,13 @@
 			<version>${it.version}</version><% } %>
 			<scope>runtime</scope><% if (it.type != null) { %>
 			<type>${it.type}</type><% } %>
+		</dependency><% } %><% compileOnlyDependencies.each { %>
+		<dependency>
+			<groupId>${it.groupId}</groupId>
+			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
+			<version>${it.version}</version><% } %>
+			<optional>true</optional><% if (it.type != null) { %>
+			<type>${it.type}</type><% } %>
 		</dependency><% } %><% providedDependencies.each { %>
 		<dependency>
 			<groupId>${it.groupId}</groupId>
