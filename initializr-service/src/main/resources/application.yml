@@ -87,6 +87,7 @@ initializr:
           id: devtools
           groupId: org.springframework.boot
           artifactId: spring-boot-devtools
+          scope: runtime
           description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
           starter: false
