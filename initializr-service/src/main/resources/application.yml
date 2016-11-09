@@ -166,9 +166,13 @@ initializr:
             - web
           groupId: com.vaadin
           artifactId: vaadin-spring-boot-starter
-          version: 1.0.2
           description: Vaadin java web application framework
           bom: vaadin-bom
+          mappings:
+            - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
+              version: 1.0.2
+            - versionRange: 1.4.0.RELEASE
+              version: 1.1.0
         - name: Rest Repositories
           id: data-rest
           weight: 10
