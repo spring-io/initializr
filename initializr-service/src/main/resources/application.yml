@@ -17,10 +17,6 @@ spring:
 initializr:
   env:
     boms:
-      vaadin-bom:
-        groupId: com.vaadin
-        artifactId: vaadin-bom
-        version: 7.7.3
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -43,16 +39,20 @@ initializr:
         version: 1.0.1.RELEASE
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
+      cloud-services-bom:
+        groupId: io.pivotal.spring.cloud
+        artifactId: spring-cloud-services-dependencies
+        version: 1.2.0.RELEASE
+        additionalBoms: [cloud-bom]
       experimental-reactive-bom:
         groupId: org.springframework.boot.experimental
         artifactId: spring-boot-dependencies-web-reactive
         repositories: spring-snapshots,spring-milestones
         version: 0.1.0.BUILD-SNAPSHOT
-      scs-bom:
-        groupId: io.pivotal.spring.cloud
-        artifactId: spring-cloud-services-dependencies
-        version: 1.2.0.RELEASE
-        additionalBoms: [cloud-bom]
+      vaadin-bom:
+        groupId: com.vaadin
+        artifactId: vaadin-bom
+        version: 7.7.3
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -620,7 +620,7 @@ initializr:
           scope: test
           starter: false
     - name: Pivotal Cloud Foundry
-      bom: scs-bom
+      bom: cloud-services-bom
       versionRange: "[1.3.0.RELEASE,1.4.0.M1)"
       content:
         - name: Config Client (PCF)
