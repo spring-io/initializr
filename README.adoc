@@ -15,7 +15,7 @@ clients to provide the necessary assistance.
 
 Finally, Initializr offers a configuration structure to define all the aspects related
 to the project to generate: list of dependencies, supported java and boot versions, etc. Check
-the {code}/initializr-service/application.yml[configuration of our instance] for an example. Such
+the {code}/initializr-service/src/main/resources/application.yml[configuration of our instance] for an example. Such
 configuration is {wiki}/Configuration-format[also described in details on the wiki].
 
 NOTE: We use the continuous deployment technique to manage our instance; check the
@@ -236,7 +236,7 @@ If you are on a Mac and using http://brew.sh/[homebrew], install the Cloud Found
     $ brew install cloudfoundry-cli
 ----
 
-Alternatively, download a suitable binary for your platform from 
+Alternatively, download a suitable binary for your platform from
 https://console.run.pivotal.io/tools[Pivotal Web Services].
 
 You should ensure that the application name and URL (name and host values) are suitable for
