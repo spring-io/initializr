@@ -1,6 +1,11 @@
 {
   "groups": [
     {
+      "name": "initializr.metrics",
+      "type": "io.spring.initializr.actuate.autoconfigure.MetricsProperties",
+      "sourceType": "io.spring.initializr.actuate.autoconfigure.MetricsProperties"
+    },
+    {
       "name": "initializr.stats",
       "type": "io.spring.initializr.actuate.stat.StatsProperties",
       "sourceType": "io.spring.initializr.actuate.stat.StatsProperties"
@@ -13,6 +18,33 @@
     }
   ],
   "properties": [
+    {
+      "name": "initializr.metrics.id",
+      "type": "java.lang.String",
+      "description": "Identifier for application in metrics keys. Keys will be exported in the form '[id].[hex].[name]' (where '[id]' is this value, '[hex]' is unique per application context, and '[name]' is the \"natural\" name for the metric.",
+      "sourceType": "io.spring.initializr.actuate.autoconfigure.MetricsProperties"
+    },
+    {
+      "name": "initializr.metrics.key",
+      "type": "java.lang.String",
+      "description": "Redis key holding index to metrics keys in data store.",
+      "defaultValue": "keys.spring.metrics.collector",
+      "sourceType": "io.spring.initializr.actuate.autoconfigure.MetricsProperties"
+    },
+    {
+      "name": "initializr.metrics.prefix",
+      "type": "java.lang.String",
+      "description": "Prefix for redis keys holding metrics in data store.",
+      "defaultValue": "spring.metrics.collector.",
+      "sourceType": "io.spring.initializr.actuate.autoconfigure.MetricsProperties"
+    },
+    {
+      "name": "initializr.metrics.rate-millis",
+      "type": "java.lang.Long",
+      "description": "The rate (in milliseconds) at which metrics are exported to Redis. If the value is <=0 then the export is disabled.",
+      "defaultValue": 5000,
+      "sourceType": "io.spring.initializr.actuate.autoconfigure.MetricsProperties"
+    },
     {
       "name": "initializr.stats.elastic.uri",
       "type": "java.lang.String",
