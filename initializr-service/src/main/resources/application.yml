@@ -298,6 +298,14 @@ initializr:
               version: 9.4-1201-jdbc41
           scope: runtime
           starter: false
+        - name: SQL Server
+          id: sqlserver
+          description: Microsoft SQL Server jdbc driver
+          versionRange: 1.5.0.RC1
+          groupId: com.microsoft.sqlserver
+          artifactId: mssql-jdbc
+          scope: runtime
+          starter: false
         - name: Flyway
           id: flyway
           description: Flyway Database Migrations library
