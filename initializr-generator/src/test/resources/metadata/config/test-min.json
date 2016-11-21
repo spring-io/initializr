@@ -113,13 +113,13 @@
     "id": "name",
     "type": "TEXT",
     "description": null,
-    "content": "meta-data-merge"
+    "content": "metadata-merge"
   },
   "description": {
     "id": "description",
     "type": "TEXT",
     "description": null,
-    "content": "Demo project for meta-data merge"
+    "content": "Demo project for metadata merge"
   },
   "groupId": {
     "id": "groupId",
@@ -131,7 +131,7 @@
     "id": "artifactId",
     "type": "TEXT",
     "description": null,
-    "content": "meta-data"
+    "content": "metadata"
   },
   "version": {
     "id": "version",

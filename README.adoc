@@ -10,7 +10,7 @@ link:https://start.spring.io[]. It provides a simple web UI to configure the pro
 to generate and endpoints that you can use via plain HTTP.
 
 Spring Initializr also exposes an endpoint that serves its
-{wiki}/Metadata-format[meta-data] in a well-known format to allow third-party
+{wiki}/Metadata-format[metadata] in a well-known format to allow third-party
 clients to provide the necessary assistance.
 
 Finally, Initializr offers a configuration structure to define all the aspects related
@@ -74,10 +74,10 @@ an invalid character for a java identifier, `Application` is used as fallback.
 ** The `artifactId` attribute not only defines the identifier of the project in the build but
 also the name of the generated archive.
 * `dependencies` (or `style`): the identifiers of the dependencies to add to the project. Such
-identifiers are defined through configuration and are exposed in the <<meta-data,meta-data>>.
+identifiers are defined through configuration and are exposed in the <<metadata,metadata>>.
 * `type`: the _kind_ of project to generate (e.g. `maven-project`). Again, each service
 exposes an arbitrary number of supported types and these are available in the
-<<meta-data,meta-data>>.
+<<metadata,metadata>>.
 * `javaVersion`: the language level (e.g. `1.8`).
 * `bootVersion`: the Spring Boot version to use (e.g. `1.2.0.RELEASE`).
 * `language`: the programming language to use (e.g. `java`).
@@ -118,11 +118,11 @@ The following hashbang parameters are supported: `type`, `groupId`, `artifactId`
 `description`, `packageName`, `packaging`, `javaVersion` and `language`. Review the section
 above for a description of each of them.
 
-[[meta-data]]
-== Service meta-data
+[[metadata]]
+== Service metadata
 
-The service meta-data is used by the web UI and is exposed to ease the creation of
-third-party clients. You can grab the meta-data by _curling_ the root
+The service metadata is used by the web UI and is exposed to ease the creation of
+third-party clients. You can grab the metadata by _curling_ the root
 
 [source,bash]
 ----
@@ -132,15 +132,15 @@ $ curl -H 'Accept: application/json' https://start.spring.io
 NOTE: As stated above, if you use `curl` without an accept header, you'll retrieve a human
 readable text version of the metadata. `HTTPie` is also supported.
 
-The meta-data basically lists the _capabilities_ of the service, that is the available
+The metadata basically lists the _capabilities_ of the service, that is the available
 options for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) The web
 UI uses that information to initialize the select options and the tree of available
 dependencies.
 
-The meta-data also lists the default values for simple _text_ parameter (i.e. the default
+The metadata also lists the default values for simple _text_ parameter (i.e. the default
 `name` for the project).
 
-NOTE: More details about the structure of the meta-data are {wiki}/Metadata-format[available
+NOTE: More details about the structure of the metadata are {wiki}/Metadata-format[available
 on the wiki].
 
 == Running your own instance

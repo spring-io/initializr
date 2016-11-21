@@ -19,7 +19,7 @@ package io.spring.initializr.web.mapper
 import org.springframework.http.MediaType
 
 /**
- * Define the supported meta-data version.
+ * Define the supported metadata version.
  *
  * @author Stephane Nicoll
  * @since 1.0
@@ -34,7 +34,7 @@ enum InitializrMetadataVersion {
 	/**
 	 * Add 'versionRange' attribute to any dependency to specify which
 	 * Spring Boot versions are compatible with it. Also provide a
-	 * separate 'dependencies' endpoint to query dependencies meta-data.
+	 * separate 'dependencies' endpoint to query dependencies metadata.
 	 */
 	V2_1('application/vnd.initializr.v2.1+json')
 

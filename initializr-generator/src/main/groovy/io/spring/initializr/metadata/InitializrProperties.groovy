@@ -66,37 +66,37 @@ class InitializrProperties extends InitializrConfiguration {
 	final List<DefaultMetadataElement> bootVersions = []
 
 	/**
-	 * GroupId meta-data.
+	 * GroupId metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement groupId = new SimpleElement(value: 'com.example')
 
 	/**
-	 * ArtifactId meta-data.
+	 * ArtifactId metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement artifactId = new SimpleElement()
 
 	/**
-	 * Version meta-data.
+	 * Version metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement version = new SimpleElement(value: '0.0.1-SNAPSHOT')
 
 	/**
-	 * Name meta-data.
+	 * Name metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement name = new SimpleElement(value: 'demo')
 
 	/**
-	 * Description meta-data.
+	 * Description metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement description = new SimpleElement(value: 'Demo project for Spring Boot')
 
 	/**
-	 * Package name meta-data.
+	 * Package name metadata.
 	 */
 	@JsonIgnore
 	final SimpleElement packageName = new SimpleElement()

@@ -27,7 +27,7 @@ import io.spring.initializr.metadata.InitializrMetadata
 interface InitializrMetadataJsonMapper {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Write a json representation of the specified metadata.
 	 */
 	String write(InitializrMetadata metadata, String appUrl);
 

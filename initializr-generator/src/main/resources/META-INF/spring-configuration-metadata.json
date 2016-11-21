@@ -227,7 +227,7 @@
     {
       "name": "initializr.env.spring-boot-metadata-url",
       "type": "java.lang.String",
-      "description": "The meta-data url of the Spring Boot project.",
+      "description": "The metadata url of the Spring Boot project.",
       "sourceType": "io.spring.initializr.metadata.InitializrConfiguration$Env",
       "defaultValue": "https://spring.io/project_metadata/spring-boot"
     },

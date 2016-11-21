@@ -117,7 +117,7 @@ class InitializrConfiguration {
 		String artifactRepository = 'https://repo.spring.io/release/'
 
 		/**
-		 * The meta-data url of the Spring Boot project.
+		 * The metadata url of the Spring Boot project.
 		 */
 		String springBootMetadataUrl = 'https://spring.io/project_metadata/spring-boot'
 

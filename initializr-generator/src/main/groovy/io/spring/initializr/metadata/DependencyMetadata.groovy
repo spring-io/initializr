@@ -19,7 +19,7 @@ package io.spring.initializr.metadata
 import io.spring.initializr.util.Version
 
 /**
- * Dependency meta-data for a given spring boot {@link Version}.
+ * Dependency metadata for a given spring boot {@link Version}.
  *
  * @author Stephane Nicoll
  * @since 1.0

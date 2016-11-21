@@ -27,7 +27,7 @@ import io.spring.initializr.metadata.DependencyMetadata
 interface DependencyMetadataJsonMapper {
 
 	/**
-	 * Write a json representation of the specified meta-data.
+	 * Write a json representation of the specified metadata.
 	 */
 	String write(DependencyMetadata metadata);
 

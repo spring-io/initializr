@@ -20,7 +20,7 @@ import groovy.transform.AutoClone
 import groovy.transform.AutoCloneStyle
 
 /**
- * A basic meta-data element
+ * A basic metadata element
  *
  * @author Stephane Nicoll
  * @since 1.0

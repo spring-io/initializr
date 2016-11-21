@@ -23,7 +23,7 @@ import io.spring.initializr.metadata.DependencyMetadata
 import io.spring.initializr.metadata.Repository
 
 /**
- * A {@link DependencyMetadataJsonMapper} handling the meta-data format for v2.1.
+ * A {@link DependencyMetadataJsonMapper} handling the metadata format for v2.1.
  *
  * @author Stephane Nicoll
  * @since 1.0

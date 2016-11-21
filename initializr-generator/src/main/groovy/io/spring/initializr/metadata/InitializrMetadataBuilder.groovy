@@ -25,7 +25,7 @@ import org.springframework.core.io.Resource
 import org.springframework.util.StreamUtils
 
 /**
- * Builder for {@link InitializrMetadata}. Allows to read meta-data from any arbitrary resource,
+ * Builder for {@link InitializrMetadata}. Allows to read metadata from any arbitrary resource,
  * including remote URLs.
  *
  * @author Stephane Nicoll
@@ -81,7 +81,7 @@ class InitializrMetadataBuilder {
 
 	/**
 	 * Add a {@link InitializrMetadata} to be merged with other content.
-	 * @param resource a resource to a json document describing the meta-data to include
+	 * @param resource a resource to a json document describing the metadata to include
 	 */
 	InitializrMetadataBuilder withInitializrMetadata(Resource resource) {
 		withCustomizer(new ResourceInitializrMetadataCustomizer(resource))
@@ -174,7 +174,7 @@ class InitializrMetadataBuilder {
 
 		@Override
 		void customize(InitializrMetadata metadata) {
-			log.info("Loading initializr meta-data from $resource")
+			log.info("Loading initializr metadata from $resource")
 			def content = StreamUtils.copyToString(resource.getInputStream(), UTF_8)
 			ObjectMapper objectMapper = new ObjectMapper()
 			def anotherMetadata = objectMapper.readValue(content, InitializrMetadata)

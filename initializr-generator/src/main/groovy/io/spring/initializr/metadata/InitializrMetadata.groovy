@@ -84,7 +84,7 @@ class InitializrMetadata {
 	}
 
 	/**
-	 * Validate the meta-data.
+	 * Validate the metadata.
 	 */
 	void validate() {
 		this.configuration.validate()

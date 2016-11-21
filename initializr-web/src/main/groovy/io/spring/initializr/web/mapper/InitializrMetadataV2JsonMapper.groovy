@@ -25,7 +25,7 @@ import org.springframework.hateoas.TemplateVariables
 import org.springframework.hateoas.UriTemplate
 
 /**
- * A {@link InitializrMetadataJsonMapper} handling the meta-data format for v2.
+ * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.
  *
  * @author Stephane Nicoll
  * @since 1.0
