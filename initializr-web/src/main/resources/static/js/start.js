@@ -182,6 +182,7 @@ $(function () {
         $("body").scrollTop(0);
         return false;
     });
+    var maxSuggestions = 5;
     var starters = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.nonword('name', 'description', 'keywords', 'group'),
         queryTokenizer: Bloodhound.tokenizers.nonword,
@@ -191,6 +192,7 @@ $(function () {
         sorter: function(a,b) {
             return b.weight - a.weight;
         },
+        limit: maxSuggestions,
         cache: false
     });
     initializeSearchEngine(starters, $("#bootVersion").val());
@@ -205,6 +207,14 @@ $(function () {
             templates: {
                 suggestion: function (data) {
                     return "<div><strong>" + data.name + "</strong><br/><small>" + data.description + "</small></div>";
+                },
+                footer: function(search) {
+                    if (search.suggestions && search.suggestions.length == maxSuggestions) {
+                        return "<div class=\"tt-footer\">More matches, please refine your search</div>";
+                    }
+                    else {
+                        return "";
+                    }
                 }
             }
         });

@@ -121,9 +121,9 @@ input[type=text] {
 }
 
 .tt-suggestion {
-    padding: 3px 20px;
-    font-size: 18px;
-    line-height: 24px;
+    padding: 4px 20px;
+    font-size: 16px;
+    line-height: 22px;
 }
 
 .tt-suggestion:hover {
@@ -135,6 +135,15 @@ input[type=text] {
 .tt-suggestion.tt-cursor {
     color: #fff;
     background-color: #0097cf;
+}
+
+.tt-footer {
+    padding: 6px 20px 0px 20px;
+    font-size: 13px;
+    line-height: 15px;
+    text-align: center;
+    font-style: italic;
+    border-top: 1px solid #ccc;
 }
 
 footer {
