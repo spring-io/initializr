@@ -156,6 +156,16 @@ class DependencyTests {
 	}
 
 	@Test
+	void resolveVersionRequirement() {
+		def dependency = new Dependency(id: 'web')
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.1.0.RELEASE, 1.2.0.RELEASE)', version: '0.1.0.RELEASE')
+		dependency.resolve()
+		def resolved = dependency.resolve(Version.parse('1.1.5.RELEASE'))
+		assertEquals ">=1.1.0.RELEASE and <1.2.0.RELEASE", resolved.versionRequirement
+	}
+
+	@Test
 	void resolveMatchingVersionMapping() {
 		def dependency = new Dependency(id: 'web', description: 'A web dependency', version: '0.3.0.RELEASE',
 				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'])

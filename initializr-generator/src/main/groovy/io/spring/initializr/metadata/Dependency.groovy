@@ -16,6 +16,7 @@
 
 package io.spring.initializr.metadata
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.AutoClone
 import groovy.transform.AutoCloneStyle
@@ -80,6 +81,9 @@ class Dependency extends MetadataElement {
 	String description
 
 	String versionRange
+
+	@JsonIgnore
+	String versionRequirement
 
 	String bom
 
@@ -157,7 +161,8 @@ class Dependency extends MetadataElement {
 		}
 		if (versionRange) {
 			try {
-				VersionRange.parse(versionRange)
+				def range = VersionRange.parse(versionRange)
+				versionRequirement = range.toString()
 			} catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException("Invalid version range '$versionRange' for " +
 						"dependency with id '$id'")
@@ -183,6 +188,7 @@ class Dependency extends MetadataElement {
 				dependency.groupId = mapping.groupId ? mapping.groupId : this.groupId
 				dependency.artifactId = mapping.artifactId ? mapping.artifactId : this.artifactId
 				dependency.version = mapping.version ? mapping.version : this.version
+				dependency.versionRequirement = mapping.range.toString()
 				dependency.mappings = null
 				return dependency
 			}
