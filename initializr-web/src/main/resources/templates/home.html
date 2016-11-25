@@ -139,11 +139,13 @@
                     <div class="form-group col-sm-6">
                         <h3>${it.name}</h3>
                         <% it.content.each { %>
-                        <div class="checkbox" data-range="${it.versionRange}">
+                        <div class="checkbox" data-range="${it.versionRange?:''}">
                             <label>
-                                <input tabindex="13" type="checkbox" name="style" value="${it.id}">
-                                ${it.name}
+                                <input tabindex="13" type="checkbox" name="style" value="${it.id}">${it.name}
                                 <p class="help-block">${it.description}</p>
+                                <% if (it.versionRequirement) { %>
+                                <p class="help-block version-requirement">requires Spring Boot ${it.versionRequirement}</p>
+                                <% } %>
                             </label>
                         </div>
                         <% } %>

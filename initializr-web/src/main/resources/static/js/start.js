@@ -125,12 +125,12 @@ $(function () {
     var refreshDependencies = function (versionRange) {
         var versions = new Versions();
         $("#dependencies div.checkbox").each(function (idx, item) {
-            if ($(item).attr('data-range') === 'null' || versions.matchRange($(item).attr('data-range'))(versionRange)) {
+            if (!$(item).attr('data-range') || versions.matchRange($(item).attr('data-range'))(versionRange)) {
                 $("input", item).removeAttr("disabled");
-                $(item).removeClass("disabled");
+                $(item).removeClass("disabled has-error");
             } else {
                 $("input", item).prop('checked', false);
-                $(item).addClass("disabled");
+                $(item).addClass("disabled has-error");
                 $("input", item).attr("disabled", true);
                 removeTag($("input", item).val());
             }
