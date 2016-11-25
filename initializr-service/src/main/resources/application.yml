@@ -52,7 +52,7 @@ initializr:
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
-        version: 7.7.3
+        version: 7.7.5
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -172,7 +172,7 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
               version: 1.0.2
             - versionRange: 1.4.0.RELEASE
-              version: 1.1.0
+              version: 1.1.1
         - name: Rest Repositories
           id: data-rest
           weight: 10
