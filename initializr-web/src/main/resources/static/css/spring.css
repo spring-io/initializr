@@ -69,6 +69,13 @@ input[type=text] {
     margin: 1em 0;
 }
 
+.version-requirement {
+    display: none;
+}
+.disabled .version-requirement {
+    display: block;
+}
+
 /* autocomplete */
 
 #autocomplete, .twitter-typeahead, .tt-hint {
