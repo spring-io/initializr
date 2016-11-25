@@ -131,6 +131,10 @@ initializr:
       content:
         - name: Web
           id: web
+          links:
+            - id: rest-guide
+              url: https://spring.io/guides/gs/rest-service/
+              description: 'Guide: getting started building a REST service'
           description: Full-stack web development with Tomcat and Spring MVC
           weight: 100
           facets:

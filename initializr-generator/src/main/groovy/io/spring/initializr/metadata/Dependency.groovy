@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata
 
+import java.net.URL
+
 import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.AutoClone
 import groovy.transform.AutoCloneStyle
@@ -84,6 +86,8 @@ class Dependency extends MetadataElement {
 	String bom
 
 	String repository
+
+	List<Link> links = []
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	int weight
