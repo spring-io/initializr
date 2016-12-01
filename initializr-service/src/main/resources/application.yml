@@ -483,12 +483,6 @@ initializr:
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and server-sent events
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine
-        - name: Turbine AMQP
-          id: cloud-turbine-amqp
-          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and AMQP
-          versionRange: "[1.2.0.RELEASE,1.3.0.M5]"
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-turbine-amqp
         - name: Turbine Stream
           id: cloud-turbine-stream
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
