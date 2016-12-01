@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.autoconfigure
 
+import org.springframework.web.servlet.resource.ResourceUrlProvider
+
 import java.util.concurrent.TimeUnit
 
 import com.github.benmanes.caffeine.cache.Caffeine
@@ -77,9 +79,11 @@ class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean
 	MainController initializrMainController(InitializrMetadataProvider metadataProvider,
 											GroovyTemplate groovyTemplate,
+											ResourceUrlProvider resourceUrlProvider,
 											ProjectGenerator projectGenerator,
 											DependencyMetadataProvider dependencyMetadataProvider) {
-		new MainController(metadataProvider, groovyTemplate, projectGenerator, dependencyMetadataProvider)
+		new MainController(metadataProvider, groovyTemplate, resourceUrlProvider
+				, projectGenerator, dependencyMetadataProvider)
 	}
 
 	@Bean

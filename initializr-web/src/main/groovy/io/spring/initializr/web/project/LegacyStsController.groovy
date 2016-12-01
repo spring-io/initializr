@@ -22,6 +22,7 @@ import io.spring.initializr.util.GroovyTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.resource.ResourceUrlProvider
 
 /**
  * A controller used to serve the legacy home page used by STS.
@@ -33,8 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Deprecated
 class LegacyStsController extends AbstractInitializrController {
 
-	LegacyStsController(InitializrMetadataProvider metadataProvider, GroovyTemplate groovyTemplate) {
-		super(metadataProvider, groovyTemplate)
+	LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider,
+						GroovyTemplate groovyTemplate) {
+		super(metadataProvider, resourceUrlProvider, groovyTemplate)
 	}
 
 	@RequestMapping(value = '/sts', produces = 'text/html')

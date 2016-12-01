@@ -13,6 +13,11 @@ spring:
   jackson:
     serialization:
      write-dates-as-timestamps: false
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
 
 initializr:
   env:

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.project
 
+import org.springframework.web.servlet.resource.ResourceUrlProvider
+
 import javax.servlet.http.HttpServletResponse
 
 import io.spring.initializr.generator.InvalidProjectRequestException
@@ -36,12 +38,15 @@ abstract class AbstractInitializrController {
 
 	protected final InitializrMetadataProvider metadataProvider
 	private final GroovyTemplate groovyTemplate
+	private final Closure<String> linkTo
 	private Boolean forceSsl
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
+										   ResourceUrlProvider resourceUrlProvider,
 										   GroovyTemplate groovyTemplate) {
 		this.metadataProvider = metadataProvider
 		this.groovyTemplate = groovyTemplate
+		this.linkTo = { link -> resourceUrlProvider.getForLookupPath(link)?:link }
 	}
 
 	boolean isForceSsl() {
@@ -78,6 +83,9 @@ abstract class AbstractInitializrController {
 
 		// Google analytics support
 		model['trackingCode'] = metadata.configuration.env.googleAnalyticsTrackingCode
+
+		// Linking to static resources
+		model['linkTo'] = this.linkTo
 
 		groovyTemplate.process templatePath, model
 	}

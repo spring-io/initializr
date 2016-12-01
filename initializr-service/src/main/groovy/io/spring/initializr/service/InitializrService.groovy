@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import org.springframework.web.servlet.resource.ResourceUrlProvider
 
 /**
  * Initializr service application. Enables legacy STS support for older
@@ -47,8 +48,9 @@ class InitializrService {
 	@Bean
 	@SuppressWarnings("deprecation")
 	LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
+											ResourceUrlProvider resourceUrlProvider,
 											GroovyTemplate groovyTemplate) {
-		new LegacyStsController(metadataProvider, groovyTemplate)
+		new LegacyStsController(metadataProvider, resourceUrlProvider, groovyTemplate)
 	}
 
 	@Configuration

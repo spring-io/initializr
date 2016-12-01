@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.project
 
+import org.springframework.web.servlet.resource.ResourceUrlProvider
+
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
@@ -74,8 +76,9 @@ class MainController extends AbstractInitializrController {
 	private final CommandLineHelpGenerator commandLineHelpGenerator
 
 	MainController(InitializrMetadataProvider metadataProvider, GroovyTemplate groovyTemplate,
-				   ProjectGenerator projectGenerator, DependencyMetadataProvider dependencyMetadataProvider) {
-		super(metadataProvider, groovyTemplate)
+				   ResourceUrlProvider resourceUrlProvider, ProjectGenerator projectGenerator,
+				   DependencyMetadataProvider dependencyMetadataProvider) {
+		super(metadataProvider, resourceUrlProvider, groovyTemplate)
 		this.projectGenerator = projectGenerator
 		this.dependencyMetadataProvider = dependencyMetadataProvider
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(groovyTemplate)
