@@ -41,7 +41,11 @@ initializr:
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
-        version: 1.0.1.RELEASE
+        mappings:
+          - versionRange: "[1.3.0.RELEASE,1.4.0.BUILD-SNAPSHOT)"
+            version: 1.0.1.RELEASE
+          - versionRange: "[1.4.0.RELEASE,1.5.0.BUILD-SNAPSHOT)"
+            version: 1.1.0.RELEASE
         additionalBoms: [cloud-bom]
         repositories: spring-snapshots,spring-milestones
       cloud-services-bom:
@@ -581,16 +585,17 @@ initializr:
           artifactId: spring-cloud-starter-aws-messaging
     - name: Cloud Data Flow
       bom: cloud-dataflow-bom
-      versionRange: 1.3.2.RELEASE
       content:
         - name: Local Data Flow Server
           id: cloud-dataflow-server-local
           description: Local Data Flow Server implementation
+          versionRange: "[1.3.0.RELEASE,1.5.0.BUILD-SNAPSHOT)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-dataflow-server-local
         - name: Data Flow Shell
           id: cloud-dataflow-shell
           description: Data Flow Shell
+          versionRange: "[1.3.0.RELEASE,1.5.0.BUILD-SNAPSHOT)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-dataflow-shell
     - name: Cloud Cluster
