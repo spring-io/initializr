@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,22 @@ final class Version implements Serializable, Comparable<Version> {
 
 	private static final VersionQualifierComparator qualifierComparator = new VersionQualifierComparator()
 
-	Integer major
-	Integer minor
-	Integer patch
-	Qualifier qualifier
-	
+	private static final VersionParser parser = new VersionParser(Collections.EMPTY_LIST)
+
+	final Integer major
+	final Integer minor
+	final Integer patch
+	final Qualifier qualifier
+
+	Version(Integer major, Integer minor, Integer patch, Qualifier qualifier) {
+		this.major = major
+		this.minor = minor
+		this.patch = patch
+		this.qualifier = qualifier
+	}
+
 	@Override
-	public String toString() {
+	String toString() {
 		"${major}.${minor}.${patch}" + (qualifier?".${qualifier.qualifier}${qualifier.version?:''}" : '')
 	}
 
@@ -60,29 +69,10 @@ final class Version implements Serializable, Comparable<Version> {
 	 * @param text the version text
 	 * @return a Version instance for the specified version text
 	 * @throws InvalidVersionException if the version text could not be parsed
-	 * @see #safeParse(java.lang.String)
+	 * @see {@link VersionParser}
 	 */
 	static Version parse(String text) {
-		Assert.notNull(text, 'Text must not be null')
-		def matcher = (text.trim() =~ VERSION_REGEX)
-		if (!matcher.matches()) {
-			throw new InvalidVersionException("Could not determine version based on '$text': version format " +
-					"is Minor.Major.Patch.Qualifier (i.e. 1.0.5.RELEASE)")
-		}
-		Version version = new Version()
-		version.major = Integer.valueOf(matcher[0][1])
-		version.minor = Integer.valueOf(matcher[0][2])
-		version.patch = Integer.valueOf(matcher[0][3])
-		String qualifierId = matcher[0][4]
-		if (qualifierId) {
-			Qualifier qualifier = new Qualifier(qualifier: qualifierId)
-			String o = matcher[0][5]
-			if (o != null) {
-				qualifier.version = Integer.valueOf(o)
-			}
-			version.qualifier = qualifier
-		}
-		version
+		return parser.parse(text)
 	}
 
 	/**
@@ -91,7 +81,7 @@ final class Version implements Serializable, Comparable<Version> {
 	 * Return {@code null} if the text represents an invalid version.
 	 * @param text the version text
 	 * @return a Version instance for the specified version text
-	 * @see #parse(java.lang.String)
+	 * @see {@link VersionParser}
 	 */
 	static safeParse(String text) {
 		try {
@@ -129,7 +119,7 @@ final class Version implements Serializable, Comparable<Version> {
 
 	@ToString
 	@EqualsAndHashCode
-	public static class Qualifier {
+	static class Qualifier {
 		String qualifier
 		Integer version
 	}

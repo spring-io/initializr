@@ -19,7 +19,6 @@ package io.spring.initializr.generator
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.Type
 import io.spring.initializr.util.GroovyTemplate
-import io.spring.initializr.util.VersionRange
 
 /**
  * Generate help pages for command-line clients.
@@ -144,7 +143,7 @@ class CommandLineHelpGenerator {
 			String[] data = new String[3]
 			data[0] = dep.id
 			data[1] = dep.description ?: dep.name
-			data[2] = buildVersionRangeRepresentation(dep.versionRange)
+			data[2] = dep.versionRequirement
 			dependencyTable[i + 1] = data
 		}
 		TableGenerator.generate(dependencyTable)
@@ -180,18 +179,6 @@ class CommandLineHelpGenerator {
 		result['applicationName'] = 'application name'
 		result['baseDir'] = 'base directory to create in the archive'
 		result
-	}
-
-	private static String buildVersionRangeRepresentation(String range) {
-		if (!range) {
-			return null
-		}
-		VersionRange versionRange = VersionRange.parse(range)
-		if (versionRange.higherVersion == null) {
-			return ">= $range"
-		} else {
-			return range.trim()
-		}
 	}
 
 	private static String buildTagRepresentation(Type type) {

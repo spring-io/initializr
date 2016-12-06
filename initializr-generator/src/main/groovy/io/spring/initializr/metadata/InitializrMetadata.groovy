@@ -16,6 +16,9 @@
 
 package io.spring.initializr.metadata
 
+import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionParser
+
 /**
  * Meta-data used to generate a project.
  *
@@ -132,7 +135,23 @@ class InitializrMetadata {
 				}
 			}
 		}
+	}
 
+	/**
+	 * Update the available Spring Boot versions with the specified capabilities.
+	 * @param versionsMetadata the Spring Boot boot versions metadata to use
+	 */
+	void updateSpringBootVersions(List<DefaultMetadataElement> versionsMetadata) {
+		bootVersions.content.clear()
+		bootVersions.content.addAll(versionsMetadata)
+		List<Version> bootVersions = bootVersions.content.collect {
+			Version.parse(it.id)
+		}
+		VersionParser parser = new VersionParser(bootVersions)
+		dependencies.updateVersionRange(parser)
+		configuration.env.boms.values().each {
+			it.updateVersionRange(parser)
+		}
 	}
 
 	/**

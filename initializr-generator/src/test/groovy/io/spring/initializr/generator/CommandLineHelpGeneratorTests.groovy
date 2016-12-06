@@ -112,11 +112,11 @@ class CommandLineHelpGeneratorTests {
 		def second = new Dependency(id: 'second', description: 'second desc', versionRange: ' [1.2.0.RELEASE,1.3.0.M1)  ')
 		def metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", first, second).build()
 		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service")
-		assertThat content, containsString('| first  | first desc  | >= 1.2.0.RELEASE         |')
-		assertThat content, containsString('| second | second desc | [1.2.0.RELEASE,1.3.0.M1) |')
+		assertThat content, containsString('| first  | first desc  | >=1.2.0.RELEASE               |')
+		assertThat content, containsString('| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |')
 	}
 
-	private assertCommandLineCapabilities(String content) {
+	private static assertCommandLineCapabilities(String content) {
 		assertThat content, containsString("| Rel")
 		assertThat content, containsString("| dependencies")
 		assertThat content, containsString("| applicationName")
@@ -124,11 +124,11 @@ class CommandLineHelpGeneratorTests {
 		assertThat content, not(containsString('| Tags'))
 	}
 
-	private static def createDependency(String id, String name) {
+	private static createDependency(String id, String name) {
 		createDependency(id, name, null)
 	}
 
-	private static def createDependency(String id, String name, String description) {
+	private static createDependency(String id, String name, String description) {
 		new Dependency(id: id, name: name, description: description)
 	}
 

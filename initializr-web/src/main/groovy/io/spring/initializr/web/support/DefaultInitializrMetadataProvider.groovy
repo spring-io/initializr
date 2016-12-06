@@ -55,8 +55,7 @@ class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 			if (!bootVersions.find { it.default }) { // No default specified
 				bootVersions[0].default = true
 			}
-			metadata.bootVersions.content.clear()
-			metadata.bootVersions.content.addAll(bootVersions)
+			metadata.updateSpringBootVersions(bootVersions)
 		}
 	}
 

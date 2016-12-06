@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
 import io.spring.initializr.util.InvalidVersionException
 import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionParser
 import io.spring.initializr.util.VersionRange
 
 /**
@@ -75,9 +76,13 @@ class BillOfMaterials {
 		if (!version && !mappings) {
 			throw new InvalidInitializrMetadataException("No version available for $this");
 		}
+		updateVersionRange(VersionParser.DEFAULT)
+	}
+
+	void updateVersionRange(VersionParser versionParser) {
 		mappings.each {
 			try {
-				it.range = VersionRange.parse(it.versionRange)
+				it.range = versionParser.parseRange(it.versionRange)
 			} catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException("Invalid version range $it.versionRange for $this", ex)
 			}
@@ -118,6 +123,10 @@ class BillOfMaterials {
 		List<String> additionalBoms = []
 
 		private VersionRange range
+
+		String determineVersionRangeRequirement() {
+			range.toString()
+		}
 
 	}
 

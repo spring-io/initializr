@@ -17,6 +17,7 @@
 package io.spring.initializr.metadata
 
 import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionParser
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -197,6 +198,37 @@ class DependencyTests {
 				'org.spring.boot', 'spring-boot-starter-web', '0.3.0.RELEASE')
 		validateResolvedWebDependency(dependency.resolve(Version.parse('1.2.0.RELEASE')),
 				'org.springframework.boot', 'starter-web', '0.3.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.3.0.RELEASE') // default
+	}
+
+	@Test
+	void resolveMatchingVersionWithVariablePatch() {
+		def dependency = new Dependency(id: 'web', description: 'A web dependency', version: '0.3.0.RELEASE',
+				keywords: ['foo', 'bar'], aliases: ['the-web'], facets: ['web'])
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.1.0.RELEASE, 1.1.x.RELEASE]', version: '0.1.0.RELEASE')
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)', version: '0.2.0.RELEASE')
+		dependency.resolve()
+
+		dependency.updateVersionRanges(new VersionParser(Arrays.asList(
+				Version.parse("1.1.5.RELEASE"), Version.parse("1.1.6.BUILD-SNAPSHOT"))))
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.1.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.6.BUILD-SNAPSHOT')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.2.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.3.0.RELEASE') // default
+
+		dependency.updateVersionRanges(new VersionParser(Arrays.asList(
+				Version.parse("1.1.6.RELEASE"), Version.parse("1.1.7.BUILD-SNAPSHOT"))))
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.5.RELEASE')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.1.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.6.RELEASE')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.1.0.RELEASE')
+		validateResolvedWebDependency(dependency.resolve(Version.parse('1.1.7.BUILD-SNAPSHOT')),
+				'org.springframework.boot', 'spring-boot-starter-web', '0.2.0.RELEASE')
 		validateResolvedWebDependency(dependency.resolve(Version.parse('2.1.3.M1')),
 				'org.springframework.boot', 'spring-boot-starter-web', '0.3.0.RELEASE') // default
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,28 +84,53 @@ class VersionRangeTests {
 	}
 
 	@Test
-	void invalidRange() {
-		thrown.expect(InvalidVersionException)
-		VersionRange.parse("foo-bar")
-	}
-
-	@Test
 	void rangeWithSpaces() {
 		assertThat('1.2.0.RC3', match('[   1.2.0.RC1 ,  1.2.0.RC5]'))
 	}
-	
+
+	@Test
+	void matchLatestVersion() {
+		assertThat('1.2.8.RELEASE', match('[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]',
+				new VersionParser(Arrays.asList(Version.parse('1.2.9.BUILD-SNAPSHOT')))))
+	}
+
+	@Test
+	void matchOverLatestVersion() {
+		assertThat('1.2.10.RELEASE', not(match('[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]',
+				new VersionParser(Arrays.asList(Version.parse('1.2.9.BUILD-SNAPSHOT'))))))
+	}
+
+	@Test
+	void matchAsOfCurrentVersion() {
+		assertThat('1.3.5.RELEASE', match('[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]',
+				new VersionParser(Arrays.asList(Version.parse('1.3.4.RELEASE'),
+						Version.parse('1.3.6.BUILD-SNAPSHOT')))))
+	}
+
+	@Test
+	void matchOverAsOfCurrentVersion() {
+		assertThat('1.3.5.RELEASE', not(match('[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]',
+				new VersionParser(Arrays.asList(Version.parse('1.3.7.RELEASE'),
+						Version.parse('1.3.6.BUILD-SNAPSHOT'))))))
+	}
 
 	private static VersionRangeMatcher match(String range) {
-		new VersionRangeMatcher(range)
+		new VersionRangeMatcher(range, new VersionParser(Collections.EMPTY_LIST))
+	}
+
+	private static VersionRangeMatcher match(String range, VersionParser parser) {
+		new VersionRangeMatcher(range, parser)
 	}
 
 
 	static class VersionRangeMatcher extends BaseMatcher<String> {
 
 		private final VersionRange range;
+		private final VersionParser parser;
 
-		VersionRangeMatcher(String text) {
-			this.range = VersionRange.parse(text)
+		VersionRangeMatcher(String text, VersionParser parser) {
+			this.parser = parser
+			this.range = parser.parseRange(text)
 		}
 
 		@Override
@@ -113,12 +138,13 @@ class VersionRangeTests {
 			if (!item instanceof String) {
 				return false;
 			}
-			return this.range.match(Version.parse(item))
+			return this.range.match(this.parser.parse((String) item))
 		}
 
 		@Override
 		void describeTo(Description description) {
-			description.appendText(range)
+			description.appendText(range.toString())
 		}
 	}
+
 }

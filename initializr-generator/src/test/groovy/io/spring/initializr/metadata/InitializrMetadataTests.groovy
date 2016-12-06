@@ -17,9 +17,12 @@
 package io.spring.initializr.metadata
 
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
+import io.spring.initializr.util.Version
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+
+import static org.assertj.core.api.Assertions.assertThat
 
 /**
  * @author Stephane Nicoll
@@ -144,6 +147,34 @@ class InitializrMetadataTests {
 		thrown.expectMessage('1.3.0.M2')
 		thrown.expectMessage("bar-bom")
 		builder.build()
+	}
+
+	@Test
+	void updateSpringBootVersions() {
+		def bom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '[1.3.0.RELEASE,1.3.x.RELEASE]', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(versionRange: '1.3.x.BUILD-SNAPSHOT', version: '1.1.0-BUILD-SNAPSHOT')
+		def dependency = new Dependency(id: 'bar')
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '[1.3.0.RELEASE, 1.3.x.RELEASE]', version: '0.1.0.RELEASE')
+		dependency.mappings << new Dependency.Mapping(
+				versionRange: '1.3.x.BUILD-SNAPSHOT', version: '0.2.0.RELEASE')
+		InitializrMetadata metadata = InitializrMetadataTestBuilder
+				.withDefaults().addDependencyGroup("test", dependency)
+				.addBom('foo-bom', bom).build();
+
+		List<DefaultMetadataElement> bootVersions = Arrays.asList(
+				new DefaultMetadataElement(id: '1.3.6.RELEASE', name: '1.3.6'),
+				new DefaultMetadataElement(id: '1.3.7.BUILD-SNAPSHOT', name: '1.3.7'))
+		metadata.updateSpringBootVersions(bootVersions)
+		assertThat(metadata.configuration.env.boms['foo-bom']
+				.resolve(Version.parse('1.3.6.RELEASE')).version).isEqualTo('1.0.0')
+		assertThat(metadata.configuration.env.boms['foo-bom']
+				.resolve(Version.parse('1.3.7.BUILD-SNAPSHOT')).version).isEqualTo('1.1.0-BUILD-SNAPSHOT')
+		assertThat(metadata.dependencies.get('bar')
+				.resolve(Version.parse('1.3.6.RELEASE')).version).isEqualTo('0.1.0.RELEASE')
+		assertThat(metadata.dependencies.get('bar')
+				.resolve(Version.parse('1.3.7.BUILD-SNAPSHOT')).version).isEqualTo('0.2.0.RELEASE')
 	}
 
 	@Test

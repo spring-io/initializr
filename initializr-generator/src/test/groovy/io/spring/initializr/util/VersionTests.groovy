@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,20 @@
 
 package io.spring.initializr.util
 
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 
-import static io.spring.initializr.util.Version.parse
-import static io.spring.initializr.util.Version.safeParse
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
-import static org.junit.Assert.assertNull
+import static org.hamcrest.Matchers.comparesEqualTo
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.greaterThan
+import static org.hamcrest.Matchers.lessThan
 
 /**
  * @author Stephane Nicoll
  */
 class VersionTests {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none()
-
-	@Test
-	void noQualifierString() {
-		def version = parse('1.2.0')
-		assertThat(version.toString(), equalTo('1.2.0'))
-	}
-
-	@Test
-	void withQualifierString() {
-		def version = parse('1.2.0.RELEASE')
-		assertThat(version.toString(), equalTo('1.2.0.RELEASE'))
-	}
-
-	@Test
-	void withQualifierAndVersionString() {
-		def version = parse('1.2.0.RC2')
-		assertThat(version.toString(), equalTo('1.2.0.RC2'))
-	}
+	private static final VersionParser parser = new VersionParser(Collections.EMPTY_LIST)
 
 	@Test
 	void equalNoQualifier() {
@@ -146,20 +125,9 @@ class VersionTests {
 		assertThat(parse('1.2.0.BUILD-SNAPSHOT'), lessThan(parse('1.2.0.RELEASE')))
 	}
 
-	@Test
-	void parseInvalidVersion() {
-		thrown.expect(InvalidVersionException)
-		parse('foo')
-	}
-
-	@Test
-	void safeParseInvalidVersion() {
-		assertNull safeParse('foo')
-	}
-
-	@Test
-	void parseVersionWithSpaces() {
-		assertThat(parse('    1.2.0.RC3  '), lessThan(parse('1.3.0.RELEASE')))
+	private static Version parse(String text) {
+		def version = parser.parse(text)
+		version
 	}
 
 }

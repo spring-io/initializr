@@ -17,6 +17,7 @@
 package io.spring.initializr.metadata
 
 import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionParser
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -106,6 +107,27 @@ class BillOfMaterialsTests {
 		thrown.expect(IllegalStateException)
 		thrown.expectMessage('1.4.1.RELEASE')
 		bom.resolve(Version.parse('1.4.1.RELEASE'))
+	}
+
+	@Test
+	void resolveRangeWithVariablePatch() {
+		BillOfMaterials bom = new BillOfMaterials(groupId: 'com.example',
+				artifactId: 'bom', version: '1.0.0')
+		bom.mappings << new BillOfMaterials.Mapping(
+				versionRange: '[1.3.0.RELEASE,1.3.x.RELEASE]', version: '1.1.0')
+		bom.mappings << new BillOfMaterials.Mapping(
+				versionRange: '[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)', version: '1.1.1-SNAPSHOT')
+		bom.validate()
+
+		bom.updateVersionRange(new VersionParser(Arrays.asList(
+				Version.parse("1.3.8.RELEASE"), Version.parse("1.3.9.BUILD-SNAPSHOT"))))
+		assertThat(bom.resolve(Version.parse('1.3.8.RELEASE')).version, equalTo('1.1.0'))
+		assertThat(bom.resolve(Version.parse('1.3.9.RELEASE')).version, equalTo('1.1.1-SNAPSHOT'))
+
+		bom.updateVersionRange(new VersionParser(Arrays.asList(
+				Version.parse("1.3.9.RELEASE"), Version.parse("1.3.10.BUILD-SNAPSHOT"))))
+		assertThat(bom.resolve(Version.parse('1.3.8.RELEASE')).version, equalTo('1.1.0'))
+		assertThat(bom.resolve(Version.parse('1.3.9.RELEASE')).version, equalTo('1.1.0'))
 	}
 
 }

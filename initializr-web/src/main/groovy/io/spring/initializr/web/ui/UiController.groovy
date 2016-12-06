@@ -22,7 +22,6 @@ import groovy.json.JsonBuilder
 import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.util.Version
-import io.spring.initializr.util.VersionRange
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -52,7 +51,7 @@ class UiController {
 		dependencyGroups.each { g ->
 			g.content.each { d ->
 				if (v && d.versionRange) {
-					if (VersionRange.parse(d.versionRange).match(v)) {
+					if (d.match(v)) {
 						content << new DependencyItem(g.name, d)
 					}
 				} else {

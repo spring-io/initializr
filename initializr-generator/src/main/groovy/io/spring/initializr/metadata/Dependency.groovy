@@ -23,6 +23,7 @@ import groovy.transform.AutoCloneStyle
 import groovy.transform.ToString
 import io.spring.initializr.util.InvalidVersionException
 import io.spring.initializr.util.Version
+import io.spring.initializr.util.VersionParser
 import io.spring.initializr.util.VersionRange
 
 /**
@@ -84,6 +85,8 @@ class Dependency extends MetadataElement {
 
 	@JsonIgnore
 	String versionRequirement
+	
+	private VersionRange range
 
 	String bom
 
@@ -159,18 +162,22 @@ class Dependency extends MetadataElement {
 						"Invalid dependency, id should have the form groupId:artifactId[:version] but got $id")
 			}
 		}
+		updateVersionRanges(VersionParser.DEFAULT)
+	}
+
+	def updateVersionRanges(VersionParser versionParser) {
 		if (versionRange) {
 			try {
-				def range = VersionRange.parse(versionRange)
+				range = versionParser.parseRange(versionRange)
 				versionRequirement = range.toString()
 			} catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException("Invalid version range '$versionRange' for " +
-						"dependency with id '$id'")
+						"dependency with id '$id'", ex)
 			}
 		}
 		mappings.each {
 			try {
-				it.range = VersionRange.parse(it.versionRange)
+				it.range = versionParser.parseRange(it.versionRange)
 			} catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException("Invalid version range $it.versionRange for $this", ex)
 			}
@@ -200,8 +207,8 @@ class Dependency extends MetadataElement {
 	 * Specify if this dependency is available for the specified Spring Boot version.
 	 */
 	boolean match(Version version) {
-		if (versionRange) {
-			return VersionRange.parse(versionRange).match(version)
+		if (range) {
+			return range.match(version)
 		}
 		true
 	}

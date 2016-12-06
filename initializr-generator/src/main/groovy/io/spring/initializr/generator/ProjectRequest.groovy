@@ -93,12 +93,9 @@ class ProjectRequest extends BasicProjectRequest {
 					facets.add(it)
 				}
 			}
-			if (it.versionRange) {
-				def range = VersionRange.parse(it.versionRange)
-				if (!range.match(requestedVersion)) {
-					throw new InvalidProjectRequestException("Dependency '$it.id' is not compatible " +
-							"with Spring Boot $bootVersion")
-				}
+			if (!it.match(requestedVersion)) {
+				throw new InvalidProjectRequestException("Dependency '$it.id' is not compatible " +
+						"with Spring Boot $requestedVersion")
 			}
 			if (it.bom) {
 				resolveBom(metadata, it.bom, requestedVersion)

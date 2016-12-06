@@ -17,7 +17,6 @@
 package io.spring.initializr.util
 
 import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
 
 import org.springframework.util.Assert
 
@@ -41,15 +40,13 @@ import org.springframework.util.Assert
 @EqualsAndHashCode
 class VersionRange {
 
-	private static final String RANGE_REGEX = "(\\(|\\[)(.*),(.*)(\\)|\\])"
-
 	final Version lowerVersion
 	final boolean lowerInclusive
 	final Version higherVersion
 	final boolean higherInclusive
 
-	private VersionRange(Version lowerVersion, boolean lowerInclusive,
-						 Version higherVersion, boolean higherInclusive) {
+	protected VersionRange(Version lowerVersion, boolean lowerInclusive,
+						   Version higherVersion, boolean higherInclusive) {
 		this.lowerVersion = lowerVersion
 		this.lowerInclusive = lowerInclusive
 		this.higherVersion = higherVersion
@@ -86,31 +83,9 @@ class VersionRange {
 			sb.append("${lowerInclusive ? '>=' : '>'}${lowerVersion}")
 		}
 		if (higherVersion) {
-		   sb.append(" and ${higherInclusive ? '<=' : '<'}${higherVersion}")
+			sb.append(" and ${higherInclusive ? '<=' : '<'}${higherVersion}")
 		}
 		return sb.toString()
-	}
-
-	/**
-	 * Parse the string representation of a {@link VersionRange}. Throws an
-	 * {@link InvalidVersionException} if the range could not be parsed.
-	 * @param text the range text
-	 * @return a VersionRange instance for the specified range text
-	 * @throws InvalidVersionException if the range text could not be parsed
-	 */
-	static VersionRange parse(String text) {
-		Assert.notNull(text, "Text must not be null")
-		def matcher = (text.trim() =~ RANGE_REGEX)
-		if (!matcher.matches()) {
-			// Try to read it as simple string
-			Version version = Version.parse(text)
-			return new VersionRange(version, true, null, true)
-		}
-		boolean lowerInclusive = matcher[0][1].equals('[')
-		Version lowerVersion = Version.parse(matcher[0][2])
-		Version higherVersion = Version.parse(matcher[0][3])
-		boolean higherInclusive = matcher[0][4].equals(']')
-		new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive)
 	}
 
 }
