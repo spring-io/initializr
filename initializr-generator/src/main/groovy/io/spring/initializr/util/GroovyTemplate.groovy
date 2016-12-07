@@ -70,7 +70,7 @@ class GroovyTemplate {
 		def classLoader = GroovyTemplate.class.classLoader
 		def resource = classLoader.getResource("templates/" + name)
 		if (resource) {
-			return engine.createTemplate(resource)
+			return engine.createTemplate(resource.getText('utf-8'))
 		}
 
 		return engine.createTemplate(name)
