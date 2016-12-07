@@ -408,7 +408,7 @@ class ProjectGenerator {
 	def write(File target, String templateName, def model) {
 		def tmpl = templateName.endsWith('.groovy') ? templateName + '.tmpl' : templateName
 		def body = groovyTemplate.process tmpl, model
-		target.write(body)
+		target.write(body, 'utf-8')
 	}
 
 	private void addTempFile(String group, File file) {
