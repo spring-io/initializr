@@ -35,8 +35,11 @@ initializr:
             repositories: spring-snapshots,spring-milestones
           - versionRange: "[1.4.0.RELEASE,1.4.3.BUILD-SNAPSHOT)"
             version: Camden.SR3
-          - versionRange: 1.4.3.BUILD-SNAPSHOT
+          - versionRange: "[1.4.3.BUILD-SNAPSHOT, 1.5.0.M1)"
             version: Camden.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "1.5.0.M1"
+            version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
