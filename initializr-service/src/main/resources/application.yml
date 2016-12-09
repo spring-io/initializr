@@ -56,8 +56,18 @@ initializr:
       cloud-services-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
-        version: 1.3.1.RELEASE
         additionalBoms: [cloud-bom]
+        mappings:
+          - versionRange: "[1.3.0.RELEASE,1.3.9.BUILD-SNAPSHOT)"
+            version: 1.2.1.RELEASE
+          - versionRange: "[1.3.9.BUILD-SNAPSHOT,1.4.0.RELEASE)"
+            version: 1.2.2.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "[1.4.0.RELEASE,1.4.3.BUILD-SNAPSHOT)"
+            version: 1.3.1.RELEASE
+          - versionRange: "[1.4.3.BUILD-SNAPSHOT, 1.5.0.M1)"
+            version: 1.3.2.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
       experimental-reactive-bom:
         groupId: org.springframework.boot.experimental
         artifactId: spring-boot-dependencies-web-reactive
