@@ -58,7 +58,7 @@ initializr:
         artifactId: spring-cloud-services-dependencies
         additionalBoms: [cloud-bom]
         mappings:
-          - versionRange: "[1.3.0.M1,1.3.9.BUILD-SNAPSHOT)"
+          - versionRange: "[1.3.0.RELEASE,1.3.9.BUILD-SNAPSHOT)"
             version: 1.2.1.RELEASE
           - versionRange: "[1.3.9.BUILD-SNAPSHOT,1.4.0.RELEASE)"
             version: 1.2.2.BUILD-SNAPSHOT
