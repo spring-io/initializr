@@ -26,8 +26,8 @@ apply plugin: 'war'
 	baseName = '${artifactId}'
 	version = '${version}'
 }
+
 sourceCompatibility = ${javaVersion}
-targetCompatibility = ${javaVersion}
 
 repositories {
 	mavenCentral()<% if (repositories) { repositories.each { key, repo -> %>
