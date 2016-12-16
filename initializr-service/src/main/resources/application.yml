@@ -663,7 +663,7 @@ initializr:
           starter: false
     - name: Pivotal Cloud Foundry
       bom: cloud-services-bom
-      versionRange: 1.3.0.RELEASE
+      versionRange: "[1.3.0.RELEASE,1.5.0.M1)"
       content:
         - name: Config Client (PCF)
           id: scs-config-client
