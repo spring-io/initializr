@@ -57,7 +57,6 @@ class GradleBuildAssert {
 
 	GradleBuildAssert hasJavaVersion(String javaVersion) {
 		contains("sourceCompatibility = $javaVersion")
-		contains("targetCompatibility = $javaVersion")
 	}
 
 	GradleBuildAssert hasSnapshotRepository() {
