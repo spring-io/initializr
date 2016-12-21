@@ -181,6 +181,22 @@ class ProjectRequestTests {
 	}
 
 	@Test
+	void resolveDependencyWithAdditional() {
+		def request = new ProjectRequest()
+		Dependency testDependency = createDependency('org.foo', 'acme-test', '1.2.0')
+		testDependency.id = 'acmetest'
+		Dependency dependency = createDependency('org.foo', 'acme', '1.2.0')
+		dependency.additional.add(testDependency.id)
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('code', dependency, testDependency).build()
+
+		request.style << 'org.foo:acme'
+		request.resolve(metadata)
+		assertDependency(request.resolvedDependencies[0], 'org.foo', 'acme', '1.2.0')
+		assertDependency(request.resolvedDependencies[1], 'org.foo', 'acme-test', '1.2.0')
+	}
+
+	@Test
 	void resolveBuild() {
 		def request = new ProjectRequest()
 		def metadata = InitializrMetadataTestBuilder.withDefaults().build()

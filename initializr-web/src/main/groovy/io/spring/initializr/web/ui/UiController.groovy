@@ -91,6 +91,9 @@ class UiController {
 			def all = d.keywords + d.aliases
 			result.keywords = all.join(',')
 		}
+		if (d.additional) {
+			result.additional = d.additional.join(',')
+		}
 		result
 	}
 
