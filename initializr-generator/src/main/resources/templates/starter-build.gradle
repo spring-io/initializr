@@ -10,11 +10,13 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}")<% if (!bootOneThreeAvailable) { %>
 		classpath('io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}')<% } %><% if (language=='kotlin') { %>
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")<% } %>
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:\${kotlinVersion}")<% } %>
 	}
 }
 
-apply plugin: '${language}'<% if (packaging=='war') {  %>
+apply plugin: '${language}'<% if (language=='kotlin') { %>
+apply plugin: 'kotlin-spring'<% } %><% if (packaging=='war') {  %>
 apply plugin: 'eclipse-wtp'<% } else { %>
 apply plugin: 'eclipse'<% } %>
 apply plugin: '${springBootPluginName}'<% if (!bootOneThreeAvailable) { %>
