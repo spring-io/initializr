@@ -80,7 +80,7 @@ initializr:
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      version: 1.0.5-2
+      version: 1.0.6
   dependencies:
     - name: Core
       content:
