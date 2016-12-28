@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration<% } %>
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration <% } %>
-open class ${applicationName}
+class ${applicationName}
 
 fun main(args: Array<String>) {
     SpringApplication.run(${applicationName}::class.java, *args)
