@@ -202,6 +202,13 @@ If you want to run the smoke tests using Geb, you need to enable the
     $ mvn verify -PsmokeTests
 ----
 
+If you want to build both the library and the service, you can enable the `full` profile:
+
+[indent=0]
+----
+    $ mvn clean install -Pfull
+----
+
 
 [[run-app]]
 === Running the app locally
@@ -211,7 +218,7 @@ Spring Boot app from the `initializr-service` directory:
 
 [indent=0]
 ----
-	$ cd initializr-service
+    $ cd initializr-service
     $ mvn spring-boot:run
 ----
 
@@ -242,9 +249,8 @@ https://console.run.pivotal.io/tools[Pivotal Web Services].
 You should ensure that the application name and URL (name and host values) are suitable for
 your environment before running `cf push`.
 
-First, make sure that you have <<building, built the library>>, the build the service from
-the `initializr-service` directory:
-Make sure first that the jar has been created:
+First, make sure that you have <<building, built the library>>, then make sure first that
+the jar has been created:
 
 [indent=0]
 ----
