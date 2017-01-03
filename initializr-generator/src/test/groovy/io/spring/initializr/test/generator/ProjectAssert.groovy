@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,13 +88,23 @@ class ProjectAssert {
 		this
 	}
 
-	ProjectAssert isGradleProject() {
+	ProjectAssert isGradleProject(String version) {
 		hasFile('build.gradle').hasNoFile('pom.xml')
 		hasFile('gradlew', 'gradlew.bat',
 				'gradle/wrapper/gradle-wrapper.properties',
 				'gradle/wrapper/gradle-wrapper.jar')
 		mavenProject = false
+		if (version) {
+			Properties properties = properties("gradle/wrapper/gradle-wrapper.properties")
+			String distributionUrl = properties['distributionUrl']
+			assertTrue("Wrong gradle version for project $distributionUrl",
+					distributionUrl.contains(version))
+		}
 		this
+	}
+
+	ProjectAssert isGradleProject() {
+		isGradleProject(null)
 	}
 
 	ProjectAssert isJavaProject(String expectedPackageName, String expectedApplicationName) {
@@ -172,6 +182,15 @@ class ProjectAssert {
 
 	private File file(String localPath) {
 		new File(dir, localPath)
+	}
+
+	private Properties properties(String localPath) {
+		File f = file(localPath)
+		Properties properties = new Properties()
+		f.withInputStream {
+			properties.load(it)
+		}
+		properties
 	}
 
 }

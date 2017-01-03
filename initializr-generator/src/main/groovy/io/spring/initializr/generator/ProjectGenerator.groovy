@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ class ProjectGenerator {
 	private static final VERSION_1_4_0_M3 = Version.parse('1.4.0.M3')
 
 	private static final VERSION_1_4_2_M1 = Version.parse('1.4.2.M1')
+
+	private static final VERSION_2_0_0_M1 = Version.parse('2.0.0.M1')
 
 	@Autowired
 	ApplicationEventPublisher eventPublisher
@@ -135,7 +137,7 @@ class ProjectGenerator {
 		if (isGradleBuild(request)) {
 			def gradle = new String(doGenerateGradleBuild(model))
 			new File(dir, 'build.gradle').write(gradle)
-			writeGradleWrapper(dir)
+			writeGradleWrapper(dir, Version.safeParse(request.bootVersion))
 		} else {
 			def pom = new String(doGenerateMavenPom(model))
 			new File(dir, 'pom.xml').write(pom)
@@ -343,6 +345,10 @@ class ProjectGenerator {
 				.compareTo(Version.safeParse(request.bootVersion)) <= 0
 	}
 
+	private static boolean isGradle3Available(Version bootVersion) {
+		VERSION_2_0_0_M1.compareTo(bootVersion) <= 0
+	}
+
 	private byte[] doGenerateMavenPom(Map model) {
 		groovyTemplate.process 'starter-pom.xml', model
 	}
@@ -352,16 +358,17 @@ class ProjectGenerator {
 		groovyTemplate.process 'starter-build.gradle', model
 	}
 
-	private void writeGradleWrapper(File dir) {
-		writeTextResource(dir, 'gradlew.bat', 'gradle/gradlew.bat')
-		writeTextResource(dir, 'gradlew', 'gradle/gradlew')
+	private void writeGradleWrapper(File dir, Version bootVersion) {
+		String gradlePrefix = isGradle3Available(bootVersion) ? 'gradle3' : 'gradle'
+		writeTextResource(dir, 'gradlew.bat', "$gradlePrefix/gradlew.bat")
+		writeTextResource(dir, 'gradlew', "$gradlePrefix/gradlew")
 
 		def wrapperDir = new File(dir, 'gradle/wrapper')
 		wrapperDir.mkdirs()
 		writeTextResource(wrapperDir, 'gradle-wrapper.properties',
-				'gradle/gradle/wrapper/gradle-wrapper.properties')
+				"$gradlePrefix/gradle/wrapper/gradle-wrapper.properties")
 		writeBinaryResource(wrapperDir, 'gradle-wrapper.jar',
-				'gradle/gradle/wrapper/gradle-wrapper.jar')
+				"$gradlePrefix/gradle/wrapper/gradle-wrapper.jar")
 	}
 
 	private void writeMavenWrapper(File dir) {

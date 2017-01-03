@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -268,6 +268,21 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.doesNotHaveImports(EnableAutoConfiguration.class.name, ComponentScan.class.name, Configuration.class.name)
 				.contains('@SpringBootApplication')
 				.doesNotContain('@EnableAutoConfiguration', '@Configuration', '@ComponentScan')
+	}
+
+	@Test
+	void springBootUseGradle2() {
+		def request = createProjectRequest('web')
+		request.type = 'gradle-project'
+		generateProject(request).isGradleProject('2.13')
+	}
+
+	@Test
+	void springBoot2UseGradle3() {
+		def request = createProjectRequest('web')
+		request.type = 'gradle-project'
+		request.bootVersion = '2.0.0.BUILD-SNAPSHOT'
+		generateProject(request).isGradleProject('3.2.1')
 	}
 
 	@Test
