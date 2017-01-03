@@ -17,6 +17,7 @@
 package io.spring.initializr.test.generator
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertThat
 import static org.junit.Assert.assertTrue
 
 /**
@@ -143,6 +144,24 @@ class ProjectAssert {
 		isGenericProject(expectedPackageName, expectedApplicationName, codeLocation, extension)
 				.hasStaticAndTemplatesResources(true)
 				.hasFile("src/main/$codeLocation/$packageName/ServletInitializer.$extension")
+	}
+
+	ProjectAssert hasApplicationNameProperty(String name) {
+		hasApplicationProperty('spring.application.name', name)
+	}
+
+	ProjectAssert hasApplicationProperty(String propertyName, String propertyValue) {
+		 hasApplicationProperties([(propertyName): propertyValue])
+	}
+
+	ProjectAssert hasApplicationProperties(Map expectedValues) {
+		hasFile('src/main/resources/application.properties')
+		Properties properties = new Properties()
+		properties.load(file('src/main/resources/application.properties').newReader())
+		expectedValues.each {
+			assertEquals "The value of the application property ${it.key} is equal to ${it.value}", properties.getProperty(it.key), it.value
+		}
+		this
 	}
 
 	ProjectAssert hasStaticAndTemplatesResources(boolean web) {

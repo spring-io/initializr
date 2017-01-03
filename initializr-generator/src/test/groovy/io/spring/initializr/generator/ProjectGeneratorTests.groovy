@@ -271,6 +271,15 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	void nameIsPutInPropertyFile() {
+		def request = createProjectRequest()
+		request.name = 'custom-name'
+		request.packageName = 'foo'
+		request.bootVersion = '1.3.3.RELEASE'
+		generateProject(request).hasApplicationNameProperty(request.name)
+	}
+
+	@Test
 	void customBaseDirectory() {
 		def request = createProjectRequest()
 		request.baseDir = 'my-project'
