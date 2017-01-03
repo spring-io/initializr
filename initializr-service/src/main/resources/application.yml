@@ -224,6 +224,12 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.3.0.RC1)"
               version: 1.0.1.RELEASE
           scope: test
+        - name: Wicket
+          id: wicket
+          groupId: com.giffing.wicket.spring.boot.starter
+          artifactId: wicket-spring-boot-starter
+          version: 0.0.16
+          description: Autoconfiguration for Wicket Wicketstuff and other dependencies
     - name: Template Engines
       content:
         - name: Freemarker
