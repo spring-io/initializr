@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ import org.junit.Test
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.boot.bind.PropertiesConfigurationFactory
+import org.springframework.core.env.MutablePropertySources
+import org.springframework.core.env.PropertiesPropertySource
+import org.springframework.core.env.PropertySources
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 
@@ -183,7 +186,9 @@ class InitializrMetadataBuilderTests {
 		PropertiesConfigurationFactory<InitializrProperties> factory =
 				new PropertiesConfigurationFactory<>(InitializrProperties)
 		factory.setTargetName("initializr")
-		factory.setProperties(loadProperties(resource))
+		PropertySources sources = new MutablePropertySources()
+		sources.addFirst(new PropertiesPropertySource("main", loadProperties(resource)))
+		factory.setPropertySources(sources)
 		factory.afterPropertiesSet();
 		return factory.getObject();
 	}
