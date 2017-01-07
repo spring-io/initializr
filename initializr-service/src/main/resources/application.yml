@@ -752,6 +752,7 @@ initializr:
         - name: Remote Shell
           id: remote-shell
           description: CRaSH shell integration
+          versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
     - name: Experimental
       content:
         - name: Reactive Web
