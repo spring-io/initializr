@@ -734,6 +734,10 @@ initializr:
           id: mail
           description: javax.mail
           versionRange: 1.2.0.RC1
+        - name: LDAP
+          id: data-ldap
+          description: LDAP support, including spring-data-ldap
+          versionRange: 1.5.0.RC1
     - name: Ops
       content:
         - name: Actuator
