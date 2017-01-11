@@ -92,7 +92,7 @@ initializr:
       stormpath-bom:
         groupId: com.stormpath.sdk
         artifactId: stormpath-bom
-        version: 1.3.0
+        version: 1.5.0
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -338,17 +338,12 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.3.0.RC1)"
               version: 1.0.1.RELEASE
           scope: test
-        - name: Stormpath Default
+        - name: Stormpath
+          id: stormpath
+          description: Stormpath default starter including Spring MVC, Thymeleaf and Spring Security
           groupId: com.stormpath.spring
           artifactId: stormpath-default-spring-boot-starter
-          id: stormpath-default-spring-boot-starter
-          description: Stormpath Default Spring Boot Starter for integration with Stormpath including WebMVC, Thymeleaf and Spring Security
-          keywords:
-            - api
-            - auth
-            - mvc
-            - oauth
-            - oauth2
+          versionRange: "[1.5.0.RC1,2.0.0.M1)"
           bom: stormpath-bom
     - name: Template Engines
       content:
@@ -381,6 +376,7 @@ initializr:
         - name: Thymeleaf
           id: thymeleaf
           description: Thymeleaf templating engine, including integration with Spring
+          weight: 100
           facets:
             - web
           keywords:
