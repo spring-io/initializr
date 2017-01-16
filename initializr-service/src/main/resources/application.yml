@@ -746,6 +746,14 @@ initializr:
         - name: AMQP
           id: amqp
           description: Advanced Message Queuing Protocol via spring-rabbit
+        - name: Kafka
+          id: kafka
+          weight: 100
+          description: Kafka messaging support using Spring Kafka
+          versionRange: 1.5.0.RC1
+          groupId: org.springframework.kafka
+          artifactId: spring-kafka
+          starter: false
         - name: Mail
           id: mail
           description: javax.mail
