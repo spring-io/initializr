@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,13 @@ class BillOfMaterials {
 	 * in the bom declaration itself.
      */
 	String versionProperty
+
+	/**
+	 * The relative order of this BOM where lower values have higher priority. The
+	 * default value is {@code Integer.MAX_VALUE}, indicating lowest priority. The
+	 * Spring Boot dependencies bom has an order of 100.
+	 */
+	Integer order = Integer.MAX_VALUE
 
 	/**
 	 * The BOM(s) that should be automatically included if this BOM is required. Can be
@@ -102,7 +109,7 @@ class BillOfMaterials {
 		for (Mapping mapping : mappings) {
 			if (mapping.range.match(bootVersion)) {
 				def resolvedBom = new BillOfMaterials(groupId: groupId, artifactId: artifactId,
-						version: mapping.version, versionProperty: versionProperty)
+						version: mapping.version, versionProperty: versionProperty, order: order)
 				resolvedBom.repositories += mapping.repositories ?: repositories
 				resolvedBom.additionalBoms += mapping.additionalBoms ?: additionalBoms
 				return resolvedBom

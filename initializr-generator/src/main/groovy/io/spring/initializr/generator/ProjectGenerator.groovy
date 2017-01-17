@@ -258,6 +258,8 @@ class ProjectGenerator {
 			model['includeSpringBootBom'] = parentPom.includeSpringBootBom
 		}
 
+		model['resolvedBoms'] = request.boms.values().sort {a, b -> a.order <=> b.order }
+
 		model['compileDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE)
 		model['runtimeDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_RUNTIME)
 		model['compileOnlyDependencies'] = filterDependencies(dependencies, Dependency.SCOPE_COMPILE_ONLY)

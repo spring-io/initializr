@@ -168,7 +168,7 @@ class InitializrMetadata {
 	 */
 	BillOfMaterials createSpringBootBom(String bootVersion, String versionProperty) {
 		new BillOfMaterials(groupId: 'org.springframework.boot', artifactId: 'spring-boot-dependencies',
-				version: bootVersion, versionProperty: versionProperty)
+				version: bootVersion, versionProperty: versionProperty, order: 100)
 	}
 
 	/**

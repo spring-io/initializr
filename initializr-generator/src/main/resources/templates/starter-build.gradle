@@ -53,7 +53,7 @@ dependencies {<% compileDependencies.each { %>
 }
 <% if (boms) { %>
 dependencyManagement {
-	imports {<% boms.values().each { %>
+	imports {<% resolvedBoms.reverse().each { %>
 		mavenBom "${it.groupId}:${it.artifactId}:${it.determineVersionToken()}"<% } %>
 	}
 }

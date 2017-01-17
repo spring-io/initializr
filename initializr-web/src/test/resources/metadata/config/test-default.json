@@ -86,6 +86,7 @@
       "my-api-bom": {
         "groupId": "org.acme",
         "artifactId": "my-api-bom",
+        "order": 2147483647,
         "repositories": [],
         "additionalBoms": [
           "my-api-dependencies-bom"
@@ -117,7 +118,8 @@
         "mappings": [],
         "artifactId": "my-api-dependencies-bom",
         "additionalBoms": [],
-        "version": "1.0.0.RELEASE"
+        "version": "1.0.0.RELEASE",
+        "order": 2147483647
       }
     },
     "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"

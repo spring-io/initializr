@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,6 +136,31 @@ class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		def project = generateProject(request)
 		project.sourceCodeAssert("$fileName")
 				.equalsTo(new ClassPathResource("project/$build/compile-only-dependency-$assertFileName"))
+	}
+
+	@Test
+	void bomWithOrdering() {
+		def foo = new Dependency(id: 'foo', groupId: 'org.acme', artifactId: 'foo', bom: 'foo-bom')
+		def barBom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'bar-bom',
+				version: '1.0', order: 50)
+		def bizBom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'biz-bom',
+				order: 40, additionalBoms: ['bar-bom'])
+		bizBom.mappings << new BillOfMaterials.Mapping(versionRange: '1.0.0.RELEASE',
+				version: '1.0')
+		def fooBom = new BillOfMaterials(groupId: 'org.acme', artifactId: 'foo-bom',
+				version: '1.0', order: 20, additionalBoms: ['biz-bom'])
+
+		def metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('foo', foo)
+				.addBom('foo-bom', fooBom)
+				.addBom('bar-bom', barBom)
+				.addBom('biz-bom', bizBom)
+				.build()
+		applyMetadata(metadata)
+		def request = createProjectRequest('foo')
+		def project = generateProject(request)
+		project.sourceCodeAssert("$fileName")
+				.equalsTo(new ClassPathResource("project/$build/bom-ordering-$assertFileName"))
 	}
 
 	@Override

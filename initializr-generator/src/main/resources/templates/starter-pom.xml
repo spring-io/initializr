@@ -76,7 +76,7 @@
 	</dependencies>
 <% if (boms) { %>
 	<dependencyManagement>
-		<dependencies><% boms.values().each { %>
+		<dependencies><% resolvedBoms.each { %>
 			<dependency>
 				<groupId>${it.groupId}</groupId>
 				<artifactId>${it.artifactId}</artifactId>
