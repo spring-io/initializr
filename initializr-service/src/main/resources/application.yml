@@ -41,7 +41,7 @@ initializr:
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
-        additionalBoms: [cloud-bom]
+        additionalBoms: [cloud-task-bom,cloud-bom]
         mappings:
           - versionRange: "[1.3.2.RELEASE,1.4.0.RELEASE)"
             version: 1.0.1.RELEASE
