@@ -38,10 +38,8 @@ import io.spring.initializr.metadata.DependencyMetadataProvider
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.util.Version
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.CacheControl
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -266,10 +264,10 @@ class MainController extends AbstractInitializrController {
 
 	private ResponseEntity<byte[]> createResponseEntity(byte[] content, String contentType, String fileName) {
 		String contentDispositionValue = "attachment; filename=\"$fileName\""
-		def result = new ResponseEntity<byte[]>(content,
-				['Content-Type'       : contentType,
-				 'Content-Disposition': contentDispositionValue] as HttpHeaders, HttpStatus.OK)
-		result
+		ResponseEntity.ok()
+				.header('Content-Type', contentType)
+				.header('Content-Disposition', contentDispositionValue)
+				.body(content);
 	}
 
 	private String createUniqueId(String content) {
