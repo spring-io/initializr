@@ -80,6 +80,12 @@ input[type=text] {
     display: block;
 }
 
+.external-links {
+    padding: 0;
+}
+.external-links li {
+    list-style-type: none;
+}
 /* autocomplete */
 
 #autocomplete, .twitter-typeahead, .tt-hint {
