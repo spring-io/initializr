@@ -56,13 +56,13 @@ public class MetricsExportTests {
 	public RedisRunning running = new RedisRunning();
 
 	@Autowired
-	ProjectGenerationMetricsListener listener;
+	private ProjectGenerationMetricsListener listener;
 
 	@Autowired
 	@Qualifier("writer")
-	MetricWriter writer;
+	private MetricWriter writer;
 
-	RedisMetricRepository repository;
+	private RedisMetricRepository repository;
 
 	@Before
 	public void init() {
@@ -83,10 +83,10 @@ public class MetricsExportTests {
 	@Configuration
 	@EnableAutoConfiguration
 	@EnableConfigurationProperties(InitializrProperties.class)
-	static class Config {
+	protected static class Config {
 
 		@Bean
-		InitializrMetadataProvider initializrMetadataProvider(
+		public InitializrMetadataProvider initializrMetadataProvider(
 				InitializrProperties properties) {
 			InitializrMetadata metadata = InitializrMetadataBuilder
 					.fromInitializrProperties(properties).build();

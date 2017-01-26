@@ -184,32 +184,32 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@RestController
-	static class StatsMockController {
+	protected static class StatsMockController {
 
 		private final List<Content> stats = new ArrayList<>();
 
 		@RequestMapping(path = "/elastic/test/my-entity", method = RequestMethod.POST)
-		void handleProjectRequestDocument(RequestEntity<String> input) {
+		public void handleProjectRequestDocument(RequestEntity<String> input) {
 			String authorization = input.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 			Content content = new Content(authorization, input.getBody());
 			this.stats.add(content);
 		}
 
 		@RequestMapping(path = "/elastic-error/test/my-entity", method = RequestMethod.POST)
-		void handleExpectedError() {
+		public void handleExpectedError() {
 			throw new IllegalStateException("Expected exception");
 		}
 
-		static class Content {
+		public static class Content {
 
 			public Content(String authorization, String body) {
 				this.authorization = authorization;
 				json = body;
 			}
 
-			String authorization;
+			private String authorization;
 
-			String json;
+			private String json;
 
 		}
 

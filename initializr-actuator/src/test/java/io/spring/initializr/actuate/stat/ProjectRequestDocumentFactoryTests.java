@@ -36,7 +36,7 @@ import io.spring.initializr.generator.ProjectRequest;
 public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTests {
 
 	private final ProjectRequestDocumentFactory factory =
-			new ProjectRequestDocumentFactory(createProvider(metadata));
+			new ProjectRequestDocumentFactory(createProvider(getMetadata()));
 
 	@Test
 	public void createDocumentForSimpleProject() {

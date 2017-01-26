@@ -27,7 +27,7 @@ import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
  */
 abstract class AbstractInitializrStatTests {
 
-	InitializrMetadata metadata = InitializrMetadataTestBuilder
+	private final InitializrMetadata metadata = InitializrMetadataTestBuilder
 			.withDefaults()
 			.addDependencyGroup("core", "security", "validation", "aop")
 			.addDependencyGroup("web", "web", "data-rest", "jersey")
@@ -43,6 +43,10 @@ abstract class AbstractInitializrStatTests {
 		ProjectRequest request = new ProjectRequest();
 		request.initialize(metadata);
 		return request;
+	}
+
+	public InitializrMetadata getMetadata() {
+		return metadata;
 	}
 
 }
