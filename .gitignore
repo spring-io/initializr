@@ -6,7 +6,9 @@
 .classpath
 .project
 .settings
+.gitignore
 .idea
+.factorypath
 *.iml
 bin
 build
