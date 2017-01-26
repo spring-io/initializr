@@ -29,12 +29,12 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Dave Syer
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 abstract class AbstractFullStackInitializrIntegrationTests
 		extends AbstractInitializrIntegrationTests {
 
 	@LocalServerPort
-	int port
+	protected int port
 
 	String host = "localhost"
 
