@@ -39,7 +39,7 @@ class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * The id of the starter to use if no dependency is defined.
 	 */
-	static final DEFAULT_STARTER = 'root_starter'
+	public static final DEFAULT_STARTER = 'root_starter'
 
 	/**
 	 * Additional parameters that can be used to further identify the request.
