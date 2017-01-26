@@ -52,7 +52,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	public void setUp() {
 		this.properties = createProperties();
 		ProjectRequestDocumentFactory documentFactory =
-				new ProjectRequestDocumentFactory(createProvider(metadata));
+				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
 		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory, properties, retryTemplate);
 		mockServer = MockRestServiceServer.createServer(this.statPublisher.getRestTemplate());

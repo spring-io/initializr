@@ -53,14 +53,14 @@ public class MetricsProperties {
 	@Value("${spring.metrics.export.default.delayMillis:5000}")
 	private long rateMillis = 5000L;
 
-	String getPrefix() {
+	public String getPrefix() {
 		if (prefix.endsWith(".")) {
 			return prefix;
 		}
 		return prefix + ".";
 	}
 
-	String getId(String defaultValue) {
+	public String getId(String defaultValue) {
 		if (StringUtils.hasText(id)) return id;
 		return defaultValue;
 	}

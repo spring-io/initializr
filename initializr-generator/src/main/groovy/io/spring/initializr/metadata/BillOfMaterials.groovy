@@ -18,6 +18,7 @@ package io.spring.initializr.metadata
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.ToString
+import io.spring.initializr.metadata.BillOfMaterials.Mapping;
 import io.spring.initializr.util.InvalidVersionException
 import io.spring.initializr.util.Version
 import io.spring.initializr.util.VersionParser
@@ -68,6 +69,10 @@ class BillOfMaterials {
 	List<String> repositories = []
 
 	final List<Mapping> mappings = []
+
+	static BillOfMaterials create(String groupId, String artifactId, String version) {
+		new BillOfMaterials(groupId: groupId, artifactId: artifactId, version: version)
+	}
 
 	/**
 	 * Determine the version placeholder to use for this instance. If a version
@@ -129,6 +134,10 @@ class BillOfMaterials {
 		List<String> additionalBoms = []
 
 		private VersionRange range
+
+		static Mapping create(String versionRange, String version) {
+			new Mapping(versionRange: versionRange, version: version)
+		}
 
 		String determineVersionRangeRequirement() {
 			range.toString()
