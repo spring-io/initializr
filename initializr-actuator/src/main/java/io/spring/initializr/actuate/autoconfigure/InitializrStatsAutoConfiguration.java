@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.autoconfigure
+package io.spring.initializr.actuate.autoconfigure;
 
-import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher
-import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory
-import io.spring.initializr.actuate.stat.StatsProperties
-import io.spring.initializr.metadata.InitializrMetadataProvider
+import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.retry.backoff.ExponentialBackOffPolicy
-import org.springframework.retry.policy.SimpleRetryPolicy
-import org.springframework.retry.support.RetryTemplate
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
+
+import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
+import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
+import io.spring.initializr.actuate.stat.StatsProperties;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -39,29 +41,34 @@ import org.springframework.retry.support.RetryTemplate
  * @since 1.0
  */
 @Configuration
-@EnableConfigurationProperties(StatsProperties)
-@ConditionalOnProperty('initializr.stats.elastic.uri')
+@EnableConfigurationProperties(StatsProperties.class)
+@ConditionalOnProperty("initializr.stats.elastic.uri")
 class InitializrStatsAutoConfiguration {
 
 	@Autowired
-	private StatsProperties statsProperties
+	private StatsProperties statsProperties;
 
 	@Bean
-	ProjectGenerationStatPublisher projectRequestStatHandler(InitializrMetadataProvider provider) {
-		new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(provider),
-				statsProperties, statsRetryTemplate())
+	ProjectGenerationStatPublisher projectRequestStatHandler(
+			InitializrMetadataProvider provider) {
+		return new ProjectGenerationStatPublisher(
+				new ProjectRequestDocumentFactory(provider), statsProperties,
+				statsRetryTemplate());
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(name = "statsRetryTemplate")
 	RetryTemplate statsRetryTemplate() {
-		RetryTemplate retryTemplate = new RetryTemplate()
-		def backOffPolicy = new ExponentialBackOffPolicy(initialInterval: 3000L, multiplier: 3)
-		def retryPolicy = new SimpleRetryPolicy(statsProperties.elastic.maxAttempts, Collections
-				.<Class<? extends Throwable>, Boolean> singletonMap(Exception.class, true))
-		retryTemplate.setBackOffPolicy(backOffPolicy)
-		retryTemplate.setRetryPolicy(retryPolicy)
-		retryTemplate
+		RetryTemplate retryTemplate = new RetryTemplate();
+		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+		backOffPolicy.setInitialInterval(3000L);
+		backOffPolicy.setMultiplier(3);
+		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(
+				statsProperties.getElastic().getMaxAttempts(), Collections
+				.<Class<? extends Throwable>, Boolean> singletonMap(Exception.class, true));
+		retryTemplate.setBackOffPolicy(backOffPolicy);
+		retryTemplate.setRetryPolicy(retryPolicy);
+		return retryTemplate;
 	}
 
 }

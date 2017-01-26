@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.stat
+package io.spring.initializr.actuate.stat;
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.util.StringUtils
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.StringUtils;
 
 /**
  * Statistics-related properties.
@@ -26,56 +29,109 @@ import org.springframework.util.StringUtils
  * @since 1.0
  */
 @ConfigurationProperties("initializr.stats")
-class StatsProperties {
+public class StatsProperties {
 
-	final Elastic elastic = new Elastic()
+	private final Elastic elastic = new Elastic();
 
-	static final class Elastic {
+	public Elastic getElastic() {
+		return elastic;
+	}
+
+	public static final class Elastic {
 
 		/**
 		 * Elastic service uri.
 		 */
-		String uri
+		private String uri;
 
 		/**
 		 * Elastic service username.
 		 */
-		String username
+		private String username;
 
 		/**
 		 * Elastic service password
 		 */
-		String password
+		private String password;
 
 		/**
 		 * Name of the index.
 		 */
-		String indexName = 'initializr'
+		private String indexName = "initializr";
 
 		/**
 		 * Name of the entity to use to publish stats.
 		 */
-		String entityName = 'request'
+		private String entityName = "request";
 
 		/**
 		 * Number of attempts before giving up.
 		 */
-		int maxAttempts = 3
+		private int maxAttempts = 3;
 
-		void setUri(String uri) {
-			this.uri = cleanUri(uri)
+		public String getUsername() {
+			return username;
 		}
 
-		URI getEntityUrl() {
-			def string = "$uri/$indexName/$entityName"
-			new URI(string)
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+		public String getIndexName() {
+			return indexName;
+		}
+
+		public void setIndexName(String indexName) {
+			this.indexName = indexName;
+		}
+
+		public String getEntityName() {
+			return entityName;
+		}
+
+		public void setEntityName(String entityName) {
+			this.entityName = entityName;
+		}
+
+		public int getMaxAttempts() {
+			return maxAttempts;
+		}
+
+		public void setMaxAttempts(int maxAttempts) {
+			this.maxAttempts = maxAttempts;
+		}
+
+		public String getUri() {
+			return uri;
+		}
+
+		public void setUri(String uri) {
+			this.uri = cleanUri(uri);
+		}
+
+		public URI getEntityUrl() {
+			String string = uri + "/" + indexName + "/" + entityName;
+			try {
+				return new URI(string);
+			}
+			catch (URISyntaxException e) {
+				throw new IllegalStateException("Cannot create entity URL: " + string, e);
+			}
 		}
 
 		private static String cleanUri(String contextPath) {
 			if (StringUtils.hasText(contextPath) && contextPath.endsWith("/")) {
-				return contextPath.substring(0, contextPath.length() - 1)
+				return contextPath.substring(0, contextPath.length() - 1);
 			}
-			return contextPath
+			return contextPath;
 		}
 
 	}

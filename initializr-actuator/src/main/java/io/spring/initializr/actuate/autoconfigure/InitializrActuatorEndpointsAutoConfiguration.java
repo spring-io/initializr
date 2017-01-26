@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.autoconfigure
+package io.spring.initializr.actuate.autoconfigure;
 
-import io.spring.initializr.actuate.info.BomRangesInfoContributor
-import io.spring.initializr.metadata.InitializrMetadataProvider
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import io.spring.initializr.actuate.info.BomRangesInfoContributor;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -29,12 +29,12 @@ import org.springframework.context.annotation.Configuration
  * @author Stephane Nicoll
  */
 @Configuration
-class InitializrActuatorEndpointsAutoConfiguration {
+public class InitializrActuatorEndpointsAutoConfiguration {
 
 	@Bean
 	BomRangesInfoContributor bomRangesInfoContributor(
 			InitializrMetadataProvider metadataProvider) {
-		return new BomRangesInfoContributor(metadataProvider)
+		return new BomRangesInfoContributor(metadataProvider);
 	}
 
 }

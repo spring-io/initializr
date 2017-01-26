@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.metric
+package io.spring.initializr.actuate.metric;
 
-import io.spring.initializr.generator.ProjectFailedEvent
-import io.spring.initializr.generator.ProjectGeneratedEvent
-import io.spring.initializr.generator.ProjectRequest
-import io.spring.initializr.util.Agent
+import io.spring.initializr.generator.ProjectFailedEvent;
+import io.spring.initializr.generator.ProjectGeneratedEvent;
+import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.util.Agent;
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.actuate.metrics.CounterService
-import org.springframework.context.event.EventListener
-import org.springframework.util.StringUtils
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.CounterService;
+import org.springframework.context.event.EventListener;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link ProjectGeneratedEvent} listener that uses a {@link CounterService} to update
@@ -33,101 +36,104 @@ import org.springframework.util.StringUtils
  * @author Stephane Nicoll
  * @since 1.0
  */
-class ProjectGenerationMetricsListener {
+public class ProjectGenerationMetricsListener {
 
-	private final CounterService counterService
+	private final CounterService counterService;
 
 	@Autowired
-	ProjectGenerationMetricsListener(CounterService counterService) {
-		this.counterService = counterService
+	public ProjectGenerationMetricsListener(CounterService counterService) {
+		this.counterService = counterService;
 	}
 
 	@EventListener
-	void onGeneratedProject(ProjectGeneratedEvent event) {
-		handleProjectRequest(event.projectRequest)
+	public void onGeneratedProject(ProjectGeneratedEvent event) {
+		handleProjectRequest(event.getProjectRequest());
 	}
 
 	@EventListener
-	void onFailedProject(ProjectFailedEvent event) {
-		handleProjectRequest(event.projectRequest)
-		increment(key('failures'))
+	public void onFailedProject(ProjectFailedEvent event) {
+		handleProjectRequest(event.getProjectRequest());
+		increment(key("failures"));
 	}
 
 	protected void handleProjectRequest(ProjectRequest request) {
-		increment(key('requests')) // Total number of requests
-		handleDependencies(request)
-		handleType(request)
-		handleJavaVersion(request)
-		handlePackaging(request)
-		handleLanguage(request)
-		handleBootVersion(request)
-		handleUserAgent(request)
+		increment(key("requests"));// Total number of requests
+		handleDependencies(request);
+		handleType(request);
+		handleJavaVersion(request);
+		handlePackaging(request);
+		handleLanguage(request);
+		handleBootVersion(request);
+		handleUserAgent(request);
 	}
 
 	protected void handleDependencies(ProjectRequest request) {
-		request.resolvedDependencies.each {
-			if (!ProjectRequest.DEFAULT_STARTER.equals(it.id)) {
-				def id = sanitize(it.id)
-				increment(key("dependency.$id"))
-			}
+		List<Dependency> dependencies = request.getResolvedDependencies();
+		if (dependencies != null) {
+			dependencies.forEach(it -> {
+				if (!ProjectRequest.DEFAULT_STARTER.equals(it.getId())) {
+					String id = sanitize(it.getId());
+					increment(key("dependency." + id));
+				}
+			});
 		}
 	}
 
 	protected void handleType(ProjectRequest request) {
-		if (StringUtils.hasText(request.type)) {
-			def type = sanitize(request.type)
-			increment(key("type.$type"))
+		if (StringUtils.hasText(request.getType())) {
+			String type = sanitize(request.getType());
+			increment(key("type." + type));
 		}
 	}
 
 	protected void handleJavaVersion(ProjectRequest request) {
-		if (StringUtils.hasText(request.javaVersion)) {
-			def javaVersion = sanitize(request.javaVersion)
-			increment(key("java_version.$javaVersion"))
+		if (StringUtils.hasText(request.getJavaVersion())) {
+			String javaVersion = sanitize(request.getJavaVersion());
+			increment(key("java_version." + javaVersion));
 		}
 	}
 
 	protected void handlePackaging(ProjectRequest request) {
-		if (StringUtils.hasText(request.packaging)) {
-			def packaging = sanitize(request.packaging)
-			increment(key("packaging.$packaging"))
+		if (StringUtils.hasText(request.getPackaging())) {
+			String packaging = sanitize(request.getPackaging());
+			increment(key("packaging." + packaging));
 		}
 	}
 
 	protected void handleLanguage(ProjectRequest request) {
-		if (StringUtils.hasText(request.language)) {
-			def language = sanitize(request.language)
-			increment(key("language.$language"))
+		if (StringUtils.hasText(request.getLanguage())) {
+			String language = sanitize(request.getLanguage());
+			increment(key("language." + language));
 		}
 	}
 
 	protected void handleBootVersion(ProjectRequest request) {
-		if (StringUtils.hasText(request.bootVersion)) {
-			def bootVersion = sanitize(request.bootVersion)
-			increment(key("boot_version.$bootVersion"))
+		if (StringUtils.hasText(request.getBootVersion())) {
+			String bootVersion = sanitize(request.getBootVersion());
+			increment(key("boot_version." + bootVersion));
 		}
 	}
 
 	protected void handleUserAgent(ProjectRequest request) {
-		String userAgent = request.parameters['user-agent']
-		if (userAgent) {
-			Agent agent = Agent.fromUserAgent(userAgent)
-			if (agent) {
-				increment(key("client_id.$agent.id.id"))
+		String userAgent = (String) request.getParameters().get("user-agent");
+		if (userAgent != null) {
+			Agent agent = Agent.fromUserAgent(userAgent);
+			if (agent != null) {
+				increment(key("client_id." + agent.getId().getId()));
 			}
 		}
 	}
 
 	protected void increment(String key) {
-		counterService.increment(key)
+		counterService.increment(key);
 	}
 
 	protected String key(String part) {
-		"initializr.$part"
+		return "initializr." + part;
 	}
 
 	protected String sanitize(String s) {
-		s.replace('.', '_')
+		return s.replace(".", "_");
 	}
 
 }

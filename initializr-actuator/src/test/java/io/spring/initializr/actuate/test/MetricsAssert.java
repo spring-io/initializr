@@ -14,45 +14,50 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.test
+package io.spring.initializr.actuate.test;
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.fail
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
 
 /**
  * Metrics assertion based on {@link TestCounterService}.
  *
  * @author Stephane Nicoll
  */
-class MetricsAssert {
+public class MetricsAssert {
 
-	private final TestCounterService counterService
+	private final TestCounterService counterService;
 
-	MetricsAssert(TestCounterService counterService) {
-		this.counterService = counterService
+	public MetricsAssert(TestCounterService counterService) {
+		this.counterService = counterService;
 	}
 
-	MetricsAssert hasValue(long value, String... metrics) {
-		metrics.each {
-			def actual = counterService.values[it]
+	public MetricsAssert hasValue(long value, String... metrics) {
+		Arrays.asList(metrics).forEach(it -> {
+			Long actual = counterService.values.get(it);
 			if (actual == null) {
-				fail("Metric '$it' not found, got '${counterService.values.keySet()}")
+				fail("Metric '" + it + "' not found, got '"
+						+ counterService.values.keySet() + "'");
 			}
-			assertEquals "Wrong value for metric $it", value, actual
-		}
-		this
+			assertEquals("Wrong value for metric " + it, value, actual.longValue());
+		});
+		return this;
 	}
 
-	MetricsAssert hasNoValue(String... metrics) {
-		metrics.each {
-			assertEquals "Metric '$it' should not be registered", null, counterService.values[it]
-		}
-		this
+	public MetricsAssert hasNoValue(String... metrics) {
+		Arrays.asList(metrics).forEach(it -> {
+			assertEquals("Metric '" + it + "' should not be registered", null,
+					counterService.values.get(it));
+		});
+		return this;
 	}
 
-	MetricsAssert metricsCount(int count) {
-		assertEquals "Wrong number of metrics, got '${counterService.values.keySet()}",
-				count, counterService.values.size()
-		this
+	public MetricsAssert metricsCount(int count) {
+		assertEquals(
+				"Wrong number of metrics, got '" + counterService.values.keySet() + "'",
+				count, counterService.values.size());
+		return this;
 	}
 }

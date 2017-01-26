@@ -14,77 +14,83 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.metric
+package io.spring.initializr.actuate.metric;
 
-import io.spring.initializr.actuate.test.RedisRunning
-import io.spring.initializr.generator.ProjectGeneratedEvent
-import io.spring.initializr.generator.ProjectRequest
-import io.spring.initializr.metadata.InitializrMetadataBuilder
-import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.metadata.InitializrProperties
-import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
+import static org.junit.Assert.assertTrue;
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository
-import org.springframework.boot.actuate.metrics.writer.MetricWriter
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
-import org.springframework.test.context.junit4.SpringRunner
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository;
+import org.springframework.boot.actuate.metrics.writer.MetricWriter;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertTrue
+import io.spring.initializr.actuate.metric.MetricsExportTests.Config;
+import io.spring.initializr.actuate.test.RedisRunning;
+import io.spring.initializr.generator.ProjectGeneratedEvent;
+import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataBuilder;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InitializrProperties;
+import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
 
 /**
  * @author Dave Syer
  */
-@RunWith(SpringRunner)
-@SpringBootTest(classes = Config, properties = ['spring.metrics.export.delayMillis:500',
-		'spring.metrics.export.enabled:true',
-		'initializr.metrics.prefix:test.prefix', 'initializr.metrics.key:key.test'])
-class MetricsExportTests {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Config.class, properties = {
+		"spring.metrics.export.delayMillis:500", "spring.metrics.export.enabled:true",
+		"initializr.metrics.prefix:test.prefix", "initializr.metrics.key:key.test" })
+public class MetricsExportTests {
 
 	@Rule
-	public RedisRunning running = new RedisRunning()
+	public RedisRunning running = new RedisRunning();
 
 	@Autowired
-	ProjectGenerationMetricsListener listener
+	ProjectGenerationMetricsListener listener;
 
 	@Autowired
 	@Qualifier("writer")
-	MetricWriter writer
+	MetricWriter writer;
 
-	RedisMetricRepository repository
+	RedisMetricRepository repository;
 
 	@Before
-	void init() {
-		repository = (RedisMetricRepository) writer
-		repository.findAll().each {
-			repository.reset(it.name)
-		}
-		assertTrue("Metrics not empty", repository.findAll().size() == 0)
+	public void init() {
+		repository = (RedisMetricRepository) writer;
+		repository.findAll().forEach(it -> {
+			repository.reset(it.getName());
+		});
+		assertTrue("Metrics not empty", repository.count() == 0);
 	}
 
 	@Test
-	void exportAndCheckMetricsExist() {
-		listener.onGeneratedProject(new ProjectGeneratedEvent(new ProjectRequest()))
-		Thread.sleep(1000L)
-		assertTrue("No metrics exported", repository.findAll().size() > 0)
+	public void exportAndCheckMetricsExist() throws Exception {
+		listener.onGeneratedProject(new ProjectGeneratedEvent(new ProjectRequest()));
+		Thread.sleep(1000L);
+		assertTrue("No metrics exported", repository.count() > 0);
 	}
 
+	@Configuration
 	@EnableAutoConfiguration
-	@EnableConfigurationProperties(InitializrProperties)
+	@EnableConfigurationProperties(InitializrProperties.class)
 	static class Config {
 
 		@Bean
-		InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
-			def metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build()
-			new SimpleInitializrMetadataProvider(metadata)
+		InitializrMetadataProvider initializrMetadataProvider(
+				InitializrProperties properties) {
+			InitializrMetadata metadata = InitializrMetadataBuilder
+					.fromInitializrProperties(properties).build();
+			return new SimpleInitializrMetadataProvider(metadata);
 		}
 	}
 }

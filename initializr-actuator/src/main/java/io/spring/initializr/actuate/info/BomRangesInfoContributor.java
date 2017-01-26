@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.info
+package io.spring.initializr.actuate.info;
 
-import io.spring.initializr.metadata.InitializrMetadataProvider
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.springframework.boot.actuate.info.Info
-import org.springframework.boot.actuate.info.InfoContributor
+import org.springframework.boot.actuate.info.Info;
+import org.springframework.boot.actuate.info.InfoContributor;
+
+import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 /**
  * An {@link InfoContributor} that exposes the actual ranges used by each bom
@@ -27,29 +30,29 @@ import org.springframework.boot.actuate.info.InfoContributor
  *
  * @author Stephane Nicoll
  */
-class BomRangesInfoContributor implements InfoContributor {
+public class BomRangesInfoContributor implements InfoContributor {
 
-	private final InitializrMetadataProvider metadataProvider
+	private final InitializrMetadataProvider metadataProvider;
 
-	BomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider
+	public BomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
+		this.metadataProvider = metadataProvider;
 	}
 
 	@Override
-	void contribute(Info.Builder builder) {
-		def details = [:]
-		metadataProvider.get().configuration.env.boms.each { k, v ->
-			if (v.mappings) {
-				def bom = [:]
-				v.mappings.each {
-					String requirement = "Spring Boot ${it.determineVersionRangeRequirement()}"
-					bom[it.version] = requirement
-				}
-				details[k] = bom
+	public void contribute(Info.Builder builder) {
+		Map<String, Object> details = new LinkedHashMap<>();
+		metadataProvider.get().getConfiguration().getEnv().getBoms().forEach( (k, v) -> {
+			if (v.getMappings()!=null && !v.getMappings().isEmpty()) {
+				Map<String, Object> bom = new LinkedHashMap<>();
+				v.getMappings().forEach(it -> {
+					String requirement = "Spring Boot " + it.determineVersionRangeRequirement();
+					bom.put(it.getVersion(), requirement);
+				});
+				details.put(k, bom);
 			}
-		}
-		if (details) {
-			builder.withDetail('bom-ranges', details)
+		});
+		if (!details.isEmpty()) {
+			builder.withDetail("bom-ranges", details);
 		}
 	}
 

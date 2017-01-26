@@ -14,181 +14,202 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.stat
+package io.spring.initializr.actuate.stat;
 
-import groovy.json.JsonSlurper
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
-import org.junit.Before
-import org.junit.Test
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Import
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.RequestEntity
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.util.Base64Utils
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.HttpClientErrorException
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.assertTrue
-import static org.junit.Assert.fail
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+
+import groovy.json.JsonSlurper;
+import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
+import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController.Content;
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 
 /**
  * Integration tests for stats processing.
  *
  * @author Stephane Nicoll
  */
-@Import(StatsMockController)
-@ActiveProfiles(['test-default', 'test-custom-stats'])
-class MainControllerStatsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+@Import(StatsMockController.class)
+@ActiveProfiles({ "test-default", "test-custom-stats" })
+public class MainControllerStatsIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Autowired
-	private StatsMockController statsMockController
+	private StatsMockController statsMockController;
 
 	@Autowired
-	private StatsProperties statsProperties
+	private StatsProperties statsProperties;
 
-	private final JsonSlurper slurper = new JsonSlurper()
+	private final JsonSlurper slurper = new JsonSlurper();
 
 	@Before
 	public void setup() {
-		this.statsMockController.stats.clear()
+		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
-		this.statsProperties.elastic.uri = "http://localhost:$port/elastic"
+		this.statsProperties.getElastic().setUri( "http://localhost:" + port + "/elastic");
 	}
 
 	@Test
-	void simpleProject() {
-		downloadArchive('/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web')
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void simpleProject() {
+		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertEquals 'com.foo', json.groupId
-		assertEquals 'bar', json.artifactId
-		assertEquals 1, json.dependencies.size()
-		assertEquals 'web', json.dependencies[0]
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertEquals("com.foo", json.get("groupId"));
+		assertEquals("bar", json.get("artifactId"));
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>) json.get("dependencies");
+		assertEquals(1, list.size());
+		assertEquals("web", list.get(0));
 	}
 
 	@Test
-	void authorizationHeaderIsSet() {
-		downloadArchive('/starter.zip')
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void authorizationHeaderIsSet() {
+		downloadArchive("/starter.zip");
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def authorization = content.authorization
-		assertNotNull 'Authorization header must be set', authorization
-		assertTrue 'Wrong value for authorization header', authorization.startsWith('Basic ')
-		def token = authorization.substring('Basic '.length(), authorization.size())
-		def data = new String(Base64Utils.decodeFromString(token)).split(':')
-		assertEquals "Wrong user from $token", 'test-user', data[0]
-		assertEquals "Wrong password $token", 'test-password', data[1]
+		String authorization = content.authorization;
+		assertNotNull("Authorization header must be set", authorization);
+		assertTrue("Wrong value for authorization header", authorization.startsWith("Basic "));
+		String token = authorization.substring("Basic ".length(), authorization.length());
+		String[] data = new String(Base64Utils.decodeFromString(token)).split(":");
+		assertEquals("Wrong user from $token", "test-user", data[0]);
+		assertEquals("Wrong password $token", "test-password", data[1]);
 	}
 
 	@Test
-	void requestIpNotSetByDefault() {
-		downloadArchive('/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web')
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void requestIpNotSetByDefault() {
+		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertFalse 'requestIp property should not be set', json.containsKey('requestIp')
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertFalse("requestIp property should not be set", json.containsKey("requestIp"));
 	}
 
 	@Test
-	void requestIpIsSetWhenHeaderIsPresent() {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl('/starter.zip')))
-				.header('X-FORWARDED-FOR', '10.0.0.123').build()
-		restTemplate.exchange(request, String)
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void requestIpIsSetWhenHeaderIsPresent() throws Exception {
+		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
+				.header("X-FORWARDED-FOR", "10.0.0.123").build();
+		restTemplate.exchange(request, String.class);
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertEquals 'Wrong requestIp', '10.0.0.123', json.requestIp
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp"));
 	}
 
 	@Test
-	void requestIpv4IsNotSetWhenHeaderHasGarbage() {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl('/starter.zip')))
-				.header('x-forwarded-for', 'foo-bar').build()
-		restTemplate.exchange(request, String)
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void requestIpv4IsNotSetWhenHeaderHasGarbage() throws Exception {
+		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
+				.header("x-forwarded-for", "foo-bar").build();
+		restTemplate.exchange(request, String.class);
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertFalse 'requestIpv4 property should not be set if value is not a valid IPv4',
-				json.containsKey('requestIpv4')
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
+				json.containsKey("requestIpv4"));
 	}
 
 	@Test
-	void requestCountryIsNotSetWhenHeaderIsSetToXX() {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl('/starter.zip')))
-				.header('cf-ipcountry', 'XX').build()
-		restTemplate.exchange(request, String)
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+	public void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
+		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
+				.header("cf-ipcountry", "XX").build();
+		restTemplate.exchange(request, String.class);
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertFalse 'requestCountry property should not be set if value is set to xx',
-				json.containsKey('requestCountry')
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertFalse("requestCountry property should not be set if value is set to xx",
+				json.containsKey("requestCountry"));
 	}
 
 	@Test
-	void invalidProjectSillHasStats() {
+	public void invalidProjectSillHasStats() {
 		try {
-			downloadArchive('/starter.zip?type=invalid-type')
-			fail("Should have failed to generate project with invalid type")
+			downloadArchive("/starter.zip?type=invalid-type");
+			fail("Should have failed to generate project with invalid type");
 		} catch (HttpClientErrorException ex) {
-			assertEquals HttpStatus.BAD_REQUEST, ex.statusCode
+			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
 		}
-		assertEquals 'No stat got generated', 1, statsMockController.stats.size()
-		def content = statsMockController.stats[0]
+		assertEquals("No stat got generated", 1, statsMockController.stats.size());
+		Content content = statsMockController.stats.get(0);
 
-		def json = slurper.parseText(content.json)
-		assertEquals 'com.example', json.groupId
-		assertEquals 'demo', json.artifactId
-		assertEquals true, json.invalid
-		assertEquals true, json.invalidType
-		assertNotNull json.errorMessage
-		assertTrue json.errorMessage.contains('invalid-type')
+		@SuppressWarnings("unchecked")
+		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		assertEquals("com.example", json.get("groupId"));
+		assertEquals("demo", json.get("artifactId"));
+		assertEquals(true, json.get("invalid"));
+		assertEquals(true, json.get("invalidType"));
+		assertNotNull(json.get("errorMessage"));
+		assertTrue(((String) json.get("errorMessage")).contains("invalid-type"));
 	}
 
 	@Test
-	void errorPublishingStatsDoesNotBubbleUp() {
-		this.statsProperties.elastic.uri = "http://localhost:$port/elastic-error"
-		downloadArchive('/starter.zip')
-		assertEquals 'No stat should be available', 0, statsMockController.stats.size()
+	public void errorPublishingStatsDoesNotBubbleUp() {
+		this.statsProperties.getElastic()
+				.setUri("http://localhost:" + port + "/elastic-error");
+		downloadArchive("/starter.zip");
+		assertEquals("No stat should be available", 0, statsMockController.stats.size());
 	}
-
 
 	@RestController
 	static class StatsMockController {
 
-		private final List<Content> stats = []
+		private final List<Content> stats = new ArrayList<>();
 
-		@RequestMapping(path = '/elastic/test/my-entity', method = RequestMethod.POST)
+		@RequestMapping(path = "/elastic/test/my-entity", method = RequestMethod.POST)
 		void handleProjectRequestDocument(RequestEntity<String> input) {
-			def authorization = input.headers.getFirst(HttpHeaders.AUTHORIZATION)
-			def content = new Content(authorization: authorization, json: input.body)
-			this.stats << content
+			String authorization = input.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+			Content content = new Content(authorization, input.getBody());
+			this.stats.add(content);
 		}
 
-		@RequestMapping(path = '/elastic-error/test/my-entity', method = RequestMethod.POST)
+		@RequestMapping(path = "/elastic-error/test/my-entity", method = RequestMethod.POST)
 		void handleExpectedError() {
-			throw new IllegalStateException('Expected exception')
+			throw new IllegalStateException("Expected exception");
 		}
 
 		static class Content {
 
-			String authorization
+			public Content(String authorization, String body) {
+				this.authorization = authorization;
+				json = body;
+			}
 
-			String json
+			String authorization;
+
+			String json;
 
 		}
 

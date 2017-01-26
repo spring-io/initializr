@@ -14,36 +14,39 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.test
+package io.spring.initializr.actuate.test;
 
-import org.springframework.boot.actuate.metrics.CounterService
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.boot.actuate.metrics.CounterService;
 
 /**
  * A test {@link CounterService} that keeps track of the metric values.
  *
  * @author Stephane Nicoll
  */
-class TestCounterService implements CounterService {
+public class TestCounterService implements CounterService {
 
-	final Map<String, Long> values = [:]
+	final Map<String, Long> values = new HashMap<>();
 
 	@Override
-	void increment(String metricName) {
-		def value = values[metricName]
-		def valueToSet = value ? ++value : 1
-		values[metricName] = valueToSet
+	public void increment(String metricName) {
+		Long value = values.get(metricName);
+		Long valueToSet = value!=null ? ++value : 1;
+		values.put(metricName, valueToSet);
 	}
 
 	@Override
-	void decrement(String metricName) {
-		def value = values[metricName]
-		def valueToSet = value ? --value : -1
-		values[metricName] = valueToSet
+	public void decrement(String metricName) {
+		Long value = values.get(metricName);
+		Long valueToSet = value!=null ? +--value : -1;
+		values.put(metricName, valueToSet);
 	}
 
 	@Override
-	void reset(String metricName) {
-		values[metricName] = 0
+	public void reset(String metricName) {
+		values.put(metricName, 0L);
 	}
 
 }

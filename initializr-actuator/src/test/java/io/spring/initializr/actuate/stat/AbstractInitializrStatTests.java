@@ -14,34 +14,35 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.stat
+package io.spring.initializr.actuate.stat;
 
-import io.spring.initializr.generator.ProjectRequest
-import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
+import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
+import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 
 /**
  * @author Stephane Nicoll
  */
 abstract class AbstractInitializrStatTests {
 
-	def metadata = InitializrMetadataTestBuilder
+	InitializrMetadata metadata = InitializrMetadataTestBuilder
 			.withDefaults()
-			.addDependencyGroup('core', 'security', 'validation', 'aop')
-			.addDependencyGroup('web', 'web', 'data-rest', 'jersey')
-			.addDependencyGroup('data', 'data-jpa', 'jdbc')
-			.addDependencyGroup('database', 'h2', 'mysql')
-			.build()
+			.addDependencyGroup("core", "security", "validation", "aop")
+			.addDependencyGroup("web", "web", "data-rest", "jersey")
+			.addDependencyGroup("data", "data-jpa", "jdbc")
+			.addDependencyGroup("database", "h2", "mysql")
+			.build();
 
-	protected InitializrMetadataProvider createProvider(def metadata) {
-		new SimpleInitializrMetadataProvider(metadata)
+	protected InitializrMetadataProvider createProvider(InitializrMetadata metadata) {
+		return new SimpleInitializrMetadataProvider(metadata);
 	}
 
 	protected ProjectRequest createProjectRequest() {
-		ProjectRequest request = new ProjectRequest()
-		request.initialize(metadata)
-		request
+		ProjectRequest request = new ProjectRequest();
+		request.initialize(metadata);
+		return request;
 	}
 
 }

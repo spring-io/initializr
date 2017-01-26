@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.stat
+package io.spring.initializr.actuate.stat;
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import io.spring.initializr.generator.ProjectFailedEvent
-import io.spring.initializr.generator.ProjectRequest
-import io.spring.initializr.generator.ProjectRequestEvent
-import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.util.Agent
+import org.springframework.util.StringUtils;
+
+import io.spring.initializr.generator.ProjectFailedEvent;
+import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.generator.ProjectRequestEvent;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.util.Agent;
 
 /**
  * Create {@link ProjectRequestDocument} instances.
@@ -31,117 +36,118 @@ import io.spring.initializr.util.Agent
  * @author Stephane Nicoll
  * @since 1.0
  */
-class ProjectRequestDocumentFactory {
+public class ProjectRequestDocumentFactory {
 
-	private static final IP_PATTERN = Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*")
+	private static final Pattern IP_PATTERN = Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
-	private final InitializrMetadataProvider metadataProvider
+	private final InitializrMetadataProvider metadataProvider;
 
-	ProjectRequestDocumentFactory(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider
+	public ProjectRequestDocumentFactory(InitializrMetadataProvider metadataProvider) {
+		this.metadataProvider = metadataProvider;
 	}
 
-	ProjectRequestDocument createDocument(ProjectRequestEvent event) {
-		def metadata = metadataProvider.get()
-		def request = event.projectRequest
+	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
+		InitializrMetadata metadata = metadataProvider.get();
+		ProjectRequest request = event.getProjectRequest();
 
-		ProjectRequestDocument document = new ProjectRequestDocument()
-		document.generationTimestamp = event.timestamp
+		ProjectRequestDocument document = new ProjectRequestDocument();
+		document.setGenerationTimestamp(event.getTimestamp());
 
-		handleCloudFlareHeaders(request, document)
-		def candidate = request.parameters['x-forwarded-for']
-		if (!document.requestIp && candidate) {
-			document.requestIp = candidate
-			document.requestIpv4 = extractIpv4(candidate)
+		handleCloudFlareHeaders(request, document);
+		String candidate = (String) request.getParameters().get("x-forwarded-for");
+		if (!StringUtils.hasText(document.getRequestIp()) && candidate!=null) {
+			document.setRequestIp(candidate);
+			document.setRequestIpv4(extractIpv4(candidate));
 		}
 
-		Agent agent = extractAgentInformation(request)
-		if (agent) {
-			document.clientId = agent.id.id
-			document.clientVersion = agent.version
+		Agent agent = extractAgentInformation(request);
+		if (agent!=null) {
+			document.setClientId(agent.getId().getId());
+			document.setClientVersion(agent.getVersion());
 		}
 
-		document.groupId = request.groupId
-		document.artifactId = request.artifactId
-		document.packageName = request.packageName
-		document.bootVersion = request.bootVersion
+		document.setGroupId(request.getGroupId());
+		document.setArtifactId(request.getArtifactId());
+		document.setPackageName(request.getPackageName());
+		document.setBootVersion(request.getBootVersion());
 
-		document.javaVersion = request.javaVersion
-		if (request.javaVersion && !metadata.javaVersions.get(request.javaVersion)) {
-			document.invalid = true
-			document.invalidJavaVersion = true
+		document.setJavaVersion(request.getJavaVersion());
+		if (StringUtils.hasText(request.getJavaVersion()) && metadata.getJavaVersions().get(request.getJavaVersion())==null) {
+			document.setInvalid(true);
+			document.setInvalidJavaVersion(true);
 		}
 
-		document.language = request.language
-		if (request.language && !metadata.languages.get(request.language)) {
-			document.invalid = true
-			document.invalidLanguage = true
+		document.setLanguage(request.getLanguage());
+		if (StringUtils.hasText(request.getLanguage()) && metadata.getLanguages().get(request.getLanguage())==null) {
+			document.setInvalid(true);
+			document.setInvalidLanguage(true);
 		}
 
-		document.packaging = request.packaging
-		if (request.packaging && !metadata.packagings.get(request.packaging)) {
-			document.invalid = true
-			document.invalidPackaging = true
+		document.setPackaging(request.getPackaging());
+		if (StringUtils.hasText(request.getPackaging()) && metadata.getPackagings().get(request.getPackaging())==null) {
+			document.setInvalid(true);
+			document.setInvalidPackaging(true);
 		}
 
-		document.type = request.type
-		if (request.type && !metadata.types.get(request.type)) {
-			document.invalid = true
-			document.invalidType = true
+		document.setType(request.getType());
+		if (StringUtils.hasText(request.getType()) && metadata.getTypes().get(request.getType())==null) {
+			document.setInvalid(true);
+			document.setInvalidType(true);
 		}
 
 		// Let's not rely on the resolved dependencies here
-		def dependencies = []
-		dependencies.addAll(request.style)
-		dependencies.addAll(request.dependencies)
-		dependencies.each { id ->
-			if (metadata.dependencies.get(id)) {
-				document.dependencies << id
+		List<String> dependencies = new ArrayList<>();
+		dependencies.addAll(request.getStyle());
+		dependencies.addAll(request.getDependencies());
+		dependencies.forEach( id -> {
+			if (metadata.getDependencies().get(id)!=null) {
+				document.getDependencies().add(id);
 			} else {
-				document.invalid = true
-				document.invalidDependencies << id
+				document.setInvalid(true);
+				document.getInvalidDependencies().add(id);
 			}
-		}
+		});
 
 		// Let's make sure that the document is flagged as invalid no matter what
 		if (event instanceof ProjectFailedEvent) {
-			document.invalid = true
-			if (event.cause) {
-				document.errorMessage = event.cause.message
+			ProjectFailedEvent failed = (ProjectFailedEvent) event;
+			document.setInvalid(true);
+			if (failed.getCause()!=null) {
+				document.setErrorMessage(failed.getCause().getMessage());
 			}
 		}
 
-		document
+		return document;
 	}
 
 	private static void handleCloudFlareHeaders(ProjectRequest request, ProjectRequestDocument document) {
-		def candidate = request.parameters['cf-connecting-ip']
-		if (candidate) {
-			document.requestIp = candidate
-			document.requestIpv4 = extractIpv4(candidate)
+		String candidate = (String) request.getParameters().get("cf-connecting-ip");
+		if (StringUtils.hasText(candidate)) {
+			document.setRequestIp(candidate);
+			document.setRequestIpv4(extractIpv4(candidate));
 		}
-		String country = request.parameters['cf-ipcountry']
-		if (country && !country.toLowerCase().equals('xx')) {
-			document.requestCountry = country
+		String country = (String) request.getParameters().get("cf-ipcountry");
+		if (StringUtils.hasText(country) && !country.toLowerCase().equals("xx")) {
+			document.setRequestCountry(country);
 		}
 	}
 
 	private static Agent extractAgentInformation(ProjectRequest request) {
-		String userAgent = request.parameters['user-agent']
-		if (userAgent) {
-			return Agent.fromUserAgent(userAgent)
+		String userAgent = (String) request.getParameters().get("user-agent");
+		if (StringUtils.hasText(userAgent)) {
+			return Agent.fromUserAgent(userAgent);
 		}
-		return null
+		return null;
 	}
 
-	private static String extractIpv4(def candidate) {
-		if (candidate) {
-			Matcher matcher = IP_PATTERN.matcher(candidate)
+	private static String extractIpv4(String candidate) {
+		if (StringUtils.hasText(candidate)) {
+			Matcher matcher = IP_PATTERN.matcher(candidate);
 			if (matcher.find()) {
-				return matcher.group()
+				return matcher.group();
 			}
 		}
-		return null
+		return null;
 	}
 
 }

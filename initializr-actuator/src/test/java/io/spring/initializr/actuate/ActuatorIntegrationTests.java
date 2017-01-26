@@ -14,65 +14,71 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate
+package io.spring.initializr.actuate;
 
-import groovy.json.JsonSlurper
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
-import org.junit.Test
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.springframework.test.context.ActiveProfiles
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertTrue
+import org.junit.Test;
+import org.springframework.test.context.ActiveProfiles;
+
+import groovy.json.JsonSlurper;
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 
 /**
  * Tests for actuator specific features.
  *
  * @author Stephane Nicoll
  */
-@ActiveProfiles('test-default')
-class ActuatorIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+@ActiveProfiles("test-default")
+public class ActuatorIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
-	private final def slurper = new JsonSlurper()
-
-	@Test
-	void infoHasExternalProperties() {
-		def body = restTemplate.getForObject(createUrl('/info'), String)
-		assertTrue("Wrong body:\n$body", body.contains('"spring-boot"'))
-		assertTrue("Wrong body:\n$body", body.contains('"version":"1.1.4.RELEASE"'))
-	}
+	private final JsonSlurper slurper = new JsonSlurper();
 
 	@Test
-	void metricsAvailableByDefault() {
-		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa')
-		def result = metricsEndpoint()
-		def requests = result['counter.initializr.requests']
-		def packaging = result['counter.initializr.packaging.jar']
-		def javaVersion = result['counter.initializr.java_version.1_8']
-		def webDependency = result['counter.initializr.dependency.web']
-		def jpaDependency = result['counter.initializr.dependency.jpa']
-
-		downloadZip('/starter.zip?packaging=jar&javaVersion=1.8&style=web') // No jpa dep this time
-
-		def updatedResult = metricsEndpoint()
-		assertEquals 'Number of request should have increased',
-				requests + 1, updatedResult['counter.initializr.requests']
-		assertEquals 'jar packaging metric should have increased',
-				packaging + 1, updatedResult['counter.initializr.packaging.jar']
-		assertEquals 'java version metric should have increased',
-				javaVersion + 1, updatedResult['counter.initializr.java_version.1_8']
-		assertEquals 'web dependency metric should have increased',
-				webDependency + 1, updatedResult['counter.initializr.dependency.web']
-		assertEquals 'jpa dependency metric should not have increased',
-				jpaDependency, updatedResult['counter.initializr.dependency.jpa']
+	public void infoHasExternalProperties() {
+		String body = restTemplate.getForObject(createUrl("/info"), String.class);
+		assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
+		assertTrue("Wrong body:\n" + body,
+				body.contains("\"version\":\"1.1.4.RELEASE\""));
 	}
 
-	private def metricsEndpoint() {
-		parseJson(restTemplate.getForObject(createUrl('/metrics'), String))
+	@Test
+	public void metricsAvailableByDefault() {
+		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
+		Map<String, Integer> result = metricsEndpoint();
+		Integer requests = result.get("counter.initializr.requests");
+		Integer packaging = result.get("counter.initializr.packaging.jar");
+		Integer javaVersion = result.get("counter.initializr.java_version.1_8");
+		Integer webDependency = result.get("counter.initializr.dependency.web");
+		Integer jpaDependency = result.get("counter.initializr.dependency.jpa");
+
+		// No jpa dep this time
+		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
+
+		Map<String, Integer> updatedResult = metricsEndpoint();
+		assertEquals("Number of request should have increased", requests + 1,
+				updatedResult.get("counter.initializr.requests").intValue());
+		assertEquals("jar packaging metric should have increased", packaging + 1,
+				updatedResult.get("counter.initializr.packaging.jar").intValue());
+		assertEquals("java version metric should have increased", javaVersion + 1,
+				updatedResult.get("counter.initializr.java_version.1_8").intValue());
+		assertEquals("web dependency metric should have increased", webDependency + 1,
+				updatedResult.get("counter.initializr.dependency.web").intValue());
+		assertEquals("jpa dependency metric should not have increased", jpaDependency,
+				updatedResult.get("counter.initializr.dependency.jpa"));
 	}
 
-	private def parseJson(String content) {
-		slurper.parseText(content)
+	private Map<String, Integer> metricsEndpoint() {
+		return parseJson(restTemplate.getForObject(createUrl("/metrics"), String.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Integer> parseJson(String content) {
+		return (Map<String, Integer>) slurper.parseText(content);
 	}
 
 }

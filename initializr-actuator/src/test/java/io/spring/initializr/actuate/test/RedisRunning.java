@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.test
+package io.spring.initializr.actuate.test;
 
-import org.junit.Assume
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
-
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
+import org.junit.Assume;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 /**
  * A {@link org.junit.rules.TestRule} that validates Redis is available.
@@ -29,22 +28,22 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
  * @author Dave Syer
  * @since 1.0
  */
-class RedisRunning extends TestWatcher {
+public class RedisRunning extends TestWatcher {
 
 	JedisConnectionFactory connectionFactory;
 
 	@Override
-	Statement apply(Statement base, Description description) {
+	public Statement apply(Statement base, Description description) {
 		if (connectionFactory == null) {
-			connectionFactory = new JedisConnectionFactory()
-			connectionFactory.afterPropertiesSet()
+			connectionFactory = new JedisConnectionFactory();
+			connectionFactory.afterPropertiesSet();
 		}
 		try {
-			connectionFactory.connection
+			connectionFactory.getConnection();
 		} catch (Exception e) {
-			Assume.assumeNoException('Cannot connect to Redis (so skipping tests)', e)
+			Assume.assumeNoException("Cannot connect to Redis (so skipping tests)", e);
 		}
-		super.apply(base, description)
+		return super.apply(base, description);
 	}
 
 }

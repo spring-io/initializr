@@ -14,69 +14,72 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.info
+package io.spring.initializr.actuate.info;
 
-import io.spring.initializr.metadata.BillOfMaterials
-import io.spring.initializr.metadata.InitializrMetadata
-import io.spring.initializr.metadata.SimpleInitializrMetadataProvider
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
-import org.junit.Test
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
-import org.springframework.boot.actuate.info.Info
+import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat
-import static org.assertj.core.api.Assertions.entry
+import org.junit.Test;
+import org.springframework.boot.actuate.info.Info;
+
+import io.spring.initializr.metadata.BillOfMaterials;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
+import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 
 /**
  * Tests for {@link BomRangesInfoContributor}
  *
  * @author Stephane Nicoll
  */
-class BomRangesInfoContributorTests {
+public class BomRangesInfoContributorTests {
 
 	@Test
-	void noBom() {
-		def metadata = InitializrMetadataTestBuilder.withDefaults().build()
-		def info = getInfo(metadata)
-		assertThat(info.details).doesNotContainKeys('bom-ranges')
+	public void noBom() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.build();
+		Info info = getInfo(metadata);
+		assertThat(info.getDetails()).doesNotContainKeys("bom-ranges");
 	}
 
 	@Test
-	void noMapping() {
-		def bom = new BillOfMaterials(groupId: 'com.example', artifactId: 'bom', version: '1.0.0')
-		def metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom('foo', bom)
-				.build()
-		def info = getInfo(metadata)
-		assertThat(info.details).doesNotContainKeys('bom-ranges')
+	public void noMapping() {
+		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addBom("foo", bom).build();
+		Info info = getInfo(metadata);
+		assertThat(info.getDetails()).doesNotContainKeys("bom-ranges");
 	}
 
 	@Test
-	void withMappings() {
-		BillOfMaterials bom = new BillOfMaterials(groupId: 'com.example',
-				artifactId: 'bom', version: '1.0.0')
-		bom.mappings << new BillOfMaterials.Mapping(
-				versionRange: '[1.3.0.RELEASE,1.3.8.RELEASE]', version: '1.1.0')
-		bom.mappings << new BillOfMaterials.Mapping(
-				versionRange: '1.3.8.BUILD-SNAPSHOT', version: '1.1.1-SNAPSHOT')
-		def metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom('foo', bom)
-				.build()
-		def info = getInfo(metadata)
-		assertThat(info.details).containsKeys('bom-ranges')
-		Map<String,Object> ranges = info.details['bom-ranges'] as Map<String, Object>
-		assertThat(ranges).containsOnlyKeys('foo')
-		Map<String,Object> foo = ranges['foo'] as Map<String, Object>
+	public void withMappings() {
+		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		bom.getMappings().add(
+				BillOfMaterials.Mapping.create("[1.3.0.RELEASE,1.3.8.RELEASE]", "1.1.0"));
+		bom.getMappings().add(
+				BillOfMaterials.Mapping.create("1.3.8.BUILD-SNAPSHOT", "1.1.1-SNAPSHOT"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addBom("foo", bom).build();
+		Info info = getInfo(metadata);
+		assertThat(info.getDetails()).containsKeys("bom-ranges");
+		@SuppressWarnings("unchecked")
+		Map<String, Object> ranges = (Map<String, Object>) info.getDetails()
+				.get("bom-ranges");
+		assertThat(ranges).containsOnlyKeys("foo");
+		@SuppressWarnings("unchecked")
+		Map<String, Object> foo = (Map<String, Object>) ranges.get("foo");
 		assertThat(foo).containsExactly(
-				entry('1.1.0', 'Spring Boot >=1.3.0.RELEASE and <=1.3.8.RELEASE'),
-				entry('1.1.1-SNAPSHOT', 'Spring Boot >=1.3.8.BUILD-SNAPSHOT'))
+				entry("1.1.0", "Spring Boot >=1.3.0.RELEASE and <=1.3.8.RELEASE"),
+				entry("1.1.1-SNAPSHOT", "Spring Boot >=1.3.8.BUILD-SNAPSHOT"));
 	}
 
 	private static Info getInfo(InitializrMetadata metadata) {
-		Info.Builder builder = new Info.Builder()
+		Info.Builder builder = new Info.Builder();
 		new BomRangesInfoContributor(new SimpleInitializrMetadataProvider(metadata))
-				.contribute(builder)
-		builder.build()
+				.contribute(builder);
+		return builder.build();
 	}
 
 }

@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.actuate.stat
+package io.spring.initializr.actuate.stat;
 
-import io.spring.initializr.actuate.stat.StatsProperties
-import org.junit.Test
+import io.spring.initializr.actuate.stat.StatsProperties;
+import org.junit.Test;
 
-import static org.junit.Assert.assertThat
-import static org.hamcrest.CoreMatchers.is
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author Stephane Nicoll
  */
-class StatsPropertiesTests {
+public class StatsPropertiesTests {
 
-	private final StatsProperties properties = new StatsProperties()
+	private final StatsProperties properties = new StatsProperties();
 
 	@Test
-	void cleanTrailingSlash() {
-		properties.elastic.uri = 'http://example.com/'
-		assertThat(properties.elastic.uri, is('http://example.com'))
+	public void cleanTrailingSlash() {
+		properties.getElastic().setUri("http://example.com/");
+		assertThat(properties.getElastic().getUri(), is("http://example.com"));
 	}
 
 	@Test
-	void provideEntityUrl() {
-		properties.elastic.uri = 'http://example.com/'
-		properties.elastic.indexName = 'my-index'
-		properties.elastic.entityName = 'foo'
-		assertThat(properties.elastic.entityUrl.toString(),
-				is('http://example.com/my-index/foo'))
+	public void provideEntityUrl() {
+		properties.getElastic().setUri("http://example.com/");
+		properties.getElastic().setIndexName("my-index");
+		properties.getElastic().setEntityName("foo");
+		assertThat(properties.getElastic().getEntityUrl().toString(),
+				is("http://example.com/my-index/foo"));
 	}
 
 }
