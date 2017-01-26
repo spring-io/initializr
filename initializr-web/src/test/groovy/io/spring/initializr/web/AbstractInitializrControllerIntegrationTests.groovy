@@ -65,7 +65,7 @@ abstract class AbstractInitializrControllerIntegrationTests {
 	@LocalServerPort
 	protected int port
 
-	final RestTemplate restTemplate = new RestTemplate()
+	public final RestTemplate restTemplate = new RestTemplate()
 
 	String createUrl(String context) {
 		"http://localhost:$port$context"
