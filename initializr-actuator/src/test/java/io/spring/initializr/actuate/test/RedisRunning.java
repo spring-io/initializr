@@ -29,7 +29,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
  */
 public class RedisRunning extends TestWatcher {
 
-	JedisConnectionFactory connectionFactory;
+	private JedisConnectionFactory connectionFactory;
 
 	@Override
 	public Statement apply(Statement base, Description description) {
