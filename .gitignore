@@ -8,6 +8,7 @@
 .settings
 .gitignore
 .idea
+.factorypath
 *.iml
 bin
 build
