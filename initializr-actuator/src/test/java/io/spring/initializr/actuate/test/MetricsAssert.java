@@ -36,10 +36,10 @@ public class MetricsAssert {
 
 	public MetricsAssert hasValue(long value, String... metrics) {
 		Arrays.asList(metrics).forEach(it -> {
-			Long actual = counterService.values.get(it);
+			Long actual = counterService.getValues().get(it);
 			if (actual == null) {
 				fail("Metric '" + it + "' not found, got '"
-						+ counterService.values.keySet() + "'");
+						+ counterService.getValues().keySet() + "'");
 			}
 			assertEquals("Wrong value for metric " + it, value, actual.longValue());
 		});
@@ -49,15 +49,15 @@ public class MetricsAssert {
 	public MetricsAssert hasNoValue(String... metrics) {
 		Arrays.asList(metrics).forEach(it -> {
 			assertEquals("Metric '" + it + "' should not be registered", null,
-					counterService.values.get(it));
+					counterService.getValues().get(it));
 		});
 		return this;
 	}
 
 	public MetricsAssert metricsCount(int count) {
 		assertEquals(
-				"Wrong number of metrics, got '" + counterService.values.keySet() + "'",
-				count, counterService.values.size());
+				"Wrong number of metrics, got '" + counterService.getValues().keySet() + "'",
+				count, counterService.getValues().size());
 		return this;
 	}
 }

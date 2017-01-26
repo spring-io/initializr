@@ -47,7 +47,8 @@ import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
 public class InitializrMetricsConfiguration {
 
 	@Bean
-	ProjectGenerationMetricsListener metricsListener(CounterService counterService) {
+	public ProjectGenerationMetricsListener metricsListener(
+			CounterService counterService) {
 		return new ProjectGenerationMetricsListener(counterService);
 	}
 
@@ -56,20 +57,12 @@ public class InitializrMetricsConfiguration {
 	@EnableScheduling
 	@EnableConfigurationProperties(MetricsProperties.class)
 	@Configuration
-	public static class MetricsExportConfiguration {
-
-		@Autowired
-		RedisConnectionFactory connectionFactory;
-
-		@Autowired
-		MetricsProperties metrics;
-
-		@Autowired
-		ApplicationContext context;
+	protected static class MetricsExportConfiguration {
 
 		@Bean
 		@ExportMetricWriter
-		MetricWriter writer() {
+		public MetricWriter writer(RedisConnectionFactory connectionFactory,
+				MetricsProperties metrics, ApplicationContext context) {
 			return new RedisMetricRepository(connectionFactory,
 					metrics.getPrefix() + metrics.getId(context.getId()) + "."
 							+ ObjectUtils.getIdentityHexString(context) + ".",
