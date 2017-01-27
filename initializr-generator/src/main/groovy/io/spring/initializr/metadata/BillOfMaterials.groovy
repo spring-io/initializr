@@ -30,7 +30,7 @@ import io.spring.initializr.util.VersionRange
  * @author Stephane Nicoll
  */
 @ToString(ignoreNulls = true, excludes = 'mappings', includePackage = false)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 class BillOfMaterials {
 
 	String groupId
