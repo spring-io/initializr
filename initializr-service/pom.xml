@@ -67,6 +67,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
 					<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
