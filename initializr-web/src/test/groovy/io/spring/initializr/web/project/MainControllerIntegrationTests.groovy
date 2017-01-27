@@ -74,7 +74,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void dependencyInRange() {
 		def biz = new Dependency(id: 'biz', groupId: 'org.acme',
-				artifactId: 'biz', version: '1.3.5', scope: 'runtime')
+		artifactId: 'biz', version: '1.3.5', scope: 'runtime')
 		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
@@ -153,7 +153,8 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
-	void metadataWithNoAcceptHeader() { //  rest template sets application/json by default
+	void metadataWithNoAcceptHeader() {
+		//  rest template sets application/json by default
 		ResponseEntity<String> response = invokeHome(null, '*/*')
 		validateCurrentMetadata(response)
 	}
@@ -167,6 +168,9 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void metadataWithV2AcceptHeader() {
+		requests.setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
+				"javaVersion.values[0]", "packaging.values[0]", 
+				"bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2+json')
 		validateMetadata(response, InitializrMetadataVersion.V2.mediaType, '2.0.0', JSONCompareMode.STRICT)
 	}

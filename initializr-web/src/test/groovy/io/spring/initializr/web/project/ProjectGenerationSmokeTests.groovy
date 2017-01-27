@@ -18,7 +18,7 @@ package io.spring.initializr.web.project
 
 import geb.Browser
 import io.spring.initializr.test.generator.ProjectAssert
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests
 import io.spring.initializr.web.project.test.HomePage
 import org.junit.After
 import org.junit.Assume
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegrationTests {
+class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegrationTests {
 
 	private File downloadDir
 	private WebDriver driver

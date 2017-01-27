@@ -45,6 +45,7 @@
 		<module>initializr-actuator</module>
 		<module>initializr-generator</module>
 		<module>initializr-web</module>
+		<module>initializr-stubs</module>
 	</modules>
 
 	<dependencyManagement>
@@ -114,6 +115,29 @@
 						<goals>
 							<goal>jar-no-fork</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<id>generate-docs</id>
+						<phase>prepare-package</phase>
+						<inherited>false</inherited>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<sourceDocumentName>index.adoc</sourceDocumentName>
+							<backend>html</backend>
+							<doctype>book</doctype>
+							<attributes>
+								<snippets>${basedir}/initializr-web/target/snippets</snippets>
+							</attributes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

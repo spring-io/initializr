@@ -45,7 +45,7 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 	void doNotForceSsl() {
 		ResponseEntity<String> response = invokeHome('curl/1.2.4', "*/*")
 		String body = response.getBody()
-		assertTrue "Must not force https", body.contains("http://localhost:$port/")
+		assertTrue "Must not force https", body.contains("http://start.spring.io/")
 		assertFalse "Must not force https", body.contains('https://')
 	}
 
