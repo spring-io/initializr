@@ -28,7 +28,6 @@ import io.spring.initializr.util.VersionRange
  * if a dependency refers to it.
  *
  * @author Stephane Nicoll
- * @since 1.0
  */
 @ToString(ignoreNulls = true, excludes = 'mappings', includePackage = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)

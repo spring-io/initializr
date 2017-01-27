@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue
  * Various project based assertions.
  *
  * @author Stephane Nicoll
- * @since 1.0
  */
 class ProjectAssert {
 

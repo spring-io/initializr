@@ -36,7 +36,6 @@ import static io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.Pa
  * @author Dave Syer
  * @author Stephane Nicoll
  * @author Sebastien Deleuze
- * @since 1.0
  */
 @Slf4j
 class ProjectGenerator {
