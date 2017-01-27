@@ -143,6 +143,13 @@
                             <label>
                                 <input tabindex="13" type="checkbox" name="style" value="${it.id}">${it.name}
                                 <p class="help-block">${it.description}</p>
+                                <% if (it.links) { %>
+	                                <ul class="external-links"><% it.links.each { %>
+	                                  <li><a href="${it.url}">
+                                          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                                          ${it.description?:it.url}</a></li>
+	                                <% } %></ul>
+                                <% } %>
                                 <% if (it.versionRequirement) { %>
                                 <p class="help-block version-requirement">requires Spring Boot ${it.versionRequirement}</p>
                                 <% } %>

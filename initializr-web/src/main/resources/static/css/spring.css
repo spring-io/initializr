@@ -65,6 +65,10 @@ input[type=text] {
     margin-left: 0.2em;
 }
 
+.tag a {
+    color: #ffffff;
+}
+
 .advanced {
     margin: 1em 0;
 }
@@ -76,6 +80,12 @@ input[type=text] {
     display: block;
 }
 
+.external-links {
+    padding: 0;
+}
+.external-links li {
+    list-style-type: none;
+}
 /* autocomplete */
 
 #autocomplete, .twitter-typeahead, .tt-hint {
