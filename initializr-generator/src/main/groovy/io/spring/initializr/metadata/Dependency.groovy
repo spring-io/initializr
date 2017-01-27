@@ -91,8 +91,6 @@ class Dependency extends MetadataElement {
 
 	String repository
 
-	List<Link> links = []
-
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	int weight
 
@@ -103,6 +101,8 @@ class Dependency extends MetadataElement {
 	boolean starter = true
 
 	List<String> keywords = []
+
+	List<Link> links = []
 
 	void setScope(String scope) {
 		if (!SCOPE_ALL.contains(scope)) {
@@ -162,6 +162,9 @@ class Dependency extends MetadataElement {
 				throw new InvalidInitializrMetadataException(
 						"Invalid dependency, id should have the form groupId:artifactId[:version] but got $id")
 			}
+		}
+		links.forEach { l ->
+			l.resolve()
 		}
 		updateVersionRanges(VersionParser.DEFAULT)
 	}

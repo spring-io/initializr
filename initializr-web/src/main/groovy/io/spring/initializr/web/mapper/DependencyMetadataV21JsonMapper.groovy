@@ -57,9 +57,6 @@ class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMapper {
 		if (dep.repository) {
 			result.repository = dep.repository
 		}
-		if (dep.links) {
-			result.links = dep.links
-		}
 		result
 	}
 
