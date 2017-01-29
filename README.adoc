@@ -130,7 +130,14 @@ $ curl -H 'Accept: application/json' https://start.spring.io
 ----
 
 NOTE: As stated above, if you use `curl` without an accept header, you'll retrieve a human
-readable text version of the metadata. `HTTPie` is also supported.
+readable text version of the metadata. `HTTPie` is also supported:
+
+[source,bash]
+----
+$ http https://start.spring.io Accept:application/json
+----
+
+
 
 The metadata basically lists the _capabilities_ of the service, that is the available
 options for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) The web
