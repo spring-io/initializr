@@ -52,6 +52,9 @@ class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMapper {
 		if (dependency.versionRange) {
 			content['versionRange'] = dependency.versionRange
 		}
+		if (dependency.links) {
+			content._links = LinkMapper.mapLinks(dependency.links)
+		}
 		content
 	}
 

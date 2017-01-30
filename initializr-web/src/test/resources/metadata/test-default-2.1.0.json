@@ -30,7 +30,16 @@
           {
             "id": "web",
             "name": "Web",
-            "description": "Web dependency description"
+            "description": "Web dependency description",
+            "_links": {
+              "guide": {
+                "href": "https://example.com/guide",
+                "title": "Building a RESTful Web Service"
+              },
+              "reference": {
+                "href": "https://example.com/doc"
+              }
+            }
           },
           {
             "id": "security",
@@ -47,7 +56,22 @@
         "values": [
           {
             "id": "org.acme:foo",
-            "name": "Foo"
+            "name": "Foo",
+            "_links": {
+              "guide": [
+                {
+                  "href": "https://example.com/guide1"
+                },
+                {
+                  "href": "https://example.com/guide2",
+                  "title": "Some guide for foo"
+                }
+              ],
+              "reference": {
+                "href": "https://example.com/{bootVersion}/doc",
+                "templated": true
+              }
+            }
           },
           {
             "id": "org.acme:bar",

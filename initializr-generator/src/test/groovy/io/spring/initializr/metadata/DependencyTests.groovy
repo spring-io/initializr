@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,6 +118,15 @@ class DependencyTests {
 	@Test
 	void invalidIdFormatTooManyColons() {
 		def dependency = new Dependency(id: 'org.foo:bar:1.0:test:external')
+
+		thrown.expect(InvalidInitializrMetadataException)
+		dependency.resolve()
+	}
+
+	@Test
+	void invalidLink() {
+		def dependency = new Dependency(id : 'foo')
+		dependency.links << new Link(href: 'https://example.com')
 
 		thrown.expect(InvalidInitializrMetadataException)
 		dependency.resolve()

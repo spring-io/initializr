@@ -131,7 +131,18 @@
             "groupId": "org.springframework.boot",
             "id": "web",
             "name": "Web",
-            "scope": "compile"
+            "scope": "compile",
+            "links": [
+              {
+                "rel": "guide",
+                "description": "Building a RESTful Web Service",
+                "href": "https://example.com/guide"
+              },
+              {
+                "rel": "reference",
+                "href": "https://example.com/doc"
+              }
+            ]
           },
           {
             "starter": true,
@@ -164,7 +175,23 @@
             "starter": true,
             "keywords": ["thefoo", "dafoo"],
             "scope": "compile",
-            "version": "1.3.5"
+            "version": "1.3.5",
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://example.com/guide1"
+              },
+              {
+                "rel": "reference",
+                "href": "https://example.com/{bootVersion}/doc",
+                "templated": true
+              },
+              {
+                "rel": "guide",
+                "description": "Some guide for foo",
+                "href": "https://example.com/guide2"
+              }
+            ]
           },
           {
             "starter": true,

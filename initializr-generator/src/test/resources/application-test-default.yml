@@ -39,6 +39,12 @@ initializr:
           description: Web dependency description
           facets:
             - web
+          links:
+            - rel: guide
+              href: https://example.com/guide
+              description: Building a RESTful Web Service
+            - rel: reference
+              href: https://example.com/doc
         - name: Security
           id: security
         - name: Data JPA
@@ -55,6 +61,14 @@ initializr:
           keywords:
             - thefoo
             - dafoo
+          links:
+            - rel: guide
+              href: https://example.com/guide1
+            - rel: reference
+              href: https://example.com/{bootVersion}/doc
+            - rel: guide
+              href: https://example.com/guide2
+              description: Some guide for foo
         - name: Bar
           id: org.acme:bar
           version: 2.1.0

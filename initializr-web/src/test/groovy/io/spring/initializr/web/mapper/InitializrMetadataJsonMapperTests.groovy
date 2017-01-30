@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 package io.spring.initializr.web.mapper
 
 import groovy.json.JsonSlurper
+import io.spring.initializr.metadata.Dependency
 import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.Link
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder
 import org.junit.Test
 
@@ -50,6 +52,19 @@ class InitializrMetadataJsonMapperTests {
 		assertEquals 'http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,' +
 				'language,bootVersion,groupId,artifactId,version,name,description,packageName}',
 				result._links.foo.href
+	}
+
+	@Test
+	void keepLinksOrdering()  {
+		def dependency = new Dependency(id: 'foo')
+		dependency.links << new Link(rel: 'guide', href: 'https://example.com/how-to')
+		dependency.links << new Link(rel: 'reference', href: 'https://example.com/doc')
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup('test', dependency).build()
+		def json = jsonMapper.write(metadata, null)
+		def first = json.indexOf('https://example.com/how-to')
+		def second = json.indexOf('https://example.com/doc')
+		assert first < second
 	}
 
 }
