@@ -100,6 +100,18 @@ initializr:
           id: security
           description: Secure your application via spring-security
           weight: 100
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/securing-web/
+              description: Securing a Web Application
+            - rel: guide
+              href: https://spring.io/guides/tutorials/spring-boot-oauth2/
+              description: Spring Boot and OAuth2
+            - rel: guide
+              href: https://spring.io/guides/gs/authenticating-ldap/
+              description: Authenticating a User with LDAP
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security
         - name: AOP
           id: aop
           description: Aspect-oriented programming including spring-aop and AspectJ
@@ -107,18 +119,42 @@ initializr:
           id: jta-atomikos
           description: JTA distributed transactions via Atomikos
           versionRange: 1.2.0.M1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-atomikos
         - name: Bitronix (JTA)
           id: jta-bitronix
           description: JTA distributed transactions via Bitronix
           versionRange: 1.2.0.M1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-bitronix
         - name: Narayana (JTA)
           id: jta-narayana
           description: JTA distributed transactions via Narayana
           versionRange: 1.4.0.M2
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-narayana
         - name: Cache
           id: cache
           description: Spring's Cache abstraction
           versionRange: 1.3.0.M1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/caching/
+              description: Caching Data with Spring
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-caching
         - name: DevTools
           id: devtools
           groupId: org.springframework.boot
@@ -127,6 +163,9 @@ initializr:
           description: Spring Boot Development Tools
           versionRange: 1.3.0.M1
           starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#using-boot-devtools
         - name: Configuration Processor
           id: configuration-processor
           groupId: org.springframework.boot
@@ -135,10 +174,17 @@ initializr:
           description: Generate metadata for your custom configuration keys
           versionRange: 1.2.0.RELEASE
           starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#configuration-metadata-annotation-processor
         - name: Validation
           id: validation
           description: JSR-303 validation infrastructure (already included with web)
           versionRange: 1.3.0.M1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/validating-form-input/
+              title: Validating Form Input
         - name: Session
           id: session
           groupId: org.springframework.session
@@ -171,9 +217,27 @@ initializr:
           weight: 100
           facets:
             - web
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/rest-service/
+              description: Building a RESTful Web Service
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-developing-web-applications
+            - rel: guide
+              href: https://spring.io/guides/gs/serving-web-content/
+              description: Serving Web Content with Spring MVC
+            - rel: guide
+              href: https://spring.io/guides/tutorials/bookmarks/
+              description: Building REST services with Spring
         - name: Websocket
           id: websocket
           description: Websocket development with SockJS and STOMP
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-stomp-websocket/
+              description: Using WebSocket to build an interactive web application
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-websockets
         - name: Web Services
           id: web-services
           description: Contract-first SOAP service development with Spring Web Services
@@ -184,10 +248,19 @@ initializr:
               artifactId: spring-boot-starter-web-services
             - versionRange: "[1.1.0.RELEASE,1.4.0.M3)"
               artifactId: spring-boot-starter-ws
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/producing-web-service/
+              description: Producing a SOAP web service
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices
         - name: Jersey (JAX-RS)
           id: jersey
           description: RESTful Web Services framework
           versionRange: 1.2.0.RELEASE
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey
         - name: Ratpack
           id: ratpack
           description: Spring Boot integration for the Ratpack framework
@@ -209,14 +282,38 @@ initializr:
               version: 1.0.2
             - versionRange: 1.4.0.RELEASE
               version: 1.1.1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/crud-with-vaadin/
+              description: Creating CRUD UI with Vaadin
+            - rel: reference
+              href: https://vaadin.com/spring
         - name: Rest Repositories
           id: data-rest
           weight: 10
           description: Exposing Spring Data repositories over REST via spring-data-rest-webmvc
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-rest/
+              description: Accessing JPA Data with REST
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-neo4j-data-rest/
+              description: Accessing Neo4j Data with REST
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-mongodb-data-rest/
+              description: Accessing MongoDB Data with REST
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-use-exposing-spring-data-repositories-rest-endpoint
         - name: HATEOAS
           id: hateoas
           description: HATEOAS-based RESTful services
           versionRange: 1.2.2.RELEASE
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/rest-hateoas/
+              description: Building a Hypermedia-Driven RESTful Web Service
+            - ref: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-hateoas
         - name: Rest Repositories HAL Browser
           id: data-rest-hal
           description: Browsing Spring Data REST repositories in your browser
@@ -245,6 +342,9 @@ initializr:
             - web
           keywords:
             - template
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
         - name: Velocity
           id: velocity
           description: Velocity templating engine
@@ -258,6 +358,9 @@ initializr:
           description: Groovy templating engine
           facets:
             - web
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
         - name: Thymeleaf
           id: thymeleaf
           description: Thymeleaf templating engine, including integration with Spring
@@ -265,6 +368,12 @@ initializr:
             - web
           keywords:
             - template
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/handling-form-submission/
+              description: Handling Form Submission
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
         - name: Mustache
           id: mustache
           description: Mustache templating engine
@@ -273,6 +382,9 @@ initializr:
             - web
           keywords:
             - template
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
     - name: SQL
       content:
         - name: JPA
@@ -281,10 +393,19 @@ initializr:
           weight: 100
           aliases:
             - jpa
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-jpa/
+              description: Accessing Data with JPA
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jpa-and-spring-data
         - name: JOOQ
           id: jooq
           description: Persistence support using Java Object Oriented Querying
           versionRange: 1.3.0.M2
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jooq
         - name: MyBatis
           id: mybatis
           description: Persistence support using MyBatis
@@ -298,6 +419,15 @@ initializr:
         - name: JDBC
           id: jdbc
           description: JDBC databases
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/relational-data-access/
+              description: Accessing Relational Data using JDBC with Spring
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-sql
         - name: H2
           id: h2
           description: H2 database (with embedded support)
@@ -327,6 +457,10 @@ initializr:
           artifactId: mysql-connector-java
           scope: runtime
           starter: false
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-mysql/
+              description: Accessing data with MySQL
         - name: PostgreSQL
           id: postgresql
           description: PostgreSQL jdbc driver
@@ -351,30 +485,54 @@ initializr:
           groupId: org.flywaydb
           artifactId: flyway-core
           starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-execute-flyway-database-migrations-on-startup
         - name: Liquibase
           id: liquibase
           description: Liquibase Database Migrations library
           groupId: org.liquibase
           artifactId: liquibase-core
           starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-execute-liquibase-database-migrations-on-startup
     - name: NoSQL
       content:
         - name: MongoDB
           id: data-mongodb
           description: MongoDB NoSQL Database, including spring-data-mongodb
           weight: 50
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-mongodb/
+              description: Accessing Data with MongoDB
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb
         - name: Cassandra
           id: data-cassandra
           description: Cassandra NoSQL Database, including spring-data-cassandra
           versionRange: 1.3.0.RC1
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
         - name: Couchbase
           id: data-couchbase
           description: Couchbase NoSQL database, including spring-data-couchbase
           versionRange: 1.4.0.M1
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase
         - name: Neo4j
           id: data-neo4j
           description: Neo4j NoSQL graph database, including spring-data-neo4j
           versionRange: 1.4.0.M2
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-neo4j/
+              description: Accessing Data with Neo4j
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-neo4j
         - name: Redis
           id: data-redis
           description: REDIS key-value data store, including spring-redis
@@ -385,16 +543,34 @@ initializr:
               artifactId: spring-boot-starter-data-redis
             - versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
               artifactId: spring-boot-starter-redis
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-redis/
+              description: Messaging with Redis
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-redis
         - name: Gemfire
           id: data-gemfire
           description: GemFire distributed data store including spring-data-gemfire
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-data-gemfire/
+              description: Accessing Data with GemFire
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-gemfire
         - name: Solr
           id: data-solr
           description: Apache Solr search platform, including spring-data-solr
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-solr
         - name: Elasticsearch
           id: data-elasticsearch
           description: Elasticsearch search and analytics engine including spring-data-elasticsearch
           weight: 10
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-elasticsearch
     - name: Cloud Core
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
@@ -447,6 +623,10 @@ initializr:
           description: Central management for configuration via a git or svn backend
           groupId: org.springframework.cloud
           artifactId: spring-cloud-config-server
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/centralized-configuration/
+              description: Centralized Configuration
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
           description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
@@ -474,6 +654,10 @@ initializr:
           description: spring-cloud-netflix Eureka Server
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-eureka-server
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/service-registration-and-discovery/
+              description: Service Registration and Discovery
         - name: Zookeeper Discovery
           id: cloud-starter-zookeeper-discovery
           description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
@@ -501,11 +685,19 @@ initializr:
           description: Intelligent and programmable routing with spring-cloud-netflix Zuul
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zuul
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/routing-and-filtering/
+              description: Routing and Filtering
         - name: Ribbon
           id: cloud-ribbon
           description: Client side load balancing with spring-cloud-netflix and Ribbon
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-ribbon
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/client-side-load-balancing/
+              description: Client Side Load Balancing with Ribbon and Spring Cloud
         - name: Feign
           id: cloud-feign
           description: Declarative REST clients with spring-cloud-netflix Feign
@@ -520,6 +712,10 @@ initializr:
           description: Circuit breaker with spring-cloud-netflix Hystrix
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-hystrix
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/circuit-breaker/
+              description: Circuit Breaker
         - name: Hystrix Dashboard
           id: cloud-hystrix-dashboard
           description: Circuit breaker dashboard with spring-cloud-netflix Hystrix
@@ -709,20 +905,46 @@ initializr:
           id: social-facebook
           description: spring-social-facebook
           weight: 25
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/register-facebook-app/
+              description: Registering an Application with Facebook
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-facebook/
+              description: Accessing Facebook Data
         - name: LinkedIn
           id: social-linkedin
           description: spring-social-linkedin
         - name: Twitter
           id: social-twitter
           description: spring-social-twitter
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/register-twitter-app/
+              description: Registering an Application with Twitter
+            - rel: guide
+              href: https://spring.io/guides/gs/accessing-twitter/
+              description: Accessing Twitter Data
     - name: I/O
       content:
         - name: Batch
           id: batch
           description: Spring Batch including HSQLDB database
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/batch-processing/
+              description: Creating a Batch Service
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-batch-applications
         - name: Integration
           id: integration
           description: Common spring-integration modules
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/integration/
+              description: Integrating Data
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration
         - name: Activiti
           id: activiti-basic
           description: Activiti BPMN workflow engine
@@ -739,17 +961,41 @@ initializr:
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
           versionRange: 1.4.0.RC1
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq
         - name: JMS (Artemis)
           id: artemis
           description: Java Message Service API via Apache Artemis
           versionRange: 1.3.0.M2
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
         - name: JMS (HornetQ)
           id: hornetq
           description: Java Message Service API via HornetQ
           versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-hornetq
         - name: AMQP
           id: amqp
           description: Advanced Message Queuing Protocol via spring-rabbit
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-rabbitmq/
+              description: Messaging with RabbitMQ
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp
         - name: Kafka
           id: kafka
           weight: 100
@@ -758,19 +1004,34 @@ initializr:
           groupId: org.springframework.kafka
           artifactId: spring-kafka
           starter: false
+          link:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
         - name: Mail
           id: mail
           description: javax.mail
           versionRange: 1.2.0.RC1
+          link:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email
         - name: LDAP
           id: data-ldap
           description: LDAP support, including spring-data-ldap
           versionRange: 1.5.0.RC1
+          link:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-ldap
     - name: Ops
       content:
         - name: Actuator
           id: actuator
           description: Production ready features to help you monitor and manage your application
+          link:
+            - rel: guide
+              href: https://spring.io/guides/gs/actuator-service/
+              description: Building a RESTful Web Service with Spring Boot Actuator
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-ldap
         - name: Actuator Docs
           id: actuator-docs
           description: API documentation for the Actuator endpoints
