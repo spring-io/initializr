@@ -43,9 +43,9 @@
 
 	<modules>
 		<module>initializr-actuator</module>
+		<module>initializr-docs</module>
 		<module>initializr-generator</module>
 		<module>initializr-web</module>
-		<module>initializr-stubs</module>
 	</modules>
 
 	<dependencyManagement>
@@ -78,6 +78,13 @@
 				<type>test-jar</type>
 			</dependency>
 
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-dependencies</artifactId>
+				<version>1.0.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -118,32 +125,19 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.asciidoctor</groupId>
-				<artifactId>asciidoctor-maven-plugin</artifactId>
-				<version>1.5.3</version>
-				<executions>
-					<execution>
-						<id>generate-docs</id>
-						<phase>prepare-package</phase>
-						<inherited>false</inherited>
-						<goals>
-							<goal>process-asciidoc</goal>
-						</goals>
-						<configuration>
-							<sourceDocumentName>index.adoc</sourceDocumentName>
-							<backend>html</backend>
-							<doctype>book</doctype>
-							<attributes>
-								<snippets>${basedir}/initializr-web/target/snippets</snippets>
-							</attributes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
