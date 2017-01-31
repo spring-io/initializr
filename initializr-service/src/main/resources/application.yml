@@ -277,6 +277,7 @@ initializr:
           artifactId: vaadin-spring-boot-starter
           description: Vaadin java web application framework
           bom: vaadin-bom
+          versionRange: "[1.2.0.RELEASE,1.5.0.RC1)"
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
               version: 1.0.2
