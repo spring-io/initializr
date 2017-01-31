@@ -317,7 +317,7 @@ initializr:
             - rel: guide
               href: https://spring.io/guides/gs/rest-hateoas/
               description: Building a Hypermedia-Driven RESTful Web Service
-            - ref: reference
+            - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-hateoas
         - name: Rest Repositories HAL Browser
           id: data-rest-hal
