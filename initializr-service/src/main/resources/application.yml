@@ -39,7 +39,7 @@ initializr:
           - versionRange: "[1.5.0.RC1, 1.5.x.BUILD-SNAPSHOT)"
             version: Dalston.M1
             repositories: spring-milestones
-          - versionRange: "1.5.0.BUILD-SNAPSHOT"
+          - versionRange: "1.5.x.BUILD-SNAPSHOT"
             version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
