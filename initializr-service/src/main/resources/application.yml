@@ -552,6 +552,7 @@ initializr:
         - name: Gemfire
           id: data-gemfire
           description: GemFire distributed data store including spring-data-gemfire
+          versionRange: "[1.1.0.RELEASE,2.0.0.M1)"
           links:
             - rel: guide
               href: https://spring.io/guides/gs/accessing-data-gemfire/
