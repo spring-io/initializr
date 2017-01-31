@@ -44,7 +44,8 @@ ext['${it.key}'] = '${it.value.call()}'<% } %>
 dependencies {<% compileDependencies.each { %>
 	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% if (language=='groovy') { %>
 	compile('org.codehaus.groovy:groovy')<% } %><% if (language=='kotlin') { %>
-	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
+	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-reflect:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
 	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% compileOnlyDependencies.each { %>
 	compileOnly('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% providedDependencies.each { %>
 	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %>
