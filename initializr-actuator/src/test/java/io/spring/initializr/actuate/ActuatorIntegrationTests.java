@@ -19,13 +19,11 @@ package io.spring.initializr.actuate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
-
+import org.json.JSONObject;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import groovy.json.JsonSlurper;
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 
 /**
  * Tests for actuator specific features.
@@ -34,9 +32,7 @@ import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
  */
 @ActiveProfiles("test-default")
 public class ActuatorIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
-
-	private final JsonSlurper slurper = new JsonSlurper();
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
 	public void infoHasExternalProperties() {
@@ -49,36 +45,35 @@ public class ActuatorIntegrationTests
 	@Test
 	public void metricsAvailableByDefault() {
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
-		Map<String, Integer> result = metricsEndpoint();
-		Integer requests = result.get("counter.initializr.requests");
-		Integer packaging = result.get("counter.initializr.packaging.jar");
-		Integer javaVersion = result.get("counter.initializr.java_version.1_8");
-		Integer webDependency = result.get("counter.initializr.dependency.web");
-		Integer jpaDependency = result.get("counter.initializr.dependency.jpa");
+		JSONObject result = metricsEndpoint();
+		int requests = result.getInt("counter.initializr.requests");
+		int packaging = result.getInt("counter.initializr.packaging.jar");
+		int javaVersion = result.getInt("counter.initializr.java_version.1_8");
+		int webDependency = result.getInt("counter.initializr.dependency.web");
+		int jpaDependency = result.getInt("counter.initializr.dependency.data-jpa");
 
 		// No jpa dep this time
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
 
-		Map<String, Integer> updatedResult = metricsEndpoint();
+		JSONObject updatedResult = metricsEndpoint();
 		assertEquals("Number of request should have increased", requests + 1,
-				updatedResult.get("counter.initializr.requests").intValue());
+				updatedResult.getInt("counter.initializr.requests"));
 		assertEquals("jar packaging metric should have increased", packaging + 1,
-				updatedResult.get("counter.initializr.packaging.jar").intValue());
+				updatedResult.getInt("counter.initializr.packaging.jar"));
 		assertEquals("java version metric should have increased", javaVersion + 1,
-				updatedResult.get("counter.initializr.java_version.1_8").intValue());
+				updatedResult.getInt("counter.initializr.java_version.1_8"));
 		assertEquals("web dependency metric should have increased", webDependency + 1,
-				updatedResult.get("counter.initializr.dependency.web").intValue());
-		assertEquals("jpa dependency metric should not have increased", jpaDependency,
-				updatedResult.get("counter.initializr.dependency.jpa"));
+				updatedResult.getInt("counter.initializr.dependency.web"));
+		assertEquals("jpa dependency metric should not have increased", jpaDependency + 0,
+				updatedResult.getInt("counter.initializr.dependency.data-jpa"));
 	}
 
-	private Map<String, Integer> metricsEndpoint() {
+	private JSONObject metricsEndpoint() {
 		return parseJson(getRestTemplate().getForObject(createUrl("/metrics"), String.class));
 	}
 
-	@SuppressWarnings("unchecked")
-	private Map<String, Integer> parseJson(String content) {
-		return (Map<String, Integer>) slurper.parseText(content);
+	private JSONObject parseJson(String content) {
+		return new JSONObject(content);
 	}
 
 }

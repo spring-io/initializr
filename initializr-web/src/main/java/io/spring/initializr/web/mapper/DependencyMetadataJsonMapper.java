@@ -14,31 +14,20 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.metadata
+package io.spring.initializr.web.mapper;
+
+import io.spring.initializr.metadata.DependencyMetadata;
 
 /**
- * Defines a particular project type. Each type is associated to a concrete
- * action that should be invoked to generate the content of that type.
+ * Generate a JSON representation of a set of dependencies.
  *
  * @author Stephane Nicoll
  */
-class Type extends DefaultMetadataElement implements Describable {
+interface DependencyMetadataJsonMapper {
 
-	String description
-
-	@Deprecated
-	String stsId
-
-	String action
-
-	final Map<String, String> tags = [:]
-
-	void setAction(String action) {
-		String actionToUse = action
-		if (!actionToUse.startsWith("/")) {
-			actionToUse =  "/" +  actionToUse
-		}
-		this.action = actionToUse
-	}
+	/**
+	 * Write a json representation of the specified metadata.
+	 */
+	String write(DependencyMetadata metadata);
 
 }

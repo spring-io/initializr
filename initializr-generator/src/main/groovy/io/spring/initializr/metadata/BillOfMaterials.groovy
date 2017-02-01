@@ -70,10 +70,6 @@ class BillOfMaterials {
 
 	final List<Mapping> mappings = []
 
-	static BillOfMaterials create(String groupId, String artifactId, String version) {
-		new BillOfMaterials(groupId: groupId, artifactId: artifactId, version: version)
-	}
-
 	/**
 	 * Determine the version placeholder to use for this instance. If a version
 	 * property is defined, this returns the reference for the property. Otherwise
@@ -135,14 +131,26 @@ class BillOfMaterials {
 
 		private VersionRange range
 
-		static Mapping create(String versionRange, String version) {
-			new Mapping(versionRange: versionRange, version: version)
-		}
-
 		String determineVersionRangeRequirement() {
 			range.toString()
 		}
 
+		public static Mapping create(String range, String version) {
+			return new Mapping(versionRange: range, version: version);
+		}
+
+		public static Mapping create(String range, String version, String... repositories) {
+			return new Mapping(versionRange: range, version: version, repositories: repositories);
+		}
+
+	}
+
+	public static BillOfMaterials create(String groupId, String artifactId) {
+		return new BillOfMaterials(groupId: groupId, artifactId: artifactId);
+	}
+
+	public static BillOfMaterials create(String groupId, String artifactId, String version) {
+		return new BillOfMaterials(groupId: groupId, artifactId: artifactId, version: version);
 	}
 
 }

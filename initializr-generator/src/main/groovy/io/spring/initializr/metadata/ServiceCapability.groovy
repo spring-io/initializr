@@ -32,7 +32,7 @@ import org.springframework.util.Assert
 @JsonIgnoreProperties(["default", "all"])
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
-abstract class ServiceCapability<T> {
+abstract class ServiceCapability<T> implements Cloneable {
 
 	final String id
 
