@@ -25,8 +25,9 @@ import static org.junit.Assert.fail;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import groovy.json.JsonSlurper;
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController.Content;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
@@ -62,8 +62,6 @@ public class MainControllerStatsIntegrationTests
 	@Autowired
 	private StatsProperties statsProperties;
 
-	private final JsonSlurper slurper = new JsonSlurper();
-
 	@Before
 	public void setup() {
 		this.statsMockController.stats.clear();
@@ -77,13 +75,11 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		JSONObject json = new JSONObject(content.json);
 		assertEquals("com.foo", json.get("groupId"));
 		assertEquals("bar", json.get("artifactId"));
-		@SuppressWarnings("unchecked")
-		List<String> list = (List<String>) json.get("dependencies");
-		assertEquals(1, list.size());
+		JSONArray list = json.getJSONArray("dependencies");
+		assertEquals(1, list.length());
 		assertEquals("web", list.get(0));
 	}
 
@@ -108,9 +104,8 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
-		assertFalse("requestIp property should not be set", json.containsKey("requestIp"));
+		JSONObject json = new JSONObject(content.json);
+		assertFalse("requestIp property should not be set", json.has("requestIp"));
 	}
 
 	@Test
@@ -121,8 +116,7 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		JSONObject json = new JSONObject(content.json);
 		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp"));
 	}
 
@@ -134,10 +128,9 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		JSONObject json = new JSONObject(content.json);
 		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
-				json.containsKey("requestIpv4"));
+				json.has("requestIpv4"));
 	}
 
 	@Test
@@ -148,10 +141,9 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		JSONObject json = new JSONObject(content.json);
 		assertFalse("requestCountry property should not be set if value is set to xx",
-				json.containsKey("requestCountry"));
+				json.has("requestCountry"));
 	}
 
 	@Test
@@ -165,8 +157,7 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		Content content = statsMockController.stats.get(0);
 
-		@SuppressWarnings("unchecked")
-		Map<String,Object> json = (Map<String, Object>) slurper.parseText(content.json);
+		JSONObject json = new JSONObject(content.json);
 		assertEquals("com.example", json.get("groupId"));
 		assertEquals("demo", json.get("artifactId"));
 		assertEquals(true, json.get("invalid"));

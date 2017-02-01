@@ -45,6 +45,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.rauschig</groupId>
+			<artifactId>jarchivelib</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<scope>test</scope>
@@ -81,14 +86,5 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
