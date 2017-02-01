@@ -14,31 +14,8 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.metadata
+package io.spring.initializr.metadata;
 
-/**
- * Defines a particular project type. Each type is associated to a concrete
- * action that should be invoked to generate the content of that type.
- *
- * @author Stephane Nicoll
- */
-class Type extends DefaultMetadataElement implements Describable {
-
-	String description
-
-	@Deprecated
-	String stsId
-
-	String action
-
-	final Map<String, String> tags = [:]
-
-	void setAction(String action) {
-		String actionToUse = action
-		if (!actionToUse.startsWith("/")) {
-			actionToUse =  "/" +  actionToUse
-		}
-		this.action = actionToUse
-	}
-
+interface Describable {
+	String getDescription();
 }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.AutoClone
 import groovy.transform.AutoCloneStyle
 import groovy.transform.ToString
+import io.spring.initializr.metadata.Dependency.Mapping;
 import io.spring.initializr.util.InvalidVersionException
 import io.spring.initializr.util.Version
 import io.spring.initializr.util.VersionParser
@@ -35,19 +36,19 @@ import io.spring.initializr.util.VersionRange
 @ToString(ignoreNulls = true, includePackage = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
-class Dependency extends MetadataElement {
 
+class Dependency extends MetadataElement implements Describable {
 	static final String SCOPE_COMPILE = 'compile'
 	static final String SCOPE_COMPILE_ONLY = 'compileOnly'
 	static final String SCOPE_RUNTIME = 'runtime'
 	static final String SCOPE_PROVIDED = 'provided'
 	static final String SCOPE_TEST = 'test'
 	static final List<String> SCOPE_ALL = [
-			SCOPE_COMPILE,
-			SCOPE_RUNTIME,
-			SCOPE_COMPILE_ONLY,
-			SCOPE_PROVIDED,
-			SCOPE_TEST
+		SCOPE_COMPILE,
+		SCOPE_RUNTIME,
+		SCOPE_COMPILE_ONLY,
+		SCOPE_PROVIDED,
+		SCOPE_TEST
 	]
 
 	List<String> aliases = []
@@ -144,7 +145,7 @@ class Dependency extends MetadataElement {
 		if (id == null) {
 			if (!hasCoordinates()) {
 				throw new InvalidInitializrMetadataException(
-						'Invalid dependency, should have at least an id or a groupId/artifactId pair.')
+				'Invalid dependency, should have at least an id or a groupId/artifactId pair.')
 			}
 			generateId()
 		} else if (!hasCoordinates()) {
@@ -160,7 +161,7 @@ class Dependency extends MetadataElement {
 				}
 			} else {
 				throw new InvalidInitializrMetadataException(
-						"Invalid dependency, id should have the form groupId:artifactId[:version] but got $id")
+				"Invalid dependency, id should have the form groupId:artifactId[:version] but got $id")
 			}
 		}
 		links.forEach { l ->
@@ -176,7 +177,7 @@ class Dependency extends MetadataElement {
 				versionRequirement = range.toString()
 			} catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException("Invalid version range '$versionRange' for " +
-						"dependency with id '$id'", ex)
+				"dependency with id '$id'", ex)
 			}
 		}
 		mappings.each {
@@ -223,7 +224,7 @@ class Dependency extends MetadataElement {
 	def generateId() {
 		if (groupId == null || artifactId == null) {
 			throw new IllegalArgumentException(
-					"Could not generate id for $this: at least groupId and artifactId must be set.")
+			"Could not generate id for $this: at least groupId and artifactId must be set.")
 		}
 		StringBuilder sb = new StringBuilder()
 		sb.append(groupId).append(':').append(artifactId)
@@ -257,6 +258,22 @@ class Dependency extends MetadataElement {
 
 		private VersionRange range
 
+		public static Mapping create(String range, String groupId, String artifactId,
+				String version) {
+			new Mapping(versionRange: range, groupId: groupId, artifactId: artifactId, version: version);
+		}
+	}
+
+	public static Dependency create(String groupId, String artifactId, String version, String scope) {
+		return new Dependency(groupId: groupId, artifactId: artifactId, version: version, scope: scope);
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId, String version) {
+		return new Dependency(groupId: groupId, artifactId: artifactId, versionRange: version, id: id);
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId) {
+		return new Dependency(groupId: groupId, artifactId: artifactId, id: id);
 	}
 
 }
