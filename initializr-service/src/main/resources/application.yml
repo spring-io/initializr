@@ -284,12 +284,12 @@ initializr:
           artifactId: vaadin-spring-boot-starter
           description: Vaadin java web application framework
           bom: vaadin-bom
-          versionRange: "[1.2.0.RELEASE,1.5.0.RC1)"
+          versionRange: 1.2.0.RELEASE
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
               version: 1.0.2
             - versionRange: 1.4.0.RELEASE
-              version: 1.1.1
+              version: 1.2.0
           links:
             - rel: guide
               href: https://spring.io/guides/gs/crud-with-vaadin/
