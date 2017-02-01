@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import groovy.json.JsonSlurper;
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 
 /**
  * Tests for actuator specific features.
@@ -34,7 +34,7 @@ import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
  */
 @ActiveProfiles("test-default")
 public class ActuatorIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	private final JsonSlurper slurper = new JsonSlurper();
 

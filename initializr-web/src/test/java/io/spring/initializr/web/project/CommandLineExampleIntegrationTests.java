@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project
+package io.spring.initializr.web.project;
 
-import io.spring.initializr.test.generator.PomAssert
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
-import org.junit.Test
+import org.junit.Test;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
-import org.springframework.test.context.ActiveProfiles
+import io.spring.initializr.test.generator.PomAssert;
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 
 /**
  * Validate that the "raw" HTTP commands that are described in the
@@ -31,44 +32,44 @@ import org.springframework.test.context.ActiveProfiles
  *
  * @author Stephane Nicoll
  */
-@ActiveProfiles('test-default')
-class CommandLineExampleIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+@ActiveProfiles("test-default")
+public class CommandLineExampleIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	void generateDefaultProject() {
-		downloadZip('/starter.zip').isJavaProject()
+	public void generateDefaultProject() {
+		downloadZip("/starter.zip").isJavaProject()
 				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
 				.hasSpringBootStarterRootDependency()
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2)
+				.hasDependenciesCount(2);
 	}
 
 	@Test
-	void generateWebProjectWithJava8() {
-		downloadZip('/starter.zip?dependencies=web&javaVersion=1.8').isJavaProject()
+	public void generateWebProjectWithJava8() {
+		downloadZip("/starter.zip?dependencies=web&javaVersion=1.8").isJavaProject()
 				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert()
-				.hasJavaVersion('1.8')
-				.hasSpringBootStarterDependency('web')
+				.hasJavaVersion("1.8")
+				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2)
+				.hasDependenciesCount(2);
 	}
 
 	@Test
-	void generateWebDataJpaGradleProject() {
-		downloadTgz('/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir')
-				.hasBaseDir('my-dir')
+	public void generateWebDataJpaGradleProject() {
+		downloadTgz("/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir")
+				.hasBaseDir("my-dir")
 				.isJavaProject()
 				.isGradleProject().hasStaticAndTemplatesResources(true)
 				.gradleBuildAssert()
-				.contains('spring-boot-starter-web')
-				.contains('spring-boot-starter-data-jpa')
+				.contains("spring-boot-starter-web")
+				.contains("spring-boot-starter-data-jpa");
 	}
 
 	@Test
-	void generateMavenPomWithWarPackaging() {
-		def response = restTemplate.getForEntity(createUrl('/pom.xml?packaging=war'), String)
-		PomAssert pomAssert = new PomAssert(response.body)
-		pomAssert.hasPackaging('war')
+	public void generateMavenPomWithWarPackaging() {
+		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"), String.class);
+		PomAssert pomAssert = new PomAssert(response.getBody());
+		pomAssert.hasPackaging("war");
 	}
 
 }

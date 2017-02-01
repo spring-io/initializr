@@ -66,7 +66,7 @@ import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI
 @Slf4j
 class MainController extends AbstractInitializrController {
 
-	static final MediaType HAL_JSON_CONTENT_TYPE = MediaType.parseMediaType('application/hal+json')
+	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType.parseMediaType('application/hal+json')
 
 	private final ProjectGenerator projectGenerator
 	private final DependencyMetadataProvider dependencyMetadataProvider

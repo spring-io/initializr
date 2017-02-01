@@ -14,32 +14,33 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web
+package io.spring.initializr.web;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 
-import org.junit.runner.RunWith
-import org.springframework.boot.context.embedded.LocalServerPort
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit4.SpringRunner
+import org.junit.runner.RunWith;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author Stephane Nicoll
  * @author Dave Syer
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Config, webEnvironment = RANDOM_PORT)
-abstract class AbstractFullStackInitializrIntegrationTests
+@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
+public abstract class AbstractFullStackInitializrIntegrationTests
 		extends AbstractInitializrIntegrationTests {
 
 	@LocalServerPort
-	protected int port
+	protected int port;
 
-	String host = "localhost"
+	protected String host = "localhost";
 
-	String createUrl(String context) {
-		"http://${host}:${port}" + (context.startsWith('/') ? context : '/' + context)
+	protected String createUrl(String context) {
+		return "http://" + host + ":" + port
+				+ (context.startsWith("/") ? context : "/" + context);
 	}
 
 }
