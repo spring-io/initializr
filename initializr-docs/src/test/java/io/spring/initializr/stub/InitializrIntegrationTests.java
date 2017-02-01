@@ -26,8 +26,7 @@ import static org.springframework.boot.test.context.SpringBootTest.*;
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 // Need a spring boot app. Doesn't really have one
 @AutoConfigureStubRunner(
-		// TODO: can't hardcode the version there as it must be automatically replaced when releasing
-		ids = "io.spring.initializr:initializr-web:0.3.0.BUILD-SNAPSHOT",
+		ids = "io.spring.initializr:initializr-web",
 		workOffline = true)
 public class InitializrIntegrationTests {
 

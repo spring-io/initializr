@@ -74,6 +74,7 @@
 									<attributes>
 										<docinfo>true</docinfo>
 										<spring-boot-version>${spring.boot.version}</spring-boot-version>
+										<snippets>${basedir}/../initializr-web/target/snippets</snippets>
 									</attributes>
 								</configuration>
 							</execution>

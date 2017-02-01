@@ -39,6 +39,8 @@ public final class MockMvcClientHttpRequestFactoryTestExecutionListener
 					beanFactory.getBean(MockMvc.class));
 			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
 					this.factory);
+		} else {
+			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory", MockMvcClientHttpRequestFactory.class);
 		}
 	}
 
