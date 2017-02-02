@@ -30,17 +30,17 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.TestExecutionListeners.MergeMode
 
-import static org.junit.Assert.assertTrue
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment
-
 /**
  * @author Stephane Nicoll
  */
 @ContextConfiguration(classes = RestTemplateConfig)
-@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS, listeners = MockMvcClientHttpRequestFactoryTestExecutionListener)
+@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS,
+		listeners = MockMvcClientHttpRequestFactoryTestExecutionListener)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir="target/snippets", uriPort=80, uriHost="start.spring.io")
-abstract class AbstractInitializrControllerIntegrationTests extends AbstractInitializrIntegrationTests {
+@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80,
+		uriHost = "start.spring.io")
+abstract class AbstractInitializrControllerIntegrationTests
+		extends AbstractInitializrIntegrationTests {
 
 	String host = "start.spring.io"
 	

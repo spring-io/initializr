@@ -74,7 +74,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void dependencyInRange() {
 		def biz = new Dependency(id: 'biz', groupId: 'org.acme',
-		artifactId: 'biz', version: '1.3.5', scope: 'runtime')
+				artifactId: 'biz', version: '1.3.5', scope: 'runtime')
 		downloadTgz('/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE').isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
@@ -153,8 +153,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	}
 
 	@Test
-	void metadataWithNoAcceptHeader() {
-		//  rest template sets application/json by default
+	void metadataWithNoAcceptHeader() { //  rest template sets application/json by default
 		ResponseEntity<String> response = invokeHome(null, '*/*')
 		validateCurrentMetadata(response)
 	}
@@ -163,7 +162,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Ignore("Need a comparator that does not care about the number of elements in an array")
 	void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, '*/*')
-		validateMetadata(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, '2.0.0', JSONCompareMode.LENIENT)
+		validateMetadata(response, CURRENT_METADATA_MEDIA_TYPE, '2.0.0', JSONCompareMode.LENIENT)
 	}
 
 	@Test
@@ -187,7 +186,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void metadataWithSeveralAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null,
 				'application/vnd.initializr.v2.1+json', 'application/vnd.initializr.v2+json')
-		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE)
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
 

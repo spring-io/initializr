@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
  *
  * @author Andy Wilkinson
  * @author Jeremy Rickard
- *
  */
 //Copied from RestDocs to make it visible
 final class JsonFieldPath {
@@ -127,4 +126,5 @@ final class JsonFieldPath {
 		}
 		return segments;
 	}
+
 }

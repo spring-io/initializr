@@ -16,12 +16,6 @@
 
 package io.spring.initializr.web.test;
 
-import org.springframework.restdocs.RestDocumentationContext;
-import org.springframework.restdocs.operation.Operation;
-import org.springframework.restdocs.snippet.TemplatedSnippet;
-import org.springframework.restdocs.snippet.WriterResolver;
-import org.springframework.restdocs.templates.TemplateEngine;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
@@ -31,16 +25,21 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import org.springframework.restdocs.RestDocumentationContext;
+import org.springframework.restdocs.operation.Operation;
+import org.springframework.restdocs.snippet.TemplatedSnippet;
+import org.springframework.restdocs.snippet.WriterResolver;
+import org.springframework.restdocs.templates.TemplateEngine;
+
 /**
- * Creates a separate snippet for a single field in a larger payload. The output comes in
- * a sub-directory ("response-fields") of one containing the request and response
- * snippets, with a file name the same as the path. An exception to the last rule is if
- * you pick a single array element by using a path like `foo.bar[0]`, the snippet file
- * name is then just the array name (because asciidoctor cannot import snippets with
- * brackets in the name).
- * 
- * @author Dave Syer
+ * Creates a separate snippet for a single field in a larger payload. The output
+ * comes in a sub-directory ("response-fields") of one containing the request and
+ * response snippets, with a file name the same as the path. An exception to the last
+ * rule is if you pick a single array element by using a path like `foo.bar[0]`, the
+ * snippet file name is then just the array name (because asciidoctor cannot import
+ * snippets with brackets in the name).
  *
+ * @author Dave Syer
  */
 public class ResponseFieldSnippet extends TemplatedSnippet {
 
@@ -51,7 +50,7 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final Integer index;
-	
+
 	private final String file;
 
 	public ResponseFieldSnippet(String path) {
@@ -66,7 +65,8 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 			this.index = Integer.valueOf(index);
 			path = path.substring(0, path.lastIndexOf("["));
 			file = file.replace("]", "").replace("[", ".");
-		} else {
+		}
+		else {
 			this.index = null;
 		}
 		this.file = file;

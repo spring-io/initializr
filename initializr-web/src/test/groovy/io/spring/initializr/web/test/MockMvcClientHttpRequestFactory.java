@@ -16,6 +16,14 @@
 
 package io.spring.initializr.web.test;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,23 +39,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
  * @author Dave Syer
- *
  */
 public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory {
 
@@ -132,7 +129,7 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 	public void setTest(Class<?> testClass, Method testMethod) {
 		this.label = testMethod.getName();
 	}
-	
+
 	public void setFields(String... fields) {
 		this.fields = Arrays.asList(fields);
 	}

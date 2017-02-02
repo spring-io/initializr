@@ -16,14 +16,12 @@
 
 package io.spring.initializr.web
 
-import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config
-
 import org.junit.runner.RunWith
+
 import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 
-import static org.junit.Assert.assertTrue
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 
 /**
@@ -32,11 +30,12 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
-abstract class AbstractFullStackInitializrIntegrationTests extends AbstractInitializrIntegrationTests  {
-	
+abstract class AbstractFullStackInitializrIntegrationTests
+		extends AbstractInitializrIntegrationTests {
+
 	@LocalServerPort
 	int port
-	
+
 	String host = "localhost"
 
 	String createUrl(String context) {

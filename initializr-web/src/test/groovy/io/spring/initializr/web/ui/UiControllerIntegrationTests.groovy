@@ -17,11 +17,11 @@
 package io.spring.initializr.web.ui
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
-
 import org.json.JSONObject
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
+
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
@@ -30,7 +30,8 @@ import org.springframework.test.context.ActiveProfiles
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class UiControllerIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void dependenciesNoVersion() {
@@ -50,4 +51,5 @@ class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrati
 		def expected = readJsonFrom("metadata/ui/test-dependencies-$version" + ".json")
 		JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT)
 	}
+
 }

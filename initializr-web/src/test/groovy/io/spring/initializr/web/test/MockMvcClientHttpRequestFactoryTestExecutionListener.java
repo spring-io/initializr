@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * @author Dave Syer
- *
  */
 public final class MockMvcClientHttpRequestFactoryTestExecutionListener
 		extends AbstractTestExecutionListener {
@@ -39,7 +38,8 @@ public final class MockMvcClientHttpRequestFactoryTestExecutionListener
 					beanFactory.getBean(MockMvc.class));
 			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
 					this.factory);
-		} else {
+		}
+		else {
 			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory", MockMvcClientHttpRequestFactory.class);
 		}
 	}

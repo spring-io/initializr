@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web
 
+import java.nio.charset.Charset
+
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
@@ -23,7 +25,6 @@ import io.spring.initializr.metadata.InitializrProperties
 import io.spring.initializr.test.generator.ProjectAssert
 import io.spring.initializr.web.mapper.InitializrMetadataVersion
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider
-
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
@@ -31,6 +32,7 @@ import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
@@ -46,10 +48,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 
-import java.nio.charset.Charset
-
 import static org.junit.Assert.assertTrue
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 
 /**
  * @author Stephane Nicoll
@@ -234,4 +233,5 @@ abstract class AbstractInitializrIntegrationTests {
 		}
 
 	}
+
 }

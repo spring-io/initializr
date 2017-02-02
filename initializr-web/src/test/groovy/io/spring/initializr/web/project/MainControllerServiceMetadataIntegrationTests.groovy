@@ -16,16 +16,15 @@
 
 package io.spring.initializr.web.project
 
-import static org.junit.Assert.assertEquals
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests
-
 import org.json.JSONObject
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.UrlResource
 import org.springframework.http.HttpStatus
@@ -34,11 +33,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.client.HttpClientErrorException
 
+import static org.junit.Assert.assertEquals
+
 /**
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class MainControllerServiceMetadataIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
+class MainControllerServiceMetadataIntegrationTests
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider
@@ -70,7 +72,7 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractFullStackIni
 	void validateJson() {
 		ResponseEntity<String> response = execute('/metadata/config', String, null, 'application/json')
 		validateContentType(response, MediaType.APPLICATION_JSON)
-		JSONObject json =  new JSONObject(response.body)
+		JSONObject json = new JSONObject(response.body)
 		def expected = readJsonFrom("metadata/config/test-default.json")
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
 	}

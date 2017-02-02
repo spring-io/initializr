@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * extracted and removed.
  *
  * @author Andy Wilkinson
- *
  */
 // Copied from RestDocs to make it visible
 final class JsonFieldProcessor {
