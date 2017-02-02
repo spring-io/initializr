@@ -1,3 +1,4 @@
+!.mvn/wrapper/maven-wrapper.jar
 .gradle
 *.sw?
 .#*

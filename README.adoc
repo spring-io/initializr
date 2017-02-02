@@ -198,7 +198,7 @@ Just invoke the build at the root of the project
 
 [indent=0]
 ----
-    $ mvn clean install
+    $ ./mvnw clean install
 ----
 
 If you want to run the smoke tests using Geb, you need to enable the
@@ -213,7 +213,7 @@ If you want to build both the library and the service, you can enable the `full`
 
 [indent=0]
 ----
-    $ mvn clean install -Pfull
+    $ ./mvnw clean install -Pfull
 ----
 
 
@@ -226,7 +226,7 @@ Spring Boot app from the `initializr-service` directory:
 [indent=0]
 ----
     $ cd initializr-service
-    $ mvn spring-boot:run
+    $ ./mvnw spring-boot:run
 ----
 
 [[run-ide]]
@@ -262,7 +262,7 @@ the jar has been created:
 [indent=0]
 ----
     $ cd initializr-service
-    $ mvn package
+    $ ./mvnw package
 ----
 
 Once the jar has been created, you can push the application:
