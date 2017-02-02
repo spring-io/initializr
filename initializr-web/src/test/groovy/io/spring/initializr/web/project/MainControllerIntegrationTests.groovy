@@ -168,15 +168,15 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void metadataWithV2AcceptHeader() {
-		requests.setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
-				"javaVersion.values[0]", "packaging.values[0]", 
-				"bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2+json')
 		validateMetadata(response, InitializrMetadataVersion.V2.mediaType, '2.0.0', JSONCompareMode.STRICT)
 	}
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
+		requests.setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
+				"javaVersion.values[0]", "packaging.values[0]",
+				"bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2.1+json')
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE)

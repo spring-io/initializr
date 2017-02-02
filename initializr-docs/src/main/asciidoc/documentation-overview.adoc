@@ -1,0 +1,43 @@
+[[boot-documentation]]
+= Spring Initializr Documentation
+
+Spring Initializr provides an extensible API to generate quickstart projects. It also
+provides a configurable service: you can see our default instance at
+https://start.spring.io. It provides a simple web UI to configure the project to
+generate and endpoints that you can use via plain HTTP.
+
+Spring Initializr also exposes an endpoint that serves its metadata in a
+<<metadata-format.adoc#metadata-format,well-known format>> to allow third-party
+clients to provide the necessary assistance.
+
+Finally, Initializr offers a <<configuration-format.adoc#configuration-format,
+configuration structure>> to define all the aspects related to the project to
+generate: list of dependencies, supported java and boot versions, etc.
+
+
+
+[[initializr-documentation-about]]
+== About the documentation
+The Spring Initializr reference guide is available as
+{spring-initializr-docs}/html[html],
+{spring-initializr-docs}/pdf/spring-boot-reference.pdf[pdf]
+and {spring-initializr-docs}/epub/spring-boot-reference.epub[epub] documents. The
+latest copy is available at {spring-initializr-docs-current}.
+
+Copies of this document may be made for your own use and for
+distribution to others, provided that you do not charge any fee for such copies and
+further provided that each copy contains this Copyright Notice, whether distributed
+in print or electronically.
+
+
+
+[[initializr-documentation-getting-help]]
+== Getting help
+Having trouble with Spring Initializr, We'd like to help!
+
+* Ask a question on https://gitter.im/spring-io/initializr[Gitter].
+* Report bugs with Spring Initializr at https://github.com/spring-io/initializr/issues.
+
+NOTE: All of Spring Initializr is open source, including the documentation! If you
+find problems with the docs; or if you just want to improve them, please
+{github-code}[get involved].

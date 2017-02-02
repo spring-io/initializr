@@ -9,6 +9,10 @@
 	<artifactId>initializr-docs</artifactId>
 	<name>Spring Initializr :: Docs</name>
 
+	<properties>
+		<snippets.location>${project.build.directory}/snippets</snippets.location>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
@@ -57,9 +61,33 @@
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack-restdocs-snippets</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>io.spring.initializr</groupId>
+											<artifactId>initializr-web</artifactId>
+											<version>${project.version}</version>
+											<classifier>snippets</classifier>
+											<type>zip</type>
+											<outputDirectory>${snippets.location}</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.asciidoctor</groupId>
 						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>1.5.0</version>
 						<executions>
 							<execution>
 								<id>generate-docbook</id>
@@ -73,8 +101,10 @@
 									<doctype>book</doctype>
 									<attributes>
 										<docinfo>true</docinfo>
-										<spring-boot-version>${spring.boot.version}</spring-boot-version>
-										<snippets>${basedir}/../initializr-web/target/snippets</snippets>
+										<spring-initializr-version>${project.version}</spring-initializr-version>
+										<spring-initializr-docs-version>${project.version}</spring-initializr-docs-version>
+										<snippets>${snippets.location}</snippets>
+										<github-tag>${github-tag}</github-tag>
 									</attributes>
 								</configuration>
 							</execution>
@@ -83,7 +113,6 @@
 					<plugin>
 						<groupId>com.agilejava.docbkx</groupId>
 						<artifactId>docbkx-maven-plugin</artifactId>
-						<version>2.0.15</version>
 						<configuration>
 							<sourceDirectory>${basedir}/target/generated-docs</sourceDirectory>
 							<includes>index.xml</includes>
@@ -241,6 +270,22 @@
 										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
 											<fileset dir="${project.build.directory}/contents"/>
 										</zip>
+									</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>setup-maven-properties</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<exportAntProperties>true</exportAntProperties>
+									<target>
+										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+										<taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask" />
+										<var name="github-tag" value="v${project.version}" />
+										<propertyregex property="github-tag" override="true" input="${github-tag}" regexp=".*SNAPSHOT" replace="master" />
 									</target>
 								</configuration>
 							</execution>
