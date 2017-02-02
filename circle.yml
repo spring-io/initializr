@@ -9,3 +9,7 @@ dependencies:
 notify:
   webhooks:
     - url: https://webhooks.gitter.im/e/895bb7c544f3a8fe0e56
+
+test:
+  override:
+    - mvn clean install
