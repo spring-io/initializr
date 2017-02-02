@@ -19,7 +19,7 @@ package io.spring.initializr.web.project
 import io.spring.initializr.metadata.InitializrMetadata
 import io.spring.initializr.metadata.InitializrMetadataBuilder
 import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests
 import org.json.JSONObject
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
@@ -39,7 +39,8 @@ import static org.junit.Assert.assertEquals
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class MainControllerServiceMetadataIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class MainControllerServiceMetadataIntegrationTests
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider
@@ -71,7 +72,7 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractInitializrCo
 	void validateJson() {
 		ResponseEntity<String> response = execute('/metadata/config', String, null, 'application/json')
 		validateContentType(response, MediaType.APPLICATION_JSON)
-		JSONObject json =  new JSONObject(response.body)
+		JSONObject json = new JSONObject(response.body)
 		def expected = readJsonFrom("metadata/config/test-default.json")
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT)
 	}

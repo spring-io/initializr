@@ -30,7 +30,8 @@ import org.springframework.test.context.ActiveProfiles
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class UiControllerIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void dependenciesNoVersion() {

@@ -1,0 +1,174 @@
+[[metadata-format]]
+= Metadata Format
+This section describes the hal/json structure of the metadata exposed by the
+initializr. Such metadata can be used by third party clients to provide a list of
+options and default settings that can be used to request the creation of a project.
+
+Each third-party client is advised to set a `User-Agent` header for *each* request
+sent to the service. A good structure for a user agent is `clientId/clientVersion`
+(i.e. `foo/1.2.0` for the "foo" client and version `1.2.0`).
+
+
+
+== Content
+Any third party client can retrieve the capabilities of the service by issuing a
+`GET` on the root URL using the following `Accept` header:
+`application/vnd.initializr.v2.1+json`. Please note that the metadata may evolve in a
+non backward compatible way in the future so adding this header ensures the service
+returns the metadata format you expect.
+
+This is an example output for a service running at `https://start.spring.io`:
+
+.request
+include::{snippets}/metadataWithCurrentAcceptHeader/http-request.adoc[]
+
+.response
+include::{snippets}/metadataWithCurrentAcceptHeader/http-response.adoc[]
+
+The current capabilities are the following:
+
+* Project dependencies: these are the _starters_ really or actually any dependency
+that we might want to add to the project.
+* Project types: these define the action that can be invoked on this service and a
+description of what it would produce (for instance a zip holding a pre-configured
+Maven project). Each type may have one more tags that further define what it
+generates.
+* Packaging: the kind of projects to generate. This merely gives a hint to the
+component responsible to generate the project (for instance, generate an executable
+_jar_ project).
+* Java version: the supported java versions
+* Language: the language to use (e.g. Java)
+* Boot version: the Spring Boot version to use
+* Additional basic information such as: `groupId`, `artifactId`,  `version`, `name`,
+`description` and `packageName`.
+
+Each top-level attribute (i.e. capability) has a standard format:
+
+* A `type` attribute that defines the semantic of the attribute (see below).
+* A `default` attribute that defines either the default value or the reference to
+the default value.
+* A `values` attribute that defines the set of acceptable values (if any). This can
+be hierarchical (with `values` being held in `values`). Each item in a `values` array
+can have an `id`, `name` and `description`).
+
+The following attribute `type` are supported:
+
+* `text`: defines a simple text value with no option.
+* `single-select`: defines a simple value to be chosen amongst the specified options.
+* `hierarchical-multi-select`: defines a hierarchical set of values (values in
+values) with the ability to select multiple values.
+* `action`: a special type that defines the attribute defining the action to use.
+
+Each action is defined as a HAL-compliant URL. For instance, the `maven-project` type
+templated URL is defined as follows:
+
+.Type link example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/_links.maven-project.adoc[]
+
+You can use Spring HATEOAS and the `UriTemplate` helper in particular to generate an
+URI from template variables. Note that the variables match the name of top-level
+attribute in the metadata document. If you can't parse such URI, the `action`
+attribute of each type gives you the root action to invoke on the server. This
+requires more manual handling on your end.
+
+=== Project dependencies
+A dependency is usually the coordinates of a _starter_ module but it can be just as
+well be a regular dependency. A typical dependency structure looks like this:
+
+```json
+{
+  "name": "Display name",
+  "id": "org.acme.project:project-starter-foo",
+  "description": "What starter foo does"
+}
+```
+
+The name is used as a display name to be shown in whatever UI used by the remote
+client. The id can be anything, really as the actual dependency definition is
+defined through configuration. If no id is defined, a default one is built using the
+`groupId` and `artifactId` of the dependency. Note in particular that the version is
+**never** used as part of an automatic id.
+
+Each dependency belongs to a group. The idea of the group is to gather similar
+dependencies and order them. Here is a value containing the `core` group to
+illustrates the feature:
+
+.Dependency group example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/dependencies.values.0.adoc[]
+
+Each dependency can have _links_ (in a HAL-compliant format). Links are grouped by
+"relations" that provide a semantic to the link. A link can also have a _title_ and
+its URI can be templated. At the moment, the only valid parameter is `bootVersion`.
+
+The official relations are:
+
+* `guide`: link to an how-to or guide that explain how to get started
+* `reference`: link to a section of a reference guide (documentation)
+
+
+
+=== Project types
+The `type` element defines what kind of project can be generated and how. For
+instance, if the service exposes the capability to generate a Maven project, this
+would look like this:
+
+.Project type example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/type.values.0.adoc[]
+
+You should not rely on the output format depending that information. Always use the
+response headers that define a `Content-Type` and also a `Content-Disposition`
+header.
+
+Note that each id has a related HAL-compliant link that can be used to generate a
+proper URI based on template variables. The top-level `type` has, as any other
+attribute, a `default` attribute that is a hint to select what the service consider
+to be a good default.
+
+The `action` attribute defines the endpoint the client should contact to actually
+generate a project of that type if you can't use the HAL-compliant url.
+
+The `tags` object is used to categorize the project type and give _hints_ to 3rd
+party client. For instance, the _build_ tag defines the build system the project is
+going to use and the _format_ tag defines the format of the generated content (i.e.
+here a complete project vs. a build file. Note that the `Content-type` header of the
+reply provides additional metadata).
+
+
+
+=== Packaging
+The `packaging` element defines the kind of project that should be generated.
+
+.Packaging example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/packaging.values.0.adoc[]
+
+The obvious values for this element are `jar` and `war`.
+
+
+
+=== Java version
+The `javaVersion` element provides a list of possible java versions for the project:
+
+.Java example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/javaVersion.values.0.adoc[]
+
+
+
+=== Languages
+The `language` element provides a list of possible languages for the project:
+
+.Language example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/language.values.0.adoc[]
+
+
+
+=== Boot version
+The `bootVersion` element provides the list of available boot versions
+
+.Spring Boot version example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/bootVersion.values.0.adoc[]
+
+
+
+== Defaults
+Each top-level element has a `default` attribute that should be used as a hint to
+provide the default value in the relevant UI component.

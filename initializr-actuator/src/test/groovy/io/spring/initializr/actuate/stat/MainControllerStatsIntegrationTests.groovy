@@ -17,7 +17,7 @@
 package io.spring.initializr.actuate.stat
 
 import groovy.json.JsonSlurper
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests
 import org.junit.Before
 import org.junit.Test
 
@@ -46,7 +46,8 @@ import static org.junit.Assert.fail
  */
 @Import(StatsMockController)
 @ActiveProfiles(['test-default', 'test-custom-stats'])
-class MainControllerStatsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class MainControllerStatsIntegrationTests
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private StatsMockController statsMockController

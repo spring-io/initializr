@@ -162,7 +162,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Ignore("Need a comparator that does not care about the number of elements in an array")
 	void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, '*/*')
-		validateMetadata(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, '2.0.0', JSONCompareMode.LENIENT)
+		validateMetadata(response, CURRENT_METADATA_MEDIA_TYPE, '2.0.0', JSONCompareMode.LENIENT)
 	}
 
 	@Test
@@ -173,6 +173,9 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
+		requests.setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
+				"javaVersion.values[0]", "packaging.values[0]",
+				"bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null, 'application/vnd.initializr.v2.1+json')
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()))
 		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE)
@@ -183,7 +186,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void metadataWithSeveralAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null,
 				'application/vnd.initializr.v2.1+json', 'application/vnd.initializr.v2+json')
-		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE)
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE)
 		validateCurrentMetadata(new JSONObject(response.body))
 	}
 

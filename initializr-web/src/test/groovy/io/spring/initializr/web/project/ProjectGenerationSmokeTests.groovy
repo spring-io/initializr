@@ -18,7 +18,7 @@ package io.spring.initializr.web.project
 
 import geb.Browser
 import io.spring.initializr.test.generator.ProjectAssert
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests
 import io.spring.initializr.web.project.test.HomePage
 import org.junit.After
 import org.junit.Assume
@@ -40,7 +40,8 @@ import static org.junit.Assert.assertTrue
  * @author Stephane Nicoll
  */
 @ActiveProfiles('test-default')
-class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegrationTests {
+class ProjectGenerationSmokeTests
+		extends AbstractFullStackInitializrIntegrationTests {
 
 	private File downloadDir
 	private WebDriver driver
@@ -388,7 +389,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			def projectAssert = zipProjectAssert(from('demo.zip'))
 			projectAssert.hasBaseDir('demo')
 					.isMavenProject()
-					.isGroovyProject('com.example.acme', ProjectAssert.DEFAULT_APPLICATION_NAME )
+					.isGroovyProject('com.example.acme', ProjectAssert.DEFAULT_APPLICATION_NAME)
 					.hasStaticAndTemplatesResources(false)
 					.pomAssert().hasDependenciesCount(3)
 					.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
@@ -419,7 +420,7 @@ class ProjectGenerationSmokeTests extends AbstractInitializrControllerIntegratio
 			def projectAssert = zipProjectAssert(from('my-project.zip'))
 			projectAssert.hasBaseDir('my-project')
 					.isMavenProject()
-					.isJavaProject('com.example.acme', 'MyProjectApplication' )
+					.isJavaProject('com.example.acme', 'MyProjectApplication')
 					.hasStaticAndTemplatesResources(false)
 					.pomAssert()
 					.hasGroupId('com.example.acme')
