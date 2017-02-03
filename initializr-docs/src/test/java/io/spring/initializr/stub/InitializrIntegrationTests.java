@@ -50,8 +50,7 @@ public class InitializrIntegrationTests {
 	}
 
 	private URI createUri(String path) {
-		String url = this.stubFinder.findStubUrl(
-				"io.spring.initializr:initializr-web").toString();
+		String url = this.stubFinder.findStubUrl("initializr-web").toString();
 		return URI.create(url + path);
 	}
 
