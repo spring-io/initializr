@@ -95,7 +95,7 @@ initializr:
       stormpath-bom:
         groupId: com.stormpath.sdk
         artifactId: stormpath-bom
-        version: 1.5.0
+        version: 1.5.2
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
