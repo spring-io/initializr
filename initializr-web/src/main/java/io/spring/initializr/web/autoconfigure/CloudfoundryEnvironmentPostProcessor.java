@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.autoconfigure
+package io.spring.initializr.web.autoconfigure;
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.context.config.ConfigFileApplicationListener
-import org.springframework.boot.env.EnvironmentPostProcessor
-import org.springframework.core.Ordered
-import org.springframework.core.env.ConfigurableEnvironment
-import org.springframework.core.env.MapPropertySource
-import org.springframework.core.env.MutablePropertySources
-import org.springframework.core.env.PropertySource
-import org.springframework.util.StringUtils
-import org.springframework.web.util.UriComponents
-import org.springframework.web.util.UriComponentsBuilder
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.config.ConfigFileApplicationListener;
+import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.core.Ordered;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Post-process the environment to extract the service credentials provided by
@@ -34,7 +37,8 @@ import org.springframework.web.util.UriComponentsBuilder
  *
  * @author Stephane Nicoll
  */
-class CloudfoundryEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
+public class CloudfoundryEnvironmentPostProcessor
+		implements EnvironmentPostProcessor, Ordered {
 
 	private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
 
@@ -44,18 +48,18 @@ class CloudfoundryEnvironmentPostProcessor implements EnvironmentPostProcessor, 
 	public void postProcessEnvironment(ConfigurableEnvironment environment,
 									   SpringApplication springApplication) {
 
-		Map<String,Object> map = [:]
-		String uri = environment.getProperty('vcap.services.stats-index.credentials.uri')
+		Map<String,Object> map = new LinkedHashMap<>();
+		String uri = environment.getProperty("vcap.services.stats-index.credentials.uri");
 		if (StringUtils.hasText(uri)) {
-			UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build()
-			def userInfo = uriComponents.getUserInfo()
-			if (userInfo) {
-				String[] credentials = userInfo.split(':')
-				map['initializr.stats.elastic.username'] = credentials[0]
-				map['initializr.stats.elastic.password'] = credentials[1]
+			UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
+			String userInfo = uriComponents.getUserInfo();
+			if (StringUtils.hasText(userInfo)) {
+				String[] credentials = userInfo.split(":");
+				map.put("initializr.stats.elastic.username", credentials[0]);
+				map.put("initializr.stats.elastic.password", credentials[1]);
 			}
-			map['initializr.stats.elastic.uri'] = UriComponentsBuilder.fromUriString(uri)
-					.userInfo(null).build().toString()
+			map.put("initializr.stats.elastic.uri", UriComponentsBuilder.fromUriString(uri)
+					.userInfo(null).build().toString());
 
 			addOrReplace(environment.getPropertySources(), map);
 		}
@@ -63,19 +67,19 @@ class CloudfoundryEnvironmentPostProcessor implements EnvironmentPostProcessor, 
 
 	@Override
 	public int getOrder() {
-		return this.order
+		return this.order;
 	}
 
 	private static void addOrReplace(MutablePropertySources propertySources,
 							  Map<String, Object> map) {
-		MapPropertySource target = null
+		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
-			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME)
+			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);
 			if (source instanceof MapPropertySource) {
-				target = (MapPropertySource) source
+				target = (MapPropertySource) source;
 				for (String key : map.keySet()) {
 					if (!target.containsProperty(key)) {
-						target.getSource().put(key, map.get(key))
+						target.getSource().put(key, map.get(key));
 					}
 				}
 			}

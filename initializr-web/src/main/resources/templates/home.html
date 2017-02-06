@@ -3,9 +3,9 @@
 <head>
     <title>Spring Initializr</title>
     <link href="//fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="${linkTo.call('/css/bootstrap.min.css')}"/>
-    <link rel="stylesheet" href="${linkTo.call('/css/bootstrap-theme.min.css')}"/>
-    <link rel="stylesheet" href="${linkTo.call('/css/spring.css')}"/>
+    <link rel="stylesheet" href="${linkTo.apply('/css/bootstrap.min.css')}"/>
+    <link rel="stylesheet" href="${linkTo.apply('/css/bootstrap-theme.min.css')}"/>
+    <link rel="stylesheet" href="${linkTo.apply('/css/spring.css')}"/>
     <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -170,10 +170,10 @@
             and <a href="https://run.pivotal.io">Pivotal Web Services</a></p>
     </div>
 </footer>
-<script src="${linkTo.call('/js/jquery-3.1.1.min.js')}"></script>
-<script src="${linkTo.call('/js/typeahead.bundle.min.js')}"></script>
-<script src="${linkTo.call('/js/mousetrap.min.js')}"></script>
-<script src="${linkTo.call('/js/start.js')}"></script>
+<script src="${linkTo.apply('/js/jquery-3.1.1.min.js')}"></script>
+<script src="${linkTo.apply('/js/typeahead.bundle.min.js')}"></script>
+<script src="${linkTo.apply('/js/mousetrap.min.js')}"></script>
+<script src="${linkTo.apply('/js/start.js')}"></script>
 <% if (trackingCode) { %>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

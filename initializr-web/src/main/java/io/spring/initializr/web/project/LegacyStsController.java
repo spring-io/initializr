@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project
+package io.spring.initializr.web.project;
 
-import io.spring.initializr.metadata.InitializrMetadataProvider
-import io.spring.initializr.util.GroovyTemplate
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.util.GroovyTemplate;
 
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.servlet.resource.ResourceUrlProvider
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
  * A controller used to serve the legacy home page used by STS.
@@ -30,18 +30,17 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider
  * @author Stephane Nicoll
  */
 @Controller
-@Deprecated
-class LegacyStsController extends AbstractInitializrController {
+public class LegacyStsController extends AbstractInitializrController {
 
-	LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider,
+	public LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider,
 						GroovyTemplate groovyTemplate) {
-		super(metadataProvider, resourceUrlProvider, groovyTemplate)
+		super(metadataProvider, resourceUrlProvider, groovyTemplate);
 	}
 
-	@RequestMapping(value = '/sts', produces = 'text/html')
+	@RequestMapping(value = "/sts", produces = "text/html")
 	@ResponseBody
-	String stsHome() {
-		renderHome('sts-home.html')
+	public String stsHome() throws Exception {
+		return renderHome("sts-home.html");
 	}
 
 }

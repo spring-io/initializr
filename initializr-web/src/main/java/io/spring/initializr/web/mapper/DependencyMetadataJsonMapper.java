@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.mapper
+package io.spring.initializr.web.mapper;
 
-import io.spring.initializr.metadata.DependencyMetadata
+import io.spring.initializr.metadata.DependencyMetadata;
 
 /**
  * Generate a JSON representation of a set of dependencies.

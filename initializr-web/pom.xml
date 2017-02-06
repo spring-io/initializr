@@ -36,6 +36,14 @@
 			<groupId>com.github.ben-manes.caffeine</groupId>
 			<artifactId>caffeine</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.rauschig</groupId>
+			<artifactId>jarchivelib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
@@ -96,11 +104,6 @@
 		<dependency>
 			<groupId>org.gebish</groupId>
 			<artifactId>geb-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.rauschig</groupId>
-			<artifactId>jarchivelib</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.mapper
+package io.spring.initializr.web.mapper;
 
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType;
 
 /**
  * Define the supported metadata version.
  *
  * @author Stephane Nicoll
  */
-enum InitializrMetadataVersion {
+public enum InitializrMetadataVersion {
 
 	/**
 	 * HAL-compliant metadata.
 	 */
-	V2('application/vnd.initializr.v2+json'),
+	V2("application/vnd.initializr.v2+json"),
 
 	/**
-	 * Add 'versionRange' attribute to any dependency to specify which
+	 * Add "versionRange" attribute to any dependency to specify which
 	 * Spring Boot versions are compatible with it. Also provide a
-	 * separate 'dependencies' endpoint to query dependencies metadata.
+	 * separate "dependencies" endpoint to query dependencies metadata.
 	 */
-	V2_1('application/vnd.initializr.v2.1+json')
+	V2_1("application/vnd.initializr.v2.1+json");
 
 	private final MediaType mediaType;
 
-	InitializrMetadataVersion(String mediaType) {
-		this.mediaType = MediaType.parseMediaType(mediaType)
+	private InitializrMetadataVersion(String mediaType) {
+		this.mediaType = MediaType.parseMediaType(mediaType);
 	}
 
-	MediaType getMediaType() {
-		return mediaType
+	public MediaType getMediaType() {
+		return mediaType;
 	}
 
 }

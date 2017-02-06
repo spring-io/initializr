@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.mapper
+package io.spring.initializr.web.mapper;
 
-import io.spring.initializr.metadata.InitializrMetadata
+import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
  * Generate a JSON representation of the metadata.
  *
  * @author Stephane Nicoll
  */
-interface InitializrMetadataJsonMapper {
+public interface InitializrMetadataJsonMapper {
 
 	/**
 	 * Write a json representation of the specified metadata.

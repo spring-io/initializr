@@ -36,8 +36,8 @@ import io.spring.initializr.util.VersionRange
 @ToString(ignoreNulls = true, includePackage = false)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
-class Dependency extends MetadataElement {
 
+class Dependency extends MetadataElement implements Describable {
 	static final String SCOPE_COMPILE = 'compile'
 	static final String SCOPE_COMPILE_ONLY = 'compileOnly'
 	static final String SCOPE_RUNTIME = 'runtime'
