@@ -104,4 +104,16 @@ class Link {
 		new URI(result)
 	}
 
+	public static Link create(String rel, String href) {
+		return new Link(rel: rel, href: href);
+	}
+
+	public static Link create(String rel, String href, String description) {
+		return new Link(rel: rel, href: href, description: description);
+	}
+
+	public static Link create(String rel, String href, boolean templated) {
+		return new Link(rel: rel, href: href, templated: templated);
+	}
+
 }

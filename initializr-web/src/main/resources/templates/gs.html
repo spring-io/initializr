@@ -39,8 +39,10 @@
       </div>
       <h1>Getting Started</h1>
       <div>
-        <ul><% repos.each { %>
-            <li><a href="/gs/${it.repo}">${it.name}</a></li><% } %>
+        <ul>
+        {{#repos}}
+            <li><a href="/gs/{{repo}}">{{name}}}</a></li>
+        {{/repos}}
         </ul>
       </div>
     </div>
