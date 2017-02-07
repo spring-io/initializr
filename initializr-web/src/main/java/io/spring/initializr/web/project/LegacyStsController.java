@@ -16,13 +16,13 @@
 
 package io.spring.initializr.web.project;
 
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.util.GroovyTemplate;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
+
+import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 /**
  * A controller used to serve the legacy home page used by STS.
@@ -32,15 +32,15 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Controller
 public class LegacyStsController extends AbstractInitializrController {
 
-	public LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider,
-						GroovyTemplate groovyTemplate) {
-		super(metadataProvider, resourceUrlProvider, groovyTemplate);
+	public LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider) {
+		super(metadataProvider, resourceUrlProvider);
 	}
-
+	
 	@RequestMapping(value = "/sts", produces = "text/html")
-	@ResponseBody
-	public String stsHome() throws Exception {
-		return renderHome("sts-home.html");
+	public String stsHome(Map<String, Object> model) throws Exception {
+		renderHome(model);
+		return "sts-home";
 	}
 
 }
+

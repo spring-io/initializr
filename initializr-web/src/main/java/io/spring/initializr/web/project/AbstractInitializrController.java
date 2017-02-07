@@ -18,7 +18,6 @@ package io.spring.initializr.web.project;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -34,7 +33,6 @@ import io.spring.initializr.generator.InvalidProjectRequestException;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.TypeCapability;
-import io.spring.initializr.util.GroovyTemplate;
 
 /**
  * A base controller that uses a {@link InitializrMetadataProvider}
@@ -44,14 +42,12 @@ import io.spring.initializr.util.GroovyTemplate;
 public abstract class AbstractInitializrController {
 
 	protected final InitializrMetadataProvider metadataProvider;
-	private final GroovyTemplate groovyTemplate;
 	private final Function<String, String> linkTo;
 	private Boolean forceSsl;
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
-			ResourceUrlProvider resourceUrlProvider, GroovyTemplate groovyTemplate) {
+			ResourceUrlProvider resourceUrlProvider) {
 		this.metadataProvider = metadataProvider;
-		this.groovyTemplate = groovyTemplate;
 		this.linkTo = link -> {
 			String result = resourceUrlProvider.getForLookupPath(link);
 			return result == null ? link : result;
@@ -76,10 +72,9 @@ public abstract class AbstractInitializrController {
 	/**
 	 * Render the home page with the specified template.
 	 */
-	protected String renderHome(String templatePath) throws Exception {
+	protected void renderHome(Map<String,Object> model) throws Exception {
 		InitializrMetadata metadata = metadataProvider.get();
 
-		Map<String,Object> model = new LinkedHashMap<>();
 		model.put("serviceUrl", generateAppUrl());
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
 		for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
@@ -94,10 +89,10 @@ public abstract class AbstractInitializrController {
 		model.put("trackingCode",
 				metadata.getConfiguration().getEnv().getGoogleAnalyticsTrackingCode());
 
-		// Linking to static resources
-		model.put("linkTo", this.linkTo);
+	}
 
-		return groovyTemplate.process(templatePath, model);
+	public Function<String, String> getLinkTo() {
+		return linkTo;
 	}
 
 	private TypeCapability removeTypes(TypeCapability types) {

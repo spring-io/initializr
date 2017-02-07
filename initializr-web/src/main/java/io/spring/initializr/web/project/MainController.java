@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
+import com.samskivert.mustache.Mustache;
+
 import io.spring.initializr.generator.BasicProjectRequest;
 import io.spring.initializr.generator.CommandLineHelpGenerator;
 import io.spring.initializr.generator.ProjectGenerator;
@@ -86,7 +88,7 @@ public class MainController extends AbstractInitializrController {
 			GroovyTemplate groovyTemplate, ResourceUrlProvider resourceUrlProvider,
 			ProjectGenerator projectGenerator,
 			DependencyMetadataProvider dependencyMetadataProvider) {
-		super(metadataProvider, resourceUrlProvider, groovyTemplate);
+		super(metadataProvider, resourceUrlProvider);
 		this.projectGenerator = projectGenerator;
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(groovyTemplate);
@@ -204,10 +206,17 @@ public class MainController extends AbstractInitializrController {
 				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
 	}
 
+	@ModelAttribute("linkTo")
+	public Mustache.Lambda linkTo() {
+		return (frag, out) -> {
+			out.write(this.getLinkTo().apply(frag.execute()));
+		};
+	}
+
 	@RequestMapping(value = "/", produces = "text/html")
-	@ResponseBody
-	public String home() throws Exception {
-		return renderHome("home.html");
+	public String home(Map<String, Object> model) throws Exception {
+		renderHome(model);
+		return "home";
 	}
 
 	@RequestMapping("/spring")
@@ -317,3 +326,5 @@ public class MainController extends AbstractInitializrController {
 	}
 
 }
+
+
