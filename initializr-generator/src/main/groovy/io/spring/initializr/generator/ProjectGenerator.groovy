@@ -67,9 +67,10 @@ class ProjectGenerator {
 	@Autowired
 	ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator()
 
-	@Value('${TMPDIR:.}')
+	@Value('${TMPDIR:.}/initializr')
 	String tmpdir
 
+	private File temporaryDirectory
 	private transient Map<String, List<File>> temporaryFiles = [:]
 
 	/**
@@ -126,7 +127,7 @@ class ProjectGenerator {
 	protected File doGenerateProjectStructure(ProjectRequest request) {
 		def model = resolveModel(request)
 
-		def rootDir = File.createTempFile('tmp', '', new File(tmpdir))
+		def rootDir = File.createTempFile('tmp', '', getTemporaryDirectory())
 		addTempFile(rootDir.name, rootDir)
 		rootDir.delete()
 		rootDir.mkdirs()
@@ -182,9 +183,17 @@ class ProjectGenerator {
 	 * directory and extension
 	 */
 	File createDistributionFile(File dir, String extension) {
-		def download = new File(tmpdir, dir.name + extension)
+		def download = new File(getTemporaryDirectory(), dir.name + extension)
 		addTempFile(dir.name, download)
 		download
+	}
+
+	private File getTemporaryDirectory() {
+		if (!temporaryDirectory) {
+			temporaryDirectory = new File(tmpdir, 'initializr')
+			temporaryDirectory.mkdirs()
+		}
+		temporaryDirectory
 	}
 
 	/**
