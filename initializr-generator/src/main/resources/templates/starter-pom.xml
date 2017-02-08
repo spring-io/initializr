@@ -19,8 +19,8 @@
 	</parent>
 
 	<properties><% buildProperties.maven.each { %>
-		<${it.key}>${it.value()}</${it.key}><% } %><%buildProperties.versions.each { %>
-		<${it.key}>${it.value()}</${it.key}><%}%>
+		<${it.key}>${((java.util.function.Supplier)it.value).get()}</${it.key}><% } %><%buildProperties.versions.each { %>
+		<${it.key}>${((java.util.function.Supplier)it.value).get()}</${it.key}><%}%>
 	</properties>
 
 	<dependencies><% compileDependencies.each { %>
