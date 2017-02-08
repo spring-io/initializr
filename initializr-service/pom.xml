@@ -53,10 +53,6 @@
 		<finalName>initializr-service</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
 				<executions>
