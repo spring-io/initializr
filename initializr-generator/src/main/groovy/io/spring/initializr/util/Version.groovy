@@ -82,7 +82,7 @@ final class Version implements Serializable, Comparable<Version> {
 	 * @return a Version instance for the specified version text
 	 * @see {@link VersionParser}
 	 */
-	static safeParse(String text) {
+	static Version safeParse(String text) {
 		try {
 			return parse(text)
 		} catch (InvalidVersionException e) {
