@@ -1,6 +1,6 @@
 buildscript {
 	ext {<% buildProperties.gradle.each { %>
-		${it.key} = '${it.value.call()}'<% } %>
+		${it.key} = '${((java.util.function.Supplier)it.value).get()}'<% } %>
 	}
 	repositories {
 		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
@@ -39,7 +39,7 @@ repositories {
 	providedRuntime
 }
 <% } %><% if (buildProperties.versions) { %><%buildProperties.versions.each { %>
-ext['${it.key}'] = '${it.value.call()}'<% } %>
+ext['${it.key}'] = '${((java.util.function.Supplier)it.value).get()}'<% } %>
 <% } %>
 dependencies {<% compileDependencies.each { %>
 	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% if (language=='groovy') { %>
