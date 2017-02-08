@@ -436,7 +436,8 @@ class HomePage {
 	}
 
 	public void advanced() {
-		form.findElement(By.cssSelector(".tofullversion")).click();
+		form.findElement(By.cssSelector(".tofullversion"))
+				.findElement(By.tagName("a")).click();
 	}
 
 	public void simple() {
