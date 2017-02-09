@@ -1,11 +1,11 @@
-${logo}
-:: Service capabilities ::  ${serviceUrl}
+{{{logo}}}
+:: Service capabilities ::  {{serviceUrl}}
 
 Supported dependencies
-${dependencies}
+{{{dependencies}}}
 
 Project types (* denotes the default)
-${types}
+{{{types}}}
 
 Parameters
-${parameters}
+{{{parameters}}}

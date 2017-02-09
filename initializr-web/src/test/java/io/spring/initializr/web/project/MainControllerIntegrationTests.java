@@ -409,8 +409,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void homeHasBootVersion() {
 		String body = htmlHome();
-		assertTrue("Wrong body:\n$body", body.contains("name=\"bootVersion\""));
-		assertTrue("Wrong body:\n$body", body.contains("1.2.0.BUILD-SNAPSHOT\""));
+		assertTrue("Wrong body:\n" + body, body.contains("name=\"bootVersion\""));
+		assertTrue("Wrong body:\n" + body, body.contains("1.2.0.BUILD-SNAPSHOT\""));
 	}
 
 	@Test

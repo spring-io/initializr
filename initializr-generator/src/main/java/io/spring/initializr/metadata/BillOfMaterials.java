@@ -151,7 +151,8 @@ public class BillOfMaterials {
 	 * is defined, this returns the reference for the property. Otherwise this returns the
 	 * plain {@link #version}
 	 */
-	public String determineVersionToken() {
+	@JsonIgnore
+	public String getVersionToken() {
 		return (versionProperty != null ? "${" + versionProperty + "}" : version);
 	}
 

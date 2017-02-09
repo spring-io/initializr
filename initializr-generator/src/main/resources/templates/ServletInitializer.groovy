@@ -8,10 +8,11 @@ import org.springframework.boot.web.support.SpringBootServletInitializer
 import org.springframework.boot.context.web.SpringBootServletInitializer
 {{/newServletInitializer}}
 
-class ServletInitializer : SpringBootServletInitializer() {
+class ServletInitializer extends SpringBootServletInitializer {
 
-	override fun configure(application: SpringApplicationBuilder) : SpringApplicationBuilder {
-		return application.sources({{applicationName}}::class.java)
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		application.sources({{applicationName}})
 	}
 
 }

@@ -1,7 +1,12 @@
-<% if (build=='maven') {  %>target/
-!.mvn/wrapper/maven-wrapper.jar<% } else { %>.gradle
+{{#mavenBuild}}
+target/
+!.mvn/wrapper/maven-wrapper.jar
+{{/mavenBuild}}
+{{^mavenBuild}}
+.gradle
 /build/
-!gradle/wrapper/gradle-wrapper.jar<% } %>
+!gradle/wrapper/gradle-wrapper.jar
+{{/mavenBuild}}
 
 ### STS ###
 .apt_generated

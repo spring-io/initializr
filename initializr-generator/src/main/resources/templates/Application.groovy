@@ -18,8 +18,9 @@ import org.springframework.context.annotation.Configuration
 @ComponentScan
 @EnableAutoConfiguration
 {{/useSpringBootApplication}}
-class {{applicationName}}
+class {{applicationName}} {
 
-fun main(args: Array<String>) {
-    SpringApplication.run({{applicationName}}::class.java, *args)
+	static void main(String[] args) {
+		SpringApplication.run {{applicationName}}, args
+	}
 }

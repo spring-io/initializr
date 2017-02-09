@@ -26,7 +26,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
-import io.spring.initializr.util.GroovyTemplate;
+import io.spring.initializr.util.TemplateRenderer;
 
 /**
  * Generate help pages for command-line clients.
@@ -42,9 +42,9 @@ public class CommandLineHelpGenerator {
 			+ "  '  |____| .__|_| |_|_| |_\\__, | / / / /\n"
 			+ " =========|_|==============|___/=/_/_/_/";
 
-	private final GroovyTemplate template;
+	private final TemplateRenderer template;
 
-	public CommandLineHelpGenerator(GroovyTemplate template) {
+	public CommandLineHelpGenerator(TemplateRenderer template) {
 		this.template = template;
 	}
 
