@@ -413,24 +413,60 @@ public class Dependency extends MetadataElement implements Describable {
 		/**
 		 * The version range of this mapping.
 		 */
-		String versionRange;
+		private String versionRange;
 
 		/**
 		 * The version to use for this mapping or {@code null} to use the default.
 		 */
-		String groupId;
+		private String groupId;
 
 		/**
 		 * The groupId to use for this mapping or {@code null} to use the default.
 		 */
-		String artifactId;
+		private String artifactId;
 
 		/**
 		 * The artifactId to use for this mapping or {@code null} to use the default.
 		 */
-		String version;
+		private String version;
 
 		private VersionRange range;
+
+		public String getGroupId() {
+			return groupId;
+		}
+
+		public void setGroupId(String groupId) {
+			this.groupId = groupId;
+		}
+
+		public String getArtifactId() {
+			return artifactId;
+		}
+
+		public void setArtifactId(String artifactId) {
+			this.artifactId = artifactId;
+		}
+
+		public String getVersion() {
+			return version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
+		public VersionRange getRange() {
+			return range;
+		}
+
+		public String getVersionRange() {
+			return versionRange;
+		}
+
+		public void setVersionRange(String versionRange) {
+			this.versionRange = versionRange;
+		}
 
 		public static Mapping create(String range, String groupId, String artifactId,
 				String version) {
