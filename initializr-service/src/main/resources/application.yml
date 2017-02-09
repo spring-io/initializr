@@ -525,6 +525,13 @@ initializr:
               description: Accessing Data with MongoDB
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb
+        - name: Reactive MongoDB
+          id: data-mongodb-reactive
+          description: MongoDB NoSQL Database, including spring-data-mongodb and the reactive driver
+          weight: 50
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb
         - name: Cassandra
           id: data-cassandra
           description: Cassandra NoSQL Database, including spring-data-cassandra
@@ -1068,6 +1075,7 @@ initializr:
           bom: experimental-reactive-bom
           versionRange: 2.0.0.BUILD-SNAPSHOT
           description: Reactive web development with Apache Tomcat and Spring Reactive (experimental)
+          weight: 75
   types:
     - name: Maven Project
       id: maven-project
