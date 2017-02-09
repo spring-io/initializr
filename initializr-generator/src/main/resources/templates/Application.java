@@ -1,18 +1,26 @@
-package ${packageName};
+package {{packageName}};
 
-import org.springframework.boot.SpringApplication;<% if (useSpringBootApplication) { %>
-import org.springframework.boot.autoconfigure.SpringBootApplication;<% } else { %>
+import org.springframework.boot.SpringApplication;
+{{#useSpringBootApplication}}
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+{{/useSpringBootApplication}}
+{{^useSpringBootApplication}}
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;<% } %>
-<% if (useSpringBootApplication) { %>
-@SpringBootApplication<% } else { %>
+import org.springframework.context.annotation.Configuration;
+{{/useSpringBootApplication}}
+
+{{#useSpringBootApplication}}
+@SpringBootApplication
+{{/useSpringBootApplication}}
+{{^useSpringBootApplication}}
 @Configuration
 @ComponentScan
-@EnableAutoConfiguration <% } %>
-public class ${applicationName} {
+@EnableAutoConfiguration
+{{/useSpringBootApplication}}
+public class {{applicationName}} {
 
 	public static void main(String[] args) {
-		SpringApplication.run(${applicationName}.class, args);
+		SpringApplication.run({{applicationName}}.class, args);
 	}
 }

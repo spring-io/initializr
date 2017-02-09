@@ -333,7 +333,7 @@ public class InitializrConfiguration {
 			/**
 			 * Version of the "dependency-management-plugin" to use.
 			 */
-			private String dependencyManagementPluginVersion;
+			private String dependencyManagementPluginVersion = "1.0.0.RELEASE";
 
 			private void merge(Gradle other) {
 				dependencyManagementPluginVersion = other.dependencyManagementPluginVersion;

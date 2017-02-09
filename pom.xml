@@ -98,17 +98,6 @@
 				<version>1.5</version>
 			</dependency>
 			<dependency>
-				<groupId>org.gebish</groupId>
-				<artifactId>geb-core</artifactId>
-				<version>0.10.0</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-all</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
 				<groupId>org.rauschig</groupId>
 				<artifactId>jarchivelib</artifactId>
 				<version>0.7.1</version>

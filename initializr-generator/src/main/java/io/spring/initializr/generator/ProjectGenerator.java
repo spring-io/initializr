@@ -43,7 +43,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.util.GroovyTemplate;
+import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 
 /**
@@ -79,7 +79,7 @@ public class ProjectGenerator {
 	private ProjectRequestResolver requestResolver;
 
 	@Autowired
-	private GroovyTemplate groovyTemplate = new GroovyTemplate();
+	private TemplateRenderer templateRenderer = new TemplateRenderer();
 
 	@Autowired
 	private ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator();
@@ -106,8 +106,8 @@ public class ProjectGenerator {
 		this.requestResolver = requestResolver;
 	}
 
-	public void setGroovyTemplate(GroovyTemplate groovyTemplate) {
-		this.groovyTemplate = groovyTemplate;
+	public void setTemplateRenderer(TemplateRenderer templateRenderer) {
+		this.templateRenderer = templateRenderer;
 	}
 
 	public void setProjectResourceLocator(ProjectResourceLocator projectResourceLocator) {
@@ -299,7 +299,13 @@ public class ProjectGenerator {
 	 */
 	protected void generateGitIgnore(File dir, ProjectRequest request) {
 		Map<String, Object> model = new LinkedHashMap<>();
-		model.put("build", isGradleBuild(request) ? "gradle" : "maven");
+		if (isMavenBuild(request)) {
+			model.put("build", "maven");
+			model.put("mavenBuild", true);
+		}
+		else {
+			model.put("build", "gradle");
+		}
 		write(new File(dir, ".gitignore"), "gitignore.tmpl", model);
 	}
 
@@ -323,7 +329,12 @@ public class ProjectGenerator {
 		log.info("Processing request{type=" + request.getType() + ", dependencies="
 				+ dependencyIds);
 
+		if (isWar(request)) {
+			model.put("war", true);
+		}
+
 		if (isMavenBuild(request)) {
+			model.put("mavenBuild", true);
 			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
 					.resolveParentPom(request.getBootVersion());
 			if (parentPom.isIncludeSpringBootBom()
@@ -338,9 +349,17 @@ public class ProjectGenerator {
 			model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
 		}
 
+		model.put("repositoryValues", request.getRepositories().entrySet());
+		if (!request.getRepositories().isEmpty()) {
+			model.put("hasRepositories", true);
+		}
 		model.put("resolvedBoms",
 				request.getBoms().values().stream()
 						.sorted((a, b) -> a.getOrder().compareTo(b.getOrder()))
+						.collect(Collectors.toList()));
+		model.put("reversedBoms",
+				request.getBoms().values().stream()
+						.sorted((a, b) -> -a.getOrder().compareTo(b.getOrder()))
 						.collect(Collectors.toList()));
 
 		model.put("compileDependencies",
@@ -363,12 +382,35 @@ public class ProjectGenerator {
 			}
 		});
 
+		Map<String, String> versions = new LinkedHashMap<String, String>();
+		model.put("buildPropertiesVersions", versions.entrySet());
+		request.getBuildProperties().getVersions().forEach((k,v) -> {
+			versions.put(k, v.get());
+		});
+		Map<String, String> gradle = new LinkedHashMap<String, String>();
+		model.put("buildPropertiesGradle", gradle.entrySet());
+		request.getBuildProperties().getGradle().forEach((k,v) -> {
+			gradle.put(k, v.get());
+		});
+		Map<String, String> maven = new LinkedHashMap<String, String>();
+		model.put("buildPropertiesMaven", maven.entrySet());
+		request.getBuildProperties().getMaven().forEach((k,v) -> {
+			maven.put(k, v.get());
+		});
+
 		// Add various versions
 		model.put("dependencyManagementPluginVersion", metadata.getConfiguration()
 				.getEnv().getGradle().getDependencyManagementPluginVersion());
 		model.put("kotlinVersion",
 				metadata.getConfiguration().getEnv().getKotlin().getVersion());
+		if ("kotlin".equals(request.getLanguage())) {
+			model.put("kotlin", true);			
+		}
+		if ("groovy".equals(request.getLanguage())) {
+			model.put("groovy", true);
+		}
 
+		model.put("isRelease", request.getBootVersion().contains("RELEASE"));
 		// @SpringBootApplication available as from 1.2.0.RC1
 		model.put("useSpringBootApplication", VERSION_1_2_0_RC1
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
@@ -396,6 +438,9 @@ public class ProjectGenerator {
 				model.put(descriptor.getName(),
 						bean.getPropertyValue(descriptor.getName()));
 			}
+		}
+		if (!request.getBoms().isEmpty()) {
+			model.put("hasBoms", true);
 		}
 
 		return model;
@@ -444,6 +489,10 @@ public class ProjectGenerator {
 		return "maven".equals(request.getBuild());
 	}
 
+	private static boolean isWar(ProjectRequest request) {
+		return "war".equals(request.getPackaging());
+	}
+
 	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
 		return VERSION_1_4_0_M2
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
@@ -459,11 +508,11 @@ public class ProjectGenerator {
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
-		return groovyTemplate.process("starter-pom.xml", model).getBytes();
+		return templateRenderer.process("starter-pom.xml", model).getBytes();
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
-		return groovyTemplate.process("starter-build.gradle", model).getBytes();
+		return templateRenderer.process("starter-build.gradle", model).getBytes();
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
@@ -525,9 +574,7 @@ public class ProjectGenerator {
 	}
 
 	public void write(File target, String templateName, Map<String, Object> model) {
-		String tmpl = templateName.endsWith(".groovy") ? templateName + ".tmpl"
-				: templateName;
-		String body = groovyTemplate.process(tmpl, model);
+		String body = templateRenderer.process(templateName, model);
 		writeText(target, body);
 	}
 

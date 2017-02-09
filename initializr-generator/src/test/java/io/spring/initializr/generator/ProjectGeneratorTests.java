@@ -57,7 +57,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void defaultGradleBuild() {
 		ProjectRequest request = createProjectRequest("web");
-		generateGradleBuild(request);
+		generateGradleBuild(request).doesNotContain("import");
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -167,8 +167,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setPackaging("war");
 		request.setType("gradle-project");
 		generateProject(request).isJavaWarProject().isGradleProject().gradleBuildAssert()
-				.contains("compile('org.foo:thymeleaf')") // This is tagged as web facet
-															// so it brings the web one
+				// This is tagged as web facet so it brings the web one
+				.contains("compile('org.foo:thymeleaf')").contains("war {")
+				.contains("compile('org.foo:thymeleaf')").contains("apply plugin: 'war'")
 				.doesNotContain(
 						"compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(

@@ -34,7 +34,7 @@
     "fallbackApplicationName": "Application",
     "forceSsl": true,
     "gradle": {
-      "dependencyManagementPluginVersion": null
+      "dependencyManagementPluginVersion": "1.0.0.RELEASE"
     },
     "kotlin": {
       "version": null

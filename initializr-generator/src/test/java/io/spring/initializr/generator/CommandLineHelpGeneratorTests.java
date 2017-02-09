@@ -16,24 +16,30 @@
 
 package io.spring.initializr.generator;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import io.spring.initializr.util.GroovyTemplate;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import io.spring.initializr.util.TemplateRenderer;
 
 /**
  * @author Stephane Nicoll
  */
 public class CommandLineHelpGeneratorTests {
 
-	private CommandLineHelpGenerator generator = new CommandLineHelpGenerator(
-			new GroovyTemplate());
+	private CommandLineHelpGenerator generator;
+	
+	@Before
+	public void init() {
+		generator = new CommandLineHelpGenerator(new TemplateRenderer());
+	}
 
 	@Test
 	public void generateGenericCapabilities() {
@@ -79,7 +85,7 @@ public class CommandLineHelpGeneratorTests {
 		assertThat(content, containsString("id-b | depB"));
 		assertThat(content, containsString("https://fake-service"));
 		assertThat(content, containsString("Examples:"));
-		assertThat(content, containsString("curl"));
+		assertThat(content, containsString("curl https://fake-service"));
 	}
 
 	@Test

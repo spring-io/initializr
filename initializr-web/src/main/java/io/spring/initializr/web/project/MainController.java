@@ -57,7 +57,7 @@ import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
-import io.spring.initializr.util.GroovyTemplate;
+import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
@@ -85,13 +85,13 @@ public class MainController extends AbstractInitializrController {
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
 
 	public MainController(InitializrMetadataProvider metadataProvider,
-			GroovyTemplate groovyTemplate, ResourceUrlProvider resourceUrlProvider,
+			TemplateRenderer templateRenderer, ResourceUrlProvider resourceUrlProvider,
 			ProjectGenerator projectGenerator,
 			DependencyMetadataProvider dependencyMetadataProvider) {
 		super(metadataProvider, resourceUrlProvider);
 		this.projectGenerator = projectGenerator;
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
-		this.commandLineHelpGenerator = new CommandLineHelpGenerator(groovyTemplate);
+		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
 	}
 
 	@ModelAttribute

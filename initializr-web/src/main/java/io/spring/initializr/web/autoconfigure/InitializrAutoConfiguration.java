@@ -48,7 +48,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.util.GroovyTemplate;
+import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
@@ -81,11 +81,11 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public MainController initializrMainController(InitializrMetadataProvider metadataProvider,
-											GroovyTemplate groovyTemplate,
+											TemplateRenderer templateRenderer,
 											ResourceUrlProvider resourceUrlProvider,
 											ProjectGenerator projectGenerator,
 											DependencyMetadataProvider dependencyMetadataProvider) {
-		return new MainController(metadataProvider, groovyTemplate, resourceUrlProvider
+		return new MainController(metadataProvider, templateRenderer, resourceUrlProvider
 				, projectGenerator, dependencyMetadataProvider);
 	}
 
@@ -103,12 +103,12 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public GroovyTemplate groovyTemplate(Environment environment) {
+	public TemplateRenderer templateRenderer(Environment environment) {
 		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment, "spring.groovy.template.");
 		boolean cache = resolver.getProperty("cache", Boolean.class, true);
-		GroovyTemplate groovyTemplate = new GroovyTemplate();
-		groovyTemplate.setCache(cache);
-		return groovyTemplate;
+		TemplateRenderer templateRenderer = new TemplateRenderer();
+		templateRenderer.setCache(cache);
+		return templateRenderer;
 	}
 
 	@Bean

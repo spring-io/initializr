@@ -1,14 +1,18 @@
-package ${packageName};
+package {{packageName}};
 
-import org.springframework.boot.builder.SpringApplicationBuilder;<% if (newServletInitializer) { %>
-import org.springframework.boot.web.support.SpringBootServletInitializer;<% } else { %>
-import org.springframework.boot.context.web.SpringBootServletInitializer;<% } %>
+import org.springframework.boot.builder.SpringApplicationBuilder;
+{{#newServletInitializer}}
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+{{/newServletInitializer}}
+{{^newServletInitializer}}
+import org.springframework.boot.context.web.SpringBootServletInitializer;
+{{/newServletInitializer}}
 
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(${applicationName}.class);
+		return application.sources({{applicationName}}.class);
 	}
 
 }
