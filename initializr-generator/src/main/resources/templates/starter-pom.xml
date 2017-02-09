@@ -3,103 +3,148 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>${groupId}</groupId>
-	<artifactId>${artifactId}</artifactId>
-	<version>${version}</version>
-	<packaging>${packaging}</packaging>
+	<groupId>{{groupId}}</groupId>
+	<artifactId>{{artifactId}}</artifactId>
+	<version>{{version}}</version>
+	<packaging>{{packaging}}</packaging>
 
-	<name>${name}</name>
-	<description>${description}</description>
+	<name>{{name}}</name>
+	<description>{{description}}</description>
 
 	<parent>
-		<groupId>${mavenParentGroupId}</groupId>
-		<artifactId>${mavenParentArtifactId}</artifactId>
-		<version>${mavenParentVersion}</version>
+		<groupId>{{mavenParentGroupId}}</groupId>
+		<artifactId>{{mavenParentArtifactId}}</artifactId>
+		<version>{{mavenParentVersion}}</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<properties><% buildProperties.maven.each { %>
-		<${it.key}>${((java.util.function.Supplier)it.value).get()}</${it.key}><% } %><%buildProperties.versions.each { %>
-		<${it.key}>${((java.util.function.Supplier)it.value).get()}</${it.key}><%}%>
+	<properties>
+		{{#buildPropertiesMaven}}
+		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
+		{{/buildPropertiesMaven}}
+		{{#buildPropertiesVersions}}
+		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
+		{{/buildPropertiesVersions}}
 	</properties>
 
-	<dependencies><% compileDependencies.each { %>
+	<dependencies>
+		{{#compileDependencies}}
 		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %><% if (it.type != null) { %>
-			<type>${it.type}</type><% } %>
-		</dependency><% } %><% if (language=='groovy') { %>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/compileDependencies}}
+		{{#groovy}}
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
-		</dependency><% } %><% if (language=='kotlin') { %>
+		</dependency>
+		{{/groovy}}
+		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
-			<version>\${kotlin.version}</version>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
-			<version>\${kotlin.version}</version>
-		</dependency><% } %>
-<% runtimeDependencies.each { %>
+			<version>${kotlin.version}</version>
+		</dependency>
+		{{/kotlin}}
+
+		{{#runtimeDependencies}}
 		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>runtime</scope><% if (it.type != null) { %>
-			<type>${it.type}</type><% } %>
-		</dependency><% } %><% compileOnlyDependencies.each { %>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>runtime</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/runtimeDependencies}}
+		{{#compileOnlyDependencies}}
 		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<optional>true</optional><% if (it.type != null) { %>
-			<type>${it.type}</type><% } %>
-		</dependency><% } %><% providedDependencies.each { %>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<optional>true</optional>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/compileOnlyDependencies}}
+		{{#providedDependencies}}
 		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>provided</scope><% if (it.type != null) { %>
-			<type>${it.type}</type><% } %>
-		</dependency><% } %>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>provided</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/providedDependencies}}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency><% testDependencies.each { %>
+		</dependency>
+		{{#testDependencies}}
 		<dependency>
-			<groupId>${it.groupId}</groupId>
-			<artifactId>${it.artifactId}</artifactId><% if (it.version != null) { %>
-			<version>${it.version}</version><% } %>
-			<scope>test</scope><% if (it.type != null) { %>
-			<type>${it.type}</type><% } %>
-		</dependency><% } %>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>test</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/testDependencies}}
 	</dependencies>
-<% if (boms) { %>
+{{#hasBoms}}
+
 	<dependencyManagement>
-		<dependencies><% resolvedBoms.each { %>
+		<dependencies>
+		    {{#resolvedBoms}}
 			<dependency>
-				<groupId>${it.groupId}</groupId>
-				<artifactId>${it.artifactId}</artifactId>
-				<version>${it.determineVersionToken()}</version>
+				<groupId>{{groupId}}</groupId>
+				<artifactId>{{artifactId}}</artifactId>
+				<version>{{versionToken}}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency><% } %>
+			</dependency>
+			{{/resolvedBoms}}
 		</dependencies>
 	</dependencyManagement>
-<% } %>
-	<build><% if (language=='kotlin') { %>
-		<sourceDirectory>\${project.basedir}/src/main/kotlin</sourceDirectory>
-		<testSourceDirectory>\${project.basedir}/src/test/kotlin</testSourceDirectory><% } %>
+{{/hasBoms}}
+
+	<build>
+		{{#kotlin}}
+		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+		{{/kotlin}}
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin><% if (language=='groovy') { %>
+			</plugin>
+			{{#groovy}}
 			<plugin>
 				<groupId>org.codehaus.gmavenplus</groupId>
 				<artifactId>gmavenplus-plugin</artifactId>
@@ -118,11 +163,13 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin><% } %><% if (language=='kotlin') { %>
+			</plugin>
+			{{/groovy}}
+			{{#kotlin}}
 			<plugin>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<groupId>org.jetbrains.kotlin</groupId>
-				<version>\${kotlin.version}</version>
+				<version>${kotlin.version}</version>
 				<configuration>
 					<compilerPlugins>
 						<plugin>spring</plugin>
@@ -148,23 +195,30 @@
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-allopen</artifactId>
-						<version>\${kotlin.version}</version>
+						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
-			</plugin><% } %>
+			</plugin>
+			{{/kotlin}}
 		</plugins>
 	</build>
-<% if (repositories) { %>
-	<repositories><% repositories.each { key, repo -> %>
+{{#hasRepositories}}
+
+	<repositories>
+		{{#repositoryValues}}
 		<repository>
-			<id>${key}</id>
-			<name>${repo.name}</name>
-			<url>${repo.url}</url>
+			<id>{{key}}</id>
+			<name>{{value.name}}</name>
+			<url>{{value.url}}</url>
 			<snapshots>
-				<enabled>${repo.snapshotsEnabled}</enabled>
+				<enabled>{{value.snapshotsEnabled}}</enabled>
 			</snapshots>
-		</repository><% } %>
-	</repositories><% } %><% if (!bootVersion.contains("RELEASE")) { %>
+		</repository>
+		{{/repositoryValues}}
+	</repositories>
+{{/hasRepositories}}
+{{^isRelease}}
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-snapshots</id>
@@ -182,6 +236,8 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories><% } %>
+	</pluginRepositories>
+{{/isRelease}}
+
 
 </project>

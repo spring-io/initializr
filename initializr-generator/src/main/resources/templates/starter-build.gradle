@@ -1,61 +1,104 @@
 buildscript {
-	ext {<% buildProperties.gradle.each { %>
-		${it.key} = '${((java.util.function.Supplier)it.value).get()}'<% } %>
+	ext {
+		{{#buildPropertiesGradle}}
+		{{key}} = '{{value}}'
+		{{/buildPropertiesGradle}}
 	}
 	repositories {
-		mavenCentral()<% if (!bootVersion.contains("RELEASE")) { %>
+		mavenCentral()
+		{{^isRelease}}
 		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }<% } %>
+		maven { url "https://repo.spring.io/milestone" }
+		{{/isRelease}}
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}")<% if (!bootOneThreeAvailable) { %>
-		classpath('io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}')<% } %><% if (language=='kotlin') { %>
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:\${kotlinVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-allopen:\${kotlinVersion}")<% } %>
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		{{^bootOneThreeAvailable}}
+		classpath('io.spring.gradle:dependency-management-plugin:{{dependencyManagementPluginVersion}}')
+		{{/bootOneThreeAvailable}}
+		{{#kotlin}}
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		{{/kotlin}}
 	}
 }
 
-apply plugin: '${language}'<% if (language=='kotlin') { %>
-apply plugin: 'kotlin-spring'<% } %><% if (packaging=='war') {  %>
-apply plugin: 'eclipse-wtp'<% } else { %>
-apply plugin: 'eclipse'<% } %>
-apply plugin: '${springBootPluginName}'<% if (!bootOneThreeAvailable) { %>
-apply plugin: 'io.spring.dependency-management'<% } %><% if (packaging=='war') {  %>
-apply plugin: 'war'<% } %>
+apply plugin: '{{language}}'
+{{#kotlin}}
+apply plugin: 'kotlin-spring'
+{{/kotlin}}
+{{#war}}
+apply plugin: 'eclipse-wtp'
+{{/war}}
+{{^war}}
+apply plugin: 'eclipse'
+{{/war}}
+apply plugin: '{{springBootPluginName}}'
+{{^bootOneThreeAvailable}}
+apply plugin: 'io.spring.dependency-management'
+{{/bootOneThreeAvailable}}
+{{#war}}
+apply plugin: 'war'
+{{/war}}
 
-<% if (packaging=='war') {  %>war<% } else { %>jar<% } %> {
-	baseName = '${artifactId}'
-	version = '${version}'
+{{#war}}war{{/war}}{{^war}}jar{{/war}} {
+	baseName = '{{artifactId}}'
+	version = '{{version}}'
 }
 
-sourceCompatibility = ${javaVersion}
+sourceCompatibility = {{javaVersion}}
 
 repositories {
-	mavenCentral()<% if (repositories) { repositories.each { key, repo -> %>
-	maven { url "${repo.url}" }<% }} %>
+	mavenCentral()
+	{{#repositoryValues}}
+	maven { url "{{value.url}}" }
+	{{/repositoryValues}}
 }
 
-<% if (providedDependencies) { %>configurations {
+{{#providedDependencies}}
+configurations {
 	providedRuntime
 }
-<% } %><% if (buildProperties.versions) { %><%buildProperties.versions.each { %>
-ext['${it.key}'] = '${((java.util.function.Supplier)it.value).get()}'<% } %>
-<% } %>
-dependencies {<% compileDependencies.each { %>
-	compile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% if (language=='groovy') { %>
-	compile('org.codehaus.groovy:groovy')<% } %><% if (language=='kotlin') { %>
-	compile("org.jetbrains.kotlin:kotlin-stdlib:\${kotlinVersion}")
-	compile("org.jetbrains.kotlin:kotlin-reflect:\${kotlinVersion}")<% } %><% runtimeDependencies.each { %>
-	runtime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% compileOnlyDependencies.each { %>
-	compileOnly('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %><% providedDependencies.each { %>
-	providedRuntime('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %>
-	testCompile('org.springframework.boot:spring-boot-starter-test')<% testDependencies.each { %>
-	testCompile('${it.groupId}:${it.artifactId}${it.version ? ":$it.version" : ""}${it.type ? "@$it.type" : ""}')<% } %>
+{{/providedDependencies}}
+
+{{^buildPropertiesVersions.empty}}
+{{#buildPropertiesVersions}}
+ext['{{key}}'] = '{{value}}'
+{{/buildPropertiesVersions}}
+
+{{/buildPropertiesVersions.empty}}
+dependencies {
+	{{#compileDependencies}}
+	compile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/compileDependencies}}
+	{{#groovy}}
+	compile('org.codehaus.groovy:groovy')
+	{{/groovy}}
+	{{#kotlin}}
+	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+	{{/kotlin}}
+	{{#runtimeDependencies}}
+	runtime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/runtimeDependencies}}
+	{{#compileOnlyDependencies}}
+	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/compileOnlyDependencies}}
+	{{#providedDependencies}}
+	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/providedDependencies}}
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	{{#testDependencies}}
+	testCompile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/testDependencies}}
 }
-<% if (boms) { %>
+{{#hasBoms}}
+
 dependencyManagement {
-	imports {<% resolvedBoms.reverse().each { %>
-		mavenBom "${it.groupId}:${it.artifactId}:${it.determineVersionToken()}"<% } %>
+	imports {
+		{{#reversedBoms}}
+		mavenBom "{{groupId}}:{{artifactId}}:{{versionToken}}"
+		{{/reversedBoms}}
 	}
 }
-<% } %>
+{{/hasBoms}}

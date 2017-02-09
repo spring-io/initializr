@@ -46,7 +46,7 @@ public class SourceCodeAssert {
 		try (InputStream stream = expected.getInputStream()) {
 			String expectedContent = StreamUtils.copyToString(stream,
 					Charset.forName("UTF-8"));
-			assertEquals("Unexpected content for $name",
+			assertEquals("Unexpected content for " + name,
 					expectedContent.replaceAll("\r\n", "\n"), content);
 		}
 		catch (IOException e) {

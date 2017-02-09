@@ -16,39 +16,41 @@
 
 package io.spring.initializr.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import org.codehaus.groovy.control.CompilationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ConcurrentReferenceHashMap;
-import org.springframework.util.StreamUtils;
 
-import groovy.lang.Writable;
-import groovy.text.GStringTemplateEngine;
-import groovy.text.Template;
-import groovy.text.TemplateEngine;
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Mustache.Compiler;
+import com.samskivert.mustache.Mustache.TemplateLoader;
+import com.samskivert.mustache.Template;
 
 /**
  * @author Dave Syer
  */
-public class GroovyTemplate {
+public class TemplateRenderer {
+
+	private static final Logger log = LoggerFactory.getLogger(TemplateRenderer.class);
 
 	private boolean cache = true;
 
-	private final TemplateEngine engine;
+	private final Compiler mustache;
 	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
 
-	public GroovyTemplate(TemplateEngine engine) {
-		this.engine = engine;
+	public TemplateRenderer(Compiler mustache) {
+		this.mustache = mustache;
 	}
 
-	public GroovyTemplate() {
-		this(new GStringTemplateEngine());
+	public TemplateRenderer() {
+		this(mustacheCompiler());
 	}
 
 	public boolean isCache() {
@@ -62,18 +64,15 @@ public class GroovyTemplate {
 	public String process(String name, Map<String, ?> model) {
 		try {
 			Template template = getTemplate(name);
-			Writable writable = template.make(model);
-			StringWriter result = new StringWriter();
-			writable.writeTo(result);
-			return result.toString();
+			return template.execute(model);
 		}
 		catch (Exception e) {
+			log.error("Cannot render: " + name, e);
 			throw new IllegalStateException("Cannot render template", e);
 		}
 	}
 
-	public Template getTemplate(String name)
-			throws CompilationFailedException, ClassNotFoundException, IOException {
+	public Template getTemplate(String name) {
 		if (cache) {
 			return this.templateCaches.computeIfAbsent(name, n -> loadTemplate(n));
 		}
@@ -82,23 +81,28 @@ public class GroovyTemplate {
 
 	protected Template loadTemplate(String name) {
 		try {
-			File file = new File("templates", name);
-			if (file.exists()) {
-				return engine.createTemplate(file);
-			}
-
-			ClassLoader classLoader = GroovyTemplate.class.getClassLoader();
-			URL resource = classLoader.getResource("templates/" + name);
-			if (resource != null) {
-				return engine.createTemplate(StreamUtils
-						.copyToString(resource.openStream(), Charset.forName("UTF-8")));
-			}
-
-			return engine.createTemplate(name);
+			Reader template;
+			template = mustache.loader.getTemplate(name);
+			return mustache.compile(template);
 		}
 		catch (Exception e) {
 			throw new IllegalStateException("Cannot load template " + name, e);
 		}
+	}
+
+	private static Compiler mustacheCompiler() {
+		return Mustache.compiler().withLoader(mustacheTemplateLoader());
+	}
+
+	private static TemplateLoader mustacheTemplateLoader() {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		String prefix = "classpath:/templates/";
+		Charset charset = Charset.forName("UTF-8");
+		TemplateLoader loader = name -> {
+			return new InputStreamReader(
+					resourceLoader.getResource(prefix + name).getInputStream(), charset);
+		};
+		return loader;
 	}
 
 }

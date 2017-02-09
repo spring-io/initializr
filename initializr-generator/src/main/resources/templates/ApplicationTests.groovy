@@ -4,17 +4,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 {{testImports}}
 {{#newTestInfrastructure}}
-@RunWith(SpringRunner::class)
+@RunWith(SpringRunner)
 @SpringBootTest
 {{/newTestInfrastructure}}
 {{^newTestInfrastructure}}
-@RunWith(SpringJUnit4ClassRunner::class)
-@SpringApplicationConfiguration(classes = arrayOf({{applicationName}}::class))
+@RunWith(SpringJUnit4ClassRunner)
+@SpringApplicationConfiguration(classes = {{applicationName}})
 {{/newTestInfrastructure}}
 {{testAnnotations}}class {{applicationName}}Tests {
 
 	@Test
-	fun contextLoads() {
+	void contextLoads() {
 	}
 
 }
