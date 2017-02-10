@@ -104,7 +104,7 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public TemplateRenderer templateRenderer(Environment environment) {
-		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment, "spring.groovy.template.");
+		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment, "spring.mustache.");
 		boolean cache = resolver.getProperty("cache", Boolean.class, true);
 		TemplateRenderer templateRenderer = new TemplateRenderer();
 		templateRenderer.setCache(cache);

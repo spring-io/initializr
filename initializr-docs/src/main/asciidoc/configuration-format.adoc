@@ -23,7 +23,7 @@ the list of available option for each setting and which one is the default.
 
 
 ## Env section
-TIP: Check {sc-initializr-generator}/metadata/InitializrConfiguration.groovy#L113[the code]
+TIP: Check {sc-initializr-generator}/metadata/InitializrConfiguration.java#L142[the code]
 for a full list of the available configuration options.
 
 The `env` element defines environment option that the service uses:
@@ -99,7 +99,7 @@ that dependency is added.
 with the dependency.
 * Links to resources such as a guide or a reference doc section.
 
-TIP: Check {sc-initializr-generator}/metadata/Dependency.groovy[the code] for a full
+TIP: Check {sc-initializr-generator}/metadata/Dependency.java[the code] for a full
 list of the available configuration options.
 
 Here is the most basic dependency entry you could have

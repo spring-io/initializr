@@ -243,12 +243,11 @@ other Spring Boot app from the `initializr-service` directory:
 [[run-ide]]
 === Running the app in an IDE
 
-You should be able to import the projects into your IDE with no problems (STS with
-the m2e Groovy compiler support or IntelliJ IDEA definitely work). Once there you can
-run the `initializr-service` from its main method, debug it, and it will reload if
-you make changes to other modules. (You may need to manually enable the "full"
-profile.) This is the recommended way to operate while you are developing the
-application, especially the UI.
+You should be able to import the projects into your IDE with no problems. Once there you
+can run the `initializr-service` from its main method, debug it, and it will reload if
+you make changes to other modules. (You may need to manually enable the "full" profile.)
+This is the recommended way to operate while you are developing the application,
+especially the UI.
 
 
 ## Deploying to Cloud Foundry

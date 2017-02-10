@@ -14,7 +14,7 @@ Stéphane Nicoll; Dave Syer
 :github-code: https://github.com/{github-repo}/tree/{github-tag}
 :github-wiki: https://github.com/{github-repo}/wiki
 :github-master-code: https://github.com/{github-repo}/tree/master
-:sc-initializr-generator: {github-code}/initializr-generator/src/main/groovy/io/spring/initializr
+:sc-initializr-generator: {github-code}/initializr-generator/src/main/java/io/spring/initializr
 :sc-initializr-service: {github-code}/initializr-service/src/main
 :spring-initializr-docs-version: current
 :spring-initializr-docs: http://docs.spring.io/initializr/docs/{spring-initializr-docs-version}/reference
