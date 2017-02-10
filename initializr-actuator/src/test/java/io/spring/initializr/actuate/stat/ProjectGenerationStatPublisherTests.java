@@ -42,7 +42,6 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 
-	private StatsProperties properties;
 	private RetryTemplate retryTemplate;
 	private ProjectGenerationStatPublisher statPublisher;
 	private MockRestServiceServer mockServer;
@@ -50,12 +49,14 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 
 	@Before
 	public void setUp() {
-		this.properties = createProperties();
+		StatsProperties properties = createProperties();
 		ProjectRequestDocumentFactory documentFactory =
 				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
-		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory, properties, retryTemplate);
-		mockServer = MockRestServiceServer.createServer(this.statPublisher.getRestTemplate());
+		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
+				properties, retryTemplate);
+		mockServer = MockRestServiceServer.createServer(
+				this.statPublisher.getRestTemplate());
 	}
 
 	@Test

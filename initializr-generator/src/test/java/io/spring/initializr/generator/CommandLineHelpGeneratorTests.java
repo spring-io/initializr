@@ -106,9 +106,12 @@ public class CommandLineHelpGeneratorTests {
 
 	@Test
 	public void generateSpringBootCliCapabilities() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
-				createDependency("id-b", "depB"),
-				createDependency("id-a", "depA", "and some description")).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder
+				.withDefaults()
+				.addDependencyGroup("test",
+						createDependency("id-b", "depB"),
+						createDependency("id-a", "depA", "and some description"))
+				.build();
 		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");
 		assertThat(content, containsString("| Id"));
 		assertThat(content, containsString("| Tags"));
@@ -131,10 +134,15 @@ public class CommandLineHelpGeneratorTests {
 		Dependency second = Dependency.withId("second");
 		second.setDescription("second desc");
 		second.setVersionRange(" [1.2.0.RELEASE,1.3.0.M1)  ");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", first, second).build();
-		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");
-		assertThat(content, containsString("| first  | first desc  | >=1.2.0.RELEASE               |"));
-		assertThat(content, containsString("| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder
+				.withDefaults()
+				.addDependencyGroup("test", first, second).build();
+		String content = generator.generateSpringBootCliCapabilities(
+				metadata, "https://fake-service");
+		assertThat(content, containsString(
+				"| first  | first desc  | >=1.2.0.RELEASE               |"));
+		assertThat(content, containsString(
+				"| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |"));
 	}
 
 	private static void assertCommandLineCapabilities(String content) {

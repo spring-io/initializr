@@ -18,6 +18,7 @@ package io.spring.initializr.web.project;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -207,13 +208,11 @@ public class MainController extends AbstractInitializrController {
 
 	@ModelAttribute("linkTo")
 	public Mustache.Lambda linkTo() {
-		return (frag, out) -> {
-			out.write(this.getLinkTo().apply(frag.execute()));
-		};
+		return (frag, out) -> out.write(this.getLinkTo().apply(frag.execute()));
 	}
 
 	@RequestMapping(value = "/", produces = "text/html")
-	public String home(Map<String, Object> model) throws Exception {
+	public String home(Map<String, Object> model) {
 		renderHome(model);
 		return "home";
 	}
@@ -251,7 +250,7 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping("/starter.zip")
 	@ResponseBody
 	public ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest)
-			throws Exception {
+			throws IOException {
 		ProjectRequest request = (ProjectRequest) basicRequest;
 		File dir = projectGenerator.generateProjectStructure(request);
 
@@ -268,7 +267,7 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping(value = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
 	public ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest)
-			throws Exception {
+			throws IOException {
 		ProjectRequest request = (ProjectRequest) basicRequest;
 		File dir = projectGenerator.generateProjectStructure(request);
 
@@ -295,13 +294,12 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ProjectRequest request) {
 		String script = "gradle".equals(request.getBuild()) ? "gradlew" : "mvnw";
-		String wrapperScript = request.getBaseDir() != null
+		return request.getBaseDir() != null
 				? request.getBaseDir() + "/" + script : script;
-		return wrapperScript;
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
-			String contentType) throws Exception {
+			String contentType) throws IOException {
 		byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(download));
 		log.info("Uploading: {} ({} bytes)", download, bytes.length);
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType,

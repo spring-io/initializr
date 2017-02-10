@@ -47,10 +47,9 @@ public class MetricsAssert {
 	}
 
 	public MetricsAssert hasNoValue(String... metrics) {
-		Arrays.asList(metrics).forEach(it -> {
-			assertEquals("Metric '" + it + "' should not be registered", null,
-					counterService.getValues().get(it));
-		});
+		Arrays.asList(metrics).forEach(it ->
+				assertEquals("Metric '" + it + "' should not be registered", null,
+						counterService.getValues().get(it)));
 		return this;
 	}
 

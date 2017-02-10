@@ -17,22 +17,22 @@
 package io.spring.initializr.generator;
 
 /**
- * Event published when an error occured trying to generate a project.
+ * Event published when an error occurred trying to generate a project.
  *
  * @author Stephane Nicoll
  */
 public class ProjectFailedEvent extends ProjectRequestEvent {
 
-	/**
-	 * The cause of the failure.
-	 */
-	final Exception cause;
+	private final Exception cause;
 
 	public ProjectFailedEvent(ProjectRequest projectRequest, Exception cause) {
 		super(projectRequest);
 		this.cause = cause;
 	}
 
+	/**
+	 * Return the cause of the failure.
+	 */
 	public Exception getCause() {
 		return cause;
 	}

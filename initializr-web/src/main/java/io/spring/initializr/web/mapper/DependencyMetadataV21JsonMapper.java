@@ -39,14 +39,14 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 		json.put("bootVersion", metadata.getBootVersion().toString());
 		json.put("dependencies",
 				metadata.getDependencies().entrySet().stream()
-						.collect(Collectors.toMap(entry -> entry.getKey(),
+						.collect(Collectors.toMap(Map.Entry::getKey,
 								entry -> mapDependency(entry.getValue()))));
 		json.put("repositories",
 				metadata.getRepositories().entrySet().stream()
-						.collect(Collectors.toMap(entry -> entry.getKey(),
+						.collect(Collectors.toMap(Map.Entry::getKey,
 								entry -> mapRepository(entry.getValue()))));
 		json.put("boms", metadata.getBoms().entrySet().stream().collect(Collectors
-				.toMap(entry -> entry.getKey(), entry -> mapBom(entry.getValue()))));
+				.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue()))));
 		return json.toString();
 	}
 

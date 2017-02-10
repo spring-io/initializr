@@ -33,4 +33,5 @@ public class SimpleInitializrMetadataProvider implements InitializrMetadataProvi
 	public InitializrMetadata get() {
 		return this.metadata;
 	}
+
 }

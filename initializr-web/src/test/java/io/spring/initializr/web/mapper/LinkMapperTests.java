@@ -35,9 +35,9 @@ public class LinkMapperTests {
 
 	@Test
 	public void mapSimpleRel() {
-		List<Link> links = new ArrayList<Link>();
+		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com", "some description"));
-		Map<String, Object> model = (Map<String, Object>) LinkMapper.mapLinks(links);
+		Map<String, Object> model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
 		assertTrue(model.containsKey("a"));
 		@SuppressWarnings("unchecked")
@@ -49,9 +49,9 @@ public class LinkMapperTests {
 
 	@Test
 	public void mapTemplatedRel() {
-		List<Link> links = new ArrayList<Link>();
+		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com/{bootVersion}/a", true));
-		Map<String, Object> model = (Map<String, Object>) LinkMapper.mapLinks(links);
+		Map<String, Object> model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
 		assertTrue(model.containsKey("a"));
 		@SuppressWarnings("unchecked")
@@ -63,10 +63,10 @@ public class LinkMapperTests {
 
 	@Test
 	public void mergeSeveralLinksInArray() {
-		List<Link> links = new ArrayList<Link>();
+		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com", "some description"));
 		links.add(Link.create("a", "https://example.com/2"));
-		Map<String, Object> model = (Map<String, Object>) LinkMapper.mapLinks(links);
+		Map<String, Object> model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
 		assertTrue(model.containsKey("a"));
 		@SuppressWarnings("unchecked")
@@ -78,20 +78,20 @@ public class LinkMapperTests {
 
 	@Test
 	public void keepOrdering() {
-		List<Link> links = new ArrayList<Link>();
+		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com"));
 		links.add(Link.create("b", "https://example.com"));
-		Map<String, Object> model = (Map<String, Object>) LinkMapper.mapLinks(links);
+		Map<String, Object> model = LinkMapper.mapLinks(links);
 		assertEquals("[a, b]", model.keySet().toString());
 	}
 
 	@Test
 	public void keepOrderingWithMultipleUrlForSameRel() {
-		List<Link> links = new ArrayList<Link>();
+		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com"));
 		links.add(Link.create("b", "https://example.com"));
 		links.add(Link.create("a", "https://example.com"));
-		Map<String, Object> model = (Map<String, Object>) LinkMapper.mapLinks(links);
+		Map<String, Object> model = LinkMapper.mapLinks(links);
 		assertEquals("[a, b]", model.keySet().toString());
 	}
 

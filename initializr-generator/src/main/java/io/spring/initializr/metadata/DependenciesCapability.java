@@ -44,6 +44,7 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 				"Project dependencies", "dependency identifiers (comma-separated)");
 	}
 
+	@Override
 	public List<DependencyGroup> getContent() {
 		return content;
 	}
@@ -68,15 +69,13 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	}
 
 	public void updateVersionRange(VersionParser versionParser) {
-		indexedDependencies.values().forEach(it -> {
-			it.updateVersionRanges(versionParser);
-		});
+		indexedDependencies.values().forEach(it -> it.updateVersionRanges(versionParser));
 	}
 
 	@Override
 	public void merge(List<DependencyGroup> otherContent) {
 		otherContent.forEach(group -> {
-			if (!content.stream().anyMatch(it -> group.getName() != null
+			if (content.stream().noneMatch(it -> group.getName() != null
 					&& group.getName().equals(it.getName()))) {
 				content.add(group);
 			}
@@ -86,27 +85,25 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 
 	private void index() {
 		indexedDependencies.clear();
-		content.forEach(group -> {
-			group.content.forEach(dependency -> {
-				// Apply defaults
-				if (dependency.getVersionRange() == null
-						&& group.getVersionRange() != null) {
-					dependency.setVersionRange(group.getVersionRange());
-				}
-				if (dependency.getBom() == null && group.getBom() != null) {
-					dependency.setBom(group.getBom());
-				}
-				if (dependency.getRepository() == null && group.getRepository() != null) {
-					dependency.setRepository(group.getRepository());
-				}
+		content.forEach(group -> group.content.forEach(dependency -> {
+			// Apply defaults
+			if (dependency.getVersionRange() == null
+					&& group.getVersionRange() != null) {
+				dependency.setVersionRange(group.getVersionRange());
+			}
+			if (dependency.getBom() == null && group.getBom() != null) {
+				dependency.setBom(group.getBom());
+			}
+			if (dependency.getRepository() == null && group.getRepository() != null) {
+				dependency.setRepository(group.getRepository());
+			}
 
-				dependency.resolve();
-				indexDependency(dependency.getId(), dependency);
-				for (String alias : dependency.getAliases()) {
-					indexDependency(alias, dependency);
-				}
-			});
-		});
+			dependency.resolve();
+			indexDependency(dependency.getId(), dependency);
+			for (String alias : dependency.getAliases()) {
+				indexDependency(alias, dependency);
+			}
+		}));
 	}
 
 	private void indexDependency(String id, Dependency dependency) {

@@ -61,7 +61,7 @@ public class Agent {
 	/**
 	 * Defines the various known agents.
 	 */
-	public static enum AgentId {
+	public enum AgentId {
 
 		CURL("curl", "curl"),
 
@@ -88,7 +88,7 @@ public class Agent {
 			return name;
 		}
 
-		private AgentId(String id, String name) {
+		AgentId(String id, String name) {
 			this.id = id;
 			this.name = name;
 		}

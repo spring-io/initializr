@@ -23,7 +23,6 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
 import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -44,8 +43,11 @@ import org.springframework.retry.support.RetryTemplate;
 @ConditionalOnProperty("initializr.stats.elastic.uri")
 class InitializrStatsAutoConfiguration {
 
-	@Autowired
-	private StatsProperties statsProperties;
+	private final StatsProperties statsProperties;
+
+	public InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
+		this.statsProperties = statsProperties;
+	}
 
 	@Bean
 	public ProjectGenerationStatPublisher projectRequestStatHandler(

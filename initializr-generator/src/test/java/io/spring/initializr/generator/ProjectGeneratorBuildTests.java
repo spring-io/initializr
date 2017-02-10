@@ -39,8 +39,7 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	public static Object[] parameters() {
 		Object[] maven = new Object[] { "maven", "pom.xml" };
 		Object[] gradle = new Object[] { "gradle", "build.gradle" };
-		Object[] parameters = new Object[] { maven, gradle };
-		return parameters;
+		return new Object[] { maven, gradle };
 	}
 
 	private final String build;
@@ -72,8 +71,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(
-				new ClassPathResource("project/" + language + "/standard/" + assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/standard/" + assertFileName));
 	}
 
 	@Test
@@ -96,8 +95,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setPackaging("war");
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(
-				new ClassPathResource("project/" + language + "/war/" + assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/war/" + assertFileName));
 	}
 
 	@Test
@@ -138,8 +137,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo", "web", "data-jpa");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName)
-				.equalsTo(new ClassPathResource("project/" + build + "/compile-only-dependency-" + assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/compile-only-dependency-" + assertFileName));
 	}
 
 	@Test
@@ -167,8 +166,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName)
-				.equalsTo(new ClassPathResource("project/" + build + "/bom-ordering-" + assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/bom-ordering-" + assertFileName));
 	}
 
 	@Override

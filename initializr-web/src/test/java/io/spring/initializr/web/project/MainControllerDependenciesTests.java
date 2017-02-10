@@ -34,13 +34,15 @@ import static org.junit.Assert.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class MainControllerDependenciesTests extends AbstractInitializrControllerIntegrationTests {
+public class MainControllerDependenciesTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	public void noBootVersion() {
-		ResponseEntity<String> response = execute("/dependencies", String.class, null, "application/json");
+		ResponseEntity<String> response = execute("/dependencies", String.class, null,
+				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("1.1.4", new JSONObject(response.getBody()));
 	}
 
@@ -49,12 +51,13 @@ public class MainControllerDependenciesTests extends AbstractInitializrControlle
 		ResponseEntity<String> response = execute("/dependencies?bootVersion=1.2.1.RELEASE",
 				String.class, null, "application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		validateContentType(response, AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("1.2.1", new JSONObject(response.getBody()));
 	}
 
 	protected void validateDependenciesOutput(String version, JSONObject actual) {
-		JSONObject expected = readJsonFrom("metadata/dependencies/test-dependencies-" + version + ".json");
+		JSONObject expected = readJsonFrom(
+				"metadata/dependencies/test-dependencies-" + version + ".json");
 		JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
 	}
 

@@ -113,8 +113,8 @@ public class InitializrMetadataTests {
 	@Test
 	public void invalidBomVersionRangeMapping() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("FOO_BAR", "1.2.0"));
+		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
+		bom.getMappings().add(Mapping.create("FOO_BAR", "1.2.0"));
 
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
@@ -128,8 +128,8 @@ public class InitializrMetadataTests {
 	@Test
 	public void invalidBomVersionRangeMappingUnknownRepo() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
-		Mapping mapping = BillOfMaterials.Mapping.create("1.3.0.M2", "1.2.0");
+		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
+		Mapping mapping = Mapping.create("1.3.0.M2", "1.2.0");
 		mapping.getRepositories().add("foo-repo");
 		bom.getMappings().add(mapping);
 
@@ -146,8 +146,8 @@ public class InitializrMetadataTests {
 	@Test
 	public void invalidBomVersionRangeMappingUnknownAdditionalBom() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
-		Mapping mapping = BillOfMaterials.Mapping.create("1.3.0.M2", "1.2.0");
+		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
+		Mapping mapping = Mapping.create("1.3.0.M2", "1.2.0");
 		mapping.getAdditionalBoms().add("bar-bom");
 		bom.getMappings().add(mapping);
 
@@ -164,8 +164,8 @@ public class InitializrMetadataTests {
 	@Test
 	public void updateSpringBootVersions() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
+		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
+		bom.getMappings().add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
 		Dependency dependency = Dependency.withId("bar");
 		dependency.getMappings().add(Dependency.Mapping.create(
 				"[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE"));

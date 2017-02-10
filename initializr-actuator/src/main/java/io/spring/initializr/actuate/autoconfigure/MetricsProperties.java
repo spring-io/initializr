@@ -61,7 +61,9 @@ public class MetricsProperties {
 	}
 
 	public String getId(String defaultValue) {
-		if (StringUtils.hasText(id)) return id;
+		if (StringUtils.hasText(id)) {
+			return id;
+		}
 		return defaultValue;
 	}
 

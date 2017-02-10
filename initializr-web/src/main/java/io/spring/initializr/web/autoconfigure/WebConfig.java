@@ -50,12 +50,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	 * A command-line aware {@link ContentNegotiationStrategy} that forces the media type
 	 * to "text/plain" for compatible agents.
 	 */
-	private static class CommandLineContentNegotiationStrategy implements ContentNegotiationStrategy {
+	private static class CommandLineContentNegotiationStrategy
+			implements ContentNegotiationStrategy {
 
 		private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
 		@Override
-		public List<MediaType> resolveMediaTypes(NativeWebRequest request) throws HttpMediaTypeNotAcceptableException {
+		public List<MediaType> resolveMediaTypes(NativeWebRequest request)
+				throws HttpMediaTypeNotAcceptableException {
 			String path = urlPathHelper.getPathWithinApplication(
 					request.getNativeRequest(HttpServletRequest.class));
 			if (!StringUtils.hasText(path) || !path.equals("/")) {  // Only care about "/"
@@ -65,7 +67,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 			if (userAgent != null) {
 				Agent agent = Agent.fromUserAgent(userAgent);
 				if (agent != null) {
-					if (AgentId.CURL.equals(agent.getId()) || AgentId.HTTPIE.equals(agent.getId())) {
+					if (AgentId.CURL.equals(agent.getId())
+							|| AgentId.HTTPIE.equals(agent.getId())) {
 						return Collections.singletonList(MediaType.TEXT_PLAIN);
 					}
 				}

@@ -28,7 +28,6 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Version;
 import org.json.JSONObject;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -46,26 +45,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UiController {
 
-	@Autowired
-	protected InitializrMetadataProvider metadataProvider;
+	protected final InitializrMetadataProvider metadataProvider;
+
+	public UiController(InitializrMetadataProvider metadataProvider) {
+		this.metadataProvider = metadataProvider;
+	}
 
 	@RequestMapping(value = "/ui/dependencies", produces = "application/json")
-	public ResponseEntity<String> dependencies(@RequestParam(required = false) String version) {
-		List<DependencyGroup> dependencyGroups = metadataProvider.get().getDependencies().getContent();
+	public ResponseEntity<String> dependencies(
+			@RequestParam(required = false) String version) {
+		List<DependencyGroup> dependencyGroups = metadataProvider.get()
+				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
 		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
-		dependencyGroups.forEach(g -> {
-			g.getContent().forEach(d -> {
-				if (v != null && d.getVersionRange() != null) {
-					if (d.match(v)) {
-						content.add(new DependencyItem(g.getName(), d));
-					}
-				}
-				else {
+		dependencyGroups.forEach(g -> g.getContent().forEach(d -> {
+			if (v != null && d.getVersionRange() != null) {
+				if (d.match(v)) {
 					content.add(new DependencyItem(g.getName(), d));
 				}
-			});
-		});
+			}
+			else {
+				content.add(new DependencyItem(g.getName(), d));
+			}
+		}));
 		String json = writeDependencies(content);
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).
 				eTag(createUniqueId(json)).body(json);

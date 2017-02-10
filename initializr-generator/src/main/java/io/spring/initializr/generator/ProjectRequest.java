@@ -39,7 +39,6 @@ import org.springframework.util.StringUtils;
  * @author Dave Syer
  * @author Stephane Nicoll
  */
-// @ToString(ignoreNulls = true, includePackage = false, includeNames = true)
 public class ProjectRequest extends BasicProjectRequest {
 
 	/**
@@ -47,10 +46,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	 */
 	public static final String DEFAULT_STARTER = "root_starter";
 
-	/**
-	 * Additional parameters that can be used to further identify the request.
-	 */
-	private final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+	private final Map<String, Object> parameters = new LinkedHashMap<>();
 
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	private List<Dependency> resolvedDependencies;
@@ -59,9 +55,6 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	private final Map<String, Repository> repositories = new LinkedHashMap<>();
 
-	/**
-	 * Build properties.
-	 */
 	private final BuildProperties buildProperties = new BuildProperties();
 
 	private List<String> facets = new ArrayList<>();
@@ -91,6 +84,9 @@ public class ProjectRequest extends BasicProjectRequest {
 		this.build = build;
 	}
 
+	/**
+	 * Return the additional parameters that can be used to further identify the request.
+	 */
 	public Map<String, Object> getParameters() {
 		return parameters;
 	}
@@ -103,6 +99,9 @@ public class ProjectRequest extends BasicProjectRequest {
 		return repositories;
 	}
 
+	/**
+	 * Return the build properties.
+	 */
 	public BuildProperties getBuildProperties() {
 		return buildProperties;
 	}
@@ -209,12 +208,10 @@ public class ProjectRequest extends BasicProjectRequest {
 			repositories.put("spring-milestones", metadata.getConfiguration().getEnv()
 					.getRepositories().get("spring-milestones"));
 		}
-		boms.values().forEach(it -> {
-			it.getRepositories().forEach(key -> {
-				repositories.computeIfAbsent(key, s -> metadata.getConfiguration()
-						.getEnv().getRepositories().get(s));
-			});
-		});
+		boms.values().forEach(it -> it.getRepositories().forEach(key -> {
+			repositories.computeIfAbsent(key, s -> metadata.getConfiguration()
+					.getEnv().getRepositories().get(s));
+		}));
 	}
 
 	protected void initializeProperties(InitializrMetadata metadata) {
@@ -264,7 +261,7 @@ public class ProjectRequest extends BasicProjectRequest {
 			tomcat.setScope(Dependency.SCOPE_PROVIDED);
 			resolvedDependencies.add(tomcat);
 		}
-		if (!resolvedDependencies.stream().anyMatch(it -> it.isStarter())) {
+		if (resolvedDependencies.stream().noneMatch(Dependency::isStarter)) {
 			// There"s no starter so we add the default one
 			addDefaultDependency();
 		}
@@ -296,15 +293,14 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	@Override
 	public String toString() {
-		return "ProjectRequest ["
-				+ (parameters != null ? "parameters=" + parameters + ", " : "")
+		return "ProjectRequest [" + "parameters=" + parameters + ", "
 				+ (resolvedDependencies != null
-						? "resolvedDependencies=" + resolvedDependencies + ", " : "")
-				+ (boms != null ? "boms=" + boms + ", " : "")
-				+ (repositories != null ? "repositories=" + repositories + ", " : "")
-				+ (buildProperties != null ? "buildProperties=" + buildProperties + ", "
-						: "")
-				+ (facets != null ? "facets=" + facets + ", " : "")
+				? "resolvedDependencies=" + resolvedDependencies + ", "
+				: "")
+				+ "boms=" + boms + ", " + "repositories="
+				+ repositories + ", " + "buildProperties="
+				+ buildProperties + ", " + (facets != null
+				? "facets=" + facets + ", " : "")
 				+ (build != null ? "build=" + build : "") + "]";
 	}
 

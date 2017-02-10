@@ -39,7 +39,7 @@ public enum InitializrMetadataVersion {
 
 	private final MediaType mediaType;
 
-	private InitializrMetadataVersion(String mediaType) {
+	InitializrMetadataVersion(String mediaType) {
 		this.mediaType = MediaType.parseMediaType(mediaType);
 	}
 

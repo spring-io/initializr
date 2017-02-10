@@ -64,7 +64,7 @@ public class ActuatorIntegrationTests
 				updatedResult.getInt("counter.initializr.java_version.1_8"));
 		assertEquals("web dependency metric should have increased", webDependency + 1,
 				updatedResult.getInt("counter.initializr.dependency.web"));
-		assertEquals("jpa dependency metric should not have increased", jpaDependency + 0,
+		assertEquals("jpa dependency metric should not have increased", jpaDependency,
 				updatedResult.getInt("counter.initializr.dependency.data-jpa"));
 	}
 

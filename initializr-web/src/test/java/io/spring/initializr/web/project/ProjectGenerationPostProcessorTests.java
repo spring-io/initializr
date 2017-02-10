@@ -32,7 +32,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test-default")
 @Import(ProjectRequestPostProcessorConfiguration.class)
-public class ProjectGenerationPostProcessorTests extends AbstractInitializrControllerIntegrationTests {
+public class ProjectGenerationPostProcessorTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 
 	@Test

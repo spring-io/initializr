@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,8 +66,8 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1
-			.getMediaType();
+	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
+			InitializrMetadataVersion.V2_1.getMediaType();
 
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder();
@@ -87,7 +86,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected String htmlHome() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
 		return restTemplate.exchange(createUrl("/"), HttpMethod.GET,
 				new HttpEntity<Void>(headers), String.class).getBody();
 	}
@@ -199,12 +198,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected File writeArchive(byte[] body) throws IOException {
 		File archiveFile = folder.newFile();
-		FileOutputStream stream = new FileOutputStream(archiveFile);
-		try {
+		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
 			stream.write(body);
-		}
-		finally {
-			stream.close();
 		}
 		return archiveFile;
 	}
@@ -212,24 +207,21 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected JSONObject readJsonFrom(String path) {
 		try {
 			ClassPathResource resource = new ClassPathResource(path);
-			InputStream stream = resource.getInputStream();
-			try {
+			try (InputStream stream = resource.getInputStream()) {
 				String json = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
 				String placeholder = "";
 				if (this instanceof AbstractInitializrControllerIntegrationTests) {
 					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
 				}
 				if (this instanceof AbstractFullStackInitializrIntegrationTests) {
-					AbstractFullStackInitializrIntegrationTests test = (AbstractFullStackInitializrIntegrationTests) this;
+					AbstractFullStackInitializrIntegrationTests test =
+							(AbstractFullStackInitializrIntegrationTests) this;
 					placeholder = test.host + ":" + test.port;
 				}
 				// Let's parse the port as it is random
 				// TODO: put the port back somehow so it appears in stubs
 				String content = json.replaceAll("@host@", placeholder);
 				return new JSONObject(content);
-			}
-			finally {
-				stream.close();
 			}
 		}
 		catch (Exception e) {
@@ -244,7 +236,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	private enum ArchiveType {
 		ZIP,
 
-		TGZ;
+		TGZ
 	}
 
 	@EnableAutoConfiguration

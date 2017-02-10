@@ -17,5 +17,7 @@
 package io.spring.initializr.metadata;
 
 public interface Describable {
+
 	String getDescription();
+
 }

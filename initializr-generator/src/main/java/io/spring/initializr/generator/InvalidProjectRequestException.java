@@ -33,4 +33,5 @@ public class InvalidProjectRequestException extends InitializrException {
 	public InvalidProjectRequestException(String message) {
 		super(message);
 	}
+
 }

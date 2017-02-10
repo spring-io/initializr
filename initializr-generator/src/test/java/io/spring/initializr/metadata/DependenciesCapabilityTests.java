@@ -26,6 +26,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 /**
+ * Tests for {@link DependenciesCapability}.
+ *
  * @author Stephane Nicoll
  */
 public class DependenciesCapabilityTests {

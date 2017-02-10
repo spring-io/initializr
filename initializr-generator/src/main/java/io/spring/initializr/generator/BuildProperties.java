@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator;
 
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
@@ -42,15 +43,15 @@ public class BuildProperties {
 	 */
 	private final TreeMap<String, Supplier<String>> versions = new TreeMap<>();
 
-	public TreeMap<String, Supplier<String>> getMaven() {
+	public Map<String, Supplier<String>> getMaven() {
 		return maven;
 	}
 
-	public TreeMap<String, Supplier<String>> getGradle() {
+	public Map<String, Supplier<String>> getGradle() {
 		return gradle;
 	}
 
-	public TreeMap<String, Supplier<String>> getVersions() {
+	public Map<String, Supplier<String>> getVersions() {
 		return versions;
 	}
 

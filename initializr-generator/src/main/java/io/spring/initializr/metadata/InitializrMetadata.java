@@ -128,7 +128,7 @@ public class InitializrMetadata {
 
 	/**
 	 * Merge this instance with the specified argument
-	 * @param other
+	 * @param other the other instance
 	 */
 	public void merge(InitializrMetadata other) {
 		this.configuration.merge(other.configuration);

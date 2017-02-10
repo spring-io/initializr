@@ -17,12 +17,14 @@
 package io.spring.initializr.generator;
 
 import java.beans.PropertyDescriptor;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.TemplateRenderer;
 
@@ -35,7 +37,7 @@ import org.springframework.beans.BeanWrapperImpl;
  */
 public class CommandLineHelpGenerator {
 
-	private static final String logo = "  .   ____          _            __ _ _\n"
+	private static final String LOGO = "  .   ____          _            __ _ _\n"
 			+ " /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\\n"
 			+ "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\\n"
 			+ " \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )\n"
@@ -95,7 +97,7 @@ public class CommandLineHelpGenerator {
 	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
-		model.put("logo", logo);
+		model.put("logo", LOGO);
 		model.put("serviceUrl", serviceUrl);
 		model.put("dependencies", generateDependencyTable(metadata));
 		model.put("types", generateTypeTable(metadata, "Rel", false));
@@ -126,7 +128,7 @@ public class CommandLineHelpGenerator {
 	protected Map<String, Object> initializeSpringBootCliModel(
 			InitializrMetadata metadata, String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
-		model.put("logo", logo);
+		model.put("logo", LOGO);
 		model.put("serviceUrl", serviceUrl);
 		model.put("dependencies", generateDependencyTable(metadata));
 		model.put("types", generateTypeTable(metadata, "Id", true));
@@ -154,7 +156,7 @@ public class CommandLineHelpGenerator {
 		dependencyTable[0] = new String[] { "Id", "Description", "Required version" };
 		int i = 1;
 		for (Dependency dep : metadata.getDependencies().getAll().stream()
-				.sorted((a, b) -> a.getId().compareTo(b.getId()))
+				.sorted(Comparator.comparing(MetadataElement::getId))
 				.collect(Collectors.toList())) {
 			String[] data = new String[3];
 			data[0] = dep.getId();
@@ -162,7 +164,6 @@ public class CommandLineHelpGenerator {
 			data[2] = dep.getVersionRequirement();
 			dependencyTable[i++] = data;
 		}
-		;
 		return TableGenerator.generate(dependencyTable);
 	}
 
@@ -177,7 +178,7 @@ public class CommandLineHelpGenerator {
 		}
 		int i = 1;
 		for (Type type : metadata.getTypes().getContent().stream()
-				.sorted((a, b) -> a.getId().compareTo(b.getId()))
+				.sorted(Comparator.comparing(MetadataElement::getId))
 				.collect(Collectors.toList())) {
 			String[] data = new String[typeTable[0].length];
 			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());

@@ -43,7 +43,8 @@ public class ProjectRequestResolverTests {
 			.build();
 
 	final List<ProjectRequestPostProcessor> postProcessors = new ArrayList<>();
-	final GenericProjectRequestPostProcessor processor = new GenericProjectRequestPostProcessor();
+	final GenericProjectRequestPostProcessor processor =
+			new GenericProjectRequestPostProcessor();
 
 	@Before
 	public void setup() {
@@ -55,14 +56,16 @@ public class ProjectRequestResolverTests {
 		processor.before.put("javaVersion", "1.2");
 		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
 		assertEquals("1.2", request.getJavaVersion());
-		assertEquals("1.2", request.getBuildProperties().getVersions().get("java.version").get());
+		assertEquals("1.2", request.getBuildProperties().getVersions()
+				.get("java.version").get());
 	}
 
 	@Test
 	public void afterResolution() {
 		postProcessors.add(new ProjectRequestPostProcessorAdapter() {
 			@Override
-			public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
+			public void postProcessAfterResolution(ProjectRequest request,
+					InitializrMetadata metadata) {
 				request.getBuildProperties().getMaven().clear();
 				request.getBuildProperties().getMaven().put("foo", () -> "bar");
 			}
@@ -72,9 +75,9 @@ public class ProjectRequestResolverTests {
 		assertEquals("bar", request.getBuildProperties().getMaven().get("foo").get());
 	}
 
-	ProjectRequest resolve(ProjectRequest request, List<ProjectRequestPostProcessor> processors) {
-		return new ProjectRequestResolver(processors)
-				.resolve(request, metadata);
+	ProjectRequest resolve(ProjectRequest request,
+			List<ProjectRequestPostProcessor> processors) {
+		return new ProjectRequestResolver(processors).resolve(request, metadata);
 	}
 
 	ProjectRequest createMavenProjectRequest(String... styles) {
@@ -90,21 +93,24 @@ public class ProjectRequestResolverTests {
 		return request;
 	}
 
-	static class GenericProjectRequestPostProcessor implements ProjectRequestPostProcessor {
+	static class GenericProjectRequestPostProcessor
+			implements ProjectRequestPostProcessor {
 
 		final Map<String, Object> before = new LinkedHashMap<>();
 		final Map<String, Object> after = new LinkedHashMap<>();
 
 		@Override
-		public void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata) {
+		public void postProcessBeforeResolution(ProjectRequest request,
+				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			before.forEach((k, v) -> wrapper.setPropertyValue(k, v));
+			before.forEach(wrapper::setPropertyValue);
 		}
 
 		@Override
-		public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
+		public void postProcessAfterResolution(ProjectRequest request,
+				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			after.forEach((k, v) -> wrapper.setPropertyValue(k, v));
+			after.forEach(wrapper::setPropertyValue);
 		}
 
 	}

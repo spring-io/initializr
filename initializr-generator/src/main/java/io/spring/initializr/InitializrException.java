@@ -31,4 +31,5 @@ public class InitializrException extends RuntimeException {
 	public InitializrException(String message) {
 		super(message);
 	}
+
 }

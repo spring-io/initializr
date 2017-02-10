@@ -37,7 +37,7 @@ import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.ui.UiController;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -69,8 +69,13 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @EnableConfigurationProperties(InitializrProperties.class)
 public class InitializrAutoConfiguration {
 
-	@Autowired(required = false)
-	private List<ProjectRequestPostProcessor> postProcessors = new ArrayList<>();
+	private final List<ProjectRequestPostProcessor> postProcessors;
+
+	public InitializrAutoConfiguration(
+			ObjectProvider<List<ProjectRequestPostProcessor>> postProcessors) {
+		List<ProjectRequestPostProcessor> list = postProcessors.getIfAvailable();
+		this.postProcessors = list != null ? list : new ArrayList<>();
+	}
 
 	@Bean
 	public WebConfig webConfig() {
@@ -79,7 +84,8 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public MainController initializrMainController(InitializrMetadataProvider metadataProvider,
+	public MainController initializrMainController(
+			InitializrMetadataProvider metadataProvider,
 			TemplateRenderer templateRenderer,
 			ResourceUrlProvider resourceUrlProvider,
 			ProjectGenerator projectGenerator,
@@ -90,8 +96,9 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public UiController initializrUiController() {
-		return new UiController();
+	public UiController initializrUiController(
+			InitializrMetadataProvider metadataProvider) {
+		return new UiController(metadataProvider);
 	}
 
 	@Bean
@@ -103,7 +110,8 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public TemplateRenderer templateRenderer(Environment environment) {
-		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment, "spring.mustache.");
+		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment,
+				"spring.mustache.");
 		boolean cache = resolver.getProperty("cache", Boolean.class, true);
 		TemplateRenderer templateRenderer = new TemplateRenderer();
 		templateRenderer.setCache(cache);
@@ -123,8 +131,10 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
-	public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
-		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build();
+	public InitializrMetadataProvider initializrMetadataProvider(
+			InitializrProperties properties) {
+		InitializrMetadata metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(properties).build();
 		return new DefaultInitializrMetadataProvider(metadata, new RestTemplate());
 	}
 

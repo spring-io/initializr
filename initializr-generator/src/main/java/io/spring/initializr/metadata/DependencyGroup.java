@@ -28,34 +28,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class DependencyGroup {
 
-	/**
-	 * Name of this group.
-	 */
 	private String name;
 
-	/**
-	 * The default version range to apply to all dependencies of this group unless
-	 * specified otherwise.
-	 */
 	@JsonIgnore
 	private String versionRange;
 
-	/**
-	 * The default bom to associate to all dependencies of this group unless
-	 * specified otherwise.
-	 */
 	@JsonIgnore
 	private String bom;
 
-	/**
-	 * The default repository to associate to all dependencies of this group unless
-	 * specified otherwise.
-	 */
 	@JsonIgnore
 	private String repository;
 
 	final List<Dependency> content = new ArrayList<>();
 
+	/**
+	 * Return the name of this group.
+	 */
 	public String getName() {
 		return name;
 	}
@@ -64,6 +52,10 @@ public class DependencyGroup {
 		this.name = name;
 	}
 
+	/**
+	 * Return the default version range to apply to all dependencies of this group unless
+	 * specified otherwise.
+	 */
 	public String getVersionRange() {
 		return versionRange;
 	}
@@ -72,6 +64,10 @@ public class DependencyGroup {
 		this.versionRange = versionRange;
 	}
 
+	/**
+	 * Return the default bom to associate to all dependencies of this group unless
+	 * specified otherwise.
+	 */
 	public String getBom() {
 		return bom;
 	}
@@ -80,6 +76,10 @@ public class DependencyGroup {
 		this.bom = bom;
 	}
 
+	/**
+	 * Return the default repository to associate to all dependencies of this group unless
+	 * specified otherwise.
+	 */
 	public String getRepository() {
 		return repository;
 	}
@@ -88,6 +88,9 @@ public class DependencyGroup {
 		this.repository = repository;
 	}
 
+	/**
+	 * Return the {@link Dependency dependencies} of this group.
+	 */
 	public List<Dependency> getContent() {
 		return content;
 	}

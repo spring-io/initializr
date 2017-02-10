@@ -41,9 +41,11 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public final class Version implements Serializable, Comparable<Version> {
 
-	private static final VersionQualifierComparator qualifierComparator = new VersionQualifierComparator();
+	private static final VersionQualifierComparator qualifierComparator =
+			new VersionQualifierComparator();
 
-	private static final VersionParser parser = new VersionParser(Collections.emptyList());
+	private static final VersionParser parser =
+			new VersionParser(Collections.emptyList());
 
 	private final Integer major;
 	private final Integer minor;
@@ -92,7 +94,7 @@ public final class Version implements Serializable, Comparable<Version> {
 	 * @param text the version text
 	 * @return a Version instance for the specified version text
 	 * @throws InvalidVersionException if the version text could not be parsed
-	 * @see {@link VersionParser}
+	 * @see VersionParser
 	 */
 	public static Version parse(String text) {
 		return parser.parse(text);
@@ -104,7 +106,7 @@ public final class Version implements Serializable, Comparable<Version> {
 	 * Return {@code null} if the text represents an invalid version.
 	 * @param text the version text
 	 * @return a Version instance for the specified version text
-	 * @see {@link VersionParser}
+	 * @see VersionParser
 	 */
 	public static Version safeParse(String text) {
 		try {
@@ -141,16 +143,14 @@ public final class Version implements Serializable, Comparable<Version> {
 		return firstIndex.compareTo(secondIndex);
 	}
 
-	public static class Qualifier {
-		public Qualifier() {
-		}
+	public static class Qualifier implements Serializable {
 
 		public Qualifier(String qualifier) {
 			this.qualifier = qualifier;
 		}
 
-		String qualifier;
-		Integer version;
+		private String qualifier;
+		private Integer version;
 
 		public String getQualifier() {
 			return qualifier;
@@ -264,7 +264,8 @@ public final class Version implements Serializable, Comparable<Version> {
 		static final String MILESTONE = "M";
 		static final String RC = "RC";
 
-		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC, SNAPSHOT, RELEASE);
+		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC,
+				SNAPSHOT, RELEASE);
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
@@ -285,7 +286,8 @@ public final class Version implements Serializable, Comparable<Version> {
 			Integer firstIndex = getQualifierIndex(first.qualifier);
 			Integer secondIndex = getQualifierIndex(second.qualifier);
 
-			if (firstIndex == -1 && secondIndex == -1) { // Unknown qualifier, alphabetic ordering
+			// Unknown qualifier, alphabetic ordering
+			if (firstIndex == -1 && secondIndex == -1) {
 				return first.qualifier.compareTo(second.qualifier);
 			}
 			else {

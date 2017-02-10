@@ -30,7 +30,8 @@ import org.springframework.test.context.ActiveProfiles;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+public class UiControllerIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	public void dependenciesNoVersion() {
@@ -41,13 +42,15 @@ public class UiControllerIntegrationTests extends AbstractInitializrControllerIn
 
 	@Test
 	public void dependenciesSpecificVersion() {
-		ResponseEntity<String> response = execute("/ui/dependencies?version=1.1.2.RELEASE", String.class, null);
+		ResponseEntity<String> response = execute(
+				"/ui/dependencies?version=1.1.2.RELEASE", String.class, null);
 		validateContentType(response, MediaType.APPLICATION_JSON);
 		validateDependenciesOutput("1.1.2", new JSONObject(response.getBody()));
 	}
 
 	protected void validateDependenciesOutput(String version, JSONObject actual) {
-		JSONObject expected = readJsonFrom("metadata/ui/test-dependencies-" + version + ".json");
+		JSONObject expected = readJsonFrom(
+				"metadata/ui/test-dependencies-" + version + ".json");
 		JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
 	}
 }

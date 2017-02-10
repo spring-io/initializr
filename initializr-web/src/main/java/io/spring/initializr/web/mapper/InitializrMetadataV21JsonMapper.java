@@ -43,12 +43,14 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 
 	public InitializrMetadataV21JsonMapper() {
 		this.dependenciesVariables = new TemplateVariables(
-				new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM)
+				new TemplateVariable("bootVersion",
+						TemplateVariable.VariableType.REQUEST_PARAM)
 		);
 	}
 
 	@Override
-	protected Map<String, Object> links(JSONObject parent, List<Type> types, String appUrl) {
+	protected Map<String, Object> links(JSONObject parent, List<Type> types,
+			String appUrl) {
 		Map<String, Object> links = super.links(parent, types, appUrl);
 		links.put("dependencies", dependenciesLink(appUrl));
 		parent.put("_links", links);
@@ -75,4 +77,5 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 		result.put("templated", true);
 		return result;
 	}
+
 }

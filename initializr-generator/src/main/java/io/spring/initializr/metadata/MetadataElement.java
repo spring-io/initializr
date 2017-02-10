@@ -21,7 +21,6 @@ package io.spring.initializr.metadata;
  *
  * @author Stephane Nicoll
  */
-// @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 public class MetadataElement {
 
 	/**

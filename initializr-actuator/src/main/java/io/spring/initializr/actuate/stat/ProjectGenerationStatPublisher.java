@@ -28,7 +28,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.retry.RetryCallback;
-import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
@@ -68,7 +67,7 @@ public class ProjectGenerationStatPublisher {
 		try {
 			ProjectRequestDocument document = documentFactory.createDocument(event);
 			if (log.isDebugEnabled()) {
-				log.debug("Publishing $document");
+				log.debug("Publishing " + document);
 			}
 			json = toJson(document);
 
@@ -76,12 +75,9 @@ public class ProjectGenerationStatPublisher {
 					.post(this.statsProperties.getElastic().getEntityUrl())
 					.contentType(MediaType.APPLICATION_JSON).body(json);
 
-			this.retryTemplate.execute(new RetryCallback<Void, RuntimeException>() {
-				@Override
-				public Void doWithRetry(RetryContext context) {
-					restTemplate.exchange(request, String.class);
-					return null;
-				}
+			this.retryTemplate.execute((RetryCallback<Void, RuntimeException>) context -> {
+				restTemplate.exchange(request, String.class);
+				return null;
 			});
 		}
 		catch (Exception ex) {
@@ -95,8 +91,8 @@ public class ProjectGenerationStatPublisher {
 		try {
 			return this.objectMapper.writeValueAsString(stats);
 		}
-		catch (JsonProcessingException e) {
-			throw new IllegalStateException("Cannot convert to JSON", e);
+		catch (JsonProcessingException ex) {
+			throw new IllegalStateException("Cannot convert to JSON", ex);
 		}
 	}
 

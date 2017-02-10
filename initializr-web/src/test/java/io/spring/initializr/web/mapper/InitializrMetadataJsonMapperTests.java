@@ -31,11 +31,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class InitializrMetadataJsonMapperTests {
 
-	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataV21JsonMapper();
+	private final InitializrMetadataJsonMapper jsonMapper =
+			new InitializrMetadataV21JsonMapper();
 
 	@Test
 	public void withNoAppUrl() {
-		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addType("foo", true, "/foo.zip", "none", "test")
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
+				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, null);
 		JSONObject result = new JSONObject(json);
@@ -45,7 +47,8 @@ public class InitializrMetadataJsonMapperTests {
 
 	@Test
 	public void withAppUrl() {
-		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addType("foo", true, "/foo.zip", "none", "test")
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
+				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
 		JSONObject result = new JSONObject(json);

@@ -38,38 +38,11 @@ public class BillOfMaterials {
 
 	private String groupId;
 	private String artifactId;
-
-	/**
-	 * The version of the BOM. Can be {@code null} if it is provided via a mapping.
-	 */
 	private String version;
-
-	/**
-	 * The property to use to externalize the version of the BOM. When this is set, a
-	 * version property is automatically added rather than setting the version in the bom
-	 * declaration itself.
-	 */
 	private String versionProperty;
-
-	/**
-	 * The relative order of this BOM where lower values have higher priority. The default
-	 * value is {@code Integer.MAX_VALUE}, indicating lowest priority. The Spring Boot
-	 * dependencies bom has an order of 100.
-	 */
 	private Integer order = Integer.MAX_VALUE;
-
-	/**
-	 * The BOM(s) that should be automatically included if this BOM is required. Can be
-	 * {@code null} if it is provided via a mapping.
-	 */
 	private List<String> additionalBoms = new ArrayList<>();
-
-	/**
-	 * The repositories that are required if this BOM is required. Can be {@code null} if
-	 * it is provided via a mapping.
-	 */
 	private List<String> repositories = new ArrayList<>();
-
 	private final List<Mapping> mappings = new ArrayList<>();
 
 	public BillOfMaterials() {
@@ -101,6 +74,9 @@ public class BillOfMaterials {
 		this.artifactId = artifactId;
 	}
 
+	/**
+	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
+	 */
 	public String getVersion() {
 		return version;
 	}
@@ -109,6 +85,11 @@ public class BillOfMaterials {
 		this.version = version;
 	}
 
+	/**
+	 * Return the property to use to externalize the version of the BOM. When this is set,
+	 * a version property is automatically added rather than setting the version in the
+	 * bom declaration itself.
+	 */
 	public String getVersionProperty() {
 		return versionProperty;
 	}
@@ -117,6 +98,11 @@ public class BillOfMaterials {
 		this.versionProperty = versionProperty;
 	}
 
+	/**
+	 * Return the relative order of this BOM where lower values have higher priority. The
+	 * default value is {@code Integer.MAX_VALUE}, indicating lowest priority. The Spring
+	 * Boot dependencies bom has an order of 100.
+	 */
 	public Integer getOrder() {
 		return order;
 	}
@@ -125,6 +111,10 @@ public class BillOfMaterials {
 		this.order = order;
 	}
 
+	/**
+	 * Return the BOM(s) that should be automatically included if this BOM is required.
+	 * Can be {@code null} if it is provided via a mapping.
+	 */
 	public List<String> getAdditionalBoms() {
 		return additionalBoms;
 	}
@@ -133,6 +123,10 @@ public class BillOfMaterials {
 		this.additionalBoms = additionalBoms;
 	}
 
+	/**
+	 * Return the repositories that are required if this BOM is required. Can be
+	 * {@code null} if it is provided via a mapping.
+	 */
 	public List<String> getRepositories() {
 		return repositories;
 	}

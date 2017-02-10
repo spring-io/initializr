@@ -34,11 +34,13 @@ import static org.junit.Assert.assertTrue;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
-public class MainControllerEnvIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+public class MainControllerEnvIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	public void downloadCliWithCustomRepository() throws Exception {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"), String.class);
+		ResponseEntity<?> entity = getRestTemplate().getForEntity(
+				createUrl("/spring"), String.class);
 		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
 		assertEquals(new URI(expected), entity.getHeaders().getLocation());
@@ -55,7 +57,7 @@ public class MainControllerEnvIntegrationTests extends AbstractInitializrControl
 	@Test
 	public void generateProjectWithInvalidName() {
 		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
-				.isJavaProject((String) ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
+				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
 				.isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasDependenciesCount(2)
@@ -66,7 +68,8 @@ public class MainControllerEnvIntegrationTests extends AbstractInitializrControl
 	@Test
 	public void googleAnalytics() {
 		String body = htmlHome();
-		assertTrue("google analytics should be enabled", body.contains("ga('create', 'UA-1234567-89', 'auto');"));
+		assertTrue("google analytics should be enabled",
+				body.contains("ga('create', 'UA-1234567-89', 'auto');"));
 	}
 
 }

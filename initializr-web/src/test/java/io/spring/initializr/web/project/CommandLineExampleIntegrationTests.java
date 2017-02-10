@@ -33,7 +33,8 @@ import org.springframework.test.context.ActiveProfiles;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class CommandLineExampleIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+public class CommandLineExampleIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	public void generateDefaultProject() {
@@ -67,7 +68,8 @@ public class CommandLineExampleIntegrationTests extends AbstractInitializrContro
 
 	@Test
 	public void generateMavenPomWithWarPackaging() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"), String.class);
+		ResponseEntity<String> response = getRestTemplate().getForEntity(
+				createUrl("/pom.xml?packaging=war"), String.class);
 		PomAssert pomAssert = new PomAssert(response.getBody());
 		pomAssert.hasPackaging("war");
 	}

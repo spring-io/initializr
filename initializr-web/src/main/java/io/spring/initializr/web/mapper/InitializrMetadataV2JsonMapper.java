@@ -95,9 +95,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 
 	protected Map<String, Object> links(JSONObject parent, List<Type> types, String appUrl) {
 		Map<String, Object> content = new LinkedHashMap<>();
-		types.forEach(it -> {
-			content.put(it.getId(), link(appUrl, it));
-		});
+		types.forEach(it -> content.put(it.getId(), link(appUrl, it)));
 		parent.put("_links", content);
 		return content;
 	}
@@ -120,7 +118,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("type", capability.getType().getName());
 		map.put("values",
-				capability.getContent().stream().map(it -> mapDependencyGroup(it)).collect(Collectors.toList()));
+				capability.getContent().stream().map(this::mapDependencyGroup)
+						.collect(Collectors.toList()));
 		parent.put(capability.getId(), map);
 	}
 
@@ -131,7 +130,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		if (defaultType != null) {
 			map.put("default", defaultType.getId());
 		}
-		map.put("values", capability.getContent().stream().map(it -> mapType(it))
+		map.put("values", capability.getContent().stream().map(this::mapType)
 				.collect(Collectors.toList()));
 		parent.put("type", map);
 	}
@@ -143,7 +142,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		if (defaultType != null) {
 			map.put("default", defaultType.getId());
 		}
-		map.put("values", capability.getContent().stream().map(it -> mapValue(it))
+		map.put("values", capability.getContent().stream().map(this::mapValue)
 				.collect(Collectors.toList()));
 		parent.put(capability.getId(), map);
 	}
@@ -161,7 +160,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	protected Map<String, Object> mapDependencyGroup(DependencyGroup group) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		result.put("name", group.getName());
-		if ((group instanceof Describable) && ((Describable) group).getDescription() != null) {
+		if ((group instanceof Describable)
+				&& ((Describable) group).getDescription() != null) {
 			result.put("description", ((Describable) group).getDescription());
 		}
 		List<Object> items = new ArrayList<>();
@@ -194,7 +194,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		Map<String, Object> result = new LinkedHashMap<>();
 		result.put("id", value.getId());
 		result.put("name", value.getName());
-		if ((value instanceof Describable) && ((Describable) value).getDescription() != null) {
+		if ((value instanceof Describable)
+				&& ((Describable) value).getDescription() != null) {
 			result.put("description", ((Describable) value).getDescription());
 		}
 		return result;

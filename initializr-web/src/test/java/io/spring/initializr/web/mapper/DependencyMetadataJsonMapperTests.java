@@ -34,7 +34,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class DependencyMetadataJsonMapperTests {
 
-	private final DependencyMetadataJsonMapper mapper = new DependencyMetadataV21JsonMapper();
+	private final DependencyMetadataJsonMapper mapper =
+			new DependencyMetadataV21JsonMapper();
 
 	@Test
 	public void mapDependency() throws Exception {

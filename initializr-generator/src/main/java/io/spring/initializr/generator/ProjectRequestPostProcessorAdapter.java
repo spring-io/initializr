@@ -11,11 +11,13 @@ import io.spring.initializr.metadata.InitializrMetadata;
 public class ProjectRequestPostProcessorAdapter implements ProjectRequestPostProcessor {
 
 	@Override
-	public void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata) {
+	public void postProcessBeforeResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
 	}
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
 	}
 
 }

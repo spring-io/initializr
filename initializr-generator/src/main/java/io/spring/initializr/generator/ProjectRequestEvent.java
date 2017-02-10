@@ -25,14 +25,7 @@ package io.spring.initializr.generator;
  */
 public abstract class ProjectRequestEvent {
 
-	/**
-	 * The {@link ProjectRequest} used to generate the project.
-	 */
 	private final ProjectRequest projectRequest;
-
-	/**
-	 * The timestamp at which the request was processed.
-	 */
 	private final long timestamp;
 
 	protected ProjectRequestEvent(ProjectRequest projectRequest) {
@@ -40,10 +33,16 @@ public abstract class ProjectRequestEvent {
 		this.timestamp = System.currentTimeMillis();
 	}
 
+	/**
+	 * Return the {@link ProjectRequest} used to generate the project.
+	 */
 	public ProjectRequest getProjectRequest() {
 		return projectRequest;
 	}
 
+	/**
+	 * Return the timestamp at which the request was processed.
+	 */
 	public long getTimestamp() {
 		return timestamp;
 	}

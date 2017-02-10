@@ -39,9 +39,8 @@ public class LinkMapper {
 	public static Map<String, Object> mapLinks(List<Link> links) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		Map<String, List<Link>> byRel = new LinkedHashMap<>();
-		links.forEach(it -> {
-			byRel.computeIfAbsent(it.getRel(), k -> new ArrayList<>()).add(it);
-		});
+		links.forEach(it -> byRel.computeIfAbsent(it.getRel(),
+				k -> new ArrayList<>()).add(it));
 		byRel.forEach((rel, l) -> {
 			if (l.size() == 1) {
 				Map<String, Object> root = new LinkedHashMap<>();

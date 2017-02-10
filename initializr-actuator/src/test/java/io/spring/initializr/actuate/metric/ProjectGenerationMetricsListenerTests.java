@@ -40,7 +40,6 @@ public class ProjectGenerationMetricsListenerTests {
 	private ProjectGenerationMetricsListener listener;
 	private MetricsAssert metricsAssert;
 
-
 	@Before
 	public void setup() {
 		TestCounterService counterService = new TestCounterService();

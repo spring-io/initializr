@@ -31,7 +31,7 @@ public class SingleSelectCapability
 		extends ServiceCapability<List<DefaultMetadataElement>>
 		implements Defaultable<DefaultMetadataElement> {
 
-	private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<DefaultMetadataElement>();
+	private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<>();
 
 	@JsonCreator
 	SingleSelectCapability(@JsonProperty("id") String id) {
@@ -42,6 +42,7 @@ public class SingleSelectCapability
 		super(id, ServiceCapabilityType.SINGLE_SELECT, title, description);
 	}
 
+	@Override
 	public List<DefaultMetadataElement> getContent() {
 		return content;
 	}
@@ -49,6 +50,7 @@ public class SingleSelectCapability
 	/**
 	 * Return the default element of this capability.
 	 */
+	@Override
 	public DefaultMetadataElement getDefault() {
 		return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
 				.orElse(null);

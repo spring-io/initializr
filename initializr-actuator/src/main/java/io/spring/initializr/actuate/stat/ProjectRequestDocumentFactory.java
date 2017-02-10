@@ -37,7 +37,8 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequestDocumentFactory {
 
-	private static final Pattern IP_PATTERN = Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
+	private static final Pattern IP_PATTERN =
+			Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
 	private final InitializrMetadataProvider metadataProvider;
 
@@ -71,25 +72,29 @@ public class ProjectRequestDocumentFactory {
 		document.setBootVersion(request.getBootVersion());
 
 		document.setJavaVersion(request.getJavaVersion());
-		if (StringUtils.hasText(request.getJavaVersion()) && metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
+		if (StringUtils.hasText(request.getJavaVersion())
+				&& metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
 			document.setInvalid(true);
 			document.setInvalidJavaVersion(true);
 		}
 
 		document.setLanguage(request.getLanguage());
-		if (StringUtils.hasText(request.getLanguage()) && metadata.getLanguages().get(request.getLanguage()) == null) {
+		if (StringUtils.hasText(request.getLanguage())
+				&& metadata.getLanguages().get(request.getLanguage()) == null) {
 			document.setInvalid(true);
 			document.setInvalidLanguage(true);
 		}
 
 		document.setPackaging(request.getPackaging());
-		if (StringUtils.hasText(request.getPackaging()) && metadata.getPackagings().get(request.getPackaging()) == null) {
+		if (StringUtils.hasText(request.getPackaging())
+				&& metadata.getPackagings().get(request.getPackaging()) == null) {
 			document.setInvalid(true);
 			document.setInvalidPackaging(true);
 		}
 
 		document.setType(request.getType());
-		if (StringUtils.hasText(request.getType()) && metadata.getTypes().get(request.getType()) == null) {
+		if (StringUtils.hasText(request.getType())
+				&& metadata.getTypes().get(request.getType()) == null) {
 			document.setInvalid(true);
 			document.setInvalidType(true);
 		}
@@ -120,14 +125,15 @@ public class ProjectRequestDocumentFactory {
 		return document;
 	}
 
-	private static void handleCloudFlareHeaders(ProjectRequest request, ProjectRequestDocument document) {
+	private static void handleCloudFlareHeaders(ProjectRequest request,
+			ProjectRequestDocument document) {
 		String candidate = (String) request.getParameters().get("cf-connecting-ip");
 		if (StringUtils.hasText(candidate)) {
 			document.setRequestIp(candidate);
 			document.setRequestIpv4(extractIpv4(candidate));
 		}
 		String country = (String) request.getParameters().get("cf-ipcountry");
-		if (StringUtils.hasText(country) && !country.toLowerCase().equals("xx")) {
+		if (StringUtils.hasText(country) && !"xx".equalsIgnoreCase(country)) {
 			document.setRequestCountry(country);
 		}
 	}

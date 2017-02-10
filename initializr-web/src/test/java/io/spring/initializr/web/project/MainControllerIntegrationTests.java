@@ -270,7 +270,6 @@ public class MainControllerIntegrationTests
 		validateContentType(response,
 				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(new JSONObject(response.getBody()));
-		;
 	}
 
 	@Test
@@ -379,33 +378,36 @@ public class MainControllerIntegrationTests
 		assertFalse("Wrong body:\n" + body, body.contains("{{"));
 		assertFalse("Wrong body:\n" + body, body.contains("}}"));
 		assertTrue("Wrong body:\n" + body, body.contains("<option value=\"groovy\">"));
-		assertTrue("Wrong body:\n" + body, body.contains("<option value=\"java\" selected>"));
+		assertTrue("Wrong body:\n" + body,
+				body.contains("<option value=\"java\" selected>"));
 	}
 
 	@Test
 	public void homeIsJson() {
 		String body = invokeHome(null, (String[]) null).getBody();
-		assertTrue("Wrong body:\n$body", body.contains("\"dependencies\""));
+		assertTrue("Wrong body:\n" + body, body.contains("\"dependencies\""));
 	}
 
 	@Test
 	public void webIsAddedPom() {
-		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"), String.class);
+		String body = getRestTemplate().getForObject(
+				createUrl("/pom.xml?packaging=war"), String.class);
 		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
 		assertTrue("Wrong body:\n" + body, body.contains("provided"));
 	}
 
 	@Test
 	public void webIsAddedGradle() {
-		String body = getRestTemplate().getForObject(createUrl("/build.gradle?packaging=war"), String.class);
-		assertTrue("Wrong body:\n$body", body.contains("spring-boot-starter-web"));
-		assertTrue("Wrong body:\n$body", body.contains("providedRuntime"));
+		String body = getRestTemplate().getForObject(
+				createUrl("/build.gradle?packaging=war"), String.class);
+		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
+		assertTrue("Wrong body:\n" + body, body.contains("providedRuntime"));
 	}
 
 	@Test
 	public void homeHasWebStyle() {
 		String body = htmlHome();
-		assertTrue("Wrong body:\n$body", body.contains("name=\"style\" value=\"web\""));
+		assertTrue("Wrong body:\n" + body, body.contains("name=\"style\" value=\"web\""));
 	}
 
 	@Test
@@ -419,12 +421,14 @@ public class MainControllerIntegrationTests
 	public void homeHasOnlyProjectFormatTypes() {
 		String body = htmlHome();
 		assertTrue("maven project not found", body.contains("Maven Project"));
-		assertFalse("maven pom type should have been filtered", body.contains("Maven POM"));
+		assertFalse("maven pom type should have been filtered",
+				body.contains("Maven POM"));
 	}
 
 	@Test
 	public void downloadStarter() {
-		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"), byte[].class);
+		byte[] body = getRestTemplate().getForObject(
+				createUrl("starter.zip"), byte[].class);
 		assertNotNull(body);
 		assertTrue(body.length > 100);
 	}

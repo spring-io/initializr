@@ -56,15 +56,19 @@ public class DefaultInitializrMetadataProviderTests {
 	@Test
 	public void bootVersionsAreReplaced() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addBootVersion("0.0.9.RELEASE", true).addBootVersion("0.0.8.RELEASE", false).build();
+				.addBootVersion("0.0.9.RELEASE", true)
+				.addBootVersion("0.0.8.RELEASE", false)
+				.build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
-		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata, restTemplate);
+		DefaultInitializrMetadataProvider provider =
+				new DefaultInitializrMetadataProvider(metadata, restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot.json");
 
 		InitializrMetadata updatedMetadata = provider.get();
 		assertNotNull(updatedMetadata.getBootVersions());
-		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata.getBootVersions().getContent();
+		List<DefaultMetadataElement> updatedBootVersions =
+				updatedMetadata.getBootVersions().getContent();
 		assertEquals(4, updatedBootVersions.size());
 		assertBootVersion(updatedBootVersions.get(0), "1.4.1 (SNAPSHOT)", false);
 		assertBootVersion(updatedBootVersions.get(1), "1.4.0", true);
@@ -75,15 +79,18 @@ public class DefaultInitializrMetadataProviderTests {
 	@Test
 	public void defaultBootVersionIsAlwaysSet() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addBootVersion("0.0.9.RELEASE", true).addBootVersion("0.0.8.RELEASE", false).build();
+				.addBootVersion("0.0.9.RELEASE", true)
+				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
-		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata, restTemplate);
+		DefaultInitializrMetadataProvider provider =
+				new DefaultInitializrMetadataProvider(metadata, restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot-no-default.json");
 
 		InitializrMetadata updatedMetadata = provider.get();
 		assertNotNull(updatedMetadata.getBootVersions());
-		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata.getBootVersions().getContent();
+		List<DefaultMetadataElement> updatedBootVersions =
+				updatedMetadata.getBootVersions().getContent();
 		assertEquals(4, updatedBootVersions.size());
 		assertBootVersion(updatedBootVersions.get(0), "1.3.1 (SNAPSHOT)", true);
 		assertBootVersion(updatedBootVersions.get(1), "1.3.0", false);
@@ -91,7 +98,8 @@ public class DefaultInitializrMetadataProviderTests {
 		assertBootVersion(updatedBootVersions.get(3), "1.2.5", false);
 	}
 
-	private static void assertBootVersion(DefaultMetadataElement actual, String name, boolean defaultVersion) {
+	private static void assertBootVersion(DefaultMetadataElement actual, String name,
+			boolean defaultVersion) {
 		assertEquals(name, actual.getName());
 		assertEquals(defaultVersion, actual.isDefault());
 	}

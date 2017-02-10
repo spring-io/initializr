@@ -32,12 +32,13 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Controller
 public class LegacyStsController extends AbstractInitializrController {
 
-	public LegacyStsController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider) {
+	public LegacyStsController(InitializrMetadataProvider metadataProvider,
+			ResourceUrlProvider resourceUrlProvider) {
 		super(metadataProvider, resourceUrlProvider);
 	}
 
 	@RequestMapping(value = "/sts", produces = "text/html")
-	public String stsHome(Map<String, Object> model) throws Exception {
+	public String stsHome(Map<String, Object> model) {
 		renderHome(model);
 		return "sts-home";
 	}

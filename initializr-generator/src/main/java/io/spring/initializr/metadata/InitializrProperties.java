@@ -154,6 +154,7 @@ public class InitializrProperties extends InitializrConfiguration {
 	}
 
 	public static class SimpleElement {
+
 		/**
 		 * Element title.
 		 */

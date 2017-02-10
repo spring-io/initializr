@@ -43,7 +43,7 @@ import org.springframework.restdocs.templates.TemplateEngine;
  */
 public class ResponseFieldSnippet extends TemplatedSnippet {
 
-	private String path;
+	private final String path;
 
 	private final JsonFieldProcessor fieldProcessor = new JsonFieldProcessor();
 
@@ -96,7 +96,6 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 
 	@Override
 	protected Map<String, Object> createModel(Operation operation) {
-		String value = "{}";
 		try {
 			Object object = objectMapper.readValue(
 					operation.getResponse().getContentAsString(), Object.class);
@@ -104,12 +103,12 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 			if (field instanceof List && index != null) {
 				field = ((List<?>) field).get(index);
 			}
-			value = objectMapper.writeValueAsString(field);
+			return Collections.singletonMap("value",
+					objectMapper.writeValueAsString(field));
 		}
-		catch (Exception e) {
-			throw new IllegalStateException(e);
+		catch (Exception ex) {
+			throw new IllegalStateException(ex);
 		}
-		return Collections.singletonMap("value", value);
 	}
 
 }

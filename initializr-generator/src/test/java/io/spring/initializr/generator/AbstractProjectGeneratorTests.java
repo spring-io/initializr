@@ -41,7 +41,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- *
  * @author Stephane Nicoll
  */
 public abstract class AbstractProjectGeneratorTests {

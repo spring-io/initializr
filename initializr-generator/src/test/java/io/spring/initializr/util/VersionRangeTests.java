@@ -94,13 +94,15 @@ public class VersionRangeTests {
 	@Test
 	public void matchLatestVersion() {
 		assertThat("1.2.8.RELEASE", match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
+				new VersionParser(Collections.singletonList(
+						Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	public void matchOverLatestVersion() {
 		assertThat("1.2.10.RELEASE", not(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.2.9.BUILD-SNAPSHOT"))))));
+				new VersionParser(Collections.singletonList(
+						Version.parse("1.2.9.BUILD-SNAPSHOT"))))));
 	}
 
 	@Test

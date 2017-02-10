@@ -30,7 +30,6 @@ import org.springframework.util.StringUtils;
  */
 @JsonIgnoreProperties({ "default", "all" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-// @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 public abstract class ServiceCapability<T> implements Cloneable {
 
 	private final String id;
@@ -46,17 +45,6 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	 * A description of the capability, used in help usage or UI tooltips.
 	 */
 	private String description;
-
-	public ServiceCapability(ServiceCapability<T> other) {
-		this.id = other.id;
-		this.type = other.type;
-		merge(other);
-	}
-
-	protected ServiceCapability(String id, ServiceCapabilityType type) {
-		this.id = id;
-		this.type = type;
-	}
 
 	protected ServiceCapability(String id, ServiceCapabilityType type, String title,
 			String description) {

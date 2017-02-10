@@ -67,9 +67,7 @@ public class MetricsExportTests {
 	@Before
 	public void init() throws Exception {
 		repository = (RedisMetricRepository) writer;
-		repository.findAll().forEach(it -> {
-			repository.reset(it.getName());
-		});
+		repository.findAll().forEach(it -> repository.reset(it.getName()));
 		assertTrue("Metrics not empty", repository.count() == 0);
 	}
 
@@ -93,4 +91,5 @@ public class MetricsExportTests {
 			return new SimpleInitializrMetadataProvider(metadata);
 		}
 	}
+
 }

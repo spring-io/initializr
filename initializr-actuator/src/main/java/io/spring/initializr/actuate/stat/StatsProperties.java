@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
 @ConfigurationProperties("initializr.stats")
 public class StatsProperties {
 
+	@NestedConfigurationProperty
 	private final Elastic elastic = new Elastic();
 
 	public Elastic getElastic() {
@@ -121,8 +123,8 @@ public class StatsProperties {
 			try {
 				return new URI(string);
 			}
-			catch (URISyntaxException e) {
-				throw new IllegalStateException("Cannot create entity URL: " + string, e);
+			catch (URISyntaxException ex) {
+				throw new IllegalStateException("Cannot create entity URL: " + string, ex);
 			}
 		}
 

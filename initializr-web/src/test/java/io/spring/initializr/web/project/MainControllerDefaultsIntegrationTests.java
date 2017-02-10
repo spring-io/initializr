@@ -28,15 +28,18 @@ import static org.junit.Assert.assertTrue;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-defaults" })
-public class MainControllerDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+public class MainControllerDefaultsIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization
 
 	@Test
 	public void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"), String.class);
+		String content = getRestTemplate().getForObject(
+				createUrl("/pom.xml?style=web"), String.class);
 		PomAssert pomAssert = new PomAssert(content);
-		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar").hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar")
+		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
+				.hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar")
 				.hasName("FooBar").hasDescription("FooBar Project");
 	}
 

@@ -26,9 +26,8 @@ import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Reads metadata from the main spring.io website. This is a stateful
- * service: creates a new instance whenever you need to refresh the
- * content.
+ * Reads metadata from the main spring.io website. This is a stateful service: create a
+ * new instance whenever you need to refresh the content.
  *
  * @author Stephane Nicoll
  */

@@ -44,9 +44,11 @@ public class VersionParser {
 
 	public static final VersionParser DEFAULT = new VersionParser(Collections.emptyList());
 
-	private static final Pattern VERSION_REGEX = Pattern.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:\\.([^0-9]+)(\\d+)?)?$");
+	private static final Pattern VERSION_REGEX =
+			Pattern.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:\\.([^0-9]+)(\\d+)?)?$");
 
-	private static final Pattern RANGE_REGEX = Pattern.compile("(\\(|\\[)(.*),(.*)(\\)|\\])");
+	private static final Pattern RANGE_REGEX =
+			Pattern.compile("(\\(|\\[)(.*),(.*)(\\)|\\])");
 
 	private final List<Version> latestVersions;
 
@@ -66,8 +68,9 @@ public class VersionParser {
 		Assert.notNull(text, "Text must not be null");
 		Matcher matcher = VERSION_REGEX.matcher(text.trim());
 		if (!matcher.matches()) {
-			throw new InvalidVersionException("Could not determine version based on '" + text + "': version format " +
-					"is Minor.Major.Patch.Qualifier (e.g. 1.0.5.RELEASE)");
+			throw new InvalidVersionException("Could not determine version based on '"
+					+ text + "': version format " + "is Minor.Major.Patch.Qualifier "
+					+ "(e.g. 1.0.5.RELEASE)");
 		}
 		Integer major = Integer.valueOf(matcher.group(1));
 		String minor = matcher.group(2);
@@ -78,7 +81,7 @@ public class VersionParser {
 			qualifier = new Version.Qualifier(qualifierId);
 			String o = matcher.group(5);
 			if (o != null) {
-				qualifier.version = Integer.valueOf(o);
+				qualifier.setVersion(Integer.valueOf(o));
 			}
 		}
 		if ("x".equals(minor) || "x".equals(patch)) {
@@ -89,10 +92,12 @@ public class VersionParser {
 						: Integer.parseInt(minor)),
 						("x".equals(patch) ? 999 : Integer.parseInt(patch)), qualifier);
 			}
-			return new Version(major, latest.getMinor(), latest.getPatch(), latest.getQualifier());
+			return new Version(major, latest.getMinor(), latest.getPatch(),
+					latest.getQualifier());
 		}
 		else {
-			return new Version(major, Integer.parseInt(minor), Integer.parseInt(patch), qualifier);
+			return new Version(major, Integer.parseInt(minor), Integer.parseInt(patch),
+					qualifier);
 		}
 	}
 

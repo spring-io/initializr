@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -43,8 +44,8 @@ public class ProjectResourceLocator {
 		try (InputStream stream = getInputStream(location)) {
 			return StreamUtils.copyToByteArray(stream);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot get resource", e);
+		catch (IOException ex) {
+			throw new IllegalStateException("Cannot get resource", ex);
 		}
 	}
 
@@ -58,16 +59,14 @@ public class ProjectResourceLocator {
 		try (InputStream stream = getInputStream(location)) {
 			return StreamUtils.copyToString(stream, UTF_8);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot get resource", e);
+		catch (IOException ex) {
+			throw new IllegalStateException("Cannot get resource", ex);
 		}
-
 	}
 
-	private InputStream getInputStream(String location) throws Exception {
+	private InputStream getInputStream(String location) throws IOException {
 		URL url = ResourceUtils.getURL(location);
-		InputStream stream = url.openStream();
-		return stream;
+		return url.openStream();
 	}
 
 }

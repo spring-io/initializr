@@ -37,6 +37,7 @@ public class TextCapability extends ServiceCapability<String> {
 		super(id, ServiceCapabilityType.TEXT, title, description);
 	}
 
+	@Override
 	public String getContent() {
 		return content;
 	}

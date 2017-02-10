@@ -90,11 +90,12 @@ public class MainControllerStatsIntegrationTests
 
 		String authorization = content.authorization;
 		assertNotNull("Authorization header must be set", authorization);
-		assertTrue("Wrong value for authorization header", authorization.startsWith("Basic "));
+		assertTrue("Wrong value for authorization header",
+				authorization.startsWith("Basic "));
 		String token = authorization.substring("Basic ".length(), authorization.length());
 		String[] data = new String(Base64Utils.decodeFromString(token)).split(":");
-		assertEquals("Wrong user from $token", "test-user", data[0]);
-		assertEquals("Wrong password $token", "test-password", data[1]);
+		assertEquals("Wrong user from " + token, "test-user", data[0]);
+		assertEquals("Wrong password " + token, "test-password", data[1]);
 	}
 
 	@Test
@@ -193,14 +194,13 @@ public class MainControllerStatsIntegrationTests
 
 		public static class Content {
 
-			public Content(String authorization, String body) {
+			private final String authorization;
+			private final String json;
+
+			Content(String authorization, String body) {
 				this.authorization = authorization;
 				json = body;
 			}
-
-			private String authorization;
-
-			private String json;
 
 		}
 

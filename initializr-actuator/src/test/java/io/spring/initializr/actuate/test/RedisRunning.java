@@ -41,8 +41,8 @@ public class RedisRunning extends TestWatcher {
 		try {
 			connectionFactory.getConnection();
 		}
-		catch (Exception e) {
-			Assume.assumeNoException("Cannot connect to Redis (so skipping tests)", e);
+		catch (Exception ex) {
+			Assume.assumeNoException("Cannot connect to Redis (so skipping tests)", ex);
 		}
 		return super.apply(base, description);
 	}

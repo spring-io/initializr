@@ -72,7 +72,7 @@ public abstract class AbstractInitializrController {
 	/**
 	 * Render the home page with the specified template.
 	 */
-	protected void renderHome(Map<String, Object> model) throws Exception {
+	protected void renderHome(Map<String, Object> model) {
 		InitializrMetadata metadata = metadataProvider.get();
 
 		model.put("serviceUrl", generateAppUrl());
@@ -82,7 +82,8 @@ public abstract class AbstractInitializrController {
 				model.put("types", removeTypes(metadata.getTypes()));
 			}
 			else {
-				model.put(descriptor.getName(), wrapper.getPropertyValue(descriptor.getName()));
+				model.put(descriptor.getName(),
+						wrapper.getPropertyValue(descriptor.getName()));
 			}
 		}
 
@@ -111,7 +112,8 @@ public abstract class AbstractInitializrController {
 	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#forceSsl
 	 */
 	protected String generateAppUrl() {
-		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
+		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder
+				.fromCurrentServletMapping();
 		if (isForceSsl()) {
 			builder.scheme("https");
 		}

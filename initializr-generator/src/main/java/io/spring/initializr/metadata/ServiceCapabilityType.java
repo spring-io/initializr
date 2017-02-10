@@ -44,9 +44,9 @@ public enum ServiceCapabilityType {
 	 */
 	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
 
-	final String name;
+	private final String name;
 
-	private ServiceCapabilityType(String name) {
+	ServiceCapabilityType(String name) {
 		this.name = name;
 	}
 

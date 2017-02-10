@@ -128,8 +128,7 @@ public class VersionTests {
 	}
 
 	private static Version parse(String text) {
-		Version version = parser.parse(text);
-		return version;
+		return parser.parse(text);
 	}
 
 }

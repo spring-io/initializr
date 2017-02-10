@@ -204,7 +204,8 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	@Test
 	public void createDocumentWithProjectFailedEvent() {
 		ProjectRequest request = createProjectRequest();
-		ProjectFailedEvent event = new ProjectFailedEvent(request, new IllegalStateException("my test message"));
+		ProjectFailedEvent event = new ProjectFailedEvent(request,
+				new IllegalStateException("my test message"));
 		ProjectRequestDocument document = factory.createDocument(event);
 		assertTrue(document.isInvalid());
 		assertEquals("my test message", document.getErrorMessage());

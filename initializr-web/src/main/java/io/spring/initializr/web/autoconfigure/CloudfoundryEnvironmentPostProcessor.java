@@ -42,7 +42,7 @@ public class CloudfoundryEnvironmentPostProcessor
 
 	private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
 
-	private final int order = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
+	private static final int ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
 
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment,
@@ -58,8 +58,8 @@ public class CloudfoundryEnvironmentPostProcessor
 				map.put("initializr.stats.elastic.username", credentials[0]);
 				map.put("initializr.stats.elastic.password", credentials[1]);
 			}
-			map.put("initializr.stats.elastic.uri", UriComponentsBuilder.fromUriString(uri)
-					.userInfo(null).build().toString());
+			map.put("initializr.stats.elastic.uri", UriComponentsBuilder
+					.fromUriString(uri).userInfo(null).build().toString());
 
 			addOrReplace(environment.getPropertySources(), map);
 		}
@@ -67,7 +67,7 @@ public class CloudfoundryEnvironmentPostProcessor
 
 	@Override
 	public int getOrder() {
-		return this.order;
+		return ORDER;
 	}
 
 	private static void addOrReplace(MutablePropertySources propertySources,

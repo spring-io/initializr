@@ -48,35 +48,14 @@ public class Dependency extends MetadataElement implements Describable {
 			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
 
 	private List<String> aliases = new ArrayList<>();
-
 	private List<String> facets = new ArrayList<>();
-
 	private String groupId;
-
 	private String artifactId;
-
-	/**
-	 * The default version, can be {@code null} to indicate that the version is managed by
-	 * the project and does not need to be specified.
-	 */
 	private String version;
-
-	/**
-	 * The type, can be {@code null} to indicate that the default type should be used
-	 * (i.e. {@code jar}).
-	 */
 	private String type;
-
-	/**
-	 * Dependency mapping if an attribute of the dependency differs according to the
-	 * Spring Boot version. If no mapping matches, default attributes are used.
-	 */
 	private List<Mapping> mappings = new ArrayList<>();
-
 	private String scope = SCOPE_COMPILE;
-
 	private String description;
-
 	private String versionRange;
 
 	@JsonIgnore
@@ -86,7 +65,6 @@ public class Dependency extends MetadataElement implements Describable {
 	private VersionRange range;
 
 	private String bom;
-
 	private String repository;
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -261,9 +239,7 @@ public class Dependency extends MetadataElement implements Describable {
 			throw new IllegalArgumentException("Could not generate id for " + this
 					+ ": at least groupId and artifactId must be set.");
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(groupId).append(":").append(artifactId);
-		setId(sb.toString());
+		setId(groupId + ":" + artifactId);
 		return getId();
 	}
 
@@ -299,6 +275,10 @@ public class Dependency extends MetadataElement implements Describable {
 		this.artifactId = artifactId;
 	}
 
+	/**
+	 * Return the default version, can be {@code null} to indicate that the version is
+	 * managed by the project and does not need to be specified.
+	 */
 	public String getVersion() {
 		return version;
 	}
@@ -307,6 +287,10 @@ public class Dependency extends MetadataElement implements Describable {
 		this.version = version;
 	}
 
+	/**
+	 * Return the type, can be {@code null} to indicate that the default type should be
+	 * used (i.e. {@code jar}).
+	 */
 	public String getType() {
 		return type;
 	}
@@ -315,6 +299,10 @@ public class Dependency extends MetadataElement implements Describable {
 		this.type = type;
 	}
 
+	/**
+	 * Return the dependency mapping if an attribute of the dependency differs according
+	 * to the Spring Boot version. If no mapping matches, default attributes are used.
+	 */
 	public List<Mapping> getMappings() {
 		return mappings;
 	}
@@ -323,6 +311,7 @@ public class Dependency extends MetadataElement implements Describable {
 		this.mappings = mappings;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}

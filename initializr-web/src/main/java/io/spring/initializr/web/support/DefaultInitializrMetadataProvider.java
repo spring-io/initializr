@@ -42,7 +42,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	private final InitializrMetadata metadata;
 	private final RestTemplate restTemplate;
 
-	public DefaultInitializrMetadataProvider(InitializrMetadata metadata, RestTemplate restTemplate) {
+	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
+			RestTemplate restTemplate) {
 		this.metadata = metadata;
 		this.restTemplate = restTemplate;
 	}
@@ -57,7 +58,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	protected void updateInitializrMetadata(InitializrMetadata metadata) {
 		List<DefaultMetadataElement> bootVersions = fetchBootVersions();
 		if (bootVersions != null && !bootVersions.isEmpty()) {
-			if (bootVersions.stream().noneMatch(it -> it.isDefault())) { // No default specified
+			if (bootVersions.stream().noneMatch(DefaultMetadataElement::isDefault)) {
+				// No default specified
 				bootVersions.get(0).setDefault(true);
 			}
 			metadata.updateSpringBootVersions(bootVersions);

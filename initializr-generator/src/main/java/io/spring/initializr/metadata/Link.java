@@ -146,7 +146,7 @@ public class Link {
 	 * @return an URI where all variables have been expanded
 	 */
 	public URI expand(Map<String, String> parameters) {
-		AtomicReference<String> result = new AtomicReference<String>(href);
+		AtomicReference<String> result = new AtomicReference<>(href);
 		templateVariables.forEach(var -> {
 			Object value = parameters.get(var);
 			if (value == null) {

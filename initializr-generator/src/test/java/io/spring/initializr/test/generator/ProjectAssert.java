@@ -54,7 +54,7 @@ public class ProjectAssert {
 
 	/**
 	 * Create a new instance with the directory holding the generated project.
-	 * @param dir
+	 * @param dir the directory of the project
 	 */
 	public ProjectAssert(File dir) {
 		this.dir = dir;

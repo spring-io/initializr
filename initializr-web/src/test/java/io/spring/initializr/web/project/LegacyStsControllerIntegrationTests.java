@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.project;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
@@ -48,14 +48,18 @@ public class LegacyStsControllerIntegrationTests
 		String body = htmlHome();
 		assertTrue("groupId not found", body.contains("com.example"));
 		assertTrue("artifactId not found", body.contains("demo"));
-		assertTrue("custom description not found", body.contains("Demo project for Spring Boot"));
-		assertTrue("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
-		assertTrue("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
+		assertTrue("custom description not found",
+				body.contains("Demo project for Spring Boot"));
+		assertTrue("Wrong body:\n" + body,
+				body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
+		assertTrue("Wrong body:\n" + body,
+				body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
 	}
 
+	@Override
 	protected String htmlHome() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
 		return getRestTemplate().exchange(createUrl("/sts"), HttpMethod.GET,
 				new HttpEntity<Void>(headers), String.class).getBody();
 	}

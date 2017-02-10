@@ -98,12 +98,12 @@ public class VersionRange {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (lowerVersion != null) {
-			sb.append((lowerInclusive ? ">=" : ">") + lowerVersion);
+			sb.append(lowerInclusive ? ">=" : ">").append(lowerVersion);
 		}
 		if (higherVersion != null) {
-			sb.append(" and " + (higherInclusive ? "<=" : "<") + higherVersion);
+			sb.append(" and ").append(higherInclusive ? "<=" : "<").append(higherVersion);
 		}
 		return sb.toString();
 	}

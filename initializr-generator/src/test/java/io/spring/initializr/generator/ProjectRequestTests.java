@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.Dependency.Mapping;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
@@ -168,10 +169,10 @@ public class ProjectRequestTests {
 	@Test
 	public void resolveDependencyVersion() {
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", null,
-				null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(
-				Dependency.Mapping.create("1.1.0.RELEASE", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings().add(Mapping.create(
+				"[1.0.0.RELEASE, 1.1.0.RELEASE)", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings().add(Mapping.create(
+				"1.1.0.RELEASE", null, null, "0.2.0.RELEASE"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", dependency).build();
 

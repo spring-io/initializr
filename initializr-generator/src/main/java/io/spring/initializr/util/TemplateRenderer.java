@@ -43,7 +43,8 @@ public class TemplateRenderer {
 	private boolean cache = true;
 
 	private final Compiler mustache;
-	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
+	private final ConcurrentMap<String, Template> templateCaches =
+			new ConcurrentReferenceHashMap<>();
 
 	public TemplateRenderer(Compiler mustache) {
 		this.mustache = mustache;
@@ -74,7 +75,7 @@ public class TemplateRenderer {
 
 	public Template getTemplate(String name) {
 		if (cache) {
-			return this.templateCaches.computeIfAbsent(name, n -> loadTemplate(n));
+			return this.templateCaches.computeIfAbsent(name, this::loadTemplate);
 		}
 		return loadTemplate(name);
 	}
@@ -98,11 +99,8 @@ public class TemplateRenderer {
 		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		String prefix = "classpath:/templates/";
 		Charset charset = Charset.forName("UTF-8");
-		TemplateLoader loader = name -> {
-			return new InputStreamReader(
-					resourceLoader.getResource(prefix + name).getInputStream(), charset);
-		};
-		return loader;
+		return name -> new InputStreamReader(
+				resourceLoader.getResource(prefix + name).getInputStream(), charset);
 	}
 
 }

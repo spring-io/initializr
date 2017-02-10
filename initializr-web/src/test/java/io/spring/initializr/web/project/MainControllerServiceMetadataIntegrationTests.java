@@ -54,7 +54,8 @@ public class MainControllerServiceMetadataIntegrationTests
 		// Basic assertions
 		assertEquals(localMetadata.getDependencies().getContent().size(),
 				metadata.getDependencies().getContent().size());
-		assertEquals(localMetadata.getTypes().getContent().size(), metadata.getTypes().getContent().size());
+		assertEquals(localMetadata.getTypes().getContent().size(),
+				metadata.getTypes().getContent().size());
 		assertEquals(localMetadata.getBootVersions().getContent().size(),
 				metadata.getBootVersions().getContent().size());
 		assertEquals(localMetadata.getPackagings().getContent().size(),
