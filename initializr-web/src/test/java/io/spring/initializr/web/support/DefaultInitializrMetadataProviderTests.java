@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 
 package io.spring.initializr.web.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
 import java.util.List;
 
+import io.spring.initializr.metadata.DefaultMetadataElement;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,9 +32,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import io.spring.initializr.metadata.DefaultMetadataElement;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
  * @author Stephane Nicoll
@@ -102,8 +102,8 @@ public class DefaultInitializrMetadataProviderTests {
 		this.mockServer.expect(requestTo(url))
 				.andExpect(method(HttpMethod.GET))
 				.andRespond(withStatus(HttpStatus.OK)
-				.body(new ClassPathResource(bodyPath))
-				.headers(httpHeaders));
+						.body(new ClassPathResource(bodyPath))
+						.headers(httpHeaders));
 	}
 
 }

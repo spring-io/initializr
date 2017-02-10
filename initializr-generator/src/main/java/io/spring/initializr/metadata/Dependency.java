@@ -21,15 +21,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.springframework.util.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.spring.initializr.util.InvalidVersionException;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
 import io.spring.initializr.util.VersionRange;
+
+import org.springframework.util.StringUtils;
 
 /**
  * Meta-data for a dependency. Each dependency has a primary identifier and an arbitrary
@@ -38,7 +37,6 @@ import io.spring.initializr.util.VersionRange;
  * @author Stephane Nicoll
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-// @AutoClone(style = AutoCloneStyle.COPY_CONSTRUCTOR)
 public class Dependency extends MetadataElement implements Describable {
 
 	public static final String SCOPE_COMPILE = "compile";
@@ -249,7 +247,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * Specify if this dependency is available for the specified Spring Boot version.
 	 */
 	public boolean match(Version version) {
-		if (range!=null) {
+		if (range != null) {
 			return range.match(version);
 		}
 		return true;

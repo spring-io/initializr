@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class SingleSelectCapabilityTests {
 	public void defaultNoDefault() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
-		capability.getContent().add(DefaultMetadataElement.create("bar",false));
+		capability.getContent().add(DefaultMetadataElement.create("bar", false));
 		assertNull(capability.getDefault());
 	}
 
@@ -44,7 +44,7 @@ public class SingleSelectCapabilityTests {
 	public void defaultType() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
-		DefaultMetadataElement second = DefaultMetadataElement.create("bar",true);
+		DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
 		capability.getContent().add(second);
 		assertEquals(second, capability.getDefault());
 	}
@@ -56,7 +56,7 @@ public class SingleSelectCapabilityTests {
 		capability.getContent().add(foo);
 
 		SingleSelectCapability anotherCapability = new SingleSelectCapability("test");
-		DefaultMetadataElement bar =DefaultMetadataElement.create("bar", false);
+		DefaultMetadataElement bar = DefaultMetadataElement.create("bar", false);
 		anotherCapability.getContent().add(bar);
 
 		capability.merge(anotherCapability);

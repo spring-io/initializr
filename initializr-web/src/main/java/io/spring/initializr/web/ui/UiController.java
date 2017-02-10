@@ -22,7 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.DependencyGroup;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.util.Version;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +37,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.DependencyGroup;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.util.Version;
 
 /**
  * UI specific controller providing dedicated endpoints for the Web UI.
@@ -56,11 +56,12 @@ public class UiController {
 		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
 		dependencyGroups.forEach(g -> {
 			g.getContent().forEach(d -> {
-				if (v!=null && d.getVersionRange()!=null) {
+				if (v != null && d.getVersionRange() != null) {
 					if (d.match(v)) {
 						content.add(new DependencyItem(g.getName(), d));
 					}
-				} else {
+				}
+				else {
 					content.add(new DependencyItem(g.getName(), d));
 				}
 			});
@@ -84,10 +85,10 @@ public class UiController {
 		result.put("id", d.getId());
 		result.put("name", d.getName());
 		result.put("group", item.group);
-		if (d.getDescription()!=null) {
+		if (d.getDescription() != null) {
 			result.put("description", d.getDescription());
 		}
-		if (d.getWeight()>0) {
+		if (d.getWeight() > 0) {
 			result.put("weight", d.getWeight());
 		}
 		if (!CollectionUtils.isEmpty(d.getKeywords()) || !CollectionUtils.isEmpty(d.getAliases())) {

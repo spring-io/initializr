@@ -20,12 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.json.JSONObject;
-
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
+import org.json.JSONObject;
 
 /**
  * A {@link DependencyMetadataJsonMapper} handling the metadata format for v2.1.

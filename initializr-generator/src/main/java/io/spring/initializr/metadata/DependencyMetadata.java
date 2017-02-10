@@ -40,7 +40,7 @@ public class DependencyMetadata {
 	}
 
 	public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies,
-					   Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
+			Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
 		this.bootVersion = bootVersion;
 		this.dependencies = dependencies;
 		this.repositories = repositories;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@ package io.spring.initializr.actuate.metric;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import io.spring.initializr.actuate.test.MetricsAssert;
 import io.spring.initializr.actuate.test.TestCounterService;
 import io.spring.initializr.generator.ProjectFailedEvent;
@@ -29,6 +26,8 @@ import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
@@ -237,7 +236,7 @@ public class ProjectGenerationMetricsListenerTests {
 	@Test
 	public void incrementMetrics() {
 		ProjectRequest request = initialize();
-		request.getStyle().addAll(Arrays.asList("security","spring-data"));
+		request.getStyle().addAll(Arrays.asList("security", "spring-data"));
 		request.resolve(metadata);
 		fireProjectGeneratedEvent(request);
 		metricsAssert.hasValue(1, "initializr.requests",

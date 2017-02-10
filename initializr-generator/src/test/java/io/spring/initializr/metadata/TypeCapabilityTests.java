@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package io.spring.initializr.metadata;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
@@ -63,20 +63,20 @@ public class TypeCapabilityTests {
 	@Test
 	public void mergeAddEntry() {
 		TypeCapability capability = new TypeCapability();
-				Type first = new Type();
-				first.setId("foo");
-				first.setDefault(false);
-				capability.getContent().add(first);
+		Type first = new Type();
+		first.setId("foo");
+		first.setDefault(false);
+		capability.getContent().add(first);
 
 		TypeCapability anotherCapability = new TypeCapability();
-				Type another = new Type();
-				another.setId("foo");
-				another.setDefault(false);
-				Type second = new Type();
-				second.setId("bar");
-				second.setDefault(true);
-				anotherCapability.getContent().add(another);
-				anotherCapability.getContent().add(second);
+		Type another = new Type();
+		another.setId("foo");
+		another.setDefault(false);
+		Type second = new Type();
+		second.setId("bar");
+		second.setDefault(true);
+		anotherCapability.getContent().add(another);
+		anotherCapability.getContent().add(second);
 
 		capability.merge(anotherCapability);
 		assertEquals(2, capability.getContent().size());

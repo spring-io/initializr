@@ -46,9 +46,9 @@ public class CloudfoundryEnvironmentPostProcessor
 
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment,
-									   SpringApplication springApplication) {
+			SpringApplication springApplication) {
 
-		Map<String,Object> map = new LinkedHashMap<>();
+		Map<String, Object> map = new LinkedHashMap<>();
 		String uri = environment.getProperty("vcap.services.stats-index.credentials.uri");
 		if (StringUtils.hasText(uri)) {
 			UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
@@ -71,7 +71,7 @@ public class CloudfoundryEnvironmentPostProcessor
 	}
 
 	private static void addOrReplace(MutablePropertySources propertySources,
-							  Map<String, Object> map) {
+			Map<String, Object> map) {
 		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
 			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);

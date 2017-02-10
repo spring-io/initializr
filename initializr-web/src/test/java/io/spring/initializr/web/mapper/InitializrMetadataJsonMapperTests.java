@@ -16,16 +16,15 @@
 
 package io.spring.initializr.web.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.json.JSONObject;
-import org.junit.Test;
-
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import org.json.JSONObject;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stephane Nicoll
@@ -51,12 +50,12 @@ public class InitializrMetadataJsonMapperTests {
 		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
 		JSONObject result = new JSONObject(json);
 		assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
-				"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+						"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
 				get(result, "_links.foo.href"));
 	}
 
 	@Test
-	public void linksRendered()  {
+	public void linksRendered() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo");
 		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
@@ -66,17 +65,17 @@ public class InitializrMetadataJsonMapperTests {
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
 		// JSON objects are not ordered
-		assertTrue(first>0);
-		assertTrue(second>0);
+		assertTrue(first > 0);
+		assertTrue(second > 0);
 	}
 
 	private Object get(JSONObject result, String path) {
 		String[] nodes = path.split("\\.");
-		for (int i = 0; i < nodes.length-1; i++) {
+		for (int i = 0; i < nodes.length - 1; i++) {
 			String node = nodes[i];
 			result = result.getJSONObject(node);
 		}
-		return result.getString(nodes[nodes.length-1]);
+		return result.getString(nodes[nodes.length - 1]);
 	}
 
 }

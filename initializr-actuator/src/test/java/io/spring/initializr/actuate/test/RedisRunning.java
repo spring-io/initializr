@@ -20,6 +20,7 @@ import org.junit.Assume;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 /**
@@ -39,7 +40,8 @@ public class RedisRunning extends TestWatcher {
 		}
 		try {
 			connectionFactory.getConnection();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Assume.assumeNoException("Cannot connect to Redis (so skipping tests)", e);
 		}
 		return super.apply(base, description);

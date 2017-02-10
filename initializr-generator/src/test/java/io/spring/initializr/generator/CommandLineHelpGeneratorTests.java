@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 
 package io.spring.initializr.generator;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.TemplateRenderer;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -35,7 +34,7 @@ import io.spring.initializr.util.TemplateRenderer;
 public class CommandLineHelpGeneratorTests {
 
 	private CommandLineHelpGenerator generator;
-	
+
 	@Before
 	public void init() {
 		generator = new CommandLineHelpGenerator(new TemplateRenderer());
@@ -111,7 +110,7 @@ public class CommandLineHelpGeneratorTests {
 				createDependency("id-b", "depB"),
 				createDependency("id-a", "depA", "and some description")).build();
 		String content = generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");
-            assertThat(content, containsString("| Id"));
+		assertThat(content, containsString("| Id"));
 		assertThat(content, containsString("| Tags"));
 		assertThat(content, containsString("id-a | and some description |"));
 		assertThat(content, containsString("id-b | depB"));

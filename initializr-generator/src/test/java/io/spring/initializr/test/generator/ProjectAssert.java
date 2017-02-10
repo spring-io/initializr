@@ -16,9 +16,6 @@
 
 package io.spring.initializr.test.generator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +26,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Various project based assertions.
@@ -74,8 +74,8 @@ public class ProjectAssert {
 		assertTrue("No directory " + name + " found in " + dir.getAbsolutePath(),
 				projectDir.exists());
 		assertTrue(name + " is not a directory", projectDir.isDirectory());
-		return new ProjectAssert(projectDir); // Replacing the root dir so that other
-												// assertions match the root
+		// Replacing the root dir so that other assertions match the root
+		return new ProjectAssert(projectDir);
 	}
 
 	/**
@@ -201,8 +201,8 @@ public class ProjectAssert {
 		String packageName = expectedPackageName.replace(".", "/");
 		return isGenericProject(expectedPackageName, expectedApplicationName,
 				codeLocation, extension).hasStaticAndTemplatesResources(true)
-						.hasFile("src/main/" + codeLocation + "/" + packageName
-								+ "/ServletInitializer." + extension);
+				.hasFile("src/main/" + codeLocation + "/" + packageName
+						+ "/ServletInitializer." + extension);
 	}
 
 	public ProjectAssert hasStaticAndTemplatesResources(boolean web) {

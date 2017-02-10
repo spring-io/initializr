@@ -16,16 +16,15 @@
 
 package io.spring.initializr.web.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.spring.initializr.metadata.Link;
 import org.junit.Test;
 
-import io.spring.initializr.metadata.Link;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link LinkMapper}.

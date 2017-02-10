@@ -16,16 +16,16 @@
 
 package io.spring.initializr.test.generator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.metadata.BillOfMaterials;
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
+import io.spring.initializr.metadata.Repository;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
@@ -37,11 +37,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.Repository;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * XPath assertions that are specific to a standard Maven POM.
@@ -231,7 +230,7 @@ public class PomAssert {
 					dependency.getScope());
 		}
 		if (expected.getType() != null) {
-			assertEquals("Wrong type for "+ dependency, expected.getType(),
+			assertEquals("Wrong type for " + dependency, expected.getType(),
 					dependency.getType());
 		}
 		return this;

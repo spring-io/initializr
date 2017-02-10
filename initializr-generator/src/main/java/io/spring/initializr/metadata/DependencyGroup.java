@@ -55,7 +55,7 @@ public class DependencyGroup {
 	private String repository;
 
 	final List<Dependency> content = new ArrayList<>();
-	
+
 	public String getName() {
 		return name;
 	}
@@ -96,6 +96,6 @@ public class DependencyGroup {
 		DependencyGroup group = new DependencyGroup();
 		group.setName(name);
 		return group;
-	} 
+	}
 
 }

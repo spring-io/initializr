@@ -44,7 +44,7 @@ public class GradleBuildAssert {
 	}
 
 	public GradleBuildAssert hasArtifactId(String artifactId) {
-		return contains("baseName = '"+ artifactId+"'");
+		return contains("baseName = '" + artifactId + "'");
 	}
 
 	public GradleBuildAssert hasVersion(String version) {

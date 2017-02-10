@@ -21,14 +21,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.util.StringUtils;
-
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.generator.ProjectRequestEvent;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
+
+import org.springframework.util.StringUtils;
 
 /**
  * Create {@link ProjectRequestDocument} instances.
@@ -54,13 +54,13 @@ public class ProjectRequestDocumentFactory {
 
 		handleCloudFlareHeaders(request, document);
 		String candidate = (String) request.getParameters().get("x-forwarded-for");
-		if (!StringUtils.hasText(document.getRequestIp()) && candidate!=null) {
+		if (!StringUtils.hasText(document.getRequestIp()) && candidate != null) {
 			document.setRequestIp(candidate);
 			document.setRequestIpv4(extractIpv4(candidate));
 		}
 
 		Agent agent = extractAgentInformation(request);
-		if (agent!=null) {
+		if (agent != null) {
 			document.setClientId(agent.getId().getId());
 			document.setClientVersion(agent.getVersion());
 		}
@@ -71,25 +71,25 @@ public class ProjectRequestDocumentFactory {
 		document.setBootVersion(request.getBootVersion());
 
 		document.setJavaVersion(request.getJavaVersion());
-		if (StringUtils.hasText(request.getJavaVersion()) && metadata.getJavaVersions().get(request.getJavaVersion())==null) {
+		if (StringUtils.hasText(request.getJavaVersion()) && metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
 			document.setInvalid(true);
 			document.setInvalidJavaVersion(true);
 		}
 
 		document.setLanguage(request.getLanguage());
-		if (StringUtils.hasText(request.getLanguage()) && metadata.getLanguages().get(request.getLanguage())==null) {
+		if (StringUtils.hasText(request.getLanguage()) && metadata.getLanguages().get(request.getLanguage()) == null) {
 			document.setInvalid(true);
 			document.setInvalidLanguage(true);
 		}
 
 		document.setPackaging(request.getPackaging());
-		if (StringUtils.hasText(request.getPackaging()) && metadata.getPackagings().get(request.getPackaging())==null) {
+		if (StringUtils.hasText(request.getPackaging()) && metadata.getPackagings().get(request.getPackaging()) == null) {
 			document.setInvalid(true);
 			document.setInvalidPackaging(true);
 		}
 
 		document.setType(request.getType());
-		if (StringUtils.hasText(request.getType()) && metadata.getTypes().get(request.getType())==null) {
+		if (StringUtils.hasText(request.getType()) && metadata.getTypes().get(request.getType()) == null) {
 			document.setInvalid(true);
 			document.setInvalidType(true);
 		}
@@ -98,10 +98,11 @@ public class ProjectRequestDocumentFactory {
 		List<String> dependencies = new ArrayList<>();
 		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
-		dependencies.forEach( id -> {
-			if (metadata.getDependencies().get(id)!=null) {
+		dependencies.forEach(id -> {
+			if (metadata.getDependencies().get(id) != null) {
 				document.getDependencies().add(id);
-			} else {
+			}
+			else {
 				document.setInvalid(true);
 				document.getInvalidDependencies().add(id);
 			}
@@ -111,7 +112,7 @@ public class ProjectRequestDocumentFactory {
 		if (event instanceof ProjectFailedEvent) {
 			ProjectFailedEvent failed = (ProjectFailedEvent) event;
 			document.setInvalid(true);
-			if (failed.getCause()!=null) {
+			if (failed.getCause() != null) {
 				document.setErrorMessage(failed.getCause().getMessage());
 			}
 		}

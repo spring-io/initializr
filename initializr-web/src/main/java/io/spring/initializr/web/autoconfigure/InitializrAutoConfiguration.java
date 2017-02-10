@@ -21,6 +21,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import io.spring.initializr.generator.ProjectGenerator;
+import io.spring.initializr.generator.ProjectRequestPostProcessor;
+import io.spring.initializr.generator.ProjectRequestResolver;
+import io.spring.initializr.generator.ProjectResourceLocator;
+import io.spring.initializr.metadata.DependencyMetadataProvider;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataBuilder;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InitializrProperties;
+import io.spring.initializr.util.TemplateRenderer;
+import io.spring.initializr.web.project.MainController;
+import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
+import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
+import io.spring.initializr.web.ui.UiController;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -36,23 +52,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
-
-import com.github.benmanes.caffeine.cache.Caffeine;
-
-import io.spring.initializr.generator.ProjectGenerator;
-import io.spring.initializr.generator.ProjectRequestPostProcessor;
-import io.spring.initializr.generator.ProjectRequestResolver;
-import io.spring.initializr.generator.ProjectResourceLocator;
-import io.spring.initializr.metadata.DependencyMetadataProvider;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.util.TemplateRenderer;
-import io.spring.initializr.web.project.MainController;
-import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
-import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
-import io.spring.initializr.web.ui.UiController;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -81,10 +80,10 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public MainController initializrMainController(InitializrMetadataProvider metadataProvider,
-											TemplateRenderer templateRenderer,
-											ResourceUrlProvider resourceUrlProvider,
-											ProjectGenerator projectGenerator,
-											DependencyMetadataProvider dependencyMetadataProvider) {
+			TemplateRenderer templateRenderer,
+			ResourceUrlProvider resourceUrlProvider,
+			ProjectGenerator projectGenerator,
+			DependencyMetadataProvider dependencyMetadataProvider) {
 		return new MainController(metadataProvider, templateRenderer, resourceUrlProvider
 				, projectGenerator, dependencyMetadataProvider);
 	}

@@ -56,7 +56,7 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 	@Override
 	public void merge(List<Type> otherContent) {
 		otherContent.forEach(it -> {
-			if (get(it.getId())==null) {
+			if (get(it.getId()) == null) {
 				content.add(it);
 			}
 		});

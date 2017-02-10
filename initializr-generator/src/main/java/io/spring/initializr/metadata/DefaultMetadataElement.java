@@ -45,7 +45,7 @@ public class DefaultMetadataElement extends MetadataElement {
 	public boolean isDefault() {
 		return this.defaultValue;
 	}
-	
+
 	public static DefaultMetadataElement create(String id, boolean defaultValue) {
 		return new DefaultMetadataElement(id, defaultValue);
 	}

@@ -22,7 +22,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.spring.initializr.util.InvalidVersionException;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;

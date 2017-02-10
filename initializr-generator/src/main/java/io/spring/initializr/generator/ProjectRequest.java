@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
-
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
@@ -32,6 +29,9 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.Version;
+
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.StringUtils;
 
 /**
  * A request to generate a project.

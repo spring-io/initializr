@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,17 @@
 
 package io.spring.initializr.actuate.stat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -42,9 +39,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
-import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController.Content;
-import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Integration tests for stats processing.
@@ -66,14 +65,14 @@ public class MainControllerStatsIntegrationTests
 	public void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
-		this.statsProperties.getElastic().setUri( "http://localhost:" + port + "/elastic");
+		this.statsProperties.getElastic().setUri("http://localhost:" + port + "/elastic");
 	}
 
 	@Test
 	public void simpleProject() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertEquals("com.foo", json.get("groupId"));
@@ -87,7 +86,7 @@ public class MainControllerStatsIntegrationTests
 	public void authorizationHeaderIsSet() {
 		downloadArchive("/starter.zip");
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		String authorization = content.authorization;
 		assertNotNull("Authorization header must be set", authorization);
@@ -102,7 +101,7 @@ public class MainControllerStatsIntegrationTests
 	public void requestIpNotSetByDefault() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertFalse("requestIp property should not be set", json.has("requestIp"));
@@ -114,7 +113,7 @@ public class MainControllerStatsIntegrationTests
 				.header("X-FORWARDED-FOR", "10.0.0.123").build();
 		getRestTemplate().exchange(request, String.class);
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp"));
@@ -126,7 +125,7 @@ public class MainControllerStatsIntegrationTests
 				.header("x-forwarded-for", "foo-bar").build();
 		getRestTemplate().exchange(request, String.class);
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
@@ -139,7 +138,7 @@ public class MainControllerStatsIntegrationTests
 				.header("cf-ipcountry", "XX").build();
 		getRestTemplate().exchange(request, String.class);
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertFalse("requestCountry property should not be set if value is set to xx",
@@ -151,11 +150,12 @@ public class MainControllerStatsIntegrationTests
 		try {
 			downloadArchive("/starter.zip?type=invalid-type");
 			fail("Should have failed to generate project with invalid type");
-		} catch (HttpClientErrorException ex) {
+		}
+		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
 		}
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		Content content = statsMockController.stats.get(0);
+		StatsMockController.Content content = statsMockController.stats.get(0);
 
 		JSONObject json = new JSONObject(content.json);
 		assertEquals("com.example", json.get("groupId"));

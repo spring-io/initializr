@@ -23,16 +23,16 @@ import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
 
+import io.spring.initializr.generator.InvalidProjectRequestException;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.TypeCapability;
+
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import io.spring.initializr.generator.InvalidProjectRequestException;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.TypeCapability;
 
 /**
  * A base controller that uses a {@link InitializrMetadataProvider}
@@ -72,7 +72,7 @@ public abstract class AbstractInitializrController {
 	/**
 	 * Render the home page with the specified template.
 	 */
-	protected void renderHome(Map<String,Object> model) throws Exception {
+	protected void renderHome(Map<String, Object> model) throws Exception {
 		InitializrMetadata metadata = metadataProvider.get();
 
 		model.put("serviceUrl", generateAppUrl());
@@ -80,7 +80,8 @@ public abstract class AbstractInitializrController {
 		for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
 			if ("types".equals(descriptor.getName())) {
 				model.put("types", removeTypes(metadata.getTypes()));
-			} else {
+			}
+			else {
 				model.put(descriptor.getName(), wrapper.getPropertyValue(descriptor.getName()));
 			}
 		}
@@ -101,7 +102,7 @@ public abstract class AbstractInitializrController {
 		result.setTitle(types.getTitle());
 		result.getContent().addAll(types.getContent());
 		// Only keep project type
-		result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")) );
+		result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")));
 		return result;
 	}
 

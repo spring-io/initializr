@@ -16,10 +16,6 @@
 
 package io.spring.initializr.web.project;
 
-import static io.spring.initializr.util.Agent.AgentId.CURL;
-import static io.spring.initializr.util.Agent.AgentId.HTTPIE;
-import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,26 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.rauschig.jarchivelib.ArchiverFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.DigestUtils;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
-
 import com.samskivert.mustache.Mustache;
-
 import io.spring.initializr.generator.BasicProjectRequest;
 import io.spring.initializr.generator.CommandLineHelpGenerator;
 import io.spring.initializr.generator.ProjectGenerator;
@@ -64,6 +41,28 @@ import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
+import org.rauschig.jarchivelib.ArchiverFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.ResourceUrlProvider;
+
+import static io.spring.initializr.util.Agent.AgentId.CURL;
+import static io.spring.initializr.util.Agent.AgentId.HTTPIE;
+import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI;
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as
@@ -179,10 +178,10 @@ public class MainController extends AbstractInitializrController {
 	private static InitializrMetadataJsonMapper getJsonMapper(
 			InitializrMetadataVersion version) {
 		switch (version) {
-		case V2:
-			return new InitializrMetadataV2JsonMapper();
-		default:
-			return new InitializrMetadataV21JsonMapper();
+			case V2:
+				return new InitializrMetadataV2JsonMapper();
+			default:
+				return new InitializrMetadataV21JsonMapper();
 		}
 	}
 

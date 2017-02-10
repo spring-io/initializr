@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 
 package io.spring.initializr.actuate.info;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-
 import java.util.Map;
-
-import org.junit.Test;
-import org.springframework.boot.actuate.info.Info;
 
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import org.junit.Test;
+
+import org.springframework.boot.actuate.info.Info;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 /**
  * Tests for {@link BomRangesInfoContributor}

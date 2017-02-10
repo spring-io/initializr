@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 
 package io.spring.initializr.web.mapper;
 
-import static org.junit.Assert.assertEquals;
-
 import java.net.URL;
 import java.util.Collections;
-
-import org.json.JSONObject;
-import org.junit.Test;
 
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.util.Version;
+import org.json.JSONObject;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Stephane Nicoll

@@ -81,9 +81,9 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return major + "." + minor + "." + patch + 
-				(qualifier!=null ? "." + qualifier.qualifier + 
-						(qualifier.version!=null ? qualifier.version : "") : "");
+		return major + "." + minor + "." + patch +
+				(qualifier != null ? "." + qualifier.qualifier +
+						(qualifier.version != null ? qualifier.version : "") : "");
 	}
 
 	/**
@@ -109,7 +109,8 @@ public final class Version implements Serializable, Comparable<Version> {
 	public static Version safeParse(String text) {
 		try {
 			return parse(text);
-		} catch (InvalidVersionException e) {
+		}
+		catch (InvalidVersionException e) {
 			return null;
 		}
 	}
@@ -135,37 +136,45 @@ public final class Version implements Serializable, Comparable<Version> {
 	}
 
 	private static int safeCompare(Integer first, Integer second) {
-		Integer firstIndex = first !=null ? first : 0;
-		Integer secondIndex = second !=null ? second : 0;
+		Integer firstIndex = first != null ? first : 0;
+		Integer secondIndex = second != null ? second : 0;
 		return firstIndex.compareTo(secondIndex);
 	}
 
 	public static class Qualifier {
 		public Qualifier() {
 		}
+
 		public Qualifier(String qualifier) {
 			this.qualifier = qualifier;
 		}
+
 		String qualifier;
 		Integer version;
+
 		public String getQualifier() {
 			return qualifier;
 		}
+
 		public void setQualifier(String qualifier) {
 			this.qualifier = qualifier;
 		}
+
 		public Integer getVersion() {
 			return version;
 		}
+
 		public void setVersion(Integer version) {
 			this.version = version;
 		}
+
 		@Override
 		public String toString() {
 			return "Qualifier ["
 					+ (qualifier != null ? "qualifier=" + qualifier + ", " : "")
 					+ (version != null ? "version=" + version : "") + "]";
 		}
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -174,6 +183,7 @@ public final class Version implements Serializable, Comparable<Version> {
 			result = prime * result + ((version == null) ? 0 : version.hashCode());
 			return result;
 		}
+
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -258,16 +268,16 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
-			Qualifier first = o1!=null ? o1 : new Qualifier(RELEASE);
-			Qualifier second = o2!=null ? o2 : new Qualifier(RELEASE);
+			Qualifier first = o1 != null ? o1 : new Qualifier(RELEASE);
+			Qualifier second = o2 != null ? o2 : new Qualifier(RELEASE);
 
 			int qualifier = compareQualifier(first, second);
-			return qualifier!=0 ? qualifier : compareQualifierVersion(first, second);
+			return qualifier != 0 ? qualifier : compareQualifierVersion(first, second);
 		}
 
 		private static int compareQualifierVersion(Qualifier first, Qualifier second) {
-			Integer firstVersion = first.getVersion()!=null ? first.getVersion() : 0;
-			Integer secondVersion = second.getVersion()!=null ? second.getVersion(): 0;
+			Integer firstVersion = first.getVersion() != null ? first.getVersion() : 0;
+			Integer secondVersion = second.getVersion() != null ? second.getVersion() : 0;
 			return firstVersion.compareTo(secondVersion);
 		}
 
@@ -277,13 +287,15 @@ public final class Version implements Serializable, Comparable<Version> {
 
 			if (firstIndex == -1 && secondIndex == -1) { // Unknown qualifier, alphabetic ordering
 				return first.qualifier.compareTo(second.qualifier);
-			} else {
+			}
+			else {
 				return firstIndex.compareTo(secondIndex);
 			}
 		}
 
 		private static int getQualifierIndex(String qualifier) {
-			return StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier) : 0;
+			return StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier)
+					: 0;
 		}
 	}
 

@@ -16,6 +16,10 @@
 
 package io.spring.initializr.web;
 
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests.RestTemplateConfig;
+import io.spring.initializr.web.test.MockMvcClientHttpRequestFactory;
+import io.spring.initializr.web.test.MockMvcClientHttpRequestFactoryTestExecutionListener;
+
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -26,10 +30,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestExecutionListeners.MergeMode;
-
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests.RestTemplateConfig;
-import io.spring.initializr.web.test.MockMvcClientHttpRequestFactory;
-import io.spring.initializr.web.test.MockMvcClientHttpRequestFactoryTestExecutionListener;
 
 /**
  * @author Stephane Nicoll

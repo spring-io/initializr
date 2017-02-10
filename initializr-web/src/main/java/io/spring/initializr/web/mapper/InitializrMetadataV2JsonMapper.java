@@ -22,12 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.json.JSONObject;
-import org.springframework.hateoas.TemplateVariable;
-import org.springframework.hateoas.TemplateVariables;
-import org.springframework.hateoas.UriTemplate;
-import org.springframework.util.StringUtils;
-
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.DependenciesCapability;
 import io.spring.initializr.metadata.Dependency;
@@ -39,6 +33,12 @@ import io.spring.initializr.metadata.SingleSelectCapability;
 import io.spring.initializr.metadata.TextCapability;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.TypeCapability;
+import org.json.JSONObject;
+
+import org.springframework.hateoas.TemplateVariable;
+import org.springframework.hateoas.TemplateVariables;
+import org.springframework.hateoas.UriTemplate;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.
@@ -176,7 +176,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	}
 
 	protected Map<String, Object> mapDependency(Dependency dependency) {
-		if (dependency.getVersionRange() == null) { 
+		if (dependency.getVersionRange() == null) {
 			// only map the dependency if no versionRange is set
 			return mapValue(dependency);
 		}

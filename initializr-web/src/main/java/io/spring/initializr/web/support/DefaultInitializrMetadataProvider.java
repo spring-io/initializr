@@ -18,15 +18,15 @@ package io.spring.initializr.web.support;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
-
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * A default {@link InitializrMetadataProvider} that is able to refresh
@@ -35,7 +35,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
  * @author Stephane Nicoll
  */
 public class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
-	
+
 	private static final Logger log = LoggerFactory
 			.getLogger(DefaultInitializrMetadataProvider.class);
 
@@ -56,7 +56,7 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 
 	protected void updateInitializrMetadata(InitializrMetadata metadata) {
 		List<DefaultMetadataElement> bootVersions = fetchBootVersions();
-		if (bootVersions!=null && !bootVersions.isEmpty()) {
+		if (bootVersions != null && !bootVersions.isEmpty()) {
 			if (bootVersions.stream().noneMatch(it -> it.isDefault())) { // No default specified
 				bootVersions.get(0).setDefault(true);
 			}
@@ -70,7 +70,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 			try {
 				log.info("Fetching boot metadata from {}", url);
 				return new SpringBootMetadataReader(restTemplate, url).getBootVersions();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.warn("Failed to fetch spring boot metadata", e);
 			}
 		}

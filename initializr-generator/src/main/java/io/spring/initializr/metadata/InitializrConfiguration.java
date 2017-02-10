@@ -462,8 +462,8 @@ public class InitializrConfiguration {
 							&& !StringUtils.hasText(artifactId)
 							&& !StringUtils.hasText(version))
 							|| (StringUtils.hasText(groupId)
-									&& StringUtils.hasText(artifactId)
-									&& StringUtils.hasText(version)))) {
+							&& StringUtils.hasText(artifactId)
+							&& StringUtils.hasText(version)))) {
 						throw new InvalidInitializrMetadataException("Custom maven pom "
 								+ "requires groupId, artifactId and version");
 					}

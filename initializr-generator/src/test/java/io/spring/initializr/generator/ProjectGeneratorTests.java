@@ -16,26 +16,26 @@
 
 package io.spring.initializr.generator;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.util.Collections;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link ProjectGenerator}
@@ -186,10 +186,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateGradleBuild(request)
 				.contains(
 						"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
-				.contains("compile('org.springframework.boot:spring-boot-starter-web')") // Added
-																							// by
-																							// war
-																							// packaging
+				// Added by warpackaging
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
 						"testCompile('org.springframework.boot:spring-boot-starter-test')")
 				.contains("configurations {") // declare providedRuntime config
@@ -464,9 +462,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
 						"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
-				.contains("runtime('org.h2:h2')").contains("configurations {") // declare
-																				// providedRuntime
-																				// config
+				// declare providedRuntime config
+				.contains("runtime('org.h2:h2')").contains("configurations {")
 				.contains("providedRuntime")
 				.contains("providedRuntime('javax.servlet:servlet-api')")
 				.contains("testCompile('org.hamcrest:hamcrest')");

@@ -20,13 +20,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.Type;
 import org.json.JSONObject;
+
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
-
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.Type;
 
 /**
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.1
@@ -50,7 +50,7 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 	@Override
 	protected Map<String, Object> links(JSONObject parent, List<Type> types, String appUrl) {
 		Map<String, Object> links = super.links(parent, types, appUrl);
-		links.put("dependencies",  dependenciesLink(appUrl));
+		links.put("dependencies", dependenciesLink(appUrl));
 		parent.put("_links", links);
 		return links;
 	}
@@ -58,10 +58,10 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 	@Override
 	protected Map<String, Object> mapDependency(Dependency dependency) {
 		Map<String, Object> content = mapValue(dependency);
-		if (dependency.getVersionRange()!=null) {
+		if (dependency.getVersionRange() != null) {
 			content.put("versionRange", dependency.getVersionRange());
 		}
-		if (dependency.getLinks()!=null && !dependency.getLinks().isEmpty()) {
+		if (dependency.getLinks() != null && !dependency.getLinks().isEmpty()) {
 			content.put("_links", LinkMapper.mapLinks(dependency.getLinks()));
 		}
 		return content;

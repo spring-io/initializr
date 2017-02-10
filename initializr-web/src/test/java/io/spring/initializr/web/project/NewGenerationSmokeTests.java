@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 
 package io.spring.initializr.web.project;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.test.generator.ProjectAssert;
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -41,11 +39,13 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StreamUtils;
 
-import io.spring.initializr.test.generator.ProjectAssert;
-import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dave Syer

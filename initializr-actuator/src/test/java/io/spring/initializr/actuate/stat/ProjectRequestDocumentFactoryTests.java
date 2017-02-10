@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 
 package io.spring.initializr.actuate.stat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
-
-import org.junit.Test;
 
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -60,7 +59,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	@Test
 	public void createDocumentWithRequestIp() {
 		ProjectRequest request = createProjectRequest();
-		request.getParameters().put("x-forwarded-for","10.0.0.123");
+		request.getParameters().put("x-forwarded-for", "10.0.0.123");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
 		ProjectRequestDocument document = factory.createDocument(event);
 		assertEquals("10.0.0.123", document.getRequestIp());
@@ -83,7 +82,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	public void createDocumentWithCloudFlareHeaders() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "10.0.0.123");
-		request.getParameters().put("cf-ipcountry","BE");
+		request.getParameters().put("cf-ipcountry", "BE");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
 		ProjectRequestDocument document = factory.createDocument(event);
 		assertEquals("10.0.0.123", document.getRequestIp());
@@ -126,7 +125,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	@Test
 	public void createDocumentWithUserAgent() {
 		ProjectRequest request = createProjectRequest();
-		request.getParameters().put("user-agent","HTTPie/0.8.0");
+		request.getParameters().put("user-agent", "HTTPie/0.8.0");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
 		ProjectRequestDocument document = factory.createDocument(event);
 		assertEquals("httpie", document.getClientId());
@@ -136,7 +135,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	@Test
 	public void createDocumentWithUserAgentNoVersion() {
 		ProjectRequest request = createProjectRequest();
-		request.getParameters().put("user-agent","IntelliJ IDEA");
+		request.getParameters().put("user-agent", "IntelliJ IDEA");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
 		ProjectRequestDocument document = factory.createDocument(event);
 		assertEquals("intellijidea", document.getClientId());

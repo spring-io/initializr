@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,24 @@
 
 package io.spring.initializr.web.project;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.mapper.InitializrMetadataVersion;
+import org.json.JSONObject;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.HttpClientErrorException;
+
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -26,24 +44,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
-
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 
 /**
  * @author Stephane Nicoll
@@ -81,7 +81,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void dependencyNotInRange() {
 		try {
-			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[])null);
+			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[]) null);
 		}
 		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.NOT_ACCEPTABLE, ex.getStatusCode());
@@ -92,8 +92,8 @@ public class MainControllerIntegrationTests
 	public void noDependencyProject() {
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
-				.hasSpringBootStarterRootDependency() // the root dep is added if none is
-														// specified
+				// the root dep is added if none is specified
+				.hasSpringBootStarterRootDependency()
 				.hasSpringBootStarterTest();
 	}
 
@@ -349,7 +349,8 @@ public class MainControllerIntegrationTests
 		try {
 			downloadArchive("/starter.zip?style=foo:bar");
 			fail("Should have failed");
-		} catch (HttpClientErrorException ex) {
+		}
+		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
 			assertStandardErrorBody(ex.getResponseBodyAsString(),
 					"Unknown dependency 'foo:bar' check project metadata");
@@ -361,7 +362,8 @@ public class MainControllerIntegrationTests
 		try {
 			downloadArchive("/starter.zip?style=foo");
 			fail("Should have failed");
-		} catch (HttpClientErrorException ex) {
+		}
+		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
 			assertStandardErrorBody(ex.getResponseBodyAsString(),
 					"Unknown dependency 'foo' check project metadata");
@@ -371,18 +373,18 @@ public class MainControllerIntegrationTests
 	@Test
 	public void homeIsForm() {
 		String body = htmlHome();
-		assertTrue ("Wrong body:\n" + body, body.contains("action=\"/starter.zip\""));
-		assertTrue ("Wrong body:\n" + body, body.contains("Web dependency description"));
-		assertFalse ("Wrong body:\n" + body, body.contains("${"));
-		assertFalse ("Wrong body:\n" + body, body.contains("{{"));
-		assertFalse ("Wrong body:\n" + body, body.contains("}}"));
-		assertTrue ("Wrong body:\n" + body, body.contains("<option value=\"groovy\">"));
-		assertTrue ("Wrong body:\n" + body, body.contains("<option value=\"java\" selected>"));
+		assertTrue("Wrong body:\n" + body, body.contains("action=\"/starter.zip\""));
+		assertTrue("Wrong body:\n" + body, body.contains("Web dependency description"));
+		assertFalse("Wrong body:\n" + body, body.contains("${"));
+		assertFalse("Wrong body:\n" + body, body.contains("{{"));
+		assertFalse("Wrong body:\n" + body, body.contains("}}"));
+		assertTrue("Wrong body:\n" + body, body.contains("<option value=\"groovy\">"));
+		assertTrue("Wrong body:\n" + body, body.contains("<option value=\"java\" selected>"));
 	}
 
 	@Test
 	public void homeIsJson() {
-		String body = invokeHome(null, (String[])null).getBody();
+		String body = invokeHome(null, (String[]) null).getBody();
 		assertTrue("Wrong body:\n$body", body.contains("\"dependencies\""));
 	}
 

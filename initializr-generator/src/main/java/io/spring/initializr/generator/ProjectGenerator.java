@@ -28,16 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.util.Assert;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StreamUtils;
-
 import io.spring.initializr.InitializrException;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
@@ -45,6 +35,16 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.util.Assert;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Generate a project based on the configured metadata.
@@ -384,17 +384,17 @@ public class ProjectGenerator {
 
 		Map<String, String> versions = new LinkedHashMap<String, String>();
 		model.put("buildPropertiesVersions", versions.entrySet());
-		request.getBuildProperties().getVersions().forEach((k,v) -> {
+		request.getBuildProperties().getVersions().forEach((k, v) -> {
 			versions.put(k, v.get());
 		});
 		Map<String, String> gradle = new LinkedHashMap<String, String>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
-		request.getBuildProperties().getGradle().forEach((k,v) -> {
+		request.getBuildProperties().getGradle().forEach((k, v) -> {
 			gradle.put(k, v.get());
 		});
 		Map<String, String> maven = new LinkedHashMap<String, String>();
 		model.put("buildPropertiesMaven", maven.entrySet());
-		request.getBuildProperties().getMaven().forEach((k,v) -> {
+		request.getBuildProperties().getMaven().forEach((k, v) -> {
 			maven.put(k, v.get());
 		});
 
@@ -404,7 +404,7 @@ public class ProjectGenerator {
 		model.put("kotlinVersion",
 				metadata.getConfiguration().getEnv().getKotlin().getVersion());
 		if ("kotlin".equals(request.getLanguage())) {
-			model.put("kotlin", true);			
+			model.put("kotlin", true);
 		}
 		if ("groovy".equals(request.getLanguage())) {
 			model.put("groovy", true);
@@ -423,7 +423,7 @@ public class ProjectGenerator {
 		model.put("springBootPluginName",
 				(VERSION_1_4_2_M1
 						.compareTo(Version.safeParse(request.getBootVersion())) <= 0
-								? "org.springframework.boot" : "spring-boot"));
+						? "org.springframework.boot" : "spring-boot"));
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));

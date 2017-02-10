@@ -21,12 +21,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanWrapperImpl;
-
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.TemplateRenderer;
+
+import org.springframework.beans.BeanWrapperImpl;
 
 /**
  * Generate help pages for command-line clients.

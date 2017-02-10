@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.util.Version.Qualifier;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import io.spring.initializr.util.Version.Qualifier;
 
 /**
  * Parser for {@link Version} and {@link VersionRange} that allows to resolve the minor
@@ -84,12 +84,14 @@ public class VersionParser {
 		if ("x".equals(minor) || "x".equals(patch)) {
 			Integer minorInt = "x".equals(minor) ? null : Integer.parseInt(minor);
 			Version latest = findLatestVersion(major, minorInt, qualifier);
-			if (latest==null) {
-				return new Version(major, ("x".equals(minor) ? 999 : Integer.parseInt(minor)),
+			if (latest == null) {
+				return new Version(major, ("x".equals(minor) ? 999
+						: Integer.parseInt(minor)),
 						("x".equals(patch) ? 999 : Integer.parseInt(patch)), qualifier);
 			}
 			return new Version(major, latest.getMinor(), latest.getPatch(), latest.getQualifier());
-		} else {
+		}
+		else {
 			return new Version(major, Integer.parseInt(minor), Integer.parseInt(patch), qualifier);
 		}
 	}
@@ -105,7 +107,8 @@ public class VersionParser {
 	public Version safeParse(String text) {
 		try {
 			return parse(text);
-		} catch (InvalidVersionException ex) {
+		}
+		catch (InvalidVersionException ex) {
 			return null;
 		}
 	}
@@ -133,15 +136,15 @@ public class VersionParser {
 	}
 
 	private Version findLatestVersion(Integer major, Integer minor,
-									  Version.Qualifier qualifier) {
+			Version.Qualifier qualifier) {
 		List<Version> matches = this.latestVersions.stream().filter(it -> {
-			if (major!=null && !major.equals(it.getMajor())) {
+			if (major != null && !major.equals(it.getMajor())) {
 				return false;
 			}
-			if (minor!=null && !minor.equals(it.getMinor())) {
+			if (minor != null && !minor.equals(it.getMinor())) {
 				return false;
 			}
-			if (qualifier!=null && !qualifier.equals(it.getQualifier())) {
+			if (qualifier != null && !qualifier.equals(it.getQualifier())) {
 				return false;
 			}
 			return true;

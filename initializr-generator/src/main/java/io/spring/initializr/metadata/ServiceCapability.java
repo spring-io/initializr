@@ -16,11 +16,11 @@
 
 package io.spring.initializr.metadata;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Defines a capability of the initializr service. Each capability is defined by a id and

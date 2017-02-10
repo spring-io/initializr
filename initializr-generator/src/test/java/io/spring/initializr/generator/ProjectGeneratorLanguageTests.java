@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package io.spring.initializr.generator;
 
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME;
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME;
-
+import io.spring.initializr.test.generator.ProjectAssert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
 import org.springframework.core.io.ClassPathResource;
 
-import io.spring.initializr.test.generator.ProjectAssert;
+import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME;
+import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME;
 
 /**
  * Project generator tests for supported languages.
@@ -121,7 +121,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);
 		request.setPackaging("war");
-		if (bootVersion!=null) {
+		if (bootVersion != null) {
 			request.setBootVersion(bootVersion);
 		}
 		ProjectAssert project = generateProject(request);

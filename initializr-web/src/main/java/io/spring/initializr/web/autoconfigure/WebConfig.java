@@ -21,6 +21,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.spring.initializr.util.Agent;
+import io.spring.initializr.util.Agent.AgentId;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -30,9 +33,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
-
-import io.spring.initializr.util.Agent;
-import io.spring.initializr.util.Agent.AgentId;
 
 /**
  * Spring Initializr web configuration.
@@ -62,12 +62,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 				return Collections.emptyList();
 			}
 			String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-			if (userAgent!=null) {
+			if (userAgent != null) {
 				Agent agent = Agent.fromUserAgent(userAgent);
-				if (agent!=null) {
-				if (AgentId.CURL.equals(agent.getId()) || AgentId.HTTPIE.equals(agent.getId())) {
-					return Collections.singletonList(MediaType.TEXT_PLAIN);
-				}
+				if (agent != null) {
+					if (AgentId.CURL.equals(agent.getId()) || AgentId.HTTPIE.equals(agent.getId())) {
+						return Collections.singletonList(MediaType.TEXT_PLAIN);
+					}
 				}
 			}
 			return Collections.singletonList(MediaType.APPLICATION_JSON);

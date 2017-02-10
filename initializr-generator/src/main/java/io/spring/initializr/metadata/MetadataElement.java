@@ -33,7 +33,7 @@ public class MetadataElement {
 	 * The unique id of this element for a given capability.
 	 */
 	private String id;
-	
+
 	public MetadataElement() {
 	}
 
@@ -47,7 +47,7 @@ public class MetadataElement {
 	}
 
 	public String getName() {
-		return name!=null ? name: id;
+		return name != null ? name : id;
 	}
 
 	public String getId() {

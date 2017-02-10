@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package io.spring.initializr.actuate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.json.JSONObject;
 import org.junit.Test;
+
 import org.springframework.test.context.ActiveProfiles;
 
-import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for actuator specific features.

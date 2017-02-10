@@ -40,7 +40,7 @@ public class VersionRange {
 	final boolean lowerInclusive;
 	final Version higherVersion;
 	final boolean higherInclusive;
-	
+
 	// For Jackson
 	@SuppressWarnings("unused")
 	private VersionRange() {
@@ -48,7 +48,7 @@ public class VersionRange {
 	}
 
 	protected VersionRange(Version lowerVersion, boolean lowerInclusive,
-						   Version higherVersion, boolean higherInclusive) {
+			Version higherVersion, boolean higherInclusive) {
 		this.lowerVersion = lowerVersion;
 		this.lowerInclusive = lowerInclusive;
 		this.higherVersion = higherVersion;
@@ -64,14 +64,16 @@ public class VersionRange {
 		int lower = lowerVersion.compareTo(version);
 		if (lower > 0) {
 			return false;
-		} else if (!lowerInclusive && lower == 0) {
+		}
+		else if (!lowerInclusive && lower == 0) {
 			return false;
 		}
-		if (higherVersion!=null) {
+		if (higherVersion != null) {
 			int higher = higherVersion.compareTo(version);
 			if (higher < 0) {
 				return false;
-			} else if (!higherInclusive && higher == 0) {
+			}
+			else if (!higherInclusive && higher == 0) {
 				return false;
 			}
 		}
@@ -95,13 +97,12 @@ public class VersionRange {
 	}
 
 	@Override
-	public
-	String toString() {
+	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		if (lowerVersion!=null) {
+		if (lowerVersion != null) {
 			sb.append((lowerInclusive ? ">=" : ">") + lowerVersion);
 		}
-		if (higherVersion!=null) {
+		if (higherVersion != null) {
 			sb.append(" and " + (higherInclusive ? "<=" : "<") + higherVersion);
 		}
 		return sb.toString();

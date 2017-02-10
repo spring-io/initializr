@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 package io.spring.initializr.web.project;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.project.LegacyStsControllerIntegrationTests.LegacyConfig;
 import org.junit.Test;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
@@ -31,9 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import io.spring.initializr.web.project.LegacyStsControllerIntegrationTests.LegacyConfig;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stephane Nicoll
@@ -49,8 +49,8 @@ public class LegacyStsControllerIntegrationTests
 		assertTrue("groupId not found", body.contains("com.example"));
 		assertTrue("artifactId not found", body.contains("demo"));
 		assertTrue("custom description not found", body.contains("Demo project for Spring Boot"));
-		assertTrue ("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
-		assertTrue ("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
+		assertTrue("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
+		assertTrue("Wrong body:\n" + body, body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
 	}
 
 	protected String htmlHome() {

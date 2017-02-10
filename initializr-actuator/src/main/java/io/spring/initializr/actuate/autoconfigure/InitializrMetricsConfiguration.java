@@ -16,7 +16,8 @@
 
 package io.spring.initializr.actuate.autoconfigure;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
+
 import org.springframework.boot.actuate.autoconfigure.ExportMetricWriter;
 import org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration;
 import org.springframework.boot.actuate.metrics.CounterService;
@@ -33,8 +34,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.ObjectUtils;
-
-import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration

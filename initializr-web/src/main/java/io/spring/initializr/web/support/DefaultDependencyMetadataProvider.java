@@ -19,8 +19,6 @@ package io.spring.initializr.web.support;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.cache.annotation.Cacheable;
-
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
@@ -28,6 +26,8 @@ import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.util.Version;
+
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * A default {@link DependencyMetadataProvider} implementation.
@@ -48,14 +48,14 @@ public class DefaultDependencyMetadataProvider implements DependencyMetadataProv
 
 		Map<String, Repository> repositories = new LinkedHashMap<>();
 		for (Dependency d : dependencies.values()) {
-			if (d.getRepository()!=null) {
+			if (d.getRepository() != null) {
 				repositories.put(d.getRepository(), metadata.getConfiguration().getEnv().getRepositories().get(d.getRepository()));
 			}
 		}
 
 		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
 		for (Dependency d : dependencies.values()) {
-			if (d.getBom()!=null) {
+			if (d.getBom() != null) {
 				boms.put(d.getBom(), metadata.getConfiguration().getEnv().getBoms().get(d.getBom()).resolve(bootVersion));
 			}
 		}

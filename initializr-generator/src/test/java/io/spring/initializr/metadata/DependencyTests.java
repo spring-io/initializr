@@ -16,18 +16,17 @@
 
 package io.spring.initializr.metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
 import java.util.Arrays;
 
+import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionParser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionParser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  * @author Stephane Nicoll

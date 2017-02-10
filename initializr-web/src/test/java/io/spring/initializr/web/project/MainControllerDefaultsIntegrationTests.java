@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 
 package io.spring.initializr.web.project;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.springframework.test.context.ActiveProfiles;
-
 import io.spring.initializr.test.generator.PomAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import org.junit.Test;
+
+import org.springframework.test.context.ActiveProfiles;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stephane Nicoll
  */
-@ActiveProfiles({"test-default", "test-custom-defaults"})
+@ActiveProfiles({ "test-default", "test-custom-defaults" })
 public class MainControllerDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization

@@ -19,12 +19,11 @@ package io.spring.initializr.web.support;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.spring.initializr.metadata.DefaultMetadataElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
-import io.spring.initializr.metadata.DefaultMetadataElement;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Reads metadata from the main spring.io website. This is a stateful
@@ -50,7 +49,7 @@ public class SpringBootMetadataReader {
 	public List<DefaultMetadataElement> getBootVersions() {
 		JSONArray array = content.getJSONArray("projectReleases");
 		List<DefaultMetadataElement> list = new ArrayList<>();
-		for (int i=0; i<array.length(); i++) {
+		for (int i = 0; i < array.length(); i++) {
 			JSONObject it = array.getJSONObject(i);
 			DefaultMetadataElement version = new DefaultMetadataElement();
 			version.setId(it.getString("version"));

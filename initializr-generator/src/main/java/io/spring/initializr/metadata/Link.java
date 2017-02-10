@@ -68,14 +68,14 @@ public class Link {
 	 */
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String description;
-	
+
 	public Link() {
 	}
 
 	private Link(String rel, String href) {
-		this(rel, href, (String)null);
+		this(rel, href, null);
 	}
-	
+
 	private Link(String rel, String href, String description) {
 		this.rel = rel;
 		this.href = href;
@@ -124,11 +124,11 @@ public class Link {
 	}
 
 	public void resolve() {
-		if (rel==null) {
+		if (rel == null) {
 			throw new InvalidInitializrMetadataException(
 					"Invalid link " + this + ": rel attribute is mandatory");
 		}
-		if (href==null) {
+		if (href == null) {
 			throw new InvalidInitializrMetadataException(
 					"Invalid link " + this + ": href attribute is mandatory");
 		}
@@ -147,13 +147,13 @@ public class Link {
 	 */
 	public URI expand(Map<String, String> parameters) {
 		AtomicReference<String> result = new AtomicReference<String>(href);
-		templateVariables.forEach( var -> {
+		templateVariables.forEach(var -> {
 			Object value = parameters.get(var);
-			if (value==null) {
+			if (value == null) {
 				throw new IllegalArgumentException(
 						"Could not expand " + href + ", missing value for '" + var + "'");
 			}
-			result.set(result.get().replace("{" + var+"}", value.toString()));
+			result.set(result.get().replace("{" + var + "}", value.toString()));
 		});
 		try {
 			return new URI(result.get());
