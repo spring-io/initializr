@@ -21,6 +21,10 @@ spring:
 
 initializr:
   env:
+    repositories:
+      vaadin-prereleases:
+        name: Vaadin Prereleases
+        url: https://maven.vaadin.com/vaadin-prereleases/
     boms:
       cloud-bom:
         groupId: org.springframework.cloud
@@ -88,7 +92,12 @@ initializr:
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
-        version: 7.7.5
+        mappings:
+          - versionRange: "[1.3.0.RELEASE, 2.0.0.M1)"
+            version: 7.7.5
+          - versionRange: "2.0.0.M1"
+            version: 8.0.0.rc1
+            repositories: vaadin-prereleases
       stormpath-bom:
         groupId: com.stormpath.sdk
         artifactId: stormpath-bom
@@ -285,7 +294,7 @@ initializr:
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
               version: 1.0.2
-            - versionRange: 1.4.0.RELEASE
+            - versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
               version: 1.2.0
           links:
             - rel: guide
