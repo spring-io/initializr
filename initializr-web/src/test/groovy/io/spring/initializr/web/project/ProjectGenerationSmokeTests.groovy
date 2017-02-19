@@ -26,6 +26,7 @@ import org.junit.Before
 import org.junit.Test
 import org.openqa.selenium.Keys
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.interactions.Actions
@@ -55,16 +56,22 @@ class ProjectGenerationSmokeTests
 		Assume.assumeTrue("Smoke tests disabled (set System property 'smoke.test')",
 				Boolean.getBoolean("smoke.test"))
 		downloadDir = folder.newFolder()
-		FirefoxProfile fxProfile = new FirefoxProfile();
+		FirefoxProfile fxProfile = new FirefoxProfile()
 
-		fxProfile.setPreference("browser.download.folderList", 2);
-		fxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-		fxProfile.setPreference("browser.download.dir", downloadDir.getAbsolutePath());
+		fxProfile.setPreference("browser.download.folderList", 2)
+		fxProfile.setPreference("browser.download.manager.showWhenStarting", false)
+		fxProfile.setPreference("browser.download.dir", downloadDir.getAbsolutePath())
 		fxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-				"application/zip,application/x-compress,application/octet-stream");
+				"application/zip,application/x-compress,application/octet-stream")
 
-		driver = new FirefoxDriver(fxProfile);
-		actions = new Actions(driver)
+		try {
+			driver = new FirefoxDriver(fxProfile)
+			actions = new Actions(driver)
+		}
+		catch (WebDriverException wde) {
+			driver = null
+		}
+		Assume.assumeTrue(driver != null)
 		browser = new Browser()
 		browser.driver = driver
 
