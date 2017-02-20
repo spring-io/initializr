@@ -795,12 +795,6 @@ initializr:
           scope: runtime
           versionRange: 1.3.3.RELEASE
           starter: false
-        - name: Zipkin Server
-          id: zipkin-server
-          description: Consumes span data over HTTP and writes them to a span store
-          groupId: io.zipkin.java
-          artifactId: zipkin-server
-          starter: false
     - name: Cloud Messaging
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
