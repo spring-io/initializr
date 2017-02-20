@@ -55,7 +55,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleZipProject() {
 		downloadZip("/starter.zip?style=web&style=jpa").isJavaProject()
-				.hasFile(".gitignore").isMavenProject()
+				.hasFile(".gitignore")
+				.hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
@@ -65,7 +66,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleTgzProject() {
 		downloadTgz("/starter.tgz?style=org.acme:foo").isJavaProject()
-				.hasFile(".gitignore").isMavenProject()
+				.hasFile(".gitignore")
+				.hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				.hasDependency("org.acme", "foo", "1.3.5");
 	}

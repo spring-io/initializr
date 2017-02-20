@@ -217,6 +217,13 @@ public class ProjectAssert {
 		return this;
 	}
 
+	public ProjectAssert hasExecutableFile(String... localPaths) {
+		for (String localPath : localPaths) {
+			assertFile(localPath, true);
+		}
+		return this;
+	}
+
 	public ProjectAssert hasNoFile(String... localPaths) {
 		for (String localPath : localPaths) {
 			assertFile(localPath, false);
@@ -228,6 +235,13 @@ public class ProjectAssert {
 		File candidate = file(localPath);
 		assertEquals("Invalid presence (\"" + exist + "\") for " + localPath, exist,
 				candidate.exists());
+		return this;
+	}
+
+	public ProjectAssert assertExecutableFile(String localPath, boolean executable) {
+		File candidate = file(localPath);
+		assertEquals("Invalid  (\"" + executable + "\") for " + localPath, executable,
+				candidate.exists() && candidate.canExecute());
 		return this;
 	}
 

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,23 +27,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.test.generator.ProjectAssert;
-import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
-import io.spring.initializr.web.mapper.InitializrMetadataVersion;
-import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Expand;
+import org.apache.tools.ant.taskdefs.Untar;
+import org.apache.tools.ant.taskdefs.Untar.UntarCompressionMethod;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.rauschig.jarchivelib.ArchiverFactory;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,7 +53,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertTrue;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataBuilder;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InitializrProperties;
+import io.spring.initializr.test.generator.ProjectAssert;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
+import io.spring.initializr.web.mapper.InitializrMetadataVersion;
+import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 
 /**
  * @author Stephane Nicoll
@@ -183,10 +186,10 @@ public abstract class AbstractInitializrIntegrationTests {
 			File project = folder.newFolder();
 			switch (archiveType) {
 				case ZIP:
-					ArchiverFactory.createArchiver("zip").extract(archiveFile, project);
+					unzip(archiveFile, project);
 					break;
 				case TGZ:
-					ArchiverFactory.createArchiver("tar", "gz").extract(archiveFile, project);
+					untar(archiveFile, project);
 					break;
 			}
 			return new ProjectAssert(project);
@@ -194,6 +197,25 @@ public abstract class AbstractInitializrIntegrationTests {
 		catch (Exception e) {
 			throw new IllegalStateException("Cannot unpack archive", e);
 		}
+	}
+
+	private void untar(File archiveFile, File project) {
+		Untar expand = new Untar();
+		expand.setProject(new Project());
+		expand.setDest(project);
+		expand.setSrc(archiveFile);
+		UntarCompressionMethod method = new UntarCompressionMethod();
+		method.setValue("gzip");
+		expand.setCompression(method );
+		expand.execute();
+	}
+
+	private void unzip(File archiveFile, File project) {
+		Expand expand = new Expand();
+		expand.setProject(new Project());
+		expand.setDest(project);
+		expand.setSrc(archiveFile);
+		expand.execute();
 	}
 
 	protected File writeArchive(byte[] body) throws IOException {
