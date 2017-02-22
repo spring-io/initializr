@@ -63,7 +63,18 @@ class DependenciesCapability extends ServiceCapability<List<DependencyGroup>> {
 	@Override
 	void merge(List<DependencyGroup> otherContent) {
 		otherContent.each { group ->
-			if (!content.find { group.name.equals(it.name)}) {
+			def contentGroup = content.find { group.name.equals(it.name)}
+			if (contentGroup != null) {
+				contentGroup.bom = group.bom
+				contentGroup.repository = group.repository
+				contentGroup.versionRange = group.versionRange
+				group.content.each { dependency ->
+					if (!contentGroup.content.contains(dependency)) {
+						contentGroup.content.add(dependency)
+					}
+				}
+			}
+			else {
 				content << group
 			}
 		}

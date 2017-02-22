@@ -161,6 +161,37 @@ class InitializrMetadataBuilderTests {
 	}
 
 	@Test
+	void mergeConfigurationNewDependencyGroup() {
+		def config = load(new ClassPathResource("application-test-default.yml"))
+		def metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(config).build()
+		assertEquals 2, metadata.dependencies.content.size()
+
+		metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(config)
+				.withInitializrMetadata(new ClassPathResource("application-test-overrides.json")).build()
+		assertEquals 3, metadata.dependencies.content.size()
+	}
+
+	@Test
+	void mergeConfigurationExistingDependencyGroup() {
+		def config = load(new ClassPathResource("application-test-default.yml"))
+		def metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(config).build()
+		assertEquals 2, metadata.dependencies.content.size()
+		assertEquals 3, metadata.dependencies.content[0].content.size()
+		assertEquals 5, metadata.dependencies.content[1].content.size()
+
+		metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(config)
+				.withInitializrMetadata(new ClassPathResource("application-test-overrides.json")).build()
+		assertEquals 3, metadata.dependencies.content.size()
+		assertEquals 4, metadata.dependencies.content[0].content.size()
+		assertEquals 5, metadata.dependencies.content[1].content.size()
+		assertEquals 1, metadata.dependencies.content[2].content.size()
+	}
+
+	@Test
 	void addDependencyInCustomizer() {
 		def group = new DependencyGroup(name: 'Extra')
 		def dependency = new Dependency(id: 'com.foo:foo:1.0.0')
