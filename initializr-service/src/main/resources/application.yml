@@ -237,6 +237,11 @@ initializr:
             - rel: guide
               href: https://spring.io/guides/tutorials/bookmarks/
               description: Building REST services with Spring
+        - name: Reactive Web
+          id: webflux
+          versionRange: 2.0.0.BUILD-SNAPSHOT
+          description: Reactive web development with Netty and Spring WebFlux
+          weight: 90
         - name: Websocket
           id: websocket
           description: Websocket development with SockJS and STOMP
@@ -1061,16 +1066,6 @@ initializr:
           id: remote-shell
           description: CRaSH shell integration
           versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
-    - name: Experimental
-      content:
-        - name: Reactive Web
-          id: experimental-web-reactive
-          groupId: org.springframework.boot.experimental
-          artifactId: spring-boot-starter-web-reactive
-          bom: experimental-reactive-bom
-          versionRange: 2.0.0.BUILD-SNAPSHOT
-          description: Reactive web development with Apache Tomcat and Spring Reactive (experimental)
-          weight: 75
   types:
     - name: Maven Project
       id: maven-project
