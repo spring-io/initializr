@@ -18,22 +18,9 @@ package io.spring.initializr.actuate.autoconfigure;
 
 import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
 
-import org.springframework.boot.actuate.autoconfigure.ExportMetricWriter;
-import org.springframework.boot.actuate.autoconfigure.MetricExportAutoConfiguration;
 import org.springframework.boot.actuate.metrics.CounterService;
-import org.springframework.boot.actuate.metrics.repository.redis.RedisMetricRepository;
-import org.springframework.boot.actuate.metrics.writer.MetricWriter;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.util.ObjectUtils;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -42,31 +29,12 @@ import org.springframework.util.ObjectUtils;
  * @author Dave Syer
  */
 @Configuration
-@AutoConfigureAfter({ RedisAutoConfiguration.class, MetricExportAutoConfiguration.class })
 public class InitializrMetricsConfiguration {
 
 	@Bean
 	public ProjectGenerationMetricsListener metricsListener(
 			CounterService counterService) {
 		return new ProjectGenerationMetricsListener(counterService);
-	}
-
-	@ConditionalOnBean(RedisConnectionFactory.class)
-	@ConditionalOnProperty(value = "spring.metrics.export.enabled")
-	@EnableScheduling
-	@EnableConfigurationProperties(MetricsProperties.class)
-	@Configuration
-	protected static class MetricsExportConfiguration {
-
-		@Bean
-		@ExportMetricWriter
-		public MetricWriter writer(RedisConnectionFactory connectionFactory,
-				MetricsProperties metrics, ApplicationContext context) {
-			return new RedisMetricRepository(connectionFactory,
-					metrics.getPrefix() + metrics.getId(context.getId()) + "."
-							+ ObjectUtils.getIdentityHexString(context) + ".",
-					metrics.getKey());
-		}
 	}
 
 }

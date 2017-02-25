@@ -1,4 +1,0 @@
-spring:
-  metrics:
-    export:
-     enabled: true
