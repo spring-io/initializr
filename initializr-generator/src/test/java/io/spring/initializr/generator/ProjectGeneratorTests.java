@@ -297,11 +297,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot2UseGradle3() {
+	public void springBoot15UseGradle3() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
-		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
-		generateProject(request).isGradleProject("3.2.1");
+		request.setBootVersion("1.5.0.RELEASE");
+		generateProject(request).isGradleProject("3.4.1");
 	}
 
 	@Test

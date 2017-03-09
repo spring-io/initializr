@@ -71,7 +71,7 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_1_4_2_M1 = Version.parse("1.4.2.M1");
 
-	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
+	private static final Version VERSION_1_5_0_M1 = Version.parse("1.5.0.M1");
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -502,7 +502,7 @@ public class ProjectGenerator {
 	}
 
 	private static boolean isGradle3Available(Version bootVersion) {
-		return VERSION_2_0_0_M1.compareTo(bootVersion) <= 0;
+		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
