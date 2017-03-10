@@ -122,7 +122,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * Specify if the dependency has its coordinates set, i.e. {@code groupId} and
 	 * {@code artifactId}.
 	 */
-	public boolean hasCoordinates() {
+	private boolean hasCoordinates() {
 		return groupId != null && artifactId != null;
 	}
 
@@ -390,6 +390,14 @@ public class Dependency extends MetadataElement implements Describable {
 
 	public String getVersionRange() {
 		return versionRange;
+	}
+
+	@Override
+	public String toString() {
+		return "Dependency{" + "id='" + getId() + '\'' +
+				", groupId='" + groupId + '\'' +
+				", artifactId='" + artifactId + '\'' +
+				", version='" + version + '\'' + '}';
 	}
 
 	/**

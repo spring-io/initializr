@@ -620,15 +620,13 @@ initializr:
           id: cloud-task
           description: Task result tracking along with integration with batch and streams
           groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-task
           versionRange: 1.3.0.RELEASE
           bom: cloud-task-bom
           mappings:
             - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
-              groupId: org.springframework.cloud
               artifactId: spring-cloud-task-starter
             - versionRange: "1.4.0.RELEASE"
-              groupId: org.springframework.cloud
-              artifactId: spring-cloud-starter-task
     - name: Cloud Config
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE

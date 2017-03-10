@@ -256,16 +256,36 @@ public class DependencyTests {
 				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
 	}
 
+	@Test
+	public void resolveMatchingWithCustomGroupId() {
+		Dependency dependency = Dependency.withId("foo", "com.acme", "foo",
+				"0.3.0.RELEASE");
+		dependency.getMappings().add(Dependency.Mapping
+				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE"));
+		dependency.getMappings().add(Dependency.Mapping
+				.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "bar", null));
+		dependency.resolve();
+		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
+				"foo", "com.acme", "foo", "1.0.0.RELEASE");
+		validateResolvedDependency(dependency.resolve(Version.parse("1.2.5.RELEASE")),
+				"foo", "com.acme", "bar", "0.3.0.RELEASE");
+	}
+
 	private static void validateResolvedWebDependency(Dependency dependency,
 			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
-		assertEquals(expectedVersion, dependency.getVersion());
-		assertEquals("web", dependency.getId());
-		assertEquals(expectedGroupId, dependency.getGroupId());
-		assertEquals(expectedArtifactId, dependency.getArtifactId());
+		validateResolvedDependency(dependency, "web", expectedGroupId,
+				expectedArtifactId, expectedVersion);
 		assertEquals(2, dependency.getKeywords().size());
 		assertEquals(1, dependency.getAliases().size());
 		assertEquals(1, dependency.getFacets().size());
+	}
 
+	private static void validateResolvedDependency(Dependency dependency, String id,
+			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
+		assertEquals(id, dependency.getId());
+		assertEquals(expectedGroupId, dependency.getGroupId());
+		assertEquals(expectedArtifactId, dependency.getArtifactId());
+		assertEquals(expectedVersion, dependency.getVersion());
 	}
 
 }
