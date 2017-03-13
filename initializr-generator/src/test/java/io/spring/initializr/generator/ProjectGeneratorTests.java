@@ -301,7 +301,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
 		request.setBootVersion("1.5.0.RELEASE");
-		generateProject(request).isGradleProject("3.4.1");
+		generateProject(request).isGradleProject("3.3");
 	}
 
 	@Test
