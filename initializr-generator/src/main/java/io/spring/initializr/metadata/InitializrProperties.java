@@ -92,6 +92,13 @@ public class InitializrProperties extends InitializrConfiguration {
 	@JsonIgnore
 	private final SimpleElement name = new SimpleElement("demo");
 
+
+	/**
+	 * Name metadata.
+	 */
+	@JsonIgnore
+	private final SimpleElement externalStructure = new SimpleElement("");
+
 	/**
 	 * Description metadata.
 	 */
@@ -139,6 +146,10 @@ public class InitializrProperties extends InitializrConfiguration {
 
 	public SimpleElement getVersion() {
 		return version;
+	}
+
+	public SimpleElement getExternalStructure() {
+		return externalStructure;
 	}
 
 	public SimpleElement getName() {

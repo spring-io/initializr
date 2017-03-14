@@ -16,6 +16,8 @@
 
 package io.spring.initializr.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -49,6 +51,9 @@ public class TemplateRenderer {
 	public TemplateRenderer(Compiler mustache) {
 		this.mustache = mustache;
 	}
+	public TemplateRenderer(String templateFolder) {
+		this.mustache = mustacheCompiler(templateFolder);
+	}
 
 	public TemplateRenderer() {
 		this(mustacheCompiler());
@@ -66,6 +71,7 @@ public class TemplateRenderer {
 		try {
 			Template template = getTemplate(name);
 			return template.execute(model);
+
 		}
 		catch (Exception e) {
 			log.error("Cannot render: " + name, e);
@@ -94,13 +100,22 @@ public class TemplateRenderer {
 	private static Compiler mustacheCompiler() {
 		return Mustache.compiler().withLoader(mustacheTemplateLoader());
 	}
+	private static Compiler mustacheCompiler(String templateFolder) {
+		return Mustache.compiler().withLoader(mustacheTemplateLoader(templateFolder));
+	}
 
 	private static TemplateLoader mustacheTemplateLoader() {
-		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		String prefix = "classpath:/templates/";
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		Charset charset = Charset.forName("UTF-8");
 		return name -> new InputStreamReader(
 				resourceLoader.getResource(prefix + name).getInputStream(), charset);
+	}
+	private static TemplateLoader mustacheTemplateLoader(String prefix) {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		Charset charset = Charset.forName("UTF-8");
+		return name -> new InputStreamReader(
+				new FileInputStream(prefix + name), charset);
 	}
 
 }

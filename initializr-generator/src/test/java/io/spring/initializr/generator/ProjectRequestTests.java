@@ -56,6 +56,7 @@ public class ProjectRequestTests {
 				.build();
 		ProjectRequest request = new ProjectRequest();
 		request.initialize(metadata);
+		assertEquals(metadata.getExternalStructure().getContent(), request.getExternalStructure());
 		assertEquals(metadata.getName().getContent(), request.getName());
 		assertEquals(metadata.getTypes().getDefault().getId(), request.getType());
 		assertEquals(metadata.getDescription().getContent(), request.getDescription());

@@ -133,6 +133,9 @@ public class InitializrMetadataBuilder {
 		if (!StringUtils.hasText(metadata.getName().getContent())) {
 			metadata.getName().setContent("demo");
 		}
+		if (!StringUtils.hasText(metadata.getExternalStructure().getContent())) {
+			metadata.getExternalStructure().setContent("");
+		}
 		if (!StringUtils.hasText(metadata.getDescription().getContent())) {
 			metadata.getDescription().setContent("Demo project for Spring Boot");
 		}
@@ -165,6 +168,7 @@ public class InitializrMetadataBuilder {
 			properties.getArtifactId().apply(metadata.getArtifactId());
 			properties.getVersion().apply(metadata.getVersion());
 			properties.getName().apply(metadata.getName());
+			properties.getExternalStructure().apply(metadata.getExternalStructure());
 			properties.getDescription().apply(metadata.getDescription());
 			properties.getPackageName().apply(metadata.getPackageName());
 		}

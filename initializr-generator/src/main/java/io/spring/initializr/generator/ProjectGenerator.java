@@ -21,6 +21,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +43,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
+import io.spring.initializr.util.ZipUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,11 +250,36 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
+
+        generateExternalStructure(request,dir,model);
 		publishProjectGeneratedEvent(request);
 		return rootDir;
 
 	}
 
+	private void generateExternalStructure(ProjectRequest request,File dir,Map<String, Object> model){
+        try {
+            log.info("Downloading file " + request.getExternalStructure());
+            File file = downloadExternalStructure(request.getExternalStructure(),getTemporaryDirectory());
+            log.info("Downloaded file at "+file.getAbsolutePath());
+            ZipUtils.unzipArchive(file,dir,resolveModel(request));
+
+        } catch (IOException e) {
+            log.error("Exception Downloading file:"+e.getMessage());
+        }
+
+    }
+	private File downloadExternalStructure(String urlStr,File file) throws IOException {
+        URL url = new URL(urlStr);
+        log.info("Filename: "+url.getFile());
+        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+        File f = new File(file,url.getFile());
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        fos.close();
+        rbc.close();
+        return f;
+    }
 	/**
 	 * Create a distribution file for the specified project structure directory and
 	 * extension
