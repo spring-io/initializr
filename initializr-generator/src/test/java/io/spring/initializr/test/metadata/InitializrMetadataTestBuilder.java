@@ -77,7 +77,7 @@ public class InitializrMetadataTestBuilder {
 	public InitializrMetadataTestBuilder addDefaults() {
 		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions()
 				.addDefaultLanguages().addDefaultBootVersions()
-				.setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.0.1");
+				.setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.1.1");
 	}
 
 	public InitializrMetadataTestBuilder addDefaultTypes() {
