@@ -42,7 +42,13 @@ apply plugin: 'war'
 {{/war}}
 
 version = '{{version}}'
-sourceCompatibility = {{javaVersion}}
+sourceCompatibility = {{javaVersion}}{{#kotlin}}{{#isJava8}}
+compileKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}{{/isJava8}}{{/kotlin}}
 
 repositories {
 	mavenCentral()
@@ -71,7 +77,15 @@ dependencies {
 	compile('org.codehaus.groovy:groovy')
 	{{/groovy}}
 	{{#kotlin}}
+	{{#isJava6}}
 	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	{{/isJava6}}
+	{{#isJava7}}
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}")
+	{{/isJava7}}
+	{{#isJava8}}
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+	{{/isJava8}}
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	{{/kotlin}}
 	{{#runtimeDependencies}}

@@ -67,7 +67,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Configuration
 @EnableCaching
 @EnableConfigurationProperties(InitializrProperties.class)
-public class InitializrAutoConfiguration {
+public class 	InitializrAutoConfiguration {
 
 	private final List<ProjectRequestPostProcessor> postProcessors;
 

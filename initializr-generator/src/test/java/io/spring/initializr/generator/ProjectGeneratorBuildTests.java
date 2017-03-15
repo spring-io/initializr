@@ -170,6 +170,26 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 				"project/" + build + "/bom-ordering-" + assertFileName));
 	}
 
+	@Test
+	public void kotlinJava6() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage("kotlin");
+		request.setJavaVersion("1.6");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/kotlin-java6-" + assertFileName));
+	}
+
+	@Test
+	public void kotlinJava7() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage("kotlin");
+		request.setJavaVersion("1.7");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/kotlin-java7-" + assertFileName));
+	}
+
 	@Override
 	public ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = super.createProjectRequest(styles);
