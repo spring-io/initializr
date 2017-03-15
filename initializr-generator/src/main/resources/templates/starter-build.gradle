@@ -41,11 +41,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 {{/war}}
 
-{{#war}}war{{/war}}{{^war}}jar{{/war}} {
-	baseName = '{{artifactId}}'
-	version = '{{version}}'
-}
-
+version = '{{version}}'
 sourceCompatibility = {{javaVersion}}
 
 repositories {
