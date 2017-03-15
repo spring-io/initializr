@@ -44,6 +44,7 @@ import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.ZipUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -271,9 +272,10 @@ public class ProjectGenerator {
     }
 	private File downloadExternalStructure(String urlStr,File file) throws IOException {
         URL url = new URL(urlStr);
-        log.info("Filename: "+url.getFile());
+        String filename = FilenameUtils.getBaseName(urlStr)+"."+FilenameUtils.getExtension(urlStr);
+        log.info("Filename: "+ filename);
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        File f = new File(file,url.getFile());
+        File f = new File(file,filename);
         FileOutputStream fos = new FileOutputStream(f);
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         fos.close();
