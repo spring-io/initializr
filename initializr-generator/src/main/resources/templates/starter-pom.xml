@@ -183,7 +183,7 @@
 						<plugin>spring</plugin>
 					</compilerPlugins>
 					{{#isJava8}}
-					<jvmTarget>${java.version}</jvmTarget>
+					<jvmTarget>1.8</jvmTarget>
 					{{/isJava8}}
 				</configuration>
 				<executions>

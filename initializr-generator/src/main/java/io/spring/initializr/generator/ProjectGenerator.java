@@ -430,9 +430,9 @@ public class ProjectGenerator {
 		model.put("newServletInitializer", isNewServletInitializerAvailable(request));
 
 		// Java versions
-		model.put("isJava6", isJava6(request));
-		model.put("isJava7", isJava7(request));
-		model.put("isJava8", isJava8(request));
+		model.put("isJava6", isJavaVersion(request, "1.6"));
+		model.put("isJava7", isJavaVersion(request, "1.7"));
+		model.put("isJava8", isJavaVersion(request, "1.8"));
 
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
@@ -510,16 +510,8 @@ public class ProjectGenerator {
 		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
 	}
 
-	private static boolean isJava6(ProjectRequest request) {
-		return "1.6".equals(request.getJavaVersion());
-	}
-
-	private static boolean isJava7(ProjectRequest request) {
-		return "1.7".equals(request.getJavaVersion());
-	}
-
-	private static boolean isJava8(ProjectRequest request) {
-		return "1.8".equals(request.getJavaVersion());
+	private static boolean isJavaVersion(ProjectRequest request, String version) {
+		return request.getJavaVersion().equals(version);
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {

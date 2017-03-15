@@ -185,7 +185,7 @@ public class ProjectGenerationSmokeTests
 		projectAssert.hasBaseDir("demo").isMavenProject().isKotlinProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(4)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib")
+				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jre8")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect");
 	}
 
