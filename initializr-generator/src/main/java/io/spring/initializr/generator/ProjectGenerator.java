@@ -429,6 +429,11 @@ public class ProjectGenerator {
 		// New Servlet Initializer location
 		model.put("newServletInitializer", isNewServletInitializerAvailable(request));
 
+		// Java versions
+		model.put("isJava6", isJava6(request));
+		model.put("isJava7", isJava7(request));
+		model.put("isJava8", isJava8(request));
+
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
 		for (PropertyDescriptor descriptor : bean.getPropertyDescriptors()) {
@@ -503,6 +508,18 @@ public class ProjectGenerator {
 
 	private static boolean isGradle3Available(Version bootVersion) {
 		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
+	}
+
+	private static boolean isJava6(ProjectRequest request) {
+		return "1.6".equals(request.getJavaVersion());
+	}
+
+	private static boolean isJava7(ProjectRequest request) {
+		return "1.7".equals(request.getJavaVersion());
+	}
+
+	private static boolean isJava8(ProjectRequest request) {
+		return "1.8".equals(request.getJavaVersion());
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
