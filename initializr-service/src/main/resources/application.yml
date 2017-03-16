@@ -529,6 +529,12 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb
+        - name: Embedded MongoDB
+          id: mongo-embedded
+          description: Flapdoodle embedded Mongo for testing
+          groupId: de.flapdoodle.embed
+          artifactId: de.flapdoodle.embed.mongo
+          starter: false
         - name: Cassandra
           id: data-cassandra
           description: Cassandra NoSQL Database, including spring-data-cassandra
