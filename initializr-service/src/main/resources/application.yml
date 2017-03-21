@@ -31,8 +31,10 @@ initializr:
             version: Angel.SR6
           - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
             version: Brixton.SR7
-          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE]"
+          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
             version: Camden.SR6
+          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+            version: Dalston.RC1
           - versionRange: "1.5.x.BUILD-SNAPSHOT"
             version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
