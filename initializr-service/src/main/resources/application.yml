@@ -35,7 +35,7 @@ initializr:
             version: Camden.SR6
           - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
             version: Dalston.RC1
-            repositories: spring-snapshots,spring-milestones
+            repositories: spring-milestones
           - versionRange: "1.5.x.BUILD-SNAPSHOT"
             version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
