@@ -41,6 +41,7 @@ import static org.junit.Assert.fail;
  * Tests for {@link ProjectGenerator}
  *
  * @author Stephane Nicoll
+ * @author Andy Wilkinson
  */
 public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
@@ -508,6 +509,17 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains("springBootVersion = '1.4.2.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
 				.doesNotContain("apply plugin: 'spring-boot'");
+	}
+
+	@Test
+	public void gradleBuildAsFromSpringBoot20() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		generateGradleBuild(request)
+				.contains("springBootVersion = '2.0.0.BUILD-SNAPSHOT'")
+				.contains("apply plugin: 'org.springframework.boot'")
+				.doesNotContain("apply plugin: 'spring-boot'")
+				.contains("apply plugin: 'io.spring.dependency-management'");
 	}
 
 	@Test
