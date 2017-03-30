@@ -37,6 +37,9 @@ apply plugin: '{{springBootPluginName}}'
 {{^bootOneThreeAvailable}}
 apply plugin: 'io.spring.dependency-management'
 {{/bootOneThreeAvailable}}
+{{#bootTwoZeroAvailable}}
+apply plugin: 'io.spring.dependency-management'
+{{/bootTwoZeroAvailable}}
 {{#war}}
 apply plugin: 'war'
 {{/war}}

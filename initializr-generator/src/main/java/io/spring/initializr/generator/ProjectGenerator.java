@@ -56,6 +56,7 @@ import org.springframework.util.StreamUtils;
  * @author Dave Syer
  * @author Stephane Nicoll
  * @author Sebastien Deleuze
+ * @author Andy Wilkinson
  */
 public class ProjectGenerator {
 
@@ -72,6 +73,8 @@ public class ProjectGenerator {
 	private static final Version VERSION_1_4_2_M1 = Version.parse("1.4.2.M1");
 
 	private static final Version VERSION_1_5_0_M1 = Version.parse("1.5.0.M1");
+
+	private static final Version VERSION_2_0_0_BUILD_SNAPSHOT = Version.parse("2.0.0.BUILD-SNAPSHOT");
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -415,6 +418,9 @@ public class ProjectGenerator {
 
 		// Gradle plugin has changed as from 1.3.0
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
+				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
+
+		model.put("bootTwoZeroAvailable", VERSION_2_0_0_BUILD_SNAPSHOT
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
