@@ -19,13 +19,11 @@ Stéphane Nicoll; Dave Syer
 :spring-initializr-docs-version: current
 :spring-initializr-docs: http://docs.spring.io/initializr/docs/{spring-initializr-docs-version}/reference
 :spring-initializr-docs-current: http://docs.spring.io/initializr/docs/current/reference
-
+:spring-boot-reference: http://docs.spring.io/spring-boot/docs/{spring-boot-docs-version}/reference/htmlsingle
 
 // ======================================================================================
 
-include::documentation-overview.adoc[leveloffset=+1]
-include::metadata-format.adoc[leveloffset=+1]
-include::using-the-stubs.adoc[leveloffset=+1]
-include::configuration-format.adoc[leveloffset=+1]
-
+include::documentation-overview.adoc[]
+include::user-guide.adoc[]
+include::configuration-guide.adoc[]
 // ======================================================================================

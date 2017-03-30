@@ -1,0 +1,387 @@
+[[configuration-guide]]
+= Configuration Guide
+
+[partintro]
+--
+This section describes how you can create your own instance of the service and tune it for
+your needs. You'll also find some advanced tips to make sure the available options are
+consistent with the chosen Spring Boot generation.
+--
+
+
+
+[[create-instance]]
+== Creating your own instance
+Spring Initializr is split in three main modules:
+
+* `initializr-generator`: standalone project generation library that can be reused in
+many environments (including embedded in your own project)
+* `initializr-web`: REST endpoints and web interface
+* `initializr-actuator`: optional module to provide statistics and metrics on project
+generation
+
+Because it contains several auto-configurations, creating your own instance is quite easy,
+actually you could get started using Spring Initializr itself!
+
+Create a new project with the `web` dependency and add the following dependency:
+
+[source,xml,indent=0,subs="verbatim,attributes"]
+----
+	<dependency>
+		<groupId>io.spring.initializr</groupId>
+		<artifactId>initializr-web</artifactId>
+		<version>{spring-initializr-version}</version>
+	</dependency>
+----
+
+Or if you are using Gradle:
+
+[source,groovy,indent=0,subs="verbatim,quotes,attributes"]
+----
+compile("io.spring.initializr:initializr-web:{spring-initializr-version}")
+----
+
+If you start the application, you'll see the familiar interface but none of the drop down
+lists have values (except the one for the Spring Boot version, we will
+<<create-instance-boot-versions,come back to that later>>). In the rest of this section,
+we will configure those basic settings.
+
+[TIP]
+====
+Most of the settings are configured via `application.properties` using the `initializr`
+namespace. Because the configuration is highly hierarchical, we recommend using the yaml
+format that is more readable for such structure. If you agree, go ahead and rename
+`application.properties` to `application.yml`.
+====
+
+
+
+[[create-instance-basic-settings]]
+=== Configuring basic settings
+Most of the drop-down lists are configured via a simple list-based structure where each
+entry has an `id`, a `name` and whether that entry is the default or not. If no `name` is
+provided, the `id` is used instead.
+
+Let's configure the languages and the Java versions we want to support:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  javaVersions:
+		- id: 9
+		  default: false
+		- id: 1.8
+		  default: true
+	  languages:
+		- name: Java
+		  id: java
+		  default: true
+		- name: Kotlin
+		  id: kotlin
+		  default: false
+----
+
+If you click on the "Switch to the full version" link, the two drop down lists now offer
+the options and default values defined above.
+
+Spring Initializr supports `java`, `groovy` and `kotlin` and additional languages can be
+added in your own customization.
+
+The available packagings are also configurable that way:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  packagings:
+		- name: Jar
+		  id: jar
+		  default: true
+		- name: War
+		  id: war
+		  default: false
+----
+
+These two packaging types are the only one explicitly supported at the moment.
+
+
+
+[[create-instance-boot-versions]]
+=== Configuring available Spring Boot versions
+If you look at http://projects.spring.io/spring-boot[the project home page for Spring
+Boot], the latest versions are displayed. And you've probably noticed that they match
+the drop down list that you automatically get with a default instance. The reason for that
+is that Spring Initializr requests an API on spring.io to retrieve the latest versions
+automatically. This makes sure that you always get the latest available versions.
+
+If that's not what you want, you need to override the `InitializrMetadataProvider` bean
+that is responsible to provide the metadata of the service. For instance, you could swap
+to an implementation that always returns the content of your configuration file:
+
+[source,java,indent=0]
+----
+	@Bean
+	public InitializrMetadataProvider initializrMetadataProvider(
+			InitializrProperties properties) {
+		InitializrMetadata metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(properties).build();
+		return new SimpleInitializrMetadataProvider(metadata);
+	}
+----
+
+The thing to remember is that, by default, you don't have to worry about upgrading your
+instance when a new Spring Boot version is released. However, you may need to
+<<create-instance-advanced-config-caching,configure caching>> to avoid requesting that
+service too often.
+
+
+
+[[create-instance-types]]
+=== Configuring available project types
+The available project types mostly define the structure of the generated project and its
+build system. Once a project type is selected, the related action is invoked to generate
+the project.
+
+By default, Spring Initializr exposes the following actions:
+
+* `/pom.xml` generate a Maven `pom.xml`
+* `/build.gradle` generate a Gradle build
+* `/starter.zip` generate a complete project structure archived in a zip
+* `/starter.tgz` generate a complete project structure archived in a tgz
+
+Each type also defines one or more *tags*, that is additional metadata entries to qualify
+the entry. The following standard tags exist:
+
+* `build`: the name of the build system to use (e.g. `maven`, `gradle`)
+* `format`: the format of the project (e.g. `project` for a full project, `build` for just
+a build file).
+
+By default, the HTML UI filters all the available types to only display the ones that have
+a `format` tag with value `project`.
+
+You can of course implement additional endpoints that generate whatever project structure
+you need but, for now, we'll simply configure our instance to generate a Gradle or a Maven
+project:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  types:
+		- name: Maven Project
+		  id: maven-project
+		  description: Generate a Maven based project archive
+		  tags:
+			build: maven
+			format: project
+		  default: true
+		  action: /starter.zip
+		- name: Gradle Project
+		  id: gradle-project
+		  description: Generate a Gradle based project archive
+		  tags:
+			build: gradle
+			format: project
+		  default: false
+		  action: /starter.zip
+----
+
+NOTE: If you intend to build a custom client against your service, you can add as
+many tags as you want.
+
+The spring boot CLI uses them as a shortcut to the full id. So rather than having to
+create a Gradle project as follows:
+
+[indent=0,subs="verbatim,quotes,attributes"]
+----
+	$ spring init --type=gradle-project my-project.zip
+----
+
+You can simply define a more convenient build parameter:
+
+[indent=0,subs="verbatim,quotes,attributes"]
+----
+	$ spring init --build=gradle my-project.zip
+----
+
+
+With that configuration, you should be able to generate your first project,
+congratulations! Let's now add dependencies so that you can start searching for them.
+
+
+
+[[create-instance-dependencies]]
+=== Configuring dependencies
+The most basic `dependency` is composed of:
+
+* An `id` used in clients to refer to it
+* The full maven coordinates of the dependency (`groupId` and `artifactId`)
+* A display `name` (used in the UI and the search results)
+* A `description` can (and should) be added to provide more information about the
+dependency
+
+Spring Initializr automatically considers that a dependency without maven coordinates
+defines an official Spring Boot starter. In such a case, the `id` is used to infer the
+`artifactId`.
+
+For instance, the following configures the `spring-boot-starter-web` Starter:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Web
+		  content:
+			- name: Web
+			  id: web
+			  description: Full-stack web development with Tomcat and Spring MVC
+----
+
+Each dependency is contained in a _group_ that gathers dependencies sharing a common
+surface area or any other form of grouping. In the example above, a `Web` group holds our
+unique dependency. A group can also provide default values for various settings, see the
+<<howto-group-share-settings,dedicated how-to>> for more details.
+
+In our `spring-boot-starter-web` example above, the dependency is _managed_ by Spring
+Boot so there is no need to provide a `version` attribute for it. You'll surely need to
+define additional dependencies that are not provided by Spring Boot and we strongly
+recommend you to use a <<create-instance-boms,Bill Of Materials (or BOM)>>.
+
+If no BOM is available you can specify a version directly:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Tech
+		  content:
+			- name: Acme
+			  id: acme
+			  groupId: com.example.acme
+			  artifactId: acme
+			  version: 1.2.0.RELEASE
+			  description: A solid description for this dependency
+----
+
+If you add this configuration and search for "acme" (or "solid"), you'll find this extra
+entry; generating a maven project with it should add the following to the pom
+
+[source,xml,indent=0,subs="verbatim"]
+----
+	<dependency>
+		<groupId>com.example.acme</groupId>
+		<artifactId>acme</artifactId>
+		<version>1.2.0.RELEASE</version>
+	</dependency>
+----
+
+The rest of this section will detail the other configuration options.
+
+
+[[dependencies-version-range]]
+==== Availability (version range)
+
+
+[[dependencies-mappings]]
+==== Map coordinates according to the Spring Boot version
+
+
+[[dependencies-alias]]
+==== Aliases
+
+
+[[dependencies-repository]]
+==== Repository
+
+If the dependency is not available on Maven Central (or whatever default repository that
+is configured on your end), you can also add a <<dependencies-repository,reference to a
+repository>>.
+
+
+[[dependencies-facet]]
+==== Facets
+
+[[create-instance-dependencies-link]]
+==== Links
+
+
+[[create-instance-dependencies-search]]
+==== Improve search results
+
+Weight + keywords
+
+
+[[create-instance-repositories]]
+=== Configuring Repositories
+
+
+[[create-instance-boms]]
+=== Configuring Bill of Materials
+
+
+[[configuration-howto]]
+== '`How-to`' guides
+
+This section provides answers to some common '`how do I do that...`' type of questions
+that often arise when configuring Spring Initializr.
+
+[[howto-dependency-starter-flag]]
+=== Make sure a regular dependency brings the base starter
+
+[[howto-group-share-settings]]
+=== Share common dependency settings in a group
+
+
+[[create-instance-advanced-config]]
+== Advanced configuration
+
+
+
+[[create-instance-advanced-config-caching]]
+=== Caching configuration
+If you use the service, you'll notice that the logs have lots of entries with the message
+`Fetching boot metadata from https://spring.io/project_metadata/spring-boot`. To avoid
+checking for the latest Spring Boot versions too often, you should enable caching on your
+service. Spring Initializr has some auto-configuration to apply the proper caches if you
+are willing to use a JCache (JSR-107) implementation.
+
+Add the `javax.cache:cache-api` and your favorite JCache implementation and simply enable
+caching by adding `@EnableCaching` to your `@SpringBootApplication`. For instance, you
+could use `ehcache` by adding the following:
+
+[source,xml,indent=0,subs="verbatim,attributes"]
+----
+	<dependency>
+		<groupId>javax.cache</groupId>
+		<artifactId>cache-api</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.ehcache</groupId>
+		<artifactId>ehcache</artifactId>
+	</dependency>
+----
+
+Or if you are using Gradle:
+
+[source,groovy,indent=0,subs="verbatim,quotes,attributes"]
+----
+compile("javax.cache:cache-api")
+compile("org.ehcache:ehcache")
+----
+
+You'll notice that the log entry is much more rare. If you do not want to use JSR-107, you
+should configure the cache yourselves:
+
+.Cache configuration
+|===
+| cache name | Description
+
+|`initializr`
+|Cache the full metadata of the service. When the metadata expires, it is fully resolved
+again (including a check on spring.io for the latest Spring Boot versions). Adapt the
+expiration settings accordingly.
+
+|`project-resources`
+|Cache resources that are used to generate projects.
+
+|`dependency-metadata`
+|Cache dependency-specific metadata.
+|===

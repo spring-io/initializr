@@ -1,19 +1,32 @@
-[[boot-documentation]]
+[[initializr-documentation]]
 = Spring Initializr Documentation
 
-Spring Initializr provides an extensible API to generate quickstart projects. It also
-provides a configurable service: you can see our default instance at
-https://start.spring.io. It provides a simple web UI to configure the project to
-generate and endpoints that you can use via plain HTTP.
+[partintro]
+--
+This section provides a brief overview of Spring Initializr reference documentation. Think
+of it as map for the rest of the document. Some sections are targeted to a specific
+audience so this reference guide is not meant to be read in a linear fashion.
+--
 
-Spring Initializr also exposes an endpoint that serves its metadata in a
-<<metadata-format.adoc#metadata-format,well-known format>> to allow third-party
-clients to provide the necessary assistance.
+Spring Initializr provides an extensible API to generate quickstart projects. Such an API
+can be used standalone or embedded in other tools. We also provide a configurable service:
+you can see our default instance at https://start.spring.io. It provides a simple web UI
+to configure the project to generate and endpoints that you can use via plain HTTP.
 
-Finally, Initializr offers a <<configuration-format.adoc#configuration-format,
-configuration structure>> to define all the aspects related to the project to
-generate: list of dependencies, supported java and boot versions, etc.
+The service allows you to customize the project to generate: the build system and its
+coordinates, the language and version, the packaging and finally the dependencies to add
+the project. The latter is a core concept: based on the chosen Spring Boot version, a set
+of dependencies can be chosen, usually Spring Boot starters, that will have a concrete
+impact on your application. More details in the <<user-guide.adoc#user-guide>>.
 
+You can easily create your own instance: there is minimal code involved and the service
+has a very rich configuration structure, allowing you to define not only the values of
+various project attributes but also the list of dependencies and the constraints to apply
+to them.
+
+Spring Initializr also exposes an endpoint that serves its metadata in a well-known format
+to allow third-party clients to provide the necessary assistance. Currently, all the major
+Java IDEs are covered and you can generate a project right from your favourite IDE.
 
 
 [[initializr-documentation-about]]
