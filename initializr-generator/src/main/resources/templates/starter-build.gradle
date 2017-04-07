@@ -91,6 +91,7 @@ dependencies {
 	{{/isJava8}}
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	{{/kotlin}}
+	compile("org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.2.3.RELEASE")	
 	{{#runtimeDependencies}}
 	runtime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/runtimeDependencies}}
@@ -101,10 +102,12 @@ dependencies {
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.testng:testng:6.11')
+	testCompile('org.mockito:mockito-all:1.9.5')		
 	{{#testDependencies}}
 	testCompile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
-}
+} 
 {{#hasBoms}}
 
 dependencyManagement {

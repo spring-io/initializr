@@ -1128,12 +1128,21 @@ initializr:
       id: kotlin
       default: false
   bootVersions:
-    - name : Latest SNAPSHOT
-      id: 1.2.4.BUILD-SNAPSHOT
+    - name : 2.0.0(SNAPSHOT)
+      id: 2.0.0.BUILD-SNAPSHOT
       default: false
-    - name: 1.2.3
-      id: 1.2.3.RELEASE
-      default: true
-    - name: 1.1.12
-      id: 1.1.12.RELEASE
+    - name : 1.5.3(SNAPSHOT)
+      id: 1.5.3.BUILD-SNAPSHOT
       default: false
+    - name: 1.5.2
+      id: 1.5.2.RELEASE
+      default: false
+    - name : 1.4.6(SNAPSHOT)
+      id: 1.4.6.BUILD-SNAPSHOT
+      default: false
+    - name: 1.4.6
+      id: 1.4.6.RELEASE
+      default: false
+    - name: 1.3.8
+      id: 1.3.8.RELEASE
+      default: false  
