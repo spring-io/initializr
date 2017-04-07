@@ -50,6 +50,16 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	// Resolved dependencies based on the ids provided by either "style" or "dependencies"
 	private List<Dependency> resolvedDependencies;
+	
+	private List<String> services; 
+
+	public List<String> getServices() {
+		return services;
+	}
+
+	public void setServices(List<String> services) {
+		this.services = services;
+	}
 
 	private final Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
 
@@ -293,15 +303,11 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	@Override
 	public String toString() {
-		return "ProjectRequest [" + "parameters=" + parameters + ", "
-				+ (resolvedDependencies != null
-				? "resolvedDependencies=" + resolvedDependencies + ", "
-				: "")
-				+ "boms=" + boms + ", " + "repositories="
-				+ repositories + ", " + "buildProperties="
-				+ buildProperties + ", " + (facets != null
-				? "facets=" + facets + ", " : "")
-				+ (build != null ? "build=" + build : "") + "]";
+		return "ProjectRequest [parameters=" + parameters + ", resolvedDependencies=" + resolvedDependencies
+				+ ", services=" + services + ", boms=" + boms + ", repositories=" + repositories + ", buildProperties="
+				+ buildProperties + ", facets=" + facets + ", build=" + build + "]";
 	}
+
+	
 
 }

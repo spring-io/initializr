@@ -204,6 +204,9 @@ public class ProjectGenerator {
 
 		File dir = initializerProjectDir(rootDir, request);
 
+		String manifest = new String(doGenerateManifest(model));
+		writeText(new File(dir, "manifest.yml"), manifest);
+		
 		if (isGradleBuild(request)) {
 			String gradle = new String(doGenerateGradleBuild(model));
 			writeText(new File(dir, "build.gradle"), gradle);
@@ -339,13 +342,14 @@ public class ProjectGenerator {
 		if (isWar(request)) {
 			model.put("war", true);
 		}
-
+		
+		model.put("services", request.getServices());
+		model.put("name", request.getName());
+		
 		if (isMavenBuild(request)) {
 			model.put("mavenBuild", true);
-			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
-					.resolveParentPom(request.getBootVersion());
-			if (parentPom.isIncludeSpringBootBom()
-					&& !request.getBoms().containsKey("spring-boot")) {
+			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven().resolveParentPom(request.getBootVersion());
+			if (parentPom.isIncludeSpringBootBom()&& !request.getBoms().containsKey("spring-boot")) {
 				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
 						request.getBootVersion(), "spring-boot.version"));
 			}
@@ -522,6 +526,25 @@ public class ProjectGenerator {
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
 		return templateRenderer.process("starter-pom.xml", model).getBytes();
+	}
+	
+	private String doGenerateManifest(Map<String, Object> model) {
+		String ManifestData = null;
+		
+		ManifestData = "applications: \n\t- name: "+model.get("name").toString().replaceAll(" ", "_");
+		if(model.get("services")!= null){
+			List<String> serviceObj  = (List<String>) model.get("services");
+			if(!serviceObj.isEmpty()){
+			ManifestData = ManifestData + "\n\t  services:";
+			for (String string : serviceObj) {
+				ManifestData = ManifestData +"\n\t   -"+string;
+			}
+			}
+		}
+		
+		//return templateRenderer.process("starter-build.gradle", model).getBytes();
+		return ManifestData; 
+		
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {

@@ -55,7 +55,7 @@
                                value="{{artifactId.content}}"
                                name="artifactId">
                     </div>
-                    <div class="form-group full hidden name-form-group">
+                    <div class="form-group name-form-group">
                         <label for="name" class="control-label">{{name.title}}</label>
                         <input tabindex="5" id="name" class="form-control" type="text" value="{{name.content}}"
                                name="name">
@@ -111,6 +111,12 @@
                         <label for="starters" class="control-label">Selected Dependencies</label>
                         <div id="starters">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="services" class="control-label">Services</label>
+                        <input tabindex="12" id="services" class="form-control" type="text"
+                               placeholder="PostgreSQL, Asset, Time Series, RabbitMq..."
+                               name="services">
                     </div>
                 </div>
             </div>
