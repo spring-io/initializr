@@ -263,11 +263,21 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices
         - name: Jersey (JAX-RS)
           id: jersey
-          description: RESTful Web Services framework
+          description: RESTful Web Services framework with support of JAX-RS
           versionRange: 1.2.0.RELEASE
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey
+        - name: Apache CXF (JAX-RS)
+          id: cxf-jaxrs
+          groupId: org.apache.cxf
+          artifactId: cxf-spring-boot-starter-jaxrs
+          version: 3.1.11
+          description: RESTful Web Services framework with support of JAX-RS
+          versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
+          links:
+            - rel: reference
+              href: https://cxf.apache.org/docs/springboot.html#SpringBoot-SpringBootCXFJAX-RSStarter
         - name: Ratpack
           id: ratpack
           description: Spring Boot integration for the Ratpack framework
