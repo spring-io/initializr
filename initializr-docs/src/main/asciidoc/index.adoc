@@ -23,7 +23,8 @@ Stéphane Nicoll; Dave Syer
 
 // ======================================================================================
 
-include::documentation-overview.adoc[]
-include::user-guide.adoc[]
-include::configuration-guide.adoc[]
+include::documentation-overview.adoc[leveloffset=+1]
+include::user-guide.adoc[leveloffset=+1]
+include::configuration-guide.adoc[leveloffset=+1]
+include::api-guide.adoc[leveloffset=+1]
 // ======================================================================================

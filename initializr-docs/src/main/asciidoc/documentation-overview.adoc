@@ -8,33 +8,36 @@ of it as map for the rest of the document. Some sections are targeted to a speci
 audience so this reference guide is not meant to be read in a linear fashion.
 --
 
-Spring Initializr provides an extensible API to generate quickstart projects. Such an API
-can be used standalone or embedded in other tools. We also provide a configurable service:
-you can see our default instance at https://start.spring.io. It provides a simple web UI
-to configure the project to generate and endpoints that you can use via plain HTTP.
+Spring Initializr provides a simple web UI to configure the project to generate and
+endpoints that you can use via plain HTTP: you can see our default instance at
+https://start.spring.io.  The service allows you to customize the project to generate: the
+build system and its coordinates, the language and version, the packaging and finally the
+dependencies to add to the project. The latter is a core concept: based on the chosen
+Spring Boot version, a set of dependencies can be chosen, usually Spring Boot starters,
+that will have a concrete impact on your application. More details in the
+<<user-guide.adoc#user-guide>> section.
 
-The service allows you to customize the project to generate: the build system and its
-coordinates, the language and version, the packaging and finally the dependencies to add
-the project. The latter is a core concept: based on the chosen Spring Boot version, a set
-of dependencies can be chosen, usually Spring Boot starters, that will have a concrete
-impact on your application. More details in the <<user-guide.adoc#user-guide>>.
+You can easily create your own instance of the Initializr, by using the jars as libraries
+in your own app. There is minimal code involved and the service has a very rich
+configuration structure, allowing you to define not only the values of various project
+attributes but also the list of dependencies and the constraints to apply to them. If that
+sounds interesting, then the <<configuration-guide.adoc#configuration-guide>> section has
+all the details you need. You might only want to modify an existing instance of the
+Initializr, e.g. to add a new dependency type, or update the version of an existing
+one. For those and other simple and common use cases check out the
+<<configuration-guide.adoc#configuration-howto>> section.
 
-You can easily create your own instance: there is minimal code involved and the service
-has a very rich configuration structure, allowing you to define not only the values of
-various project attributes but also the list of dependencies and the constraints to apply
-to them.
-
-Spring Initializr also exposes an endpoint that serves its metadata in a well-known format
-to allow third-party clients to provide the necessary assistance. Currently, all the major
-Java IDEs are covered and you can generate a project right from your favourite IDE.
-
+The Initializr also provides an extensible API to generate quickstart projects, and to
+inspect the metadata used to generate projects, for instance to list the available
+dependencies and versions. The API can be used standalone or embedded in other tools
+(e.g. it is used in Spring Tool Suite, and in the IntelliJ and Netbeans plugins for Spring
+Boot). These features are covered in a separate <<api-guide.adoc#api-guide>> section of
+this document.
 
 [[initializr-documentation-about]]
 == About the documentation
 The Spring Initializr reference guide is available as
-{spring-initializr-docs}/html[html],
-{spring-initializr-docs}/pdf/spring-boot-reference.pdf[pdf]
-and {spring-initializr-docs}/epub/spring-boot-reference.epub[epub] documents. The
+{spring-initializr-docs}/html[html]. The
 latest copy is available at {spring-initializr-docs-current}.
 
 Copies of this document may be made for your own use and for

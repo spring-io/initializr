@@ -12,16 +12,16 @@ consistent with the chosen Spring Boot generation.
 
 [[create-instance]]
 == Creating your own instance
-Spring Initializr is split in three main modules:
+Spring Initializr is split across three main modules:
 
 * `initializr-generator`: standalone project generation library that can be reused in
 many environments (including embedded in your own project)
-* `initializr-web`: REST endpoints and web interface
+* `initializr-web`: API endpoints and web interface
 * `initializr-actuator`: optional module to provide statistics and metrics on project
 generation
 
 Because it contains several auto-configurations, creating your own instance is quite easy,
-actually you could get started using Spring Initializr itself!
+actually you could get started using Spring Initializr itself to generate a starting point!
 
 Create a new project with the `web` dependency and add the following dependency:
 
@@ -323,6 +323,18 @@ Weight + keywords
 This section provides answers to some common '`how do I do that...`' type of questions
 that often arise when configuring Spring Initializr.
 
+[[howto-add-a-new-checkbox]]
+=== Add a new dependency checkbox
+
+[[howto-override-a-version]]
+=== Override the version of a dependency
+
+[[howto-link-boot-version]]
+=== Link a Boot version to a version of your dependency
+
+[[howto-add-snapshot-repository]]
+=== Configure a snapshot repository
+
 [[howto-dependency-starter-flag]]
 === Make sure a regular dependency brings the base starter
 
@@ -368,7 +380,8 @@ compile("org.ehcache:ehcache")
 ----
 
 You'll notice that the log entry is much more rare. If you do not want to use JSR-107, you
-should configure the cache yourselves:
+should configure the cache yourselves. Here are the caches used by the application (each
+one will require some configuration to get it working):
 
 .Cache configuration
 |===
