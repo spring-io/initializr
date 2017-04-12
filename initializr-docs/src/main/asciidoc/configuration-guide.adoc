@@ -4,8 +4,9 @@
 [partintro]
 --
 This section describes how you can create your own instance of the service and tune it for
-your needs. You'll also find some advanced tips to make sure the available options are
-consistent with the chosen Spring Boot generation.
+your needs, and also how you can configure an existing instance. You'll also find some
+advanced tips to make sure the available options are consistent with the chosen Spring
+Boot generation.
 --
 
 
@@ -108,14 +109,15 @@ These two packaging types are the only one explicitly supported at the moment.
 [[create-instance-boot-versions]]
 === Configuring available Spring Boot versions
 If you look at http://projects.spring.io/spring-boot[the project home page for Spring
-Boot], the latest versions are displayed. And you've probably noticed that they match
-the drop down list that you automatically get with a default instance. The reason for that
-is that Spring Initializr requests an API on spring.io to retrieve the latest versions
-automatically. This makes sure that you always get the latest available versions.
+Boot], the latest versions are displayed. And you've probably noticed that they match the
+drop down list that you automatically get with a default instance of the Initializr. The
+reason for that is that Spring Initializr calls an API on spring.io to retrieve the
+latest versions automatically. This makes sure that you always get the latest available
+versions.
 
-If that's not what you want, you need to override the `InitializrMetadataProvider` bean
-that is responsible to provide the metadata of the service. For instance, you could swap
-to an implementation that always returns the content of your configuration file:
+If that's not what you want, you need to override the `InitializrMetadataProvider` bean to
+provide your own metadata for the service. For instance, you could swap to an
+implementation that always returns the contents of your configuration file:
 
 [source,java,indent=0]
 ----
@@ -141,7 +143,7 @@ The available project types mostly define the structure of the generated project
 build system. Once a project type is selected, the related action is invoked to generate
 the project.
 
-By default, Spring Initializr exposes the following actions:
+By default, Spring Initializr exposes the following resources (all accessed via HTTP GET):
 
 * `/pom.xml` generate a Maven `pom.xml`
 * `/build.gradle` generate a Gradle build
@@ -184,11 +186,11 @@ project:
 		  action: /starter.zip
 ----
 
-NOTE: If you intend to build a custom client against your service, you can add as
-many tags as you want.
+NOTE: If you intend to build a custom client against your service, you can add as many
+tags as you want, and process them in the client in a way that makes sense for your users.
 
-The spring boot CLI uses them as a shortcut to the full id. So rather than having to
-create a Gradle project as follows:
+For instance, the spring boot CLI uses them as a shortcut to the full type id. So rather
+than having to create a Gradle project as follows:
 
 [indent=0,subs="verbatim,quotes,attributes"]
 ----

@@ -20,7 +20,7 @@ arrow keys and `Enter` to select the "Web" starter.
 
 Your browser should now be in this state:
 
-TODO: add screenshot
+image::web-selected.png[]
 
 NOTE: The Spring Boot version above probably doesn't match the one you have. As we will
 see later, start.spring.io is continuously updated as new Spring Boot versions are
@@ -58,9 +58,10 @@ Because Spring Initializr has detected it is a web application, a `static` and `
 directories have been created to hold your static resources and ui templates.
 
 Also, a Maven wrapper is automatically included so that you don't have to install Maven to
-run this project. You can select Gradle instead in first drop down list. This will
-generate a Gradle-based project instead that also contains a wrapper if you don't have
-Gradle installed.
+run this project (you can build it with `./mvnw install`). If you prefer, you can select
+Gradle instead in the first drop down list at the top of the screen. This will generate a
+Gradle-based project instead that also contains a wrapper if you don't have Gradle
+installed (build it with `./gradlew build`).
 
 
 
@@ -85,9 +86,9 @@ Maven). start.spring.io can generate jar or war projects
 * *Language*: the programming language to use
 
 If you keep on scrolling, you'll discover all the dependencies that you can find using the
-search box on the right. You'll probably notice that some dependencies aren't available
-because they require a specific Spring Boot version. We'll tackle that in the next
-section.
+search box on the right. You'll probably notice that some dependencies are greyed out in
+the UI, meaning that they aren't available because they require a specific Spring Boot
+version. We'll tackle that in the next section.
 
 
 
@@ -95,9 +96,9 @@ section.
 === Dependencies
 The UI allows you to select the Spring Boot version you want to use. You may want to be
 conservative and keep the default which corresponds at all times to the latest stable
-release. Or you may want to chose a milestone of the next major version. Either way,
-you'll notice that certain dependencies become available and others aren't anymore when
-you change the version.
+release. Or you may want to chose a milestone or snapshot of the next major
+version. Either way, you'll notice that certain dependencies become available and others
+aren't anymore when you change the version.
 
 If you are searching for a dependency that you know to be available and you get no result,
 it's worth looking in the advanced section if that dependency is available in the Spring
@@ -189,7 +190,7 @@ with the web UI:
 
 * The project will be extracted in the current directory (the web UI adds a base directory
 automatically with the same name as the one of the project)
-* The name of the project is not `my-project` (the `-o` parameter has no incidence on the
+* The name of the project is not `my-project` (the `-o` parameter has no impact on the
 name of the project)
 
 The exact same project can be generated using the `http` command as well:
