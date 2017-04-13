@@ -295,15 +295,88 @@ The rest of this section will detail the other configuration options.
 
 If the dependency is not available on Maven Central (or whatever default repository that
 is configured on your end), you can also add a <<dependencies-repository,reference to a
-repository>>.
+repository>>. A repository is declared at the top level (under `env`) and given an id via
+the key in the configuration. Example
 
+[source,yml,indent=0,subs="verbatim,attributes"]
+----
+initializr:
+  env:
+    repositories:
+      my-api-repo-1:
+        name: repo1
+        url: http://example.com/repo1
+----
+
+he repository can then be referred back to in a dependency
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: Foo
+          groupId: org.acme
+          artifactId: foo
+          version: 1.3.5
+          repository: my-api-repo-1
+----
+
+It is usually preferable to have a BOM for every dependency, and attach the repository to
+the BOM instead.
+
+[[create-instance-boms]]
+=== Configuring Bill of Materials
+
+A Bill of Materials (BOM) is a special `pom.xml`, deployed to a Maven repository, and use
+to control dependency management for a set of related artifacts. In the Spring Boot
+ecosystem we usually use the suffix "-dependencies" on the artifact id of a BOM. In other
+projects we see "-bom". It is recommended that all dependencies are included in a BOM of
+some sort, since they provide nice high level features for users of the dependency. It is
+also important that 2 BOMs used in a project do not contain conflicting versions for the
+same dependency, so the best practice is to look at the existing BOMs in the Initializr
+before you add a new one, and make sure that you aren't adding a conflict. Maven (3.5)
+will report conflicts when it builds a project containing the two BOMs, even if the
+dependency that conflicts is not used.
+
+In the Initializr a BOM is declared at the `env` level, and given an id through the
+configuration key. Example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-dependencies
+        version: 1.0.0.RELEASE
+        repositories: my-api-repo-1
+----
+
+If a BOM requires a special, non-default repository, then it can be referred to here,
+instead of having to explicitly list the repository again for each dependency. A
+dependency, or a dependency group, can declare that it requires the use of one or more BOMs by referring to the id. Example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: My API
+          id : my-api
+          groupId: org.acme
+          artifactId: my-api
+          bom: my-api-bom
+----
 
 [[dependencies-facet]]
 ==== Facets
 
 [[create-instance-dependencies-link]]
 ==== Links
-
 
 [[create-instance-dependencies-search]]
 ==== Improve search results
@@ -313,10 +386,6 @@ Weight + keywords
 
 [[create-instance-repositories]]
 === Configuring Repositories
-
-
-[[create-instance-boms]]
-=== Configuring Bill of Materials
 
 
 [[configuration-howto]]
