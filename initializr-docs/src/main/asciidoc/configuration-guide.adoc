@@ -281,6 +281,33 @@ The rest of this section will detail the other configuration options.
 [[dependencies-version-range]]
 ==== Availability (version range)
 
+A dependency can have a `versionRange`, which is a range of versions of Spring Boot which
+are valid in combination with it. The versions are *not* applied to the dependency itself,
+but rather used to filter out the dependency, or modify it, when different versions of
+Spring Boot are selected for the generated project.
+
+A version range has a lower and an upper bound, and if the bound is inclusive it is
+denoted as a square bracket ("[" or "]"), otherwise it is exclusive and denoted by a
+parenthesis ("(" or ")"). Example: "[1.1.6.RELEASE,1.3.0.M1)" means from all versions from
+1.1.6 up to but not including 1.3.0.M1 (no not including any of the 1.3.x line. 
+
+A version range can be a single value, e.g. "1.2.0.RELEASE", which is short for "this
+version or greater". It is an inclusive lower bound with an implied infinite upper bound.
+
+The other shorthand notation that is available is to use "x" for the micro-version label,
+e.g. "1.3.x" means all versions beginning with "1.3". This is mainly used in inclusive
+bounds, like "[1.2.0.RELEASE,1.4.x.RELEASE)" for "all versions in 1.2.x and 1.3.x but not
+1.4.0 or above".
+
+Snapshots are naturally ordered higher than released versions, so if you are looking to
+match a dependency to only the latest snapshots of Spring Boot, you could use a version
+range of "1.5.x.BUILD-SNAPSHOT" (assuming 1.5 was the latest).
+
+Remember to quote the values of a version range in YAML configuration files (with double
+quotes "").
+
+See below in the section on <<howto-link-boot-version,linking versions>> for more examples
+and idioms.
 
 [[dependencies-mappings]]
 ==== Map coordinates according to the Spring Boot version
@@ -375,17 +402,26 @@ initializr:
 [[dependencies-facet]]
 ==== Facets
 
+A "facet" is a label on a dependency which is used to drive a code modification in the
+generated project. In the standard Initializr generator, there is only one facet that is
+actually used ("web"), but custom installations might choose to use it for their own
+purposes. The "web" facet is used to drive the inclusion of `spring-boot-starter-web` if
+any other dependency with that facet is included. The value of the "facets" property of a
+dependency is a list of strings.
+
 [[create-instance-dependencies-link]]
 ==== Links
+
+Links can be used to provide descriptive and hyperlink data to guide to user on how to
+learn more about a dependency. A dependency has a "links" property which is a list of
+`Link`. Each link has a "rel" label to identify it, an "href" and an optional (but
+recommended) description. In the web UI the links are not currently rendered.
 
 [[create-instance-dependencies-search]]
 ==== Improve search results
 
-Weight + keywords
-
-
-[[create-instance-repositories]]
-=== Configuring Repositories
+Each dependency can have a "weight" (a number >=0) and also "keywords" (list of string)
+that are used to prioritize them in the search feature in the UI. If you type one of the keywords into the "Dependencies" box in the UI, those dependencies will be listed below, in order of decreasing weight, if they have one (unweighted dependencies come last).
 
 
 [[configuration-howto]]
@@ -397,11 +433,123 @@ that often arise when configuring Spring Initializr.
 [[howto-add-a-new-checkbox]]
 === Add a new dependency checkbox
 
+To add a new checkbox, first identify the Maven co-ordinates of the dependency you want to
+add (`groupId:artifactId:version`) and then check which versions of Spring Boot it works
+with. If there are multiple versions that work with different versions of Spring Boot,
+then that's fine too.
+
+* If there is a published BOM that manages the version of you dependency, then add that
+  first, in the `env` section (see the <<create-instance-boms>> section above).
+
+* Then configure the dependency, fitting it into an existing group if you can, otherwise
+  creating a new group.
+
+* If there is a BOM then omit the version.
+
+* If there is a Spring Boot version range (or min or max) that you need for this
+  dependency, add that as a <<howto-link-boot-version,linked version>>.
+
 [[howto-override-a-version]]
 === Override the version of a dependency
 
+Sometimes it happens that the BOM that normally manages your dependency version is in
+conflict with the newest version. Or maybe this is the case for only a range of Spring
+Boot versions. Or maybe there just is no BOM, or it's not worth creating one for just one
+dependency. In these cases you can specify the version manually for a dependency either at the top level, or in a <<howto-link-boot-version,version mapping>>. At the top level it looks like this (just a "version" property in a dependency):
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: I/O
+      content:
+        - name: Activiti
+          id: activiti-basic
+          description: Activiti BPMN workflow engine
+          groupId: org.activiti
+          artifactId: activiti-spring-boot-starter-basic
+          version: 5.21.0
+----
+
 [[howto-link-boot-version]]
 === Link a Boot version to a version of your dependency
+
+If your dependency requires a specific version of Spring Boot, ot different versions of
+Spring Boot require different versions of your dependency there are a couple of mechanisms
+to configure that.
+
+The simplest is to put a "versionRange" in the dependency declaration. This is a range of versions of Spring Boot, not or your dependency. For example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      content:
+        - name: Atomikos (JTA)
+          id: jta-atomikos
+          description: JTA distributed transactions via Atomikos
+          versionRange: 1.2.0.M1
+        - name: Stormpath
+          id: stormpath
+          groupId: com.stormpath.spring
+          artifactId: stormpath-default-spring-boot-starter
+          versionRange: "[1.5.0.RC1,2.0.0.M1)"
+          bom: stormpath-bom
+----
+
+In this example Atomikos is available for Spring Boot 1.2.0 (or any milestone of 1.2.0) or
+greater, and Stormpath is available for Spring Boot 1.5.0 up to, but not including 2.0.0.
+
+If different versions of your dependency work with different versions of Spring Boot,
+that's when you need the "mappings" property. A mapping is a combination of a `versionRange`
+(for Spring Boot) and some or all of the other properties of the dependency, overriding
+the values defined at the top level. For example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      content:
+        - name: Cloud Task
+          id: cloud-task
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-task
+          versionRange: 1.3.0.RELEASE
+          bom: cloud-task-bom
+          mappings:
+            - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
+              artifactId: spring-cloud-task-starter
+            - versionRange: "1.4.0.RELEASE"
+----
+
+This dependency is available only for Spring Boot 1.3.0 and above, but up to 1.4.0
+(i.e. for 1.3.x only) its `artifactId` was actually different.
+
+A mapping can also be applied to a BOM declaration. For example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-bom
+        additionalBoms: ['my-api-dependencies-bom']
+        mappings:
+          - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+            version: 1.0.0.RELEASE
+            repositories: my-api-repo-1
+          - versionRange: "1.2.1.RELEASE"
+            version: 2.0.0.RELEASE
+            repositories: my-api-repo-2
+----
+
+In this example Spring Boot versions up to 1.1.6 select version 1.0.0 of the BOM, and set
+a different repository. Spring Boot versions 1.2.1 and above select 2.0.0 of the BOM and
+yet another repository.
 
 [[howto-add-snapshot-repository]]
 === Configure a snapshot repository
