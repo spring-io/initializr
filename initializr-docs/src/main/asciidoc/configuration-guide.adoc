@@ -611,8 +611,20 @@ yet another repository.
 [[howto-add-snapshot-repository]]
 === Configure a snapshot repository
 
+A dependency, or a BOM, might require the use of a specific repository, if the default one
+(usually Maven Central) does not contain the artifacts. Normally, the best place to
+declare that is in the BOM configuration, but if there isn't a BOM then you can put it in
+the dependency itself. You can also use a Spring Boot <<You can declare a
+repository,version mapping>> to override the default repository for a dependency or BOM.
+
 [[howto-dependency-starter-flag]]
 === Make sure a regular dependency brings the base starter
+
+If a dependency does not stand on its own (and specifically if it does not depend on an
+existing Spring Boot starter) you can flag it as "starter=false". When a project is
+generated that only has dependencies with this flag set, then a Spring Boot starter is
+added as well (the vanilla `spring-boot-starter` or the `spring-boot-starter-web` if there
+is a dependency with the web facet).
 
 [[howto-group-share-settings]]
 === Share common dependency settings in a group
