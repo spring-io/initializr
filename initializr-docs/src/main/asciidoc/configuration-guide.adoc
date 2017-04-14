@@ -312,10 +312,67 @@ and idioms.
 [[dependencies-mappings]]
 ==== Map coordinates according to the Spring Boot version
 
+In addition to a Spring Boot version range for the dependency or a BOM, you can configure
+the version relationships at a finer grained level using version mappings. A dependency or
+BOM has a list of "mappings", each of which consists of a version range, and a set of one
+or more dependency properties to override for those versions of Spring Boot. You can use a
+mapping to switch the version of a dependency, or (better) the BOM, or to change its
+artifact id (if the project changed its packaging) for instance.
+
+Here's an example of a BOM with mappings:
+
+[source,yaml,indent=0]
+----
+initializr:
+  env:
+    boms:
+      cloud-bom:
+        groupId: org.springframework.cloud
+        artifactId: spring-cloud-dependencies
+        order: 50
+        mappings:
+          - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
+            version: Angel.SR6
+          - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
+            version: Brixton.SR7
+          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
+            version: Camden.SR6
+          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+            version: Dalston.RC1
+            repositories: spring-milestones
+          - versionRange: "1.5.x.BUILD-SNAPSHOT"
+            version: Dalston.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+----
+
+The primary use case here is to map Spring Boot versions to the preferred or supported
+versions of Spring Cloud. You can also see that for the milestone and snapshot BOMs,
+additional repositories are declared because those artifacts are not in the default
+repository.
+
+See below in the section on <<howto-link-boot-version,linking versions>> for more examples.
 
 [[dependencies-alias]]
 ==== Aliases
 
+A dependency has an id (e.g. "web-services"), but it can also be referred to using
+aliases, if those are declared in the metadata. Aliases and ids for dependencies must be
+globally unique (this is not enforced by the software). For example:
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: Web Services
+          id: web-services
+          aliases:
+            - ws
+----
+
+The same project can now be generated with `dependencies=ws` or
+`dependencies=web-services`.
 
 [[dependencies-repository]]
 ==== Repository
