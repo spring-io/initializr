@@ -629,6 +629,25 @@ is a dependency with the web facet).
 [[howto-group-share-settings]]
 === Share common dependency settings in a group
 
+A dependency group is a hint for user interface implememtations, to group things together
+for users when they are selecting dependencies. It is also a convenient way to share
+settings between dependencies because every dependency inherits all the settings. Th emost
+common settings in a group are the group id, version range (for Spring Boot versions), and
+bom. Example:
+
+[source,yml,subs="verbatim,attributes"]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      bom: stuff-bom
+      versionRange: "[1.3.0.RELEASE,2.0.x)"
+      content:
+...
+---
+
+These dependencies, by default, will be available only for Spring Boot versions 1.3 to
+2.0, and will bring in a BOM declared as "stuff-bom" in the `env` section.
 
 [[create-instance-advanced-config]]
 == Advanced configuration
