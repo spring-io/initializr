@@ -4,7 +4,7 @@ This section describes the hal/json structure of the metadata exposed by the
 initializr. Such metadata can be used by third party clients to provide a list of
 options and default settings that can be used to request the creation of a project.
 
-Each third-party client is advised to set a `User-Agent` header for *each* request
+A third-party client is advised to set a `User-Agent` header for *each* request
 sent to the service. A good structure for a user agent is `clientId/clientVersion`
 (i.e. `foo/1.2.0` for the "foo" client and version `1.2.0`).
 
@@ -72,8 +72,8 @@ attribute of each type gives you the root action to invoke on the server. This
 requires more manual handling on your end.
 
 === Project dependencies
-A dependency is usually the coordinates of a _starter_ module but it can be just as
-well be a regular dependency. A typical dependency structure looks like this:
+A dependency is usually the coordinates of a _starter_ module but it can be just a regular
+dependency. A typical dependency structure looks like this:
 
 ```json
 {

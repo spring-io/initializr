@@ -15,6 +15,8 @@ of your client.
 
 
 == Using WireMock with Spring Boot
+=== Loading Stubs from the Classpath
+
 A convenient way to consume the stubs in your project is to add a test dependency:
 
 [source,xml,indent=0,subs="attributes,specialchars"]
@@ -48,9 +50,62 @@ public class ClientApplicationTests {
 }
 ----
 
-Alternatively you can configure the stub runner to look for the artifact. The example
-below will automatically download, if necessary, the latest version of the initializr
-stubs:
+The wiremock fetaures come with Spring Cloud Contract Wiremock:
+
+[source,xml,indent=0,subs="attributes,specialchars"]
+----
+	<dependencies>
+	...
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-contract-wiremock</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-dependencies</artifactId>
+				<version>1.0.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+---
+
+=== Using the Stub Runner
+
+Alternatively you can configure the stub runner to look for the artifact, using a
+different Spring Cloud Contract dependency:
+`spring-cloud-starter-contract-stub-runner`. The example below will automatically
+download, if necessary, the latest version of the initializr stubs (so you don't need the
+stubs declared as a dependency):
+
+[source,xml,indent=0,subs="attributes,specialchars"]
+----
+	<dependencies>
+	...
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-contract-stubrunner</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-dependencies</artifactId>
+				<version>1.0.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+---
+
 
 [source,java,indent=0]
 ----
@@ -80,12 +135,21 @@ Then you have a server that returns the stub of the JSON metadata
 
 
 == Names and Paths of Stubs
-The stubs are laid out in a jar file in a form (under "/mappings") that can be
-consumed by WireMock just by setting its file source. The names of the individual
-stubs are the same as the method names of the test cases that generated them in the
-Initializr project. So for example there is a test case "metadataWithV2AcceptHeader"
-in `MainControllerIntegrationTests` that makes assertions about the response when the
-accept header is `application/vnd.initializr.v2.1+json`. The response is recorded in
-the stub, and it will match in WireMock if the same headers and request parameters
-that were used in the Initializr test case and used in the client. The method name
-usually summarizes what those values are.
+
+The stubs are laid out in a jar file in a form (under "**/mappings") that can be consumed
+by WireMock just by setting its file source. The names of the individual stubs are the
+same as the method names of the test cases that generated them in the Initializr
+project. So for example there is a test case "metadataWithV2AcceptHeader" in
+`MainControllerIntegrationTests` that makes assertions about the response when the accept
+header is `application/vnd.initializr.v2.1+json`. The response is recorded in the stub,
+and it will match in WireMock if the same headers and request parameters that were used in
+the Initializr test case and used in the client. The method name usually summarizes what
+those values are.
+
+The stub runner, and the `@AutoConfigureWireMock` in the examples above loads all the
+stubs into WireMock, so you don't necessarily need to know the names of the stubs. You can
+also register stubs one by one, though, in which case it would help to scan the stubs jar
+and compare the file names with the test methods. For instance, if you look in the stubs
+jar, you will see a file called `metadataWithV2AcceptHeader.json` and, in the
+initializr-web project, a test method called `metadataWithV2AcceptHeader` which generated
+it.

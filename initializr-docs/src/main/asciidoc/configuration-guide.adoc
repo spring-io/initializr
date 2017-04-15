@@ -478,7 +478,10 @@ recommended) description. In the web UI the links are not currently rendered.
 ==== Improve search results
 
 Each dependency can have a "weight" (a number >=0) and also "keywords" (list of string)
-that are used to prioritize them in the search feature in the UI. If you type one of the keywords into the "Dependencies" box in the UI, those dependencies will be listed below, in order of decreasing weight, if they have one (unweighted dependencies come last).
+that are used to prioritize them in the search feature in the web UI. If you type one of
+the keywords into the "Dependencies" box in the UI, those dependencies will be listed
+below, in order of decreasing weight, if they have one (unweighted dependencies come
+last).
 
 
 [[configuration-howto]]
@@ -631,7 +634,7 @@ is a dependency with the web facet).
 
 A dependency group is a hint for user interface implememtations, to group things together
 for users when they are selecting dependencies. It is also a convenient way to share
-settings between dependencies because every dependency inherits all the settings. Th emost
+settings between dependencies because every dependency inherits all the settings. The most
 common settings in a group are the group id, version range (for Spring Boot versions), and
 bom. Example:
 
@@ -644,10 +647,10 @@ initializr:
       versionRange: "[1.3.0.RELEASE,2.0.x)"
       content:
 ...
----
+----
 
 These dependencies, by default, will be available only for Spring Boot versions 1.3 to
-2.0, and will bring in a BOM declared as "stuff-bom" in the `env` section.
+2.0, and will bring in a BOM already declared as "stuff-bom" in the `env` section.
 
 [[create-instance-advanced-config]]
 == Advanced configuration
