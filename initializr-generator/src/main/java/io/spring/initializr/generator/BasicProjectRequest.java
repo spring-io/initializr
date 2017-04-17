@@ -29,6 +29,7 @@ public class BasicProjectRequest {
 
 	private List<String> style = new ArrayList<>();
 	private List<String> dependencies = new ArrayList<>();
+	private String externalStructure;
 	private String name;
 	private String type;
 	private String description;
@@ -67,6 +68,14 @@ public class BasicProjectRequest {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getExternalStructure() {
+		return externalStructure;
+	}
+
+	public void setExternalStructure(String externalStructure) {
+		this.externalStructure = externalStructure;
 	}
 
 	public String getType() {

@@ -42,7 +42,7 @@ public class InitializrMetadataJsonMapperTests {
 		String json = jsonMapper.write(metadata, null);
 		JSONObject result = new JSONObject(json);
 		assertEquals("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion," +
-				"groupId,artifactId,version,name,description,packageName}", get(result, "_links.foo.href"));
+				"groupId,artifactId,version,name,description,externalStructure,packageName}", get(result, "_links.foo.href"));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class InitializrMetadataJsonMapperTests {
 		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
 		JSONObject result = new JSONObject(json);
 		assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
-						"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+						"language,bootVersion,groupId,artifactId,version,name,description,externalStructure,packageName}",
 				get(result, "_links.foo.href"));
 	}
 

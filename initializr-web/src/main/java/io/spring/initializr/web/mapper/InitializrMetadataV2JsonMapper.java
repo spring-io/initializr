@@ -70,6 +70,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 				new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable("description",
 						TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("externalStructure",
+						TemplateVariable.VariableType.REQUEST_PARAM),
 				new TemplateVariable("packageName",
 						TemplateVariable.VariableType.REQUEST_PARAM));
 	}
@@ -88,6 +90,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		text(delegate, metadata.getArtifactId());
 		text(delegate, metadata.getVersion());
 		text(delegate, metadata.getName());
+		text(delegate, metadata.getExternalStructure());
 		text(delegate, metadata.getDescription());
 		text(delegate, metadata.getPackageName());
 		return delegate.toString();

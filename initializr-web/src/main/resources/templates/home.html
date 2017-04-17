@@ -37,7 +37,15 @@
             </div>
 
             <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
-
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div>
+                        <label for="externalStructure" class="control-label">{{externalStructure.title}}</label>
+                        <input tabindex="4" id="externalStructure" class="form-control" type="text" value="{{externalStructure.content}}"
+                               name="externalStructure">
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <h2>Project Metadata</h2>
@@ -46,34 +54,34 @@
 
                     <div class="form-group groupid-form-group">
                         <label for="groupId" class="control-label">{{groupId.title}}</label>
-                        <input tabindex="3" id="groupId" class="form-control" type="text" value="{{groupId.content}}"
+                        <input tabindex="5" id="groupId" class="form-control" type="text" value="{{groupId.content}}"
                                name="groupId">
                     </div>
                     <div class="form-group artifactid-form-group">
                         <label for="artifactId" class="control-label">{{artifactId.title}}</label>
-                        <input tabindex="4" id="artifactId" class="form-control" type="text"
+                        <input tabindex="6" id="artifactId" class="form-control" type="text"
                                value="{{artifactId.content}}"
                                name="artifactId">
                     </div>
                     <div class="form-group full hidden name-form-group">
                         <label for="name" class="control-label">{{name.title}}</label>
-                        <input tabindex="5" id="name" class="form-control" type="text" value="{{name.content}}"
+                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
                                name="name">
                     </div>
                     <div class="form-group full hidden description-form-group">
                         <label for="description" class="control-label">{{description.title}}</label>
-                        <input tabindex="6" id="description" class="form-control" type="text"
+                        <input tabindex="7" id="description" class="form-control" type="text"
                                value="{{description.content}}" name="description">
                     </div>
                     <div class="form-group full hidden packagename-form-group">
                         <label for="packageName" class="control-label">{{packageName.title}}</label>
-                        <input tabindex="7" id="packageName" class="form-control" type="text"
+                        <input tabindex="8" id="packageName" class="form-control" type="text"
                                value="{{packageName.content}}"
                                name="packageName">
                     </div>
                     <div class="form-group full hidden packaging-form-group">
                         <label for="packaging" class="control-label">{{packagings.title}}</label>
-                        <select tabindex="8" class="form-control" id="packaging" name="packaging">
+                        <select tabindex="9" class="form-control" id="packaging" name="packaging">
                             {{#packagings.content}}
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/packagings.content}}
@@ -81,7 +89,7 @@
                     </div>
                     <div class="form-group full hidden javaversion-form-group">
                         <label for="javaVersion" class="control-label">{{javaVersions.title}}</label>
-                        <select tabindex="9" class="form-control" name="javaVersion" id="javaVersion">
+                        <select tabindex="10" class="form-control" name="javaVersion" id="javaVersion">
                             {{#javaVersions.content}}
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/javaVersions.content}}
@@ -89,7 +97,7 @@
                     </div>
                     <div class="form-group full hidden language-form-group">
                         <label for="language" class="control-label">{{languages.title}}</label>
-                        <select tabindex="10" class="form-control" name="language" id="language">
+                        <select tabindex="11" class="form-control" name="language" id="language">
                             {{#languages.content}}
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/languages.content}}
@@ -103,7 +111,7 @@
 
                     <div class="form-group">
                         <label for="autocomplete" class="control-label">Search for dependencies</label>
-                        <input tabindex="11" id="autocomplete" class="form-control" type="text"
+                        <input tabindex="12" id="autocomplete" class="form-control" type="text"
                                placeholder="Web, Security, JPA, Actuator, Devtools..."
                                name="autocomplete">
                     </div>
@@ -119,7 +127,7 @@
             </div>
             <div class="row">
                 <p class="text-center">
-                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary"
+                    <button tabindex="13" name="generate-project" type="submit" class="btn btn-lg btn-primary"
                             role="button">
                         Generate Project
                     </button>
@@ -136,7 +144,7 @@
                         {{#content}}
                         <div class="checkbox" data-range="{{#versionRange}}{{versionRange}}{{/versionRange}}">
                             <label>
-                                <input tabindex="13" type="checkbox" name="style" value="{{id}}">{{name}}
+                                <input tabindex="14" type="checkbox" name="style" value="{{id}}">{{name}}
                                 <p class="help-block">{{#description}}{{.}}{{/description}}</p>
                                 {{#versionRequirement}}
                                 <p class="help-block version-requirement">requires Spring Boot {{.}}</p>
@@ -145,12 +153,12 @@
                         </div>
                         {{/content}}
                     </div>
-                   {{/dependencies.content}}
+                    {{/dependencies.content}}
                 </div>
             </div>
             <div class="row full hidden">
                 <p class="text-center">
-                    <button tabindex="14" name="generate-project" type="submit" class="btn btn-lg btn-primary"
+                    <button tabindex="15" name="generate-project" type="submit" class="btn btn-lg btn-primary"
                             role="button">
                         Generate Project
                     </button>
@@ -172,8 +180,8 @@
 {{#trackingCode}}
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     ga('create', '{{.}}', 'auto');
     ga('send', 'pageview');
