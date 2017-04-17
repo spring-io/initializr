@@ -307,6 +307,13 @@
     "title": "Name",
     "type": "TEXT"
   },
+  "externalStructure": {
+    "content": "",
+    "description": "External Structure",
+    "id": "externalStructure",
+    "title": "External Structure",
+    "type": "TEXT"
+  },
   "packageName": {
     "content": "com.example",
     "description": "root package",
