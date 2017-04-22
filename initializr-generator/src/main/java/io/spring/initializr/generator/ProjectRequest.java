@@ -29,6 +29,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionProperty;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
@@ -226,10 +227,11 @@ public class ProjectRequest extends BasicProjectRequest {
 			buildProperties.getMaven().put("project.build.sourceEncoding", () -> "UTF-8");
 			buildProperties.getMaven().put("project.reporting.outputEncoding",
 					() -> "UTF-8");
-			buildProperties.getVersions().put("java.version", this::getJavaVersion);
+			buildProperties.getVersions().put(new VersionProperty("java.version"),
+					this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {
-				buildProperties.getVersions().put("kotlin.version", () -> metadata
-						.getConfiguration().getEnv().getKotlin().getVersion());
+				buildProperties.getVersions().put(new VersionProperty("kotlin.version"),
+						() -> metadata.getConfiguration().getEnv().getKotlin().getVersion());
 			}
 		}
 	}

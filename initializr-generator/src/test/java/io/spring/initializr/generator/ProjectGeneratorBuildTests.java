@@ -21,6 +21,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import io.spring.initializr.util.VersionProperty;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -102,10 +103,10 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void versionOverride() {
 		ProjectRequest request = createProjectRequest("web");
-		request.getBuildProperties().getVersions().put("spring-foo.version",
-				() -> "0.1.0.RELEASE");
-		request.getBuildProperties().getVersions().put("spring-bar.version",
-				() -> "0.2.0.RELEASE");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("spring-foo.version"), () -> "0.1.0.RELEASE");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("spring-bar.version"), () -> "0.2.0.RELEASE");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
 				"project/" + build + "/version-override-" + assertFileName));

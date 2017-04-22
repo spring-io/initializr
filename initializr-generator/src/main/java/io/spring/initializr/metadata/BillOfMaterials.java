@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.spring.initializr.util.InvalidVersionException;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
+import io.spring.initializr.util.VersionProperty;
 import io.spring.initializr.util.VersionRange;
 
 /**
@@ -39,7 +40,7 @@ public class BillOfMaterials {
 	private String groupId;
 	private String artifactId;
 	private String version;
-	private String versionProperty;
+	private VersionProperty versionProperty;
 	private Integer order = Integer.MAX_VALUE;
 	private List<String> additionalBoms = new ArrayList<>();
 	private List<String> repositories = new ArrayList<>();
@@ -86,16 +87,20 @@ public class BillOfMaterials {
 	}
 
 	/**
-	 * Return the property to use to externalize the version of the BOM. When this is set,
-	 * a version property is automatically added rather than setting the version in the
-	 * bom declaration itself.
+	 * Return the {@link VersionProperty} to use to externalize the version of the BOM.
+	 * When this is set, a version property is automatically added rather than setting
+	 * the version in the bom declaration itself.
 	 */
-	public String getVersionProperty() {
+	public VersionProperty getVersionProperty() {
 		return versionProperty;
 	}
 
-	public void setVersionProperty(String versionProperty) {
+	public void setVersionProperty(VersionProperty versionProperty) {
 		this.versionProperty = versionProperty;
+	}
+
+	public void setVersionProperty(String versionPropertyName) {
+		setVersionProperty(new VersionProperty(versionPropertyName));
 	}
 
 	/**
@@ -137,16 +142,6 @@ public class BillOfMaterials {
 
 	public List<Mapping> getMappings() {
 		return mappings;
-	}
-
-	/**
-	 * Determine the version placeholder to use for this instance. If a version property
-	 * is defined, this returns the reference for the property. Otherwise this returns the
-	 * plain {@link #version}
-	 */
-	@JsonIgnore
-	public String getVersionToken() {
-		return (versionProperty != null ? "${" + versionProperty + "}" : version);
 	}
 
 	public void validate() {

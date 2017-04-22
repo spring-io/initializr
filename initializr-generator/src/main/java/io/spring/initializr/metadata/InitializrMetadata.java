@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
+import io.spring.initializr.util.VersionProperty;
 
 /**
  * Meta-data used to generate a project.
@@ -236,7 +237,7 @@ public class InitializrMetadata {
 	public BillOfMaterials createSpringBootBom(String bootVersion, String versionProperty) {
 		BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot",
 				"spring-boot-dependencies", bootVersion);
-		bom.setVersionProperty(versionProperty);
+		bom.setVersionProperty(new VersionProperty(versionProperty));
 		bom.setOrder(100);
 		return bom;
 	}

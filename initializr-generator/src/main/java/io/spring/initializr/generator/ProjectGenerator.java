@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -361,11 +363,9 @@ public class ProjectGenerator {
 			model.put("hasRepositories", true);
 		}
 
-		List<BillOfMaterials> resolvedBoms = request.getBoms().values().stream()
-				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
-				.collect(Collectors.toList());
+		List<Map<String,String>> resolvedBoms = buildResolvedBoms(request);
 		model.put("resolvedBoms", resolvedBoms);
-		ArrayList<BillOfMaterials> reversedBoms = new ArrayList<>(resolvedBoms);
+		ArrayList<Map<String,String>> reversedBoms = new ArrayList<>(resolvedBoms);
 		Collections.reverse(reversedBoms);
 		model.put("reversedBoms", reversedBoms);
 
@@ -390,7 +390,7 @@ public class ProjectGenerator {
 		Map<String, String> versions = new LinkedHashMap<>();
 		model.put("buildPropertiesVersions", versions.entrySet());
 		request.getBuildProperties().getVersions().forEach((k, v) ->
-				versions.put(k, v.get()));
+				versions.put(computeVersionProperty(request,k), v.get()));
 		Map<String, String> gradle = new LinkedHashMap<>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
 		request.getBuildProperties().getGradle().forEach((k, v) ->
@@ -453,6 +453,31 @@ public class ProjectGenerator {
 		}
 
 		return model;
+	}
+
+	private List<Map<String,String>> buildResolvedBoms(ProjectRequest request) {
+		return request.getBoms().values().stream()
+				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
+				.map(bom -> toBomModel(request, bom))
+				.collect(Collectors.toList());
+	}
+
+	private Map<String,String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
+		Map<String, String> model = new HashMap<>();
+		model.put("groupId", bom.getGroupId());
+		model.put("artifactId", bom.getArtifactId());
+		model.put("versionToken", (bom.getVersionProperty() != null
+				? "${" + computeVersionProperty(request, bom.getVersionProperty()) + "}"
+				: bom.getVersion()));
+		return model;
+	}
+
+	private String computeVersionProperty(ProjectRequest request,
+			VersionProperty property) {
+		if (isGradleBuild(request)) {
+			return property.toCamelCaseFormat();
+		}
+		return property.toStandardFormat();
 	}
 
 	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {

@@ -23,6 +23,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import io.spring.initializr.util.VersionProperty;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -689,7 +690,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getMaven().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put("foo.version", () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("foo.version"), () -> "1.2.3");
 		request.getBuildProperties().getGradle().put("ignore.property", () -> "yes");
 
 		generateMavenPom(request).hasProperty("name", "test")
@@ -700,11 +702,13 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesGradle() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getGradle().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put("foo.version", () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("foo.version"), () -> "1.2.3");
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");
 
 		generateGradleBuild(request).contains("name = 'test'")
-				.contains("ext['foo.version'] = '1.2.3'")
+				.contains("ext {")
+				.contains("fooVersion = '1.2.3'")
 				.doesNotContain("ignore.property");
 	}
 

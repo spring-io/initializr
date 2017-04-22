@@ -67,9 +67,11 @@ configurations {
 {{/providedDependencies}}
 
 {{^buildPropertiesVersions.empty}}
-{{#buildPropertiesVersions}}
-ext['{{key}}'] = '{{value}}'
+ext {
+	{{#buildPropertiesVersions}}
+	{{key}} = '{{value}}'
 {{/buildPropertiesVersions}}
+}
 
 {{/buildPropertiesVersions.empty}}
 dependencies {
