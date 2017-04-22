@@ -25,6 +25,7 @@ initializr:
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
+        versionProperty: spring-cloud.version
         order: 50
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
@@ -41,6 +42,7 @@ initializr:
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
+        versionProperty: spring-cloud-dataflow.version
         order: 20
         additionalBoms: [cloud-task-bom,cloud-bom]
         mappings:
@@ -57,6 +59,7 @@ initializr:
       cloud-services-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
+        versionProperty: spring-cloud-services.version
         additionalBoms: [cloud-bom]
         mappings:
           - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
@@ -69,6 +72,7 @@ initializr:
       cloud-task-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-task-dependencies
+        versionProperty: spring-cloud-task.version
         order: 30
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.4.0.RELEASE]"
@@ -81,6 +85,7 @@ initializr:
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
+        versionProperty: vaadin.version
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.5.0.M1)"
             version: 7.7.5
@@ -89,6 +94,7 @@ initializr:
       stormpath-bom:
         groupId: com.stormpath.sdk
         artifactId: stormpath-bom
+        versionProperty: stormpath.version
         version: 1.5.2
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
