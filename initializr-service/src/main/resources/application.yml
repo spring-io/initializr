@@ -674,6 +674,13 @@ initializr:
             - rel: guide
               href: https://spring.io/guides/gs/centralized-configuration/
               description: Centralized Configuration
+        - name: Vault Configuration
+          id: cloud-starter-vault-config
+          description: Configuration management with HashiCorp Vault
+          versionRange: 1.5.3.RELEASE
+          starter: false
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-vault-config
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
           description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
