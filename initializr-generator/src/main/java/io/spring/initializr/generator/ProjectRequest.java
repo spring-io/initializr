@@ -232,6 +232,7 @@ public class ProjectRequest extends BasicProjectRequest {
 			if ("kotlin".equals(getLanguage())) {
 				buildProperties.getVersions().put(new VersionProperty("kotlin.version"),
 						() -> metadata.getConfiguration().getEnv().getKotlin().getVersion());
+				buildProperties.getMaven().put("kotlin.compiler.incremental", () -> "true");
 			}
 		}
 	}
