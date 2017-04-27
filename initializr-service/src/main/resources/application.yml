@@ -98,6 +98,11 @@ initializr:
         artifactId: stormpath-bom
         versionProperty: stormpath.version
         version: 1.5.2
+      keycloak-bom:
+        groupId: org.keycloak.bom
+        artifactId: keycloak-adapter-bom
+        versionProperty: keycloak.version
+        version: 3.1.0.Final
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -365,6 +370,13 @@ initializr:
           artifactId: stormpath-default-spring-boot-starter
           versionRange: "[1.5.0.RC1,2.0.0.M1)"
           bom: stormpath-bom
+        - name: Keycloak
+          id: keycloak
+          description: Keycloak integration, an open source Identity and Access Management solution.
+          groupId: org.keycloak
+          artifactId: keycloak-spring-boot-starter
+          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
+          bom: keycloak-bom
     - name: Template Engines
       content:
         - name: Freemarker
