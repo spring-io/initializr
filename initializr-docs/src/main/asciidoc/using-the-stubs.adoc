@@ -73,7 +73,7 @@ The wiremock fetaures come with Spring Cloud Contract Wiremock:
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
----
+----
 
 === Using the Stub Runner
 
@@ -104,7 +104,7 @@ stubs declared as a dependency):
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
----
+----
 
 
 [source,java,indent=0]

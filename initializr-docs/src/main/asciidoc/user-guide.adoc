@@ -139,11 +139,23 @@ instance, the following URL changes the default to use Kotlin and Gradle:
 https://start.spring.io/#!language=kotlin&type=gradle-project
 ```
 
-TIP: `type` is the attribute of the first drop-down list where the type of project can
-be selected and `gradle-project` is the id for the Gradle option. As you may guess,
-`maven-project` is the id of the default (Maven) option.
+The following attributes are supported:
 
+* Programming language: `language` (`java`, `groovy` or `kotlin`)
+* Java version: `javaVersion` (`1.6`, `1.7`, `1.8`)
+* Project type: `type` (`maven-project`, `gradle-project`)
+* Packaging: `packaging` (`jar`, `war`)
+* Group: `groupId`
+* Artifact: `artifact`
+* Name: `name`
+* Description: `description`
+* Package Name: `packageName`
 
+TIP: The same default rules will apply if a property is overridden. For instance, if the
+Group is customized, it will automatically customize the root package as well.
+
+NOTE: The Spring Boot version and the list of dependencies cannot be customized that way
+as they evolve quite frequently.
 
 [[command-line]]
 == Command line support
@@ -152,7 +164,7 @@ available options of a particular instance, simply "curl it", i.e. if you have `
 installed invoke `curl start.spring.io` on the command-line (or alternatively
 `http start.spring.io` if you prefer to use `HTTPie`).
 
-This provides a textual representation of the capabilities of the service that are split
+The result is a textual representation of the capabilities of the service that are split
 in three sections:
 
 First, a table that describes the available project's types. On the default instance,
@@ -211,9 +223,10 @@ Spring Initializr is also integrated in all major Java IDEs and allows you to cr
 import a new project without having to leave the IDE for the command-line or the web UI.
 
 The following IDEs have dedicated support:
+
 * Eclipse/STS
 * IntelliJ IDEA (Ultimate Edition)
-* NetBeans (using the
+* NetBeans (using the http://plugins.netbeans.org/plugin/67888/nb-springboot[NB SpringBoot plugin])
 
 Refer to the documentation of your favorite IDE for more details.
 
