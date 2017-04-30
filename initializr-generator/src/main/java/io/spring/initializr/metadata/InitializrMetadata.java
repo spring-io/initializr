@@ -167,7 +167,7 @@ public class InitializrMetadata {
 					&& !repositories.containsKey(dependency.getRepository())) {
 				throw new InvalidInitializrMetadataException("Dependency " + dependency
 						+ "defines an invalid repository id " + dependency.getRepository()
-						+ ", available repositores " + repositories);
+						+ ", available repositories " + repositories);
 			}
 		}
 		for (BillOfMaterials bom : boms.values()) {
@@ -190,7 +190,7 @@ public class InitializrMetadata {
 					if (!repositories.containsKey(r)) {
 						throw new InvalidInitializrMetadataException(
 								m + " of " + bom + "defines an invalid repository id " + r
-										+ ", available repositores " + repositories);
+										+ ", available repositories " + repositories);
 					}
 
 				}
