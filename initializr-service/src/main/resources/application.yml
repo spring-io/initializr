@@ -563,6 +563,13 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
+        - name: Reactive Cassandra
+          id: data-cassandra-reactive
+          description: Cassandra NoSQL Database, including spring-data-cassandra and the reactive driver
+          versionRange: 2.0.0.BUILD-SNAPSHOT
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
         - name: Couchbase
           id: data-couchbase
           description: Couchbase NoSQL database, including spring-data-couchbase
