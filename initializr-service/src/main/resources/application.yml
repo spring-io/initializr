@@ -36,7 +36,7 @@ initializr:
             version: Camden.SR6
           - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
             version: Dalston.RELEASE
-          - versionRange: "1.5.x.BUILD-SNAPSHOT"
+          - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
@@ -79,7 +79,7 @@ initializr:
             version: 1.0.3.RELEASE
           - versionRange: "[1.4.0.RELEASE, 1.5.0.RC1)"
             version: 1.1.2.RELEASE
-          - versionRange: "1.5.0.RC1"
+          - versionRange: "[1.5.0.RC1, 2.0.0.M1)"
             version: 1.2.0.RELEASE
       vaadin-bom:
         groupId: com.vaadin
@@ -621,12 +621,12 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-elasticsearch
     - name: Cloud Core
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Cloud Connectors
           id: cloud-connectors
           description: Simplifies connecting to services in cloud platforms, including spring-cloud-connector and spring-cloud-cloudfoundry-connector
-          versionRange: 1.2.0.RELEASE
+          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
         - name: Cloud Bootstrap
           id: cloud-starter
           description: spring-cloud-context (e.g. Bootstrap context and @RefreshScope)
@@ -648,7 +648,7 @@ initializr:
           description: Task result tracking along with integration with batch and streams
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-task
-          versionRange: 1.3.0.RELEASE
+          versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           bom: cloud-task-bom
           mappings:
             - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
@@ -656,7 +656,7 @@ initializr:
             - versionRange: "1.4.0.RELEASE"
     - name: Cloud Config
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Config Client
           id: cloud-config-client
@@ -676,25 +676,25 @@ initializr:
         - name: Vault Configuration
           id: cloud-starter-vault-config
           description: Configuration management with HashiCorp Vault
-          versionRange: 1.5.3.RELEASE
+          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
           starter: false
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-vault-config
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
           description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-config
         - name: Consul Configuration
           id: cloud-starter-consul-config
           description: Configuration management with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-config
     - name: Cloud Discovery
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Eureka Discovery
           id: cloud-eureka
@@ -714,24 +714,24 @@ initializr:
         - name: Zookeeper Discovery
           id: cloud-starter-zookeeper-discovery
           description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-discovery
         - name: Cloud Foundry Discovery
           id: cloud-cloudfoundry-discovery
           description: Service discovery with Cloud Foundry
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cloudfoundry-discovery
         - name: Consul Discovery
           id: cloud-starter-consul-discovery
           description: Service discovery with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-discovery
     - name: Cloud Routing
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Zuul
           id: cloud-zuul
@@ -758,7 +758,7 @@ initializr:
           artifactId: spring-cloud-starter-feign
     - name: Cloud Circuit Breaker
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Hystrix
           id: cloud-hystrix
@@ -782,13 +782,13 @@ initializr:
         - name: Turbine Stream
           id: cloud-turbine-stream
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
-          versionRange: 1.3.0.M5
+          versionRange: "[1.3.0.M5,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-stream
           weight: -1
     - name: Cloud Tracing
       bom: cloud-bom
-      versionRange: 1.3.0.M4
+      versionRange: "[1.3.0.M4,2.0.0.M1)"
       content:
         - name: Sleuth
           id: cloud-starter-sleuth
@@ -820,7 +820,7 @@ initializr:
           starter: false
     - name: Cloud Messaging
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: Cloud Bus AMQP
           id: cloud-bus-amqp
@@ -830,24 +830,24 @@ initializr:
         - name: Cloud Bus Kafka
           id: cloud-bus-kafka
           description: A simple control bus with Kafka and spring-cloud-bus
-          versionRange: "1.3.0.RELEASE"
+          versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-bus-kafka
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
           description: Messaging microservices with RabbitMQ
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-rabbit
         - name: Stream Kafka
           id: cloud-stream-binder-kafka
           description: Messaging microservices with Kafka
-          versionRange: 1.3.0.M4
+          versionRange: "[1.3.0.M4,2.0.0.M1)"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-stream-binder-kafka
     - name: Cloud AWS
       bom: cloud-bom
-      versionRange: 1.2.3.RELEASE
+      versionRange: "[1.2.3.RELEASE,2.0.0.M1)"
       content:
         - name: AWS Core
           id: cloud-aws
@@ -904,7 +904,7 @@ initializr:
           artifactId: spring-cloud-cluster-etcd
     - name: Cloud Contract
       bom: cloud-bom
-      versionRange: 1.4.0.RC1
+      versionRange: "[1.4.0.RC1,2.0.0.M1)"
       content:
         - name: Cloud Contract Verifier
           id: cloud-contract-verifier
