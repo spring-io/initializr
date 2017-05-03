@@ -544,6 +544,7 @@ initializr:
         - name: Reactive MongoDB
           id: data-mongodb-reactive
           description: MongoDB NoSQL Database, including spring-data-mongodb and the reactive driver
+          versionRange: 2.0.0.BUILD-SNAPSHOT
           weight: 50
           links:
             - rel: reference
