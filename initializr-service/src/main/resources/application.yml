@@ -593,7 +593,7 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-neo4j
         - name: Redis
           id: data-redis
-          description: REDIS key-value data store, including spring-redis
+          description: Redis key-value data store, including spring-data-redis and Jedis
           aliases:
             - redis
           mappings:
@@ -601,6 +601,16 @@ initializr:
               artifactId: spring-boot-starter-data-redis
             - versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
               artifactId: spring-boot-starter-redis
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-redis/
+              description: Messaging with Redis
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-redis
+        - name: Reactive Redis
+          id: data-redis-reactive
+          description: Redis key-value data store, including spring-data-redis and Lettuce
+          versionRange: 2.0.0.BUILD-SNAPSHOT
           links:
             - rel: guide
               href: https://spring.io/guides/gs/messaging-redis/
