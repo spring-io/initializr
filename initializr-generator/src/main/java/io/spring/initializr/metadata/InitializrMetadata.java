@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
+import io.spring.initializr.util.VersionProperty;
 
 /**
  * Meta-data used to generate a project.
@@ -166,7 +167,7 @@ public class InitializrMetadata {
 					&& !repositories.containsKey(dependency.getRepository())) {
 				throw new InvalidInitializrMetadataException("Dependency " + dependency
 						+ "defines an invalid repository id " + dependency.getRepository()
-						+ ", available repositores " + repositories);
+						+ ", available repositories " + repositories);
 			}
 		}
 		for (BillOfMaterials bom : boms.values()) {
@@ -189,7 +190,7 @@ public class InitializrMetadata {
 					if (!repositories.containsKey(r)) {
 						throw new InvalidInitializrMetadataException(
 								m + " of " + bom + "defines an invalid repository id " + r
-										+ ", available repositores " + repositories);
+										+ ", available repositories " + repositories);
 					}
 
 				}
@@ -236,7 +237,7 @@ public class InitializrMetadata {
 	public BillOfMaterials createSpringBootBom(String bootVersion, String versionProperty) {
 		BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot",
 				"spring-boot-dependencies", bootVersion);
-		bom.setVersionProperty(versionProperty);
+		bom.setVersionProperty(new VersionProperty(versionProperty));
 		bom.setOrder(100);
 		return bom;
 	}

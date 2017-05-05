@@ -24,6 +24,7 @@ import java.util.Map;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import io.spring.initializr.util.VersionProperty;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +58,7 @@ public class ProjectRequestResolverTests {
 		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
 		assertEquals("1.2", request.getJavaVersion());
 		assertEquals("1.2", request.getBuildProperties().getVersions()
-				.get("java.version").get());
+				.get(new VersionProperty("java.version")).get());
 	}
 
 	@Test

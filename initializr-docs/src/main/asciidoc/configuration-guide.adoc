@@ -1,0 +1,780 @@
+[[configuration-guide]]
+= Configuration Guide
+
+[partintro]
+--
+This section describes how you can create your own instance of the service and tune it for
+your needs, and also how you can configure an existing instance. You'll also find some
+advanced tips to make sure the available options are consistent with the chosen Spring
+Boot generation.
+--
+
+
+
+[[create-instance]]
+== Creating your own instance
+Spring Initializr is split across three main modules:
+
+* `initializr-generator`: standalone project generation library that can be reused in
+many environments (including embedded in your own project)
+* `initializr-web`: API endpoints and web interface
+* `initializr-actuator`: optional module to provide statistics and metrics on project
+generation
+
+Because it contains several auto-configurations, creating your own instance is quite easy,
+actually you could get started using Spring Initializr itself to generate a starting point!
+
+Create a new project with the `web` dependency and add the following dependency:
+
+[source,xml,indent=0,subs="verbatim,attributes"]
+----
+	<dependency>
+		<groupId>io.spring.initializr</groupId>
+		<artifactId>initializr-web</artifactId>
+		<version>{spring-initializr-version}</version>
+	</dependency>
+----
+
+Or if you are using Gradle:
+
+[source,groovy,indent=0,subs="verbatim,quotes,attributes"]
+----
+compile("io.spring.initializr:initializr-web:{spring-initializr-version}")
+----
+
+If you start the application, you'll see the familiar interface but none of the drop down
+lists have values (except the one for the Spring Boot version, we will
+<<create-instance-boot-versions,come back to that later>>). In the rest of this section,
+we will configure those basic settings.
+
+[TIP]
+====
+Most of the settings are configured via `application.properties` using the `initializr`
+namespace. Because the configuration is highly hierarchical, we recommend using the yaml
+format that is more readable for such structure. If you agree, go ahead and rename
+`application.properties` to `application.yml`.
+====
+
+
+
+[[create-instance-basic-settings]]
+=== Configuring basic settings
+Most of the drop-down lists are configured via a simple list-based structure where each
+entry has an `id`, a `name` and whether that entry is the default or not. If no `name` is
+provided, the `id` is used instead.
+
+Let's configure the languages and the Java versions we want to support:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  javaVersions:
+		- id: 9
+		  default: false
+		- id: 1.8
+		  default: true
+	  languages:
+		- name: Java
+		  id: java
+		  default: true
+		- name: Kotlin
+		  id: kotlin
+		  default: false
+----
+
+If you click on the "Switch to the full version" link, the two drop down lists now offer
+the options and default values defined above.
+
+Spring Initializr supports `java`, `groovy` and `kotlin` and additional languages can be
+added in your own customization.
+
+The available packagings are also configurable that way:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  packagings:
+		- name: Jar
+		  id: jar
+		  default: true
+		- name: War
+		  id: war
+		  default: false
+----
+
+These two packaging types are the only one explicitly supported at the moment.
+
+
+
+[[create-instance-boot-versions]]
+=== Configuring available Spring Boot versions
+If you look at http://projects.spring.io/spring-boot[the project home page for Spring
+Boot], the latest versions are displayed. And you've probably noticed that they match the
+drop down list that you automatically get with a default instance of the Initializr. The
+reason for that is that Spring Initializr calls an API on spring.io to retrieve the
+latest versions automatically. This makes sure that you always get the latest available
+versions.
+
+If that's not what you want, you need to override the `InitializrMetadataProvider` bean to
+provide your own metadata for the service. For instance, you could swap to an
+implementation that always returns the contents of static `application.yml`:
+
+[source,java,indent=0]
+----
+	@Bean
+	public InitializrMetadataProvider initializrMetadataProvider(
+			InitializrProperties properties) {
+		InitializrMetadata metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(properties).build();
+		return new SimpleInitializrMetadataProvider(metadata);
+	}
+----
+
+The thing to remember is that, by default, you don't have to worry about upgrading your
+instance when a new Spring Boot version is released. However, you may need to
+<<create-instance-advanced-config-caching,configure caching>> to avoid requesting that
+service too often.
+
+
+
+[[create-instance-types]]
+=== Configuring available project types
+The available project types mostly define the structure of the generated project and its
+build system. Once a project type is selected, the related action is invoked to generate
+the project.
+
+By default, Spring Initializr exposes the following resources (all accessed via HTTP GET):
+
+* `/pom.xml` generate a Maven `pom.xml`
+* `/build.gradle` generate a Gradle build
+* `/starter.zip` generate a complete project structure archived in a zip
+* `/starter.tgz` generate a complete project structure archived in a tgz
+
+Each type also defines one or more *tags* that provides additional metadata entries to
+qualify the entry. The following standard tags exist:
+
+* `build`: the name of the build system to use (e.g. `maven`, `gradle`)
+* `format`: the format of the project (e.g. `project` for a full project, `build` for just
+a build file).
+
+By default, the HTML UI filters all the available types to only display the ones that have
+a `format` tag with value `project`.
+
+You can of course implement additional endpoints that generate whatever project structure
+you need but, for now, we'll simply configure our instance to generate a Gradle or a Maven
+project:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  types:
+		- name: Maven Project
+		  id: maven-project
+		  description: Generate a Maven based project archive
+		  tags:
+			build: maven
+			format: project
+		  default: true
+		  action: /starter.zip
+		- name: Gradle Project
+		  id: gradle-project
+		  description: Generate a Gradle based project archive
+		  tags:
+			build: gradle
+			format: project
+		  default: false
+		  action: /starter.zip
+----
+
+NOTE: If you intend to build a custom client against your service, you can add as many
+tags as you want, and process them in the client in a way that makes sense for your users.
+
+For instance, the spring boot CLI uses them as a shortcut to the full type id. So rather
+than having to create a Gradle project as follows:
+
+[indent=0,subs="verbatim,quotes,attributes"]
+----
+	$ spring init --type=gradle-project my-project.zip
+----
+
+You can simply define a more convenient build parameter:
+
+[indent=0,subs="verbatim,quotes,attributes"]
+----
+	$ spring init --build=gradle my-project.zip
+----
+
+
+With that configuration, you should be able to generate your first project,
+congratulations! Let's now add dependencies so that you can start searching for them.
+
+
+
+[[create-instance-dependencies]]
+=== Configuring dependencies
+The most basic `dependency` is composed of:
+
+* An `id` used in clients to refer to it
+* The full maven coordinates of the dependency (`groupId` and `artifactId`)
+* A display `name` (used in the UI and the search results)
+* A `description` can (and should) be added to provide more information about the
+dependency
+
+Spring Initializr automatically considers that a dependency without maven coordinates
+defines an official Spring Boot starter. In such a case, the `id` is used to infer the
+`artifactId`.
+
+For instance, the following configures the `spring-boot-starter-web` Starter:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Web
+		  content:
+			- name: Web
+			  id: web
+			  description: Full-stack web development with Tomcat and Spring MVC
+----
+
+Each dependency is contained in a _group_ that gathers dependencies sharing a common
+surface area or any other form of grouping. In the example above, a `Web` group holds our
+unique dependency. A group can also provide default values for various settings, see the
+<<howto-group-share-settings,dedicated how-to>> for more details.
+
+In our `spring-boot-starter-web` example above, the dependency is _managed_ by Spring
+Boot so there is no need to provide a `version` attribute for it. You'll surely need to
+define additional dependencies that are not provided by Spring Boot and we strongly
+recommend you to use a <<create-instance-boms,Bill Of Materials (or BOM)>>.
+
+If no BOM is available you can specify a version directly:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Tech
+		  content:
+			- name: Acme
+			  id: acme
+			  groupId: com.example.acme
+			  artifactId: acme
+			  version: 1.2.0.RELEASE
+			  description: A solid description for this dependency
+----
+
+If you add this configuration and search for "acme" (or "solid"), you'll find this extra
+entry; generating a maven project with it should add the following to the pom:
+
+[source,xml,indent=0,subs="verbatim"]
+----
+	<dependency>
+		<groupId>com.example.acme</groupId>
+		<artifactId>acme</artifactId>
+		<version>1.2.0.RELEASE</version>
+	</dependency>
+----
+
+The rest of this section will detail the other configuration options.
+
+
+
+[[dependencies-version-range]]
+==== Availability (version range)
+By default, a dependency is available regardless of the Spring Boot version you have
+selected. If you need to restrict a dependency to a certain Spring Boot generation you
+can add a `versionRange` attribute to its definition. A version range is a range of
+versions of Spring Boot which are valid in combination with it. The versions are *not*
+applied to the dependency itself, but rather used to filter out the dependency, or modify
+it, when different versions of Spring Boot are selected for the generated project.
+
+A version range has a lower and an upper bound, and if the bound is inclusive it is
+denoted as a square bracket (`[` or `]`), otherwise it is exclusive and denoted by a
+parenthesis (`(` or `)`). For instance `[1.1.6.RELEASE,1.3.0.M1)` means from all versions
+from `1.1.6.RELEASE` up to but not including `1.3.0.M1` (concretely no including the
+`1.3.x` line and after).
+
+A version range can be a single value, e.g. `1.2.0.RELEASE`, which is short for "this
+version or greater". It is an inclusive lower bound with an implied infinite upper bound.
+
+If you need to specify "the latest release" in a given line, you can use a `x` rather than
+an hard-coded version. For instance, `1.4.x.BUILD-SNAPSHOT` is the latest snapshot build
+of the 1.4.x line. For instance, if you want to restrict a dependency from `1.1.0.RELEASE`
+to the latest stable release of the 1.3.x line, you'd use `[1.1.0.RELEASE,1.3.x.RELEASE]`.
+
+Snapshots are naturally ordered higher than released versions, so if you are looking to
+match a dependency to only the latest snapshots of Spring Boot, you could use a version
+range of `1.5.x.BUILD-SNAPSHOT` (assuming 1.5 was the latest).
+
+TIP: Remember to quote the values of a version range in YAML configuration files (with
+double quotes "").
+
+See below in the section on <<howto-link-boot-version,linking versions>> for more examples
+and idioms.
+
+
+
+[[dependencies-repository]]
+==== Repository
+If the dependency is not available on Maven Central (or whatever default repository that
+is configured on your end), you can also add a reference to a repository. A repository is
+declared at the top level (under `env`) and given an id via the key in the configuration:
+
+[source,yaml,indent=0]
+----
+initializr:
+  env:
+    repositories:
+      my-api-repo-1:
+        name: repo1
+        url: http://example.com/repo1
+----
+
+Once defined, the repository can then be referred back to in a dependency
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: Foo
+          groupId: org.acme
+          artifactId: foo
+          version: 1.3.5
+          repository: my-api-repo-1
+----
+
+It is usually preferable to have a BOM for every dependency, and attach the repository to
+the BOM instead.
+
+TIP: The snapshots and milestones repositories on `repo.spring.io` are automatically
+available with the `spring-snapshots` and `spring-milestones` identifiers respectively.
+
+
+
+[[create-instance-boms]]
+=== Configuring Bill of Materials
+A Bill of Materials (BOM) is a special `pom.xml`, deployed to a Maven repository, and used
+to control dependency management for a set of related artifacts. In the Spring Boot
+ecosystem we usually use the suffix `-dependencies` on the artifact id of a BOM. In other
+projects we see `-bom`. It is recommended that all dependencies are included in a BOM of
+some sort, since they provide nice high level features for users of the dependency. It is
+also important that 2 BOMs used in a project do not contain conflicting versions for the
+same dependency, so the best practice is to look at the existing BOMs in the Initializr
+before you add a new one, and make sure that you aren't adding a conflict.
+
+In the Initializr a BOM is declared at the `env` level, and given an id through the
+configuration key. Example:
+
+[source,yaml,indent=0]
+----
+initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-dependencies
+        version: 1.0.0.RELEASE
+        repositories: my-api-repo-1
+----
+
+If a BOM requires a special, non-default repository, then it can be referred to here,
+instead of having to explicitly list the repository again for each dependency. A
+dependency, or a dependency group, can declare that it requires the use of one or more
+BOMs by referring to the id:
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: My API
+          id : my-api
+          groupId: org.acme
+          artifactId: my-api
+          bom: my-api-bom
+----
+
+
+
+[[dependencies-mappings]]
+==== Map coordinates according to the Spring Boot version
+In addition to a Spring Boot version range for the dependency or a BOM, you can configure
+the version relationships at a finer grained level using version mappings. A dependency or
+BOM has a list of "mappings", each of which consists of a version range, and a set of one
+or more dependency properties to override for those versions of Spring Boot. You can use a
+mapping to switch the version of a dependency, or (better) the BOM, or to change its
+artifact id (if the project changed its packaging) for instance.
+
+Here's an example of a BOM with mappings:
+
+[source,yaml,indent=0]
+----
+initializr:
+  env:
+    boms:
+      cloud-bom:
+        groupId: com.example.foo
+        artifactId: acme-foo-dependencies
+        mappings:
+          - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
+            version: Arcturus.SR6
+          - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
+            version: Botein.SR7
+          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
+            version: Castor.SR6
+          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+            version: Diadem.RC1
+            repositories: spring-milestones
+          - versionRange: "1.5.x.BUILD-SNAPSHOT"
+            version: Diadem.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+----
+
+The primary use case here is to map Spring Boot versions to the preferred or supported
+versions of the Foo project. You can also see that for the milestone and snapshot BOMs,
+additional repositories are declared because those artifacts are not in the default
+repository.
+
+TIP: We also use the `x` trick in version ranges to avoid updating the range every time
+a new Spring Boot 1.5 bug fix release is available
+
+See below in the section on <<howto-link-boot-version,linking versions>> for more examples.
+
+
+
+[[dependencies-alias]]
+==== Aliases
+A dependency has an id (e.g. "web-services"), but it could be necessary to provide a new
+id and still be able to serve request from client using the now deprecated id. To do so,
+an alias can be defined for ths dependency;
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Other
+      content:
+        - name: Web Services
+          id: web-services
+          aliases:
+            - ws
+----
+
+The same project can now be generated with `dependencies=ws` or
+`dependencies=web-services`.
+
+
+
+[[dependencies-facet]]
+==== Facets
+A "facet" is a label on a dependency which is used to drive a code modification in the
+generated project. In the standard Initializr generator, there is only one facet that is
+actually used (`web`), but custom installations might choose to use it for their own
+purposes. The `web` facet is used to drive the inclusion of `spring-boot-starter-web` if
+any other dependency with that facet is included. The value of the "facets" property of a
+dependency is a list of strings.
+
+
+
+[[create-instance-dependencies-link]]
+==== Links
+Links can be used to provide descriptive and hyperlink data to guide to user on how to
+learn more about a dependency. A dependency has a "links" property which is a list of
+`Link`. Each link has a `rel` label to identify it, an `href` and an optional (but
+recommended) `description`.
+
+The following `rel` value are currently officially supported:
+
+* `guide`: the link points to a guide describing how to use the related dependency. It
+can be a tutorial, a how-to or typically a guide available on https://spring.io/guides
+* reference: the link points to a section of a developer guide typically or any page that
+documents how to use the dependency
+
+The url can be templated if its actual value can change according to the environment. An
+URL parameter is specified with curly braces, something like
+`https://example.com/doc/{bootVersion}/section` defines a `bootVersion` parameter.
+
+The following attributes are currently supported:
+
+* `bootVersion`: the Spring Boot version that is currently active
+
+Here is an example that adds two links to the `acme` dependency:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Tech
+		  content:
+			- name: Acme
+			  id: acme
+			  groupId: com.example.acme
+			  artifactId: acme
+			  version: 1.2.0.RELEASE
+			  description: A solid description for this dependency
+			  links:
+			    - rel: guide
+				  href: https://com.example/guides/acme/
+				  description: Getting started with Acme
+			    - rel: reference
+				  href: http://docs.example.com/acme/html
+----
+
+
+
+[[create-instance-dependencies-search]]
+==== Improve search results
+Each dependency can have a `weight` (a number >=0) and also `keywords` (list of string)
+that are used to prioritize them in the search feature in the web UI. If you type one of
+the keywords into the "Dependencies" box in the UI, those dependencies will be listed
+below, in order of decreasing weight, if they have one (unweighted dependencies come
+last).
+
+
+
+[[configuration-howto]]
+== '`How-to`' guides
+This section provides answers to some common '`how do I do that...`' type of questions
+that often arise when configuring Spring Initializr.
+
+
+
+[[howto-add-a-new-dependency]]
+=== Add a new dependency
+To add a new dependency, first identify the Maven co-ordinates of the dependency you want
+to add (`groupId:artifactId:version`) and then check which versions of Spring Boot it works
+with. If there are multiple versions that work with different versions of Spring Boot,
+then that's fine too.
+
+* If there is a published BOM that manages the version of you dependency, then add that
+  first, in the `env` section (see <<create-instance-boms>>).
+* Then configure the dependency, fitting it into an existing group if you can, otherwise
+  creating a new group.
+* If there is a BOM then omit the version.
+* If there is a Spring Boot version range (or min or max) that you need for this
+  dependency, add that as a <<howto-link-boot-version,linked version>>.
+
+
+
+[[howto-override-a-version]]
+=== Override the version of a dependency
+Sometimes it happens that the BOM that normally manages your dependency version is in
+conflict with the newest version. Or maybe this is the case for only a range of Spring
+Boot versions. Or maybe there just is no BOM, or it's not worth creating one for just one
+dependency. In these cases you can specify the version manually for a dependency either
+at the top level, or in a
+<<howto-link-boot-version,version mapping>>. At the top level it looks like this (just
+a `version` property in a dependency):
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+		- name: Tech
+		  content:
+			- name: Acme
+			  id: acme
+			  groupId: com.example.acme
+			  artifactId: acme
+			  version: 1.2.0.RELEASE
+			  description: A solid description for this dependency
+----
+
+
+
+[[howto-link-boot-version]]
+=== Link a Boot version to a version of your dependency
+If your dependency requires a specific version of Spring Boot, ot different versions of
+Spring Boot require different versions of your dependency there are a couple of mechanisms
+to configure that.
+
+The simplest is to put a `versionRange` in the dependency declaration. This is a range of
+versions of Spring Boot, not of your dependency. For example:
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      content:
+        - name: Foo
+          id: foo
+          ...
+          versionRange: 1.2.0.M1
+        - name: Bar
+          id: bar
+          ...
+          versionRange: "[1.5.0.RC1,2.0.0.M1)"
+----
+
+In this example `Foo` is available for Spring Boot 1.2.0 (or any milestone of 1.2.0) or
+greater, and `Bar` is available for Spring Boot 1.5.0 up to, but not including 2.0.0.
+
+If different versions of your dependency work with different versions of Spring Boot,
+that's when you need the `mappings` property. A mapping is a combination of a
+`versionRange` and some or all of the other properties of the dependency, overriding
+the values defined at the top level. For example:
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      content:
+        - name: Foo
+          id: foo
+          groupId: org.acme.foo
+          artifactId: foo-spring-boot-starter
+          versionRange: 1.3.0.RELEASE
+          bom: cloud-task-bom
+          mappings:
+            - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
+              artifactId: foo-starter
+            - versionRange: "1.4.0.RELEASE"
+----
+
+In this example, The artifact of `foo` was changed to `foo-spring-boot-starter` as of the
+version that is compatible with Spring Boot 1.4. This mapping instruct that if Spring Boot
+1.3.x is selected, the artifact Id should be set to `foo-starter`.
+
+A mapping can also be applied to a BOM declaration. For example:
+
+[source,yaml,indent=0]
+----
+initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-bom
+        additionalBoms: ['my-api-dependencies-bom']
+        mappings:
+          - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+            version: 1.0.0.RELEASE
+            repositories: my-api-repo-1
+          - versionRange: "1.2.1.RELEASE"
+            version: 2.0.0.RELEASE
+            repositories: my-api-repo-2
+----
+
+In this example Spring Boot versions up to 1.1.6 select version 1.0.0 of the BOM, and set
+a different repository. Spring Boot versions 1.2.1 and above select 2.0.0 of the BOM and
+yet another repository.
+
+
+
+[[howto-add-snapshot-repository]]
+=== Configure a snapshot repository
+A dependency, or a BOM, might require the use of a specific repository, if the default one
+(usually Maven Central) does not contain the artifacts. Normally, the best place to
+declare that is in the BOM configuration, but if there isn't a BOM then you can put it in
+the dependency itself. You can also use a Spring Boot <<You can declare a
+repository,version mapping>> to override the default repository for a dependency or BOM.
+
+
+
+[[howto-dependency-starter-flag]]
+=== Make sure a regular dependency brings the base starter
+If a dependency does not stand on its own (and specifically if it does not depend on an
+existing Spring Boot starter) you can flag it as a "non starter":
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      content:
+        - name: Lib
+          id: lib
+          groupId: com.acme
+          artifactId: lib
+          starter:false
+----
+
+When a project is generated that only has dependencies with this flag set, then the base
+Spring Boot starter is added as well.
+
+
+
+[[howto-group-share-settings]]
+=== Share common dependency settings in a group
+A dependency group is a hint for user interface implementations, to group things together
+for users when they are selecting dependencies. It is also a convenient way to share
+settings between dependencies because every dependency inherits all the settings. The most
+common settings in a group are the `groupId`, `versionRange` and `bom`:
+
+[source,yaml,indent=0]
+----
+initializr:
+  dependencies:
+    - name: Stuff
+      bom: stuff-bom
+      versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
+      content:
+...
+----
+
+These dependencies, by default, will be available only for Spring Boot versions 1.3 up to
+2.0 (excluded) and will bring in the `stuff-bom` BOM.
+
+
+
+[[create-instance-advanced-config]]
+== Advanced configuration
+
+
+
+[[create-instance-advanced-config-caching]]
+=== Caching configuration
+If you use the service, you'll notice that the logs have lots of entries with the message
+`Fetching boot metadata from https://spring.io/project_metadata/spring-boot`. To avoid
+checking for the latest Spring Boot versions too often, you should enable caching on your
+service. Spring Initializr has some auto-configuration to apply the proper caches if you
+are willing to use a JCache (JSR-107) implementation.
+
+Add the `javax.cache:cache-api` and your favorite JCache implementation and simply enable
+caching by adding `@EnableCaching` to your `@SpringBootApplication`. For instance, you
+could use `ehcache` by adding the following:
+
+[source,xml,indent=0,subs="verbatim,attributes"]
+----
+	<dependency>
+		<groupId>javax.cache</groupId>
+		<artifactId>cache-api</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.ehcache</groupId>
+		<artifactId>ehcache</artifactId>
+	</dependency>
+----
+
+Or if you are using Gradle:
+
+[source,groovy,indent=0,subs="verbatim,quotes,attributes"]
+----
+compile("javax.cache:cache-api")
+compile("org.ehcache:ehcache")
+----
+
+You'll notice that the log entry is much more rare. If you do not want to use JSR-107, you
+should configure the cache yourselves. Here are the caches used by the application (each
+one will require some configuration to get it working):
+
+.Cache configuration
+|===
+| cache name | Description
+
+|`initializr`
+|Cache the full metadata of the service. When the metadata expires, it is fully resolved
+again (including a check on spring.io for the latest Spring Boot versions). Adapt the
+expiration settings accordingly.
+
+|`project-resources`
+|Cache resources that are used to generate projects.
+
+|`dependency-metadata`
+|Cache dependency-specific metadata.
+|===

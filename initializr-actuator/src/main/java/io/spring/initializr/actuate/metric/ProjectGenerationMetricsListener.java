@@ -24,7 +24,6 @@ import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.util.Agent;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.StringUtils;
@@ -39,7 +38,6 @@ public class ProjectGenerationMetricsListener {
 
 	private final CounterService counterService;
 
-	@Autowired
 	public ProjectGenerationMetricsListener(CounterService counterService) {
 		this.counterService = counterService;
 	}

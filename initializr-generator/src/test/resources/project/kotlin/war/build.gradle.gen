@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.0.1'
+		kotlinVersion = '1.1.1'
 		springBootVersion = '1.2.3.RELEASE'
 	}
 	repositories {
@@ -21,12 +21,14 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 
-war {
-	baseName = 'demo'
-	version = '0.0.1-SNAPSHOT'
-}
-
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+compileKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
 
 repositories {
 	mavenCentral()
@@ -38,7 +40,7 @@ configurations {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

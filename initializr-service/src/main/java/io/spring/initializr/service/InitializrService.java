@@ -23,6 +23,7 @@ import io.spring.initializr.web.project.LegacyStsController;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
@@ -37,6 +38,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  * @author Stephane Nicoll
  */
 @SpringBootApplication
+@EnableCaching
 public class InitializrService {
 
 	public static void main(String[] args) {

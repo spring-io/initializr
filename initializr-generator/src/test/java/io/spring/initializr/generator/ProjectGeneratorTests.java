@@ -23,6 +23,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import io.spring.initializr.util.VersionProperty;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -41,6 +42,7 @@ import static org.junit.Assert.fail;
  * Tests for {@link ProjectGenerator}
  *
  * @author Stephane Nicoll
+ * @author Andy Wilkinson
  */
 public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
@@ -168,8 +170,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setType("gradle-project");
 		generateProject(request).isJavaWarProject().isGradleProject().gradleBuildAssert()
 				// This is tagged as web facet so it brings the web one
-				.contains("compile('org.foo:thymeleaf')").contains("war {")
-				.contains("compile('org.foo:thymeleaf')").contains("apply plugin: 'war'")
+				.contains("apply plugin: 'war'")
+				.contains("compile('org.foo:thymeleaf')")
 				.doesNotContain(
 						"compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
@@ -511,6 +513,17 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void gradleBuildAsFromSpringBoot20() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		generateGradleBuild(request)
+				.contains("springBootVersion = '2.0.0.BUILD-SNAPSHOT'")
+				.contains("apply plugin: 'org.springframework.boot'")
+				.doesNotContain("apply plugin: 'spring-boot'")
+				.contains("apply plugin: 'io.spring.dependency-management'");
+	}
+
+	@Test
 	public void mavenBom() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("foo-bom");
@@ -677,7 +690,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getMaven().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put("foo.version", () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("foo.version"), () -> "1.2.3");
 		request.getBuildProperties().getGradle().put("ignore.property", () -> "yes");
 
 		generateMavenPom(request).hasProperty("name", "test")
@@ -688,11 +702,13 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesGradle() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getGradle().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put("foo.version", () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(
+				new VersionProperty("foo.version"), () -> "1.2.3");
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");
 
 		generateGradleBuild(request).contains("name = 'test'")
-				.contains("ext['foo.version'] = '1.2.3'")
+				.contains("ext {")
+				.contains("fooVersion = '1.2.3'")
 				.doesNotContain("ignore.property");
 	}
 

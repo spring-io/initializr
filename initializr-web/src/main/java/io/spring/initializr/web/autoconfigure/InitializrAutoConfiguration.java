@@ -17,11 +17,11 @@
 package io.spring.initializr.web.autoconfigure;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import io.spring.initializr.generator.ProjectGenerator;
 import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.generator.ProjectRequestResolver;
@@ -38,15 +38,13 @@ import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.ui.UiController;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -65,8 +63,8 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  * @author Stephane Nicoll
  */
 @Configuration
-@EnableCaching
 @EnableConfigurationProperties(InitializrProperties.class)
+@AutoConfigureAfter(CacheAutoConfiguration.class)
 public class InitializrAutoConfiguration {
 
 	private final List<ProjectRequestPostProcessor> postProcessors;
@@ -144,22 +142,26 @@ public class InitializrAutoConfiguration {
 		return new DefaultDependencyMetadataProvider();
 	}
 
-	@Bean
-	@ConditionalOnMissingBean
-	public CacheManager cacheManager() {
-		SimpleCacheManager cacheManager = new SimpleCacheManager();
-		cacheManager.setCaches(Arrays.asList(
-				createConcurrentMapCache(600L, "initializr"),
-				new ConcurrentMapCache("dependency-metadata"),
-				new ConcurrentMapCache("project-resources")));
-		return cacheManager;
-	}
+	@Configuration
+	@ConditionalOnClass(javax.cache.CacheManager.class)
+	static class CacheConfiguration {
 
-	private static Cache createConcurrentMapCache(Long timeToLive, String name) {
-		return new CaffeineCache(name, Caffeine
-				.newBuilder()
-				.expireAfterWrite(timeToLive, TimeUnit.SECONDS)
-				.build());
+		@Bean
+		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
+			return cm -> {
+				cm.createCache("initializr", config().setExpiryPolicyFactory(
+						CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+				cm.createCache("dependency-metadata", config());
+				cm.createCache("project-resources", config());
+			};
+		}
+
+		private MutableConfiguration<Object, Object> config() {
+			return new MutableConfiguration<>()
+					.setStoreByValue(false)
+					.setManagementEnabled(true).setStatisticsEnabled(true);
+		}
+
 	}
 
 }

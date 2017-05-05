@@ -25,73 +25,88 @@ initializr:
       cloud-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
+        versionProperty: spring-cloud.version
         order: 50
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
             version: Angel.SR6
           - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
             version: Brixton.SR7
-          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE]"
+          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
             version: Camden.SR6
-          - versionRange: "1.5.x.BUILD-SNAPSHOT"
+          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+            version: Dalston.RELEASE
+          - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Dalston.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "2.0.0.M1"
+            version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-dataflow-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dataflow-dependencies
+        versionProperty: spring-cloud-dataflow.version
         order: 20
         additionalBoms: [cloud-task-bom,cloud-bom]
         mappings:
           - versionRange: "[1.3.2.RELEASE,1.4.0.RELEASE)"
             version: 1.0.1.RELEASE
           - versionRange: "[1.4.0.RELEASE,1.4.x.BUILD-SNAPSHOT)"
-            version: 1.1.0.RELEASE
-          - versionRange: 1.4.x.BUILD-SNAPSHOT
-            version: 1.1.1.BUILD-SNAPSHOT
+            version: 1.1.4.RELEASE
+          - versionRange: "[1.4.x.BUILD-SNAPSHOT, 1.5.0.RC1)"
+            version: 1.1.5.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "[1.5.0.RC1, 1.5.3.RELEASE)"
+            version: 1.2.0.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-services-bom:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
+        versionProperty: spring-cloud-services.version
         additionalBoms: [cloud-bom]
         mappings:
           - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
             version: 1.2.1.RELEASE
-          - versionRange: "[1.4.0.RELEASE,1.4.x.BUILD-SNAPSHOT)"
+          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE]"
             version: 1.4.1.RELEASE
-          - versionRange: "[1.4.x.BUILD-SNAPSHOT, 1.5.0.RC1)"
+          - versionRange: "[1.5.x.BUILD-SNAPSHOT, 2.0.0.M1)"
             version: 1.4.2.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       cloud-task-bom:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-task-dependencies
+        versionProperty: spring-cloud-task.version
         order: 30
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.4.0.RELEASE]"
             version: 1.0.3.RELEASE
-          - versionRange: "[1.4.0.RELEASE,1.4.x.BUILD-SNAPSHOT)"
+          - versionRange: "[1.4.0.RELEASE, 1.5.0.RC1)"
             version: 1.1.2.RELEASE
-          - versionRange: "[1.4.x.BUILD-SNAPSHOT, 1.5.0.RC1)"
-            version: 1.1.3.BUILD-SNAPSHOT
-            repositories: spring-snapshots,spring-milestones
-          - versionRange: "1.5.0.RC1"
-            version: 1.2.0.BUILD-SNAPSHOT
-            repositories: spring-snapshots,spring-milestones
+          - versionRange: "[1.5.0.RC1, 2.0.0.M1)"
+            version: 1.2.0.RELEASE
       vaadin-bom:
         groupId: com.vaadin
         artifactId: vaadin-bom
+        versionProperty: vaadin.version
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.5.0.M1)"
             version: 7.7.5
           - versionRange: "1.5.0.M1"
-            version: 8.0.0
+            version: 8.0.5
       stormpath-bom:
         groupId: com.stormpath.sdk
         artifactId: stormpath-bom
+        versionProperty: stormpath.version
         version: 1.5.2
+      keycloak-bom:
+        groupId: org.keycloak.bom
+        artifactId: keycloak-adapter-bom
+        versionProperty: keycloak.version
+        version: 3.1.0.Final
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      version: 1.0.6
+      version: 1.1.2
   dependencies:
     - name: Core
       content:
@@ -260,18 +275,28 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices
         - name: Jersey (JAX-RS)
           id: jersey
-          description: RESTful Web Services framework
+          description: RESTful Web Services framework with support of JAX-RS
           versionRange: 1.2.0.RELEASE
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey
+        - name: Apache CXF (JAX-RS)
+          id: cxf-jaxrs
+          groupId: org.apache.cxf
+          artifactId: cxf-spring-boot-starter-jaxrs
+          version: 3.1.11
+          description: RESTful Web Services framework with support of JAX-RS
+          versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
+          links:
+            - rel: reference
+              href: https://cxf.apache.org/docs/springboot.html#SpringBoot-SpringBootCXFJAX-RSStarter
         - name: Ratpack
           id: ratpack
           description: Spring Boot integration for the Ratpack framework
           groupId: io.ratpack
           artifactId: ratpack-spring-boot
           version: 1.1.1
-          versionRange: 1.2.0.RELEASE
+          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
           starter: false
         - name: Vaadin
           id: vaadin
@@ -345,6 +370,13 @@ initializr:
           artifactId: stormpath-default-spring-boot-starter
           versionRange: "[1.5.0.RC1,2.0.0.M1)"
           bom: stormpath-bom
+        - name: Keycloak
+          id: keycloak
+          description: Keycloak integration, an open source Identity and Access Management solution.
+          groupId: org.keycloak
+          artifactId: keycloak-spring-boot-starter
+          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
+          bom: keycloak-bom
     - name: Template Engines
       content:
         - name: Freemarker
@@ -425,10 +457,12 @@ initializr:
           groupId: org.mybatis.spring.boot
           artifactId: mybatis-spring-boot-starter
           mappings:
-            - versionRange: "[1.3.0.RELEASE,1.4.0.M2)"
+            - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
               version: 1.1.1
-            - versionRange: 1.4.0.M2
-              version: 1.2.0
+            - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
+              version: 1.2.1
+            - versionRange: 1.5.0.RELEASE
+              version: 1.3.0
         - name: JDBC
           id: jdbc
           description: JDBC databases
@@ -525,14 +559,30 @@ initializr:
         - name: Reactive MongoDB
           id: data-mongodb-reactive
           description: MongoDB NoSQL Database, including spring-data-mongodb and the reactive driver
+          versionRange: 2.0.0.BUILD-SNAPSHOT
           weight: 50
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb
+        - name: Embedded MongoDB
+          id: flapdoodle-mongo
+          description: Embedded MongoDB for testing
+          versionRange: 1.3.0.RELEASE
+          groupId: de.flapdoodle.embed
+          artifactId: de.flapdoodle.embed.mongo
+          scope: test
+          starter: false
         - name: Cassandra
           id: data-cassandra
           description: Cassandra NoSQL Database, including spring-data-cassandra
           versionRange: 1.3.0.RC1
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
+        - name: Reactive Cassandra
+          id: data-cassandra-reactive
+          description: Cassandra NoSQL Database, including spring-data-cassandra and the reactive driver
+          versionRange: 2.0.0.BUILD-SNAPSHOT
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
@@ -555,7 +605,7 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-neo4j
         - name: Redis
           id: data-redis
-          description: REDIS key-value data store, including spring-redis
+          description: Redis key-value data store, including spring-data-redis and Jedis
           aliases:
             - redis
           mappings:
@@ -563,6 +613,16 @@ initializr:
               artifactId: spring-boot-starter-data-redis
             - versionRange: "[1.1.5.RELEASE,1.4.0.M1)"
               artifactId: spring-boot-starter-redis
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-redis/
+              description: Messaging with Redis
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-redis
+        - name: Reactive Redis
+          id: data-redis-reactive
+          description: Redis key-value data store, including spring-data-redis and Lettuce
+          versionRange: 2.0.0.BUILD-SNAPSHOT
           links:
             - rel: guide
               href: https://spring.io/guides/gs/messaging-redis/
@@ -621,7 +681,7 @@ initializr:
           description: Task result tracking along with integration with batch and streams
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-task
-          versionRange: 1.3.0.RELEASE
+          versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           bom: cloud-task-bom
           mappings:
             - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
@@ -646,6 +706,13 @@ initializr:
             - rel: guide
               href: https://spring.io/guides/gs/centralized-configuration/
               description: Centralized Configuration
+        - name: Vault Configuration
+          id: cloud-starter-vault-config
+          description: Configuration management with HashiCorp Vault
+          versionRange: 1.5.3.RELEASE
+          starter: false
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-vault-config
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
           description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
@@ -832,7 +899,7 @@ initializr:
           artifactId: spring-cloud-starter-aws-messaging
     - name: Cloud Data Flow
       bom: cloud-dataflow-bom
-      versionRange: 1.3.2.RELEASE
+      versionRange: "[1.3.2.RELEASE, 1.5.3.RELEASE)"
       content:
         - name: Local Data Flow Server
           id: cloud-dataflow-server-local
@@ -846,7 +913,7 @@ initializr:
           artifactId: spring-cloud-dataflow-shell
     - name: Cloud Cluster
       bom: cloud-bom
-      versionRange: 1.3.0.M4
+      versionRange: "[1.3.0.M4,1.4.0.RC1)"
       content:
         - name: Cluster Redis
           id: cloud-cluster-redis
@@ -895,7 +962,7 @@ initializr:
           starter: false
     - name: Pivotal Cloud Foundry
       bom: cloud-services-bom
-      versionRange: "[1.3.0.RELEASE,1.5.0.RC1)"
+      versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
       content:
         - name: Config Client (PCF)
           id: scs-config-client
@@ -960,16 +1027,18 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration
         - name: Activiti
           id: activiti-basic
+          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
           description: Activiti BPMN workflow engine
           groupId: org.activiti
           artifactId: activiti-spring-boot-starter-basic
           version: 5.21.0
         - name: Apache Camel
           id: camel
+          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
-          version: 2.18.2
+          version: 2.18.3
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ

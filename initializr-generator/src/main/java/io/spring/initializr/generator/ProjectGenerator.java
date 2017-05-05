@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +58,7 @@ import org.springframework.util.StreamUtils;
  * @author Dave Syer
  * @author Stephane Nicoll
  * @author Sebastien Deleuze
+ * @author Andy Wilkinson
  */
 public class ProjectGenerator {
 
@@ -72,6 +75,8 @@ public class ProjectGenerator {
 	private static final Version VERSION_1_4_2_M1 = Version.parse("1.4.2.M1");
 
 	private static final Version VERSION_1_5_0_M1 = Version.parse("1.5.0.M1");
+
+	private static final Version VERSION_2_0_0_BUILD_SNAPSHOT = Version.parse("2.0.0.BUILD-SNAPSHOT");
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -358,11 +363,9 @@ public class ProjectGenerator {
 			model.put("hasRepositories", true);
 		}
 
-		List<BillOfMaterials> resolvedBoms = request.getBoms().values().stream()
-				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
-				.collect(Collectors.toList());
+		List<Map<String,String>> resolvedBoms = buildResolvedBoms(request);
 		model.put("resolvedBoms", resolvedBoms);
-		ArrayList<BillOfMaterials> reversedBoms = new ArrayList<>(resolvedBoms);
+		ArrayList<Map<String,String>> reversedBoms = new ArrayList<>(resolvedBoms);
 		Collections.reverse(reversedBoms);
 		model.put("reversedBoms", reversedBoms);
 
@@ -387,7 +390,7 @@ public class ProjectGenerator {
 		Map<String, String> versions = new LinkedHashMap<>();
 		model.put("buildPropertiesVersions", versions.entrySet());
 		request.getBuildProperties().getVersions().forEach((k, v) ->
-				versions.put(k, v.get()));
+				versions.put(computeVersionProperty(request,k), v.get()));
 		Map<String, String> gradle = new LinkedHashMap<>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
 		request.getBuildProperties().getGradle().forEach((k, v) ->
@@ -417,6 +420,9 @@ public class ProjectGenerator {
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
 
+		model.put("bootTwoZeroAvailable", VERSION_2_0_0_BUILD_SNAPSHOT
+				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
+
 		// Gradle plugin has changed again as from 1.4.2
 		model.put("springBootPluginName",
 				(VERSION_1_4_2_M1
@@ -428,6 +434,11 @@ public class ProjectGenerator {
 
 		// New Servlet Initializer location
 		model.put("newServletInitializer", isNewServletInitializerAvailable(request));
+
+		// Java versions
+		model.put("isJava6", isJavaVersion(request, "1.6"));
+		model.put("isJava7", isJavaVersion(request, "1.7"));
+		model.put("isJava8", isJavaVersion(request, "1.8"));
 
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
@@ -442,6 +453,31 @@ public class ProjectGenerator {
 		}
 
 		return model;
+	}
+
+	private List<Map<String,String>> buildResolvedBoms(ProjectRequest request) {
+		return request.getBoms().values().stream()
+				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
+				.map(bom -> toBomModel(request, bom))
+				.collect(Collectors.toList());
+	}
+
+	private Map<String,String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
+		Map<String, String> model = new HashMap<>();
+		model.put("groupId", bom.getGroupId());
+		model.put("artifactId", bom.getArtifactId());
+		model.put("versionToken", (bom.getVersionProperty() != null
+				? "${" + computeVersionProperty(request, bom.getVersionProperty()) + "}"
+				: bom.getVersion()));
+		return model;
+	}
+
+	private String computeVersionProperty(ProjectRequest request,
+			VersionProperty property) {
+		if (isGradleBuild(request)) {
+			return property.toCamelCaseFormat();
+		}
+		return property.toStandardFormat();
 	}
 
 	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {
@@ -503,6 +539,10 @@ public class ProjectGenerator {
 
 	private static boolean isGradle3Available(Version bootVersion) {
 		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
+	}
+
+	private static boolean isJavaVersion(ProjectRequest request, String version) {
+		return request.getJavaVersion().equals(version);
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {

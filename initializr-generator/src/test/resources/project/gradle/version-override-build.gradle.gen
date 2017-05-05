@@ -16,11 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 
-jar {
-	baseName = 'demo'
-	version = '0.0.1-SNAPSHOT'
-}
-
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -28,8 +24,10 @@ repositories {
 }
 
 
-ext['spring-bar.version'] = '0.2.0.RELEASE'
-ext['spring-foo.version'] = '0.1.0.RELEASE'
+ext {
+	springBarVersion = '0.2.0.RELEASE'
+	springFooVersion = '0.1.0.RELEASE'
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')

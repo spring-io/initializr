@@ -37,16 +37,21 @@ apply plugin: '{{springBootPluginName}}'
 {{^bootOneThreeAvailable}}
 apply plugin: 'io.spring.dependency-management'
 {{/bootOneThreeAvailable}}
+{{#bootTwoZeroAvailable}}
+apply plugin: 'io.spring.dependency-management'
+{{/bootTwoZeroAvailable}}
 {{#war}}
 apply plugin: 'war'
 {{/war}}
 
-{{#war}}war{{/war}}{{^war}}jar{{/war}} {
-	baseName = '{{artifactId}}'
-	version = '{{version}}'
+version = '{{version}}'
+sourceCompatibility = {{javaVersion}}{{#kotlin}}{{#isJava8}}
+compileKotlin {
+	kotlinOptions.jvmTarget = "1.8"
 }
-
-sourceCompatibility = {{javaVersion}}
+compileTestKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}{{/isJava8}}{{/kotlin}}
 
 repositories {
 	mavenCentral()
@@ -62,9 +67,11 @@ configurations {
 {{/providedDependencies}}
 
 {{^buildPropertiesVersions.empty}}
-{{#buildPropertiesVersions}}
-ext['{{key}}'] = '{{value}}'
+ext {
+	{{#buildPropertiesVersions}}
+	{{key}} = '{{value}}'
 {{/buildPropertiesVersions}}
+}
 
 {{/buildPropertiesVersions.empty}}
 dependencies {
@@ -75,7 +82,15 @@ dependencies {
 	compile('org.codehaus.groovy:groovy')
 	{{/groovy}}
 	{{#kotlin}}
+	{{#isJava6}}
 	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	{{/isJava6}}
+	{{#isJava7}}
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}")
+	{{/isJava7}}
+	{{#isJava8}}
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+	{{/isJava8}}
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	{{/kotlin}}
 	{{#runtimeDependencies}}

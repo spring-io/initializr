@@ -49,7 +49,15 @@
 		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
+			{{#isJava6}}
 			<artifactId>kotlin-stdlib</artifactId>
+			{{/isJava6}}
+			{{#isJava7}}
+			<artifactId>kotlin-stdlib-jre7</artifactId>
+			{{/isJava7}}
+			{{#isJava8}}
+			<artifactId>kotlin-stdlib-jre8</artifactId>
+			{{/isJava8}}
 			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
@@ -174,6 +182,9 @@
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>
+					{{#isJava8}}
+					<jvmTarget>1.8</jvmTarget>
+					{{/isJava8}}
 				</configuration>
 				<executions>
 					<execution>

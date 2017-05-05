@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
+import io.spring.initializr.util.VersionProperty;
+
 /**
  * Build properties associated to a project request.
  *
@@ -41,7 +43,7 @@ public class BuildProperties {
 	/**
 	 * Version properties. Shared between the two build systems.
 	 */
-	private final TreeMap<String, Supplier<String>> versions = new TreeMap<>();
+	private final TreeMap<VersionProperty, Supplier<String>> versions = new TreeMap<>();
 
 	public Map<String, Supplier<String>> getMaven() {
 		return maven;
@@ -51,7 +53,7 @@ public class BuildProperties {
 		return gradle;
 	}
 
-	public Map<String, Supplier<String>> getVersions() {
+	public Map<VersionProperty, Supplier<String>> getVersions() {
 		return versions;
 	}
 

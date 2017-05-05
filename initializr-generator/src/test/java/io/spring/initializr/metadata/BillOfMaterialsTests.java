@@ -59,7 +59,8 @@ public class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId(), equalTo("com.example"));
 		assertThat(resolved.getArtifactId(), equalTo("bom"));
 		assertThat(resolved.getVersion(), equalTo("1.1.0"));
-		assertThat(resolved.getVersionProperty(), equalTo("bom.version"));
+		assertThat(resolved.getVersionProperty().toStandardFormat(),
+				equalTo("bom.version"));
 		assertThat(resolved.getRepositories().size(), equalTo(1));
 		assertThat(resolved.getRepositories().get(0), equalTo("repo-main"));
 		assertThat(resolved.getAdditionalBoms().size(), equalTo(1));
@@ -98,7 +99,8 @@ public class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId(), equalTo("com.example"));
 		assertThat(resolved.getArtifactId(), equalTo("bom"));
 		assertThat(resolved.getVersion(), equalTo("1.1.0"));
-		assertThat(resolved.getVersionProperty(), equalTo("example.version"));
+		assertThat(resolved.getVersionProperty().toStandardFormat(),
+				equalTo("example.version"));
 	}
 
 	@Test

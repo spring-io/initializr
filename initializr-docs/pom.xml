@@ -103,6 +103,7 @@
 										<docinfo>true</docinfo>
 										<spring-initializr-version>${project.version}</spring-initializr-version>
 										<spring-initializr-docs-version>${project.version}</spring-initializr-docs-version>
+										<spring-boot-docs-version>${spring.boot.version}</spring-boot-docs-version>
 										<snippets>${snippets.location}</snippets>
 										<github-tag>${github-tag}</github-tag>
 									</attributes>
@@ -192,25 +193,7 @@
 									</postProcess>
 								</configuration>
 							</execution>
-							<execution>
-								<id>pdf</id>
-								<goals>
-									<goal>generate-pdf</goal>
-								</goals>
-								<phase>prepare-package</phase>
-								<configuration>
-									<foCustomization>${basedir}/src/main/docbook/xsl/pdf.xsl</foCustomization>
-									<targetDirectory>${basedir}/target/docbook/pdf</targetDirectory>
-									<postProcess>
-										<copy todir="${basedir}/target/contents/reference">
-											<fileset dir="${basedir}/target/docbook">
-												<include name="**/*.pdf" />
-											</fileset>
-										</copy>
-										<move file="${basedir}/target/contents/reference/pdf/index.pdf" tofile="${basedir}/target/contents/reference/pdf/initializr-reference.pdf" />
-									</postProcess>
-								</configuration>
-							</execution>
+							
 							<execution>
 								<id>epub</id>
 								<goals>

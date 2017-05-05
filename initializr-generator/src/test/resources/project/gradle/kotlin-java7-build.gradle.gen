@@ -1,5 +1,6 @@
 buildscript {
 	ext {
+		kotlinVersion = '1.1.1'
 		springBootVersion = '1.2.3.RELEASE'
 	}
 	repositories {
@@ -8,16 +9,19 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath('io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE')
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 	}
 }
 
-apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 repositories {
 	mavenCentral()
@@ -25,14 +29,8 @@ repositories {
 
 
 dependencies {
-	compile('org.acme:foo')
+	compile('org.springframework.boot:spring-boot-starter')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.acme:bar-bom:1.0"
-		mavenBom "org.acme:biz-bom:1.0"
-		mavenBom "org.acme:foo-bom:1.0"
-	}
 }

@@ -38,8 +38,7 @@ public class GradleBuildAssert {
 	 * Validate that this generated gradle build validates against its request.
 	 */
 	public GradleBuildAssert validateProjectRequest(ProjectRequest request) {
-		return hasArtifactId(request.getArtifactId()).hasVersion(request.getVersion())
-				.hasBootVersion(request.getBootVersion())
+		return hasVersion(request.getVersion()).hasBootVersion(request.getBootVersion())
 				.hasJavaVersion(request.getJavaVersion());
 	}
 
