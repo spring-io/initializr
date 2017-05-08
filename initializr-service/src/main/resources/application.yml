@@ -1034,7 +1034,7 @@ initializr:
           version: 5.21.0
         - name: Apache Camel
           id: camel
-          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
+          versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
