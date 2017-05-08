@@ -23,13 +23,13 @@ import org.springframework.web.client.RestTemplate;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.*;
 
-// tag::test[]
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @AutoConfigureStubRunner(
-		ids = "io.spring.initializr:initializr-web",
+		ids = "io.spring.initializr:initializr-web:${project.version}",
 		workOffline = true)
-public class InitializrIntegrationTests {
+// tag::test[]
+public class ClientApplicationTests {
 
 	@Autowired
 	private StubFinder stubFinder;
