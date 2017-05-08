@@ -276,6 +276,14 @@
 									<target>
 										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 										<taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask" />
+										<var name="version-type" value="${project.version}" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp=".*\.(.*)" replace="\1" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(M)\d+" replace="MILESTONE" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(RC)\d+" replace="MILESTONE" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="BUILD-(.*)" replace="SNAPSHOT" />
+										<stringutil string="${version-type}" property="initializr-repo">
+											<lowercase />
+										</stringutil>
 										<var name="github-tag" value="v${project.version}" />
 										<propertyregex property="github-tag" override="true" input="${github-tag}" regexp=".*SNAPSHOT" replace="master" />
 									</target>

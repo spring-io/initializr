@@ -33,20 +33,20 @@ and then pull the stubs from the classpath. In a Spring Boot application, using
 Spring Cloud Contract, you can start a WireMock server and register all the stubs
 with it like this:
 
-[source,java,subs="attributes"]
+[source,java,indent=0,subs="attributes"]
 ----
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureWireMock(port = 0,
-    stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
-public class ClientApplicationTests {
+	@RunWith(SpringRunner.class)
+	@SpringBootTest
+	@AutoConfigureWireMock(port = 0,
+		stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
+	public class ClientApplicationTests {
 
-	@Value("${wiremock.server.port}")
-	private int port;
+		@Value("${wiremock.server.port}")
+		private int port;
 
-    ...
+		...
 
-}
+	}
 ----
 
 The Wiremock features come with Spring Cloud Contract Wiremock:
@@ -73,31 +73,31 @@ stubs declared as a dependency):
 
 [source,xml,indent=0,subs="attributes,specialchars"]
 ----
-	<dependencies>
-	...
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-contract-stubrunner</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+	<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-contract-stubrunner</artifactId>
+		<scope>test</scope>
+	</dependency>
 ----
 
 The test should use `@AutoConfigureStubRunner` instead:
 
-[source,java,subs="attributes,specialchars"]
+[source,java,indent=0,,subs="attributes,specialchars"]
 ----
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:{spring-initializr-version}")
-public class ClientApplicationTests {
+	@RunWith(SpringRunner.class)
+	@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+	@AutoConfigureStubRunner(
+		ids = "io.spring.initializr:initializr-web:{spring-initializr-version}",
+		repositoryRoot = "https://repo.spring.io/{initializr-repo}")
+	public class ClientApplicationTests {
 
-	@Value("${wiremock.server.port}")
-	private int port;
+		@Autowired
+		private StubFinder stubFinder;
 
-    ...
 
-}
+		...
+
+	}
 ----
 
 Here is an example of a test that retrieves the metadata of the service. The assertions
