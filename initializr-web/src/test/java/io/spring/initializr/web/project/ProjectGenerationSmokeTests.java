@@ -149,8 +149,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("org.foo");
 		page.submit();
-		zipProjectAssert(from("demo.zip")).hasBaseDir("demo").isJavaProject("org.foo",
-				"DemoApplication");
+		zipProjectAssert(from("demo.zip")).hasBaseDir("demo")
+				.isJavaProject("org.foo.demo", "DemoApplication");
 	}
 
 	@Test
@@ -159,7 +159,16 @@ public class ProjectGenerationSmokeTests
 		page.artifactId("my-project");
 		page.submit();
 		zipProjectAssert(from("my-project.zip")).hasBaseDir("my-project")
-				.isJavaProject("com.example", "MyProjectApplication");
+				.isJavaProject("com.example.myproject", "MyProjectApplication");
+	}
+
+	@Test
+	public void customArtifactIdWithInvalidPackageNameIsHandled() throws Exception {
+		HomePage page = toHome();
+		page.artifactId("42my-project");
+		page.submit();
+		zipProjectAssert(from("42my-project.zip")).hasBaseDir("42my-project")
+				.isJavaProject("com.example.myproject", "Application");
 	}
 
 	@Test
@@ -333,7 +342,7 @@ public class ProjectGenerationSmokeTests
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("my-project.zip"));
 		projectAssert.hasBaseDir("my-project").isMavenProject()
-				.isJavaProject("com.example.acme", "MyProjectApplication")
+				.isJavaProject("com.example.acme.myproject", "MyProjectApplication")
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasGroupId("com.example.acme").hasArtifactId("my-project")
 				.hasDependenciesCount(2).hasSpringBootStarterRootDependency()

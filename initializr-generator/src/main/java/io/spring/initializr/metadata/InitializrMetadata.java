@@ -297,12 +297,10 @@ public class InitializrMetadata {
 			if (value != null) {
 				return value;
 			}
-			else if(this.groupId.getContent() != null && this.artifactId.getContent() != null) {
-				return this.groupId.getContent()
-						.concat(".")
-						.concat(this.artifactId.getContent())
-						.replaceAll("-", "")
-						.replaceAll("\\.[0-9]+", ".");
+			else if (this.groupId.getContent() != null
+					&& this.artifactId.getContent() != null) {
+				return InitializrConfiguration.cleanPackageName(
+						this.groupId.getContent() + "." + this.artifactId.getContent());
 			}
 			return null;
 		}

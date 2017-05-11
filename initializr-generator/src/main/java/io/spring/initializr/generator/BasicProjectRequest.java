@@ -19,6 +19,8 @@ package io.spring.initializr.generator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 /**
  * The base settings of a project request. Only these can be bound by user's
  * input.
@@ -142,7 +144,13 @@ public class BasicProjectRequest {
 	}
 
 	public String getPackageName() {
-		return packageName;
+		if (StringUtils.hasText(packageName)) {
+			return packageName;
+		}
+		if (StringUtils.hasText(groupId) && StringUtils.hasText(artifactId)) {
+			return getGroupId() + "." + getArtifactId();
+		}
+		return null;
 	}
 
 	public void setPackageName(String packageName) {

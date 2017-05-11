@@ -28,6 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -39,23 +40,22 @@ public class ProjectRequestTests {
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none();
 
+	private InitializrMetadata metadata = InitializrMetadataTestBuilder
+			.withDefaults().build();
+
 	@Test
-	public void initializeProjectRequest() {
-		InitializrMetadata metadata = InitializrMetadataBuilder.create().build();
+	public void initializeGroupIdAndArtifactId() {
+		metadata = InitializrMetadataBuilder.create().build();
 		metadata.getGroupId().setContent("org.acme");
 		metadata.getArtifactId().setContent("my-project");
-		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+		ProjectRequest request = initProjectRequest();
 		assertEquals("org.acme", request.getGroupId());
 		assertEquals("my-project", request.getArtifactId());
 	}
 
 	@Test
-	public void initializeProjectRequestWithDefaults() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
-		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+	public void initializeSetsMetadataDefaults() {
+		ProjectRequest request = initProjectRequest();
 		assertEquals(metadata.getName().getContent(), request.getName());
 		assertEquals(metadata.getTypes().getDefault().getId(), request.getType());
 		assertEquals(metadata.getDescription().getContent(), request.getDescription());
@@ -70,10 +70,9 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolve() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "web", "security", "spring-data").build();
-
+		ProjectRequest request = initProjectRequest();
 		request.setType("maven-project");
 		request.getStyle().addAll(Arrays.asList("web", "spring-data"));
 		request.resolve(metadata);
@@ -84,10 +83,9 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveWithDependencies() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "web", "security", "spring-data").build();
-
+		ProjectRequest request = initProjectRequest();
 		request.setType("maven-project");
 		request.getDependencies().addAll(Arrays.asList("web", "spring-data"));
 		request.resolve(metadata);
@@ -98,10 +96,10 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveFullMetadata() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", createDependency("org.foo", "acme", "1.2.0"))
 				.build();
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:acme");
 		request.resolve(metadata);
 		assertDependency(request.getResolvedDependencies().get(0), "org.foo", "acme",
@@ -110,10 +108,9 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveUnknownSimpleId() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "org.foo:bar").build();
-
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("org.foo:bar", "foo-bar"));
 
 		thrown.expect(InvalidProjectRequestException.class);
@@ -124,10 +121,9 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveUnknownDependency() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "org.foo:bar").build();
-
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:acme"); // does not exist
 
 		thrown.expect(InvalidProjectRequestException.class);
@@ -138,12 +134,11 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveDependencyInRange() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
 		dependency.setVersionRange("[1.0.1.RELEASE, 1.2.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", dependency).build();
-
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:bar");
 		request.setBootVersion("1.1.2.RELEASE");
 		request.resolve(metadata);
@@ -151,12 +146,11 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveDependencyNotInRange() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
 		dependency.setVersionRange("[1.0.1.RELEASE, 1.2.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", dependency).build();
-
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:bar");
 		request.setBootVersion("0.9.9.RELEASE");
 
@@ -173,10 +167,10 @@ public class ProjectRequestTests {
 				"[1.0.0.RELEASE, 1.1.0.RELEASE)", null, null, "0.1.0.RELEASE"));
 		dependency.getMappings().add(Mapping.create(
 				"1.1.0.RELEASE", null, null, "0.2.0.RELEASE"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", dependency).build();
 
-		ProjectRequest request = new ProjectRequest();
+		ProjectRequest request = initProjectRequest();
 		request.setBootVersion("1.0.5.RELEASE");
 		request.getStyle().add("org.foo:bar");
 		request.resolve(metadata);
@@ -193,31 +187,25 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveBuild() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		ProjectRequest request = initProjectRequest();
 		request.setType("gradle-project");
-
 		request.resolve(metadata);
 		assertEquals("gradle", request.getBuild());
 	}
 
 	@Test
 	public void resolveBuildNoTag() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addType("foo", false, "/foo.zip", null, null).build();
+		ProjectRequest request = initProjectRequest();
 		request.setType("foo");
-
 		request.resolve(metadata);
 		assertNull(request.getBuild());
 	}
 
 	@Test
 	public void resolveUnknownType() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		ProjectRequest request = initProjectRequest();
 		request.setType("foo-project");
 
 		thrown.expect(InvalidProjectRequestException.class);
@@ -227,10 +215,8 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveApplicationNameWithNoName() {
-		ProjectRequest request = new ProjectRequest();
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
-
+		ProjectRequest request = initProjectRequest();
+		request.setName(null);
 		request.resolve(metadata);
 		assertEquals(metadata.getConfiguration().getEnv().getFallbackApplicationName(),
 				request.getApplicationName());
@@ -238,60 +224,96 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveApplicationName() {
-		ProjectRequest request = new ProjectRequest();
+		ProjectRequest request = initProjectRequest();
 		request.setName("Foo2");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
-
 		request.resolve(metadata);
 		assertEquals("Foo2Application", request.getApplicationName());
 	}
 
 	@Test
 	public void resolveApplicationNameWithApplicationNameSet() {
-		ProjectRequest request = new ProjectRequest();
+		ProjectRequest request = initProjectRequest();
 		request.setName("Foo2");
 		request.setApplicationName("MyApplicationName");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
 
 		request.resolve(metadata);
 		assertEquals("MyApplicationName", request.getApplicationName());
 	}
 
 	@Test
-	public void cleanPackageNameWithNoName() {
+	public void packageNameInferredByGroupIdAndArtifactId() {
+		ProjectRequest request = initProjectRequest();
+		request.setGroupId("org.acme");
+		request.setArtifactId("foo");
+		request.resolve(metadata);
+		assertThat(request.getPackageName()).isEqualTo("org.acme.foo");
+	}
+
+	@Test
+	public void packageNameInferredByGroupIdAndCompositeArtifactId() {
+		ProjectRequest request = initProjectRequest();
+		request.setGroupId("org.acme");
+		request.setArtifactId("foo-bar");
+		request.resolve(metadata);
+		assertThat(request.getPackageName()).isEqualTo("org.acme.foobar");
+	}
+
+	@Test
+	public void packageNameUseFallbackIfGroupIdNotSet() {
+		ProjectRequest request = initProjectRequest();
+		request.setGroupId(null);
+		request.setArtifactId("foo");
+		request.resolve(metadata);
+		assertThat(request.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	public void packageNameUseFallbackIfArtifactIdNotSet() {
+		ProjectRequest request = initProjectRequest();
+		request.setGroupId("org.acme");
+		request.setArtifactId(null);
+		request.resolve(metadata);
+		assertThat(request.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	public void cleanPackageNameLeadingNumbers() {
 		ProjectRequest request = new ProjectRequest();
+		request.setPackageName("org.foo.42bar");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.build();
 
+		request.resolve(metadata);
+		assertThat(request.getPackageName()).isEqualTo("org.foo.bar");
+	}
+
+	@Test
+	public void cleanPackageNameWithNoName() {
+		ProjectRequest request = initProjectRequest();
 		request.resolve(metadata);
 		assertEquals(metadata.getPackageName().getContent(), request.getPackageName());
 	}
 
 	@Test
 	public void cleanPackageName() {
-		ProjectRequest request = new ProjectRequest();
+		ProjectRequest request = initProjectRequest();
 		request.setPackageName("com:foo  bar");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
-
 		request.resolve(metadata);
 		assertEquals("com.foo.bar", request.getPackageName());
 	}
 
 	@Test
 	public void resolveAdditionalBoms() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getAdditionalBoms().add("bar-bom");
 		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
 				"1.1.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
 				.addDependencyGroup("test", dependency).build();
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("foo");
 		request.resolve(metadata);
 		assertEquals(1, (request.getResolvedDependencies().size()));
@@ -302,7 +324,6 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveAdditionalBomsDuplicates() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		Dependency anotherDependency = Dependency.withId("bar");
@@ -311,9 +332,10 @@ public class ProjectRequestTests {
 		bom.getAdditionalBoms().add("bar-bom");
 		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
 				"1.1.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
 				.addDependencyGroup("test", dependency, anotherDependency).build();
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("foo", "bar"));
 		request.resolve(metadata);
 		assertEquals(2, request.getResolvedDependencies().size());
@@ -324,17 +346,17 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveAdditionalRepositories() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getRepositories().add("bar-repo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom)
 				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
 				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
 				.addDependencyGroup("test", dependency).build();
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("foo");
 		request.resolve(metadata);
 		assertEquals(1, request.getResolvedDependencies().size());
@@ -350,7 +372,6 @@ public class ProjectRequestTests {
 
 	@Test
 	public void resolveAdditionalRepositoriesDuplicates() {
-		ProjectRequest request = new ProjectRequest();
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");
@@ -358,11 +379,12 @@ public class ProjectRequestTests {
 		bom.getRepositories().add("bar-repo");
 		Dependency anotherDependency = Dependency.withId("bar");
 		anotherDependency.setRepository("bar-repo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom)
 				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
 				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
 				.addDependencyGroup("test", dependency, anotherDependency).build();
+		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("foo", "bar"));
 		request.resolve(metadata);
 		assertEquals(2, request.getResolvedDependencies().size());
@@ -374,6 +396,12 @@ public class ProjectRequestTests {
 		assertEquals(
 				metadata.getConfiguration().getEnv().getRepositories().get("bar-repo"),
 				request.getRepositories().get("bar-repo"));
+	}
+
+	private ProjectRequest initProjectRequest() {
+		ProjectRequest request = new ProjectRequest();
+		request.initialize(this.metadata);
+		return request;
 	}
 
 	private static void assertBootStarter(Dependency actual, String name) {

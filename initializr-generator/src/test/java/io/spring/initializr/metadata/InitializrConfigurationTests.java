@@ -124,7 +124,7 @@ public class InitializrConfigurationTests {
 
 	@Test
 	public void generatePackageNameMultipleDashers() {
-		assertEquals("com.foo", this.properties.cleanPackageName("com--foo", "com.example"));
+		assertEquals("com.foobar", this.properties.cleanPackageName("com.foo--bar", "com.example"));
 	}
 
 	@Test
