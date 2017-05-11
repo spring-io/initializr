@@ -156,12 +156,24 @@ $(function () {
             engine.add(data.dependencies);
         });
     };
+    var generatePackageName = function() {
+        var groupId = $("#groupId").val();
+        var artifactId = $("#artifactId").val();
+        var package = groupId.concat(".").concat(artifactId)
+            .replace(/-/g, '');
+        $("#packageName").val(package);
+    };
     refreshDependencies($("#bootVersion").val());
     $("#type").on('change', function () {
         $("#form").attr('action', $(this.options[this.selectedIndex]).attr('data-action'))
     });
+    $("#groupId").on("change", function() {
+        generatePackageName();
+    });
     $("#artifactId").on('change', function () {
+        $("#name").val($(this).val());
         $("#baseDir").attr('value', this.value)
+        generatePackageName();
     });
     $("#bootVersion").on("change", function (e) {
         refreshDependencies(this.value);
@@ -235,12 +247,6 @@ $(function () {
         $("#dependencies input[value='" + id + "']").prop('checked', false);
         removeTag(id);
     });
-    $("#groupId").on("change", function() {
-        $("#packageName").val($(this).val());
-    });
-    $("#artifactId").on("change", function() {
-        $("#name").val($(this).val());
-    });
     $("#dependencies input").bind("change", function () {
         var value = $(this).val()
         if ($(this).prop('checked')) {
@@ -266,7 +272,6 @@ $(function () {
             e.returnValue = false;
         }
     });
-
     applyParams();
     if ("onhashchange" in window) {
         window.onhashchange = function() {
@@ -276,5 +281,4 @@ $(function () {
             applyParams();
         }
     }
-
 });

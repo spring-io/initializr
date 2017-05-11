@@ -76,7 +76,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/DemoApplication." + extension)
+				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplication." + expectedExtension));
 	}
@@ -88,7 +88,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/DemoApplicationTests." + extension)
+				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTests." + expectedExtension));
 	}
@@ -100,7 +100,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/DemoApplicationTests." + extension)
+				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTestsWeb." + expectedExtension));
 	}
@@ -129,7 +129,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		}
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/ServletInitializer." + extension)
+				"src/main/" + language + "/com/example/demo/ServletInitializer." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/" + expectedOutput + "/ServletInitializer." + expectedExtension));
 	}
@@ -142,7 +142,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/DemoApplicationTests." + extension)
+				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTests." + expectedExtension));
 	}
@@ -155,7 +155,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/DemoApplicationTests." + extension)
+				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
 	}
@@ -168,7 +168,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/DemoApplicationTests." + extension)
+				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
 	}

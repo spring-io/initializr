@@ -97,7 +97,7 @@ public class InitializrConfiguration {
 		if (!StringUtils.hasText(packageName)) {
 			return defaultPackageName;
 		}
-		String candidate = String.join(".", packageName.trim().split("\\W+"));
+		String candidate = cleanPackageName(packageName);
 		if (hasInvalidChar(candidate.replace(".", ""))
 				|| env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
@@ -105,6 +105,11 @@ public class InitializrConfiguration {
 		else {
 			return candidate;
 		}
+	}
+
+	static String cleanPackageName(String packageName) {
+		return String.join(".", packageName.trim().replaceAll("-", "").split("\\W+"))
+				.replaceAll("\\.[0-9]+", ".");
 	}
 
 	private static String unsplitWords(String text) {
@@ -385,7 +390,7 @@ public class InitializrConfiguration {
 			public ParentPom resolveParentPom(String bootVersion) {
 				return StringUtils.hasText(parent.groupId) ? parent
 						: new ParentPom("org.springframework.boot",
-								"spring-boot-starter-parent", bootVersion);
+						"spring-boot-starter-parent", bootVersion);
 			}
 
 			public static class ParentPom {

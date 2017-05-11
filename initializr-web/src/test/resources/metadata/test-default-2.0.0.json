@@ -189,6 +189,6 @@
   },
   "packageName": {
     "type": "text",
-    "default": "com.example"
+    "default": "com.example.demo"
   }
 }
