@@ -542,7 +542,7 @@ initializr:
         - name: Reactive MongoDB
           id: data-mongodb-reactive
           description: MongoDB NoSQL Database, including spring-data-mongodb and the reactive driver
-          versionRange: 2.0.0.BUILD-SNAPSHOT
+          versionRange: 2.0.0.M1
           weight: 50
           links:
             - rel: reference
@@ -565,7 +565,7 @@ initializr:
         - name: Reactive Cassandra
           id: data-cassandra-reactive
           description: Cassandra NoSQL Database, including spring-data-cassandra and the reactive driver
-          versionRange: 2.0.0.BUILD-SNAPSHOT
+          versionRange: 2.0.0.M1
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra
@@ -605,7 +605,7 @@ initializr:
         - name: Reactive Redis
           id: data-redis-reactive
           description: Redis key-value data store, including spring-data-redis and Lettuce
-          versionRange: 2.0.0.BUILD-SNAPSHOT
+          versionRange: 2.0.0.M1
           links:
             - rel: guide
               href: https://spring.io/guides/gs/messaging-redis/
