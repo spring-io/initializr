@@ -228,7 +228,7 @@ initializr:
               description: Building REST services with Spring
         - name: Reactive Web
           id: webflux
-          versionRange: 2.0.0.BUILD-SNAPSHOT
+          versionRange: 2.0.0.M1
           description: Reactive web development with Netty and Spring WebFlux
           weight: 90
         - name: Websocket
