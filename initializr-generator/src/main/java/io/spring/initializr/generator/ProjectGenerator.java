@@ -76,7 +76,7 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_1_5_0_M1 = Version.parse("1.5.0.M1");
 
-	private static final Version VERSION_2_0_0_BUILD_SNAPSHOT = Version.parse("2.0.0.BUILD-SNAPSHOT");
+	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -420,7 +420,7 @@ public class ProjectGenerator {
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
 
-		model.put("bootTwoZeroAvailable", VERSION_2_0_0_BUILD_SNAPSHOT
+		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
