@@ -1148,11 +1148,11 @@ initializr:
     - name: Java
       id: java
       default: true
-    - name: Groovy
-      id: groovy
-      default: false
     - name: Kotlin
       id: kotlin
+      default: false
+    - name: Groovy
+      id: groovy
       default: false
   bootVersions:
     - name : Latest SNAPSHOT

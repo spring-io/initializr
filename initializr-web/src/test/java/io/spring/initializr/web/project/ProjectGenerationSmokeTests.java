@@ -174,7 +174,6 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void createGroovyProject() throws Exception {
 		HomePage page = toHome();
-		page.advanced();
 		page.language("groovy");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
@@ -187,7 +186,6 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void createKotlinProject() throws Exception {
 		HomePage page = toHome();
-		page.advanced();
 		page.language("kotlin");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
@@ -238,8 +236,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
-		page.advanced();
 		page.language("kotlin");
+		page.advanced();
 		page.name("My project");
 		page.description("A description for my Kotlin project");
 		page.packageName("com.example.foo");
@@ -261,8 +259,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
-		page.advanced();
 		page.language("groovy");
+		page.advanced();
 		page.name("My project");
 		page.description("A description for my Groovy project");
 		page.packageName("com.example.foo");
