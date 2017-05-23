@@ -31,6 +31,15 @@ body, h1, h2, h3 {
     margin: 1em 0;
 }
 
+.rwd-line {
+    display: block;
+    margin-top: 0.5em;
+}
+
+@media screen and (min-width: 992px){
+    .rwd-line { display: inline; }
+}
+
 #starters {
     min-height: 3em;
 }
