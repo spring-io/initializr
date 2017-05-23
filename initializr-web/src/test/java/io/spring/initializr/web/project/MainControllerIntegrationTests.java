@@ -372,19 +372,6 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void homeIsForm() {
-		String body = htmlHome();
-		assertTrue("Wrong body:\n" + body, body.contains("action=\"/starter.zip\""));
-		assertTrue("Wrong body:\n" + body, body.contains("Web dependency description"));
-		assertFalse("Wrong body:\n" + body, body.contains("${"));
-		assertFalse("Wrong body:\n" + body, body.contains("{{"));
-		assertFalse("Wrong body:\n" + body, body.contains("}}"));
-		assertTrue("Wrong body:\n" + body, body.contains("<option value=\"groovy\">"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<option value=\"java\" selected>"));
-	}
-
-	@Test
 	public void homeIsJson() {
 		String body = invokeHome(null, (String[]) null).getBody();
 		assertTrue("Wrong body:\n" + body, body.contains("\"dependencies\""));
