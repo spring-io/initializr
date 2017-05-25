@@ -86,6 +86,11 @@ initializr:
         artifactId: keycloak-adapter-bom
         versionProperty: keycloak.version
         version: 3.1.0.Final
+      infinispan-bom:
+        groupId: org.infinispan
+        artifactId: infinispan-bom
+        versionProperty: infinispan.version
+        version: 9.0.0.Final
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -635,6 +640,19 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-elasticsearch
+        - name: Infinispan
+          id: infinispan
+          description: Infinispan is a distributed in-memory key/value data store with optional schema
+          groupId: org.infinispan
+          artifactId: infinispan-spring-boot-starter
+          version: 1.0.0.Final
+          versionRange: "[1.5.1.RELEASE,2.0.0.M1)"
+          bom: infinispan-bom
+          links:
+            - rel: reference
+              href: http://infinispan.org/docs/stable/user_guide/user_guide.html#using_infinispan_with_spring_boot
+            - rel: starter guide
+              href: https://github.com/infinispan/infinispan-spring-boot/blob/master/README.adoc
     - name: Cloud Core
       bom: cloud-bom
       versionRange: 1.2.3.RELEASE
