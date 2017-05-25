@@ -206,6 +206,10 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
               version: 1.16.6
           starter: false
+        - name: LDAP
+          id: data-ldap
+          description: Directory database, including spring-data-ldap
+          versionRange: 1.5.0.RC1
     - name: Web
       content:
         - name: Web
