@@ -260,7 +260,12 @@ public class ProjectRequest extends BasicProjectRequest {
 		if ("war".equals(getPackaging())) {
 			if (!hasWebFacet()) {
 				// Need to be able to bootstrap the web app
-				resolvedDependencies.add(metadata.getDependencies().get("web"));
+				Dependency web = metadata.getDependencies().get("web");
+				if (web == null)
+				{
+					web = new Dependency().asSpringBootStarter("web");
+				}
+				resolvedDependencies.add(web);
 				facets.add("web");
 			}
 			// Add the tomcat starter in provided scope
