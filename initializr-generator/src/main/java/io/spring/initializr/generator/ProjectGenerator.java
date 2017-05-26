@@ -22,22 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.*;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
@@ -244,7 +234,16 @@ public class ProjectGenerator {
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
+
 		writeText(new File(resources, "application.properties"), "");
+
+		if (!request.getConfigurations().isEmpty()) {
+		    request.getConfigurations().forEach((type, configurations) -> {
+                final String properties = new String(doGenerateProperties(type, configurations));
+                writeText(new File(resources, type.name().toLowerCase() + ".properties"), properties);
+            });
+		}
+
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
@@ -255,7 +254,13 @@ public class ProjectGenerator {
 
 	}
 
-	/**
+    private byte[] doGenerateProperties(Configuration.Type type, Set<Configuration> configurations) {
+        final HashMap<String, Object> model = new HashMap<>();
+        model.put("properties", configurations);
+        return templateRenderer.process("application.properties", model).getBytes();
+    }
+
+    /**
 	 * Create a distribution file for the specified project structure directory and
 	 * extension
 	 */
@@ -450,6 +455,10 @@ public class ProjectGenerator {
 		}
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
+		}
+
+		if (!request.getConfigurations().isEmpty()) {
+			request.getConfigurations().forEach((type, configurations) -> model.put(type.name().toLowerCase(), configurations));
 		}
 
 		return model;

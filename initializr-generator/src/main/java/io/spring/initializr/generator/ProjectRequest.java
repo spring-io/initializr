@@ -16,10 +16,15 @@
 
 package io.spring.initializr.generator;
 
+import io.spring.initializr.metadata.Configuration;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.metadata.BillOfMaterials;
@@ -60,6 +65,8 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	private List<String> facets = new ArrayList<>();
 	private String build;
+
+	private Map<Configuration.Type, Set<Configuration>> configurations = new HashMap<>();
 
 	public List<Dependency> getResolvedDependencies() {
 		return resolvedDependencies;
@@ -159,7 +166,14 @@ public class ProjectRequest extends BasicProjectRequest {
 				this.repositories.computeIfAbsent(repositoryId, s -> metadata
 						.getConfiguration().getEnv().getRepositories().get(s));
 			}
-		});
+            if (!it.getConfigurations().isEmpty()) {
+                final Map<Configuration.Type, List<Configuration>> groupedConfigurations = it.getConfigurations().stream().collect(Collectors.groupingBy(Configuration::getType));
+                groupedConfigurations.forEach((type, configurations) -> this.configurations.merge(type, new HashSet<>(configurations), (configurations1, configurations2) -> {
+                    configurations1.addAll(configurations2);
+                    return configurations1;
+                }));
+            }
+        });
 		if (getType() != null) {
 			Type type = metadata.getTypes().get(getType());
 			if (type == null) {
@@ -316,4 +330,9 @@ public class ProjectRequest extends BasicProjectRequest {
 				+ (build != null ? "build=" + build : "") + "]";
 	}
 
+
+    public Map<Configuration.Type, Set<Configuration>> getConfigurations()
+    {
+        return configurations;
+    }
 }

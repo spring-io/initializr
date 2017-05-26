@@ -18,7 +18,9 @@ package io.spring.initializr.metadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -79,6 +81,9 @@ public class Dependency extends MetadataElement implements Describable {
 	private List<String> keywords = new ArrayList<>();
 
 	private List<Link> links = new ArrayList<>();
+
+	private List<Configuration> configurations = new ArrayList<>();
+
 
 	public Dependency() {
 	}
@@ -398,6 +403,16 @@ public class Dependency extends MetadataElement implements Describable {
 				", groupId='" + groupId + '\'' +
 				", artifactId='" + artifactId + '\'' +
 				", version='" + version + '\'' + '}';
+	}
+
+
+	public List<Configuration> getConfigurations()
+	{
+		return configurations;
+	}
+
+	public void setConfigurations(List<Configuration> configurations) {
+		this.configurations = configurations;
 	}
 
 	/**
