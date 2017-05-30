@@ -360,6 +360,9 @@ initializr:
           artifactId: keycloak-spring-boot-starter
           versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
           bom: keycloak-bom
+          links:
+            - rel: reference
+              href: https://keycloak.gitbooks.io/documentation/securing_apps/topics/oidc/java/spring-boot-adapter.html
     - name: Template Engines
       content:
         - name: Freemarker
