@@ -997,6 +997,10 @@ initializr:
               description: Integrating Data
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration
+        - name: Quartz Scheduler
+          id: quartz
+          versionRange: 2.0.0.M2
+          description: Schedule jobs using Quartz
         - name: Activiti
           id: activiti-basic
           versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
