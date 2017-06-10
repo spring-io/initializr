@@ -3,7 +3,7 @@
 set -e
 # set -x
 
-VERSION="1.4.6.RELEASE"
+VERSION="1.4.7.RELEASE"
 if [ -z "${PREFIX}" ]; then
     PREFIX="/usr/local/bin"
 fi
