@@ -215,7 +215,7 @@ If you want to run the smoke tests using Geb, you need to enable the
 
 [indent=0]
 ----
-    $ mvn verify -PsmokeTests
+    $ ./mvnw verify -PsmokeTests
 ----
 
 If you want to build both the library and the service, you can enable the `full`
@@ -236,7 +236,7 @@ other Spring Boot app from the `initializr-service` directory:
 [indent=0]
 ----
     $ cd initializr-service
-    $ ./mvnw spring-boot:run
+    $ ../mvnw spring-boot:run
 ----
 
 [[run-ide]]
@@ -271,7 +271,7 @@ that the jar has been created:
 [indent=0]
 ----
     $ cd initializr-service
-    $ ./mvnw package
+    $ ../mvnw package
 ----
 
 Once the jar has been created, you can push the application:
