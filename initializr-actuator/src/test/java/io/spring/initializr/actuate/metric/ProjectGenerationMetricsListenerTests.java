@@ -94,6 +94,19 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
+	public void resolvedWebDependencyWithoutWebDependencyInMetadata() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("core", "security", "spring-data").build();
+		ProjectRequest request = initialize();
+		request.getStyle().add("spring-data");
+		request.setPackaging("war");
+		request.resolve(metadata);
+		fireProjectGeneratedEvent(request);
+		metricsAssert.hasValue(1, "initializr.dependency.web",
+				"initializr.dependency.spring-data");
+	}
+
+	@Test
 	public void aliasedDependencyUseStandardId() {
 		Dependency dependency = new Dependency();
 		dependency.setId("foo");
