@@ -91,6 +91,19 @@ initializr:
     kotlin:
       version: 1.1.2-5
   dependencies:
+    - name: Azure
+      groupId: com.microsoft.azure
+      content:
+        - name: Azure Storage
+          id: azure-storage
+          artifactId: azure-storage-spring-boot-starter
+          description: Spring boot starter for Azure Storage service
+          version: 0.1.0
+        - name: Document DB
+          id: document-db
+          artifactId: azure-documentdb-spring-boot-starter
+          description: Spring boot starter for Azure Document DB service
+          version: 0.1.0
     - name: Core
       content:
         - name: Security
