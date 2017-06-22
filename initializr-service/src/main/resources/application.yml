@@ -92,15 +92,16 @@ initializr:
       version: 1.1.2-5
   dependencies:
     - name: Azure
-      groupId: com.microsoft.azure
       content:
         - name: Azure Storage
           id: azure-storage
+          groupId: com.microsoft.azure
           artifactId: azure-storage-spring-boot-starter
           description: Spring boot starter for Azure Storage service
           version: 0.1.0
         - name: Document DB
           id: document-db
+          groupId: com.microsoft.azure
           artifactId: azure-documentdb-spring-boot-starter
           description: Spring boot starter for Azure Document DB service
           version: 0.1.0
