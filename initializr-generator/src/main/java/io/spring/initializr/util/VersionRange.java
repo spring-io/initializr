@@ -55,6 +55,10 @@ public class VersionRange {
 		this.higherInclusive = higherInclusive;
 	}
 
+	public VersionRange(Version startingVersion) {
+		this(startingVersion, true, null, false);
+	}
+
 	/**
 	 * Specify if the {@link Version} matches this range. Returns {@code true}
 	 * if the version is contained within this range, {@code false} otherwise.
