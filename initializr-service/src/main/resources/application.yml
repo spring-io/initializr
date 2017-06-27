@@ -97,13 +97,13 @@ initializr:
           id: azure-storage
           groupId: com.microsoft.azure
           artifactId: azure-storage-spring-boot-starter
-          description: Spring boot starter for Azure Storage service
+          description: Spring Boot starter for Azure Storage service
           version: 0.1.0
         - name: Document DB
           id: document-db
           groupId: com.microsoft.azure
           artifactId: azure-documentdb-spring-boot-starter
-          description: Spring boot starter for Azure Document DB service
+          description: Spring Boot starter for Azure Document DB service
           version: 0.1.0
     - name: Core
       content:
