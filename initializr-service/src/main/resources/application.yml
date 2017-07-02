@@ -883,30 +883,6 @@ initializr:
           description: Messaging on AWS with SQS and spring-cloud-aws-messaging
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-aws-messaging
-    - name: Cloud Cluster
-      bom: spring-cloud
-      versionRange: "[1.3.0.M4,1.4.0.RC1)"
-      content:
-        - name: Cluster Redis
-          id: cloud-cluster-redis
-          description: Leadership election and global state with Redis and spring-cloud-cluster-redis
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-cluster-redis
-        - name: Cluster Zookeeper
-          id: cloud-cluster-zookeeper
-          description: Leadership election and global state with Zookeeper and spring-cloud-cluster-zookeeper
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-cluster-zookeeper
-        - name: Cluster Hazelcast
-          id: cloud-cluster-hazelcast
-          description: Leadership election and global state with Hazelcast and spring-cloud-cluster-hazelcast
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-cluster-hazelcast
-        - name: Cluster Etcd
-          id: cloud-cluster-etcd
-          description: Leadership election and global state with Etcd and spring-cloud-cluster-etcd
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-cluster-etcd
     - name: Cloud Contract
       bom: spring-cloud
       versionRange: 1.4.0.RC1
