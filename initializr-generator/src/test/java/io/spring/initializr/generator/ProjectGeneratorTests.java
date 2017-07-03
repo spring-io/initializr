@@ -739,7 +739,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 		// First after processor that flips Spring Boot version
 		projectGenerator.setRequestResolver(new ProjectRequestResolver(
-				Collections.singletonList(new ProjectRequestPostProcessorAdapter() {
+				Collections.singletonList(new ProjectRequestPostProcessor() {
 					@Override
 					public void postProcessBeforeResolution(ProjectRequest r,
 							InitializrMetadata m) {

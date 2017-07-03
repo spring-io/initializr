@@ -17,7 +17,7 @@
 package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.generator.ProjectRequestPostProcessorAdapter;
+import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.util.Version;
 
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-class SpringBoot2RequestPostProcessor extends ProjectRequestPostProcessorAdapter {
+class SpringBoot2RequestPostProcessor implements ProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 

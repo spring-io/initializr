@@ -37,7 +37,7 @@ public interface ProjectRequestPostProcessor {
 	 * @param metadata the metadata to use to resolve this request
 	 * @see ProjectRequest#resolve(InitializrMetadata)
 	 */
-	void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata);
+	default void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata) {}
 
 	/**
 	 * Apply this post processor to the given {@code ProjectRequest} <i>after</i> it has
@@ -48,6 +48,6 @@ public interface ProjectRequestPostProcessor {
 	 * @param request an resolved {@code ProjectRequest}
 	 * @param metadata the metadata that were used to resolve this request
 	 */
-	void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata);
+	default void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {}
 
 }
