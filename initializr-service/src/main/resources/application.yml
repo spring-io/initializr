@@ -22,6 +22,13 @@ spring:
 initializr:
   env:
     boms:
+      azure:
+        groupId: com.microsoft.azure
+        artifactId: azure-spring-boot-bom
+        versionProperty: azure.version
+        mappings:
+          - versionRange: "1.5.4.RELEASE"
+            version: 0.1.9
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -968,6 +975,55 @@ initializr:
           description: Hystrix circuit breaker on Pivotal Cloud Foundry
           groupId: io.pivotal.spring.cloud
           artifactId: spring-cloud-services-starter-circuit-breaker
+    - name: Azure
+      bom: azure
+      versionRange: 1.5.4.RELEASE
+      content:
+        - name: Azure Support
+          id: azure-support
+          groupId: com.microsoft.azure
+          artifactId: azure-spring-boot
+          description: Auto-configuration for Azure Services (service bus, storage, active directory, cosmos DB, key vault and more)
+          links:
+            - rel: reference
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot
+              description: Reference doc
+        - name: Azure Active Directory
+          id: azure-active-directory
+          groupId: com.microsoft.azure
+          artifactId: azure-active-directory-spring-boot-starter
+          description: Spring Security integration with Azure Active Directory for authentication
+          links:
+            - rel: guide
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-active-directory-spring-boot-sample
+              description: Using Active Directory
+            - rel: reference
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-active-directory-spring-boot-starter
+              description: Reference doc
+        - name: Azure Key Vault
+          id: azure-keyvault-secrets
+          groupId: com.microsoft.azure
+          artifactId: azure-keyvault-secrets-spring-boot-starter
+          description: Spring value annotation integration with Azure Key Vault Secrets
+          links:
+            - rel: guide
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-keyvault-secrets-spring-boot-sample
+              description: Using Key Vault
+            - rel: reference
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-keyvault-secrets-spring-boot-starter
+              description: Reference doc
+        - name: Azure Storage
+          id: azure-storage
+          groupId: com.microsoft.azure
+          artifactId: azure-storage-spring-boot-starter
+          description: Spring Boot starter for Azure Storage service
+          links:
+            - rel: guide
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-storage-spring-boot-sample
+              description: Using Azure Storage
+            - rel: reference
+              href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-storage-spring-boot-starter
+              description: Reference doc
     - name: Social
       content:
         - name: Facebook
