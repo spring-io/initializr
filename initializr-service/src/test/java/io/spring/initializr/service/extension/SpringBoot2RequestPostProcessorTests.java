@@ -18,18 +18,12 @@ package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Tests for {@link SpringBoot2RequestPostProcessor}.
  *
  * @author Stephane Nicoll
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
 public class SpringBoot2RequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
 

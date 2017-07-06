@@ -19,18 +19,12 @@ package io.spring.initializr.service.extension;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Tests for {@link ReactorTestRequestPostProcessor}.
  *
  * @author Stephane Nicoll
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
 public class ReactorTestRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
 
