@@ -189,10 +189,13 @@ initializr:
         - name: Session
           id: session
           groupId: org.springframework.session
-          artifactId: spring-session
+          artifactId: spring-session-core
           description: API and implementations for managing a user’s session information
-          versionRange: "[1.3.0.RELEASE,2.0.0.M2]"
+          versionRange: "1.3.0.RELEASE"
           starter: false
+          mappings:
+            - versionRange: "[1.3.0.RELEASE,2.0.0.M2]"
+              artifactId: spring-session
         - name: Retry
           id: retry
           groupId: org.springframework.retry
