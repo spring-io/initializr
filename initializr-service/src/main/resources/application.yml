@@ -39,7 +39,10 @@ initializr:
           - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Dalston.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
-          - versionRange: "2.0.0.M1"
+          - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
+            version: Finchley.M1
+            repositories: spring-milestones
+          - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-services:
