@@ -42,6 +42,7 @@
 	</properties>
 
 	<modules>
+		<module>initializr-app</module>
 		<module>initializr-actuator</module>
 		<module>initializr-docs</module>
 		<module>initializr-generator</module>

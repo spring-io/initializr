@@ -1,0 +1,2 @@
+deploy:
+  artifact: initializr-app/target/initializr.jar

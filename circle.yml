@@ -6,10 +6,27 @@ dependencies:
   override:
     - mvn --fail-never dependency:go-offline || true
 
-notify:
-  webhooks:
-    - url: https://webhooks.gitter.im/e/895bb7c544f3a8fe0e56
+dependencies:
+  pre:
+    - pip install awsebcli
+
+#notify:
+#  webhooks:
+#    - url: https://webhooks.gitter.im/e/895bb7c544f3a8fe0e56
 
 test:
   override:
     - mvn clean install
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - eb deploy --profile default
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - eb use prod-env-demo-app --profile default
+      - eb deploy --profile default
