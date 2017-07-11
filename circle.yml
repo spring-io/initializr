@@ -20,13 +20,6 @@ test:
 
 deployment:
   production:
-    branch: master
+    branch: step01_add-app
     commands:
-      - eb deploy --profile default
-
-deployment:
-  production:
-    branch: master
-    commands:
-      - eb use prod-env-demo-app --profile default
       - eb deploy --profile default
