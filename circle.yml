@@ -6,11 +6,11 @@ dependencies:
   pre:
     - pip install awsebcli
   override:
-    - mvn -DskipTests clean dependency:go-offline
+    - mvn -DskipTests clean install dependency:go-offline
 
 test:
   override:
-    - mvn clean install
+    - mvn package
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
