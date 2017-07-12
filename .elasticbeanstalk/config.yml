@@ -1,9 +1,14 @@
 branch-defaults:
   master:
-    environment: null
+    environment: initializr-dev
     group_suffix: null
 deploy:
   artifact: initializr-app/target/initializr.jar
+option_settings:
+  - option_name: GITHUB_USERNAME
+    value: ${GITHUB_USERNAME}
+  - option_name: GITHUB_PAT
+    value: ${GITHUB_PAT}
 global:
   application_name: initializr
   branch: null
@@ -14,7 +19,7 @@ global:
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: eb-cli
+  profile: default
   repository: null
   sc: git
   workspace_type: Application
