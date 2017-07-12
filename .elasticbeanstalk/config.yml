@@ -1,7 +1,6 @@
 branch-defaults:
   master:
-    environment: initializr-dev
-    group_suffix: null
+    environment: initilaizr-gr8conf
 deploy:
   artifact: initializr-app/target/initializr.jar
 option_settings:
@@ -19,7 +18,6 @@ global:
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: default
   repository: null
   sc: git
   workspace_type: Application
