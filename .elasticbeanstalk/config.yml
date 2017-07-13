@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: production
+    environment: null
     group_suffix: null
 deploy:
   artifact: initializr-app/target/initializr.jar
