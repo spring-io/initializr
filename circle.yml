@@ -19,6 +19,4 @@ deployment:
   production:
     branch: master
     commands:
-      - bash ./setup-eb.sh
-      - eb use production --profile default
       - eb deploy --profile default
