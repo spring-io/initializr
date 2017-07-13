@@ -20,5 +20,4 @@ deployment:
     branch: master
     commands:
 #      - eb create initializr
-#      - eb use initializr --profile default
       - eb deploy --profile default
