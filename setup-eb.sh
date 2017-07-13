@@ -2,4 +2,4 @@
 set -x
 set -e
 
-echo  ~/.aws/config
+cat  ~/.aws/config
