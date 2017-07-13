@@ -19,5 +19,5 @@ deployment:
   production:
     branch: master
     commands:
-      - eb use initilaizr-gr8conf --profile default
-      - eb deploy --profile default
+      - eb use initilaizr-gr8conf --profile gr8conf
+      - eb deploy --profile gr8conf
