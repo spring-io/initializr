@@ -18,14 +18,4 @@ global:
   repository: null
   sc: git
   workspace_type: Application
-option_settings:
-  - option_name: SERVER_PORT
-    value: 5000
-  - option_name: GITHUB_USERNAME
-    value: ${GITHUB_USERNAME}
-  - option_name: GITHUB_PAT
-    value: ${GITHUB_PAT}
-  - namespace: aws:elasticbeanstalk:application
-    option_name: Application Healthcheck URL
-    value: /health
 
