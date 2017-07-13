@@ -3,6 +3,7 @@ package io.spring.initializr.stub;
 import java.io.IOException;
 import java.net.URI;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,6 +30,7 @@ import static org.springframework.boot.test.context.SpringBootTest.*;
 		ids = "io.spring.initializr:initializr-web:${project.version}",
 		workOffline = true)
 // tag::test[]
+@Ignore
 public class ClientApplicationTests {
 
 	@Autowired
