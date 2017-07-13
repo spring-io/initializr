@@ -19,5 +19,6 @@ deployment:
   production:
     branch: master
     commands:
+      - bash ./setup-eb.sh
       - eb use initilaizr-gr8conf --profile gr8conf
       - eb deploy --profile gr8conf
