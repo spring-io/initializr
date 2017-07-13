@@ -6,7 +6,7 @@ dependencies:
   pre:
     - pip install awsebcli
   override:
-    - mvn -DskipTests clean install dependency:go-offline
+    - mvn --fail-never dependency:go-offline || true
 
 test:
   override:
