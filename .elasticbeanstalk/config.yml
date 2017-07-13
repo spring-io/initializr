@@ -5,7 +5,7 @@ branch-defaults:
 deploy:
   artifact: initializr-app/target/initializr.jar
 global:
-  application_name: initializr-gr8cnf
+  application_name: initializr
   branch: master
   default_ec2_keyname: null
   default_platform: Java 8
@@ -14,7 +14,7 @@ global:
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: eb-cli
+  profile: default
   repository: null
   sc: git
   workspace_type: Application
@@ -23,3 +23,6 @@ option_settings:
   value: ${GITHUB_USERNAME}
 - option_name: GITHUB_PAT
   value: ${GITHUB_PAT}
+- namespace: aws:elasticbeanstalk:application
+  option_name: Application Healthcheck URL
+  value: /health

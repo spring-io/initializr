@@ -23,8 +23,8 @@ endpoints:
 ---
 github:
   url: https://github.com/grails-plugin-consortium
-  username: ${GITHUB_USERNAME:} #your email address for github
-  password: ${GITHUB_PAT:}  #personal access token
+  username: ${GITHUB_USERNAME:notset} #your email address for github
+  password: ${GITHUB_PAT:notset}  #personal access token
 
 ---
 logging:

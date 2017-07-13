@@ -34,10 +34,10 @@ public class InitializrApp {
         SpringApplication.run(InitializrApp.class, args);
     }
 
-    @Value("${github.username:}")
+    @Value("${github.username}")
     String githubUsername;
 
-    @Value("${github.password:}")
+    @Value("${github.password}")
     String githubPassword;
 
     @Bean
