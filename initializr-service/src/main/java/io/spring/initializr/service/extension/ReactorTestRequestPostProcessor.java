@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-public class ReactorTestRequestPostProcessor implements ProjectRequestPostProcessor {
+class ReactorTestRequestPostProcessor implements ProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M2 = Version.parse("2.0.0.M2");
 
@@ -45,8 +45,7 @@ public class ReactorTestRequestPostProcessor implements ProjectRequestPostProces
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
-		Version requestVersion = Version.safeParse(request.getBootVersion());
-		if (hasWebFlux(request) && VERSION_2_0_0_M2.compareTo(requestVersion) <= 0) {
+		if (hasWebFlux(request) && isAtLeastAfter(request, VERSION_2_0_0_M2)) {
 			request.getResolvedDependencies().add(this.reactorTest);
 		}
 	}
@@ -54,6 +53,11 @@ public class ReactorTestRequestPostProcessor implements ProjectRequestPostProces
 	private boolean hasWebFlux(ProjectRequest request) {
 		return request.getResolvedDependencies().stream()
 				.anyMatch(d -> "webflux".equals(d.getId()));
+	}
+
+	private boolean isAtLeastAfter(ProjectRequest request, Version version) {
+		Version requestVersion = Version.safeParse(request.getBootVersion());
+		return version.compareTo(requestVersion) <= 0;
 	}
 
 }
