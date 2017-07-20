@@ -101,6 +101,25 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">
+
+                    <h2>Project Type</h2>
+                    <p>Select type to generate and dependencies will be auto selected for you</p>
+
+                    <!-- begin custom stuff -->
+                    <div class="form-group">
+                        <label for="archetype" class="control-label">Select a Starter Archetype</label>&nbsp;
+                        <select id="archetype" name="archetype">
+                            <option value="CUSTOM">Blank Project</option>
+                            <option value="LIBRARY">Library</option>
+                            <option value="NOTHING">---------</option>
+                            <option value="MICRO">Microservice</option>
+                            <option value="MICRO_RABBIT">Microservice (Rabbit)</option>
+                            <option value="MICRO_KAFKA">Microservice (Kafka)</option>
+                            <option value="NOTHING">---------</option>
+                            <option value="APP_WEB_DATA">App Module (Web/Data)</option>
+                        </select>
+                    </div>
+
                     <h2>Dependencies</h2>
 
                     <p>Add Spring Boot Starters and dependencies to your application</p>

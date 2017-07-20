@@ -115,6 +115,18 @@
 }());
 
 $(function () {
+
+    function _toConsumableArray(arr) {
+        if (Array.isArray(arr)) {
+            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+                arr2[i] = arr[i];
+            }
+            return arr2;
+        } else {
+            return Array.from(arr);
+        }
+    }
+
     if (navigator.appVersion.indexOf("Mac") != -1) {
         $(".btn-primary").append("<kbd>&#8984; + &#9166;</kbd>");
     }
@@ -154,6 +166,10 @@ $(function () {
                 }
             });
             engine.add(data.dependencies);
+            if (!initialLoad) {
+                $("#archetype").val('MICRO').trigger('change').blur();
+                initialLoad = true;
+            }
         });
     };
     var generatePackageName = function() {
@@ -256,6 +272,83 @@ $(function () {
             removeTag(value);
         }
     });
+
+    var savedPrefix = '';
+    var savedSuffix = '';
+    var currentPackageName = '';
+    var currentDomainName = '';
+    var initialLoad = false;
+
+    function getNameValueParsed() {
+        var convertToEmpty = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+        var replacement = convertToEmpty ? '' : '-';
+        return $("#name").val().trim().replace(/  +/g, ' ').replace(/ /g, replacement).replace(/_/g, replacement).replace(/-/g, replacement);
+    }
+
+    function setArtifactIdAndBaseDir(prefix, suffix) {
+        var replaceDash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+        savedPrefix = prefix;
+        savedSuffix = suffix;
+        var name = prefix + getNameValueParsed(replaceDash).toLowerCase() + suffix;
+        $("#artifactId").val(name);
+        $("#baseDir").val(name);
+    }
+
+    function alignArtifactAndPackageNames() {
+        $("#packageName").val(currentPackageName + '.' + (currentDomainName ? currentDomainName + '.' : '') + getNameValueParsed().toLowerCase());
+        $("#groupId").val(currentPackageName);
+    }
+
+    function setDefaultPackageName(defaultPkgName) {
+        currentPackageName = defaultPkgName;
+        alignArtifactAndPackageNames();
+    }
+
+    var base = ['springboot', 'spring-test', 'logging', 'spock'];
+    var common = [].concat(base);
+    var data = ['dbsync', 'mysql', 'jdbc'];
+    var data_jpa = ['data-jpa'];
+    var web = ['web', 'actuator', 'payload-client', 'sba-client', 'cloud-hystrix', 'cloud-hystrix-dashboard', 'springfox', 'springfoxui', 'springfoxbean', 'restdocs', 'cloud-starter-zipkin'];
+    var all = [].concat(web, _toConsumableArray(common), data, data_jpa);
+
+    $("#archetype").on("change", function () {
+        $("#starters div").remove();
+        $("#dependencies input").prop('checked', false);
+        var results = [];
+        var val = $('#archetype').val();
+        if (val === 'LIBRARY') {
+            setDefaultPackageName('org.grails.conf');
+            setArtifactIdAndBaseDir('', '');
+            results = starters.get([].concat(common));
+        } else if (val === 'MICRO_RABBIT') {
+            setDefaultPackageName('org.grails.conf.service');
+            setArtifactIdAndBaseDir('rabbit-', '-service');
+            results = starters.get(['cloud-stream-binder-rabbit'].concat(_toConsumableArray(all)));
+        } else if (val === 'MICRO_KAFKA') {
+            setDefaultPackageName('org.grails.conf.service');
+            setArtifactIdAndBaseDir('kafka-', '-service');
+            results = starters.get(['cloud-stream-binder-kafka'].concat(_toConsumableArray(all)));
+        } else if (val === 'MICRO') {
+            setDefaultPackageName('org.grails.conf.service');
+            setArtifactIdAndBaseDir('', '-service');
+            results = starters.get([].concat(_toConsumableArray(all)));
+        } else if (val === "APP_WEB_DATA") {
+            setDefaultPackageName('org.grails.conf');
+            setArtifactIdAndBaseDir('app-', '');
+            results = starters.get([].concat(_toConsumableArray(all)));
+        } else {
+            setDefaultPackageName('org.grails.conf');
+            setArtifactIdAndBaseDir('', '', false);
+            results = starters.get(['']);
+        }
+
+        for (var i = 0; i < results.length; i++) {
+            addTag(results[i].id, results[i].name, results[i].topic, results[i].description);
+            $('#dependencies input[value=\'' + results[i].id + '\']').prop('checked', true);
+        }
+    });
+
     Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
         $("#form").submit();
         return false;

@@ -1146,6 +1146,26 @@ initializr:
           groupId: org.springframework.boot
           artifactId: spring-boot-starter-logging
           description: Spring boot starter logging includes all the goodies
+    - name: Swagger
+      content:
+        - name: Spring Fox Swagger
+          groupId: io.springfox
+          artifactId: springfox-swagger2
+          id: springfox
+          description: Spring fox swagger core libs
+          version: 2.7.0
+        - name: Spring Fox Swagger UI
+          groupId: io.springfox
+          artifactId: springfox-swagger-ui
+          id: springfoxui
+          description: Spring fox swagger ui
+          version: 2.7.0
+        - name: Spring Fox Validators
+          groupId: io.springfox
+          artifactId: springfox-bean-validators
+          id: springfoxbean
+          description: Spring fox swagger support for javax.validation
+          version: 2.7.0
   types:
     - name: Maven Project
       id: maven-project
