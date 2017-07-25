@@ -43,6 +43,7 @@ public class BasicProjectRequest {
 	private String language;
 	private String packageName;
 	private String javaVersion;
+	private boolean initDocker;
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
@@ -173,4 +174,11 @@ public class BasicProjectRequest {
 		this.baseDir = baseDir;
 	}
 
+	public boolean isInitDocker() {
+		return initDocker;
+	}
+
+	public void setInitDocker(boolean initDocker) {
+		this.initDocker = initDocker;
+	}
 }

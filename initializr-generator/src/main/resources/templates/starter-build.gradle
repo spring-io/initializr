@@ -117,3 +117,15 @@ dependencyManagement {
 	}
 }
 {{/hasBoms}}
+{{#war}}
+war {
+    baseName = '{{applicationName}}'
+    version =''
+}
+{{/war}}
+{{^war}}
+jar {
+	baseName = '{{applicationName}}'
+	version =''
+}
+{{/war}}

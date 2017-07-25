@@ -218,6 +218,7 @@ public class ProjectGenerator {
 		}
 
 		generateGitIgnore(dir, request);
+		generateDockerFile(dir, model);
 
 		String applicationName = request.getApplicationName();
 		String language = request.getLanguage();
@@ -299,6 +300,12 @@ public class ProjectGenerator {
 	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, cause);
 		eventPublisher.publishEvent(event);
+	}
+
+	protected void generateDockerFile(File dir, Map<String, Object> model){
+		write(new File(dir, "Dockerfile"), "Dockerfile", model);
+		write(new File(dir, "docker.sh"), "docker.sh", model);
+		write(new File(dir, "docker-run.sh"), "docker-run.sh", model);
 	}
 
 	/**

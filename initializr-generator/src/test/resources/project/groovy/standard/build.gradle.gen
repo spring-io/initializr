@@ -29,3 +29,7 @@ dependencies {
 	compile('org.codehaus.groovy:groovy')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+jar {
+	baseName = 'DemoApplication'
+	version =''
+}

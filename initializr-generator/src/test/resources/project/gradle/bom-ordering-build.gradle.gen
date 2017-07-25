@@ -36,3 +36,7 @@ dependencyManagement {
 		mavenBom "org.acme:foo-bom:1.0"
 	}
 }
+jar {
+	baseName = 'DemoApplication'
+	version =''
+}
