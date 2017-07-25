@@ -458,6 +458,7 @@ initializr:
     - name: SQL
       content:
         - name: JPA
+          topic: jdbc
           id: data-jpa
           description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           weight: 100
@@ -470,6 +471,7 @@ initializr:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jpa-and-spring-data
         - name: JOOQ
+          topic: jdbc
           id: jooq
           description: Persistence support using Java Object Oriented Querying
           versionRange: 1.3.0.M2
@@ -477,6 +479,7 @@ initializr:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jooq
         - name: MyBatis
+          topic: jdbc
           id: mybatis
           description: Persistence support using MyBatis
           groupId: org.mybatis.spring.boot
@@ -489,6 +492,7 @@ initializr:
             - versionRange: 1.5.0.RELEASE
               version: 1.3.0
         - name: JDBC
+          topic: jdbc
           id: jdbc
           description: JDBC databases
           links:
@@ -501,12 +505,14 @@ initializr:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-sql
         - name: H2
+          topic: jdbc
           id: h2
           description: H2 database (with embedded support)
           groupId: com.h2database
           artifactId: h2
           starter: false
         - name: HSQLDB
+          topic: jdbc
           id: hsql
           description: HSQLDB database (with embedded support)
           groupId: org.hsqldb
@@ -514,6 +520,7 @@ initializr:
           scope: runtime
           starter: false
         - name: Apache Derby
+          topic: jdbc
           id: derby
           description: Apache Derby database (with embedded support)
           groupId: org.apache.derby
@@ -522,6 +529,7 @@ initializr:
           versionRange: 1.2.2.RELEASE
           starter: false
         - name: MySQL
+          topic: jdbc
           id: mysql
           description: MySQL jdbc driver
           groupId: mysql
@@ -532,6 +540,7 @@ initializr:
               href: https://spring.io/guides/gs/accessing-data-mysql/
               description: Accessing data with MySQL
         - name: PostgreSQL
+          topic: jdbc
           id: postgresql
           description: PostgreSQL jdbc driver
           groupId: org.postgresql
@@ -542,6 +551,7 @@ initializr:
           scope: runtime
           starter: false
         - name: SQL Server
+          topic: jdbc
           id: sqlserver
           description: Microsoft SQL Server jdbc driver
           versionRange: 1.5.0.RC1
@@ -550,6 +560,7 @@ initializr:
           scope: runtime
           starter: false
         - name: Flyway
+          topic: jdbc
           id: flyway
           description: Flyway Database Migrations library
           groupId: org.flywaydb
@@ -559,6 +570,7 @@ initializr:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-execute-flyway-database-migrations-on-startup
         - name: Liquibase
+          topic: jdbc
           id: liquibase
           description: Liquibase Database Migrations library
           groupId: org.liquibase
@@ -1146,6 +1158,13 @@ initializr:
           groupId: org.springframework.boot
           artifactId: spring-boot-starter-logging
           description: Spring boot starter logging includes all the goodies
+        - name: Codahale Metrics
+          id: metrics
+          groupId: com.codahale.metrics
+          artifactId: metrics-core
+          version: 3.0.2
+          description: Adds support for codahale metrics
+          topic: gr8conf
     - name: Swagger
       content:
         - name: Spring Fox Swagger

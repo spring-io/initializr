@@ -1,0 +1,39 @@
+.gr8conf {
+    color: #f47b29;
+}
+
+.tag.gr8conf {
+    background-color: #f47b29;
+    color: #fff;
+}
+
+.jdbc {
+    color: #4e5bf4;
+}
+
+.tag.jdbc {
+    background-color: #4e5bf4;
+    color: #fff;
+}
+
+
+
+.start-header {
+    border-bottom: 4px solid #f47b29
+}
+
+a {
+    color: #6db33f;
+    text-decoration: none
+}
+
+a:hover, a:focus {
+    color: #4b7a2b;
+    text-decoration: underline
+}
+
+a:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px
+}

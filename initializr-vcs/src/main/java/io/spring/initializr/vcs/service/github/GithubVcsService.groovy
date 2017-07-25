@@ -1,22 +1,20 @@
 package io.spring.initializr.vcs.service.github
 
-import com.jcraft.jsch.Session
 import groovy.util.logging.Slf4j
 import io.spring.initializr.generator.BasicProjectRequest
 import io.spring.initializr.vcs.data.CreateRepoRequest
 import io.spring.initializr.vcs.data.github.CreateRepoResponse
 import io.spring.initializr.vcs.service.VcsService
 import org.eclipse.jgit.transport.CredentialsProvider
-import org.eclipse.jgit.transport.JschConfigSessionFactory
-import org.eclipse.jgit.transport.OpenSshConfig
-import org.eclipse.jgit.transport.SshSessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 import java.util.concurrent.Executors
 
 @Slf4j
+@Service
 class GithubVcsService implements VcsService {
 
     @Autowired(required = false)
@@ -63,12 +61,12 @@ class GithubVcsService implements VcsService {
 
     @Override
     String getRepoUrl(BasicProjectRequest request, boolean includeCredentials = true, boolean includeGitExtension = true) {
-        "git@github.com:Grails-Plugin-Consortium/" + request.getArtifactId() + (includeGitExtension ? ".git" : "")
+        return "git@github.com:Grails-Plugin-Consortium/${request.getArtifactId()}${(includeGitExtension ? ".git" : "")}"
     }
 
     @Override
     String getRepoHttpsUrl(BasicProjectRequest request, String token, boolean includeGitExtension = true) {
-        "https://$token@github.com/Grails-Plugin-Consortium/" + request.getArtifactId() + (includeGitExtension ? ".git" : "")
+        return "https://$token@github.com/Grails-Plugin-Consortium/${request.getArtifactId()}${(includeGitExtension ? ".git" : "")}"
     }
 
     private static void createHooksAsync(Runnable runnable) {

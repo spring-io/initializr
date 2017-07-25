@@ -3,6 +3,7 @@ package io.spring.initializr;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.Session;
+import io.spring.initializr.vcs.config.VcsServiceAutoConfiguration;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig;
@@ -15,6 +16,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
@@ -34,6 +36,7 @@ import java.util.concurrent.Executor;
 @SpringBootApplication
 @ComponentScan({"io.spring.initializr.controller"})
 @EnableScheduling
+@Import(VcsServiceAutoConfiguration.class)
 public class InitializrApp {
 
     static {

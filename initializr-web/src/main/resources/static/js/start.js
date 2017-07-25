@@ -154,12 +154,27 @@ $(function () {
             }
         });
     };
-    var addTag = function (id, name) {
-        if ($("#starters div[data-id='" + id + "']").length == 0) {
-            $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
-                "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+
+    // var addTag = function (id, name) {
+    //     if ($("#starters div[data-id='" + id + "']").length == 0) {
+    //         $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
+    //             "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+    //     }
+    // };
+
+    var addTag = function(id, name, topic, description) {
+        topic = topic || '';
+        description = description || '';
+        if ($('#starters').find('div[data-id=\'' + id + '\']').length === 0) {
+            var div = $('<div title=\"' + description + '\" class=\'tag ' + topic + '\' data-id=\'' + id + '\'>' + name + '<button type=\'button\' class=\'close\' aria-label=\'Close\'><span aria-hidden=\'true\'>&times;</span></button></div>');
+            div.tooltip({trigger: 'hover'});
+            div.on('click', function(){
+                div.tooltip('hide');
+            });
+            $("#starters").append(div);
         }
-    };
+    }
+
     var removeTag = function (id) {
         $("#starters div[data-id='" + id + "']").remove();
     };
@@ -267,7 +282,7 @@ $(function () {
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
         }
         else {
-            addTag(suggestion.id, suggestion.name);
+            addTag(suggestion.id, suggestion.name, suggestion.topic, suggestion.description);
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
         }
         $('#autocomplete').typeahead('val', '');
@@ -281,7 +296,7 @@ $(function () {
         var value = $(this).val()
         if ($(this).prop('checked')) {
             var results = starters.get(value);
-            addTag(results[0].id, results[0].name);
+            addTag(results[0].id, results[0].name, results[0].topic, results[0].description);
         } else {
             removeTag(value);
         }
@@ -321,9 +336,9 @@ $(function () {
 
     var base = ['springboot', 'spring-test', 'logging', 'spock'];
     var common = [].concat(base);
-    var data = ['dbsync', 'h2', 'jdbc'];
+    var data = ['h2', 'jdbc'];
     var data_jpa = ['data-jpa'];
-    var web = ['web', 'actuator', 'payload-client', 'sba-client', 'cloud-hystrix', 'cloud-hystrix-dashboard', 'springfox', 'springfoxui', 'springfoxbean', 'restdocs', 'cloud-starter-zipkin'];
+    var web = ['web', 'actuator', 'payload-client', 'sba-client', 'cloud-hystrix', 'cloud-hystrix-dashboard', 'springfox', 'springfoxui', 'springfoxbean', 'restdocs', 'cloud-starter-zipkin', 'metrics'];
     var all = [].concat(web, _toConsumableArray(common), data, data_jpa);
 
     $("#archetype").on("change", function () {
