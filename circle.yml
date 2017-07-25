@@ -3,13 +3,21 @@ machine:
     version: oraclejdk8
 
 dependencies:
+  pre:
+    - pip install awsebcli
   override:
     - mvn --fail-never dependency:go-offline || true
 
-notify:
-  webhooks:
-    - url: https://webhooks.gitter.im/e/895bb7c544f3a8fe0e56
-
 test:
   override:
-    - mvn clean install
+    - mvn install
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
+deployment:
+  production:
+    branch: master
+    commands:
+#      - eb create initializr
+      - eb deploy --profile default

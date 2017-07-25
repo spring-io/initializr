@@ -16,6 +16,27 @@
 
 package io.spring.initializr.generator;
 
+import io.spring.initializr.InitializrException;
+import io.spring.initializr.metadata.BillOfMaterials;
+import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.MetadataElement;
+import io.spring.initializr.util.TemplateRenderer;
+import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionProperty;
+import io.spring.initializr.vcs.service.VcsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.util.Assert;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StreamUtils;
+
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,27 +51,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import io.spring.initializr.InitializrException;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.MetadataElement;
-import io.spring.initializr.util.TemplateRenderer;
-import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.util.Assert;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StreamUtils;
 
 /**
  * Generate a project based on the configured metadata.
@@ -93,7 +93,11 @@ public class ProjectGenerator {
 	@Autowired
 	private ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator();
 
-	@Value("${TMPDIR:.}/initializr")
+    @Autowired(required = false)
+    private VcsService vcsService;
+
+
+    @Value("${TMPDIR:.}/initializr")
 	private String tmpdir;
 
 	private File temporaryDirectory;
@@ -218,6 +222,7 @@ public class ProjectGenerator {
 		}
 
 		generateGitIgnore(dir, request);
+		generateDockerFile(dir, model);
 
 		String applicationName = request.getApplicationName();
 		String language = request.getLanguage();
@@ -244,13 +249,18 @@ public class ProjectGenerator {
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+
+
+        write(new File(resources, "application.yml"), "application.yml", model);
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
 		publishProjectGeneratedEvent(request);
+        if(request.isInitGit()){
+            vcsService.createRepo(dir, request);
+        }
 		return rootDir;
 
 	}
@@ -299,6 +309,12 @@ public class ProjectGenerator {
 	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, cause);
 		eventPublisher.publishEvent(event);
+	}
+
+	protected void generateDockerFile(File dir, Map<String, Object> model){
+		write(new File(dir, "Dockerfile"), "Dockerfile", model);
+		write(new File(dir, "docker.sh"), "docker.sh", model);
+		write(new File(dir, "docker-run.sh"), "docker-run.sh", model);
 	}
 
 	/**
@@ -451,6 +467,12 @@ public class ProjectGenerator {
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
 		}
+
+        model.put("hasSleuth", originalRequest.hasStyle("cloud-starter-sleuth") || originalRequest.hasStyle("cloud-starter-zipkin"));
+        model.put("hasSbaClient", originalRequest.hasStyle("sba-client"));
+        model.put("hasCloud", originalRequest.hasStyle("cloud-stream-binder-rabbit") || originalRequest.hasStyle("cloud-stream-binder-kafka"));
+        model.put("hasJpa", originalRequest.hasStyle("data-jpa"));
+        model.put("hasH2", originalRequest.hasStyle("h2"));
 
 		return model;
 	}

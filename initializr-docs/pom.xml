@@ -1,319 +1,332 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr</artifactId>
-		<version>0.4.0.BUILD-SNAPSHOT</version>
-	</parent>
-	<artifactId>initializr-docs</artifactId>
-	<name>Spring Initializr :: Docs</name>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr</artifactId>
+        <version>0.4.0.BUILD-SNAPSHOT</version>
+    </parent>
+    <artifactId>initializr-docs</artifactId>
+    <name>Spring Initializr :: Docs</name>
 
-	<properties>
-		<snippets.location>${project.build.directory}/snippets</snippets.location>
-	</properties>
+    <properties>
+        <snippets.location>${project.build.directory}/snippets</snippets.location>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-web</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-actuator</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-generator</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-actuator</artifactId>
+            <optional>true</optional>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<project.version>${project.version}</project.version>
-					</systemPropertyVariables>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>docs</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>unpack-restdocs-snippets</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>io.spring.initializr</groupId>
-											<artifactId>initializr-web</artifactId>
-											<version>${project.version}</version>
-											<classifier>snippets</classifier>
-											<type>zip</type>
-											<outputDirectory>${snippets.location}</outputDirectory>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>generate-docbook</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<sourceDocumentName>index.adoc</sourceDocumentName>
-									<backend>docbook5</backend>
-									<doctype>book</doctype>
-									<attributes>
-										<docinfo>true</docinfo>
-										<spring-initializr-version>${project.version}</spring-initializr-version>
-										<spring-initializr-docs-version>${project.version}</spring-initializr-docs-version>
-										<spring-boot-docs-version>${spring.boot.version}</spring-boot-docs-version>
-										<snippets>${snippets.location}</snippets>
-										<github-tag>${github-tag}</github-tag>
-									</attributes>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.agilejava.docbkx</groupId>
-						<artifactId>docbkx-maven-plugin</artifactId>
-						<configuration>
-							<sourceDirectory>${basedir}/target/generated-docs</sourceDirectory>
-							<includes>index.xml</includes>
-							<xincludeSupported>true</xincludeSupported>
-							<chunkedOutput>false</chunkedOutput>
-							<foCustomization>${basedir}/src/main/docbook/xsl/pdf.xsl</foCustomization>
-							<useExtensions>1</useExtensions>
-							<highlightSource>1</highlightSource>
-							<highlightXslthlConfig>${basedir}/src/main/docbook/xsl/xslthl-config.xml</highlightXslthlConfig>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>net.sf.xslthl</groupId>
-								<artifactId>xslthl</artifactId>
-								<version>2.1.0</version>
-							</dependency>
-							<dependency>
-								<groupId>net.sf.docbook</groupId>
-								<artifactId>docbook-xml</artifactId>
-								<version>5.0-all</version>
-								<classifier>resources</classifier>
-								<type>zip</type>
-								<scope>runtime</scope>
-							</dependency>
-						</dependencies>
-						<executions>
-							<execution>
-								<id>html-single</id>
-								<goals>
-									<goal>generate-html</goal>
-								</goals>
-								<phase>prepare-package</phase>
-								<configuration>
-									<htmlCustomization>${basedir}/src/main/docbook/xsl/html-singlepage.xsl</htmlCustomization>
-									<targetDirectory>${basedir}/target/docbook/htmlsingle</targetDirectory>
-									<postProcess>
-										<copy todir="${basedir}/target/contents/reference/htmlsingle">
-											<fileset dir="${basedir}/target/docbook/htmlsingle">
-												<include name="**/*.html" />
-											</fileset>
-										</copy>
-										<copy todir="${basedir}/target/contents/reference/htmlsingle">
-											<fileset dir="${basedir}/src/main/docbook">
-												<include name="**/*.css" />
-												<include name="**/*.png" />
-												<include name="**/*.gif" />
-												<include name="**/*.jpg" />
-											</fileset>
-										</copy>
-									</postProcess>
-								</configuration>
-							</execution>
-							<execution>
-								<id>html</id>
-								<goals>
-									<goal>generate-html</goal>
-								</goals>
-								<phase>prepare-package</phase>
-								<configuration>
-									<htmlCustomization>${basedir}/src/main/docbook/xsl/html-multipage.xsl</htmlCustomization>
-									<targetDirectory>${basedir}/target/docbook/html</targetDirectory>
-									<chunkedOutput>true</chunkedOutput>
-									<postProcess>
-										<copy todir="${basedir}/target/contents/reference/html">
-											<fileset dir="${basedir}/target/docbook/html">
-												<include name="**/*.html" />
-											</fileset>
-										</copy>
-										<copy todir="${basedir}/target/contents/reference/html">
-											<fileset dir="${basedir}/src/main/docbook">
-												<include name="**/*.css" />
-												<include name="**/*.png" />
-												<include name="**/*.gif" />
-												<include name="**/*.jpg" />
-											</fileset>
-										</copy>
-									</postProcess>
-								</configuration>
-							</execution>
-							
-							<execution>
-								<id>epub</id>
-								<goals>
-									<goal>generate-epub3</goal>
-								</goals>
-								<phase>prepare-package</phase>
-								<configuration>
-									<epub3Customization>${basedir}/src/main/docbook/xsl/epub.xsl</epub3Customization>
-									<targetDirectory>${basedir}/target/docbook/epub</targetDirectory>
-									<postProcess>
-										<copy todir="${basedir}/target/contents/reference/epub">
-											<fileset dir="${basedir}/target/docbook">
-												<include name="**/*.epub" />
-											</fileset>
-										</copy>
-										<move file="${basedir}/target/contents/reference/epub/index.epub" tofile="${basedir}/target/contents/reference/epub/initializr-reference.epub" />
-									</postProcess>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<dependencies>
-							<dependency>
-								<groupId>ant-contrib</groupId>
-								<artifactId>ant-contrib</artifactId>
-								<version>1.0b3</version>
-								<exclusions>
-									<exclusion>
-										<groupId>ant</groupId>
-										<artifactId>ant</artifactId>
-									</exclusion>
-								</exclusions>
-							</dependency>
-							<dependency>
-								<groupId>org.apache.ant</groupId>
-								<artifactId>ant-nodeps</artifactId>
-								<version>1.8.1</version>
-							</dependency>
-							<dependency>
-								<groupId>org.tigris.antelope</groupId>
-								<artifactId>antelopetasks</artifactId>
-								<version>3.2.10</version>
-							</dependency>
-						</dependencies>
-						<executions>
-							<execution>
-								<id>package-and-attach-docs-zip</id>
-								<phase>package</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<target>
-										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
-											<fileset dir="${project.build.directory}/contents" />
-										</zip>
-									</target>
-								</configuration>
-							</execution>
-							<execution>
-								<id>setup-maven-properties</id>
-								<phase>validate</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<exportAntProperties>true</exportAntProperties>
-									<target>
-										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-										<taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask" />
-										<var name="version-type" value="${project.version}" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp=".*\.(.*)" replace="\1" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(M)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(RC)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="BUILD-(.*)" replace="SNAPSHOT" />
-										<stringutil string="${version-type}" property="initializr-repo">
-											<lowercase />
-										</stringutil>
-										<var name="github-tag" value="v${project.version}" />
-										<propertyregex property="github-tag" override="true" input="${github-tag}" regexp=".*SNAPSHOT" replace="master" />
-									</target>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-zip</id>
-								<goals>
-									<goal>attach-artifact</goal>
-								</goals>
-								<configuration>
-									<artifacts>
-										<artifact>
-											<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
-											<type>zip;zip.type=docs;zip.deployed=false</type>
-										</artifact>
-									</artifacts>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <project.version>${project.version}</project.version>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>docs</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-restdocs-snippets</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>io.spring.initializr</groupId>
+                                            <artifactId>initializr-web</artifactId>
+                                            <version>${project.version}</version>
+                                            <classifier>snippets</classifier>
+                                            <type>zip</type>
+                                            <outputDirectory>${snippets.location}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>generate-docbook</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDocumentName>index.adoc</sourceDocumentName>
+                                    <backend>docbook5</backend>
+                                    <doctype>book</doctype>
+                                    <attributes>
+                                        <docinfo>true</docinfo>
+                                        <spring-initializr-version>${project.version}</spring-initializr-version>
+                                        <spring-initializr-docs-version>${project.version}
+                                        </spring-initializr-docs-version>
+                                        <spring-boot-docs-version>${spring.boot.version}</spring-boot-docs-version>
+                                        <snippets>${snippets.location}</snippets>
+                                        <github-tag>${github-tag}</github-tag>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.agilejava.docbkx</groupId>
+                        <artifactId>docbkx-maven-plugin</artifactId>
+                        <configuration>
+                            <sourceDirectory>${basedir}/target/generated-docs</sourceDirectory>
+                            <includes>index.xml</includes>
+                            <xincludeSupported>true</xincludeSupported>
+                            <chunkedOutput>false</chunkedOutput>
+                            <foCustomization>${basedir}/src/main/docbook/xsl/pdf.xsl</foCustomization>
+                            <useExtensions>1</useExtensions>
+                            <highlightSource>1</highlightSource>
+                            <highlightXslthlConfig>${basedir}/src/main/docbook/xsl/xslthl-config.xml
+                            </highlightXslthlConfig>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.xslthl</groupId>
+                                <artifactId>xslthl</artifactId>
+                                <version>2.1.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>net.sf.docbook</groupId>
+                                <artifactId>docbook-xml</artifactId>
+                                <version>5.0-all</version>
+                                <classifier>resources</classifier>
+                                <type>zip</type>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>html-single</id>
+                                <goals>
+                                    <goal>generate-html</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <htmlCustomization>${basedir}/src/main/docbook/xsl/html-singlepage.xsl
+                                    </htmlCustomization>
+                                    <targetDirectory>${basedir}/target/docbook/htmlsingle</targetDirectory>
+                                    <postProcess>
+                                        <copy todir="${basedir}/target/contents/reference/htmlsingle">
+                                            <fileset dir="${basedir}/target/docbook/htmlsingle">
+                                                <include name="**/*.html"/>
+                                            </fileset>
+                                        </copy>
+                                        <copy todir="${basedir}/target/contents/reference/htmlsingle">
+                                            <fileset dir="${basedir}/src/main/docbook">
+                                                <include name="**/*.css"/>
+                                                <include name="**/*.png"/>
+                                                <include name="**/*.gif"/>
+                                                <include name="**/*.jpg"/>
+                                            </fileset>
+                                        </copy>
+                                    </postProcess>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>html</id>
+                                <goals>
+                                    <goal>generate-html</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <htmlCustomization>${basedir}/src/main/docbook/xsl/html-multipage.xsl
+                                    </htmlCustomization>
+                                    <targetDirectory>${basedir}/target/docbook/html</targetDirectory>
+                                    <chunkedOutput>true</chunkedOutput>
+                                    <postProcess>
+                                        <copy todir="${basedir}/target/contents/reference/html">
+                                            <fileset dir="${basedir}/target/docbook/html">
+                                                <include name="**/*.html"/>
+                                            </fileset>
+                                        </copy>
+                                        <copy todir="${basedir}/target/contents/reference/html">
+                                            <fileset dir="${basedir}/src/main/docbook">
+                                                <include name="**/*.css"/>
+                                                <include name="**/*.png"/>
+                                                <include name="**/*.gif"/>
+                                                <include name="**/*.jpg"/>
+                                            </fileset>
+                                        </copy>
+                                    </postProcess>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>epub</id>
+                                <goals>
+                                    <goal>generate-epub3</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <epub3Customization>${basedir}/src/main/docbook/xsl/epub.xsl</epub3Customization>
+                                    <targetDirectory>${basedir}/target/docbook/epub</targetDirectory>
+                                    <postProcess>
+                                        <copy todir="${basedir}/target/contents/reference/epub">
+                                            <fileset dir="${basedir}/target/docbook">
+                                                <include name="**/*.epub"/>
+                                            </fileset>
+                                        </copy>
+                                        <move file="${basedir}/target/contents/reference/epub/index.epub"
+                                              tofile="${basedir}/target/contents/reference/epub/initializr-reference.epub"/>
+                                    </postProcess>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>1.0b3</version>
+                                <exclusions>
+                                    <exclusion>
+                                        <groupId>ant</groupId>
+                                        <artifactId>ant</artifactId>
+                                    </exclusion>
+                                </exclusions>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-nodeps</artifactId>
+                                <version>1.8.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.tigris.antelope</groupId>
+                                <artifactId>antelopetasks</artifactId>
+                                <version>3.2.10</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>package-and-attach-docs-zip</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
+                                            <fileset dir="${project.build.directory}/contents"/>
+                                        </zip>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>setup-maven-properties</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <exportAntProperties>true</exportAntProperties>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+                                        <taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask"/>
+                                        <var name="version-type" value="${project.version}"/>
+                                        <propertyregex property="version-type" override="true" input="${version-type}"
+                                                       regexp=".*\.(.*)" replace="\1"/>
+                                        <propertyregex property="version-type" override="true" input="${version-type}"
+                                                       regexp="(M)\d+" replace="MILESTONE"/>
+                                        <propertyregex property="version-type" override="true" input="${version-type}"
+                                                       regexp="(RC)\d+" replace="MILESTONE"/>
+                                        <propertyregex property="version-type" override="true" input="${version-type}"
+                                                       regexp="BUILD-(.*)" replace="SNAPSHOT"/>
+                                        <stringutil string="${version-type}" property="initializr-repo">
+                                            <lowercase/>
+                                        </stringutil>
+                                        <var name="github-tag" value="v${project.version}"/>
+                                        <propertyregex property="github-tag" override="true" input="${github-tag}"
+                                                       regexp=".*SNAPSHOT" replace="master"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-zip</id>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>
+                                                ${project.build.directory}/${project.artifactId}-${project.version}.zip
+                                            </file>
+                                            <type>zip;zip.type=docs;zip.deployed=false</type>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -1,0 +1,20 @@
+branch-defaults:
+  master:
+    environment: initializr
+    group_suffix: null
+deploy:
+  artifact: initializr-app/target/initializr.jar
+global:
+  application_name: initializr
+  branch: master
+  default_ec2_keyname: null
+  default_platform: Java 8
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: default
+  repository: null
+  sc: git
+  workspace_type: Application

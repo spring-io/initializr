@@ -87,6 +87,9 @@ public abstract class AbstractInitializrController {
 			}
 		}
 
+		model.put("initGit", true);
+		model.put("initDocker", true);
+
 		// Google analytics support
 		model.put("trackingCode",
 				metadata.getConfiguration().getEnv().getGoogleAnalyticsTrackingCode());

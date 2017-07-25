@@ -64,6 +64,9 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 		if (dep.getRepository() != null) {
 			result.put("repository", dep.getRepository());
 		}
+		if(dep.getTopic() != null) {
+			result.put("topic", dep.getTopic());
+		}
 		return result;
 	}
 

@@ -70,6 +70,17 @@ public class Dependency extends MetadataElement implements Describable {
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	private int weight;
 
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	private String topic;
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
 	/**
 	 * Specify if the dependency represents a "starter", i.e. the sole presence of that
 	 * dependency is enough to bootstrap the context.

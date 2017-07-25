@@ -87,6 +87,7 @@ public class UiController {
 		result.put("id", d.getId());
 		result.put("name", d.getName());
 		result.put("group", item.group);
+		result.put("topic", d.getTopic());
 		if (d.getDescription() != null) {
 			result.put("description", d.getDescription());
 		}

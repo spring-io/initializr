@@ -43,6 +43,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>DemoApplication.war</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

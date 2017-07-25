@@ -3,9 +3,11 @@
 <head>
     <title>Spring Initializr</title>
     <link href="//fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap.min.css{{/linkTo}}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap-theme.min.css{{/linkTo}}"/>
     <link rel="stylesheet" href="{{#linkTo}}/css/spring.css{{/linkTo}}"/>
+    <link rel="stylesheet" href="{{#linkTo}}/css/custom.css{{/linkTo}}"/>
     <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -14,7 +16,9 @@
     <div class="container-fluid">
         <div class="row start-header">
             <div class="container">
-                <h1>Spring Initializr <small>bootstrap your application now</small></h1>
+                <h1>Spring Initializr
+                    <small>bootstrap your application now</small>
+                </h1>
             </div>
         </div>
         <div class="container start-main">
@@ -51,10 +55,36 @@
             <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
 
             <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <input type="hidden" name="username" id="username" value="${username}"/>
+                    <div class="form-group groupid-form-group">
+                        <label for="initGit" class="control-label">Initialize Github Repo on Generate
+                            &nbsp;&nbsp;<input type="checkbox" id="initGit" name="initGit"
+                                               checked="{{#initGit}}checked{{/initGit}}" tabindex="2"></label>
+                        <div id="giturl"></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group groupid-form-group">
+                        <label for="initDocker" class="control-label">Create Docker File
+                            &nbsp;&nbsp;<input type="checkbox" id="initDocker" name="initDocker"
+                                               checked="{{#initDocker}}checked{{/initDocker}}" tabindex="2"></label>
+                        <p>Do you want a dockerfile included? Recommended for runnable jar/war projects.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <h2>Project Metadata</h2>
 
                     <p>Artifact coordinates</p>
+
+                    <div class="form-group name-form-group">
+                        <label for="name" class="control-label">{{name.title}}</label>
+                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
+                               name="name">
+                    </div>
 
                     <div class="form-group groupid-form-group">
                         <label for="groupId" class="control-label">{{groupId.title}}</label>
@@ -67,17 +97,12 @@
                                value="{{artifactId.content}}"
                                name="artifactId">
                     </div>
-                    <div class="form-group full hidden name-form-group">
-                        <label for="name" class="control-label">{{name.title}}</label>
-                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
-                               name="name">
-                    </div>
-                    <div class="form-group full hidden description-form-group">
+                    <div class="form-group description-form-group">
                         <label for="description" class="control-label">{{description.title}}</label>
                         <input tabindex="7" id="description" class="form-control" type="text"
                                value="{{description.content}}" name="description">
                     </div>
-                    <div class="form-group full hidden packagename-form-group">
+                    <div class="form-group packagename-form-group">
                         <label for="packageName" class="control-label">{{packageName.title}}</label>
                         <input tabindex="8" id="packageName" class="form-control" type="text"
                                value="{{packageName.content}}"
@@ -101,6 +126,25 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">
+
+                    <h2>Project Type</h2>
+                    <p>Select type to generate and dependencies will be auto selected for you</p>
+
+                    <!-- begin custom stuff -->
+                    <div class="form-group">
+                        <label for="archetype" class="control-label">Select a Starter Archetype</label>&nbsp;
+                        <select id="archetype" name="archetype">
+                            <option value="CUSTOM">Blank Project</option>
+                            <option value="LIBRARY">Library</option>
+                            <option value="NOTHING">---------</option>
+                            <option value="MICRO">Microservice</option>
+                            <option value="MICRO_RABBIT">Microservice (Rabbit)</option>
+                            <option value="MICRO_KAFKA">Microservice (Kafka)</option>
+                            <option value="NOTHING">---------</option>
+                            <option value="APP_WEB_DATA">App Module (Web/Data)</option>
+                        </select>
+                    </div>
+
                     <h2>Dependencies</h2>
 
                     <p>Add Spring Boot Starters and dependencies to your application</p>
@@ -169,10 +213,12 @@
             and <a href="https://run.pivotal.io">Pivotal Web Services</a></p>
     </div>
 </footer>
-<script src="{{#linkTo}}/js/jquery-3.1.1.min.js{{/linkTo}}"></script>
+<script src="//code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
 <script src="{{#linkTo}}/js/typeahead.bundle.min.js{{/linkTo}}"></script>
 <script src="{{#linkTo}}/js/mousetrap.min.js{{/linkTo}}"></script>
 <script src="{{#linkTo}}/js/start.js{{/linkTo}}"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {{#trackingCode}}
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -121,6 +121,7 @@ public class ProjectAssert {
 
 	public ProjectAssert isMavenProject() {
 		hasFile("pom.xml").hasNoFile("build.gradle");
+		hasFile("Dockerfile").hasFile("docker.sh").hasFile("docker-run.sh");
 		hasFile("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
 		mavenProject = true;
@@ -129,6 +130,7 @@ public class ProjectAssert {
 
 	public ProjectAssert isGradleProject(String version) {
 		hasFile("build.gradle").hasNoFile("pom.xml");
+		hasFile("Dockerfile").hasFile("docker.sh").hasFile("docker-run.sh");
 		hasFile("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
 		mavenProject = false;
@@ -184,7 +186,7 @@ public class ProjectAssert {
 						+ expectedApplicationName + "." + extension,
 				"src/test/" + codeLocation + "/" + packageName + "/"
 						+ expectedApplicationName + "Tests." + extension,
-				"src/main/resources/application.properties");
+				"src/main/resources/application.yml");
 	}
 
 	public ProjectAssert isJavaWarProject(String expectedApplicationName) {

@@ -1,12 +1,21 @@
 package com.example.demo
 
 import org.springframework.boot.SpringApplication
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
+@RestController("/")
 class DemoApplication {
 
 	static void main(String[] args) {
 		SpringApplication.run DemoApplication, args
+	}
+
+	@RequestMapping
+	ResponseEntity<String> index(){
+		ResponseEntity.ok("Hello World")
 	}
 }

@@ -38,3 +38,7 @@ dependencyManagement {
 		mavenBom "org.acme:foo-bom:${fooVersion}"
 	}
 }
+jar {
+	baseName = 'DemoApplication'
+	version =''
+}

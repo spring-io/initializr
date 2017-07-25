@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr</artifactId>
+        <version>0.4.0.BUILD-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>initializr-app</artifactId>
+    <name>Spring Initializr :: App</name>
+
+    <properties>
+        <pipeline.version>${project.version}</pipeline.version>
+        <maven.build.timestamp.format>EEE MMM dd HH:mm:ss zzz yyyy</maven.build.timestamp.format>
+        <build.time>${maven.build.timestamp}</build.time>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>pipelineVersion</id>
+            <activation>
+                <property>
+                    <name>PIPELINE_VERSION</name>
+                </property>
+            </activation>
+            <properties>
+                <pipeline.version>${PIPELINE_VERSION}</pipeline.version>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>initializr</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources/ebextensions</directory>
+                <targetPath>.ebextensions</targetPath>
+                <filtering>true</filtering>
+            </resource>
+            <!-- Followed is copied from `spring-boot-starter-parent.pom` -->
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/application*.yml</include>
+                    <include>**/application*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>**/application*.yml</exclude>
+                    <exclude>**/application*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
+</project>
