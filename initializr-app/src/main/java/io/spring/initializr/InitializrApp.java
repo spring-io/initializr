@@ -2,6 +2,12 @@ package io.spring.initializr;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jcraft.jsch.Session;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,6 +36,14 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 public class InitializrApp {
 
+    static {
+        SshSessionFactory.setInstance(new JschConfigSessionFactory() {
+            protected void configure(OpenSshConfig.Host hc, Session session) {
+                session.setConfig("StrictHostKeyChecking", "no");
+            }
+        });
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(InitializrApp.class, args);
     }
@@ -39,6 +53,11 @@ public class InitializrApp {
 
     @Value("${github.password}")
     String githubPassword;
+
+    @Bean
+    CredentialsProvider githubCredentialsProvider() {
+        return new UsernamePasswordCredentialsProvider(githubPassword,"");
+    }
 
     @Bean
     RestTemplate githubRestTemplate(RestTemplateBuilder builder) {

@@ -8,6 +8,8 @@ spring:
 server.tomcat.remote_ip_header: x-forwarded-for
 server.tomcat.protocol_header: x-forwarded-proto
 
+logging.level.org.apache.http: DEBUG
+
 management.security.enabled: false
 
 endpoints:
@@ -22,7 +24,7 @@ endpoints:
 
 ---
 github:
-  url: https://github.com/grails-plugin-consortium
+  url: https://api.github.com
   username: ${GITHUB_USERNAME:notset} #your email address for github
   password: ${GITHUB_PAT:notset}  #personal access token
 

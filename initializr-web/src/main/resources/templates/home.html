@@ -51,10 +51,36 @@
             <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
 
             <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <input type="hidden" name="username" id="username" value="${username}"/>
+                    <div class="form-group groupid-form-group">
+                        <label for="initGit" class="control-label">Initialize Github Repo on Generate
+                            &nbsp;&nbsp;<input type="checkbox" id="initGit" name="initGit"
+                                               checked="{{#initGit}}checked{{/initGit}}" tabindex="2"></label>
+                        <div id="giturl"></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group groupid-form-group">
+                        <label for="initDocker" class="control-label">Create Docker File
+                            &nbsp;&nbsp;<input type="checkbox" id="initDocker" name="initDocker"
+                                               checked="{{#initDocker}}checked{{/initDocker}}" tabindex="2"></label>
+                        <p>Do you want a dockerfile included? Recommended for runnable jar/war projects.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <h2>Project Metadata</h2>
 
                     <p>Artifact coordinates</p>
+
+                    <div class="form-group name-form-group">
+                        <label for="name" class="control-label">{{name.title}}</label>
+                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
+                               name="name">
+                    </div>
 
                     <div class="form-group groupid-form-group">
                         <label for="groupId" class="control-label">{{groupId.title}}</label>
@@ -66,11 +92,6 @@
                         <input tabindex="5" id="artifactId" class="form-control" type="text"
                                value="{{artifactId.content}}"
                                name="artifactId">
-                    </div>
-                    <div class="form-group name-form-group">
-                        <label for="name" class="control-label">{{name.title}}</label>
-                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
-                               name="name">
                     </div>
                     <div class="form-group description-form-group">
                         <label for="description" class="control-label">{{description.title}}</label>
@@ -98,14 +119,6 @@
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/javaVersions.content}}
                         </select>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="form-group groupid-form-group">
-                        <label for="initDocker" class="control-label">Create Docker File
-                            &nbsp;&nbsp;<input type="checkbox" id="initDocker" name="initDocker"
-                                               checked="{{#initDocker}}checked{{/initDocker}}" tabindex="2"></label>
-                        <p>Do you want a dockerfile included? Recommended for runnable jar/war projects.</p>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">

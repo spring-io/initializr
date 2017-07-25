@@ -43,6 +43,8 @@
 
 	<modules>
 		<module>initializr-app</module>
+		<module>initializr-common</module>
+		<module>initializr-vcs</module>
 		<module>initializr-actuator</module>
 		<module>initializr-docs</module>
 		<module>initializr-generator</module>
@@ -53,7 +55,17 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
+				<artifactId>initializr-common</artifactId>
+				<version>0.4.0.BUILD-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-actuator</artifactId>
+				<version>0.4.0.BUILD-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr</groupId>
+				<artifactId>initializr-vcs</artifactId>
 				<version>0.4.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>

@@ -16,10 +16,10 @@
 
 package io.spring.initializr.generator;
 
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.util.StringUtils;
 
 /**
  * The base settings of a project request. Only these can be bound by user's
@@ -44,6 +44,7 @@ public class BasicProjectRequest {
 	private String packageName;
 	private String javaVersion;
 	private boolean initDocker;
+    private boolean initGit;
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
@@ -181,6 +182,14 @@ public class BasicProjectRequest {
 	public void setInitDocker(boolean initDocker) {
 		this.initDocker = initDocker;
 	}
+
+    public boolean isInitGit() {
+        return initGit;
+    }
+
+    public void setInitGit(boolean initGit) {
+        this.initGit = initGit;
+    }
 
     boolean hasStyle(String style) {
         return this.style != null && this.style.contains(style);

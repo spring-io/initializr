@@ -134,6 +134,12 @@ $(function () {
         $(".btn-primary").append("<kbd>alt + &#9166;</kbd>");
     }
 
+    function changeGitUrl() {
+        var name = $("#artifactId").val();
+        var githubUrl = 'https://github.com/Grails-Plugin-Consortium/' + name;
+        $("#giturl").html('<a target="_blank" href="' + githubUrl + '">' + githubUrl + '</a>');
+    }
+
     var refreshDependencies = function (versionRange) {
         var versions = new Versions();
         $("#dependencies div.checkbox").each(function (idx, item) {
@@ -186,10 +192,18 @@ $(function () {
     $("#groupId").on("change", function() {
         generatePackageName();
     });
+    $("#name").on("change", function () {
+        var $name = $("#name");
+        $name.val($name.val().replace(/  +/g, ' ').trim());
+        setArtifactIdAndBaseDir(savedPrefix, savedSuffix);
+        alignArtifactAndPackageNames();
+        changeGitUrl();
+    });
     $("#artifactId").on('change', function () {
         $("#name").val($(this).val());
         $("#baseDir").attr('value', this.value)
         generatePackageName();
+        changeGitUrl();
     });
     $("#bootVersion").on("change", function (e) {
         refreshDependencies(this.value);
@@ -347,6 +361,8 @@ $(function () {
             addTag(results[i].id, results[i].name, results[i].topic, results[i].description);
             $('#dependencies input[value=\'' + results[i].id + '\']').prop('checked', true);
         }
+
+        changeGitUrl();
     });
 
     Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {

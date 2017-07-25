@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
+import io.spring.initializr.vcs.service.VcsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
@@ -92,7 +93,11 @@ public class ProjectGenerator {
 	@Autowired
 	private ProjectResourceLocator projectResourceLocator = new ProjectResourceLocator();
 
-	@Value("${TMPDIR:.}/initializr")
+    @Autowired(required = false)
+    private VcsService vcsService;
+
+
+    @Value("${TMPDIR:.}/initializr")
 	private String tmpdir;
 
 	private File temporaryDirectory;
@@ -253,6 +258,9 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
 		publishProjectGeneratedEvent(request);
+        if(request.isInitGit()){
+            vcsService.createRepo(dir, request);
+        }
 		return rootDir;
 
 	}

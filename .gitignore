@@ -17,4 +17,4 @@ target
 .springBeans
 tmp*
 grapes
-
+env.properties
