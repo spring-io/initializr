@@ -2,7 +2,7 @@
 
 #Used to build docker image
 mvn package
-if [ \$? -eq 1 ]
+if [ $? -eq 1 ]
 then
     exit 1
 else

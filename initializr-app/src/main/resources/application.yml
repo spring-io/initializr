@@ -503,7 +503,6 @@ initializr:
           description: H2 database (with embedded support)
           groupId: com.h2database
           artifactId: h2
-          scope: runtime
           starter: false
         - name: HSQLDB
           id: hsql
@@ -525,7 +524,6 @@ initializr:
           description: MySQL jdbc driver
           groupId: mysql
           artifactId: mysql-connector-java
-          scope: runtime
           starter: false
           links:
             - rel: guide

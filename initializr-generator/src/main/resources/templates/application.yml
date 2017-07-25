@@ -1,0 +1,85 @@
+spring:
+  application:
+    name: {{artifactId}}
+  profiles:
+    active: local
+
+management.security.enabled: false
+
+endpoints:
+  enabled: true
+  sensitive: false
+  restart:
+    enabled: false
+  pause:
+    enabled: false
+  refresh:
+    enabled: false
+
+{{#hasCloud}}
+---
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: {{artifactId}}-example
+          group: default
+          contentType: text/plain
+          consumer:
+            concurrency: 3
+        output:
+          destination: {{artifactId}}-example
+          group: default
+          contentType: text/plain
+{{/hasCloud}}
+{{#hasSbaClient}}
+---
+spring.boot.admin.url: ${SPRING_BOOT_ADMIN_URL:http://localhost:8888}
+spring.boot.admin.period: ${SPRING_BOOT_ADMIN_PERIOD:30000}
+spring.boot.admin.client.prefer-ip: ${SPRING_BOOT_ADMIN_CLIENT_PREFER_ID:true}
+spring.boot.admin.auto-deregistration: ${SPRING_BOOT_ADMIN_CLIENT_DEREGISTRATION:true}
+{{/hasSbaClient}}
+{{#hasSleuth}}
+---
+spring:
+  sleuth:
+    sampler:
+      percentage: ${SLEUTH_SAMPLER_PERCENTAGE:0.0}
+  zipkin:
+    baseUrl: ${ZIPKIN_BASEURL:http://localhost:9411/}
+
+{{/hasSleuth}}
+{{#hasH2}}
+---
+spring.jpa.hibernate.ddl-auto: create
+
+spring.datasource:
+    url: jdbc:h2:mem:DB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2
+
+{{/hasH2}}
+{{#hasJpa}}
+---
+spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+spring.jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+{{/hasJpa}}
+
+---
+spring.output.ansi.enabled: ALWAYS
+
+---
+#Local Only Profile Config
+spring:
+  profiles: local
+  boot:
+    admin:
+      client:
+        enabled: false
+
+endpoints:
+  enabled: true

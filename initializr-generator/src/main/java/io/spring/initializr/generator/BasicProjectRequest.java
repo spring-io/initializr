@@ -181,4 +181,8 @@ public class BasicProjectRequest {
 	public void setInitDocker(boolean initDocker) {
 		this.initDocker = initDocker;
 	}
+
+    boolean hasStyle(String style) {
+        return this.style != null && this.style.contains(style);
+    }
 }

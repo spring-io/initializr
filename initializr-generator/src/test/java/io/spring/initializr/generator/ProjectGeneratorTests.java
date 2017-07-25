@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator;
 
-import java.util.Collections;
-
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -27,12 +25,13 @@ import io.spring.initializr.util.VersionProperty;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -222,18 +221,15 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBootUseSpringBootApplicationJava() {
-		ProjectRequest request = createProjectRequest("web");
+	public void springBootUseApplicationYml() {
+		ProjectRequest request = createProjectRequest("web", "data-jpa");
 		request.setBootVersion("1.2.0.RC1");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
 		generateProject(request)
-				.sourceCodeAssert("src/main/java/foo/MyDemoApplication.java")
-				.hasImports(SpringBootApplication.class.getName())
-				.doesNotHaveImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.contains("@SpringBootApplication").doesNotContain(
-						"@EnableAutoConfiguration", "@Configuration", "@ComponentScan");
+				.sourceCodeAssert("src/main/resources/application.yml")
+				.contains("spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.H2Dialect")
+		.doesNotContain("sleuth");
 	}
 
 	@Test

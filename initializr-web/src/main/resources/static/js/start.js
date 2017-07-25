@@ -307,7 +307,7 @@ $(function () {
 
     var base = ['springboot', 'spring-test', 'logging', 'spock'];
     var common = [].concat(base);
-    var data = ['dbsync', 'mysql', 'jdbc'];
+    var data = ['dbsync', 'h2', 'jdbc'];
     var data_jpa = ['data-jpa'];
     var web = ['web', 'actuator', 'payload-client', 'sba-client', 'cloud-hystrix', 'cloud-hystrix-dashboard', 'springfox', 'springfoxui', 'springfoxbean', 'restdocs', 'cloud-starter-zipkin'];
     var all = [].concat(web, _toConsumableArray(common), data, data_jpa);

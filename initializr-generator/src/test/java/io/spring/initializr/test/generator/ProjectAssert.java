@@ -186,7 +186,7 @@ public class ProjectAssert {
 						+ expectedApplicationName + "." + extension,
 				"src/test/" + codeLocation + "/" + packageName + "/"
 						+ expectedApplicationName + "Tests." + extension,
-				"src/main/resources/application.properties");
+				"src/main/resources/application.yml");
 	}
 
 	public ProjectAssert isJavaWarProject(String expectedApplicationName) {
