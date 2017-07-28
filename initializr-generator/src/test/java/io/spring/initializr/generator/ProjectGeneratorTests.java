@@ -316,6 +316,30 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void springBoot20M3UseGradle3() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.M3");
+		generateProject(request).isGradleProject("3.5.1");
+	}
+
+	@Test
+	public void springBoot20M4UsesGradle4() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.M4");
+		generateProject(request).isGradleProject("4.0.2");
+	}
+
+	@Test
+	public void springBoot20SnapshotsUseGradle4() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		generateProject(request).isGradleProject("4.0.2");
+	}
+
+	@Test
 	public void customBaseDirectory() {
 		ProjectRequest request = createProjectRequest();
 		request.setBaseDir("my-project");

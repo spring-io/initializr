@@ -78,6 +78,8 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
+	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
@@ -541,6 +543,10 @@ public class ProjectGenerator {
 		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
 	}
 
+	private static boolean isGradle4Available(Version bootVersion) {
+		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
+	}
+
 	private static boolean isJavaVersion(ProjectRequest request, String version) {
 		return request.getJavaVersion().equals(version);
 	}
@@ -554,7 +560,8 @@ public class ProjectGenerator {
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
-		String gradlePrefix = isGradle3Available(bootVersion) ? "gradle3" : "gradle";
+		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4" :
+				isGradle3Available(bootVersion) ? "gradle3" : "gradle";
 		writeTextResource(dir, "gradlew.bat", gradlePrefix + "/gradlew.bat");
 		writeTextResource(dir, "gradlew", gradlePrefix + "/gradlew");
 
