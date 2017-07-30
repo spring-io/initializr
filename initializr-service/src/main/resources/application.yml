@@ -118,7 +118,7 @@ initializr:
         - name: Atomikos (JTA)
           id: jta-atomikos
           description: JTA distributed transactions via Atomikos
-          versionRange: 1.2.0.M1
+          versionRange: 1.2.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/managing-transactions/
@@ -128,7 +128,7 @@ initializr:
         - name: Bitronix (JTA)
           id: jta-bitronix
           description: JTA distributed transactions via Bitronix
-          versionRange: 1.2.0.M1
+          versionRange: 1.2.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/managing-transactions/
@@ -138,7 +138,7 @@ initializr:
         - name: Narayana (JTA)
           id: jta-narayana
           description: JTA distributed transactions via Narayana
-          versionRange: 1.4.0.M2
+          versionRange: 1.4.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/managing-transactions/
@@ -148,7 +148,7 @@ initializr:
         - name: Cache
           id: cache
           description: Spring's Cache abstraction
-          versionRange: 1.3.0.M1
+          versionRange: 1.3.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/caching/
@@ -161,7 +161,7 @@ initializr:
           artifactId: spring-boot-devtools
           scope: runtime
           description: Spring Boot Development Tools
-          versionRange: 1.3.0.M1
+          versionRange: 1.3.0.RELEASE
           starter: false
           links:
             - rel: reference
@@ -180,7 +180,7 @@ initializr:
         - name: Validation
           id: validation
           description: JSR-303 validation infrastructure (already included with web)
-          versionRange: 1.3.0.M1
+          versionRange: 1.3.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/validating-form-input/
@@ -190,14 +190,14 @@ initializr:
           groupId: org.springframework.session
           artifactId: spring-session
           description: API and implementations for managing a user’s session information
-          versionRange: "[1.3.0.M2,2.0.0.M2]"
+          versionRange: "[1.3.0.RELEASE,2.0.0.M2]"
           starter: false
         - name: Retry
           id: retry
           groupId: org.springframework.retry
           artifactId: spring-retry
           description: Provide declarative retry support via spring-retry
-          versionRange: 1.3.0.M2
+          versionRange: 1.3.0.RELEASE
           starter: false
         - name: Lombok
           id: lombok
@@ -335,7 +335,7 @@ initializr:
           description: Browsing Spring Data REST repositories in your browser
           groupId: org.springframework.data
           artifactId: spring-data-rest-hal-browser
-          versionRange: 1.3.0.M1
+          versionRange: 1.3.0.RELEASE
           starter: false
         - name: Mobile
           id: mobile
@@ -436,7 +436,7 @@ initializr:
         - name: JOOQ
           id: jooq
           description: Persistence support using Java Object Oriented Querying
-          versionRange: 1.3.0.M2
+          versionRange: 1.3.0.RELEASE
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jooq
@@ -578,14 +578,14 @@ initializr:
         - name: Couchbase
           id: data-couchbase
           description: Couchbase NoSQL database, including spring-data-couchbase
-          versionRange: 1.4.0.M1
+          versionRange: 1.4.0.RELEASE
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase
         - name: Neo4j
           id: data-neo4j
           description: Neo4j NoSQL graph database, including spring-data-neo4j
-          versionRange: 1.4.0.M2
+          versionRange: 1.4.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/accessing-data-neo4j/
@@ -705,13 +705,13 @@ initializr:
         - name: Zookeeper Configuration
           id: cloud-starter-zookeeper-config
           description: Configuration management with Zookeeper and spring-cloud-zookeeper-config
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-config
         - name: Consul Configuration
           id: cloud-starter-consul-config
           description: Configuration management with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-config
     - name: Cloud Discovery
@@ -736,19 +736,19 @@ initializr:
         - name: Zookeeper Discovery
           id: cloud-starter-zookeeper-discovery
           description: Service discovery with Zookeeper and spring-cloud-zookeeper-discovery
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zookeeper-discovery
         - name: Cloud Foundry Discovery
           id: cloud-cloudfoundry-discovery
           description: Service discovery with Cloud Foundry
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-cloudfoundry-discovery
         - name: Consul Discovery
           id: cloud-starter-consul-discovery
           description: Service discovery with Hashicorp Consul
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-consul-discovery
     - name: Cloud Routing
@@ -804,13 +804,13 @@ initializr:
         - name: Turbine Stream
           id: cloud-turbine-stream
           description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
-          versionRange: 1.3.0.M5
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-turbine-stream
           weight: -1
     - name: Cloud Tracing
       bom: spring-cloud
-      versionRange: 1.3.0.M4
+      versionRange: 1.3.0.RELEASE
       content:
         - name: Sleuth
           id: cloud-starter-sleuth
@@ -858,13 +858,13 @@ initializr:
         - name: Stream Rabbit
           id: cloud-stream-binder-rabbit
           description: Messaging microservices with RabbitMQ
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-rabbit
         - name: Stream Kafka
           id: cloud-stream-binder-kafka
           description: Messaging microservices with Kafka
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-stream-binder-kafka
     - name: Cloud AWS
@@ -1007,7 +1007,7 @@ initializr:
         - name: JMS (Artemis)
           id: artemis
           description: Java Message Service API via Apache Artemis
-          versionRange: 1.3.0.M2
+          versionRange: 1.3.0.RELEASE
           links:
             - rel: guide
               href: https://spring.io/guides/gs/messaging-jms/
@@ -1072,7 +1072,7 @@ initializr:
         - name: Actuator Docs
           id: actuator-docs
           description: API documentation for the Actuator endpoints
-          versionRange: 1.3.0.M4
+          versionRange: 1.3.0.RELEASE
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
         - name: Remote Shell
