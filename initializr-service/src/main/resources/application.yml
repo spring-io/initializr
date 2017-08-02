@@ -88,7 +88,7 @@ initializr:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
         versionProperty: keycloak.version
-        version: 3.1.0.Final
+        version: 3.2.1.Final
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
