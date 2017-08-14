@@ -24,7 +24,6 @@ import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
@@ -55,7 +54,6 @@ class InitializrStatsAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBean(InitializrMetadataProvider.class)
 	public ProjectGenerationStatPublisher projectRequestStatHandler(
 			InitializrMetadataProvider provider,
 			RestTemplateBuilder restTemplateBuilder) {
