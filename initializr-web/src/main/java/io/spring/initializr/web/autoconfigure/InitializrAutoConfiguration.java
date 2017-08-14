@@ -18,6 +18,7 @@ package io.spring.initializr.web.autoconfigure;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
@@ -43,12 +44,14 @@ import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
@@ -64,7 +67,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  */
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
-@AutoConfigureAfter(CacheAutoConfiguration.class)
+@AutoConfigureAfter({ CacheAutoConfiguration.class, WebClientAutoConfiguration.class })
 public class InitializrAutoConfiguration {
 
 	private final List<ProjectRequestPostProcessor> postProcessors;
@@ -73,30 +76,6 @@ public class InitializrAutoConfiguration {
 			ObjectProvider<List<ProjectRequestPostProcessor>> postProcessors) {
 		List<ProjectRequestPostProcessor> list = postProcessors.getIfAvailable();
 		this.postProcessors = list != null ? list : new ArrayList<>();
-	}
-
-	@Bean
-	public WebConfig webConfig() {
-		return new WebConfig();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public MainController initializrMainController(
-			InitializrMetadataProvider metadataProvider,
-			TemplateRenderer templateRenderer,
-			ResourceUrlProvider resourceUrlProvider,
-			ProjectGenerator projectGenerator,
-			DependencyMetadataProvider dependencyMetadataProvider) {
-		return new MainController(metadataProvider, templateRenderer, resourceUrlProvider
-				, projectGenerator, dependencyMetadataProvider);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public UiController initializrUiController(
-			InitializrMetadataProvider metadataProvider) {
-		return new UiController(metadataProvider);
 	}
 
 	@Bean
@@ -130,10 +109,12 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
 	public InitializrMetadataProvider initializrMetadataProvider(
-			InitializrProperties properties) {
+			InitializrProperties properties,
+			RestTemplateBuilder restTemplateBuilder) {
 		InitializrMetadata metadata = InitializrMetadataBuilder
 				.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata, new RestTemplate());
+		return new DefaultInitializrMetadataProvider(metadata,
+				restTemplateBuilder.build());
 	}
 
 	@Bean
@@ -143,8 +124,39 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Configuration
+	@ConditionalOnWebApplication
+	static class InitializrWebConfiguration {
+
+
+		@Bean
+		public WebConfig webConfig() {
+			return new WebConfig();
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		public MainController initializrMainController(
+				InitializrMetadataProvider metadataProvider,
+				TemplateRenderer templateRenderer,
+				ResourceUrlProvider resourceUrlProvider,
+				ProjectGenerator projectGenerator,
+				DependencyMetadataProvider dependencyMetadataProvider) {
+			return new MainController(metadataProvider, templateRenderer, resourceUrlProvider
+					, projectGenerator, dependencyMetadataProvider);
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		public UiController initializrUiController(
+				InitializrMetadataProvider metadataProvider) {
+			return new UiController(metadataProvider);
+		}
+
+	}
+
+	@Configuration
 	@ConditionalOnClass(javax.cache.CacheManager.class)
-	static class CacheConfiguration {
+	static class InitializrCacheConfiguration {
 
 		@Bean
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {

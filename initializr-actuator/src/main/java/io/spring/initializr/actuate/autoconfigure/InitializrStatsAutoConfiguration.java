@@ -23,9 +23,13 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
 import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -41,6 +45,7 @@ import org.springframework.retry.support.RetryTemplate;
 @Configuration
 @EnableConfigurationProperties(StatsProperties.class)
 @ConditionalOnProperty("initializr.stats.elastic.uri")
+@AutoConfigureAfter(WebClientAutoConfiguration.class)
 class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;
@@ -50,11 +55,13 @@ class InitializrStatsAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnBean(InitializrMetadataProvider.class)
 	public ProjectGenerationStatPublisher projectRequestStatHandler(
-			InitializrMetadataProvider provider) {
+			InitializrMetadataProvider provider,
+			RestTemplateBuilder restTemplateBuilder) {
 		return new ProjectGenerationStatPublisher(
 				new ProjectRequestDocumentFactory(provider), statsProperties,
-				statsRetryTemplate());
+				restTemplateBuilder, statsRetryTemplate());
 	}
 
 	@Bean
