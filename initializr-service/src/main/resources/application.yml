@@ -107,9 +107,9 @@ initializr:
               description: Authenticating a User with LDAP
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security
-        - name: AOP
+        - name: Aspects
           id: aop
-          description: Aspect-oriented programming including spring-aop and AspectJ
+          description: Create your own Aspects using Spring AOP and AspectJ
         - name: Atomikos (JTA)
           id: jta-atomikos
           description: JTA distributed transactions via Atomikos
