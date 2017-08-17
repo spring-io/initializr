@@ -70,6 +70,12 @@ initializr:
             version: 1.1.2.RELEASE
           - versionRange: "[1.5.0.RC1, 2.0.0.M1)"
             version: 1.2.1.RELEASE
+          - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
+            version: 2.0.0.M1
+            repositories: spring-milestones
+          - versionRange: "2.0.0.BUILD-SNAPSHOT"
+            version: 2.0.0.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
@@ -658,7 +664,7 @@ initializr:
           description: Task result tracking along with integration with batch and streams
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-task
-          versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
+          versionRange: "1.3.0.RELEASE"
           bom: spring-cloud-task
           mappings:
             - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
