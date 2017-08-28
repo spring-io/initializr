@@ -125,7 +125,8 @@ https://start.spring.io/#!language=groovy&name=Groovy%20Sample
 ----
 
 The following hashbang parameters are supported: `type`, `groupId`, `artifactId`,
-`name`, `description`, `packageName`, `packaging`, `javaVersion` and `language`.
+`name`, `description`, `packageName`, `packaging`, `javaVersion`, `language` and `dependencies`.
+Use a comma-separated list of dependency ids for `dependencies` like `dependencies=security,aop`.
 Review the section above for a description of each of them.
 
 [[metadata]]
