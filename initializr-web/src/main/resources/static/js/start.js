@@ -154,6 +154,24 @@ $(function () {
                 }
             });
             engine.add(data.dependencies);
+            var params = hashbang();
+            var depsParamValue;
+            $.each(params, function (i, param) {
+                if (param.name === 'dependencies') {
+                    depsParamValue = param.value.split(',');
+                    return false;
+                }
+            });
+            if (typeof depsParamValue !== 'undefined') {
+                $.each(depsParamValue, function(index, depParamValue) {
+                    $.each(data.dependencies, function(i, dep) {
+                        if (dep.id === depParamValue) {
+                            addTag(dep.id, dep.name);
+                            return false;
+                        }
+                    });
+                });
+            }
         });
     };
     var generatePackageName = function() {
