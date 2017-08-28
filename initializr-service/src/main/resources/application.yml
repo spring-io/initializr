@@ -1066,7 +1066,7 @@ initializr:
         - name: Actuator Docs
           id: actuator-docs
           description: API documentation for the Actuator endpoints
-          versionRange: 1.3.0.RELEASE
+          versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
         - name: Remote Shell
