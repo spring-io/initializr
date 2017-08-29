@@ -37,7 +37,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.boot.version>1.4.6.RELEASE</spring.boot.version>
+		<spring.boot.version>1.4.7.RELEASE</spring.boot.version>
 		<java.version>1.8</java.version>
 	</properties>
 
@@ -81,7 +81,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-contract-dependencies</artifactId>
-				<version>1.0.3.RELEASE</version>
+				<version>1.0.5.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

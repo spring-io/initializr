@@ -6,7 +6,7 @@ service, you can use these stubs to test your own code. You can consume them wit
 raw Wiremock APIs, or via some features of
 https://github.com/spring-cloud/spring-cloud-contract[Spring Cloud Contract].
 
-WireMock is an embedded web server that analyses incoming requests and chooses stub
+TIP: WireMock is an embedded web server that analyses incoming requests and chooses stub
 responses based on matching some rules (e.g. a specific header value). So if you send
 it a request which matches one of its stubs, it will send you a response as if it was
 a real Initializr service, and you can use that to do full stack integration testing
@@ -16,117 +16,98 @@ of your client.
 
 == Using WireMock with Spring Boot
 === Loading Stubs from the Classpath
-
 A convenient way to consume the stubs in your project is to add a test dependency:
 
 [source,xml,indent=0,subs="attributes,specialchars"]
 ----
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-web</artifactId>
-			<classifier>stubs</classifier>
-			<version>{project-version}</version>
-			<scope>test</scope>
-		</dependency>
+	<dependency>
+		<groupId>io.spring.initializr</groupId>
+		<artifactId>initializr-web</artifactId>
+		<classifier>stubs</classifier>
+		<version>{project-version}</version>
+		<scope>test</scope>
+	</dependency>
 ----
 
 and then pull the stubs from the classpath. In a Spring Boot application, using
 Spring Cloud Contract, you can start a WireMock server and register all the stubs
 with it like this:
 
-[source,java,subs="attributes"]
+[source,java,indent=0,subs="attributes"]
 ----
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureWireMock(port = 0,
-    stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
-public class ClientApplicationTests {
+	@RunWith(SpringRunner.class)
+	@SpringBootTest
+	@AutoConfigureWireMock(port = 0,
+		stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
+	public class ClientApplicationTests {
 
-	@Value("${wiremock.server.port}")
-	private int port;
+		@Value("${wiremock.server.port}")
+		private int port;
 
-    ...
+		...
 
-}
+	}
 ----
 
-The wiremock fetaures come with Spring Cloud Contract Wiremock:
+The Wiremock features come with Spring Cloud Contract Wiremock:
 
-[source,xml,indent=0,subs="attributes,specialchars"]
+[source,xml,indent=0]
 ----
-	<dependencies>
-	...
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-contract-wiremock</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-contract-dependencies</artifactId>
-				<version>1.0.3.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-contract-wiremock</artifactId>
+		<scope>test</scope>
+	</dependency>
 ----
+
+TIP: This dependency is managed by the `spring-cloud-contract-dependencies` BOM.
+
+
 
 === Using the Stub Runner
-
 Alternatively you can configure the stub runner to look for the artifact, using a
 different Spring Cloud Contract dependency:
 `spring-cloud-starter-contract-stub-runner`. The example below will automatically
-download, if necessary, the latest version of the initializr stubs (so you don't need the
+download, if necessary, the defined version of the initializr stubs (so you don't need the
 stubs declared as a dependency):
 
 [source,xml,indent=0,subs="attributes,specialchars"]
 ----
-	<dependencies>
-	...
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-contract-stubrunner</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-contract-dependencies</artifactId>
-				<version>1.0.3.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-contract-stubrunner</artifactId>
+		<scope>test</scope>
+	</dependency>
 ----
 
+The test should use `@AutoConfigureStubRunner` instead:
 
-[source,java,indent=0]
+[source,java,indent=0,,subs="attributes,specialchars"]
 ----
-include::{test-examples}/stub/InitializrIntegrationTests.java[tag=test]
-----
-
-[TIP]
-====
-If you want to test a specific version or validate your API against multiple versions
-you can define the version to use in the annotation, something like
-
-[source,java,indent=0,subs="attributes+"]
-----
+	@RunWith(SpringRunner.class)
+	@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 	@AutoConfigureStubRunner(
-			ids = "io.spring.initializr:initializr-web:{spring-initializr-version}",
-			workOffline = true)
-	public class InitializrIntegrationTests {
+		ids = "io.spring.initializr:initializr-web:{spring-initializr-version}",
+		repositoryRoot = "https://repo.spring.io/{initializr-repo}")
+	public class ClientApplicationTests {
+
+		@Autowired
+		private StubFinder stubFinder;
+
+
 		...
+
 	}
 ----
-====
+
+Here is an example of a test that retrieves the metadata of the service. The assertions
+do not matter much here but it illustrates how you could integrate that in the test suite
+of a custom client:
+
+[source,java,indent=0,subs="verbatim,quotes,attributes"]
+----
+include::{test-examples}/stub/ClientApplicationTests.java[tag=test]
+----
 
 Then you have a server that returns the stub of the JSON metadata
 (`metadataWithCurrentAcceptHeader.json`) when you send it a header

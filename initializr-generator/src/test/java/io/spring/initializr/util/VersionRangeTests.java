@@ -25,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
@@ -35,6 +36,12 @@ public class VersionRangeTests {
 
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none();
+
+	@Test
+	public void simpleStartingRange() {
+		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString(),
+				equalTo(">=1.3.0.RELEASE"));
+	}
 
 	@Test
 	public void matchSimpleRange() {

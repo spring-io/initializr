@@ -199,4 +199,17 @@ public class InitializrMetadataTests {
 		builder.build();
 	}
 
+	@Test
+	public void stripInvalidCharsFromPackage() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+		metadata.getGroupId().setContent("org.acme");
+		metadata.getArtifactId().setContent("2foo.bar");
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foo.bar");
+
+		metadata = InitializrMetadataTestBuilder.withDefaults().build();
+		metadata.getGroupId().setContent("org.ac-me");
+		metadata.getArtifactId().setContent("foo-bar");
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foobar");
+	}
+
 }

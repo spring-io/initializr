@@ -115,9 +115,15 @@ reason for that is that Spring Initializr calls an API on spring.io to retrieve 
 latest versions automatically. This makes sure that you always get the latest available
 versions.
 
-If that's not what you want, you need to override the `InitializrMetadataProvider` bean to
-provide your own metadata for the service. For instance, you could swap to an
-implementation that always returns the contents of static `application.yml`:
+If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
+scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
+details, {spring-boot-reference}/#boot-features-restclient-customization[check the
+documentation].
+
+If you don't want the version to be upgraded automatically, you need to override the
+`InitializrMetadataProvider` bean to provide your own metadata for the service. For
+instance, you could swap to an implementation that always returns the contents of static
+`application.yml`:
 
 [source,java,indent=0]
 ----

@@ -25,6 +25,7 @@ import io.spring.initializr.generator.ProjectRequest;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +55,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
 		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
-				properties, retryTemplate);
+				properties, new RestTemplateBuilder(), retryTemplate);
 		mockServer = MockRestServiceServer.createServer(
 				this.statPublisher.getRestTemplate());
 	}

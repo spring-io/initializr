@@ -198,6 +198,15 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void groupIdAndArtifactIdInferPackageName() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setGroupId("org.acme");
+		request.setArtifactId("42foo");
+		generateProject(request)
+				.isJavaProject("org/acme/foo", "DemoApplication");
+	}
+
+	@Test
 	public void springBoot11UseEnableAutoConfigurationJava() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("1.1.9.RELEASE");
@@ -303,7 +312,31 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
 		request.setBootVersion("1.5.0.RELEASE");
-		generateProject(request).isGradleProject("3.4.1");
+		generateProject(request).isGradleProject("3.5.1");
+	}
+
+	@Test
+	public void springBoot20M3UseGradle3() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.M3");
+		generateProject(request).isGradleProject("3.5.1");
+	}
+
+	@Test
+	public void springBoot20M4UsesGradle4() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.M4");
+		generateProject(request).isGradleProject("4.0.2");
+	}
+
+	@Test
+	public void springBoot20SnapshotsUseGradle4() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-project");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		generateProject(request).isGradleProject("4.0.2");
 	}
 
 	@Test
@@ -730,7 +763,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 		// First after processor that flips Spring Boot version
 		projectGenerator.setRequestResolver(new ProjectRequestResolver(
-				Collections.singletonList(new ProjectRequestPostProcessorAdapter() {
+				Collections.singletonList(new ProjectRequestPostProcessor() {
 					@Override
 					public void postProcessBeforeResolution(ProjectRequest r,
 							InitializrMetadata m) {

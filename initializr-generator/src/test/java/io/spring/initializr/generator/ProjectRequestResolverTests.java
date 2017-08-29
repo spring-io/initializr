@@ -63,7 +63,7 @@ public class ProjectRequestResolverTests {
 
 	@Test
 	public void afterResolution() {
-		postProcessors.add(new ProjectRequestPostProcessorAdapter() {
+		postProcessors.add(new ProjectRequestPostProcessor() {
 			@Override
 			public void postProcessAfterResolution(ProjectRequest request,
 					InitializrMetadata metadata) {

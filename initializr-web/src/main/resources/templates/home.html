@@ -20,18 +20,30 @@
         <div class="container start-main">
             <div class="row form-inline text-center">
                 <div class="form-group project-choice">
-                    <h2>Generate a
+                    <h2>
+                        <span class="rwd-line">
+                        <label for="type">Generate a</label>
                         <select tabindex="1" class="form-control" id="type" name="type">
                             {{#types.content}}
-                            <option data-action="{{action}}" value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
+                            <option data-action="{{action}}" value="{{id}}" {{#default}}
+                                    selected{{/default}}>{{name}}</option>
                             {{/types.content}}
                         </select>
-                        with Spring Boot
-                        <select tabindex="2" class="form-control" name="bootVersion" id="bootVersion">
+                        <label for="language">with</label>
+                        <select tabindex="2" class="form-control" name="language" id="language">
+                            {{#languages.content}}
+                            <option value="{{id}}" {{#default}} selected{{/default}}>{{name}}</option>
+                            {{/languages.content}}
+                        </select>
+                        </span>
+                        <span class="rwd-line">
+                        <label for="bootVersion">and Spring Boot</label>
+                        <select tabindex="3" class="form-control" name="bootVersion" id="bootVersion">
                             {{#bootVersions.content}}
-                            <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
+                            <option value="{{id}}" {{#default}} selected{{/default}}>{{name}}</option>
                             {{/bootVersions.content}}
                         </select>
+                    </span>
                     </h2>
                 </div>
             </div>
@@ -46,34 +58,34 @@
 
                     <div class="form-group groupid-form-group">
                         <label for="groupId" class="control-label">{{groupId.title}}</label>
-                        <input tabindex="3" id="groupId" class="form-control" type="text" value="{{groupId.content}}"
+                        <input tabindex="4" id="groupId" class="form-control" type="text" value="{{groupId.content}}"
                                name="groupId">
                     </div>
                     <div class="form-group artifactid-form-group">
                         <label for="artifactId" class="control-label">{{artifactId.title}}</label>
-                        <input tabindex="4" id="artifactId" class="form-control" type="text"
+                        <input tabindex="5" id="artifactId" class="form-control" type="text"
                                value="{{artifactId.content}}"
                                name="artifactId">
                     </div>
                     <div class="form-group full hidden name-form-group">
                         <label for="name" class="control-label">{{name.title}}</label>
-                        <input tabindex="5" id="name" class="form-control" type="text" value="{{name.content}}"
+                        <input tabindex="6" id="name" class="form-control" type="text" value="{{name.content}}"
                                name="name">
                     </div>
                     <div class="form-group full hidden description-form-group">
                         <label for="description" class="control-label">{{description.title}}</label>
-                        <input tabindex="6" id="description" class="form-control" type="text"
+                        <input tabindex="7" id="description" class="form-control" type="text"
                                value="{{description.content}}" name="description">
                     </div>
                     <div class="form-group full hidden packagename-form-group">
                         <label for="packageName" class="control-label">{{packageName.title}}</label>
-                        <input tabindex="7" id="packageName" class="form-control" type="text"
+                        <input tabindex="8" id="packageName" class="form-control" type="text"
                                value="{{packageName.content}}"
                                name="packageName">
                     </div>
                     <div class="form-group full hidden packaging-form-group">
                         <label for="packaging" class="control-label">{{packagings.title}}</label>
-                        <select tabindex="8" class="form-control" id="packaging" name="packaging">
+                        <select tabindex="9" class="form-control" id="packaging" name="packaging">
                             {{#packagings.content}}
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/packagings.content}}
@@ -81,18 +93,10 @@
                     </div>
                     <div class="form-group full hidden javaversion-form-group">
                         <label for="javaVersion" class="control-label">{{javaVersions.title}}</label>
-                        <select tabindex="9" class="form-control" name="javaVersion" id="javaVersion">
+                        <select tabindex="10" class="form-control" name="javaVersion" id="javaVersion">
                             {{#javaVersions.content}}
                             <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
                             {{/javaVersions.content}}
-                        </select>
-                    </div>
-                    <div class="form-group full hidden language-form-group">
-                        <label for="language" class="control-label">{{languages.title}}</label>
-                        <select tabindex="10" class="form-control" name="language" id="language">
-                            {{#languages.content}}
-                            <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
-                            {{/languages.content}}
                         </select>
                     </div>
                 </div>

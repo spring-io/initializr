@@ -65,7 +65,7 @@ public class InitializrMetadata {
 	private final TextCapability version = new TextCapability("version", "Version",
 			"project version");
 
-	private final TextCapability packageName = new PackageCapability(groupId);
+	private final TextCapability packageName = new PackageCapability(groupId, artifactId);
 
 	public InitializrMetadata() {
 		this(new InitializrConfiguration());
@@ -282,19 +282,27 @@ public class InitializrMetadata {
 	}
 
 	private static class PackageCapability extends TextCapability {
-		private final TextCapability nameCapability;
+		private final TextCapability groupId;
+		private final TextCapability artifactId;
 
-		PackageCapability(TextCapability nameCapability) {
+		PackageCapability(TextCapability groupId, TextCapability artifactId) {
 			super("packageName", "Package Name", "root package");
-			this.nameCapability = nameCapability;
+			this.groupId = groupId;
+			this.artifactId = artifactId;
 		}
 
 		@Override
 		public String getContent() {
 			String value = super.getContent();
-			return value != null ? value
-					: (nameCapability.getContent() != null
-							? nameCapability.getContent().replace("-", ".") : null);
+			if (value != null) {
+				return value;
+			}
+			else if (this.groupId.getContent() != null
+					&& this.artifactId.getContent() != null) {
+				return InitializrConfiguration.cleanPackageName(
+						this.groupId.getContent() + "." + this.artifactId.getContent());
+			}
+			return null;
 		}
 	}
 

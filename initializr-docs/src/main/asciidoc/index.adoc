@@ -8,6 +8,7 @@ Stéphane Nicoll; Dave Syer
 :icons: font
 :hide-uri-scheme:
 :test-examples: ../../test/java/io/spring/initializr
+:initializr-repo: snapshot
 :github-tag: master
 :github-repo: spring-io/initializr
 :github-raw: https://raw.github.com/{github-repo}/{github-tag}

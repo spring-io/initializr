@@ -149,8 +149,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("org.foo");
 		page.submit();
-		zipProjectAssert(from("demo.zip")).hasBaseDir("demo").isJavaProject("org.foo",
-				"DemoApplication");
+		zipProjectAssert(from("demo.zip")).hasBaseDir("demo")
+				.isJavaProject("org.foo.demo", "DemoApplication");
 	}
 
 	@Test
@@ -159,13 +159,21 @@ public class ProjectGenerationSmokeTests
 		page.artifactId("my-project");
 		page.submit();
 		zipProjectAssert(from("my-project.zip")).hasBaseDir("my-project")
-				.isJavaProject("com.example", "MyProjectApplication");
+				.isJavaProject("com.example.myproject", "MyProjectApplication");
+	}
+
+	@Test
+	public void customArtifactIdWithInvalidPackageNameIsHandled() throws Exception {
+		HomePage page = toHome();
+		page.artifactId("42my-project");
+		page.submit();
+		zipProjectAssert(from("42my-project.zip")).hasBaseDir("42my-project")
+				.isJavaProject("com.example.myproject", "Application");
 	}
 
 	@Test
 	public void createGroovyProject() throws Exception {
 		HomePage page = toHome();
-		page.advanced();
 		page.language("groovy");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
@@ -178,7 +186,6 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void createKotlinProject() throws Exception {
 		HomePage page = toHome();
-		page.advanced();
 		page.language("kotlin");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
@@ -229,8 +236,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
-		page.advanced();
 		page.language("kotlin");
+		page.advanced();
 		page.name("My project");
 		page.description("A description for my Kotlin project");
 		page.packageName("com.example.foo");
@@ -252,8 +259,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
-		page.advanced();
 		page.language("groovy");
+		page.advanced();
 		page.name("My project");
 		page.description("A description for my Groovy project");
 		page.packageName("com.example.foo");
@@ -333,7 +340,7 @@ public class ProjectGenerationSmokeTests
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("my-project.zip"));
 		projectAssert.hasBaseDir("my-project").isMavenProject()
-				.isJavaProject("com.example.acme", "MyProjectApplication")
+				.isJavaProject("com.example.acme.myproject", "MyProjectApplication")
 				.hasStaticAndTemplatesResources(false).pomAssert()
 				.hasGroupId("com.example.acme").hasArtifactId("my-project")
 				.hasDependenciesCount(2).hasSpringBootStarterRootDependency()

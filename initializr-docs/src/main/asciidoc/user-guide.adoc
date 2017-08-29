@@ -146,7 +146,7 @@ The following attributes are supported:
 * Project type: `type` (`maven-project`, `gradle-project`)
 * Packaging: `packaging` (`jar`, `war`)
 * Group: `groupId`
-* Artifact: `artifact`
+* Artifact: `artifactId`
 * Name: `name`
 * Description: `description`
 * Package Name: `packageName`

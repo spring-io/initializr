@@ -30,6 +30,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -49,14 +50,20 @@ public class ProjectGenerationStatPublisher {
 	private final RetryTemplate retryTemplate;
 
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
-			StatsProperties statsProperties, RetryTemplate retryTemplate) {
+			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder,
+			RetryTemplate retryTemplate) {
 		this.documentFactory = documentFactory;
 		this.statsProperties = statsProperties;
 		this.objectMapper = createObjectMapper();
-		this.restTemplate = new RestTemplateBuilder()
-				.basicAuthorization(statsProperties.getElastic().getUsername(),
-						statsProperties.getElastic().getPassword())
-				.build();
+		StatsProperties.Elastic elastic = statsProperties.getElastic();
+		if (StringUtils.hasText(elastic.getUsername())) {
+			this.restTemplate = restTemplateBuilder
+					.basicAuthorization(elastic.getUsername(),
+							elastic.getPassword())
+					.build();
+		} else {
+			this.restTemplate = restTemplateBuilder.build();
+		}
 		this.retryTemplate = retryTemplate;
 	}
 
