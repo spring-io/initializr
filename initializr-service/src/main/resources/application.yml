@@ -988,6 +988,13 @@ initializr:
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
           version: 2.19.2
+        - name: JMS (Apache Qpid)
+          id: Qpid JMS
+          versionRange: "[1.5.6.RELEASE,2.0.0.M1)"
+          description: Java Message Service API using Apache Qpid JMS for AMQP 1.0
+          groupId: org.amqphub.spring
+          artifactId: amqp-10-jms-spring-boot-starter
+          version: 0.3.0
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
