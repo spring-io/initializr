@@ -112,7 +112,7 @@
         });
     }
 
-    LOCAL_STORAGE_AVAILABLE = (function () {
+    var LOCAL_STORAGE_AVAILABLE = (function () {
         var test = 'localstorage-test';
         try {
             localStorage.setItem(test, test);
