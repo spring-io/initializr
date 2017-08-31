@@ -113,32 +113,25 @@
     }
 
     LOCAL_STORAGE_AVAILABLE = (function () {
-        var mod = 'localstorage-test';
+        var test = 'localstorage-test';
         try {
-            localStorage.setItem(mod, mod);
-            localStorage.removeItem(mod);
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
             return true;
         } catch(e) {
             return false;
         }
     })()
 
-    function setLocalStorage(key, value) {
-        localStorage.setItem(key, value);
-    }
-
-    function getLocalStorage(key) {
-        return localStorage.getItem(key);
-    }
-
-    function initLocalStorageField(selector, lsKey) {
-        var $field = $(selector);
-        var value = getLocalStorage(lsKey);
+    function initLocalStorageField(field) {
+        var $field = $('#' + field);
+        var lsKey = 'initializer-' + field;
+        var value = localStorage.getItem(lsKey);
         if (value && $field.find("option[value='" + value + "']").length > 0) {
             $field.val(value);
         }
         $field.bind('change', function (e) {
-            setLocalStorage(lsKey, e.target.value);
+            localStorage.setItem(lsKey, e.target.value);
         });
     }
 
@@ -146,9 +139,9 @@
         if (!LOCAL_STORAGE_AVAILABLE) {
             return;
         }
-        initLocalStorageField('#type', 'initializer-type');
-        initLocalStorageField('#language', 'initializer-language');
-        initLocalStorageField('#bootVersion', 'initializer-bootVersion');
+        initLocalStorageField('type');
+        initLocalStorageField('language');
+        initLocalStorageField('bootVersion');
     }
 
 }());
