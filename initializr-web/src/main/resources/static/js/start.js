@@ -112,6 +112,45 @@
         });
     }
 
+    LOCAL_STORAGE_AVAILABLE = (function () {
+        var mod = 'localstorage-test';
+        try {
+            localStorage.setItem(mod, mod);
+            localStorage.removeItem(mod);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    })()
+
+    function setLocalStorage(key, value) {
+        localStorage.setItem(key, value);
+    }
+
+    function getLocalStorage(key) {
+        return localStorage.getItem(key);
+    }
+
+    function initLocalStorageField(selector, lsKey) {
+        var $field = $(selector);
+        var value = getLocalStorage(lsKey);
+        if (value && $field.find("option[value='" + value + "']").length > 0) {
+            $field.val(value);
+        }
+        $field.bind('change', function (e) {
+            setLocalStorage(lsKey, e.target.value);
+        });
+    }
+
+    applyLocalStorage = function () {
+        if (!LOCAL_STORAGE_AVAILABLE) {
+            return;
+        }
+        initLocalStorageField('#type', 'initializer-type');
+        initLocalStorageField('#language', 'initializer-language');
+        initLocalStorageField('#bootVersion', 'initializer-bootVersion');
+    }
+
 }());
 
 $(function () {
@@ -273,6 +312,7 @@ $(function () {
         }
     });
     applyParams();
+    applyLocalStorage();
     if ("onhashchange" in window) {
         window.onhashchange = function() {
             $(".full").addClass("hidden");
