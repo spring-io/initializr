@@ -141,7 +141,6 @@
         }
         initLocalStorageField('type');
         initLocalStorageField('language');
-        initLocalStorageField('bootVersion');
     }
 
 }());
