@@ -120,6 +120,12 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		testServletInitializr("1.4.0.M3", "spring-boot-1.4");
 	}
 
+	@Test
+	public void springBoot2ServletInitializer() {
+		testServletInitializr("2.0.0.M3", "spring-boot-2.0");
+	}
+
+
 	private void testServletInitializr(String bootVersion, String expectedOutput) {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);

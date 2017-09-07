@@ -1,12 +1,12 @@
-package {{packageName}}
+package com.example.demo
 
 import org.springframework.boot.builder.SpringApplicationBuilder
-{{servletInitializrImport}}
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 class ServletInitializer : SpringBootServletInitializer() {
 
 	override fun configure(application: SpringApplicationBuilder) : SpringApplicationBuilder {
-		return application.sources({{applicationName}}::class.java)
+		return application.sources(DemoApplication::class.java)
 	}
 
 }

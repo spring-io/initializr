@@ -434,8 +434,9 @@ public class ProjectGenerator {
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
-		// New Servlet Initializer location
-		model.put("newServletInitializer", isNewServletInitializerAvailable(request));
+		// Servlet Initializer
+		model.put("servletInitializrImport", generateImport(getServletInitializrClass(request),
+				request.getLanguage()));
 
 		// Java versions
 		model.put("isJava6", isJavaVersion(request, "1.6"));
@@ -512,6 +513,19 @@ public class ProjectGenerator {
 		model.put("testAnnotations", testAnnotations);
 	}
 
+	protected String getServletInitializrClass(ProjectRequest request) {
+		Version bootVersion = Version.safeParse(request.getBootVersion());
+		if (VERSION_1_4_0_M3.compareTo(bootVersion) > 0) {
+			return "org.springframework.boot.context.web.SpringBootServletInitializer";
+		}
+		else if (VERSION_2_0_0_M1.compareTo(bootVersion) > 0) {
+			return "org.springframework.boot.web.support.SpringBootServletInitializer";
+		}
+		else {
+			return "org.springframework.boot.web.servlet.support.SpringBootServletInitializer";
+		}
+	}
+
 	protected String generateImport(String type, String language) {
 		String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
 		return "import " + type + end;
@@ -531,11 +545,6 @@ public class ProjectGenerator {
 
 	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
 		return VERSION_1_4_0_M2
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
-	}
-
-	private static boolean isNewServletInitializerAvailable(ProjectRequest request) {
-		return VERSION_1_4_0_M3
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
 	}
 
