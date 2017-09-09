@@ -139,7 +139,13 @@ public class InitializrConfigurationTests {
 
 	@Test
 	public void generatePackageNameInvalidStartCharacter() {
-		assertEquals("com.example", this.properties.cleanPackageName("0om.foo", "com.example"));
+		assertEquals("com.foo", this.properties.cleanPackageName("0com.foo", "com.example"));
+	}
+
+	@Test
+	public void generatePackageNameVersion() {
+		assertEquals("com.foo.test145", this.properties.cleanPackageName(
+				"com.foo.test-1.4.5", "com.example"));
 	}
 
 	@Test

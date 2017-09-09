@@ -108,8 +108,16 @@ public class InitializrConfiguration {
 	}
 
 	static String cleanPackageName(String packageName) {
-		return String.join(".", packageName.trim().replaceAll("-", "").split("\\W+"))
-				.replaceAll("\\.[0-9]+", ".");
+		String[] elements = packageName.trim().replaceAll("-", "").split("\\W+");
+		StringBuilder sb = new StringBuilder();
+		for (String element : elements) {
+			element = element.replaceFirst("^[0-9]+(?!$)", "");
+			if (!element.matches("[0-9]+") && sb.length() > 0) {
+				sb.append(".");
+			}
+			sb.append(element);
+		}
+		return sb.toString();
 	}
 
 	private static String unsplitWords(String text) {

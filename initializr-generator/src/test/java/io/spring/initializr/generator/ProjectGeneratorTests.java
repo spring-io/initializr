@@ -207,6 +207,31 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void cleanPackageNameWithGroupIdAndArtifactIdWithVersion() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setGroupId("org.acme");
+		request.setArtifactId("foo-1.4.5");
+		assertProjectWithPackageNameWithVersion(request);
+	}
+
+	@Test
+	public void cleanPackageNameWithInvalidPackageName() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setGroupId("org.acme");
+		request.setArtifactId("foo");
+		request.setPackageName("org.acme.foo-1.4.5");
+		assertProjectWithPackageNameWithVersion(request);
+	}
+
+	private void assertProjectWithPackageNameWithVersion(ProjectRequest request) {
+		generateProject(request)
+				.isJavaProject("org/acme/foo145", "DemoApplication")
+				.sourceCodeAssert(
+						"src/main/java/org/acme/foo145/DemoApplication.java")
+				.contains("package org.acme.foo145;");
+	}
+
+	@Test
 	public void springBoot11UseEnableAutoConfigurationJava() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("1.1.9.RELEASE");
