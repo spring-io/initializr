@@ -294,6 +294,22 @@ versions of Spring Boot which are valid in combination with it. The versions are
 applied to the dependency itself, but rather used to filter out the dependency, or modify
 it, when different versions of Spring Boot are selected for the generated project.
 
+A typical version is composed of four parts: a major revision, a minor revision, a patch
+revision and a qualifier. Qualifiers are ordered as follows:
+
+* `M` for milestones (e.g. `2.0.0.M1` is the first milestone of the upcoming 2.0.0
+release): can be seen as "beta" release
+* `RC` for release candidates (e.g. `2.0.0.RC2` is the second release candidate of
+upcoming 2.0.0 release)
+* `RELEASE` for general availability (e.g. `2.0.0.RELEASE` is 2.0.0 proper)
+* `BUILD-SNAPSHOT` for development build (`2.1.0.BUILD-SNAPSHOT` represents the latest
+available development build of the upcoming 2.1.0 release).
+
+TIP: snapshots are in a bit special in that scheme as they always represents the "latest
+state" of a release. `M1` represents the most oldest version for a given major, minor and
+patch revisions.
+
+
 A version range has a lower and an upper bound, and if the bound is inclusive it is
 denoted as a square bracket (`[` or `]`), otherwise it is exclusive and denoted by a
 parenthesis (`(` or `)`). For instance `[1.1.6.RELEASE,1.3.0.M1)` means from all versions
