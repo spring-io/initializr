@@ -39,7 +39,7 @@ public class ProjectResourceLocator {
 	 * @param location a resource location
 	 * @return the content of the resource
 	 */
-	@Cacheable("project-resources")
+	@Cacheable("initializr.project-resources")
 	public byte[] getBinaryResource(String location) {
 		try (InputStream stream = getInputStream(location)) {
 			return StreamUtils.copyToByteArray(stream);
@@ -54,7 +54,7 @@ public class ProjectResourceLocator {
 	 * @param location a resource location
 	 * @return the content of the resource
 	 */
-	@Cacheable("project-resources")
+	@Cacheable("initializr.project-resources")
 	public String getTextResource(String location) {
 		try (InputStream stream = getInputStream(location)) {
 			return StreamUtils.copyToString(stream, UTF_8);

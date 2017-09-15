@@ -37,7 +37,7 @@ import org.springframework.cache.annotation.Cacheable;
 public class DefaultDependencyMetadataProvider implements DependencyMetadataProvider {
 
 	@Override
-	@Cacheable(cacheNames = "dependency-metadata", key = "#p1")
+	@Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
 	public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
 		Map<String, Dependency> dependencies = new LinkedHashMap<>();
 		for (Dependency d : metadata.getDependencies().getAll()) {

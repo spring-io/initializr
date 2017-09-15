@@ -789,14 +789,15 @@ one will require some configuration to get it working):
 |===
 | cache name | Description
 
-|`initializr`
+|`initializr.metadata`
 |Cache the full metadata of the service. When the metadata expires, it is fully resolved
 again (including a check on spring.io for the latest Spring Boot versions). Adapt the
 expiration settings accordingly.
 
-|`project-resources`
+|`initializr.dependency-metadata`
+|Cache dependency-specific metadata.
+
+|`initializr.project-resources`
 |Cache resources that are used to generate projects.
 
-|`dependency-metadata`
-|Cache dependency-specific metadata.
 |===

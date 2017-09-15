@@ -49,7 +49,7 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	}
 
 	@Override
-	@Cacheable(value = "initializr", key = "'metadata'")
+	@Cacheable(value = "initializr.metadata", key = "'metadata'")
 	public InitializrMetadata get() {
 		updateInitializrMetadata(metadata);
 		return metadata;
