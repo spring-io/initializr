@@ -83,7 +83,7 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 
 	@Test
 	public void standardWarGroovy() {
-		testStandardWar("java");
+		testStandardWar("groovy");
 	}
 
 	@Test
