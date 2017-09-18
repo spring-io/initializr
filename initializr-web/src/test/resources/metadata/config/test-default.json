@@ -86,6 +86,7 @@
       "my-api-bom": {
         "groupId": "org.acme",
         "artifactId": "my-api-bom",
+        "versionProperty": "my-api.version",
         "additionalBoms": [
           "my-api-dependencies-bom"
         ],

@@ -8,6 +8,7 @@ initializr:
       my-api-bom:
         groupId: org.acme
         artifactId: my-api-bom
+        versionProperty: my-api.version
         additionalBoms: ['my-api-dependencies-bom']
         mappings:
           - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"

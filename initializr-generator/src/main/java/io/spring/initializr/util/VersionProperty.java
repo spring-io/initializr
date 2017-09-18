@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -55,6 +57,7 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 		return sb.toString();
 	}
 
+	@JsonValue
 	public String toStandardFormat() {
 		return this.property;
 	}

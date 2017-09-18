@@ -425,6 +425,7 @@ public class Dependency extends MetadataElement implements Describable {
 		 */
 		private String version;
 
+		@JsonIgnore
 		private VersionRange range;
 
 		public String getGroupId() {
