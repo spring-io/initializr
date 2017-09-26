@@ -69,7 +69,7 @@ initializr:
           - versionRange: "[1.4.0.RELEASE, 1.5.0.RC1)"
             version: 1.1.2.RELEASE
           - versionRange: "[1.5.0.RC1, 2.0.0.M1)"
-            version: 1.2.1.RELEASE
+            version: 1.2.2.RELEASE
           - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
             version: 2.0.0.M1
             repositories: spring-milestones
