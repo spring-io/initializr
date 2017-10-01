@@ -29,15 +29,23 @@ public class SpringSecurityTestRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
 
 	@Test
-	public void securityTestIsAdded() {
+	public void securityTestIsAddedWithSecurity() {
 		ProjectRequest request = createProjectRequest("security");
-		Dependency springSecurityTest = Dependency.withId(
-				"spring-security-test", "org.springframework.security", "spring-security-test");
-		springSecurityTest.setScope(Dependency.SCOPE_TEST);
 		generateMavenPom(request)
 				.hasSpringBootStarterDependency("security")
 				.hasSpringBootStarterTest()
-				.hasDependency(springSecurityTest)
+				.hasDependency(springSecurityTest())
+				.hasDependenciesCount(3);
+	}
+
+	@Test
+	public void securityTestIsAddedWithSecurityReactive() {
+		ProjectRequest request = createProjectRequest("security-reactive");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		generateMavenPom(request)
+				.hasSpringBootStarterDependency("security-reactive")
+				.hasSpringBootStarterTest()
+				.hasDependency(springSecurityTest())
 				.hasDependenciesCount(3);
 	}
 
@@ -58,6 +66,14 @@ public class SpringSecurityTestRequestPostProcessorTests
 				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterTest()
 				.hasDependenciesCount(2);
+	}
+
+
+	private static Dependency springSecurityTest() {
+		Dependency dependency = Dependency.withId("spring-security-test",
+				"org.springframework.security", "spring-security-test");
+		dependency.setScope(Dependency.SCOPE_TEST);
+		return dependency;
 	}
 
 }
