@@ -1032,10 +1032,14 @@ initializr:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 2.18.4
             - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.19.3
+              version: 2.20.0
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
+          links:
+            - rel: guide
+              href: http://camel.apache.org/spring-boot
+              description: Using Apache Camel with Spring Boot
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
