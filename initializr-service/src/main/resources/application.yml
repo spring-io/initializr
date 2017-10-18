@@ -27,8 +27,8 @@ initializr:
         artifactId: azure-spring-boot-bom
         versionProperty: azure.version
         mappings:
-          - versionRange: "1.5.4.RELEASE"
-            version: 0.1.9
+          - versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
+            version: 0.2.0
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -977,7 +977,7 @@ initializr:
           artifactId: spring-cloud-services-starter-circuit-breaker
     - name: Azure
       bom: azure
-      versionRange: 1.5.4.RELEASE
+      versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
       content:
         - name: Azure Support
           id: azure-support
@@ -1016,7 +1016,7 @@ initializr:
           id: azure-storage
           groupId: com.microsoft.azure
           artifactId: azure-storage-spring-boot-starter
-          description: Spring Boot starter for Azure Storage service
+          description: Azure Storage service integration
           links:
             - rel: guide
               href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-storage-spring-boot-sample
