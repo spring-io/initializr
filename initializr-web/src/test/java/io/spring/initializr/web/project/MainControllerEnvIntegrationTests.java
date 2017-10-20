@@ -68,8 +68,8 @@ public class MainControllerEnvIntegrationTests
 	@Test
 	public void googleAnalytics() {
 		String body = htmlHome();
-		assertTrue("google analytics should be enabled",
-				body.contains("ga('create', 'UA-1234567-89', 'auto');"));
+		assertTrue("google tag manager should be enabled",
+				body.contains("https://www.googletagmanager.com/gtm.js"));
 	}
 
 }
