@@ -438,6 +438,7 @@ public class ProjectGenerator {
 				filterDependencies(dependencies, Dependency.SCOPE_PROVIDED));
 		List<Dependency> testDeps = filterDependencies(dependencies, Dependency.SCOPE_TEST);
 		model.put("testDependencies", testDeps);
+		model.put("testOnlyDependencies", filterDependencies(dependencies, Dependency.SCOPE_TEST_COMPILE_ONLY));
 
 		boolean configureRestDocs = testDeps.stream()
 			.anyMatch(d -> "spring-restdocs-mockmvc".equals(d.getArtifactId()));

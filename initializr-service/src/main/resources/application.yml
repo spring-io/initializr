@@ -225,6 +225,13 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
               version: 1.16.6
           starter: false
+        - name: Mapstruct
+          id: mapstruct
+          groupId: org.mapstruct
+          version: 1.2.0.Final
+          scope: compileOnly
+          description: Java mapping framework
+          starter: false
     - name: Web
       content:
         - name: Web

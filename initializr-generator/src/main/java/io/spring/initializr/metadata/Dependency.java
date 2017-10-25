@@ -18,17 +18,19 @@ package io.spring.initializr.metadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.springframework.util.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.spring.initializr.util.InvalidVersionException;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
 import io.spring.initializr.util.VersionRange;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Meta-data for a dependency. Each dependency has a primary identifier and an arbitrary
@@ -44,8 +46,9 @@ public class Dependency extends MetadataElement implements Describable {
 	public static final String SCOPE_RUNTIME = "runtime";
 	public static final String SCOPE_PROVIDED = "provided";
 	public static final String SCOPE_TEST = "test";
+	public static final String SCOPE_TEST_COMPILE_ONLY = "testCompileOnly";
 	public static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
-			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
+			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST, SCOPE_TEST_COMPILE_ONLY);
 
 	private List<String> aliases = new ArrayList<>();
 	private List<String> facets = new ArrayList<>();
@@ -55,6 +58,7 @@ public class Dependency extends MetadataElement implements Describable {
 	private String type;
 	private List<Mapping> mappings = new ArrayList<>();
 	private String scope = SCOPE_COMPILE;
+	private List<String> scopes = Collections.singletonList(SCOPE_COMPILE);
 	private String description;
 	private String versionRange;
 
@@ -103,6 +107,14 @@ public class Dependency extends MetadataElement implements Describable {
 		this.starter = dependency.starter;
 		this.keywords.addAll(dependency.keywords);
 		this.links.addAll(dependency.links);
+	}
+
+	public List<String> getScopes() {
+		return scopes;
+	}
+
+	public void setScopes(List<String> scopes) {
+		this.scopes = scopes;
 	}
 
 	public void setScope(String scope) {

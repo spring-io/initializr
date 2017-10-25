@@ -84,11 +84,18 @@ ext {
 
 {{/buildPropertiesVersions.empty}}
 dependencies {
+	{{#runtimeDependencies}}
+	runtime("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
+	{{/runtimeDependencies}}
+	{{#providedDependencies}}
+	providedRuntime("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
+	{{/providedDependencies}}
+
 	{{#compileDependencies}}
-	compile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	compile("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
 	{{/compileDependencies}}
 	{{#groovy}}
-	compile('org.codehaus.groovy:groovy')
+	compile("org.codehaus.groovy:groovy")
 	{{/groovy}}
 	{{#kotlin}}
 	{{#isJava6}}
@@ -102,19 +109,19 @@ dependencies {
 	{{/isJava8}}
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	{{/kotlin}}
-	{{#runtimeDependencies}}
-	runtime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
-	{{/runtimeDependencies}}
+
 	{{#compileOnlyDependencies}}
-	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	compileOnly("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
 	{{/compileOnlyDependencies}}
-	{{#providedDependencies}}
-	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
-	{{/providedDependencies}}
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	testCompile("org.springframework.boot:spring-boot-starter-test")
 	{{#testDependencies}}
-	testCompile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	testCompile("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
 	{{/testDependencies}}
+
+	{{#testOnlyDependencies}}
+	testCompileOnly("{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}")
+	{{/testOnlyDependencies}}
 }
 {{#hasBoms}}
 
