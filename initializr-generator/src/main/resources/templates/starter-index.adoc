@@ -1,0 +1,6 @@
+= {{docsTitle}}
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: right
+:toclevels: 5

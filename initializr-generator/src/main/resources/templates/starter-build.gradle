@@ -22,6 +22,11 @@ buildscript {
 		{{/kotlin}}
 	}
 }
+{{#configureRestDocs}}
+plugins {
+	id "org.asciidoctor.convert" version "1.5.3"
+}
+{{/configureRestDocs}}
 
 apply plugin: '{{language}}'
 {{#kotlin}}
@@ -55,10 +60,13 @@ compileTestKotlin {
 }{{/isJava8}}{{/kotlin}}
 
 repositories {
-	mavenCentral()
+	mavenLocal()
+	maven { url 'http://nexus:8081/nexus/content/groups/public' }
 	{{#repositoryValues}}
 	maven { url "{{value.url}}" }
 	{{/repositoryValues}}
+	jcenter()
+	mavenCentral()
 }
 
 {{#providedDependencies}}
@@ -70,7 +78,7 @@ configurations {
 {{^buildPropertiesVersions.empty}}
 ext {
 	{{#buildPropertiesVersions}}
-	{{key}} = '{{value}}'
+	{{key}} = "{{& value}}"
 {{/buildPropertiesVersions}}
 }
 
@@ -118,3 +126,30 @@ dependencyManagement {
 	}
 }
 {{/hasBoms}}
+
+{{#configureRestDocs}}
+asciidoctor {
+	doFirst {
+		getOutputDir().delete()
+	}
+	attributes 'snippets': snippetsDirectory
+	inputs.dir snippetsDirectory
+	dependsOn test
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+processResources {
+	filesMatching('application.properties') {
+		filter ReplaceTokens, tokens: [
+			snippetsDirectory: snippetsDirectory
+		]
+	}
+}
+
+test {
+	doFirst {
+		delete snippetsDirectory
+	}
+	outputs.dir snippetsDirectory
+}
+{{/configureRestDocs}}

@@ -23,13 +23,27 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.util.Assert;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 import io.spring.initializr.InitializrException;
 import io.spring.initializr.metadata.BillOfMaterials;
@@ -41,16 +55,6 @@ import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.util.Assert;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StreamUtils;
 
 /**
  * Generate a project based on the configured metadata.
@@ -246,7 +250,19 @@ public class ProjectGenerator {
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+		writeText(new File(resources, "application.properties"), doGenerateApplicationProperties(model));
+
+		File docker = new File(dir, "src/main/deploy");
+		docker.mkdirs();
+		writeText(new File(docker, "values.yaml"), doGenerateValuesYaml(model));
+		writeText(new File(docker, "values-stg.yaml"), doGenerateValuesStgYaml(model));
+		writeText(new File(docker, "values-prd.yaml"), doGenerateValuesPrdYaml(model));
+
+		if(Boolean.TRUE.equals(model.get("configureRestDocs"))) {
+			File docs = new File(dir, "src/main/docs/asciidoc");
+			docs.mkdirs();
+			writeText(new File(docs, "index.adoc"), doGenerateADocs(model));
+		}
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
@@ -255,6 +271,47 @@ public class ProjectGenerator {
 		publishProjectGeneratedEvent(request);
 		return rootDir;
 
+	}
+
+	private String doGenerateValuesYaml(Map<String, Object> model) {
+		return templateRenderer.process("starter-values.yaml", model);
+	}
+
+	private String doGenerateValuesStgYaml(Map<String, Object> model) {
+		return templateRenderer.process("starter-values-stg.yaml", model);
+	}
+
+	private String doGenerateValuesPrdYaml(Map<String, Object> model) {
+		return templateRenderer.process("starter-values-prd.yaml", model);
+	}
+
+	private String doGenerateADocs(Map<String, Object> model) {
+		return templateRenderer.process("starter-index.adoc", model);
+	}
+
+	private String doGenerateApplicationProperties(Map<String, Object> model) {
+		return templateRenderer.process("starter-application.properties", model);
+	}
+
+	private String springApplicationName(ProjectRequest request) {
+		Function<String, String> toLowerCase = String::toLowerCase;
+		return fromApplicationName(request, toLowerCase, Collectors.joining("-"));
+	}
+
+	private String docsTitle(ProjectRequest request) {
+		return fromApplicationName(request, StringUtils::capitalize, Collectors.joining(" "));
+	}
+
+	private String fromApplicationName(ProjectRequest request, Function<String, String> mapper, Collector<CharSequence, ?, String> joining) {
+		String artifactId = request.getArtifactId();
+		String[] split = artifactId
+			.replace('-', ' ')
+			.replace('_',' ')
+			.toLowerCase()
+			.split("[(?=\\p{Upper})|(\\s*)|(?=\\s*\\p{Upper})]");
+		return Arrays.stream(split)
+			.map(mapper)
+			.collect(joining);
 	}
 
 	/**
@@ -379,8 +436,12 @@ public class ProjectGenerator {
 				filterDependencies(dependencies, Dependency.SCOPE_COMPILE_ONLY));
 		model.put("providedDependencies",
 				filterDependencies(dependencies, Dependency.SCOPE_PROVIDED));
-		model.put("testDependencies",
-				filterDependencies(dependencies, Dependency.SCOPE_TEST));
+		List<Dependency> testDeps = filterDependencies(dependencies, Dependency.SCOPE_TEST);
+		model.put("testDependencies", testDeps);
+
+		boolean configureRestDocs = testDeps.stream()
+			.anyMatch(d -> "spring-restdocs-mockmvc".equals(d.getArtifactId()));
+		model.put("configureRestDocs", configureRestDocs);
 
 		request.getBoms().forEach((k, v) -> {
 			if (v.getVersionProperty() != null) {
@@ -390,6 +451,9 @@ public class ProjectGenerator {
 		});
 
 		Map<String, String> versions = new LinkedHashMap<>();
+		if(configureRestDocs) {
+			versions.put("snippetsDirectory", "file('build/generated-snippets').absolutePath");
+		}
 		model.put("buildPropertiesVersions", versions.entrySet());
 		request.getBuildProperties().getVersions().forEach((k, v) ->
 				versions.put(computeVersionProperty(request,k), v.get()));
@@ -454,6 +518,9 @@ public class ProjectGenerator {
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
 		}
+
+		model.put("springApplicationName", springApplicationName(request));
+		model.put("docsTitle", docsTitle(request));
 
 		return model;
 	}

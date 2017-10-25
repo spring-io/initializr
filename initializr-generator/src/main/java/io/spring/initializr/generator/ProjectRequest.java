@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.StringUtils;
+
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
@@ -30,9 +33,6 @@ import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
-
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
 
 /**
  * A request to generate a project.
@@ -212,6 +212,9 @@ public class ProjectRequest extends BasicProjectRequest {
 					.getRepositories().get("spring-snapshots"));
 			repositories.put("spring-milestones", metadata.getConfiguration().getEnv()
 					.getRepositories().get("spring-milestones"));
+			// TODO: make it a separate flag in the ui
+			repositories.put("localch-snapshots", metadata.getConfiguration().getEnv()
+				.getRepositories().get("localch-snapshots"));
 		}
 		boms.values().forEach(it -> it.getRepositories().forEach(key -> {
 			repositories.computeIfAbsent(key, s -> metadata.getConfiguration()
