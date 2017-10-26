@@ -231,6 +231,8 @@ public class InitializrConfiguration {
 						new URL("https://repo.spring.io/snapshot"), true));
 				repositories.put("spring-milestones", new Repository("Spring Milestones",
 						new URL("https://repo.spring.io/milestone"), false));
+				repositories.put("localch-snapshots", new Repository("Local.ch Snapshots",
+					new URL("http://nexus:8081/nexus/content/groups/public-snapshots"), true));
 			}
 			catch (MalformedURLException e) {
 				throw new IllegalStateException("Cannot parse URL", e);
