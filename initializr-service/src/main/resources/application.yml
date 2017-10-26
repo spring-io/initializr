@@ -104,6 +104,16 @@ initializr:
   dependencies:
     - name: Core
       content:
+        - name: Spring Shell
+          groupId: org.springframework.shell
+          artifactId: spring-shell-starter
+          id: spring-shell
+          description: Build shell-based clients
+          version: 2.0.0.M2
+          repository: spring-milestones
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/#extending-spring-shell
         - name: Security
           id: security
           description: Secure your application via spring-security
