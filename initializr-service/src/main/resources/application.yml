@@ -1160,6 +1160,17 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-ldap
+        - name: Spring Shell
+          id: spring-shell
+          groupId: org.springframework.shell
+          artifactId: spring-shell-starter
+          description: Build shell-based clients
+          version: 2.0.0.M2
+          versionRange: 1.4.0.RELEASE
+          repository: spring-milestones
+          links:
+           - rel: reference
+             href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
     - name: Ops
       content:
         - name: Actuator
