@@ -785,6 +785,12 @@ initializr:
             - versionRange: "[1.2.3.RELEASE,1.5.x.RELEASE]"
               artifactId: spring-cloud-starter-zuul
             - versionRange: "1.5.0.BUILD-SNAPSHOT"
+        - name: Spring Cloud Gateway
+          id: cloud-gateway
+          description: Intelligent and programmable routing with the reactive Spring Cloud Gateway
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-gateway
+          versionRange: 2.0.0.M5
         - name: Ribbon
           id: cloud-ribbon
           description: Client side load balancing with spring-cloud-netflix and Ribbon
