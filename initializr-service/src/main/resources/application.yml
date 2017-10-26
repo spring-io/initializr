@@ -789,7 +789,7 @@ initializr:
           id: cloud-gateway
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-gateway
-          description: Effective way to route to APIs and provide cross cutting concerns to them
+          description: Intelligent and programmable routing with the reactive Spring Cloud Gateway
           versionRange: 2.0.0.M5
           links:
             - rel: guide
