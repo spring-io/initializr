@@ -26,33 +26,42 @@ import org.junit.Test;
  * @author Tim Riemer
  */
 public class SpringBatchTestRequestPostProcessorTests
-        extends AbstractRequestPostProcessorTests {
+		extends AbstractRequestPostProcessorTests {
 
-    @Test
-    public void batchTestIsAddedWithBatch() {
-        ProjectRequest request = createProjectRequest("batch");
-        generateMavenPom(request)
-                .hasSpringBootStarterDependency("batch")
-                .hasSpringBootStarterTest()
-                .hasDependency(springBatchTest())
-                .hasDependenciesCount(3);
-    }
+	@Test
+	public void batchTestIsAddedWithBatch() {
+		ProjectRequest request = createProjectRequest("batch");
+		generateMavenPom(request)
+				.hasSpringBootStarterDependency("batch")
+				.hasSpringBootStarterTest()
+				.hasDependency(springBatchTest())
+				.hasDependenciesCount(3);
+	}
 
-    @Test
-    public void batchTestIsNotAddedBefore13() {
-        ProjectRequest request = createProjectRequest("batch");
-        request.setBootVersion("1.2.7.RELEASE");
-        generateMavenPom(request)
-                .hasSpringBootStarterDependency("batch")
-                .hasSpringBootStarterTest()
-                .hasDependenciesCount(2);
-    }
+	@Test
+	public void batchTestIsNotAddedBefore13() {
+		ProjectRequest request = createProjectRequest("batch");
+		request.setBootVersion("1.2.7.RELEASE");
+		generateMavenPom(request)
+				.hasSpringBootStarterDependency("batch")
+				.hasSpringBootStarterTest()
+				.hasDependenciesCount(2);
+	}
 
-    private static Dependency springBatchTest() {
-        Dependency dependency = Dependency.withId("spring-batch-test",
-                "org.springframework.batch", "spring-batch-test");
-        dependency.setScope(Dependency.SCOPE_TEST);
-        return dependency;
-    }
+	@Test
+	public void batchTestIsNotAddedWithoutSpringBatch() {
+		ProjectRequest request = createProjectRequest("web");
+		generateMavenPom(request)
+				.hasSpringBootStarterDependency("web")
+				.hasSpringBootStarterTest()
+				.hasDependenciesCount(2);
+	}
+
+	private static Dependency springBatchTest() {
+		Dependency dependency = Dependency.withId("spring-batch-test",
+				"org.springframework.batch", "spring-batch-test");
+		dependency.setScope(Dependency.SCOPE_TEST);
+		return dependency;
+	}
 
 }

@@ -21,6 +21,7 @@ import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.util.Version;
+
 import org.springframework.stereotype.Component;
 
 /**
