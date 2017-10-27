@@ -123,7 +123,7 @@ initializr:
         - name: Reactive Security
           id: security-reactive
           description: Secure your reactive application via spring-security-webflux
-          versionRange: 2.0.0.M5
+          versionRange: "[2.0.0.M5,2.0.0.M6)"
           weight: 90
         - name: Aspects
           id: aop
