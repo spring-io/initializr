@@ -191,6 +191,30 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 				"project/" + build + "/kotlin-java7-" + assertFileName));
 	}
 
+	@Test
+	public void kotlinSpringBoot2Legacy() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage("kotlin");
+		request.setBootVersion("2.0.0.M5");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
+				.equalsTo(new ClassPathResource("project/kotlin/spring-boot-2.0/DemoApplicationLegacy.kt.gen"));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/kotlin-springboot2-legacy-" + assertFileName));
+	}
+
+	@Test
+	public void kotlinSpringBoot2() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage("kotlin");
+		request.setBootVersion("2.0.0.M6");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
+				.equalsTo(new ClassPathResource("project/kotlin/spring-boot-2.0/DemoApplication.kt.gen"));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/kotlin-springboot2-" + assertFileName));
+	}
+
 	@Override
 	public ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = super.createProjectRequest(styles);

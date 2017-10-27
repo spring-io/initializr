@@ -58,12 +58,16 @@
 			{{#isJava8}}
 			<artifactId>kotlin-stdlib-jre8</artifactId>
 			{{/isJava8}}
+			{{^kotlinSupport}}
 			<version>${kotlin.version}</version>
+			{{/kotlinSupport}}
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
+			{{^kotlinSupport}}
 			<version>${kotlin.version}</version>
+			{{/kotlinSupport}}
 		</dependency>
 		{{/kotlin}}
 
@@ -177,15 +181,20 @@
 			<plugin>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<groupId>org.jetbrains.kotlin</groupId>
+				{{^kotlinSupport}}
 				<version>${kotlin.version}</version>
+				{{/kotlinSupport}}
 				<configuration>
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>
+					{{^kotlinSupport}}
 					{{#isJava8}}
 					<jvmTarget>1.8</jvmTarget>
 					{{/isJava8}}
+					{{/kotlinSupport}}
 				</configuration>
+				{{^kotlinSupport}}
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -202,6 +211,7 @@
 						</goals>
 					</execution>
 				</executions>
+				{{/kotlinSupport}}
 				<dependencies>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>

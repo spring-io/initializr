@@ -80,6 +80,8 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
 
+	private static final Version VERSION_2_0_0_M6 = Version.parse("2.0.0.M6");
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
@@ -344,7 +346,16 @@ public class ProjectGenerator {
 			model.put("war", true);
 		}
 
+		// Kotlin supported as of M6
+		final boolean kotlinSupport = VERSION_2_0_0_M6
+				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
+		model.put("kotlinSupport", kotlinSupport);
+
 		if (isMavenBuild(request)) {
+			if (kotlinSupport) { // No need to provide a kotlin.version
+				request.getBuildProperties().getVersions()
+						.remove(new VersionProperty("kotlin.version"));
+			}
 			model.put("mavenBuild", true);
 			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
 					.resolveParentPom(request.getBootVersion());
@@ -433,8 +444,8 @@ public class ProjectGenerator {
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
 		// Servlet Initializer
-		model.put("servletInitializrImport", generateImport(getServletInitializrClass(request),
-				request.getLanguage()));
+		model.put("servletInitializrImport", new Imports(request.getLanguage()).add(
+				getServletInitializrClass(request)).toString());
 
 		// Java versions
 		model.put("isJava6", isJavaVersion(request, "1.6"));
@@ -537,17 +548,6 @@ public class ProjectGenerator {
 			return "org.springframework.boot.web.servlet.support.SpringBootServletInitializer";
 		}
 	}
-
-	protected String addImport(String type, String language) {
-		return String.format("%s%n", generateImport(type, language));
-	}
-
-	protected String generateImport(String type, String language) {
-		String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
-		return "import " + type + end;
-	}
-
-
 
 	private static boolean isGradleBuild(ProjectRequest request) {
 		return "gradle".equals(request.getBuild());
