@@ -414,9 +414,7 @@ public class ProjectGenerator {
 		}
 
 		model.put("isRelease", request.getBootVersion().contains("RELEASE"));
-		// @SpringBootApplication available as from 1.2.0.RC1
-		model.put("useSpringBootApplication", VERSION_1_2_0_RC1
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
+		setupApplicationModel(request, model);
 
 		// Gradle plugin has changed as from 1.3.0
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
@@ -483,34 +481,48 @@ public class ProjectGenerator {
 		return property.toStandardFormat();
 	}
 
-	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {
-		String imports = "";
-		String testAnnotations = "";
-		boolean newTestInfrastructure = isNewTestInfrastructureAvailable(request);
-		if (newTestInfrastructure) {
-			imports += String.format(
-					generateImport("org.springframework.boot.test.context.SpringBootTest",
-							request.getLanguage()) + "%n");
-			imports += String.format(
-					generateImport("org.springframework.test.context.junit4.SpringRunner",
-							request.getLanguage()) + "%n");
+	protected void setupApplicationModel(ProjectRequest request,
+			Map<String, Object> model) {
+		Imports imports = new Imports(request.getLanguage());
+		Annotations annotations = new Annotations();
+		boolean useSpringBootApplication = VERSION_1_2_0_RC1
+				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
+		if (useSpringBootApplication) {
+			imports.add("org.springframework.boot.autoconfigure.SpringBootApplication");
+			annotations.add("@SpringBootApplication");
 		}
 		else {
-			imports += String.format(generateImport(
-					"org.springframework.boot.test.SpringApplicationConfiguration",
-					request.getLanguage()) + "%n");
-			imports += String.format(generateImport(
-					"org.springframework.test.context.junit4.SpringJUnit4ClassRunner",
-					request.getLanguage()) + "%n");
+			imports.add("org.springframework.boot.autoconfigure.EnableAutoConfiguration")
+					.add("org.springframework.context.annotation.ComponentScan")
+					.add("org.springframework.context.annotation.Configuration");
+			annotations.add("@EnableAutoConfiguration")
+					.add("@ComponentScan")
+					.add("@Configuration");
+		}
+		model.put("applicationImports", imports.toString());
+		model.put("applicationAnnotations", annotations.toString());
+
+
+	}
+
+	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {
+		Imports imports = new Imports(request.getLanguage());
+		Annotations testAnnotations = new Annotations();
+		boolean newTestInfrastructure = isNewTestInfrastructureAvailable(request);
+		if (newTestInfrastructure) {
+			imports.add("org.springframework.boot.test.context.SpringBootTest")
+					.add("org.springframework.test.context.junit4.SpringRunner");
+		}
+		else {
+			imports.add("org.springframework.boot.test.SpringApplicationConfiguration")
+					.add("org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
 		}
 		if (request.hasWebFacet() && !newTestInfrastructure) {
-			imports += String.format(generateImport(
-					"org.springframework.test.context.web.WebAppConfiguration",
-					request.getLanguage()) + "%n");
-			testAnnotations = String.format("@WebAppConfiguration%n");
+			imports.add("org.springframework.test.context.web.WebAppConfiguration");
+			testAnnotations.add("@WebAppConfiguration");
 		}
-		model.put("testImports", imports);
-		model.put("testAnnotations", testAnnotations);
+		model.put("testImports", imports.withFinalCarriageReturn().toString());
+		model.put("testAnnotations", testAnnotations.withFinalCarriageReturn().toString());
 	}
 
 	protected String getServletInitializrClass(ProjectRequest request) {
@@ -526,10 +538,16 @@ public class ProjectGenerator {
 		}
 	}
 
+	protected String addImport(String type, String language) {
+		return String.format("%s%n", generateImport(type, language));
+	}
+
 	protected String generateImport(String type, String language) {
 		String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
 		return "import " + type + end;
 	}
+
+
 
 	private static boolean isGradleBuild(ProjectRequest request) {
 		return "gradle".equals(request.getBuild());
@@ -659,6 +677,66 @@ public class ProjectGenerator {
 		return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
 				.sorted(Comparator.comparing(MetadataElement::getId))
 				.collect(Collectors.toList());
+	}
+
+	private static class Imports {
+
+		private final List<String> statements = new ArrayList<>();
+		private final String language;
+		private boolean finalCarriageReturn;
+
+		public Imports(String language) {
+			this.language = language;
+		}
+
+		public Imports add(String type) {
+			this.statements.add(generateImport(type, language));
+			return this;
+		}
+
+		public Imports withFinalCarriageReturn() {
+			this.finalCarriageReturn = true;
+			return this;
+		}
+
+		private String generateImport(String type, String language) {
+			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
+			return "import " + type + end;
+		}
+
+		public String toString() {
+			if (this.statements.isEmpty()) {
+				return "";
+			}
+			String content = String.join(String.format("%n"), this.statements);
+			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+		}
+
+	}
+
+	private static class Annotations {
+
+		private final List<String> statements = new ArrayList<>();
+		private boolean finalCarriageReturn;
+
+		public Annotations add(String type) {
+			this.statements.add(type);
+			return this;
+		}
+
+		public Annotations withFinalCarriageReturn() {
+			this.finalCarriageReturn = true;
+			return this;
+		}
+
+		public String toString() {
+			if (this.statements.isEmpty()) {
+				return "";
+			}
+			String content = String.join(String.format("%n"), this.statements);
+			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+		}
+
 	}
 
 }

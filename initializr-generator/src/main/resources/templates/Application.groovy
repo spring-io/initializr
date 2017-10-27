@@ -1,23 +1,9 @@
 package {{packageName}}
 
 import org.springframework.boot.SpringApplication
-{{#useSpringBootApplication}}
-import org.springframework.boot.autoconfigure.SpringBootApplication
-{{/useSpringBootApplication}}
-{{^useSpringBootApplication}}
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
-{{/useSpringBootApplication}}
+{{applicationImports}}
 
-{{#useSpringBootApplication}}
-@SpringBootApplication
-{{/useSpringBootApplication}}
-{{^useSpringBootApplication}}
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
-{{/useSpringBootApplication}}
+{{applicationAnnotations}}
 class {{applicationName}} {
 
 	static void main(String[] args) {
