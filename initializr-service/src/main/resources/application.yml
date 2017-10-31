@@ -785,6 +785,16 @@ initializr:
             - versionRange: "[1.2.3.RELEASE,1.5.x.RELEASE]"
               artifactId: spring-cloud-starter-zuul
             - versionRange: "1.5.0.BUILD-SNAPSHOT"
+        - name: Gateway
+          id: cloud-gateway
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-gateway
+          description: Effective way to route to APIs and provide cross cutting concerns to them
+          versionRange: 2.0.0.M5
+          links:
+            - rel: guide
+              href: https://github.com/spring-cloud-samples/spring-cloud-gateway-sample
+              description: Using Spring Cloud Gateway
         - name: Ribbon
           id: cloud-ribbon
           description: Client side load balancing with spring-cloud-netflix and Ribbon
