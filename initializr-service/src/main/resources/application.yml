@@ -356,6 +356,7 @@ initializr:
         - name: Mobile
           id: mobile
           description: Simplify the development of mobile web applications with spring-mobile
+          versionRange : "[1.0.0.RELEASE, 2.0.0.M1)"
         - name: REST Docs
           id: restdocs
           description: Document RESTful services by combining hand-written and auto-generated documentation
