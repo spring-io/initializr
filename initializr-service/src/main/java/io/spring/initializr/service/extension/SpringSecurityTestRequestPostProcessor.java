@@ -53,8 +53,7 @@ class SpringSecurityTestRequestPostProcessor implements ProjectRequestPostProces
 
 	private boolean hasSpringSecurity(ProjectRequest request) {
 		return request.getResolvedDependencies().stream()
-				.anyMatch(d -> "security".equals(d.getId())
-						|| "security-reactive".equals(d.getId()));
+				.anyMatch(d -> "security".equals(d.getId()));
 	}
 
 	private boolean isAtLeastAfter(ProjectRequest request, Version version) {

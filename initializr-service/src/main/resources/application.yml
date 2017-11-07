@@ -120,11 +120,6 @@ initializr:
               description: Authenticating a User with LDAP
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security
-        - name: Reactive Security
-          id: security-reactive
-          description: Secure your reactive application via spring-security-webflux
-          versionRange: "[2.0.0.M5,2.0.0.M6)"
-          weight: 90
         - name: Aspects
           id: aop
           description: Create your own Aspects using Spring AOP and AspectJ

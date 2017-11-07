@@ -39,17 +39,6 @@ public class SpringSecurityTestRequestPostProcessorTests
 	}
 
 	@Test
-	public void securityTestIsAddedWithSecurityReactive() {
-		ProjectRequest request = createProjectRequest("security-reactive");
-		request.setBootVersion("2.0.0.M5");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("security-reactive")
-				.hasSpringBootStarterTest()
-				.hasDependency(springSecurityTest())
-				.hasDependenciesCount(3);
-	}
-
-	@Test
 	public void securityTestIsNotAddedBefore13() {
 		ProjectRequest request = createProjectRequest("security");
 		request.setBootVersion("1.2.7.RELEASE");
