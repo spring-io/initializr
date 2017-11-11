@@ -1251,11 +1251,13 @@ initializr:
       id: war
       default: false
   javaVersions:
+    - id: 9
+      default: false
     - id: 1.8
+      name: 8
       default: true
     - id: 1.7
-      default: false
-    - id: 1.6
+      name: 7
       default: false
   languages:
     - name: Java

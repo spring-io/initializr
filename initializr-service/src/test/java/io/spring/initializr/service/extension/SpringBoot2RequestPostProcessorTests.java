@@ -43,4 +43,20 @@ public class SpringBoot2RequestPostProcessorTests
 		generateGradleBuild(request).hasJavaVersion("1.8");
 	}
 
+	@Test
+	public void java9CanBeUsedMaven() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		request.setJavaVersion("9");
+		generateMavenPom(request).hasJavaVersion("9");
+	}
+
+	@Test
+	public void java9CanBeUsedGradle() {
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setBootVersion("2.0.0.M3");
+		request.setJavaVersion("9");
+		generateGradleBuild(request).hasJavaVersion("9");
+	}
+
 }
