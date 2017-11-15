@@ -587,6 +587,13 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase
+        - name: Reactive Couchbase
+          id: data-couchbase-reactive
+          description: Couchbase NoSQL database, including spring-data-couchbase and the reactive driver
+          versionRange: 2.0.0.M7
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase
         - name: Neo4j
           id: data-neo4j
           description: Neo4j NoSQL graph database, including spring-data-neo4j
