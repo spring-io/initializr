@@ -623,7 +623,7 @@ initializr:
         - name: Reactive Redis
           id: data-redis-reactive
           description: Redis key-value data store, including spring-data-redis
-          versionRange: "[2.0.0.M1,2.0.0.M5)"
+          versionRange: 2.0.0.M7
           links:
             - rel: guide
               href: https://spring.io/guides/gs/messaging-redis/
