@@ -109,7 +109,7 @@ public class SpringSessionRequestPostProcessorTests
 	@Test
 	public void sessionWithRedisReactive() {
 		ProjectRequest request = createProjectRequest("session", "data-redis-reactive");
-		request.setBootVersion("2.0.0.M3");
+		request.setBootVersion("2.0.0.M7");
 		generateMavenPom(request)
 				.hasSpringBootStarterDependency("data-redis-reactive")
 				.hasSpringBootStarterTest()
