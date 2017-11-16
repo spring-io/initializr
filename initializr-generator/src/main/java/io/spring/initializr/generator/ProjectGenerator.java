@@ -447,10 +447,11 @@ public class ProjectGenerator {
 		model.put("servletInitializrImport", new Imports(request.getLanguage()).add(
 				getServletInitializrClass(request)).toString());
 
+		// Kotlin-specific dep
+		model.put("kotlinStdlibArtifactId", getKotlinStdlibArtifactId(request));
+
 		// Java versions
-		model.put("isJava6", isJavaVersion(request, "1.6"));
-		model.put("isJava7", isJavaVersion(request, "1.7"));
-		model.put("isJava8", isJavaVersion(request, "1.8"));
+		model.put("java8OrLater", isJava8OrLater(request));
 
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
@@ -549,6 +550,22 @@ public class ProjectGenerator {
 		}
 	}
 
+	protected String getKotlinStdlibArtifactId(ProjectRequest request) {
+		String javaVersion = request.getJavaVersion();
+		if ("1.6".equals(javaVersion)) {
+			return "kotlin-stdlib";
+		}
+		else if ("1.7".equals(javaVersion)) {
+			return "kotlin-stdlib-jre7";
+		}
+		return "kotlin-stdlib-jre8";
+	}
+
+	private static boolean isJava8OrLater(ProjectRequest request) {
+		return !request.getJavaVersion().equals("1.6")
+				&& !request.getJavaVersion().equals("1.7");
+	}
+
 	private static boolean isGradleBuild(ProjectRequest request) {
 		return "gradle".equals(request.getBuild());
 	}
@@ -572,10 +589,6 @@ public class ProjectGenerator {
 
 	private static boolean isGradle4Available(Version bootVersion) {
 		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
-	}
-
-	private static boolean isJavaVersion(ProjectRequest request, String version) {
-		return request.getJavaVersion().equals(version);
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
