@@ -47,7 +47,7 @@ initializr:
             version: Edgware.RC1
             repositories: spring-milestones
           - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
-            version: Finchley.M3
+            version: Finchley.M4
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
@@ -877,12 +877,19 @@ initializr:
           artifactId: spring-cloud-starter-sleuth
         - name: Zipkin Client
           id: cloud-starter-zipkin
-          description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Sleuth Stream.
+          description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin.
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
+          mappings:
+            - versionRange: "(,1.3.x.RELEASE]"
+        - name: Zipkin2 Client
+          id: cloud-starter-zipkin2
+          description: Distributed tracing with an existing Zipkin2 installation and spring-cloud-sleuth-zipkin2.
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-zipkin2
         - name: Sleuth Stream
           id: cloud-sleuth-stream
-          description: Marshals Spring Cloud Sleuth Spans over a Spring Cloud Stream binder
+          description: Marshals Spring Cloud Sleuth Spans over a Spring Cloud Stream binder. Deprecated since Edgware, please use Zipkin2 client with Rabbit / Kafka.
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-stream
         - name: Zipkin Stream
@@ -890,6 +897,8 @@ initializr:
           description:  Consumes span data in messages from Spring Cloud Sleuth Stream and writes them to a Zipkin store
           groupId: org.springframework.cloud
           artifactId: spring-cloud-sleuth-zipkin-stream
+          mappings:
+            - versionRange: "[1.2.x.RELEASE,2.0.0.BUILD-SNAPSHOT)"
         - name: Zipkin UI
           id: zipkin-ui
           description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
