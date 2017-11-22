@@ -1038,6 +1038,7 @@ initializr:
               href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-storage-spring-boot-starter
               description: Reference doc
     - name: Social
+      versionRange: "[1.2.0.RELEASE,2.0.0.M6)"
       content:
         - name: Facebook
           id: social-facebook
