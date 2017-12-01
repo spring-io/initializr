@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    stages {
+        stage ('Build') {
+            steps {
+                echo "building {{groupId}}:{{artifactId}}:{{version}}"
+                sh 'mvn -Dmaven.test.failure.ignore=true -B clean install'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml'
+                }
+            }
+        }
+    }
+}
