@@ -186,7 +186,9 @@ public class ProjectGenerator {
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
 		try {
-			return doGenerateProjectStructure(request);
+			File rootDir = doGenerateProjectStructure(request);
+			publishProjectGeneratedEvent(request);
+			return rootDir;
 		}
 		catch (InitializrException ex) {
 			publishProjectFailedEvent(request, ex);
@@ -254,9 +256,7 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
-		publishProjectGeneratedEvent(request);
 		return rootDir;
-
 	}
 
 	/**
@@ -566,11 +566,11 @@ public class ProjectGenerator {
 				&& !request.getJavaVersion().equals("1.7");
 	}
 
-	private static boolean isGradleBuild(ProjectRequest request) {
+	protected static boolean isGradleBuild(ProjectRequest request) {
 		return "gradle".equals(request.getBuild());
 	}
 
-	private static boolean isMavenBuild(ProjectRequest request) {
+	protected static boolean isMavenBuild(ProjectRequest request) {
 		return "maven".equals(request.getBuild());
 	}
 

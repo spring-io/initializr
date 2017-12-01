@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    stages {
+        stage ('Build') {
+            steps {
+                echo "building com.example:demo:0.0.1-SNAPSHOT"
+                sh 'mvn -Dmaven.test.failure.ignore=true -B clean install'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml'
+                }
+            }
+        }
+    }
+}
