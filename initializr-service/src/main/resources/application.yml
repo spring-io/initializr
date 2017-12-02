@@ -46,7 +46,16 @@ initializr:
           - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Edgware.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
-          - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
+          - versionRange: "[2.0.0.M3, 2.0.0.M5)"
+            version: Finchley.M2
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.M5, 2.0.0.M5]"
+            version: Finchley.M3
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.M6, 2.0.0.M6]"
+            version: Finchley.M4
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.M7, 2.0.0.M7]"
             version: Finchley.M5
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
