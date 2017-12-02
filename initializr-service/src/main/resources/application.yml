@@ -47,7 +47,7 @@ initializr:
             version: Edgware.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
           - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
-            version: Finchley.M4
+            version: Finchley.M5
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
