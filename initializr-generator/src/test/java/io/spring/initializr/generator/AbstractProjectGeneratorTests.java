@@ -53,11 +53,11 @@ public abstract class AbstractProjectGeneratorTests {
 	protected final ApplicationEventPublisher eventPublisher = mock(
 			ApplicationEventPublisher.class);
 
-	public AbstractProjectGeneratorTests() {
+	protected AbstractProjectGeneratorTests() {
 		this(new ProjectGenerator());
 	}
 
-	public AbstractProjectGeneratorTests(ProjectGenerator projectGenerator) {
+	protected AbstractProjectGeneratorTests(ProjectGenerator projectGenerator) {
 		this.projectGenerator = projectGenerator;
 	}
 

@@ -186,7 +186,8 @@ public class ProjectGenerator {
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
 		try {
-			File rootDir = doGenerateProjectStructure(request);
+			Map<String, Object> model = resolveModel(request);
+			File rootDir = generateProjectStructure(request, model);
 			publishProjectGeneratedEvent(request);
 			return rootDir;
 		}
@@ -196,9 +197,12 @@ public class ProjectGenerator {
 		}
 	}
 
-	protected File doGenerateProjectStructure(ProjectRequest request) {
-		Map<String, Object> model = resolveModel(request);
-
+	/**
+	 * Generate a project structure for the specified {@link ProjectRequest} and resolved
+	 * model.
+	 */
+	protected File generateProjectStructure(ProjectRequest request,
+			Map<String, Object> model) {
 		File rootDir;
 		try {
 			rootDir = File.createTempFile("tmp", "", getTemporaryDirectory());
@@ -566,11 +570,11 @@ public class ProjectGenerator {
 				&& !request.getJavaVersion().equals("1.7");
 	}
 
-	protected static boolean isGradleBuild(ProjectRequest request) {
+	private static boolean isGradleBuild(ProjectRequest request) {
 		return "gradle".equals(request.getBuild());
 	}
 
-	protected static boolean isMavenBuild(ProjectRequest request) {
+	private static boolean isMavenBuild(ProjectRequest request) {
 		return "maven".equals(request.getBuild());
 	}
 
