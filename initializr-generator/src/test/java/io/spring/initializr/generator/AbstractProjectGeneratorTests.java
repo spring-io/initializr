@@ -48,10 +48,18 @@ public abstract class AbstractProjectGeneratorTests {
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder();
 
-	protected final ProjectGenerator projectGenerator = new ProjectGenerator();
+	protected final ProjectGenerator projectGenerator;
 
-	private final ApplicationEventPublisher eventPublisher = mock(
+	protected final ApplicationEventPublisher eventPublisher = mock(
 			ApplicationEventPublisher.class);
+
+	protected AbstractProjectGeneratorTests() {
+		this(new ProjectGenerator());
+	}
+
+	protected AbstractProjectGeneratorTests(ProjectGenerator projectGenerator) {
+		this.projectGenerator = projectGenerator;
+	}
 
 	@Before
 	public void setup() throws IOException {
@@ -104,7 +112,7 @@ public abstract class AbstractProjectGeneratorTests {
 		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
 	}
 
-	private static class ProjectGeneratedEventMatcher
+	protected static class ProjectGeneratedEventMatcher
 			extends ArgumentMatcher<ProjectGeneratedEvent> {
 
 		private final ProjectRequest request;

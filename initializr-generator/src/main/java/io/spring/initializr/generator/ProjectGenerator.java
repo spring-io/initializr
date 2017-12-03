@@ -186,7 +186,10 @@ public class ProjectGenerator {
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
 		try {
-			return doGenerateProjectStructure(request);
+			Map<String, Object> model = resolveModel(request);
+			File rootDir = generateProjectStructure(request, model);
+			publishProjectGeneratedEvent(request);
+			return rootDir;
 		}
 		catch (InitializrException ex) {
 			publishProjectFailedEvent(request, ex);
@@ -194,9 +197,12 @@ public class ProjectGenerator {
 		}
 	}
 
-	protected File doGenerateProjectStructure(ProjectRequest request) {
-		Map<String, Object> model = resolveModel(request);
-
+	/**
+	 * Generate a project structure for the specified {@link ProjectRequest} and resolved
+	 * model.
+	 */
+	protected File generateProjectStructure(ProjectRequest request,
+			Map<String, Object> model) {
 		File rootDir;
 		try {
 			rootDir = File.createTempFile("tmp", "", getTemporaryDirectory());
@@ -254,9 +260,7 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
-		publishProjectGeneratedEvent(request);
 		return rootDir;
-
 	}
 
 	/**
