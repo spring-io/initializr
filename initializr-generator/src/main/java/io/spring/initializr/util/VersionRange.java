@@ -19,7 +19,7 @@ package io.spring.initializr.util;
 import org.springframework.util.Assert;
 
 /**
- * Define a {@link Version} range.  A square bracket "[" or "]" denotes an inclusive
+ * Define a {@link Version} range. A square bracket "[" or "]" denotes an inclusive
  * end of the range and a round bracket "(" or ")" denotes an exclusive end of the
  * range. A range can also be unbounded by defining a a single {@link Version}. The
  * examples below make this clear.
