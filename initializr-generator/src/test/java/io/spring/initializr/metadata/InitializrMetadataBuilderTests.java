@@ -33,6 +33,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
+ * Tests for {@link InitializrMetadataBuilder}.
+ * 
  * @author Stephane Nicoll
  */
 public class InitializrMetadataBuilderTests {
@@ -163,8 +165,6 @@ public class InitializrMetadataBuilderTests {
 		assertEquals(defaultEnv.getFallbackApplicationName(),
 				actualEnv.getFallbackApplicationName());
 		assertEquals(defaultEnv.isForceSsl(), actualEnv.isForceSsl());
-		assertEquals(defaultEnv.getKotlin().getVersion(),
-				actualEnv.getKotlin().getVersion());
 	}
 
 	@Test
@@ -184,7 +184,7 @@ public class InitializrMetadataBuilderTests {
 				actualEnv.getSpringBootMetadataUrl());
 		assertEquals("FooBarApplication", actualEnv.getFallbackApplicationName());
 		assertEquals(false, actualEnv.isForceSsl());
-		assertEquals("1.0.0-beta-2423", actualEnv.getKotlin().getVersion());
+		assertEquals("1.0.0-beta-2423", actualEnv.getKotlin().getDefaultVersion());
 	}
 
 	@Test

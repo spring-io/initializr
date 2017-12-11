@@ -218,6 +218,7 @@ public class InitializrMetadata {
 		dependencies.updateVersionRange(parser);
 		configuration.getEnv().getBoms().values()
 				.forEach(it -> it.updateVersionRange(parser));
+		configuration.getEnv().getKotlin().updateVersionRange(parser);
 	}
 
 	/**

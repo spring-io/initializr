@@ -118,6 +118,14 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
+	public void kotlinRange() {
+		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=1.2.1.RELEASE")
+				.isKotlinProject().isMavenProject()
+				.pomAssert().hasDependenciesCount(4)
+				.hasProperty("kotlin.version", "1.1");
+	}
+
+	@Test
 	public void gradleWarProject() {
 		downloadZip("/starter.zip?style=web&style=security&packaging=war&type=gradle.zip")
 				.isJavaWarProject().isGradleProject();

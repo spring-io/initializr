@@ -24,6 +24,7 @@ import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyGroup;
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
@@ -190,9 +191,15 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setKotlinEnv(String kotlinVersion) {
-		builder.withCustomizer(it -> it.getConfiguration().getEnv()
-				.getKotlin().setVersion(kotlinVersion));
+	public InitializrMetadataTestBuilder setKotlinEnv(String defaultKotlinVersion,
+			Kotlin.Mapping... mappings) {
+		builder.withCustomizer(it -> {
+			it.getConfiguration().getEnv().getKotlin()
+					.setDefaultVersion(defaultKotlinVersion);
+			for (Kotlin.Mapping mapping : mappings) {
+				it.getConfiguration().getEnv().getKotlin().getMappings().add(mapping);
+			}
+		});
 		return this;
 	}
 

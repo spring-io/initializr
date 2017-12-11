@@ -37,7 +37,17 @@
       "dependencyManagementPluginVersion": "1.0.0.RELEASE"
     },
     "kotlin": {
-      "version": null
+      "defaultVersion": "1.2",
+      "mappings": [
+        {
+          "versionRange": "[1.0.0.RELEASE,1.2.0.RELEASE)",
+          "version": "1.0"
+        },
+        {
+          "versionRange": "[1.2.0.RELEASE,1.5.0.RELEASE)",
+          "version": "1.1"
+        }
+      ]
     },
     "maven": {
       "parent": {

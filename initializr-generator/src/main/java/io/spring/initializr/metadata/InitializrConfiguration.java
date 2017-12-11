@@ -26,6 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.spring.initializr.util.InvalidVersionException;
+import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionParser;
+import io.spring.initializr.util.VersionRange;
+
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.StringUtils;
 
@@ -319,6 +325,7 @@ public class InitializrConfiguration {
 		public void validate() {
 			maven.parent.validate();
 			boms.forEach((k, v) -> v.validate());
+			kotlin.validate();
 		}
 
 		public void merge(Env other) {
@@ -329,7 +336,7 @@ public class InitializrConfiguration {
 			invalidApplicationNames = other.invalidApplicationNames;
 			forceSsl = other.forceSsl;
 			gradle.merge(other.gradle);
-			kotlin.version = other.kotlin.version;
+			kotlin.merge(other.kotlin);
 			maven.merge(other.maven);
 			other.boms.forEach(boms::putIfAbsent);
 			other.repositories.forEach(repositories::putIfAbsent);
@@ -360,17 +367,114 @@ public class InitializrConfiguration {
 		public static class Kotlin {
 
 			/**
-			 * Kotlin version to use.
+			 * Default kotlin version.
 			 */
-			private String version;
+			private String defaultVersion;
 
-			public String getVersion() {
-				return version;
+			/**
+			 * Kotlin version mappings.
+			 */
+			private final List<Mapping> mappings = new ArrayList<>();
+
+			/**
+			 * Resolve the kotlin version to use based on the Spring Boot version.
+			 * @param bootVersion the Spring Boot version
+			 * @return the kotlin version to use
+			 */
+			public String resolveKotlinVersion(Version bootVersion) {
+				for (Mapping mapping : this.mappings) {
+					if (mapping.range.match(bootVersion)) {
+						return mapping.version;
+					}
+				}
+				if (defaultVersion == null) {
+					throw new InvalidInitializrMetadataException(
+							"No Kotlin version mapping available for " + bootVersion);
+				}
+				return this.defaultVersion;
 			}
 
-			public void setVersion(String version) {
-				this.version = version;
+			public String getDefaultVersion() {
+				return this.defaultVersion;
 			}
+
+			public void setDefaultVersion(String defaultVersion) {
+				this.defaultVersion = defaultVersion;
+			}
+
+			public List<Mapping> getMappings() {
+				return this.mappings;
+			}
+
+			public void validate() {
+				VersionParser simpleParser = new VersionParser(Collections.emptyList());
+				mappings.forEach(m -> {
+					if (m.versionRange == null) {
+						throw new InvalidInitializrMetadataException(
+								"VersionRange is mandatory, invalid version mapping for " + this);
+					}
+					m.range = simpleParser.parseRange(m.versionRange);
+					if (m.version == null) {
+						throw new InvalidInitializrMetadataException(
+								"Version is mandatory, invalid version mapping for " + this);
+					}
+				});
+			}
+
+			public void updateVersionRange(VersionParser versionParser) {
+				mappings.forEach(it -> {
+					try {
+						it.range = versionParser.parseRange(it.versionRange);
+					}
+					catch (InvalidVersionException ex) {
+						throw new InvalidInitializrMetadataException(
+								"Invalid version range " + it.versionRange + " for " + this, ex);
+					}
+				});
+			}
+
+			private void merge(Kotlin other) {
+				this.defaultVersion = other.defaultVersion;
+				this.mappings.clear();
+				this.mappings.addAll(other.mappings);
+			}
+
+			/**
+			 * Map several attribute of the dependency for a given version range.
+			 */
+			public static class Mapping {
+
+				/**
+				 * The version range of this mapping.
+				 */
+				private String versionRange;
+
+				/**
+				 * The kotlin version for this mapping.
+				 */
+				private String version;
+
+				@JsonIgnore
+				private VersionRange range;
+
+				public String getVersionRange() {
+					return this.versionRange;
+				}
+
+				public void setVersionRange(String versionRange) {
+					this.versionRange = versionRange;
+				}
+
+				public String getVersion() {
+					return this.version;
+				}
+
+				public void setVersion(String version) {
+					this.version = version;
+				}
+
+			}
+
 		}
 
 		public static class Maven {

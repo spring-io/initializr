@@ -340,6 +340,7 @@ public class ProjectGenerator {
 		ProjectRequest request = requestResolver.resolve(originalRequest, metadata);
 
 		// request resolved so we can log what has been requested
+		Version bootVersion = Version.safeParse(request.getBootVersion());
 		List<Dependency> dependencies = request.getResolvedDependencies();
 		List<String> dependencyIds = dependencies.stream().map(Dependency::getId)
 				.collect(Collectors.toList());
@@ -352,7 +353,7 @@ public class ProjectGenerator {
 
 		// Kotlin supported as of M6
 		final boolean kotlinSupport = VERSION_2_0_0_M6
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
+				.compareTo(bootVersion) <= 0;
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
@@ -419,8 +420,8 @@ public class ProjectGenerator {
 		// Add various versions
 		model.put("dependencyManagementPluginVersion", metadata.getConfiguration()
 				.getEnv().getGradle().getDependencyManagementPluginVersion());
-		model.put("kotlinVersion",
-				metadata.getConfiguration().getEnv().getKotlin().getVersion());
+		model.put("kotlinVersion", metadata.getConfiguration().getEnv().getKotlin()
+				.resolveKotlinVersion(bootVersion));
 		if ("kotlin".equals(request.getLanguage())) {
 			model.put("kotlin", true);
 		}
@@ -433,15 +434,15 @@ public class ProjectGenerator {
 
 		// Gradle plugin has changed as from 1.3.0
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
+				.compareTo(bootVersion) <= 0);
 
 		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0);
+				.compareTo(bootVersion) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
 		model.put("springBootPluginName",
 				(VERSION_1_4_2_M1
-						.compareTo(Version.safeParse(request.getBootVersion())) <= 0
+						.compareTo(bootVersion) <= 0
 						? "org.springframework.boot" : "spring-boot"));
 
 		// New testing stuff

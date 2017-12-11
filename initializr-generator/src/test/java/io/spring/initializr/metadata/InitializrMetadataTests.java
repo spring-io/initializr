@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.metadata.BillOfMaterials.Mapping;
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.Version;
 import org.junit.Rule;
@@ -173,7 +174,11 @@ public class InitializrMetadataTests {
 				"1.3.x.BUILD-SNAPSHOT", null, null, "0.2.0.RELEASE"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder
 				.withDefaults().addDependencyGroup("test", dependency)
-				.addBom("foo-bom", bom).build();
+				.addBom("foo-bom", bom)
+				.setKotlinEnv("1.3",
+						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.1"),
+						createKotlinVersionMapping("1.3.x.BUILD-SNAPSHOT", "1.2"))
+				.build();
 
 		List<DefaultMetadataElement> bootVersions = Arrays.asList(
 				DefaultMetadataElement.create("1.3.6.RELEASE", "1.3.6", false),
@@ -187,6 +192,8 @@ public class InitializrMetadataTests {
 				.resolve(Version.parse("1.3.6.RELEASE")).getVersion()).isEqualTo("0.1.0.RELEASE");
 		assertThat(metadata.getDependencies().get("bar")
 				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion()).isEqualTo("0.2.0.RELEASE");
+		assertThat(metadata.getConfiguration().getEnv().getKotlin()
+				.resolveKotlinVersion(Version.parse("1.3.7.BUILD-SNAPSHOT"))).isEqualTo("1.2");
 	}
 
 	@Test
@@ -210,6 +217,14 @@ public class InitializrMetadataTests {
 		metadata.getGroupId().setContent("org.ac-me");
 		metadata.getArtifactId().setContent("foo-bar");
 		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foobar");
+	}
+
+	private Kotlin.Mapping createKotlinVersionMapping(String versionRange,
+			String kotlinVersion){
+		Kotlin.Mapping mapping = new Kotlin.Mapping();
+		mapping.setVersionRange(versionRange);
+		mapping.setVersion(kotlinVersion);
+		return mapping;
 	}
 
 }

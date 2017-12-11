@@ -22,6 +22,13 @@ initializr:
         artifactId: my-api-dependencies-bom
         version: 1.0.0.RELEASE
         repositories: my-api-repo-3
+    kotlin:
+      defaultVersion: 1.2
+      mappings:
+        - versionRange: "[1.0.0.RELEASE,1.2.0.RELEASE)"
+          version: 1.0
+        - versionRange: "[1.2.0.RELEASE,1.5.0.RELEASE)"
+          version: 1.1
     repositories:
       my-api-repo-1:
         name: repo1

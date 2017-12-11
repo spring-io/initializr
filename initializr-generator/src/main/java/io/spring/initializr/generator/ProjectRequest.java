@@ -196,7 +196,7 @@ public class ProjectRequest extends BasicProjectRequest {
 
 		initializeRepositories(metadata, requestedVersion);
 
-		initializeProperties(metadata);
+		initializeProperties(metadata, requestedVersion);
 
 		afterResolution(metadata);
 	}
@@ -219,12 +219,14 @@ public class ProjectRequest extends BasicProjectRequest {
 		}));
 	}
 
-	protected void initializeProperties(InitializrMetadata metadata) {
+	protected void initializeProperties(InitializrMetadata metadata,
+			Version requestedVersion) {
+		String kotlinVersion = metadata.getConfiguration().getEnv().getKotlin()
+				.resolveKotlinVersion(requestedVersion);
 		if ("gradle".equals(build)) {
 			buildProperties.getGradle().put("springBootVersion", this::getBootVersion);
 			if ("kotlin".equals(getLanguage())) {
-				buildProperties.getGradle().put("kotlinVersion", () -> metadata
-						.getConfiguration().getEnv().getKotlin().getVersion());
+				buildProperties.getGradle().put("kotlinVersion", () -> kotlinVersion);
 			}
 		}
 		else {
@@ -235,7 +237,7 @@ public class ProjectRequest extends BasicProjectRequest {
 					this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {
 				buildProperties.getVersions().put(new VersionProperty("kotlin.version"),
-						() -> metadata.getConfiguration().getEnv().getKotlin().getVersion());
+						() -> kotlinVersion);
 				buildProperties.getMaven().put("kotlin.compiler.incremental", () -> "true");
 			}
 		}
