@@ -479,6 +479,12 @@ initializr:
         - name: MyBatis
           id: mybatis
           description: Persistence support using MyBatis
+          links:
+            - rel: guide
+              href: https://github.com/mybatis/spring-boot-starter/wiki/Quick-Start
+              description: Quick Start
+            - rel: reference
+              href: http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
           groupId: org.mybatis.spring.boot
           artifactId: mybatis-spring-boot-starter
           mappings:
