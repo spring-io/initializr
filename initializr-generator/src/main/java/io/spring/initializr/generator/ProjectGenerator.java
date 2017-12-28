@@ -357,10 +357,6 @@ public class ProjectGenerator {
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
-			if (kotlinSupport) { // No need to provide a kotlin.version
-				request.getBuildProperties().getVersions()
-						.remove(new VersionProperty("kotlin.version"));
-			}
 			model.put("mavenBuild", true);
 			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
 					.resolveParentPom(request.getBootVersion());
