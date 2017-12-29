@@ -23,6 +23,10 @@ logging:
     org.springframework.core.env: warn
     org.springframework.jndi: warn
 
+management:
+  security:
+    enabled: false
+
 server:
   compression:
     enabled: true

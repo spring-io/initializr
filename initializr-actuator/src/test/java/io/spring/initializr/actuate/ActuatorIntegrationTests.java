@@ -20,10 +20,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.Test;
 
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import static io.spring.initializr.web.AbstractInitializrIntegrationTests.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Tests for actuator specific features.
@@ -31,6 +34,8 @@ import static org.junit.Assert.assertTrue;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
+@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT,
+		properties = "management.security.enabled=false")
 public class ActuatorIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
