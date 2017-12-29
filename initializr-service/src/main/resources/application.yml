@@ -17,6 +17,10 @@ endpoints:
     enabled: false
   logfile:
     enabled: false
+  loggers:
+      enabled: false
+  trace:
+      enabled: false
 
 logging:
   level:
