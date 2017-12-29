@@ -1,6 +1,5 @@
 package io.spring.initializr.stub;
 
-import java.io.IOException;
 import java.net.URI;
 
 import org.junit.Test;
@@ -38,7 +37,7 @@ public class ClientApplicationTests {
 	private RestTemplate restTemplate;
 
 	@Test
-	public void testCurrentMetadata() throws IOException {
+	public void testCurrentMetadata() {
 		RequestEntity<Void> request = RequestEntity.get(createUri("/"))
 				.accept(MediaType.valueOf("application/vnd.initializr.v2.1+json"))
 				.build();
