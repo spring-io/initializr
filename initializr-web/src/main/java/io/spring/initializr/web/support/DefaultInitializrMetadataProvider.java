@@ -18,6 +18,7 @@ package io.spring.initializr.web.support;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -40,11 +41,13 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 			.getLogger(DefaultInitializrMetadataProvider.class);
 
 	private final InitializrMetadata metadata;
+	private final ObjectMapper objectMapper;
 	private final RestTemplate restTemplate;
 
 	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
-			RestTemplate restTemplate) {
+			ObjectMapper objectMapper, RestTemplate restTemplate) {
 		this.metadata = metadata;
+		this.objectMapper = objectMapper;
 		this.restTemplate = restTemplate;
 	}
 
@@ -71,7 +74,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 		if (StringUtils.hasText(url)) {
 			try {
 				log.info("Fetching boot metadata from {}", url);
-				return new SpringBootMetadataReader(restTemplate, url).getBootVersions();
+				return new SpringBootMetadataReader(objectMapper, restTemplate, url)
+						.getBootVersions();
 			}
 			catch (Exception e) {
 				log.warn("Failed to fetch spring boot metadata", e);

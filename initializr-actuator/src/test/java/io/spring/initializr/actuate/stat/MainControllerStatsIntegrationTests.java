@@ -20,10 +20,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,12 +73,12 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
-		assertEquals("com.foo", json.get("groupId"));
-		assertEquals("bar", json.get("artifactId"));
-		JSONArray list = json.getJSONArray("dependencies");
-		assertEquals(1, list.length());
-		assertEquals("web", list.get(0));
+		JsonNode json = parseJson(content.json);
+		assertEquals("com.foo", json.get("groupId").textValue());
+		assertEquals("bar", json.get("artifactId").textValue());
+		JsonNode list = json.get("dependencies");
+		assertEquals(1, list.size());
+		assertEquals("web", list.get(0).textValue());
 	}
 
 	@Test
@@ -104,7 +103,7 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
+		JsonNode json = parseJson(content.json);
 		assertFalse("requestIp property should not be set", json.has("requestIp"));
 	}
 
@@ -116,8 +115,8 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
-		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp"));
+		JsonNode json = parseJson(content.json);
+		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp").textValue());
 	}
 
 	@Test
@@ -128,7 +127,7 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
+		JsonNode json = parseJson(content.json);
 		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
 				json.has("requestIpv4"));
 	}
@@ -141,7 +140,7 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
+		JsonNode json = parseJson(content.json);
 		assertFalse("requestCountry property should not be set if value is set to xx",
 				json.has("requestCountry"));
 	}
@@ -158,13 +157,13 @@ public class MainControllerStatsIntegrationTests
 		assertEquals("No stat got generated", 1, statsMockController.stats.size());
 		StatsMockController.Content content = statsMockController.stats.get(0);
 
-		JSONObject json = new JSONObject(content.json);
-		assertEquals("com.example", json.get("groupId"));
-		assertEquals("demo", json.get("artifactId"));
-		assertEquals(true, json.get("invalid"));
-		assertEquals(true, json.get("invalidType"));
+		JsonNode json = parseJson(content.json);
+		assertEquals("com.example", json.get("groupId").textValue());
+		assertEquals("demo", json.get("artifactId").textValue());
+		assertEquals(true, json.get("invalid").booleanValue());
+		assertEquals(true, json.get("invalidType").booleanValue());
 		assertNotNull(json.get("errorMessage"));
-		assertTrue(((String) json.get("errorMessage")).contains("invalid-type"));
+		assertTrue(json.get("errorMessage").textValue().contains("invalid-type"));
 	}
 
 	@Test

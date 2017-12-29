@@ -16,11 +16,14 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.json.JSONObject;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,27 +34,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class InitializrMetadataJsonMapperTests {
 
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	private final InitializrMetadataJsonMapper jsonMapper =
 			new InitializrMetadataV21JsonMapper();
 
 	@Test
-	public void withNoAppUrl() {
+	public void withNoAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, null);
-		JSONObject result = new JSONObject(json);
+		JsonNode result = objectMapper.readTree(json);
 		assertEquals("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion," +
 				"groupId,artifactId,version,name,description,packageName}", get(result, "_links.foo.href"));
 	}
 
 	@Test
-	public void withAppUrl() {
+	public void withAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
-		JSONObject result = new JSONObject(json);
+		JsonNode result = objectMapper.readTree(json);
 		assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
 						"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
 				get(result, "_links.foo.href"));
@@ -72,13 +77,13 @@ public class InitializrMetadataJsonMapperTests {
 		assertTrue(second > 0);
 	}
 
-	private Object get(JSONObject result, String path) {
+	private Object get(JsonNode result, String path) {
 		String[] nodes = path.split("\\.");
 		for (int i = 0; i < nodes.length - 1; i++) {
 			String node = nodes[i];
-			result = result.getJSONObject(node);
+			result = result.path(node);
 		}
-		return result.getString(nodes[nodes.length - 1]);
+		return result.get(nodes[nodes.length - 1]).textValue();
 	}
 
 }

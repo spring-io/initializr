@@ -16,13 +16,14 @@
 
 package io.spring.initializr.service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,13 +56,13 @@ public class InitializrServiceSmokeTests {
 	private InitializrMetadataProvider metadataProvider;
 
 	@Test
-	public void metadataCanBeSerialized() throws URISyntaxException {
+	public void metadataCanBeSerialized() throws URISyntaxException, IOException {
 		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
 				.accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
 				.build();
 		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		new JSONObject(response.getBody());
+		new ObjectMapper().readTree(response.getBody());
 	}
 
 	@Test

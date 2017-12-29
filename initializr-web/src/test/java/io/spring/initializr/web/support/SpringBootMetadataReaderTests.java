@@ -16,9 +16,11 @@
 
 package io.spring.initializr.web.support;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
@@ -43,20 +45,22 @@ public class SpringBootMetadataReaderTests {
 	private final InitializrMetadata metadata =
 			InitializrMetadataBuilder.create().build();
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	private final MockRestServiceServer server =
 			MockRestServiceServer.bindTo(restTemplate).build();
 
 	@Test
-	public void readAvailableVersions() {
+	public void readAvailableVersions() throws IOException {
 		server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
 				.andRespond(withSuccess(
 						new ClassPathResource("metadata/sagan/spring-boot.json"),
 						MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(restTemplate,
-				metadata.getConfiguration().getEnv()
-						.getSpringBootMetadataUrl()).getBootVersions();
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(objectMapper,
+				restTemplate, metadata.getConfiguration().getEnv()
+				.getSpringBootMetadataUrl()).getBootVersions();
 		assertNotNull("spring boot versions should not be null", versions);
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
 		versions.forEach(it -> {

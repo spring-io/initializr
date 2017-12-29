@@ -16,12 +16,13 @@
 
 package io.spring.initializr.web.mapper;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.DependenciesCapability;
 import io.spring.initializr.metadata.Dependency;
@@ -33,7 +34,6 @@ import io.spring.initializr.metadata.SingleSelectCapability;
 import io.spring.initializr.metadata.TextCapability;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.TypeCapability;
-import org.json.JSONObject;
 
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
@@ -46,6 +46,8 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  */
 public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMapper {
+
+	private static final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
 	private final TemplateVariables templateVariables;
 
@@ -74,9 +76,13 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 						TemplateVariable.VariableType.REQUEST_PARAM));
 	}
 
+	protected JsonNodeFactory nodeFactory() {
+		return nodeFactory;
+	}
+
 	@Override
 	public String write(InitializrMetadata metadata, String appUrl) {
-		JSONObject delegate = new JSONObject();
+		ObjectNode delegate = nodeFactory.objectNode();
 		links(delegate, metadata.getTypes().getContent(), appUrl);
 		dependencies(delegate, metadata.getDependencies());
 		type(delegate, metadata.getTypes());
@@ -93,15 +99,15 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return delegate.toString();
 	}
 
-	protected Map<String, Object> links(JSONObject parent, List<Type> types, String appUrl) {
-		Map<String, Object> content = new LinkedHashMap<>();
-		types.forEach(it -> content.put(it.getId(), link(appUrl, it)));
-		parent.put("_links", content);
+	protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {
+		ObjectNode content = nodeFactory.objectNode();
+		types.forEach(it -> content.set(it.getId(), link(appUrl, it)));
+		parent.set("_links", content);
 		return content;
 	}
 
-	protected Map<String, Object> link(String appUrl, Type type) {
-		Map<String, Object> result = new LinkedHashMap<>();
+	protected ObjectNode link(String appUrl, Type type) {
+		ObjectNode result = nodeFactory.objectNode();
 		result.put("href", generateTemplatedUri(appUrl, type));
 		result.put("templated", true);
 		return result;
@@ -114,68 +120,73 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return uriTemplate.toString();
 	}
 
-	protected void dependencies(JSONObject parent, DependenciesCapability capability) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("type", capability.getType().getName());
-		map.put("values",
-				capability.getContent().stream().map(this::mapDependencyGroup)
-						.collect(Collectors.toList()));
-		parent.put(capability.getId(), map);
+	protected void dependencies(ObjectNode parent, DependenciesCapability capability) {
+		ObjectNode dependencies = nodeFactory.objectNode();
+		dependencies.put("type", capability.getType().getName());
+		ArrayNode values = nodeFactory.arrayNode();
+		values.addAll(capability.getContent().stream().map(this::mapDependencyGroup)
+				.collect(Collectors.toList()));
+		dependencies.set("values", values);
+		parent.set(capability.getId(), dependencies);
 	}
 
-	protected void type(JSONObject parent, TypeCapability capability) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("type", "action");
+	protected void type(ObjectNode parent, TypeCapability capability) {
+		ObjectNode type = nodeFactory.objectNode();
+		type.put("type", "action");
 		Type defaultType = capability.getDefault();
 		if (defaultType != null) {
-			map.put("default", defaultType.getId());
+			type.put("default", defaultType.getId());
 		}
-		map.put("values", capability.getContent().stream().map(this::mapType)
+		ArrayNode values = nodeFactory.arrayNode();
+		values.addAll(capability.getContent().stream().map(this::mapType)
 				.collect(Collectors.toList()));
-		parent.put("type", map);
+		type.set("values", values);
+		parent.set("type", type);
 	}
 
-	protected void singleSelect(JSONObject parent, SingleSelectCapability capability) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("type", capability.getType().getName());
+	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability) {
+		ObjectNode single = nodeFactory.objectNode();
+		single.put("type", capability.getType().getName());
 		DefaultMetadataElement defaultType = capability.getDefault();
 		if (defaultType != null) {
-			map.put("default", defaultType.getId());
+			single.put("default", defaultType.getId());
 		}
-		map.put("values", capability.getContent().stream().map(this::mapValue)
+		ArrayNode values = nodeFactory.arrayNode();
+		values.addAll(capability.getContent().stream().map(this::mapValue)
 				.collect(Collectors.toList()));
-		parent.put(capability.getId(), map);
+		single.set("values", values);
+		parent.set(capability.getId(), single);
 	}
 
-	protected void text(JSONObject parent, TextCapability capability) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("type", capability.getType().getName());
+	protected void text(ObjectNode parent, TextCapability capability) {
+		ObjectNode text = nodeFactory.objectNode();
+		text.put("type", capability.getType().getName());
 		String defaultValue = capability.getContent();
 		if (StringUtils.hasText(defaultValue)) {
-			map.put("default", defaultValue);
+			text.put("default", defaultValue);
 		}
-		parent.put(capability.getId(), map);
+		parent.set(capability.getId(), text);
 	}
 
-	protected Map<String, Object> mapDependencyGroup(DependencyGroup group) {
-		Map<String, Object> result = new LinkedHashMap<>();
+	protected ObjectNode mapDependencyGroup(DependencyGroup group) {
+		ObjectNode result = nodeFactory.objectNode();
 		result.put("name", group.getName());
 		if ((group instanceof Describable)
 				&& ((Describable) group).getDescription() != null) {
 			result.put("description", ((Describable) group).getDescription());
 		}
-		List<Object> items = new ArrayList<>();
+		ArrayNode items = nodeFactory.arrayNode();
 		group.getContent().forEach(it -> {
-			Map<String, Object> dependency = mapDependency(it);
+			JsonNode dependency = mapDependency(it);
 			if (dependency != null) {
 				items.add(dependency);
 			}
 		});
-		result.put("values", items);
+		result.set("values", items);
 		return result;
 	}
 
-	protected Map<String, Object> mapDependency(Dependency dependency) {
+	protected ObjectNode mapDependency(Dependency dependency) {
 		if (dependency.getVersionRange() == null) {
 			// only map the dependency if no versionRange is set
 			return mapValue(dependency);
@@ -183,15 +194,17 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return null;
 	}
 
-	protected Map<String, Object> mapType(Type type) {
-		Map<String, Object> result = mapValue(type);
+	protected ObjectNode mapType(Type type) {
+		ObjectNode result = mapValue(type);
 		result.put("action", type.getAction());
-		result.put("tags", type.getTags());
+		ObjectNode tags = nodeFactory.objectNode();
+		type.getTags().forEach(tags::put);
+		result.set("tags", tags);
 		return result;
 	}
 
-	protected Map<String, Object> mapValue(MetadataElement value) {
-		Map<String, Object> result = new LinkedHashMap<>();
+	protected ObjectNode mapValue(MetadataElement value) {
+		ObjectNode result = nodeFactory.objectNode();
 		result.put("id", value.getId());
 		result.put("name", value.getName());
 		if ((value instanceof Describable)

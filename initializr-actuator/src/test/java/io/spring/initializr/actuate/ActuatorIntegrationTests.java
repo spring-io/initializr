@@ -16,8 +16,8 @@
 
 package io.spring.initializr.actuate;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
-import org.json.JSONObject;
 import org.junit.Test;
 
 import org.springframework.test.context.ActiveProfiles;
@@ -45,35 +45,32 @@ public class ActuatorIntegrationTests
 	@Test
 	public void metricsAvailableByDefault() {
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
-		JSONObject result = metricsEndpoint();
-		int requests = result.getInt("counter.initializr.requests");
-		int packaging = result.getInt("counter.initializr.packaging.jar");
-		int javaVersion = result.getInt("counter.initializr.java_version.1_8");
-		int webDependency = result.getInt("counter.initializr.dependency.web");
-		int jpaDependency = result.getInt("counter.initializr.dependency.data-jpa");
+		JsonNode result = metricsEndpoint();
+		int requests = result.get("counter.initializr.requests").intValue();
+		int packaging = result.get("counter.initializr.packaging.jar").intValue();
+		int javaVersion = result.get("counter.initializr.java_version.1_8").intValue();
+		int webDependency = result.get("counter.initializr.dependency.web").intValue();
+		int jpaDependency = result.get("counter.initializr.dependency.data-jpa")
+				.intValue();
 
 		// No jpa dep this time
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
 
-		JSONObject updatedResult = metricsEndpoint();
+		JsonNode updatedResult = metricsEndpoint();
 		assertEquals("Number of request should have increased", requests + 1,
-				updatedResult.getInt("counter.initializr.requests"));
+				updatedResult.get("counter.initializr.requests").intValue());
 		assertEquals("jar packaging metric should have increased", packaging + 1,
-				updatedResult.getInt("counter.initializr.packaging.jar"));
+				updatedResult.get("counter.initializr.packaging.jar").intValue());
 		assertEquals("java version metric should have increased", javaVersion + 1,
-				updatedResult.getInt("counter.initializr.java_version.1_8"));
+				updatedResult.get("counter.initializr.java_version.1_8").intValue());
 		assertEquals("web dependency metric should have increased", webDependency + 1,
-				updatedResult.getInt("counter.initializr.dependency.web"));
+				updatedResult.get("counter.initializr.dependency.web").intValue());
 		assertEquals("jpa dependency metric should not have increased", jpaDependency,
-				updatedResult.getInt("counter.initializr.dependency.data-jpa"));
+				updatedResult.get("counter.initializr.dependency.data-jpa").intValue());
 	}
 
-	private JSONObject metricsEndpoint() {
+	private JsonNode metricsEndpoint() {
 		return parseJson(getRestTemplate().getForObject(createUrl("/metrics"), String.class));
-	}
-
-	private JSONObject parseJson(String content) {
-		return new JSONObject(content);
 	}
 
 }

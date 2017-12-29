@@ -18,15 +18,15 @@ package io.spring.initializr.web.ui;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyGroup;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Version;
-import org.json.JSONObject;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -74,31 +74,31 @@ public class UiController {
 	}
 
 	private static String writeDependencies(List<DependencyItem> items) {
-		JSONObject json = new JSONObject();
-		List<Map<String, Object>> maps = new ArrayList<>();
+		ObjectNode json = JsonNodeFactory.instance.objectNode();
+		ArrayNode maps = JsonNodeFactory.instance.arrayNode();
 		items.forEach(d -> maps.add(mapDependency(d)));
-		json.put("dependencies", maps);
+		json.set("dependencies", maps);
 		return json.toString();
 	}
 
-	private static Map<String, Object> mapDependency(DependencyItem item) {
-		Map<String, Object> result = new HashMap<>();
+	private static ObjectNode mapDependency(DependencyItem item) {
+		ObjectNode node = JsonNodeFactory.instance.objectNode();
 		Dependency d = item.dependency;
-		result.put("id", d.getId());
-		result.put("name", d.getName());
-		result.put("group", item.group);
+		node.put("id", d.getId());
+		node.put("name", d.getName());
+		node.put("group", item.group);
 		if (d.getDescription() != null) {
-			result.put("description", d.getDescription());
+			node.put("description", d.getDescription());
 		}
 		if (d.getWeight() > 0) {
-			result.put("weight", d.getWeight());
+			node.put("weight", d.getWeight());
 		}
 		if (!CollectionUtils.isEmpty(d.getKeywords()) || !CollectionUtils.isEmpty(d.getAliases())) {
 			List<String> all = new ArrayList<>(d.getKeywords());
 			all.addAll(d.getAliases());
-			result.put("keywords", StringUtils.collectionToCommaDelimitedString(all));
+			node.put("keywords", StringUtils.collectionToCommaDelimitedString(all));
 		}
-		return result;
+		return node;
 	}
 
 	private static class DependencyItem {

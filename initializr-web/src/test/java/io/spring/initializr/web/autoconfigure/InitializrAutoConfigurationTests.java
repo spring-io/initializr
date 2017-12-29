@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import org.springframework.beans.DirectFieldAccessor;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
@@ -68,7 +69,8 @@ public class InitializrAutoConfigurationTests {
 		if (config != null) {
 			ctx.register(config);
 		}
-		ctx.register(WebClientAutoConfiguration.class, InitializrAutoConfiguration.class);
+		ctx.register(WebClientAutoConfiguration.class, JacksonAutoConfiguration.class,
+				InitializrAutoConfiguration.class);
 		ctx.refresh();
 		this.context = ctx;
 	}

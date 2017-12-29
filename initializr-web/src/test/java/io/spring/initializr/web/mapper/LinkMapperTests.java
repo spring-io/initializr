@@ -18,8 +18,9 @@ package io.spring.initializr.web.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Link;
 import org.junit.Test;
 
@@ -37,28 +38,27 @@ public class LinkMapperTests {
 	public void mapSimpleRel() {
 		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com", "some description"));
-		Map<String, Object> model = LinkMapper.mapLinks(links);
+		ObjectNode model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
-		assertTrue(model.containsKey("a"));
-		@SuppressWarnings("unchecked")
-		Map<String, Object> linkModel = (Map<String, Object>) model.get("a");
+		assertTrue(model.has("a"));
+		ObjectNode linkModel = (ObjectNode) model.get("a");
 		assertEquals(2, linkModel.size());
-		assertEquals("https://example.com", linkModel.get("href"));
-		assertEquals("some description", linkModel.get("title"));
+		assertEquals("https://example.com", linkModel.get("href").textValue());
+		assertEquals("some description", linkModel.get("title").textValue());
 	}
 
 	@Test
 	public void mapTemplatedRel() {
 		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com/{bootVersion}/a", true));
-		Map<String, Object> model = LinkMapper.mapLinks(links);
+		ObjectNode model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
-		assertTrue(model.containsKey("a"));
-		@SuppressWarnings("unchecked")
-		Map<String, Object> linkModel = (Map<String, Object>) model.get("a");
+		assertTrue(model.has("a"));
+		ObjectNode linkModel = (ObjectNode) model.get("a");
 		assertEquals(2, linkModel.size());
-		assertEquals("https://example.com/{bootVersion}/a", linkModel.get("href"));
-		assertEquals(true, linkModel.get("templated"));
+		assertEquals("https://example.com/{bootVersion}/a",
+				linkModel.get("href").textValue());
+		assertEquals(true, linkModel.get("templated").booleanValue());
 	}
 
 	@Test
@@ -66,33 +66,34 @@ public class LinkMapperTests {
 		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com", "some description"));
 		links.add(Link.create("a", "https://example.com/2"));
-		Map<String, Object> model = LinkMapper.mapLinks(links);
+		ObjectNode model = LinkMapper.mapLinks(links);
 		assertEquals(1, model.size());
-		assertTrue(model.containsKey("a"));
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> linksModel = (List<Map<String, Object>>) model.get("a");
+		assertTrue(model.has("a"));
+		ArrayNode linksModel = (ArrayNode) model.get("a");
 		assertEquals(2, linksModel.size());
-		assertEquals("https://example.com", linksModel.get(0).get("href"));
-		assertEquals("https://example.com/2", linksModel.get(1).get("href"));
+		assertEquals("https://example.com", linksModel.get(0).get("href").textValue());
+		assertEquals("https://example.com/2", linksModel.get(1).get("href").textValue());
 	}
 
 	@Test
 	public void keepOrdering() {
 		List<Link> links = new ArrayList<>();
-		links.add(Link.create("a", "https://example.com"));
-		links.add(Link.create("b", "https://example.com"));
-		Map<String, Object> model = LinkMapper.mapLinks(links);
-		assertEquals("[a, b]", model.keySet().toString());
+		links.add(Link.create("first", "https://example.com"));
+		links.add(Link.create("second", "https://example.com"));
+		ObjectNode model = LinkMapper.mapLinks(links);
+		String json = model.toString();
+		assertTrue(json.indexOf("first") < json.indexOf("second"));
 	}
 
 	@Test
 	public void keepOrderingWithMultipleUrlForSameRel() {
 		List<Link> links = new ArrayList<>();
-		links.add(Link.create("a", "https://example.com"));
-		links.add(Link.create("b", "https://example.com"));
-		links.add(Link.create("a", "https://example.com"));
-		Map<String, Object> model = LinkMapper.mapLinks(links);
-		assertEquals("[a, b]", model.keySet().toString());
+		links.add(Link.create("first", "https://example.com"));
+		links.add(Link.create("second", "https://example.com"));
+		links.add(Link.create("first", "https://example.com"));
+		ObjectNode model = LinkMapper.mapLinks(links);
+		String json = model.toString();
+		assertTrue(json.indexOf("first") < json.indexOf("second"));
 	}
 
 }

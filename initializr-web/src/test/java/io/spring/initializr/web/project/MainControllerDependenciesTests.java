@@ -17,6 +17,7 @@
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -38,27 +39,28 @@ public class MainControllerDependenciesTests
 		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	public void noBootVersion() {
+	public void noBootVersion() throws JSONException {
 		ResponseEntity<String> response = execute("/dependencies", String.class, null,
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.1.4", new JSONObject(response.getBody()));
+		validateDependenciesOutput("1.1.4", response.getBody());
 	}
 
 	@Test
-	public void filteredDependencies() {
+	public void filteredDependencies() throws JSONException {
 		ResponseEntity<String> response = execute("/dependencies?bootVersion=1.2.1.RELEASE",
 				String.class, null, "application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.2.1", new JSONObject(response.getBody()));
+		validateDependenciesOutput("1.2.1", response.getBody());
 	}
 
-	protected void validateDependenciesOutput(String version, JSONObject actual) {
+	protected void validateDependenciesOutput(String version, String actual)
+			throws JSONException {
 		JSONObject expected = readJsonFrom(
 				"metadata/dependencies/test-dependencies-" + version + ".json");
-		JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
+		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
 	}
 
 }

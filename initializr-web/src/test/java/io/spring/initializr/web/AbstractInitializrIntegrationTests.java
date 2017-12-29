@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -36,6 +38,7 @@ import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Untar;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -71,6 +74,8 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
 			InitializrMetadataVersion.V2_1.getMediaType();
 
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	@Rule
 	public final TemporaryFolder folder = new TemporaryFolder();
 
@@ -103,22 +108,41 @@ public abstract class AbstractInitializrIntegrationTests {
 				actual.isCompatibleWith(expected));
 	}
 
+	protected JsonNode parseJson(String text) {
+		try {
+			return objectMapper.readTree(text);
+		}
+		catch (IOException ex) {
+			throw new IllegalArgumentException("Invalid json", ex);
+		}
+	}
+
 	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
 			String version, JSONCompareMode compareMode) {
-		validateContentType(response, mediaType);
-		JSONObject json = new JSONObject(response.getBody());
-		JSONObject expected = readMetadataJson(version);
-		JSONAssert.assertEquals(expected, json, compareMode);
+		try {
+			validateContentType(response, mediaType);
+			JSONObject json = new JSONObject(response.getBody());
+			JSONObject expected = readMetadataJson(version);
+			JSONAssert.assertEquals(expected, json, compareMode);
+		}
+		catch (JSONException ex) {
+			throw new IllegalArgumentException("Invalid json", ex);
+		}
 	}
 
 	protected void validateCurrentMetadata(ResponseEntity<String> response) {
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(new JSONObject(response.getBody()));
+		validateCurrentMetadata(response.getBody());
 	}
 
-	protected void validateCurrentMetadata(JSONObject json) {
-		JSONObject expected = readMetadataJson("2.1.0");
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
+	protected void validateCurrentMetadata(String json) {
+		try {
+			JSONObject expected = readMetadataJson("2.1.0");
+			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
+		}
+		catch (JSONException ex) {
+			throw new IllegalArgumentException("Invalid json", ex);
+		}
 	}
 
 	private JSONObject readMetadataJson(String version) {
@@ -205,7 +229,7 @@ public abstract class AbstractInitializrIntegrationTests {
 		expand.setSrc(archiveFile);
 		Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
 		method.setValue("gzip");
-		expand.setCompression(method );
+		expand.setCompression(method);
 		expand.execute();
 	}
 
@@ -267,7 +291,8 @@ public abstract class AbstractInitializrIntegrationTests {
 		public InitializrMetadataProvider initializrMetadataProvider(
 				InitializrProperties properties) {
 			return new DefaultInitializrMetadataProvider(InitializrMetadataBuilder
-					.fromInitializrProperties(properties).build(), new RestTemplate()) {
+					.fromInitializrProperties(properties).build(), new ObjectMapper(),
+					new RestTemplate()) {
 				@Override
 				protected void updateInitializrMetadata(InitializrMetadata metadata) {
 					// Disable metadata fetching from spring.io

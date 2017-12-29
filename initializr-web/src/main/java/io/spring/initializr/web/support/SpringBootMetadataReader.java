@@ -16,12 +16,14 @@
 
 package io.spring.initializr.web.support;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.spring.initializr.metadata.DefaultMetadataElement;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -33,28 +35,29 @@ import org.springframework.web.client.RestTemplate;
  */
 public class SpringBootMetadataReader {
 
-	private final JSONObject content;
+	private final JsonNode content;
 
 	/**
 	 * Parse the content of the metadata at the specified url
 	 */
-	public SpringBootMetadataReader(RestTemplate restTemplate, String url) {
-		this.content = new JSONObject(restTemplate.getForObject(url, String.class));
+	public SpringBootMetadataReader(ObjectMapper objectMapper,
+			RestTemplate restTemplate, String url) throws IOException {
+		this.content = objectMapper.readTree(
+				restTemplate.getForObject(url, String.class));
 	}
 
 	/**
 	 * Return the boot versions parsed by this instance.
 	 */
 	public List<DefaultMetadataElement> getBootVersions() {
-		JSONArray array = content.getJSONArray("projectReleases");
+		ArrayNode array = (ArrayNode) content.get("projectReleases");
 		List<DefaultMetadataElement> list = new ArrayList<>();
-		for (int i = 0; i < array.length(); i++) {
-			JSONObject it = array.getJSONObject(i);
+		for (JsonNode it : array) {
 			DefaultMetadataElement version = new DefaultMetadataElement();
-			version.setId(it.getString("version"));
-			String name = it.getString("versionDisplayName");
-			version.setName(it.getBoolean("snapshot") ? name + " (SNAPSHOT)" : name);
-			version.setDefault(it.getBoolean("current"));
+			version.setId(it.get("version").textValue());
+			String name = it.get("versionDisplayName").textValue();
+			version.setName(it.get("snapshot").booleanValue() ? name + " (SNAPSHOT)" : name);
+			version.setDefault(it.get("current").booleanValue());
 			list.add(version);
 		}
 		return list;

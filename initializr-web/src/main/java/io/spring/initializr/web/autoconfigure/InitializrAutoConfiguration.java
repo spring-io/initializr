@@ -23,6 +23,7 @@ import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.ProjectGenerator;
 import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.generator.ProjectRequestResolver;
@@ -45,6 +46,7 @@ import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -67,7 +69,8 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  */
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
-@AutoConfigureAfter({ CacheAutoConfiguration.class, WebClientAutoConfiguration.class })
+@AutoConfigureAfter({ CacheAutoConfiguration.class, JacksonAutoConfiguration.class,
+		WebClientAutoConfiguration.class })
 public class InitializrAutoConfiguration {
 
 	private final List<ProjectRequestPostProcessor> postProcessors;
@@ -110,11 +113,12 @@ public class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
 	public InitializrMetadataProvider initializrMetadataProvider(
 			InitializrProperties properties,
+			ObjectMapper objectMapper,
 			RestTemplateBuilder restTemplateBuilder) {
 		InitializrMetadata metadata = InitializrMetadataBuilder
 				.fromInitializrProperties(properties).build();
 		return new DefaultInitializrMetadataProvider(metadata,
-				restTemplateBuilder.build());
+				objectMapper, restTemplateBuilder.build());
 	}
 
 	@Bean

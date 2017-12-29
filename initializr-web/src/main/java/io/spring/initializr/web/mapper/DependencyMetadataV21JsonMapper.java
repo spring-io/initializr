@@ -16,15 +16,17 @@
 
 package io.spring.initializr.web.mapper;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
-import org.json.JSONObject;
 
 /**
  * A {@link DependencyMetadataJsonMapper} handling the metadata format for v2.1.
@@ -33,59 +35,70 @@ import org.json.JSONObject;
  */
 public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMapper {
 
+	private static final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+
 	@Override
 	public String write(DependencyMetadata metadata) {
-		JSONObject json = new JSONObject();
+		ObjectNode json = nodeFactory.objectNode();
 		json.put("bootVersion", metadata.getBootVersion().toString());
-		json.put("dependencies",
-				metadata.getDependencies().entrySet().stream()
+		json.set("dependencies",
+				mapNode(metadata.getDependencies().entrySet().stream()
 						.collect(Collectors.toMap(Map.Entry::getKey,
-								entry -> mapDependency(entry.getValue()))));
-		json.put("repositories",
-				metadata.getRepositories().entrySet().stream()
+								entry -> mapDependency(entry.getValue())))));
+		json.set("repositories",
+				mapNode(metadata.getRepositories().entrySet().stream()
 						.collect(Collectors.toMap(Map.Entry::getKey,
-								entry -> mapRepository(entry.getValue()))));
-		json.put("boms", metadata.getBoms().entrySet().stream().collect(Collectors
-				.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue()))));
+								entry -> mapRepository(entry.getValue())))));
+		json.set("boms",
+				mapNode(metadata.getBoms().entrySet().stream().collect(Collectors
+						.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue())))));
 		return json.toString();
 	}
 
-	private static Map<String, Object> mapDependency(Dependency dep) {
-		Map<String, Object> result = new LinkedHashMap<>();
-		result.put("groupId", dep.getGroupId());
-		result.put("artifactId", dep.getArtifactId());
+	private static JsonNode mapDependency(Dependency dep) {
+		ObjectNode node = nodeFactory.objectNode();
+		node.put("groupId", dep.getGroupId());
+		node.put("artifactId", dep.getArtifactId());
 		if (dep.getVersion() != null) {
-			result.put("version", dep.getVersion());
+			node.put("version", dep.getVersion());
 		}
-		result.put("scope", dep.getScope());
+		node.put("scope", dep.getScope());
 		if (dep.getBom() != null) {
-			result.put("bom", dep.getBom());
+			node.put("bom", dep.getBom());
 		}
 		if (dep.getRepository() != null) {
-			result.put("repository", dep.getRepository());
+			node.put("repository", dep.getRepository());
 		}
-		return result;
+		return node;
 	}
 
-	private static Map<String, Object> mapRepository(Repository repo) {
-		Map<String, Object> result = new LinkedHashMap<>();
-		result.put("name", repo.getName());
-		result.put("url", repo.getUrl());
-		result.put("snapshotEnabled", repo.isSnapshotsEnabled());
-		return result;
+	private static JsonNode mapRepository(Repository repo) {
+		ObjectNode node = nodeFactory.objectNode();
+		node.put("name", repo.getName())
+				.put("url", (repo.getUrl() != null ? repo.getUrl().toString() : null))
+				.put("snapshotEnabled", repo.isSnapshotsEnabled());
+		return node;
 	}
 
-	private static Map<String, Object> mapBom(BillOfMaterials bom) {
-		Map<String, Object> result = new LinkedHashMap<>();
-		result.put("groupId", bom.getGroupId());
-		result.put("artifactId", bom.getArtifactId());
+	private static JsonNode mapBom(BillOfMaterials bom) {
+		ObjectNode node = nodeFactory.objectNode();
+		node.put("groupId", bom.getGroupId());
+		node.put("artifactId", bom.getArtifactId());
 		if (bom.getVersion() != null) {
-			result.put("version", bom.getVersion());
+			node.put("version", bom.getVersion());
 		}
 		if (bom.getRepositories() != null) {
-			result.put("repositories", bom.getRepositories());
+			ArrayNode array = nodeFactory.arrayNode();
+			bom.getRepositories().forEach(array::add);
+			node.set("repositories", array);
 		}
-		return result;
+		return node;
+	}
+
+	private static JsonNode mapNode(Map<String, JsonNode> content) {
+		ObjectNode node = nodeFactory.objectNode();
+		content.forEach(node::set);
+		return node;
 	}
 
 }

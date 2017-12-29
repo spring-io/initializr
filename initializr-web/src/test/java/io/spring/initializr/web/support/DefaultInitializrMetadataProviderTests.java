@@ -18,6 +18,7 @@ package io.spring.initializr.web.support;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
@@ -43,6 +44,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 public class DefaultInitializrMetadataProviderTests {
 
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	private RestTemplate restTemplate;
 
 	private MockRestServiceServer mockServer;
@@ -61,7 +64,8 @@ public class DefaultInitializrMetadataProviderTests {
 				.build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
 		DefaultInitializrMetadataProvider provider =
-				new DefaultInitializrMetadataProvider(metadata, restTemplate);
+				new DefaultInitializrMetadataProvider(metadata, objectMapper,
+						restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot.json");
 
@@ -83,7 +87,8 @@ public class DefaultInitializrMetadataProviderTests {
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
 		DefaultInitializrMetadataProvider provider =
-				new DefaultInitializrMetadataProvider(metadata, restTemplate);
+				new DefaultInitializrMetadataProvider(metadata, objectMapper,
+						restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot-no-default.json");
 

@@ -21,6 +21,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Link;
 
 /**
@@ -30,43 +33,45 @@ import io.spring.initializr.metadata.Link;
  */
 public class LinkMapper {
 
+	private static final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+
 	/**
 	 * Map the specified links to a json model. If several links share the same relation,
 	 * they are grouped together.
 	 * @param links the links to map
 	 * @return a model for the specified links
 	 */
-	public static Map<String, Object> mapLinks(List<Link> links) {
-		Map<String, Object> result = new LinkedHashMap<>();
+	public static ObjectNode mapLinks(List<Link> links) {
+		ObjectNode result = nodeFactory.objectNode();
 		Map<String, List<Link>> byRel = new LinkedHashMap<>();
 		links.forEach(it -> byRel.computeIfAbsent(it.getRel(),
 				k -> new ArrayList<>()).add(it));
 		byRel.forEach((rel, l) -> {
 			if (l.size() == 1) {
-				Map<String, Object> root = new LinkedHashMap<>();
+				ObjectNode root = JsonNodeFactory.instance.objectNode();
 				mapLink(l.get(0), root);
-				result.put(rel, root);
+				result.set(rel, root);
 			}
 			else {
-				List<Map<String, Object>> root = new ArrayList<>();
+				ArrayNode root = JsonNodeFactory.instance.arrayNode();
 				l.forEach(link -> {
-					Map<String, Object> model = new LinkedHashMap<>();
-					mapLink(link, model);
-					root.add(model);
+					ObjectNode node = JsonNodeFactory.instance.objectNode();
+					mapLink(link, node);
+					root.add(node);
 				});
-				result.put(rel, root);
+				result.set(rel, root);
 			}
 		});
 		return result;
 	}
 
-	private static void mapLink(Link link, Map<String, Object> model) {
-		model.put("href", link.getHref());
+	private static void mapLink(Link link, ObjectNode node) {
+		node.put("href", link.getHref());
 		if (link.isTemplated()) {
-			model.put("templated", true);
+			node.put("templated", true);
 		}
 		if (link.getDescription() != null) {
-			model.put("title", link.getDescription());
+			node.put("title", link.getDescription());
 		}
 	}
 
