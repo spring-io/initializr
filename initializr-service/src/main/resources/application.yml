@@ -729,6 +729,7 @@ initializr:
           artifactId: spring-cloud-starter-task
           versionRange: "1.3.0.RELEASE"
           bom: spring-cloud-task
+          starter: false
           mappings:
             - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
               artifactId: spring-cloud-task-starter
