@@ -36,6 +36,10 @@
         }
     };
 
+    function parseVersionNumber(version) {
+        return version == 'x' ? 999 : parseInt(version, 10);
+    }
+
     function parseQualifier(version) {
         var qual = version.replace(/\d+/g, "");
         return qualifiers.indexOf(qual) != -1 ? qual : "RELEASE";
@@ -47,7 +51,7 @@
         var versionA = a.split(".");
         var versionB = b.split(".");
         for (var i = 0; i < 3; i++) {
-            result = parseInt(versionA[i], 10) - parseInt(versionB[i], 10);
+            result = parseVersionNumber(versionA[i]) - parseVersionNumber(versionB[i]);
             if (result != 0) {
                 return result;
             }
