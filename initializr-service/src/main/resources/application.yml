@@ -971,6 +971,17 @@ initializr:
           versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-stream-binder-kafka
+        - name: Stream Reactor
+          id: cloud-stream-reactive
+          description: Messaging microservices with Reactor. Typically used with a Spring Cloud Stream binder implementation.
+          versionRange: 1.3.0.RELEASE
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-reactive
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_reactive_programming_support
+              description: Reactive Programming support for Spring Cloud Stream
+
     - name: Cloud AWS
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
