@@ -1252,6 +1252,33 @@ initializr:
           id: remote-shell
           description: CRaSH shell integration
           versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
+        - name: Codecentric Spring Boot Admin Server
+          description: Provides the Spring Boot Admin Server API (which can be paired with the UI)
+          id: spring-boot-admin-server
+          artifactId: spring-boot-admin-server
+          version: 1.5.6
+          groupId: de.codecentric
+          links:
+            - rel: reference
+              href: http://codecentric.github.io/spring-boot-admin/1.5.6/#getting-started
+        - name: Codecentric Spring Boot Admin UI
+          id: spring-boot-admin-server-ui
+          links:
+            - rel: reference
+              href: http://codecentric.github.io/spring-boot-admin/1.5.6/#getting-started
+          description: Provides the Spring Boot Admin Server UI (which should be paired with the API)
+          artifactId: spring-boot-admin-server-ui
+          version: 1.5.6
+          groupId: de.codecentric
+        - name: Codecentric Spring Boot Admin Client
+          id: spring-boot-admin-starter-client
+          description: Registers applications with the Spring Boot Admin. Alternatively, Spring Boot Admin supports Spring Cloud DiscoveryClient implementations like Eureka or Consul.
+          artifactId: spring-boot-admin-starter-client
+          version: 1.5.6
+          groupId: de.codecentric
+          links:
+            - rel: reference
+              href: http://codecentric.github.io/spring-boot-admin/1.5.6/#getting-started
   types:
     - name: Maven Project
       id: maven-project
