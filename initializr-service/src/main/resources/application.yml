@@ -950,19 +950,19 @@ initializr:
           versionRange: "1.3.0.RELEASE"
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-bus-kafka
-        - name: Stream Rabbit
+        - name: Stream Binder Rabbit
           id: cloud-stream-binder-rabbit
           description: Messaging microservices with RabbitMQ
           versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-stream-rabbit
-        - name: Stream Kafka
+        - name: Stream Binder Kafka
           id: cloud-stream-binder-kafka
           description: Messaging microservices with Kafka
           versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-stream-binder-kafka
-        - name: Kafka Streams
+        - name: Stream Binder \"Kafka Streams\"
           id: cloud-stream-binder-kafka-streams
           description: Stream processing microservices with Kafka Streams API
           versionRange: 1.5.7.RELEASE
