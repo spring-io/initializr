@@ -112,6 +112,37 @@
         });
     }
 
+    var LOCAL_STORAGE_AVAILABLE = (function () {
+        var test = 'localstorage-test';
+        try {
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    })()
+
+    function initLocalStorageField(field) {
+        var $field = $('#' + field);
+        var lsKey = 'initializer-' + field;
+        var value = localStorage.getItem(lsKey);
+        if (value && $field.find("option[value='" + value + "']").length > 0) {
+            $field.val(value);
+        }
+        $field.bind('change', function (e) {
+            localStorage.setItem(lsKey, e.target.value);
+        });
+    }
+
+    applyLocalStorage = function () {
+        if (!LOCAL_STORAGE_AVAILABLE) {
+            return;
+        }
+        initLocalStorageField('type');
+        initLocalStorageField('language');
+    }
+
 }());
 
 $(function () {
@@ -273,6 +304,7 @@ $(function () {
         }
     });
     applyParams();
+    applyLocalStorage();
     if ("onhashchange" in window) {
         window.onhashchange = function() {
             $(".full").addClass("hidden");
