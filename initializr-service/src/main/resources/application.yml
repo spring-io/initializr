@@ -1278,7 +1278,7 @@ initializr:
           groupId: de.codecentric
           links:
             - rel: reference
-              href: http://codecentric.github.io/spring-boot-admin/1.5.6/#getting-started
+              href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
   types:
     - name: Maven Project
       id: maven-project
