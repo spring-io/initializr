@@ -50,13 +50,6 @@ spring:
 initializr:
   env:
     boms:
-      codecentric-spring-boot-admin:
-        groupId: de.codecentric
-        artifactId: spring-boot-admin-dependencies
-        versionProperty: spring-boot-admin.version
-        mappings:
-          - versionRange: "[1.5.7,2.0.0)"
-            version: 1.5.7
       azure:
         groupId: com.microsoft.azure
         artifactId: azure-spring-boot-bom
@@ -64,6 +57,13 @@ initializr:
         mappings:
           - versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
             version: 0.2.0
+      codecentric-spring-boot-admin:
+        groupId: de.codecentric
+        artifactId: spring-boot-admin-dependencies
+        versionProperty: spring-boot-admin.version
+        mappings:
+          - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
+            version: 1.5.7
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -1261,6 +1261,26 @@ initializr:
               description: Building a RESTful Web Service with Spring Boot Actuator
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#production-ready
+        - name: Spring Boot Admin (Server)
+          id: codecentric-spring-boot-admin-starter-server
+          groupId: de.codecentric
+          artifactId: spring-boot-admin-starter-server
+          description: An admin interface for Spring Boot applications
+          versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
+          bom: codecentric-spring-boot-admin
+          links:
+            - rel: reference
+              href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
+        - name: Spring Boot Admin (Client)
+          id: codecentric-spring-boot-admin-starter-client
+          groupId: de.codecentric
+          artifactId: spring-boot-admin-starter-client
+          description: Register your application with a Spring Boot Admin instance
+          versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
+          bom: codecentric-spring-boot-admin
+          links:
+            - rel: reference
+              href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
         - name: Actuator Docs
           id: actuator-docs
           description: API documentation for the Actuator endpoints
@@ -1271,26 +1291,6 @@ initializr:
           id: remote-shell
           description: CRaSH shell integration
           versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
-        - name: Codecentric Spring Boot Admin Server
-          bom: codecentric-spring-boot-admin
-          description: Provides the Spring Boot Admin Server API and UI
-          id: codecentric-spring-boot-admin-starter-server
-          artifactId: codecentric-spring-boot-admin-starter-server
-#          version: 1.5.7
-          groupId: de.codecentric
-          links:
-            - rel: reference
-              href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
-        - name: Codecentric Spring Boot Admin Client
-          id: codecentric-spring-boot-admin-starter-client
-          bom: codecentric-spring-boot-admin
-          description: Registers applications with the Spring Boot Admin. Alternatively, Spring Boot Admin supports Spring Cloud DiscoveryClient implementations like Eureka or Consul.
-          artifactId: codecentric-spring-boot-admin-starter-client
-#          version: 1.5.7
-          groupId: de.codecentric
-          links:
-            - rel: reference
-              href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
   types:
     - name: Maven Project
       id: maven-project
