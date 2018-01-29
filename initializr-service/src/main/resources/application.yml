@@ -1232,6 +1232,18 @@ initializr:
           groupId: org.activiti
           artifactId: activiti-spring-boot-starter-basic
           version: 5.21.0
+        - name: Axon Framework
+          id: axon-framework
+          groupId: org.axonframework
+          artifactId: axon-spring-boot-starter
+          version: 3.1.2
+          keywords: CQRS, DDD, microservices, eventsourcing
+          description: Application Framework for building evolutionairy microservices using CQRS, DDD and Event Sourcing.
+          versionRange: 1.5.0.RELEASE
+          starter: true
+          links:
+            - rel: reference
+              href: https://docs.axonframework.org
         - name: Spring Shell
           id: spring-shell
           groupId: org.springframework.shell
