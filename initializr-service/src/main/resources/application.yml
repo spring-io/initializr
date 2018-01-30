@@ -1263,7 +1263,7 @@ initializr:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#production-ready
         - name: Spring Boot Admin (Server)
-          id: codecentric-spring-boot-admin-starter-server
+          id: codecentric-spring-boot-admin-server
           groupId: de.codecentric
           artifactId: spring-boot-admin-starter-server
           description: An admin interface for Spring Boot applications
@@ -1273,7 +1273,7 @@ initializr:
             - rel: reference
               href: http://codecentric.github.io/spring-boot-admin/current/#getting-started
         - name: Spring Boot Admin (Client)
-          id: codecentric-spring-boot-admin-starter-client
+          id: codecentric-spring-boot-admin-client
           groupId: de.codecentric
           artifactId: spring-boot-admin-starter-client
           description: Register your application with a Spring Boot Admin instance
