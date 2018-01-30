@@ -422,7 +422,7 @@ initializr:
         - name: Thymeleaf
           id: thymeleaf
           description: Thymeleaf templating engine, including integration with Spring
-          weight: 100
+          weight: 90
           facets:
             - web
           keywords:
@@ -1143,6 +1143,7 @@ initializr:
         - name: Integration
           id: integration
           description: Common spring-integration modules
+          weight: 100
           links:
             - rel: guide
               href: https://spring.io/guides/gs/integration/
