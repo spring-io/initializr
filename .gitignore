@@ -15,5 +15,7 @@ bin
 build
 target
 .springBeans
+.vscode/
+.sts4-cache/
 tmp*
 grapes
