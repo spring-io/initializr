@@ -90,10 +90,10 @@ initializr:
           - versionRange: "[2.0.0.M6, 2.0.0.M6]"
             version: Finchley.M4
             repositories: spring-milestones
-          - versionRange: "[2.0.0.M7, 2.0.0.BUILD-SNAPSHOT)"
+          - versionRange: "[2.0.0.M7, 2.0.0.M7]"
             version: Finchley.M5
             repositories: spring-milestones
-          - versionRange: "2.0.0.BUILD-SNAPSHOT"
+          - versionRange: "2.0.0.RC1"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-services:
