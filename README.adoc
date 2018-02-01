@@ -5,8 +5,8 @@
 :docs: http://docs.spring.io/initializr/docs/current-SNAPSHOT/reference
 
 Spring Initializr provides an extensible API to generate quickstart projects. It also
-provides a configurable service: you can see our default instance at
-link:https://start.spring.io[]. It provides a simple web UI to configure the project
+provides a configurable service (you can see our default instance at
+link:https://start.spring.io[]). It provides a simple web UI to configure the project
 to generate and endpoints that you can use via plain HTTP.
 
 Spring Initializr also exposes an endpoint that serves its metadata in a well-known
