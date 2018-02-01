@@ -1135,7 +1135,7 @@ initializr:
       content:
         - name: Batch
           id: batch
-          description: Spring Batch including HSQLDB database
+          description: Spring Batch support
           links:
             - rel: guide
               href: https://spring.io/guides/gs/batch-processing/
