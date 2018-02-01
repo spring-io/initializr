@@ -722,6 +722,63 @@ initializr:
               description: Accessing Data with GemFire
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-gemfire
+    - name: Messaging
+      content:
+        - name: RabbitMQ
+          id: amqp
+          description: Advanced Message Queuing Protocol via spring-rabbit
+          weight: 100
+          keywords:
+            - messaging
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-rabbitmq/
+              description: Messaging with RabbitMQ
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp
+        - name: Kafka
+          id: kafka
+          weight: 100
+          description: Kafka messaging support using Spring Kafka
+          versionRange: 1.5.0.RC1
+          groupId: org.springframework.kafka
+          artifactId: spring-kafka
+          starter: false
+          keywords:
+            - messaging
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
+        - name: JMS (ActiveMQ)
+          id: activemq
+          description: Java Message Service API via Apache ActiveMQ
+          versionRange: 1.4.0.RC1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq
+        - name: JMS (Artemis)
+          id: artemis
+          description: Java Message Service API via Apache Artemis
+          versionRange: 1.3.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
+        - name: JMS (HornetQ)
+          id: hornetq
+          description: Java Message Service API via HornetQ
+          versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-hornetq
     - name: Cloud Core
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -748,7 +805,7 @@ initializr:
           artifactId: spring-cloud-starter-oauth2
         - name: Cloud Task
           id: cloud-task
-          description: Task result tracking along with integration with batch and streams
+          description: Task result tracking and integration with Spring Batch
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-task
           versionRange: "1.3.0.RELEASE"
@@ -927,7 +984,7 @@ initializr:
             - versionRange: "1.5.0.BUILD-SNAPSHOT"
         - name: Turbine Stream
           id: cloud-turbine-stream
-          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
+          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-netflix-turbine-stream
@@ -974,41 +1031,25 @@ initializr:
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
       content:
-        - name: Cloud Bus AMQP
-          id: cloud-bus-amqp
-          description: A simple control bus with AMQP and spring-cloud-bus-amqp
+        - name: Cloud Bus
+          id: cloud-bus
+          description: A simple control bus using Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-amqp
-        - name: Cloud Bus Kafka
-          id: cloud-bus-kafka
-          description: A simple control bus with Kafka and spring-cloud-bus
-          versionRange: "1.3.0.RELEASE"
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-kafka
-        - name: Stream Binder Rabbit
-          id: cloud-stream-binder-rabbit
-          description: Messaging microservices with RabbitMQ
+          artifactId: spring-cloud-bus
+        - name: Cloud Stream
+          id: cloud-stream
+          description: Messaging microservices with Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           versionRange: 1.3.0.RELEASE
+          weight: 90
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-stream-rabbit
-        - name: Stream Binder Kafka
-          id: cloud-stream-binder-kafka
-          description: Messaging microservices with Kafka
-          versionRange: 1.3.0.RELEASE
+          artifactId: spring-cloud-stream
+        - name: Reactive Cloud Stream
+          id: reactive-cloud-stream
+          description: Reactive messaging microservices with Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
+          versionRange: 2.0.0.BUILD-SNAPSHOT
+          weight: 90
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-stream-binder-kafka
-        - name: Stream Binder "Kafka Streams"
-          id: cloud-stream-binder-kafka-streams
-          description: Stream processing microservices with Kafka Streams API
-          versionRange: 1.5.7.RELEASE
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-stream-binder-kstream
-          links:
-            - rel: guide
-              href: https://github.com/spring-cloud/spring-cloud-stream-samples/tree/master/kstream
-              description: Samples for using Kafka Streams with Spring Cloud stream
-            - rel: reference
-              href: https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream
+          artifactId: spring-cloud-stream-reactive
     - name: Cloud AWS
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -1177,56 +1218,6 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email
-        - name: AMQP
-          id: amqp
-          description: Advanced Message Queuing Protocol via spring-rabbit
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-rabbitmq/
-              description: Messaging with RabbitMQ
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp
-        - name: Kafka
-          id: kafka
-          weight: 100
-          description: Kafka messaging support using Spring Kafka
-          versionRange: 1.5.0.RC1
-          groupId: org.springframework.kafka
-          artifactId: spring-kafka
-          starter: false
-          links:
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
-        - name: JMS (ActiveMQ)
-          id: activemq
-          description: Java Message Service API via Apache ActiveMQ
-          versionRange: 1.4.0.RC1
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq
-        - name: JMS (Artemis)
-          id: artemis
-          description: Java Message Service API via Apache Artemis
-          versionRange: 1.3.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
-        - name: JMS (HornetQ)
-          id: hornetq
-          description: Java Message Service API via HornetQ
-          versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-hornetq
         - name: Apache Camel
           id: camel
           versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
