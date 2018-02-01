@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -192,7 +192,7 @@ public class ProjectGenerationSmokeTests
 		projectAssert.hasBaseDir("demo").isMavenProject().isKotlinProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(4)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jre8")
+				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect");
 	}
 

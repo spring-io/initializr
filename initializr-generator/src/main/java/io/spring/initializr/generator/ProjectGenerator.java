@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -557,9 +557,9 @@ public class ProjectGenerator {
 			return "kotlin-stdlib";
 		}
 		else if ("1.7".equals(javaVersion)) {
-			return "kotlin-stdlib-jre7";
+			return "kotlin-stdlib-jdk7";
 		}
-		return "kotlin-stdlib-jre8";
+		return "kotlin-stdlib-jdk8";
 	}
 
 	private static boolean isJava8OrLater(ProjectRequest request) {
