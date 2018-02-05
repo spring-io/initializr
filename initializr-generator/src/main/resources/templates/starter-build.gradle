@@ -49,9 +49,11 @@ version = '{{version}}'
 sourceCompatibility = {{javaVersion}}{{#kotlin}}{{#java8OrLater}}
 compileKotlin {
 	kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict"]
 }
 compileTestKotlin {
 	kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict"]
 }{{/java8OrLater}}{{/kotlin}}
 
 repositories {
