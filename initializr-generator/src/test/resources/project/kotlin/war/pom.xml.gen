@@ -66,6 +66,9 @@
 				<groupId>org.jetbrains.kotlin</groupId>
 				<version>${kotlin.version}</version>
 				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>

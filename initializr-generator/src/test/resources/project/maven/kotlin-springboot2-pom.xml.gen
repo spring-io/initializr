@@ -58,6 +58,9 @@
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>

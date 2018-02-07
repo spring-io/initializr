@@ -23,6 +23,12 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.6
+compileKotlin {
+	freeCompilerArgs = ["-Xjsr305=strict"]
+}
+compileTestKotlin {
+	freeCompilerArgs = ["-Xjsr305=strict"]
+}
 
 repositories {
 	mavenCentral()
