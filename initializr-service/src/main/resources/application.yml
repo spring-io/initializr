@@ -1253,6 +1253,17 @@ initializr:
           links:
            - rel: reference
              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
+        - name: KIE Server
+          id: kie-server
+          description: Fully featured KIE Server (Drools, jBPM, Optaplanner)
+          groupId: org.kie
+          artifactId: kie-server-spring-boot-starter
+          version: 7.6.0.Final
+          versionRange: 1.5.9.RELEASE
+          links:
+            - rel: guide
+              href: https://github.com/kiegroup/droolsjbpm-integration/tree/master/kie-spring-boot/kie-spring-boot-starters/kie-server-spring-boot-starter
+              description: Managing Business Processes, Rules and Planning solutions
     - name: Ops
       content:
         - name: Actuator
