@@ -48,12 +48,16 @@ group = '{{groupId}}'
 version = '{{version}}'
 sourceCompatibility = {{javaVersion}}{{#kotlin}}
 compileKotlin {
-	freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
-	kotlinOptions.jvmTarget = "1.8"{{/java8OrLater}}
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
+		jvmTarget = "1.8"{{/java8OrLater}}
+	}
 }
 compileTestKotlin {
-	freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
-	kotlinOptions.jvmTarget = "1.8"{{/java8OrLater}}
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
+		jvmTarget = "1.8"{{/java8OrLater}}
+	}
 }{{/kotlin}}
 
 repositories {

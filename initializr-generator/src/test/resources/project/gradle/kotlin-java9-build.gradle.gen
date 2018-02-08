@@ -25,12 +25,16 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 9
 compileKotlin {
-	freeCompilerArgs = ["-Xjsr305=strict"]
-	kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
 }
 compileTestKotlin {
-	freeCompilerArgs = ["-Xjsr305=strict"]
-	kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
 }
 
 repositories {
