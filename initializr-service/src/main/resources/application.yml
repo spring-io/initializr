@@ -56,7 +56,7 @@ initializr:
         versionProperty: azure.version
         mappings:
           - versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
-            version: 0.2.0
+            version: 0.2.3
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
