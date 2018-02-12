@@ -132,6 +132,13 @@ initializr:
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: 2.0.0.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
+      spring-statemachine:
+        groupId: org.springframework.statemachine
+        artifactId: spring-statemachine-bom
+        versionProperty: spring-statemachine.version
+        mappings:
+          - versionRange: "2.0.0.RC1"
+            version: 2.0.0.M4
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
@@ -1257,6 +1264,19 @@ initializr:
           links:
            - rel: reference
              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
+        - name: Statemachine
+          id: spring-statemachine
+          groupId: org.springframework.statemachine
+          artifactId: spring-statemachine-starter
+          description: Build applications using state machine concepts
+          versionRange: 2.0.0.RC1
+          bom: spring-statemachine
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/
+            - rel: guide
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/#developing-your-first-spring-statemachine-application
+              description: Developing your first Spring Statemachine application
     - name: Ops
       content:
         - name: Actuator
