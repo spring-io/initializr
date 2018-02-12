@@ -138,7 +138,7 @@ initializr:
         versionProperty: spring-statemachine.version
         mappings:
           - versionRange: "2.0.0.RC1"
-            version: 2.0.0.M3
+            version: 2.0.0.M4
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
@@ -1263,17 +1263,16 @@ initializr:
           links:
            - rel: reference
              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
-        - name: Spring Statemachine
+        - name: Statemachine
           id: spring-statemachine
           groupId: org.springframework.statemachine
           artifactId: spring-statemachine-starter
-          description: Statemachine integration
-          version: 2.0.0.M3
+          description: Build applications using statemachine concepts
           versionRange: 2.0.0.RC1
           bom: spring-statemachine
           links:
             - rel: reference
-              href: http://docs.spring.io/spring-statemachine/docs/2.0.0.M3/reference/htmlsingle/
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/
     - name: Ops
       content:
         - name: Actuator
