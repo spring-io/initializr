@@ -25,8 +25,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * A {@link ProjectRequestPostProcessor} that automatically adds "jackson-module-kotlin"
- * when Kotlin is used and a dependency has the "json" facet (meaning that it has
- * "spring-boot-starter-json" transitive dependency).
+ * when Kotlin is used and a dependency has the "json" facet.
  *
  * @author Sebastien Deleuze
  */
@@ -36,13 +35,15 @@ class JacksonKotlinRequestPostProcessor implements ProjectRequestPostProcessor {
 	private final Dependency jacksonModuleKotlin;
 
 	public JacksonKotlinRequestPostProcessor() {
-		this.jacksonModuleKotlin = Dependency.withId(
-				"jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin");
+		this.jacksonModuleKotlin = Dependency.withId("jackson-module-kotlin",
+				"com.fasterxml.jackson.module", "jackson-module-kotlin");
 	}
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
-		if (request.getFacets().contains("json") && "kotlin".equals(request.getLanguage())) {
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
+		if (request.getFacets().contains("json")
+				&& "kotlin".equals(request.getLanguage())) {
 			request.getResolvedDependencies().add(this.jacksonModuleKotlin);
 		}
 	}

@@ -24,19 +24,29 @@ import org.junit.Test;
  * Tests for {@link JacksonKotlinRequestPostProcessor}.
  *
  * @author Sebastien Deleuze
+ * @author Stephane Nicoll
  */
 public class JacksonKotlinRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
+
+	static final Dependency JACKSON_KOTLIN = Dependency.withId("jackson-module-kotlin",
+			"com.fasterxml.jackson.module", "jackson-module-kotlin");
+
+	static final Dependency REACTOR_TEST = Dependency.create(
+			"io.projectreactor", "reactor-test", null, Dependency.SCOPE_TEST);
 
 	@Test
 	public void jacksonModuleKotlinIsAdded() {
 		ProjectRequest request = createProjectRequest("webflux");
 		request.setBootVersion("2.0.0.M2");
 		request.setLanguage("kotlin");
-		Dependency jacksonKotlinModuleTest = Dependency.withId(
-				"jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin");
 		generateMavenPom(request)
-				.hasDependency(jacksonKotlinModuleTest)
+				.hasSpringBootStarterDependency("webflux")
+				.hasDependency(JACKSON_KOTLIN)
+				.hasSpringBootStarterTest()
+				.hasDependency(REACTOR_TEST)
+				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect")
+				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
 				.hasDependenciesCount(6);
 	}
 
@@ -45,16 +55,23 @@ public class JacksonKotlinRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("webflux");
 		request.setBootVersion("2.0.0.M2");
 		generateMavenPom(request)
+				.hasSpringBootStarterDependency("webflux")
+				.hasSpringBootStarterTest()
+				.hasDependency(REACTOR_TEST)
 				.hasDependenciesCount(3);
 	}
 
 	@Test
 	public void jacksonModuleKotlinIsNotAddedWithoutJsonFacet() {
-		ProjectRequest request = createProjectRequest("batch");
+		ProjectRequest request = createProjectRequest("actuator");
 		request.setBootVersion("2.0.0.M2");
 		request.setLanguage("kotlin");
 		generateMavenPom(request)
-				.hasDependenciesCount(5);
+				.hasSpringBootStarterDependency("actuator")
+				.hasSpringBootStarterTest()
+				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect")
+				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+				.hasDependenciesCount(4);
 	}
 
 }
