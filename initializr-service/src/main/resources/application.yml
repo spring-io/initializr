@@ -1139,6 +1139,7 @@ initializr:
         - name: Batch
           id: batch
           description: Spring Batch support
+          weight: 100
           links:
             - rel: guide
               href: https://spring.io/guides/gs/batch-processing/
