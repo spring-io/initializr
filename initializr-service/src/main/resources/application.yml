@@ -1265,7 +1265,7 @@ initializr:
            - rel: reference
              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
         - name: Statemachine
-          id: spring-statemachine
+          id: statemachine
           groupId: org.springframework.statemachine
           artifactId: spring-statemachine-starter
           description: Build applications using state machine concepts
