@@ -1268,12 +1268,15 @@ initializr:
           id: spring-statemachine
           groupId: org.springframework.statemachine
           artifactId: spring-statemachine-starter
-          description: Build applications using statemachine concepts
+          description: Build applications using state machine concepts
           versionRange: 2.0.0.RC1
           bom: spring-statemachine
           links:
             - rel: reference
               href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/
+            - rel: guide
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/#developing-your-first-spring-statemachine-application
+              description: Developing your first Spring Statemachine application
     - name: Ops
       content:
         - name: Actuator
