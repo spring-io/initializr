@@ -284,6 +284,7 @@ initializr:
           weight: 100
           facets:
             - web
+            - json
           links:
             - rel: guide
               href: https://spring.io/guides/gs/rest-service/
@@ -301,9 +302,13 @@ initializr:
           versionRange: 2.0.0.M1
           description: Reactive web development with Netty and Spring WebFlux
           weight: 90
+          facets:
+            - json
         - name: Rest Repositories
           id: data-rest
           weight: 10
+          facets:
+            - json
           description: Exposing Spring Data repositories over REST via spring-data-rest-webmvc
           links:
             - rel: guide
@@ -353,6 +358,8 @@ initializr:
         - name: Jersey (JAX-RS)
           id: jersey
           description: RESTful Web Services framework with support of JAX-RS
+          facets:
+            - json
           versionRange: 1.2.0.RELEASE
           links:
             - rel: reference
