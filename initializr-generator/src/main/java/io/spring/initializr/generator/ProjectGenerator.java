@@ -689,8 +689,36 @@ public class ProjectGenerator {
 	private static List<Dependency> filterDependencies(List<Dependency> dependencies,
 			String scope) {
 		return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
-				.sorted(Comparator.comparing(MetadataElement::getId))
+				.sorted(DependencyComparator.INSTANCE)
 				.collect(Collectors.toList());
+	}
+
+	private static class DependencyComparator implements Comparator<Dependency> {
+
+		private static final DependencyComparator INSTANCE = new DependencyComparator();
+
+		@Override
+		public int compare(Dependency o1, Dependency o2) {
+			if (isSpringBootDependency(o1) && isSpringBootDependency(o2)) {
+				return o1.getArtifactId().compareTo(o2.getArtifactId());
+			}
+			if (isSpringBootDependency(o1)) {
+				return -1;
+			}
+			if (isSpringBootDependency(o2)) {
+				return 1;
+			}
+			int group = o1.getGroupId().compareTo(o2.getGroupId());
+			if (group != 0) {
+				return group;
+			}
+			return o1.getArtifactId().compareTo(o2.getArtifactId());
+		}
+
+		private boolean isSpringBootDependency(Dependency dependency) {
+			return dependency.getGroupId().startsWith("org.springframework.boot");
+		}
+
 	}
 
 	private static class Imports {

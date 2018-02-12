@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -818,6 +817,23 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void dependencyOrderSpringBootTakesPrecedence() {
+		Dependency depOne = Dependency.withId("one", "org.acme", "first", "1.2.3");
+		Dependency depTwo = Dependency.withId("two", "com.example", "second", "1.2.3");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("core", "web", "security", "data-jpa")
+				.addDependencyGroup("sample", depOne, depTwo).build();
+		applyMetadata(metadata);
+		ProjectRequest request = createProjectRequest("one", "web", "two", "data-jpa");
+		assertThat(generateGradleBuild(request).getGradleBuild())
+				.containsSequence(
+						"compile('org.springframework.boot:spring-boot-starter-data-jpa')",
+						"compile('org.springframework.boot:spring-boot-starter-web')",
+						"compile('com.example:second:1.2.3')",
+						"compile('org.acme:first:1.2.3')");
+	}
+
+	@Test
 	public void invalidProjectTypeMavenPom() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-build");
@@ -843,7 +859,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			fail("Should have failed to generate project");
 		}
 		catch (InvalidProjectRequestException ex) {
-			assertThat(ex.getMessage(), containsString("foo-bar"));
+			assertThat(ex.getMessage()).contains("foo-bar");
 			verifyProjectFailedEventFor(request, ex);
 		}
 	}
@@ -857,7 +873,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			fail("Should have failed to generate project");
 		}
 		catch (InvalidProjectRequestException ex) {
-			assertThat(ex.getMessage(), containsString("foo-bar"));
+			assertThat(ex.getMessage()).contains("foo-bar");
 			verifyProjectFailedEventFor(request, ex);
 		}
 	}
@@ -871,7 +887,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			fail("Should have failed to generate project");
 		}
 		catch (InvalidProjectRequestException ex) {
-			assertThat(ex.getMessage(), containsString("foo-bar"));
+			assertThat(ex.getMessage()).contains("foo-bar");
 			verifyProjectFailedEventFor(request, ex);
 		}
 	}
@@ -885,7 +901,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			fail("Should have failed to generate project");
 		}
 		catch (InvalidProjectRequestException ex) {
-			assertThat(ex.getMessage(), containsString("foo-bar"));
+			assertThat(ex.getMessage()).contains("foo-bar");
 			verifyProjectFailedEventFor(request, ex);
 		}
 	}
