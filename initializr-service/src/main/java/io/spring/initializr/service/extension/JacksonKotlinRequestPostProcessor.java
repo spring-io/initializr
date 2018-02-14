@@ -32,19 +32,15 @@ import org.springframework.stereotype.Component;
 @Component
 class JacksonKotlinRequestPostProcessor implements ProjectRequestPostProcessor {
 
-	private final Dependency jacksonModuleKotlin;
-
-	public JacksonKotlinRequestPostProcessor() {
-		this.jacksonModuleKotlin = Dependency.withId("jackson-module-kotlin",
-				"com.fasterxml.jackson.module", "jackson-module-kotlin");
-	}
+	static final Dependency JACKSON_KOTLIN = Dependency.withId("jackson-module-kotlin",
+			"com.fasterxml.jackson.module", "jackson-module-kotlin");
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
 		if (request.getFacets().contains("json")
 				&& "kotlin".equals(request.getLanguage())) {
-			request.getResolvedDependencies().add(this.jacksonModuleKotlin);
+			request.getResolvedDependencies().add(JACKSON_KOTLIN);
 		}
 	}
 

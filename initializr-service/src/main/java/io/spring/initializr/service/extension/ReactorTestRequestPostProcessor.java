@@ -31,33 +31,19 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-class ReactorTestRequestPostProcessor implements ProjectRequestPostProcessor {
+class ReactorTestRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M2 = Version.parse("2.0.0.M2");
 
-	private final Dependency reactorTest;
-
-	public ReactorTestRequestPostProcessor() {
-		this.reactorTest = Dependency.withId(
-				"reactor-test", "io.projectreactor", "reactor-test");
-		this.reactorTest.setScope(Dependency.SCOPE_TEST);
-	}
+	static  final Dependency REACTOR_TEST = Dependency.withId("reactor-test",
+			"io.projectreactor", "reactor-test", null, Dependency.SCOPE_TEST);
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
-		if (hasWebFlux(request) && isAtLeastAfter(request, VERSION_2_0_0_M2)) {
-			request.getResolvedDependencies().add(this.reactorTest);
+		if (hasDependency(request, "webflux")
+				&& isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M2)) {
+			request.getResolvedDependencies().add(REACTOR_TEST);
 		}
-	}
-
-	private boolean hasWebFlux(ProjectRequest request) {
-		return request.getResolvedDependencies().stream()
-				.anyMatch(d -> "webflux".equals(d.getId()));
-	}
-
-	private boolean isAtLeastAfter(ProjectRequest request, Version version) {
-		Version requestVersion = Version.safeParse(request.getBootVersion());
-		return version.compareTo(requestVersion) <= 0;
 	}
 
 }

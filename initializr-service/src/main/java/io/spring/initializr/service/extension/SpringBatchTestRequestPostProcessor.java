@@ -31,34 +31,20 @@ import org.springframework.stereotype.Component;
  * @author Tim Riemer
  */
 @Component
-class SpringBatchTestRequestPostProcessor implements ProjectRequestPostProcessor {
+class SpringBatchTestRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
 
-	private final Dependency springBatchTest;
-
-	public SpringBatchTestRequestPostProcessor() {
-		this.springBatchTest = Dependency.withId("spring-batch-test",
-				"org.springframework.batch", "spring-batch-test");
-		this.springBatchTest.setScope(Dependency.SCOPE_TEST);
-	}
+	static final Dependency SPRING_BATCH_TEST = Dependency.withId("spring-batch-test",
+			"org.springframework.batch", "spring-batch-test", null, Dependency.SCOPE_TEST);
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		if (hasSpringBatch(request) && isAtLeastAfter(request, VERSION_1_3_0)) {
-			request.getResolvedDependencies().add(this.springBatchTest);
+		if (hasDependency(request, "batch")
+				&& isSpringBootVersionAtLeastAfter(request, VERSION_1_3_0)) {
+			request.getResolvedDependencies().add(SPRING_BATCH_TEST);
 		}
-	}
-
-	private boolean hasSpringBatch(ProjectRequest request) {
-		return request.getResolvedDependencies().stream()
-				.anyMatch(d -> "batch".equals(d.getId()));
-	}
-
-	private boolean isAtLeastAfter(ProjectRequest request, Version version) {
-		Version requestVersion = Version.safeParse(request.getBootVersion());
-		return version.compareTo(requestVersion) <= 0;
 	}
 
 }

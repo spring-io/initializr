@@ -34,7 +34,8 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-public class SpringSessionRequestPostProcessor implements ProjectRequestPostProcessor {
+public class SpringSessionRequestPostProcessor
+		extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
 
@@ -46,9 +47,9 @@ public class SpringSessionRequestPostProcessor implements ProjectRequestPostProc
 
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
-		Version requestVersion = Version.safeParse(request.getBootVersion());
-		if (VERSION_2_0_0_M3.compareTo(requestVersion) <= 0) {
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
+		if (isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M3)) {
 			swapSpringSessionDepenendency(request);
 		}
 	}
@@ -69,15 +70,6 @@ public class SpringSessionRequestPostProcessor implements ProjectRequestPostProc
 				request.getResolvedDependencies().addAll(swap);
 			}
 		}
-	}
-
-	private boolean hasDependency(ProjectRequest request, String id) {
-		return getDependency(request, id) != null;
-	}
-
-	private Dependency getDependency(ProjectRequest request, String id) {
-		return request.getResolvedDependencies().stream()
-				.filter(d -> id.equals(d.getId())).findFirst().orElse(null);
 	}
 
 }

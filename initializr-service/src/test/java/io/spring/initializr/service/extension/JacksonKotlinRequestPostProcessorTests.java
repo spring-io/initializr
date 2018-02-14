@@ -17,8 +17,10 @@
 package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.metadata.Dependency;
 import org.junit.Test;
+
+import static io.spring.initializr.service.extension.JacksonKotlinRequestPostProcessor.JACKSON_KOTLIN;
+import static io.spring.initializr.service.extension.ReactorTestRequestPostProcessor.REACTOR_TEST;
 
 /**
  * Tests for {@link JacksonKotlinRequestPostProcessor}.
@@ -28,12 +30,6 @@ import org.junit.Test;
  */
 public class JacksonKotlinRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
-
-	static final Dependency JACKSON_KOTLIN = Dependency.withId("jackson-module-kotlin",
-			"com.fasterxml.jackson.module", "jackson-module-kotlin");
-
-	static final Dependency REACTOR_TEST = Dependency.create(
-			"io.projectreactor", "reactor-test", null, Dependency.SCOPE_TEST);
 
 	@Test
 	public void jacksonModuleKotlinIsAdded() {
