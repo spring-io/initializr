@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import static io.spring.initializr.service.extension.SpringCloudMessagingRequestPostProcessor.KAFKA_BINDER;
 import static io.spring.initializr.service.extension.SpringCloudMessagingRequestPostProcessor.RABBIT_BINDER;
+import static io.spring.initializr.service.extension.SpringCloudMessagingRequestPostProcessor.SCS_TEST;
 
 /**
  * Tests for {@link SpringCloudMessagingRequestPostProcessor}.
@@ -38,7 +39,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(getDependency("amqp"))
 				.hasDependency(RABBIT_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(4);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(5);
 	}
 
 	@Test
@@ -49,7 +51,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(getDependency("kafka"))
 				.hasDependency(KAFKA_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(4);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(5);
 	}
 
 	@Test
@@ -62,7 +65,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(RABBIT_BINDER)
 				.hasDependency(KAFKA_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(6);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(7);
 	}
 
 	@Test
@@ -74,7 +78,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(getDependency("amqp"))
 				.hasDependency(RABBIT_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(4);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(5);
 	}
 
 	@Test
@@ -86,7 +91,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(getDependency("kafka"))
 				.hasDependency(KAFKA_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(4);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(5);
 	}
 
 	@Test
@@ -101,7 +107,8 @@ public class SpringCloudMessagingRequestPostProcessorTests
 				.hasDependency(RABBIT_BINDER)
 				.hasDependency(KAFKA_BINDER)
 				.hasSpringBootStarterTest()
-				.hasDependenciesCount(6);
+				.hasDependency(SCS_TEST)
+				.hasDependenciesCount(7);
 	}
 
 	@Test
