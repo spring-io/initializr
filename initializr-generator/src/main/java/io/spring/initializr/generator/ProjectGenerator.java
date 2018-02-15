@@ -17,11 +17,9 @@
 package io.spring.initializr.generator;
 
 import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,6 +48,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
 /**
@@ -251,16 +250,49 @@ public class ProjectGenerator {
 		setupTestModel(request, model);
 		write(new File(test, applicationName + "Tests." + extension),
 				"ApplicationTests." + extension, model);
+		
+		// Camel endpoints
+		StringBuilder appProperties = new StringBuilder();
+		
+		try {
+			if (request.hasFacet("rest-endpoint")) {
+				appendRouter("Rest", src, model);
+				
+				appendProperties("Rest", appProperties);
+			}
+			
+			if (request.hasFacet("file-endpoint")) {
+				appendRouter("File", src, model);
+
+				appendProperties("File", appProperties);
+			}
+		} catch (IOException ex) {
+			throw new InitializrException("Failure while processing Camel Endpoints", ex);
+		}
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+		writeText(new File(resources, "application.properties"), appProperties.toString());
 
-		if (request.hasWebFacet()) {
-			new File(dir, "src/main/resources/templates").mkdirs();
-			new File(dir, "src/main/resources/static").mkdirs();
-		}
+		// TODO: 
+		// We do not need it for Camel
+		// Instead, if Spring DSL is selected, should create META-INF/spring folder
+//		if (request.hasWebFacet()) {
+//			new File(dir, "src/main/resources/templates").mkdirs();
+//			new File(dir, "src/main/resources/static").mkdirs();
+//		}
 		return rootDir;
+	}
+
+	private void appendRouter(String routerName, File srcDir, Map<String, Object> model) {
+		write(new File(srcDir, routerName + "Router.java"),
+				"camel/" + routerName + "Router.java", model);
+	}
+	
+	private void appendProperties(String routerName, StringBuilder appProperties) throws IOException {
+		File file = ResourceUtils.getFile("classpath:templates/camel/" + routerName + "Router.properties");
+		String content = new String(Files.readAllBytes(file.toPath()));
+		appProperties.append(content).append(System.lineSeparator());
 	}
 
 	/**

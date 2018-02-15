@@ -258,12 +258,11 @@ public class ProjectRequest extends BasicProjectRequest {
 	 * {@link InitializrMetadata}.
 	 */
 	protected void afterResolution(InitializrMetadata metadata) {
+		// Camel
+		addCamelFacet(metadata);
+		addWebFacet(metadata);
+		
 		if ("war".equals(getPackaging())) {
-			if (!hasWebFacet()) {
-				// Need to be able to bootstrap the web app
-				resolvedDependencies.add(metadata.getDependencies().get("web"));
-				facets.add("web");
-			}
 			// Add the tomcat starter in provided scope
 			Dependency tomcat = new Dependency().asSpringBootStarter("tomcat");
 			tomcat.setScope(Dependency.SCOPE_PROVIDED);
@@ -272,6 +271,22 @@ public class ProjectRequest extends BasicProjectRequest {
 		if (resolvedDependencies.stream().noneMatch(Dependency::isStarter)) {
 			// There"s no starter so we add the default one
 			addDefaultDependency();
+		}
+	}
+
+	private void addWebFacet(InitializrMetadata metadata) {
+		addFacet(metadata, "web");
+	}
+	
+	private void addCamelFacet(InitializrMetadata metadata) {
+		addFacet(metadata, "camel-core");
+	}
+
+	private void addFacet(InitializrMetadata metadata, String facet) {
+		if (!hasFacet(facet)) {
+			// Need to be able to bootstrap the web app
+			resolvedDependencies.add(metadata.getDependencies().get(facet));
+			facets.add(facet);
 		}
 	}
 

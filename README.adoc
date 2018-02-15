@@ -1,3 +1,9 @@
+Catalyst change: Since Camel uses the same placeholders as Mustache templates used by initializer,
+in code when Camel {{}} properties are used, Mustache delimiters are temporary replaced.
+See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a-mustache-template
+
+TODO: Add tests, see https://github.com/vanillaguy/vis-pgp
+
 = Spring Initializr image:https://badges.gitter.im/spring-io/initializr.svg[link="https://gitter.im/spring-io/initializr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
