@@ -143,7 +143,9 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                 <div id="dependencies" class="full hidden">
                     {{#dependencies.content}}
                     <div class="form-group col-sm-6">
-                        <h3>{{name}}</h3>
+                        <div class="group-heading">
+                            <h3>{{name}}<small>{{#description}} - {{.}}{{/description}}</small></h3>
+                        </div>
                         {{#content}}
                         <div class="checkbox" data-range="{{#versionRange}}{{versionRange}}{{/versionRange}}">
                             <label>
