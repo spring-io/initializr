@@ -1,7 +1,6 @@
 # catalyst-bootstrap
 
-| --- | --- |
-| **Build** | [![Travis](https://img.shields.io/travis/IntellectEU/catalyst-bootstrap.svg)](https://github.com/IntellectEU/catalyst-bootstrap) |
+[![Build Status](https://travis-ci.org/IntellectEU/catalyst-bootstrap.svg?branch=master)](https://travis-ci.org/IntellectEU/catalyst-bootstrap)
 
 Catalyst Bootstrap (hereinafter Catalyst) is **the first open source** integration toolkit connecting traditional infrastructures with modern blockchain-based eco-systems and IoTs.
 
