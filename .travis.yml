@@ -8,3 +8,4 @@ install:
 #- mvn -N io.takari:maven:wrapper
 #- ./mvnw install -Dmaven.javadoc.skip=true -B -V
  - mvn clean install -B -V
+ - mvn -f initializr-service/pom.xml heroku:deploy

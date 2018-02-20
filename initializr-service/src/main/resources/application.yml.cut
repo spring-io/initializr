@@ -1,0 +1,143 @@
+# Application properties
+
+
+# Initializr properties
+initializr:
+  javaVersions:
+    - id: 9
+      default: false
+    - id: 1.8
+      default: true
+  languages:
+    - name: Java
+      id: java
+      default: true
+  types:
+    - name: Maven Project
+      id: maven-project
+      description: Generate a Maven based project archive
+      sts-id: starter.zip
+      tags:
+        build: maven
+        format: project
+      default: true
+      action: /starter.zip
+  dependencies:
+    - name: Core
+      content:
+        - name: DevTools
+          id: devtools
+          groupId: org.springframework.boot
+          artifactId: spring-boot-devtools
+          scope: runtime
+          description: Spring Boot Development Tools
+          versionRange: 1.3.0.RELEASE
+          starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#using-boot-devtools
+        - name: Security
+          id: security
+          description: Secure your application via spring-security
+          weight: 100
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/securing-web/
+              description: Securing a Web Application
+            - rel: guide
+              href: https://spring.io/guides/tutorials/spring-boot-oauth2/
+              description: Spring Boot and OAuth2
+            - rel: guide
+              href: https://spring.io/guides/gs/authenticating-ldap/
+              description: Authenticating a User with LDAP
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security
+        - name: Lombok
+          id: lombok
+          groupId: org.projectlombok
+          artifactId: lombok
+          scope: compileOnly
+          description: Java annotation library which helps to reduce boilerplate code and code faster
+          mappings:
+            - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
+              version: 1.16.6
+          starter: false
+        - name: Configuration Processor
+          id: configuration-processor
+          groupId: org.springframework.boot
+          artifactId: spring-boot-configuration-processor
+          scope: compileOnly
+          description: Generate metadata for your custom configuration keys
+          versionRange: 1.2.0.RELEASE
+          starter: false
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#configuration-metadata-annotation-processor
+        - name: Session
+          id: session
+          groupId: org.springframework.session
+          artifactId: spring-session-core
+          description: API and implementations for managing a user’s session information
+          versionRange: "1.3.0.RELEASE"
+          starter: false
+          mappings:
+            - versionRange: "[1.3.0.RELEASE,2.0.0.M2]"
+              artifactId: spring-session
+        - name: Cache
+          id: cache
+          description: Spring's Cache abstraction
+          versionRange: 1.3.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/caching/
+              description: Caching Data with Spring
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-caching
+        - name: Validation
+          id: validation
+          description: JSR-303 validation infrastructure (already included with web)
+          versionRange: 1.3.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/validating-form-input/
+              title: Validating Form Input
+        - name: Retry
+          id: retry
+          groupId: org.springframework.retry
+          artifactId: spring-retry
+          description: Provide declarative retry support via spring-retry
+          versionRange: 1.3.0.RELEASE
+          starter: false
+        - name: JTA (Atomikos)
+          id: jta-atomikos
+          description: JTA distributed transactions via Atomikos
+          versionRange: 1.2.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-atomikos
+        - name: JTA (Bitronix)
+          id: jta-bitronix
+          description: JTA distributed transactions via Bitronix
+          versionRange: 1.2.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-bitronix
+        - name: JTA (Narayana)
+          id: jta-narayana
+          description: JTA distributed transactions via Narayana
+          versionRange: 1.4.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-narayana
+        - name: Aspects
+          id: aop
+          description: Create your own Aspects using Spring AOP and AspectJ
