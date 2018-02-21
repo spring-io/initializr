@@ -1,0 +1,88 @@
+image:https://travis-ci.org/IntellectEU/catalyst-bootstrap.svg?branch=master["Build Status", link="https://travis-ci.org/IntellectEU/catalyst-bootstrap"]
+
+== Catalyst
+
+*Catalyst Bootstrap* (hereinafter Catalyst) is **the first open source** integration toolkit connecting traditional infrastructures with modern blockchain-based eco-systems and IoTs.
+
+All implementations you do with Catalyst are lightweight by design, basically, it does not have any of specific abstractions and does not impose you to overengineer your implementations: you just select required connectors set and ask Catalyst to produce integration sample to follow up your task. Each of such samples get equipped with *operational transactionality*, *error handling engine* and *secure by design* features. In addition, cluster implementations of Catalyst provide with natural resilience and reliability of business flows it runs.
+
+Technologically, Catalyst is built on top of two major frameworks:
+
+- Apache Camel - https://camel.apache.org
+- Spring Initializr - https://start.spring.io
+
+:boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
+
+== Supported interfaces
+
+Catalyst can be used as follows:
+
+* With your browser (i.e. link:https://catalyst-bootstrap.herokuapp.com/[])
+* In your IDE if you are using STS, IntelliJ IDEA Ultimate or NetBeans (with
+https://github.com/AlexFalappa/nb-springboot[this plugin])
+* On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with
+`cURL` or `HTTPie`
+
+[TIP]
+====
+You can "curl" an instance to get a usage page with examples
+====
+
+== Generating a project
+If you click on "Generate Project" on the web ui of our instance, it will download a
+project archive with a Maven-based project and the necessary infrastructure to start
+a basic Spring Boot app.
+
+[[build]]
+== Building from Source
+
+You need Java (1.8 or better), Maven 3.2+ and a bash-like shell.
+
+[[building]]
+=== Building
+
+Just invoke the build at the root of the project
+
+[indent=0]
+----
+    $ ./mvnw clean install
+----
+
+If you want to run the smoke tests using Geb, you need to enable the
+`smokeTests` profile. Firefox should also be installed on your machine:
+
+[indent=0]
+----
+    $ ./mvnw verify -PsmokeTests
+----
+
+If you want to build both the library and the service, you can enable the `full`
+profile:
+
+[indent=0]
+----
+    $ ./mvnw clean install -Pfull
+----
+
+
+[[run-app]]
+=== Running the app locally
+
+Once you have <<building, built the library>>, you can easily start the app as any
+other Spring Boot app from the `initializr-service` directory:
+
+[indent=0]
+----
+    $ cd initializr-service
+    $ ../mvnw spring-boot:run
+----
+
+== Notes
+* Since Camel uses the same placeholders as Mustache templates used by initializer,
+in code when Camel {{}} properties are used, Mustache delimiters are temporary replaced.
+See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a-mustache-template
+
+
+== License
+Catalyst is Open Source software released under the
+http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
