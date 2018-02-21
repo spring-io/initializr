@@ -10,7 +10,14 @@ install:
 #  - mvn -f initializr-service/pom.xml heroku:deploy
   - mvn clean install -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 deploy:
-  provider:     heroku
+#  provider:     heroku
+#  app:          catalyst-bootstrap
+#  on:           master
+#  skip_cleanup: true
+#  api_key:
+#    secure:     "6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
+  provider:     script
+  script:       "mvn heroku:deploy"
   app:          catalyst-bootstrap
   on:           master
   skip_cleanup: true

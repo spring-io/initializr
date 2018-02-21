@@ -134,6 +134,12 @@
 				<groupId>com.heroku.sdk</groupId>
 				<artifactId>heroku-maven-plugin</artifactId>
 				<version>1.1.1</version>
+				<configuration>
+					<appName>catalyst-bootstrap</appName>
+					<processTypes>
+						<web>java -jar initializr-service/target/initializr-service.jar </web>
+					</processTypes>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
