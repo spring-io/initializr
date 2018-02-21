@@ -4,18 +4,17 @@ jdk:
 env:
   glonal:
     - HEROKU_API_KEY="6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
-    - MAVEN_OPTS="-B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 notifications:
   email: false
 # git strips the wrapper jar file so we have to force its download during the build.
 install:
-  - mvn dependency:resolve
+  - mvn install -DskipTests=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 #  - mvn -f initializr-service/pom.xml heroku:deploy
 #  - mvn test -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 script:
-  - mvn clean install
+  - mvn clean install -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 deploy:
 #  provider:     heroku
 #  app:          catalyst-bootstrap
