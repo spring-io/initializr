@@ -8,13 +8,13 @@ notifications:
   email: false
 # git strips the wrapper jar file so we have to force its download during the build.
 install:
-  - mvn clean install -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  - mvn clean test -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-#  - mvn -f initializr-service/pom.xml heroku:deploy
-#  - mvn test -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+script:
+  - mvn install -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 deploy:
   provider:     script
-  script:       "mvn -f initializr-service/pom.xml heroku:deploy -DskipTests"
+  script:       "mvn -f initializr-service/pom.xml heroku:deploy -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
   app:          catalyst-bootstrap
   on:           master
