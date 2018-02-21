@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,6 +77,13 @@ public class AgentTests {
 		Agent agent = Agent.fromUserAgent("nb-springboot-plugin/0.1");
 		assertThat(agent.getId(), equalTo(Agent.AgentId.NETBEANS));
 		assertThat(agent.getVersion(), is("0.1"));
+	}
+
+	@Test
+	public void checkVsCode() {
+		Agent agent = Agent.fromUserAgent("vscode/0.2.0");
+		assertThat(agent.getId(), equalTo(Agent.AgentId.VSCODE));
+		assertThat(agent.getVersion(), is("0.2.0"));
 	}
 
 	@Test
