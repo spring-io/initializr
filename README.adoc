@@ -1,7 +1,3 @@
-Catalyst change: Since Camel uses the same placeholders as Mustache templates used by initializer,
-in code when Camel {{}} properties are used, Mustache delimiters are temporary replaced.
-See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a-mustache-template
-
 image:https://travis-ci.org/IntellectEU/catalyst-bootstrap.svg?branch=master["Build Status", link="https://travis-ci.org/IntellectEU/catalyst-bootstrap"]
 
 == Catalyst
@@ -80,6 +76,11 @@ other Spring Boot app from the `initializr-service` directory:
     $ cd initializr-service
     $ ../mvnw spring-boot:run
 ----
+
+== Notes
+* Since Camel uses the same placeholders as Mustache templates used by initializer,
+in code when Camel {{}} properties are used, Mustache delimiters are temporary replaced.
+See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a-mustache-template
 
 
 == License
