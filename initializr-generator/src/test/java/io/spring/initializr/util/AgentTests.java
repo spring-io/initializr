@@ -45,6 +45,13 @@ public class AgentTests {
 	}
 
 	@Test
+	public void checkJBossForge() {
+		Agent agent = Agent.fromUserAgent("SpringBootForgeCli/1.0.0.Alpha4");
+		assertThat(agent.getId(), equalTo(Agent.AgentId.JBOSS_FORGE));
+		assertThat(agent.getVersion(), equalTo("1.0.0.Alpha4"));
+	}
+
+	@Test
 	public void checkSpringBootCli() {
 		Agent agent = Agent.fromUserAgent("SpringBootCli/1.3.1.RELEASE");
 		assertThat(agent.getId(), equalTo(Agent.AgentId.SPRING_BOOT_CLI));

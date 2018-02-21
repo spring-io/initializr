@@ -67,6 +67,8 @@ public class Agent {
 
 		HTTPIE("httpie", "HTTPie"),
 
+		JBOSS_FORGE("jbossforge", "SpringBootForgeCli"),
+
 		SPRING_BOOT_CLI("spring", "SpringBootCli"),
 
 		STS("sts", "STS"),
