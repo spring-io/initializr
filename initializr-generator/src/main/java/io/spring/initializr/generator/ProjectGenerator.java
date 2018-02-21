@@ -37,12 +37,8 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
 import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -284,8 +280,11 @@ public class ProjectGenerator {
     }
 
     private void appendProperties(String routerName, StringBuilder appProperties) throws IOException {
-        File file = ResourceUtils.getFile("classpath:templates/camel/" + routerName + "Router.properties");
-        String content = new String(Files.readAllBytes(file.toPath()));
+        InputStream is = ResourceUtils.getURL("classpath:templates/camel/" + routerName + "Router.properties").openStream();
+        String content;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()))) {
+            content = br.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
         appProperties.append(content).append(System.lineSeparator());
     }
 
