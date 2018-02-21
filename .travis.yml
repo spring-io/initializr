@@ -7,9 +7,9 @@ env:
 notifications:
   email: false
 install: true
-before_script:
-  - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
+#before_script:
 script:
+  - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
   - mvn clean install -B -V
   - mvn sonar:sonar -Dsonar.organization=intellecteu -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0f00125d5b7848079ca6778b3856210f69205b67
 # Use these for maven wrapper
@@ -17,8 +17,9 @@ script:
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 deploy:
-  provider:     script
+  provider: script
   script:
+    - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
     - mvn -f initializr-service/pom.xml heroku:deploy -DskipTests
-  app:          catalyst-bootstrap
-  on:           master
+  app:  catalyst-bootstrap
+  on: master
