@@ -51,6 +51,15 @@ spring:
 initializr:
   env:
     boms:
+      camel:
+        groupId: org.apache.camel
+        artifactId: camel-spring-boot-dependencies
+        versionProperty: camel.version
+        mappings:
+          - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
+            version: 2.18.5
+          - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
+            version: 2.20.2
       azure:
         groupId: com.microsoft.azure
         artifactId: azure-spring-boot-bom
@@ -159,8 +168,34 @@ initializr:
     kotlin:
       default-version: 1.2.20
   dependencies:
+      - name: Endpoints
+        bom: camel
+        content:
+          - name: RESTful
+            id: rest-endpoint
+            groupId: org.apache.camel
+            artifactId: camel-servlet-starter
+            facets:
+              - rest-endpoint
+            links:
+              - rel: guide
+                href: http://camel.apache.org/rest-dsl.html
+          - name: File
+            id: file-endpoint
+            facets:
+              - file-endpoint
+            links:
+              - rel: guide
+                href: http://camel.apache.org/file2.html
     - name: Core
       content:
+        - name: Camel Core
+          id: camel-core
+          groupId: org.apache.camel
+          artifactId: camel-spring-boot-starter
+          bom: camel
+          facets:
+            - camel
         - name: DevTools
           id: devtools
           groupId: org.springframework.boot
