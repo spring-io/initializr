@@ -2,28 +2,28 @@ language: java
 jdk:
   - oraclejdk8
 env:
-  global:
+  glonal:
     - HEROKU_API_KEY="6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
-#    - MAVEN-OPTS:"-B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+    - MAVEN_OPTS="-B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 notifications:
   email: false
-
-before_script:
-  - echo "MAVEN_OPTS='-B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
-
-script:
+# git strips the wrapper jar file so we have to force its download during the build.
+install:
+  - mvn dependency:resolve
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 #  - mvn -f initializr-service/pom.xml heroku:deploy
-  - mvn install
+#  - mvn test -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+script:
+  - mvn clean install
 deploy:
 #  provider:     heroku
 #  app:          catalyst-bootstrap
 #  on:           master
+#  skip_cleanup: true
 #  api_key:
 #    secure:     "6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
   provider:     script
-  script:       "mvn heroku:deploy"
-  skip_cleanup: true
+  script:       "mvn heroku:deployk"
   app:          catalyst-bootstrap
   on:           master
