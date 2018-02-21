@@ -252,8 +252,6 @@ public class ProjectRequest extends BasicProjectRequest {
 	 * {@link InitializrMetadata}.
 	 */
 	protected void afterResolution(InitializrMetadata metadata) {
-        // Camel
-        addCamelFacet(metadata);
 		if ("war".equals(getPackaging())) {
             addWebFacet(metadata);
 			// Add the tomcat starter in provided scope
@@ -269,10 +267,6 @@ public class ProjectRequest extends BasicProjectRequest {
 
     private void addWebFacet(InitializrMetadata metadata) {
         addFacet(metadata, "web");
-    }
-
-    private void addCamelFacet(InitializrMetadata metadata) {
-        addFacet(metadata, "camel-core");
     }
 
     private void addFacet(InitializrMetadata metadata, String facet) {

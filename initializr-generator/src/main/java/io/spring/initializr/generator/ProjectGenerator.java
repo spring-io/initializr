@@ -265,7 +265,6 @@ public class ProjectGenerator {
         try {
             if (request.hasFacet("rest-endpoint")) {
                 appendRouter("Rest", src, model);
-
                 appendProperties("Rest", appProperties);
             }
 
