@@ -16,23 +16,17 @@
 
 package io.spring.initializr.generator;
 
+import io.spring.initializr.metadata.*;
+import io.spring.initializr.util.Version;
+import io.spring.initializr.util.VersionProperty;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.DefaultMetadataElement;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.Repository;
-import io.spring.initializr.metadata.Type;
-import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionProperty;
-
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
 
 /**
  * A request to generate a project.
@@ -259,11 +253,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	 */
 	protected void afterResolution(InitializrMetadata metadata) {
 		if ("war".equals(getPackaging())) {
-			if (!hasWebFacet()) {
-				// Need to be able to bootstrap the web app
-				resolvedDependencies.add(metadata.getDependencies().get("web"));
-				facets.add("web");
-			}
+            addWebFacet(metadata);
 			// Add the tomcat starter in provided scope
 			Dependency tomcat = new Dependency().asSpringBootStarter("tomcat");
 			tomcat.setScope(Dependency.SCOPE_PROVIDED);
@@ -275,7 +265,19 @@ public class ProjectRequest extends BasicProjectRequest {
 		}
 	}
 
-	/**
+    private void addWebFacet(InitializrMetadata metadata) {
+        addFacet(metadata, "web");
+    }
+
+    private void addFacet(InitializrMetadata metadata, String facet) {
+        if (!hasFacet(facet)) {
+            // Need to be able to bootstrap the web app
+            resolvedDependencies.add(metadata.getDependencies().get(facet));
+            facets.add(facet);
+        }
+    }
+
+    /**
 	 * Add a default dependency if the project does not define any dependency
 	 */
 	protected void addDefaultDependency() {

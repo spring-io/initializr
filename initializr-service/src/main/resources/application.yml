@@ -32,6 +32,7 @@ management:
     enabled: false
 
 server:
+  port: ${PORT:5000}
   compression:
     enabled: true
     mime-types: application/json,text/css,text/html
@@ -50,6 +51,15 @@ spring:
 initializr:
   env:
     boms:
+      camel:
+        groupId: org.apache.camel
+        artifactId: camel-spring-boot-dependencies
+        versionProperty: camel.version
+        mappings:
+          - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
+            version: 2.18.5
+          - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
+            version: 2.20.2
       azure:
         groupId: com.microsoft.azure
         artifactId: azure-spring-boot-bom
@@ -158,6 +168,45 @@ initializr:
     kotlin:
       default-version: 1.2.20
   dependencies:
+    - name: Camel
+      bom: camel
+      content:
+        - name: Apache Camel
+          id: camel
+          description: Core Camel dependency. Required for all endpoints
+          groupId: org.apache.camel
+          artifactId: camel-spring-boot-starter
+          version: ${camel.version}
+          bom: camel
+  #          facets:
+  #            - camel
+          links:
+            - rel: guide
+              href: http://camel.apache.org/spring-boot
+              description: Using Apache Camel with Spring Boot
+        - name: Camel File Endpoint
+          id: camel-file-endpoint
+          description: Camel file endpoint
+          groupId: org.apache.camel
+          artifactId: camel-spring-boot-starter
+          version: ${camel.version}
+          starter: false
+          facets:
+            - file-endpoint
+          links:
+            - rel: guide
+              href: http://camel.apache.org/file2.html
+        - name: Camel Rest Endpoint
+          id: camel-rest-endpoint
+          groupId: org.apache.camel
+          description: Camel rest endpoint
+          artifactId: camel-servlet-starter
+          version: ${camel.version}
+          facets:
+            - rest-endpoint
+          links:
+            - rel: guide
+              href: http://camel.apache.org/rest-dsl.html
     - name: Core
       content:
         - name: DevTools
@@ -1218,21 +1267,6 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email
-        - name: Apache Camel
-          id: camel
-          versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
-          mappings:
-            - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
-              version: 2.18.5
-            - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.20.2
-          description: Integration using Apache Camel
-          groupId: org.apache.camel
-          artifactId: camel-spring-boot-starter
-          links:
-            - rel: guide
-              href: http://camel.apache.org/spring-boot
-              description: Using Apache Camel with Spring Boot
         - name: LDAP
           id: data-ldap
           description: LDAP support, including spring-data-ldap
@@ -1361,8 +1395,6 @@ initializr:
       id: war
       default: false
   javaVersions:
-    - id: 9
-      default: false
     - id: 1.8
       name: 8
       default: true
@@ -1373,12 +1405,6 @@ initializr:
     - name: Java
       id: java
       default: true
-    - name: Kotlin
-      id: kotlin
-      default: false
-    - name: Groovy
-      id: groovy
-      default: false
   bootVersions:
     - name : Latest SNAPSHOT
       id: 1.2.4.BUILD-SNAPSHOT

@@ -130,6 +130,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<configuration>
+					<appName>catalyst-bootstrap</appName>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>

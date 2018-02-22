@@ -1,0 +1,31 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    - HEROKU_API_KEY="6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
+
+notifications:
+  email: true
+
+install: true
+
+before_script:
+  - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
+
+script:
+  - mvn clean install -B -V
+  - mvn sonar:sonar -Dsonar.organization=intellecteu -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0f00125d5b7848079ca6778b3856210f69205b67
+# Use these for maven wrapper
+# git strips the wrapper jar file so we have to force its download during the build.
+#  - mvn -N io.takari:maven:wrapper
+#  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+deploy:
+  provider: script
+  script:
+    - mvn -f initializr-service/pom.xml heroku:deploy -DskipTests
+  app:  catalyst-bootstrap
+  on: master

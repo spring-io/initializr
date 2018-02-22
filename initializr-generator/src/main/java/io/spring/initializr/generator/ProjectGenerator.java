@@ -16,41 +16,31 @@
 
 package io.spring.initializr.generator;
 
-import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import io.spring.initializr.InitializrException;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
+
+import java.beans.PropertyDescriptor;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Generate a project based on the configured metadata.
@@ -252,6 +242,8 @@ public class ProjectGenerator {
 		write(new File(test, applicationName + "Tests." + extension),
 				"ApplicationTests." + extension, model);
 
+        writeCamelEndpoints(request, model, src);
+
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
 		writeText(new File(resources, "application.properties"), "");
@@ -263,7 +255,41 @@ public class ProjectGenerator {
 		return rootDir;
 	}
 
-	/**
+
+    private void writeCamelEndpoints(ProjectRequest request, Map<String, Object> model, File src) {
+        StringBuilder appProperties = new StringBuilder();
+        try {
+            if (request.hasFacet("rest-endpoint")) {
+                appendRouter("Rest", src, model);
+                appendProperties("Rest", appProperties);
+            }
+
+            if (request.hasFacet("file-endpoint")) {
+                appendRouter("File", src, model);
+
+                appendProperties("File", appProperties);
+            }
+        } catch (IOException ex) {
+            throw new InitializrException("Failure while processing Camel Endpoints", ex);
+        }
+    }
+
+    private void appendRouter(String routerName, File srcDir, Map<String, Object> model) {
+        write(new File(srcDir, routerName + "Router.java"),
+                "camel/" + routerName + "Router.java", model);
+    }
+
+    private void appendProperties(String routerName, StringBuilder appProperties) throws IOException {
+        InputStream is = ResourceUtils.getURL("classpath:templates/camel/" + routerName + "Router.properties").openStream();
+        String content;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()))) {
+            content = br.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
+        appProperties.append(content).append(System.lineSeparator());
+    }
+
+
+    /**
 	 * Create a distribution file for the specified project structure directory and
 	 * extension
 	 */
