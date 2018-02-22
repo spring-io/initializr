@@ -168,47 +168,47 @@ initializr:
     kotlin:
       default-version: 1.2.20
   dependencies:
-    - name: Endpoints
+    - name: Camel
       bom: camel
       content:
-        - name: RESTful
-          id: rest-endpoint
+        - name: Apache Camel
+          id: camel
+          description: Core Camel dependency. Required for all endpoints
           groupId: org.apache.camel
-          description: Camel rest endpoint
-          artifactId: camel-servlet-starter
-          facets:
-            - rest-endpoint
+          artifactId: camel-spring-boot-starter
+          version: ${camel.version}
+          bom: camel
+  #          facets:
+  #            - camel
           links:
             - rel: guide
-              href: http://camel.apache.org/rest-dsl.html
-        - name: File
-          id: file-endpoint
+              href: http://camel.apache.org/spring-boot
+              description: Using Apache Camel with Spring Boot
+        - name: Camel File Endpoint
+          id: camel-file-endpoint
           description: Camel file endpoint
+          groupId: org.apache.camel
+          artifactId: camel-spring-boot-starter
+          version: ${camel.version}
+          starter: false
           facets:
             - file-endpoint
           links:
             - rel: guide
               href: http://camel.apache.org/file2.html
-    - name: Core
-      content:
-        - name: Apache Camel
-          id: camel
-          versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
-          mappings:
-            - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
-              version: 2.18.5
-            - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.20.2
-          description: Integration using Apache Camel
+        - name: Camel Rest Endpoint
+          id: camel-rest-endpoint
           groupId: org.apache.camel
-          bom: camel
-#          facets:
-#            - camel
-          artifactId: camel-spring-boot-starter
+          description: Camel rest endpoint
+          artifactId: camel-servlet-starter
+          version: ${camel.version}
+          facets:
+            - rest-endpoint
           links:
             - rel: guide
-              href: http://camel.apache.org/spring-boot
-              description: Using Apache Camel with Spring Boot
+              href: http://camel.apache.org/rest-dsl.html
+    - name: Core
+      content:
         - name: DevTools
           id: devtools
           groupId: org.springframework.boot
