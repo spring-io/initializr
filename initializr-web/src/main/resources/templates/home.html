@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap.min.css{{/linkTo}}"/>
     <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap-theme.min.css{{/linkTo}}"/>
     <link rel="stylesheet" href="{{#linkTo}}/css/spring.css{{/linkTo}}"/>
+    <link rel="stylesheet" href="{{#linkTo}}/css/fontawesome-all.min.css{{/linkTo}}"/>
     <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{#trackingCode}}
@@ -147,7 +148,15 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                         {{#content}}
                         <div class="checkbox" data-range="{{#versionRange}}{{versionRange}}{{/versionRange}}">
                             <label>
-                                <input tabindex="13" type="checkbox" name="style" value="{{id}}">{{name}}
+                                <input tabindex="13" type="checkbox" name="style" value="{{id}}">
+                                <div class="dependency-info">
+                                    {{name}}
+                                    {{#links}}
+                                    <div class="link {{rel}}">
+                                        <a href="{{href}}" target="_blank"></a>
+                                    </div>
+                                    {{/links}}
+                                </div>
                                 <p class="help-block">{{#description}}{{.}}{{/description}}</p>
                                 {{#versionRequirement}}
                                 <p class="help-block version-requirement">requires Spring Boot {{.}}</p>
