@@ -137,8 +137,10 @@ initializr:
         artifactId: spring-statemachine-bom
         versionProperty: spring-statemachine.version
         mappings:
-          - versionRange: "2.0.0.RC1"
+          - versionRange: "[2.0.0.RC1,2.0.0.RC1]"
             version: 2.0.0.M4
+          - versionRange: "2.0.0.RC2"
+            version: 2.0.0.M5
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
