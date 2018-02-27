@@ -826,7 +826,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("one", "web", "two", "data-jpa");
 		assertThat(generateGradleBuild(request).getGradleBuild())
-				.containsSequence(
+				.containsSubsequence(
 						"compile('org.springframework.boot:spring-boot-starter-data-jpa')",
 						"compile('org.springframework.boot:spring-boot-starter-web')",
 						"compile('com.example:second:1.2.3')",

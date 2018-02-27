@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +51,7 @@ public class UiController {
 		this.metadataProvider = metadataProvider;
 	}
 
-	@RequestMapping(value = "/ui/dependencies", produces = "application/json")
+	@GetMapping(path = "/ui/dependencies", produces = "application/json")
 	public ResponseEntity<String> dependencies(
 			@RequestParam(required = false) String version) {
 		List<DependencyGroup> dependencyGroups = metadataProvider.get()

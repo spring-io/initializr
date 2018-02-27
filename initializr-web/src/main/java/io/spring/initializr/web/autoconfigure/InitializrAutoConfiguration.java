@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
+import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,7 +70,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
 @AutoConfigureAfter({ CacheAutoConfiguration.class, JacksonAutoConfiguration.class,
-		WebClientAutoConfiguration.class })
+		RestTemplateAutoConfiguration.class })
 public class InitializrAutoConfiguration {
 
 	private final List<ProjectRequestPostProcessor> postProcessors;
@@ -90,9 +90,9 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public TemplateRenderer templateRenderer(Environment environment) {
-		RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(environment,
-				"spring.mustache.");
-		boolean cache = resolver.getProperty("cache", Boolean.class, true);
+		Binder binder = Binder.get(environment);
+		boolean cache = binder.bind("spring.mustache.cache", Boolean.class)
+				.orElseGet(() -> true);
 		TemplateRenderer templateRenderer = new TemplateRenderer();
 		templateRenderer.setCache(cache);
 		return templateRenderer;

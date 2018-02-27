@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 
 package io.spring.initializr.actuate.autoconfigure;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
 
-import org.springframework.boot.actuate.metrics.CounterService;
+import org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,12 +33,15 @@ import org.springframework.context.annotation.Configuration;
  * @author Dave Syer
  */
 @Configuration
+@ConditionalOnClass(MeterRegistry.class)
+@AutoConfigureAfter(CompositeMeterRegistryAutoConfiguration.class)
 public class InitializrMetricsConfiguration {
 
 	@Bean
+	@ConditionalOnSingleCandidate(MeterRegistry.class)
 	public ProjectGenerationMetricsListener metricsListener(
-			CounterService counterService) {
-		return new ProjectGenerationMetricsListener(counterService);
+			MeterRegistry meterRegistry) {
+		return new ProjectGenerationMetricsListener(meterRegistry);
 	}
 
 }

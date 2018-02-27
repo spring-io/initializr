@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,28 @@ package io.spring.initializr.actuate.metric;
 
 import java.util.List;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.util.Agent;
 
-import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.StringUtils;
 
 /**
- * A {@link ProjectGeneratedEvent} listener that uses a {@link CounterService} to update
+ * A {@link ProjectGeneratedEvent} listener that uses a {@link MeterRegistry} to update
  * various project related metrics.
  *
  * @author Stephane Nicoll
  */
 public class ProjectGenerationMetricsListener {
 
-	private final CounterService counterService;
+	private final MeterRegistry meterRegistry;
 
-	public ProjectGenerationMetricsListener(CounterService counterService) {
-		this.counterService = counterService;
+	public ProjectGenerationMetricsListener(MeterRegistry meterRegistry) {
+		this.meterRegistry = meterRegistry;
 	}
 
 	@EventListener
@@ -122,7 +122,7 @@ public class ProjectGenerationMetricsListener {
 	}
 
 	protected void increment(String key) {
-		counterService.increment(key);
+		meterRegistry.counter(key).increment();
 	}
 
 	protected String key(String part) {

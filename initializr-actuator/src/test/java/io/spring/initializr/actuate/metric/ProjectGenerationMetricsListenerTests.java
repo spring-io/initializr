@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package io.spring.initializr.actuate.metric;
 
 import java.util.Arrays;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.spring.initializr.actuate.test.MetricsAssert;
-import io.spring.initializr.actuate.test.TestCounterService;
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
@@ -42,9 +42,9 @@ public class ProjectGenerationMetricsListenerTests {
 
 	@Before
 	public void setup() {
-		TestCounterService counterService = new TestCounterService();
-		listener = new ProjectGenerationMetricsListener(counterService);
-		metricsAssert = new MetricsAssert(counterService);
+		SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
+		listener = new ProjectGenerationMetricsListener(meterRegistry);
+		metricsAssert = new MetricsAssert(meterRegistry);
 	}
 
 	@Test

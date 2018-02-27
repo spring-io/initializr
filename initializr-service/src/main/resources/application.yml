@@ -1,35 +1,7 @@
-endpoints:
-  actuator:
-    enabled: false
-  autoconfig:
-    enabled: false
-  beans:
-    enabled: false
-  configprops:
-    enabled: false
-  docs:
-    enabled: false
-  dump:
-    enabled: false
-  env:
-    enabled: false
-  heapdump:
-    enabled: false
-  logfile:
-    enabled: false
-  loggers:
-      enabled: false
-  trace:
-      enabled: false
-
 logging:
   level:
     org.springframework.core.env: warn
     org.springframework.jndi: warn
-
-management:
-  security:
-    enabled: false
 
 server:
   compression:
