@@ -68,7 +68,7 @@ initializr:
           - versionRange: "[2.0.0.RC1, 2.0.0.RC1]"
             version: Finchley.M6
             repositories: spring-milestones
-          - versionRange: "[2.0.0.RC2,2.0.0.RC2]"
+          - versionRange: "[2.0.0.RC2,2.0.0.RELEASE]"
             version: Finchley.M7
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
