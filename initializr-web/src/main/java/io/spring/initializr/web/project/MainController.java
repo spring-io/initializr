@@ -58,9 +58,9 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
@@ -107,18 +107,18 @@ public class MainController extends AbstractInitializrController {
 		return request;
 	}
 
-	@GetMapping(path = "/metadata/config", produces = "application/json")
+	@RequestMapping(path = "/metadata/config", produces = "application/json")
 	@ResponseBody
 	public InitializrMetadata config() {
 		return metadataProvider.get();
 	}
 
-	@GetMapping("/metadata/client")
+	@RequestMapping("/metadata/client")
 	public String client() {
 		return "redirect:/";
 	}
 
-	@GetMapping(path = "/", produces = "text/plain")
+	@RequestMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
 		String appUrl = generateAppUrl();
@@ -150,19 +150,19 @@ public class MainController extends AbstractInitializrController {
 		return builder.eTag(createUniqueId(content)).body(content);
 	}
 
-	@GetMapping(path = "/", produces = "application/hal+json")
+	@RequestMapping(path = "/", produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1,
 				HAL_JSON_CONTENT_TYPE);
 	}
 
-	@GetMapping(path = "/", produces = { "application/vnd.initializr.v2.1+json",
+	@RequestMapping(path = "/", produces = { "application/vnd.initializr.v2.1+json",
 			"application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
 
-	@GetMapping(path = "/", produces = "application/vnd.initializr.v2+json")
+	@RequestMapping(path = "/", produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
@@ -190,7 +190,7 @@ public class MainController extends AbstractInitializrController {
 		}
 	}
 
-	@GetMapping(path = "/dependencies", produces = {
+	@RequestMapping(path = "/dependencies", produces = {
 			"application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(
 			@RequestParam(required = false) String bootVersion) {
@@ -215,25 +215,25 @@ public class MainController extends AbstractInitializrController {
 		return (frag, out) -> out.write(this.getLinkTo().apply(frag.execute()));
 	}
 
-	@GetMapping(path = "/", produces = "text/html")
+	@RequestMapping(path = "/", produces = "text/html")
 	public String home(Map<String, Object> model) {
 		renderHome(model);
 		return "home";
 	}
 
-	@GetMapping(path = { "/spring", "/spring.zip" })
+	@RequestMapping(path = { "/spring", "/spring.zip" })
 	public String spring() {
 		String url = metadataProvider.get().createCliDistributionURl("zip");
 		return "redirect:" + url;
 	}
 
-	@GetMapping(path = { "/spring.tar.gz", "spring.tgz" })
+	@RequestMapping(path = { "/spring.tar.gz", "spring.tgz" })
 	public String springTgz() {
 		String url = metadataProvider.get().createCliDistributionURl("tar.gz");
 		return "redirect:" + url;
 	}
 
-	@GetMapping(path = { "/pom", "/pom.xml" })
+	@RequestMapping(path = { "/pom", "/pom.xml" })
 	@ResponseBody
 	public ResponseEntity<byte[]> pom(BasicProjectRequest request) {
 		request.setType("maven-build");
@@ -241,7 +241,7 @@ public class MainController extends AbstractInitializrController {
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
-	@GetMapping(path = { "/build", "/build.gradle" })
+	@RequestMapping(path = { "/build", "/build.gradle" })
 	@ResponseBody
 	public ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
 		request.setType("gradle-build");
@@ -251,7 +251,7 @@ public class MainController extends AbstractInitializrController {
 				"build.gradle");
 	}
 
-	@GetMapping("/starter.zip")
+	@RequestMapping("/starter.zip")
 	@ResponseBody
 	public ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest)
 			throws IOException {
@@ -282,7 +282,7 @@ public class MainController extends AbstractInitializrController {
 		return upload(download, dir, generateFileName(request, "zip"), "application/zip");
 	}
 
-	@GetMapping(path = "/starter.tgz", produces = "application/x-compress")
+	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
 	public ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest)
 			throws IOException {
