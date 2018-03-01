@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -67,8 +68,9 @@ public class ProjectGenerationSmokeTests
 				"application/zip,application/x-compress,application/octet-stream");
 		FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
 		driver = new FirefoxDriver(options);
-		Actions actions = new Actions(driver);
+		((JavascriptExecutor) driver).executeScript("window.focus();");
 
+		Actions actions = new Actions(driver);
 		enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 
