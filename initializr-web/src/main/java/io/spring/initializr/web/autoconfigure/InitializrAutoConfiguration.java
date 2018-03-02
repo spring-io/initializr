@@ -91,8 +91,7 @@ public class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean
 	public TemplateRenderer templateRenderer(Environment environment) {
 		Binder binder = Binder.get(environment);
-		boolean cache = binder.bind("spring.mustache.cache", Boolean.class)
-				.orElseGet(() -> true);
+		boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);
 		TemplateRenderer templateRenderer = new TemplateRenderer();
 		templateRenderer.setCache(cache);
 		return templateRenderer;
