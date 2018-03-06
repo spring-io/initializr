@@ -461,14 +461,6 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
-        - name: Velocity
-          id: velocity
-          description: Velocity templating engine
-          versionRange: "[1.1.6.RELEASE,1.4.0.M2)"
-          facets:
-            - web
-          keywords:
-            - template
     - name: SQL
       content:
         - name: JPA
@@ -751,16 +743,6 @@ initializr:
               description: Messaging with JMS
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
-        - name: JMS (HornetQ)
-          id: hornetq
-          description: Java Message Service API via HornetQ
-          versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-hornetq
     - name: Cloud Core
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -989,26 +971,6 @@ initializr:
           description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Sleuth Stream.
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
-        - name: Sleuth Stream
-          id: cloud-sleuth-stream
-          description: Marshals Spring Cloud Sleuth Spans over a Spring Cloud Stream binder
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-sleuth-stream
-          versionRange: "[1.3.0.RELEASE,1.5.0.RELEASE)"
-        - name: Zipkin Stream
-          id: cloud-sleuth-zipkin-stream
-          description:  Consumes span data in messages from Spring Cloud Sleuth Stream and writes them to a Zipkin store
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-sleuth-zipkin-stream
-          versionRange: "[1.3.0.RELEASE,1.5.0.RELEASE)"
-        - name: Zipkin UI
-          id: zipkin-ui
-          description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
-          groupId: io.zipkin.java
-          artifactId: zipkin-autoconfigure-ui
-          scope: runtime
-          versionRange: "[1.3.3.RELEASE,1.5.0.RELEASE)"
-          starter: false
     - name: Cloud Messaging
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -1294,10 +1256,6 @@ initializr:
           versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
-        - name: Remote Shell
-          id: remote-shell
-          description: CRaSH shell integration
-          versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
   types:
     - name: Maven Project
       id: maven-project
