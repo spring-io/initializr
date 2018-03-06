@@ -27,8 +27,10 @@ initializr:
         artifactId: azure-spring-boot-bom
         versionProperty: azure.version
         mappings:
-          - versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
+          - versionRange: "[1.5.4.RELEASE,2.0.0.RELEASE)"
             version: 0.2.3
+          - versionRange: "2.0.0.RELEASE"
+            version: 2.0.1
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
@@ -1095,7 +1097,7 @@ initializr:
           artifactId: spring-cloud-services-starter-circuit-breaker
     - name: Azure
       bom: azure
-      versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
+      versionRange: "1.5.4.RELEASE"
       content:
         - name: Azure Support
           id: azure-support
