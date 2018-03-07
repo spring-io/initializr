@@ -119,8 +119,10 @@ initializr:
         mappings:
           - versionRange: "[2.0.0.RC1,2.0.0.RC1]"
             version: 2.0.0.M4
+            repositories: spring-milestones
           - versionRange: "[2.0.0.RC2,2.0.0.RC2]"
             version: 2.0.0.M5
+            repositories: spring-milestones
           - versionRange: "2.0.0.RELEASE"
             version: 2.0.0.RELEASE
       vaadin:
@@ -1213,7 +1215,7 @@ initializr:
           groupId: org.springframework.statemachine
           artifactId: spring-statemachine-starter
           description: Build applications using state machine concepts
-          versionRange: 2.0.0.RELEASE
+          versionRange: 2.0.0.RC1
           bom: spring-statemachine
           links:
             - rel: reference
