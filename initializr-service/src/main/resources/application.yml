@@ -119,8 +119,12 @@ initializr:
         mappings:
           - versionRange: "[2.0.0.RC1,2.0.0.RC1]"
             version: 2.0.0.M4
-          - versionRange: "2.0.0.RC2"
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.RC2,2.0.0.RC2]"
             version: 2.0.0.M5
+            repositories: spring-milestones
+          - versionRange: "2.0.0.RELEASE"
+            version: 2.0.0.RELEASE
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
