@@ -40,7 +40,7 @@ import org.springframework.web.util.UrlPathHelper;
  *
  * @author Stephane Nicoll
  */
-public class WebConfig implements WebMvcConfigurer {
+public class InitializrWebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {

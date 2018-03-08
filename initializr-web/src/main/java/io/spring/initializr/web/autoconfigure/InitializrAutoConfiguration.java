@@ -132,8 +132,8 @@ public class InitializrAutoConfiguration {
 
 
 		@Bean
-		public WebConfig webConfig() {
-			return new WebConfig();
+		public InitializrWebConfig initializrWebConfig() {
+			return new InitializrWebConfig();
 		}
 
 		@Bean
