@@ -18,11 +18,19 @@ package io.spring.initializr.service;
 
 import java.util.concurrent.Executor;
 
+import javax.servlet.Filter;
+
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.project.LegacyStsController;
+import org.apache.catalina.filters.HttpHeaderSecurityFilter;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +74,23 @@ public class InitializrService {
 			return executor;
 		}
 
+	}
+
+	@Bean
+	public Filter hstsFilter() {
+		return new HttpHeaderSecurityFilter();
+	}
+
+	@Bean
+	public WebServerFactoryCustomizer<TomcatServletWebServerFactory> securityHeaderCustomizer() {
+		return (factory) -> factory.addContextCustomizers((TomcatContextCustomizer) context -> {
+			SecurityConstraint securityConstraint = new SecurityConstraint();
+			securityConstraint.setUserConstraint("CONFIDENTIAL");
+			SecurityCollection collection = new SecurityCollection();
+			collection.addPattern("/*");
+			securityConstraint.addCollection(collection);
+			context.addConstraint(securityConstraint);
+		});
 	}
 
 }
