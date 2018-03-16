@@ -1173,7 +1173,7 @@ initializr:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 2.18.5
             - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.20.2
+              version: 2.21.0
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
