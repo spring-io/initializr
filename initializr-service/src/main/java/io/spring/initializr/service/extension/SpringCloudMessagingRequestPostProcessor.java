@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-public class SpringCloudMessagingRequestPostProcessor
+class SpringCloudMessagingRequestPostProcessor
 		extends AbstractProjectRequestPostProcessor {
 
 	static final Dependency KAFKA_BINDER = Dependency.withId("cloud-stream-binder-kafka",
