@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ package io.spring.initializr.actuate.autoconfigure;
 
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import org.junit.After;
 import org.junit.Test;
 
 import org.springframework.beans.DirectFieldAccessor;
-import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
-import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -43,38 +41,23 @@ import static org.mockito.Mockito.mock;
  */
 public class InitializrStatsAutoConfigurationTests {
 
-	private ConfigurableApplicationContext context;
-
-	@After
-	public void close() {
-		if (this.context != null) {
-			this.context.close();
-		}
-	}
+	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+			.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
+					InitializrStatsAutoConfiguration.class));
 
 	@Test
 	public void customRestTemplateBuilderIsUsed() {
-		load(CustomRestTemplateConfiguration.class,
-				"initializr.stats.elastic.uri=http://localhost:9200");
-		assertThat(this.context.getBeansOfType(ProjectGenerationStatPublisher.class))
-				.hasSize(1);
-		RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-				this.context.getBean(ProjectGenerationStatPublisher.class))
-				.getPropertyValue("restTemplate");
-		assertThat(restTemplate.getErrorHandler()).isSameAs(
-				CustomRestTemplateConfiguration.errorHandler);
-	}
-
-	private void load(Class<?> config, String... environment) {
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(ctx, environment);
-		if (config != null) {
-			ctx.register(config);
-		}
-		ctx.register(WebClientAutoConfiguration.class,
-				InitializrStatsAutoConfiguration.class);
-		ctx.refresh();
-		this.context = ctx;
+		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
+				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
+				.run((context) -> {
+					assertThat(context).hasSingleBean(
+							ProjectGenerationStatPublisher.class);
+					RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
+							context.getBean(ProjectGenerationStatPublisher.class))
+							.getPropertyValue("restTemplate");
+					assertThat(restTemplate.getErrorHandler()).isSameAs(
+							CustomRestTemplateConfiguration.errorHandler);
+				});
 	}
 
 	@Configuration
@@ -96,6 +79,7 @@ public class InitializrStatsAutoConfigurationTests {
 		public RestTemplateCustomizer testRestTemplateCustomizer() {
 			return b -> b.setErrorHandler(errorHandler);
 		}
+
 	}
 
 }

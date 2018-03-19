@@ -198,7 +198,7 @@ You may also want to <<run-app,run the default instance locally>>.
 [[build]]
 == Building from Source
 
-You need Java (1.8 or better), Maven 3.2+ and a bash-like shell.
+You need Java 1.8 and a bash-like shell.
 
 [[building]]
 === Building

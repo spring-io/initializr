@@ -26,9 +26,11 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -59,16 +61,16 @@ public class ProjectGenerationSmokeTests
 				Boolean.getBoolean("smoke.test"));
 		downloadDir = folder.newFolder();
 		FirefoxProfile fxProfile = new FirefoxProfile();
-
 		fxProfile.setPreference("browser.download.folderList", 2);
 		fxProfile.setPreference("browser.download.manager.showWhenStarting", false);
 		fxProfile.setPreference("browser.download.dir", downloadDir.getAbsolutePath());
 		fxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/zip,application/x-compress,application/octet-stream");
+		FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
+		driver = new FirefoxDriver(options);
+		((JavascriptExecutor) driver).executeScript("window.focus();");
 
-		driver = new FirefoxDriver(fxProfile);
 		Actions actions = new Actions(driver);
-
 		enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 

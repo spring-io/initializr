@@ -244,13 +244,13 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	private void resolveBom(InitializrMetadata metadata, String bomId,
 			Version requestedVersion) {
-		boms.computeIfAbsent(bomId, key -> {
-			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(key)
+		if (!boms.containsKey(bomId)) {
+			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(bomId)
 					.resolve(requestedVersion);
 			bom.getAdditionalBoms()
 					.forEach(id -> resolveBom(metadata, id, requestedVersion));
-			return bom;
-		});
+			boms.put(bomId, bom);
+		}
 	}
 
 	/**

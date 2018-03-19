@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-public class SpringSessionRequestPostProcessor
+class SpringSessionRequestPostProcessor
 		extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");

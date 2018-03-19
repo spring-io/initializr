@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.mockito.ArgumentMatcher;
 
 import org.springframework.context.ApplicationEventPublisher;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -105,15 +105,17 @@ public abstract class AbstractProjectGeneratorTests {
 	}
 
 	protected void verifyProjectSuccessfulEventFor(ProjectRequest request) {
-		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
+		verify(eventPublisher, times(1)).publishEvent(
+				argThat(new ProjectGeneratedEventMatcher(request)));
 	}
 
 	protected void verifyProjectFailedEventFor(ProjectRequest request, Exception ex) {
-		verify(eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
+		verify(eventPublisher, times(1)).publishEvent(
+				argThat(new ProjectFailedEventMatcher(request, ex)));
 	}
 
 	protected static class ProjectGeneratedEventMatcher
-			extends ArgumentMatcher<ProjectGeneratedEvent> {
+			implements ArgumentMatcher<ProjectGeneratedEvent> {
 
 		private final ProjectRequest request;
 
@@ -122,16 +124,16 @@ public abstract class AbstractProjectGeneratorTests {
 		}
 
 		@Override
-		public boolean matches(Object argument) {
-			ProjectGeneratedEvent event = (ProjectGeneratedEvent) argument;
+		public boolean matches(ProjectGeneratedEvent event) {
 			return request.equals(event.getProjectRequest());
 		}
 	}
 
 	private static class ProjectFailedEventMatcher
-			extends ArgumentMatcher<ProjectFailedEvent> {
+			implements ArgumentMatcher<ProjectFailedEvent> {
 
 		private final ProjectRequest request;
+
 		private final Exception cause;
 
 		ProjectFailedEventMatcher(ProjectRequest request, Exception cause) {
@@ -140,8 +142,7 @@ public abstract class AbstractProjectGeneratorTests {
 		}
 
 		@Override
-		public boolean matches(Object argument) {
-			ProjectFailedEvent event = (ProjectFailedEvent) argument;
+		public boolean matches(ProjectFailedEvent event) {
 			return request.equals(event.getProjectRequest())
 					&& cause.equals(event.getCause());
 		}
