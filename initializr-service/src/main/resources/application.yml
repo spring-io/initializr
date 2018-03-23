@@ -74,7 +74,7 @@ initializr:
             version: Finchley.M7
             repositories: spring-milestones
           - versionRange: "[2.0.0.RELEASE,2.0.0.RELEASE]"
-            version: Finchley.M8
+            version: Finchley.M9
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
