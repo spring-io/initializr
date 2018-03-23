@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class SpringSecurityTestRequestPostProcessor extends AbstractProjectRequestPostP
 	private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
 
 	static final Dependency SPRING_SECURITY_TEST = Dependency.withId(
-			"spring-security-test", "org.springframework.security",
+			"security-test", "org.springframework.security",
 			"spring-security-test", null, Dependency.SCOPE_TEST);
 
 	@Override
