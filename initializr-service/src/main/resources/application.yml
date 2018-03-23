@@ -1185,13 +1185,6 @@ initializr:
           id: quartz
           versionRange: 2.0.0.M2
           description: Schedule jobs using Quartz
-        - name: Activiti
-          id: activiti-basic
-          versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
-          description: Activiti BPMN workflow engine
-          groupId: org.activiti
-          artifactId: activiti-spring-boot-starter-basic
-          version: 5.21.0
         - name: Spring Shell
           id: spring-shell
           groupId: org.springframework.shell
