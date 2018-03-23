@@ -1030,16 +1030,9 @@ initializr:
           starter: false
         - name: Cloud Contract Stub Runner
           id: cloud-contract-stub-runner
-          description: Stub Runner for HTTP/Messaging based communication
+          description: Stub Runner for HTTP/Messaging based communication. Allows creating WireMock stubs from RestDocs tests
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-contract-stub-runner
-          scope: test
-          starter: false
-        - name: Cloud Contract WireMock
-          id: cloud-contract-wiremock
-          description: Test dependencies required for the WireMock HTTP server
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-contract-wiremock
           scope: test
           starter: false
     - name: Pivotal Cloud Foundry
