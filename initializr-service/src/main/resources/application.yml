@@ -1,35 +1,7 @@
-endpoints:
-  actuator:
-    enabled: false
-  autoconfig:
-    enabled: false
-  beans:
-    enabled: false
-  configprops:
-    enabled: false
-  docs:
-    enabled: false
-  dump:
-    enabled: false
-  env:
-    enabled: false
-  heapdump:
-    enabled: false
-  logfile:
-    enabled: false
-  loggers:
-      enabled: false
-  trace:
-      enabled: false
-
 logging:
   level:
     org.springframework.core.env: warn
     org.springframework.jndi: warn
-
-management:
-  security:
-    enabled: false
 
 server:
   compression:
@@ -55,8 +27,10 @@ initializr:
         artifactId: azure-spring-boot-bom
         versionProperty: azure.version
         mappings:
-          - versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
-            version: 0.2.0
+          - versionRange: "[1.5.4.RELEASE,2.0.0.RELEASE)"
+            version: 0.2.3
+          - versionRange: "2.0.0.RELEASE"
+            version: 2.0.1
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
@@ -77,7 +51,7 @@ initializr:
           - versionRange: "[1.4.0.RELEASE,1.4.x.RELEASE]"
             version: Camden.SR7
           - versionRange: "[1.5.0.RELEASE,1.5.x.RELEASE]"
-            version: Edgware.SR1
+            version: Edgware.SR2
           - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Edgware.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
@@ -92,6 +66,15 @@ initializr:
             repositories: spring-milestones
           - versionRange: "[2.0.0.M7, 2.0.0.M7]"
             version: Finchley.M5
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.RC1, 2.0.0.RC1]"
+            version: Finchley.M6
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.RC2,2.0.0.RC2]"
+            version: Finchley.M7
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.RELEASE,2.0.0.RELEASE]"
+            version: Finchley.M9
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
@@ -132,11 +115,24 @@ initializr:
           - versionRange: "[1.5.0.RC1, 2.0.0.M1)"
             version: 1.2.2.RELEASE
           - versionRange: "[2.0.0.M2, 2.0.0.BUILD-SNAPSHOT)"
-            version: 2.0.0.M2
+            version: 2.0.0.M3
             repositories: spring-milestones
           - versionRange: "2.0.0.BUILD-SNAPSHOT"
             version: 2.0.0.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
+      spring-statemachine:
+        groupId: org.springframework.statemachine
+        artifactId: spring-statemachine-bom
+        versionProperty: spring-statemachine.version
+        mappings:
+          - versionRange: "[2.0.0.RC1,2.0.0.RC1]"
+            version: 2.0.0.M4
+            repositories: spring-milestones
+          - versionRange: "[2.0.0.RC2,2.0.0.RC2]"
+            version: 2.0.0.M5
+            repositories: spring-milestones
+          - versionRange: "2.0.0.RELEASE"
+            version: 2.0.0.RELEASE
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
@@ -145,7 +141,7 @@ initializr:
           - versionRange: "[1.3.0.RELEASE, 1.5.0.M1)"
             version: 7.7.7
           - versionRange: "1.5.0.M1"
-            version: 8.3.0
+            version: 8.3.1
       keycloak:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
@@ -154,7 +150,7 @@ initializr:
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      default-version: 1.2.10
+      default-version: 1.2.20
   dependencies:
     - name: Core
       content:
@@ -282,6 +278,7 @@ initializr:
           weight: 100
           facets:
             - web
+            - json
           links:
             - rel: guide
               href: https://spring.io/guides/gs/rest-service/
@@ -299,9 +296,13 @@ initializr:
           versionRange: 2.0.0.M1
           description: Reactive web development with Netty and Spring WebFlux
           weight: 90
+          facets:
+            - json
         - name: Rest Repositories
           id: data-rest
           weight: 10
+          facets:
+            - json
           description: Exposing Spring Data repositories over REST via spring-data-rest-webmvc
           links:
             - rel: guide
@@ -351,6 +352,8 @@ initializr:
         - name: Jersey (JAX-RS)
           id: jersey
           description: RESTful Web Services framework with support of JAX-RS
+          facets:
+            - json
           versionRange: 1.2.0.RELEASE
           links:
             - rel: reference
@@ -470,14 +473,6 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines
-        - name: Velocity
-          id: velocity
-          description: Velocity templating engine
-          versionRange: "[1.1.6.RELEASE,1.4.0.M2)"
-          facets:
-            - web
-          keywords:
-            - template
     - name: SQL
       content:
         - name: JPA
@@ -539,7 +534,7 @@ initializr:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 1.2.2
             - versionRange: 1.5.0.RELEASE
-              version: 1.3.1
+              version: 1.3.2
         - name: PostgreSQL
           id: postgresql
           description: PostgreSQL jdbc driver
@@ -713,6 +708,53 @@ initializr:
               description: Accessing Data with GemFire
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-gemfire
+    - name: Messaging
+      content:
+        - name: RabbitMQ
+          id: amqp
+          description: Advanced Message Queuing Protocol via spring-rabbit
+          weight: 100
+          keywords:
+            - messaging
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-rabbitmq/
+              description: Messaging with RabbitMQ
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp
+        - name: Kafka
+          id: kafka
+          weight: 100
+          description: Kafka messaging support using Spring Kafka
+          versionRange: 1.5.0.RC1
+          groupId: org.springframework.kafka
+          artifactId: spring-kafka
+          starter: false
+          keywords:
+            - messaging
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
+        - name: JMS (ActiveMQ)
+          id: activemq
+          description: Java Message Service API via Apache ActiveMQ
+          versionRange: 1.4.0.RC1
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq
+        - name: JMS (Artemis)
+          id: artemis
+          description: Java Message Service API via Apache Artemis
+          versionRange: 1.3.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/messaging-jms/
+              description: Messaging with JMS
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
     - name: Cloud Core
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -739,7 +781,7 @@ initializr:
           artifactId: spring-cloud-starter-oauth2
         - name: Cloud Task
           id: cloud-task
-          description: Task result tracking along with integration with batch and streams
+          description: Task result tracking and integration with Spring Batch
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-task
           versionRange: "1.3.0.RELEASE"
@@ -918,7 +960,7 @@ initializr:
             - versionRange: "1.5.0.BUILD-SNAPSHOT"
         - name: Turbine Stream
           id: cloud-turbine-stream
-          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (choose a specific Stream binder implementation to complement this)
+          description: Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           versionRange: 1.3.0.RELEASE
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-netflix-turbine-stream
@@ -941,63 +983,29 @@ initializr:
           description: Distributed tracing with an existing Zipkin installation and spring-cloud-sleuth-zipkin. Alternatively, consider Sleuth Stream.
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-zipkin
-        - name: Sleuth Stream
-          id: cloud-sleuth-stream
-          description: Marshals Spring Cloud Sleuth Spans over a Spring Cloud Stream binder
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-sleuth-stream
-        - name: Zipkin Stream
-          id: cloud-sleuth-zipkin-stream
-          description:  Consumes span data in messages from Spring Cloud Sleuth Stream and writes them to a Zipkin store
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-sleuth-zipkin-stream
-        - name: Zipkin UI
-          id: zipkin-ui
-          description: add the Zipkin UI module to the Zipkin server to get a Zipkin service that accepts Spans and provides visualization
-          groupId: io.zipkin.java
-          artifactId: zipkin-autoconfigure-ui
-          scope: runtime
-          versionRange: 1.3.3.RELEASE
-          starter: false
     - name: Cloud Messaging
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
       content:
-        - name: Cloud Bus AMQP
-          id: cloud-bus-amqp
-          description: A simple control bus with AMQP and spring-cloud-bus-amqp
+        - name: Cloud Bus
+          id: cloud-bus
+          description: A simple control bus using Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-amqp
-        - name: Cloud Bus Kafka
-          id: cloud-bus-kafka
-          description: A simple control bus with Kafka and spring-cloud-bus
-          versionRange: "1.3.0.RELEASE"
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-bus-kafka
-        - name: Stream Binder Rabbit
-          id: cloud-stream-binder-rabbit
-          description: Messaging microservices with RabbitMQ
+          artifactId: spring-cloud-bus
+        - name: Cloud Stream
+          id: cloud-stream
+          description: Messaging microservices with Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
           versionRange: 1.3.0.RELEASE
+          weight: 90
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-starter-stream-rabbit
-        - name: Stream Binder Kafka
-          id: cloud-stream-binder-kafka
-          description: Messaging microservices with Kafka
-          versionRange: 1.3.0.RELEASE
+          artifactId: spring-cloud-stream
+        - name: Reactive Cloud Stream
+          id: reactive-cloud-stream
+          description: Reactive messaging microservices with Spring Cloud Stream (requires a binder, e.g. Kafka or RabbitMQ)
+          versionRange: 2.0.0.RC2
+          weight: 90
           groupId: org.springframework.cloud
-          artifactId: spring-cloud-stream-binder-kafka
-        - name: Stream Binder "Kafka Streams"
-          id: cloud-stream-binder-kafka-streams
-          description: Stream processing microservices with Kafka Streams API
-          versionRange: 1.5.7.RELEASE
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-stream-binder-kstream
-          links:
-            - rel: guide
-              href: https://github.com/spring-cloud/spring-cloud-stream-samples/tree/master/kstream
-              description: Samples for using Kafka Streams with Spring Cloud stream
-            - rel: reference
-              href: https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream
+          artifactId: spring-cloud-stream-reactive
     - name: Cloud AWS
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
@@ -1030,16 +1038,9 @@ initializr:
           starter: false
         - name: Cloud Contract Stub Runner
           id: cloud-contract-stub-runner
-          description: Stub Runner for HTTP/Messaging based communication
+          description: Stub Runner for HTTP/Messaging based communication. Allows creating WireMock stubs from RestDocs tests
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-contract-stub-runner
-          scope: test
-          starter: false
-        - name: Cloud Contract WireMock
-          id: cloud-contract-wiremock
-          description: Test dependencies required for the WireMock HTTP server
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-contract-wiremock
           scope: test
           starter: false
     - name: Pivotal Cloud Foundry
@@ -1063,7 +1064,7 @@ initializr:
           artifactId: spring-cloud-services-starter-circuit-breaker
     - name: Azure
       bom: azure
-      versionRange: "[1.5.4.RELEASE,2.0.0.M1)"
+      versionRange: "1.5.4.RELEASE"
       content:
         - name: Azure Support
           id: azure-support
@@ -1141,7 +1142,8 @@ initializr:
       content:
         - name: Batch
           id: batch
-          description: Spring Batch including HSQLDB database
+          description: Spring Batch support
+          weight: 100
           links:
             - rel: guide
               href: https://spring.io/guides/gs/batch-processing/
@@ -1165,56 +1167,6 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email
-        - name: AMQP
-          id: amqp
-          description: Advanced Message Queuing Protocol via spring-rabbit
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-rabbitmq/
-              description: Messaging with RabbitMQ
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp
-        - name: Kafka
-          id: kafka
-          weight: 100
-          description: Kafka messaging support using Spring Kafka
-          versionRange: 1.5.0.RC1
-          groupId: org.springframework.kafka
-          artifactId: spring-kafka
-          starter: false
-          links:
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
-        - name: JMS (ActiveMQ)
-          id: activemq
-          description: Java Message Service API via Apache ActiveMQ
-          versionRange: 1.4.0.RC1
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq
-        - name: JMS (Artemis)
-          id: artemis
-          description: Java Message Service API via Apache Artemis
-          versionRange: 1.3.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis
-        - name: JMS (HornetQ)
-          id: hornetq
-          description: Java Message Service API via HornetQ
-          versionRange: "[1.1.0.RELEASE,1.4.0.RC1)"
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/messaging-jms/
-              description: Messaging with JMS
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-hornetq
         - name: Apache Camel
           id: camel
           versionRange: "[1.4.0.RELEASE,2.0.0.M1)"
@@ -1222,7 +1174,7 @@ initializr:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 2.18.5
             - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.20.2
+              version: 2.21.0
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
@@ -1259,6 +1211,19 @@ initializr:
           links:
            - rel: reference
              href: https://docs.spring.io/spring-shell/docs/2.0.0.M2/reference/htmlsingle/
+        - name: Statemachine
+          id: statemachine
+          groupId: org.springframework.statemachine
+          artifactId: spring-statemachine-starter
+          description: Build applications using state machine concepts
+          versionRange: 2.0.0.RC1
+          bom: spring-statemachine
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/
+            - rel: guide
+              href: https://docs.spring.io/spring-statemachine/docs/current-SNAPSHOT/reference/htmlsingle/#developing-your-first-spring-statemachine-application
+              description: Developing your first Spring Statemachine application
     - name: Ops
       content:
         - name: Actuator
@@ -1296,10 +1261,6 @@ initializr:
           versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
-        - name: Remote Shell
-          id: remote-shell
-          description: CRaSH shell integration
-          versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
     - name: Spring Cloud GCP
       bom: spring-cloud-gcp
       versionRange: 2.0.0.RC1

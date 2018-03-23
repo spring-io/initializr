@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,8 @@ public class Agent {
 
 		HTTPIE("httpie", "HTTPie"),
 
+		JBOSS_FORGE("jbossforge", "SpringBootForgeCli"),
+
 		SPRING_BOOT_CLI("spring", "SpringBootCli"),
 
 		STS("sts", "STS"),
@@ -74,6 +76,8 @@ public class Agent {
 		INTELLIJ_IDEA("intellijidea", "IntelliJ IDEA"),
 
 		NETBEANS("netbeans", "NetBeans"),
+
+		VSCODE("vscode", "vscode"),
 
 		BROWSER("browser", "Browser");
 

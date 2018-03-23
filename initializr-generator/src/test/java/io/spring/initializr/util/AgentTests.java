@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,13 @@ public class AgentTests {
 	}
 
 	@Test
+	public void checkJBossForge() {
+		Agent agent = Agent.fromUserAgent("SpringBootForgeCli/1.0.0.Alpha4");
+		assertThat(agent.getId(), equalTo(Agent.AgentId.JBOSS_FORGE));
+		assertThat(agent.getVersion(), equalTo("1.0.0.Alpha4"));
+	}
+
+	@Test
 	public void checkSpringBootCli() {
 		Agent agent = Agent.fromUserAgent("SpringBootCli/1.3.1.RELEASE");
 		assertThat(agent.getId(), equalTo(Agent.AgentId.SPRING_BOOT_CLI));
@@ -77,6 +84,13 @@ public class AgentTests {
 		Agent agent = Agent.fromUserAgent("nb-springboot-plugin/0.1");
 		assertThat(agent.getId(), equalTo(Agent.AgentId.NETBEANS));
 		assertThat(agent.getVersion(), is("0.1"));
+	}
+
+	@Test
+	public void checkVsCode() {
+		Agent agent = Agent.fromUserAgent("vscode/0.2.0");
+		assertThat(agent.getId(), equalTo(Agent.AgentId.VSCODE));
+		assertThat(agent.getVersion(), is("0.2.0"));
 	}
 
 	@Test

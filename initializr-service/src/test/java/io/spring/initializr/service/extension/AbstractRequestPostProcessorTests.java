@@ -21,6 +21,7 @@ import java.util.Arrays;
 import io.spring.initializr.generator.ProjectGenerator;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.generator.ProjectRequestPostProcessor;
+import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.test.generator.GradleBuildAssert;
 import io.spring.initializr.test.generator.PomAssert;
@@ -44,6 +45,10 @@ public abstract class AbstractRequestPostProcessorTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider;
+
+	protected Dependency getDependency(String id) {
+		return this.metadataProvider.get().getDependencies().get(id);
+	}
 
 	protected PomAssert generateMavenPom(ProjectRequest request) {
 		request.setType("maven-build");

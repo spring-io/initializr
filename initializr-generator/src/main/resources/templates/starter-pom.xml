@@ -177,6 +177,9 @@
 				<version>${kotlin.version}</version>
 				{{/kotlinSupport}}
 				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>

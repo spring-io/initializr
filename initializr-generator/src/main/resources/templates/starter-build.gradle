@@ -46,13 +46,19 @@ apply plugin: 'war'
 
 group = '{{groupId}}'
 version = '{{version}}'
-sourceCompatibility = {{javaVersion}}{{#kotlin}}{{#java8OrLater}}
+sourceCompatibility = {{javaVersion}}{{#kotlin}}
 compileKotlin {
-	kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
+		jvmTarget = "1.8"{{/java8OrLater}}
+	}
 }
 compileTestKotlin {
-	kotlinOptions.jvmTarget = "1.8"
-}{{/java8OrLater}}{{/kotlin}}
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
+		jvmTarget = "1.8"{{/java8OrLater}}
+	}
+}{{/kotlin}}
 
 repositories {
 	mavenCentral()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,29 +20,27 @@ import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.util.Version;
 
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link ProjectRequestPostProcessor} that automatically adds "reactor-test" when
- * webflux is selected.
- * 
- * @author Stephane Nicoll
+ * A {@link ProjectRequestPostProcessor} that automatically adds "jackson-module-kotlin"
+ * when Kotlin is used and a dependency has the "json" facet.
+ *
+ * @author Sebastien Deleuze
  */
 @Component
-class ReactorTestRequestPostProcessor extends AbstractProjectRequestPostProcessor {
+class JacksonKotlinRequestPostProcessor implements ProjectRequestPostProcessor {
 
-	private static final Version VERSION_2_0_0_M2 = Version.parse("2.0.0.M2");
-
-	static  final Dependency REACTOR_TEST = Dependency.withId("reactor-test",
-			"io.projectreactor", "reactor-test", null, Dependency.SCOPE_TEST);
+	static final Dependency JACKSON_KOTLIN = Dependency.withId("jackson-module-kotlin",
+			"com.fasterxml.jackson.module", "jackson-module-kotlin");
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
-		if (hasDependency(request, "webflux")
-				&& isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M2)) {
-			request.getResolvedDependencies().add(REACTOR_TEST);
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
+		if (request.getFacets().contains("json")
+				&& "kotlin".equals(request.getLanguage())) {
+			request.getResolvedDependencies().add(JACKSON_KOTLIN);
 		}
 	}
 

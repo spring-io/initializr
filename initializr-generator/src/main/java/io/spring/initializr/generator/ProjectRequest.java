@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -238,20 +238,19 @@ public class ProjectRequest extends BasicProjectRequest {
 			if ("kotlin".equals(getLanguage())) {
 				buildProperties.getVersions().put(new VersionProperty("kotlin.version"),
 						() -> kotlinVersion);
-				buildProperties.getMaven().put("kotlin.compiler.incremental", () -> "true");
 			}
 		}
 	}
 
 	private void resolveBom(InitializrMetadata metadata, String bomId,
 			Version requestedVersion) {
-		boms.computeIfAbsent(bomId, key -> {
-			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(key)
+		if (!boms.containsKey(bomId)) {
+			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(bomId)
 					.resolve(requestedVersion);
 			bom.getAdditionalBoms()
 					.forEach(id -> resolveBom(metadata, id, requestedVersion));
-			return bom;
-		});
+			boms.put(bomId, bom);
+		}
 	}
 
 	/**
