@@ -1236,7 +1236,7 @@ initializr:
           id: axon-framework
           groupId: org.axonframework
           artifactId: axon-spring-boot-starter
-          version: 3.1.2
+          version: 3.2
           keywords: CQRS, DDD, microservices, eventsourcing
           description: Application Framework for building evolutionairy microservices using CQRS, DDD and Event Sourcing.
           versionRange: 1.5.0.RELEASE
