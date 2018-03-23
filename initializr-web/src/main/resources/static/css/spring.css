@@ -85,6 +85,11 @@ input[type=text] {
     display: block;
 }
 
+.group-heading {
+    padding-left: 20px ;
+    text-indent: -20px ;
+}
+
 /* autocomplete */
 
 #autocomplete, .twitter-typeahead, .tt-hint {

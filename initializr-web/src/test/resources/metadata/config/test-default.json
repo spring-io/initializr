@@ -173,7 +173,8 @@
             "scope": "compile"
           }
         ],
-        "name": "Core"
+        "name": "Core",
+        "description": "Core Dependencies"
       },
       {
         "content": [
@@ -243,7 +244,8 @@
             "bom": "my-api-bom"
           }
         ],
-        "name": "Other"
+        "name": "Other",
+        "description": "Other Dependencies"
       }
     ],
     "description": "dependency identifiers (comma-separated)",

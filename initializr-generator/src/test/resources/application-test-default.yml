@@ -41,6 +41,7 @@ initializr:
         url: http://example.com/repo3
   dependencies:
     - name: Core
+      description: Core Dependencies
       content:
         - name: Web
           id: web
@@ -60,6 +61,7 @@ initializr:
           aliases:
             - jpa
     - name: Other
+      description: Other Dependencies
       content:
         - name: Foo
           groupId: org.acme

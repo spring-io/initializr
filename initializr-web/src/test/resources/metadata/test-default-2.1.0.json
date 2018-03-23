@@ -26,6 +26,7 @@
     "values": [
       {
         "name": "Core",
+        "description": "Core Dependencies",
         "values": [
           {
             "id": "web",
@@ -53,6 +54,7 @@
       },
       {
         "name": "Other",
+        "description": "Other Dependencies",
         "values": [
           {
             "id": "org.acme:foo",

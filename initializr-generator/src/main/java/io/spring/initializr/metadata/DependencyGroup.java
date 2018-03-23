@@ -26,9 +26,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author Stephane Nicoll
  */
-public class DependencyGroup {
+public class DependencyGroup implements Describable {
 
 	private String name;
+
+	private String description;
 
 	@JsonIgnore
 	private String versionRange;
@@ -50,6 +52,19 @@ public class DependencyGroup {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Return the description of this group
+	 * @return
+	 */
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**
