@@ -81,8 +81,26 @@ input[type=text] {
 .version-requirement {
     display: none;
 }
+
+.dependency-info {
+    display:flex;
+}
+
 .disabled .version-requirement {
     display: block;
+}
+
+.link {
+    padding-left: 1em;
+}
+
+.github.link > a:before{
+    content: "\f09b";
+    font-family: "Font Awesome 5 Brands";
+    display: inline-block;
+    padding-right: 6px;
+    vertical-align: middle;
+    color: black;
 }
 
 /* autocomplete */
