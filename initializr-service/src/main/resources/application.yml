@@ -84,8 +84,8 @@ initializr:
         artifactId: spring-cloud-gcp-dependencies
         versionProperty: spring-cloud-gcp.version
         mappings:
-          - versionRange: "1.0.0.M2"
-            version: 1.0.0.M2
+          - versionRange: "1.0.0.M3"
+            version: 1.0.0.M3
             repositories: spring-milestones
       spring-cloud-services:
         groupId: io.pivotal.spring.cloud
@@ -1272,7 +1272,7 @@ initializr:
           artifactId: spring-cloud-gcp-starter
           links:
             - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M2/reference/htmlsingle/
+              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/
               description: Reference doc
         - name: GCP Messaging
           id: cloud-gcp-pubsub
@@ -1281,7 +1281,7 @@ initializr:
           artifactId: spring-cloud-gcp-starter-pubsub
           links:
             - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M2/reference/htmlsingle/#_spring_cloud_gcp_for_pub_sub
+              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/#_spring_cloud_gcp_for_pub_sub
               description: Reference document
         - name: GCP Storage
           id: cloud-gcp-storage
@@ -1290,7 +1290,7 @@ initializr:
           artifactId: spring-cloud-gcp-starter-storage
           links:
             - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M2/reference/htmlsingle/#_spring_resources
+              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/#_spring_resources
               description: Reference doc
 
   types:
