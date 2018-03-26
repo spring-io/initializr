@@ -84,8 +84,8 @@ initializr:
         artifactId: spring-cloud-gcp-dependencies
         versionProperty: spring-cloud-gcp.version
         mappings:
-          - versionRange: "2.0.0.RC2"
-            version: 2.0.0.RC2
+          - versionRange: "1.0.0.M2"
+            version: 1.0.0.M2
             repositories: spring-milestones
       spring-cloud-services:
         groupId: io.pivotal.spring.cloud
@@ -1263,11 +1263,11 @@ initializr:
           artifactId: spring-boot-actuator-docs
     - name: Spring Cloud GCP
       bom: spring-cloud-gcp
-      versionRange: 2.0.0.RC2
+      versionRange: 2.0.0.RELEASE
       content:
         - name: GCP Support
           id: cloud-gcp
-          description: Spring Boot support to use GCP services through Spring Cloud
+          description: Support for Google Cloud Platform services
           groupId: org.springframework.cloud
           artifactId: spring-cloud-gcp-starter
           links:
