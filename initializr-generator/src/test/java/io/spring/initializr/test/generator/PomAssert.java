@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * XPath assertions that are specific to a standard Maven POM.
@@ -88,7 +85,8 @@ public class PomAssert {
 
 	public PomAssert hasGroupId(String groupId) {
 		try {
-			assertEquals(groupId, eng.evaluate(createRootNodeXPath("groupId"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("groupId"), doc))
+					.isEqualTo(groupId);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -98,8 +96,8 @@ public class PomAssert {
 
 	public PomAssert hasArtifactId(String artifactId) {
 		try {
-			assertEquals(artifactId,
-					eng.evaluate(createRootNodeXPath("artifactId"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("artifactId"), doc))
+					.isEqualTo(artifactId);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -109,7 +107,8 @@ public class PomAssert {
 
 	public PomAssert hasVersion(String version) {
 		try {
-			assertEquals(version, eng.evaluate(createRootNodeXPath("version"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("version"), doc))
+					.isEqualTo(version);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -119,7 +118,8 @@ public class PomAssert {
 
 	public PomAssert hasPackaging(String packaging) {
 		try {
-			assertEquals(packaging, eng.evaluate(createRootNodeXPath("packaging"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("packaging"), doc))
+					.isEqualTo(packaging);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -129,7 +129,8 @@ public class PomAssert {
 
 	public PomAssert hasName(String name) {
 		try {
-			assertEquals(name, eng.evaluate(createRootNodeXPath("name"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("name"), doc))
+					.isEqualTo(name);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -139,8 +140,8 @@ public class PomAssert {
 
 	public PomAssert hasDescription(String description) {
 		try {
-			assertEquals(description,
-					eng.evaluate(createRootNodeXPath("description"), doc));
+			assertThat(eng.evaluate(createRootNodeXPath("description"), doc))
+					.isEqualTo(description);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -150,8 +151,8 @@ public class PomAssert {
 
 	public PomAssert hasJavaVersion(String javaVersion) {
 		try {
-			assertEquals(javaVersion,
-					eng.evaluate(createPropertyNodeXpath("java.version"), doc));
+			assertThat(eng.evaluate(createPropertyNodeXpath("java.version"), doc))
+					.isEqualTo(javaVersion);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -160,20 +161,18 @@ public class PomAssert {
 	}
 
 	public PomAssert hasProperty(String name, String value) {
-		assertTrue("No property " + name + " found", properties.containsKey(name));
-		assertEquals("Wrong value for property " + name, value, properties.get(name));
+		assertThat(this.properties).containsKeys(name);
+		assertThat(this.properties).containsEntry(name, value);
 		return this;
 	}
 
 	public PomAssert hasNoProperty(String name) {
-		assertFalse("No property " + name + " should have been found",
-				properties.containsKey(name));
+		assertThat(this.properties).doesNotContainKeys(name);
 		return this;
 	}
 
 	public PomAssert hasDependenciesCount(int count) {
-		assertEquals("Wrong number of declared dependencies --> " + dependencies.keySet(),
-				count, dependencies.size());
+		assertThat(this.dependencies).hasSize(count);
 		return this;
 	}
 
@@ -205,9 +204,9 @@ public class PomAssert {
 	}
 
 	public PomAssert hasParent(String groupId, String artifactId, String version) {
-		assertEquals(groupId, this.parentPom.getGroupId());
-		assertEquals(artifactId, this.parentPom.getArtifactId());
-		assertEquals(version, this.parentPom.getVersion());
+		assertThat(this.parentPom.getGroupId()).isEqualTo(groupId);
+		assertThat(this.parentPom.getArtifactId()).isEqualTo(artifactId);
+		assertThat(this.parentPom.getVersion()).isEqualTo(version);
 		return this;
 	}
 
@@ -218,35 +217,30 @@ public class PomAssert {
 
 	public PomAssert hasDependency(Dependency expected) {
 		String id = generateDependencyId(expected.getGroupId(), expected.getArtifactId());
+		assertThat(this.dependencies).containsKey(id);
 		Dependency dependency = dependencies.get(id);
-		assertNotNull("No dependency found with '" + id + "' --> " + dependencies.keySet(),
-				dependency);
 		if (expected.getVersion() != null) {
-			assertEquals("Wrong version for " + dependency, expected.getVersion(),
-					dependency.getVersion());
+			assertThat(dependency.getVersion()).isEqualTo(expected.getVersion());
 		}
 		if (expected.getScope() != null) {
-			assertEquals("Wrong scope for " + dependency, expected.getScope(),
-					dependency.getScope());
+			assertThat(dependency.getScope()).isEqualTo(expected.getScope());
 		}
 		if (expected.getType() != null) {
-			assertEquals("Wrong type for " + dependency, expected.getType(),
-					dependency.getType());
+			assertThat(dependency.getType()).isEqualTo(expected.getType());
 		}
 		return this;
 	}
 
 	public PomAssert hasBom(String groupId, String artifactId, String version) {
 		String id = generateBomId(groupId, artifactId);
+		assertThat(this.boms).containsKey(id);
 		BillOfMaterials bom = boms.get(id);
-		assertNotNull("No BOM found with '" + id + "' --> " + boms.keySet(), bom);
-		assertEquals("Wrong version for " + bom, version, bom.getVersion());
+		assertThat(bom.getVersion()).isEqualTo(version);
 		return this;
 	}
 
 	public PomAssert hasBomsCount(int count) {
-		assertEquals("Wrong number of declared boms -->" + boms.keySet(), count,
-				boms.size());
+		assertThat(this.boms).hasSize(count);
 		return this;
 	}
 
@@ -271,32 +265,27 @@ public class PomAssert {
 
 	public PomAssert hasRepository(String id, String name, String url,
 			Boolean snapshotsEnabled) {
+		assertThat(this.repositories).containsKeys(id);
 		Repository repository = repositories.get(id);
-		assertNotNull(
-				"No repository found with '" + id + "' --> " + repositories.keySet(),
-				repository);
 		if (name != null) {
-			assertEquals("Wrong name for " + repository, name, repository.getName());
+			assertThat(repository.getName()).isEqualTo(name);
 		}
 		if (url != null) {
 			try {
-				assertEquals("Wrong url for " + repository, new URL(url),
-						repository.getUrl());
+				assertThat(repository.getUrl()).isEqualTo(new URL(url));
 			}
 			catch (MalformedURLException e) {
 				throw new IllegalArgumentException("Cannot parse URL", e);
 			}
 		}
 		if (snapshotsEnabled) {
-			assertEquals("Wrong snapshots enabled flag for " + repository,
-					snapshotsEnabled, repository.isSnapshotsEnabled());
+			assertThat(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);
 		}
 		return this;
 	}
 
 	public PomAssert hasRepositoriesCount(int count) {
-		assertEquals("Wrong number of declared repositories -->" + repositories.keySet(),
-				count, repositories.size());
+		assertThat(this.repositories).hasSize(count);
 		return this;
 	}
 
@@ -394,8 +383,7 @@ public class PomAssert {
 					dependency.setType(type.item(0).getTextContent());
 				}
 				String id = dependency.generateId();
-				assertFalse("Duplicate dependency with id " + id,
-						dependencies.containsKey(id));
+				assertThat(dependencies).doesNotContainKeys(id);
 				dependencies.put(id, dependency);
 			}
 		}
@@ -434,7 +422,7 @@ public class PomAssert {
 						bom.setVersion(version.item(0).getTextContent());
 					}
 					String id = generateBomId(bom.getGroupId(), bom.getArtifactId());
-					assertFalse("Duplicate BOM with id " + id, boms.containsKey(id));
+					assertThat(this.boms).doesNotContainKeys(id);
 					boms.put(id, bom);
 				}
 			}
@@ -481,8 +469,7 @@ public class PomAssert {
 								"true".equals(snapshotsEnabled.item(0).getTextContent()));
 					}
 				}
-				assertFalse("Duplicate Repository with id " + id,
-						repositories.containsKey(id));
+				assertThat(this.repositories).doesNotContainKeys(id);
 				repositories.put(id, repository);
 			}
 		}

@@ -18,8 +18,7 @@ package io.spring.initializr.test.generator;
 
 import io.spring.initializr.generator.ProjectRequest;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Very simple assertions for the gradle build.
@@ -63,14 +62,12 @@ public class GradleBuildAssert {
 	}
 
 	public GradleBuildAssert contains(String expression) {
-		assertTrue(expression + " has not been found in gradle build " + content,
-				content.contains(expression));
+		assertThat(this.content).contains(expression);
 		return this;
 	}
 
 	public GradleBuildAssert doesNotContain(String expression) {
-		assertFalse(expression + " is not expected in gradle build " + content,
-				content.contains(expression));
+		assertThat(this.content).doesNotContain(expression);
 		return this;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,7 @@ import java.nio.charset.Charset;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Source code assertions.
@@ -46,8 +44,8 @@ public class SourceCodeAssert {
 		try (InputStream stream = expected.getInputStream()) {
 			String expectedContent = StreamUtils.copyToString(stream,
 					Charset.forName("UTF-8"));
-			assertEquals("Unexpected content for " + name,
-					expectedContent.replaceAll("\r\n", "\n"), content);
+			assertThat(content).describedAs("Content for %s", this.name)
+					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));
 		}
 		catch (IOException e) {
 			throw new IllegalStateException("Cannot read file", e);
@@ -70,18 +68,14 @@ public class SourceCodeAssert {
 	}
 
 	public SourceCodeAssert contains(String... expressions) {
-		for (String expression : expressions) {
-			assertTrue(expression + " has not been found in source code '" + name + "'",
-					content.contains(expression));
-		}
+		assertThat(this.content).describedAs("Content for %s", this.name)
+				.contains(expressions);
 		return this;
 	}
 
 	public SourceCodeAssert doesNotContain(String... expressions) {
-		for (String expression : expressions) {
-			assertFalse(expression + " should not have been found in source code '" + name
-					+ "'", content.contains(expression));
-		}
+		assertThat(this.content).describedAs("Content for %s", this.name)
+				.doesNotContain(expressions);
 		return this;
 	}
 

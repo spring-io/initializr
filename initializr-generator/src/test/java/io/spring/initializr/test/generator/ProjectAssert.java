@@ -27,8 +27,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Various project based assertions.
@@ -71,9 +70,9 @@ public class ProjectAssert {
 	 */
 	public ProjectAssert hasBaseDir(String name) {
 		File projectDir = file(name);
-		assertTrue("No directory " + name + " found in " + dir.getAbsolutePath(),
-				projectDir.exists());
-		assertTrue(name + " is not a directory", projectDir.isDirectory());
+		assertThat(projectDir).describedAs("No directory %s found in %s", name,
+				dir.getAbsolutePath()).exists();
+		assertThat(projectDir).isDirectory();
 		// Replacing the root dir so that other assertions match the root
 		return new ProjectAssert(projectDir);
 	}
@@ -149,8 +148,7 @@ public class ProjectAssert {
 			Properties properties = properties(
 					"gradle/wrapper/gradle-wrapper.properties");
 			String distributionUrl = properties.getProperty("distributionUrl");
-			assertTrue("Wrong gradle version for project " + distributionUrl,
-					distributionUrl.contains(version));
+			assertThat(distributionUrl).contains(version);
 		}
 		return this;
 	}
@@ -246,15 +244,8 @@ public class ProjectAssert {
 
 	public ProjectAssert assertFile(String localPath, boolean exist) {
 		File candidate = file(localPath);
-		assertEquals("Invalid presence (\"" + exist + "\") for " + localPath, exist,
-				candidate.exists());
-		return this;
-	}
-
-	public ProjectAssert assertExecutableFile(String localPath, boolean executable) {
-		File candidate = file(localPath);
-		assertEquals("Invalid  (\"" + executable + "\") for " + localPath, executable,
-				candidate.exists() && candidate.canExecute());
+		assertThat(candidate.exists()).describedAs("Invalid presence (%s) exist for %s",
+				exist, localPath).isEqualTo(exist);
 		return this;
 	}
 
