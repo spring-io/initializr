@@ -217,7 +217,7 @@ public class CommandLineHelpGenerator {
 		return String.join(",",
 				type.getTags().entrySet().stream()
 						.map(entry -> entry.getKey() + ":" + entry.getValue())
-						.collect(Collectors.toList()).toArray(new String[0]));
+						.toArray(String[]::new));
 	}
 
 	private static class TableGenerator {

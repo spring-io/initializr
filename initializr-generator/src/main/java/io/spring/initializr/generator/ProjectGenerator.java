@@ -37,7 +37,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;

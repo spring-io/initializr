@@ -130,7 +130,7 @@ public class InitializrConfiguration {
 		return String
 				.join("", Arrays.stream(text
 						.split("(_|-| |:)+")).map(StringUtils::capitalize)
-						.collect(Collectors.toList()).toArray(new String[0]));
+						.toArray(String[]::new));
 	}
 
 	private static String splitCamelCase(String text) {
@@ -138,8 +138,7 @@ public class InitializrConfiguration {
 				.join("", Arrays.stream(text
 						.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
 						.map(it -> StringUtils.capitalize(it.toLowerCase()))
-						.collect(Collectors.toList())
-						.toArray(new String[0]));
+						.toArray(String[]::new));
 	}
 
 	private static boolean hasInvalidChar(String text) {
