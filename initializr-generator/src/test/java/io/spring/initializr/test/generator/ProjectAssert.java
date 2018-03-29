@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,6 +101,19 @@ public class ProjectAssert {
 		}
 		catch (IOException e) {
 			throw new IllegalArgumentException("Cannot resolve build.gradle", e);
+		}
+	}
+
+	/**
+	 * Return a {@link GradleSettingsAssert} for this project.
+	 */
+	public GradleSettingsAssert gradleSettingsAssert() {
+		try {
+			return new GradleSettingsAssert(StreamUtils.copyToString(
+					new FileInputStream(file("settings.gradle")), Charset.forName("UTF-8")));
+		}
+		catch (IOException e) {
+			throw new IllegalArgumentException("Cannot resolve settings.gradle", e);
 		}
 	}
 

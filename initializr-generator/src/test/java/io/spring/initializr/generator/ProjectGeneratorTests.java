@@ -71,6 +71,18 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void defaultProjectWithGradle() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("gradle-build");
+		ProjectAssert gradleProject = generateProject(request).isGradleProject();
+		gradleProject.gradleBuildAssert()
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains("testCompile('org.springframework.boot:spring-boot-starter-test')");
+		gradleProject.gradleSettingsAssert().hasProjectName("demo");
+		verifyProjectSuccessfulEventFor(request);
+	}
+
+	@Test
 	public void noDependencyAddsRootStarter() {
 		ProjectRequest request = createProjectRequest();
 		generateProject(request).isJavaProject().isMavenProject().pomAssert()
@@ -228,6 +240,16 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.sourceCodeAssert(
 						"src/main/java/org/acme/foo145/DemoApplication.java")
 				.contains("package org.acme.foo145;");
+	}
+
+	@Test
+	public void gradleProjectWithCustomArtifactId() {
+		ProjectRequest request = createProjectRequest();
+		request.setType("gradle-build");
+		request.setArtifactId("my-application");
+		generateProject(request).isGradleProject().gradleSettingsAssert()
+				.hasProjectName("my-application");
+		verifyProjectSuccessfulEventFor(request);
 	}
 
 	@Test
