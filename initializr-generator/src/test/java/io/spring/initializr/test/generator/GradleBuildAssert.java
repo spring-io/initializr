@@ -42,10 +42,6 @@ public class GradleBuildAssert {
 				.hasJavaVersion(request.getJavaVersion());
 	}
 
-	public GradleBuildAssert hasArtifactId(String artifactId) {
-		return contains("baseName = '" + artifactId + "'");
-	}
-
 	public GradleBuildAssert hasVersion(String version) {
 		return contains("version = '" + version + "'");
 	}
