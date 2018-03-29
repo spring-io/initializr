@@ -59,6 +59,7 @@ import org.springframework.util.StreamUtils;
  * @author Stephane Nicoll
  * @author Sebastien Deleuze
  * @author Andy Wilkinson
+ * @author Chris Vogel
  */
 public class ProjectGenerator {
 
@@ -219,6 +220,8 @@ public class ProjectGenerator {
 		if (isGradleBuild(request)) {
 			String gradle = new String(doGenerateGradleBuild(model));
 			writeText(new File(dir, "build.gradle"), gradle);
+			String settings = new String(doGenerateGradleSettings(model));
+			writeText(new File(dir, "settings.gradle"), settings);
 			writeGradleWrapper(dir, Version.safeParse(request.getBootVersion()));
 		}
 		else {
@@ -598,6 +601,10 @@ public class ProjectGenerator {
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
 		return templateRenderer.process("starter-build.gradle", model).getBytes();
+	}
+
+	private byte[] doGenerateGradleSettings(Map<String, Object> model) {
+		return templateRenderer.process("starter-settings.gradle", model).getBytes();
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
