@@ -124,7 +124,7 @@ initializr:
             version: 2.0.0.M5
             repositories: spring-milestones
           - versionRange: "2.0.0.RELEASE"
-            version: 2.0.0.RELEASE
+            version: 2.0.1.RELEASE
       vaadin:
         groupId: com.vaadin
         artifactId: vaadin-bom
