@@ -1103,33 +1103,6 @@ initializr:
             - rel: reference
               href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-storage-spring-boot-starter
               description: Reference doc
-    - name: Social
-      versionRange: "[1.2.0.RELEASE,2.0.0.M1)"
-      content:
-        - name: Facebook
-          id: social-facebook
-          description: spring-social-facebook
-          weight: 25
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/register-facebook-app/
-              description: Registering an Application with Facebook
-            - rel: guide
-              href: https://spring.io/guides/gs/accessing-facebook/
-              description: Accessing Facebook Data
-        - name: LinkedIn
-          id: social-linkedin
-          description: spring-social-linkedin
-        - name: Twitter
-          id: social-twitter
-          description: spring-social-twitter
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/register-twitter-app/
-              description: Registering an Application with Twitter
-            - rel: guide
-              href: https://spring.io/guides/gs/accessing-twitter/
-              description: Accessing Twitter Data
     - name: I/O
       content:
         - name: Batch
