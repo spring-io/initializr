@@ -727,6 +727,14 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
+        - name: Kafka Streams
+          id: kafka-streams
+          description: Stream processing with Spring Cloud Stream Kafka Streams
+          versionRange: 2.0.0.RC2
+          weight: 100
+          starter: false
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-stream-binder-kafka-streams
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
@@ -998,13 +1006,6 @@ initializr:
           weight: 90
           groupId: org.springframework.cloud
           artifactId: spring-cloud-stream-reactive
-        - name: Cloud Stream Kafka Streams
-          id: cloud-stream-kafka-streams
-          description: Stream processing with Spring Cloud Stream Kafka Streams
-          versionRange: 2.0.0.RC2
-          weight: 90
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-stream-binder-kafka-streams
     - name: Cloud AWS
       bom: spring-cloud
       versionRange: 1.2.3.RELEASE
