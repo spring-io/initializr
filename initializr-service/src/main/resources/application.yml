@@ -1182,8 +1182,8 @@ initializr:
           groupId: org.springframework.shell
           artifactId: spring-shell-starter
           description: Build shell-based clients
-          version: 2.0.0.M2
-          versionRange: 1.4.0.RELEASE
+          version: 2.0.0.RELEASE
+          versionRange: 1.5.0.RELEASE
           repository: spring-milestones
           links:
            - rel: reference
