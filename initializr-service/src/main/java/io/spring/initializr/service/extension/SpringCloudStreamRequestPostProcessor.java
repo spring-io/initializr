@@ -24,20 +24,24 @@ import org.springframework.stereotype.Component;
 
 /**
  * Determine the appropriate Spring Cloud stream dependency to use based on the
- * selected messaging technology.
+ * selected integration technology.
  * <p>
- * Does not replace the messaging technology jar by the relevant binder. If more than
+ * Does not replace the integration technology jar by the relevant binder. If more than
  * one tech is selected, it is far more easier to remove the unnecessary binder jar than
  * to figure out the name of the tech jar to add to keep support for that technology.
  *
  * @author Stephane Nicoll
  */
 @Component
-class SpringCloudMessagingRequestPostProcessor
+class SpringCloudStreamRequestPostProcessor
 		extends AbstractProjectRequestPostProcessor {
 
 	static final Dependency KAFKA_BINDER = Dependency.withId("cloud-stream-binder-kafka",
 			"org.springframework.cloud", "spring-cloud-stream-binder-kafka");
+
+	static final Dependency KAFKA_STREAMS_BINDER = Dependency.withId(
+			"cloud-stream-binder-kafka-streams", "org.springframework.cloud",
+			"spring-cloud-stream-binder-kafka-streams");
 
 	static final Dependency RABBIT_BINDER = Dependency.withId(
 			"cloud-stream-binder-rabbit", "org.springframework.cloud",
@@ -67,6 +71,9 @@ class SpringCloudMessagingRequestPostProcessor
 		}
 		// Spring Cloud Stream specific
 		if (hasSpringCloudStream || hasReactiveSpringCloudStream) {
+			if (hasDependencies(request, "kafka-streams")) {
+				request.getResolvedDependencies().add(KAFKA_STREAMS_BINDER);
+			}
 			request.getResolvedDependencies().add(SCS_TEST);
 		}
 	}

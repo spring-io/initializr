@@ -700,8 +700,18 @@ initializr:
               description: Accessing Data with GemFire
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-gemfire
-    - name: Messaging
+    - name: Integration
       content:
+        - name: Spring Integration
+          id: integration
+          description: Common spring-integration modules
+          weight: 100
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/integration/
+              description: Integrating Data
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration
         - name: RabbitMQ
           id: amqp
           description: Advanced Message Queuing Protocol via spring-rabbit
@@ -727,6 +737,25 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka
+        - name: Kafka Streams
+          id: kafka-streams
+          weight: 90
+          description: Support for building stream processing applications with Apache Kafka Streams
+          versionRange: 2.0.0.RELEASE
+          groupId: org.apache.kafka
+          artifactId: kafka-streams
+          version: 1.0.1
+          starter: false
+          links:
+            - rel: guide
+              href: https://github.com/spring-cloud/spring-cloud-stream-samples/tree/master/kafka-streams-samples
+              description: Samples for using Kafka Streams with Spring Cloud stream
+            - rel: reference
+              href: https://docs.spring.io/spring-kafka/docs/current/reference/html/_reference.html#kafka-streams
+              description: Kafka Streams Support in Spring Kafka
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream
+              description: Kafka Streams Binding Capabilities of Spring Cloud Stream
         - name: JMS (ActiveMQ)
           id: activemq
           description: Java Message Service API via Apache ActiveMQ
@@ -1115,16 +1144,6 @@ initializr:
               description: Creating a Batch Service
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-batch-applications
-        - name: Integration
-          id: integration
-          description: Common spring-integration modules
-          weight: 100
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/integration/
-              description: Integrating Data
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration
         - name: Mail
           id: mail
           description: javax.mail
