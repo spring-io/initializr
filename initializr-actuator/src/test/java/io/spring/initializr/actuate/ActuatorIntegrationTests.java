@@ -38,15 +38,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT,
-		properties = "management.endpoints.web.exposure.include=info,metrics")
+@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info,metrics")
 public class ActuatorIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
 	public void infoHasExternalProperties() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/actuator/info"), String.class);
+		String body = getRestTemplate().getForObject(createUrl("/actuator/info"),
+				String.class);
 		assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
 		assertTrue("Wrong body:\n" + body,
 				body.contains("\"version\":\"1.1.4.RELEASE\""));
@@ -87,13 +86,13 @@ public class ActuatorIntegrationTests
 	}
 
 	private JsonNode metricsEndpoint() {
-		return parseJson(getRestTemplate().getForObject(
-				createUrl("/actuator/metrics"), String.class));
+		return parseJson(getRestTemplate().getForObject(createUrl("/actuator/metrics"),
+				String.class));
 	}
 
 	private int metricValue(String metric) {
-		JsonNode root =  parseJson(getRestTemplate().getForObject(
-				createUrl("/actuator/metrics/" + metric), String.class));
+		JsonNode root = parseJson(getRestTemplate()
+				.getForObject(createUrl("/actuator/metrics/" + metric), String.class));
 		JsonNode measurements = root.get("measurements");
 		assertThat(measurements.isArray());
 		assertThat(measurements.size()).isEqualTo(1);

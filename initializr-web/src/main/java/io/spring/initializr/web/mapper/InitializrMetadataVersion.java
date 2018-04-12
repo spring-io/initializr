@@ -31,9 +31,9 @@ public enum InitializrMetadataVersion {
 	V2("application/vnd.initializr.v2+json"),
 
 	/**
-	 * Add "versionRange" attribute to any dependency to specify which
-	 * Spring Boot versions are compatible with it. Also provide a
-	 * separate "dependencies" endpoint to query dependencies metadata.
+	 * Add "versionRange" attribute to any dependency to specify which Spring Boot
+	 * versions are compatible with it. Also provide a separate "dependencies" endpoint to
+	 * query dependencies metadata.
 	 */
 	V2_1("application/vnd.initializr.v2.1+json");
 

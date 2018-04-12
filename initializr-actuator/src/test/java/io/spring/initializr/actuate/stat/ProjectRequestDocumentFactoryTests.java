@@ -29,13 +29,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Stephane Nicoll
  */
 public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTests {
 
-	private final ProjectRequestDocumentFactory factory =
-			new ProjectRequestDocumentFactory(createProvider(getMetadata()));
+	private final ProjectRequestDocumentFactory factory = new ProjectRequestDocumentFactory(
+			createProvider(getMetadata()));
 
 	@Test
 	public void createDocumentForSimpleProject() {

@@ -127,16 +127,13 @@ public class InitializrConfiguration {
 	}
 
 	private static String unsplitWords(String text) {
-		return String
-				.join("", Arrays.stream(text
-						.split("(_|-| |:)+")).map(StringUtils::capitalize)
-						.toArray(String[]::new));
+		return String.join("", Arrays.stream(text.split("(_|-| |:)+"))
+				.map(StringUtils::capitalize).toArray(String[]::new));
 	}
 
 	private static String splitCamelCase(String text) {
-		return String
-				.join("", Arrays.stream(text
-						.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
+		return String.join("",
+				Arrays.stream(text.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
 						.map(it -> StringUtils.capitalize(it.toLowerCase()))
 						.toArray(String[]::new));
 	}
@@ -410,12 +407,14 @@ public class InitializrConfiguration {
 				mappings.forEach(m -> {
 					if (m.versionRange == null) {
 						throw new InvalidInitializrMetadataException(
-								"VersionRange is mandatory, invalid version mapping for " + this);
+								"VersionRange is mandatory, invalid version mapping for "
+										+ this);
 					}
 					m.range = simpleParser.parseRange(m.versionRange);
 					if (m.version == null) {
 						throw new InvalidInitializrMetadataException(
-								"Version is mandatory, invalid version mapping for " + this);
+								"Version is mandatory, invalid version mapping for "
+										+ this);
 					}
 				});
 			}
@@ -427,7 +426,9 @@ public class InitializrConfiguration {
 					}
 					catch (InvalidVersionException ex) {
 						throw new InvalidInitializrMetadataException(
-								"Invalid version range " + it.versionRange + " for " + this, ex);
+								"Invalid version range " + it.versionRange + " for "
+										+ this,
+								ex);
 					}
 				});
 			}
@@ -501,7 +502,7 @@ public class InitializrConfiguration {
 			public ParentPom resolveParentPom(String bootVersion) {
 				return StringUtils.hasText(parent.groupId) ? parent
 						: new ParentPom("org.springframework.boot",
-						"spring-boot-starter-parent", bootVersion);
+								"spring-boot-starter-parent", bootVersion);
 			}
 
 			public static class ParentPom {
@@ -572,8 +573,8 @@ public class InitializrConfiguration {
 							&& !StringUtils.hasText(artifactId)
 							&& !StringUtils.hasText(version))
 							|| (StringUtils.hasText(groupId)
-							&& StringUtils.hasText(artifactId)
-							&& StringUtils.hasText(version)))) {
+									&& StringUtils.hasText(artifactId)
+									&& StringUtils.hasText(version)))) {
 						throw new InvalidInitializrMetadataException("Custom maven pom "
 								+ "requires groupId, artifactId and version");
 					}

@@ -40,7 +40,8 @@ public final class MockMvcClientHttpRequestFactoryTestExecutionListener
 					this.factory);
 		}
 		else {
-			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory", MockMvcClientHttpRequestFactory.class);
+			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory",
+					MockMvcClientHttpRequestFactory.class);
 		}
 	}
 

@@ -40,12 +40,11 @@ import static org.junit.Assert.assertEquals;
 public class ProjectRequestResolverTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", "web", "security", "data-jpa")
-			.build();
+			.addDependencyGroup("test", "web", "security", "data-jpa").build();
 
 	final List<ProjectRequestPostProcessor> postProcessors = new ArrayList<>();
-	final GenericProjectRequestPostProcessor processor =
-			new GenericProjectRequestPostProcessor();
+
+	final GenericProjectRequestPostProcessor processor = new GenericProjectRequestPostProcessor();
 
 	@Before
 	public void setup() {
@@ -98,6 +97,7 @@ public class ProjectRequestResolverTests {
 			implements ProjectRequestPostProcessor {
 
 		final Map<String, Object> before = new LinkedHashMap<>();
+
 		final Map<String, Object> after = new LinkedHashMap<>();
 
 		@Override

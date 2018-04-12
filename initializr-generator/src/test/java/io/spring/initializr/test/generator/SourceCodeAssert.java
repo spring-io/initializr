@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SourceCodeAssert {
 
 	private final String name;
+
 	private final String content;
 
 	public SourceCodeAssert(String name, String content) {

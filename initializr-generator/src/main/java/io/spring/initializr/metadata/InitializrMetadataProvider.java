@@ -24,9 +24,8 @@ package io.spring.initializr.metadata;
 public interface InitializrMetadataProvider {
 
 	/**
-	 * Return the metadata to use. Rather than keeping a handle to
-	 * a particular instance, implementations may decide to refresh
-	 * or recompute the metadata if necessary.
+	 * Return the metadata to use. Rather than keeping a handle to a particular instance,
+	 * implementations may decide to refresh or recompute the metadata if necessary.
 	 */
 	InitializrMetadata get();
 

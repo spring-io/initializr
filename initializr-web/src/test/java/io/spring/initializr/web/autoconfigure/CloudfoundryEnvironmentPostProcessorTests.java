@@ -28,9 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class CloudfoundryEnvironmentPostProcessorTests {
 
-	private final CloudfoundryEnvironmentPostProcessor postProcessor =
-			new CloudfoundryEnvironmentPostProcessor();
+	private final CloudfoundryEnvironmentPostProcessor postProcessor = new CloudfoundryEnvironmentPostProcessor();
+
 	private final MockEnvironment environment = new MockEnvironment();
+
 	private final SpringApplication application = new SpringApplication();
 
 	@Test

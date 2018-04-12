@@ -101,6 +101,7 @@ public class ProjectGenerator {
 	private String tmpdir;
 
 	private File temporaryDirectory;
+
 	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
 
 	public InitializrMetadataProvider getMetadataProvider() {
@@ -354,8 +355,7 @@ public class ProjectGenerator {
 		}
 
 		// Kotlin supported as of M6
-		final boolean kotlinSupport = VERSION_2_0_0_M6
-				.compareTo(bootVersion) <= 0;
+		final boolean kotlinSupport = VERSION_2_0_0_M6.compareTo(bootVersion) <= 0;
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
@@ -379,9 +379,9 @@ public class ProjectGenerator {
 			model.put("hasRepositories", true);
 		}
 
-		List<Map<String,String>> resolvedBoms = buildResolvedBoms(request);
+		List<Map<String, String>> resolvedBoms = buildResolvedBoms(request);
 		model.put("resolvedBoms", resolvedBoms);
-		ArrayList<Map<String,String>> reversedBoms = new ArrayList<>(resolvedBoms);
+		ArrayList<Map<String, String>> reversedBoms = new ArrayList<>(resolvedBoms);
 		Collections.reverse(reversedBoms);
 		model.put("reversedBoms", reversedBoms);
 
@@ -398,19 +398,19 @@ public class ProjectGenerator {
 
 		request.getBoms().forEach((k, v) -> {
 			if (v.getVersionProperty() != null) {
-				request.getBuildProperties().getVersions().computeIfAbsent(
-						v.getVersionProperty(), key -> v::getVersion);
+				request.getBuildProperties().getVersions()
+						.computeIfAbsent(v.getVersionProperty(), key -> v::getVersion);
 			}
 		});
 
 		Map<String, String> versions = new LinkedHashMap<>();
 		model.put("buildPropertiesVersions", versions.entrySet());
-		request.getBuildProperties().getVersions().forEach((k, v) ->
-				versions.put(computeVersionProperty(request,k), v.get()));
+		request.getBuildProperties().getVersions().forEach(
+				(k, v) -> versions.put(computeVersionProperty(request, k), v.get()));
 		Map<String, String> gradle = new LinkedHashMap<>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
-		request.getBuildProperties().getGradle().forEach((k, v) ->
-				gradle.put(k, v.get()));
+		request.getBuildProperties().getGradle()
+				.forEach((k, v) -> gradle.put(k, v.get()));
 		Map<String, String> maven = new LinkedHashMap<>();
 		model.put("buildPropertiesMaven", maven.entrySet());
 		request.getBuildProperties().getMaven().forEach((k, v) -> maven.put(k, v.get()));
@@ -431,24 +431,20 @@ public class ProjectGenerator {
 		setupApplicationModel(request, model);
 
 		// Gradle plugin has changed as from 1.3.0
-		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
-				.compareTo(bootVersion) <= 0);
+		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1.compareTo(bootVersion) <= 0);
 
-		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1
-				.compareTo(bootVersion) <= 0);
+		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName",
-				(VERSION_1_4_2_M1
-						.compareTo(bootVersion) <= 0
-						? "org.springframework.boot" : "spring-boot"));
+		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0
+				? "org.springframework.boot" : "spring-boot"));
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
 		// Servlet Initializer
-		model.put("servletInitializrImport", new Imports(request.getLanguage()).add(
-				getServletInitializrClass(request)).toString());
+		model.put("servletInitializrImport", new Imports(request.getLanguage())
+				.add(getServletInitializrClass(request)).toString());
 
 		// Kotlin-specific dep
 		model.put("kotlinStdlibArtifactId", getKotlinStdlibArtifactId(request));
@@ -471,20 +467,20 @@ public class ProjectGenerator {
 		return model;
 	}
 
-	private List<Map<String,String>> buildResolvedBoms(ProjectRequest request) {
+	private List<Map<String, String>> buildResolvedBoms(ProjectRequest request) {
 		return request.getBoms().values().stream()
 				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
-				.map(bom -> toBomModel(request, bom))
-				.collect(Collectors.toList());
+				.map(bom -> toBomModel(request, bom)).collect(Collectors.toList());
 	}
 
-	private Map<String,String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
+	private Map<String, String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
 		Map<String, String> model = new HashMap<>();
 		model.put("groupId", bom.getGroupId());
 		model.put("artifactId", bom.getArtifactId());
-		model.put("versionToken", (bom.getVersionProperty() != null
-				? "${" + computeVersionProperty(request, bom.getVersionProperty()) + "}"
-				: bom.getVersion()));
+		model.put("versionToken",
+				(bom.getVersionProperty() != null ? "${"
+						+ computeVersionProperty(request, bom.getVersionProperty()) + "}"
+						: bom.getVersion()));
 		return model;
 	}
 
@@ -510,13 +506,11 @@ public class ProjectGenerator {
 			imports.add("org.springframework.boot.autoconfigure.EnableAutoConfiguration")
 					.add("org.springframework.context.annotation.ComponentScan")
 					.add("org.springframework.context.annotation.Configuration");
-			annotations.add("@EnableAutoConfiguration")
-					.add("@ComponentScan")
+			annotations.add("@EnableAutoConfiguration").add("@ComponentScan")
 					.add("@Configuration");
 		}
 		model.put("applicationImports", imports.toString());
 		model.put("applicationAnnotations", annotations.toString());
-
 
 	}
 
@@ -537,7 +531,8 @@ public class ProjectGenerator {
 			testAnnotations.add("@WebAppConfiguration");
 		}
 		model.put("testImports", imports.withFinalCarriageReturn().toString());
-		model.put("testAnnotations", testAnnotations.withFinalCarriageReturn().toString());
+		model.put("testAnnotations",
+				testAnnotations.withFinalCarriageReturn().toString());
 	}
 
 	protected String getServletInitializrClass(ProjectRequest request) {
@@ -607,8 +602,8 @@ public class ProjectGenerator {
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
-		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4" :
-				isGradle3Available(bootVersion) ? "gradle3" : "gradle";
+		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4"
+				: isGradle3Available(bootVersion) ? "gradle3" : "gradle";
 		writeTextResource(dir, "gradlew.bat", gradlePrefix + "/gradlew.bat");
 		writeTextResource(dir, "gradlew", gradlePrefix + "/gradlew");
 
@@ -695,8 +690,7 @@ public class ProjectGenerator {
 	private static List<Dependency> filterDependencies(List<Dependency> dependencies,
 			String scope) {
 		return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
-				.sorted(DependencyComparator.INSTANCE)
-				.collect(Collectors.toList());
+				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
 	}
 
 	private static class DependencyComparator implements Comparator<Dependency> {
@@ -730,7 +724,9 @@ public class ProjectGenerator {
 	private static class Imports {
 
 		private final List<String> statements = new ArrayList<>();
+
 		private final String language;
+
 		private boolean finalCarriageReturn;
 
 		public Imports(String language) {
@@ -748,7 +744,8 @@ public class ProjectGenerator {
 		}
 
 		private String generateImport(String type, String language) {
-			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
+			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? ""
+					: ";";
 			return "import " + type + end;
 		}
 
@@ -765,6 +762,7 @@ public class ProjectGenerator {
 	private static class Annotations {
 
 		private final List<String> statements = new ArrayList<>();
+
 		private boolean finalCarriageReturn;
 
 		public Annotations add(String type) {

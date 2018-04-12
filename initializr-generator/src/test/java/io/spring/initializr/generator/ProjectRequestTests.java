@@ -40,8 +40,8 @@ public class ProjectRequestTests {
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none();
 
-	private InitializrMetadata metadata = InitializrMetadataTestBuilder
-			.withDefaults().build();
+	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.build();
 
 	@Test
 	public void initializeGroupIdAndArtifactId() {
@@ -163,10 +163,10 @@ public class ProjectRequestTests {
 	@Test
 	public void resolveDependencyVersion() {
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
-		dependency.getMappings().add(Mapping.create(
-				"[1.0.0.RELEASE, 1.1.0.RELEASE)", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Mapping.create(
-				"1.1.0.RELEASE", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings().add(Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)",
+				null, null, "0.1.0.RELEASE"));
+		dependency.getMappings()
+				.add(Mapping.create("1.1.0.RELEASE", null, null, "0.2.0.RELEASE"));
 		metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", dependency).build();
 
@@ -310,9 +310,9 @@ public class ProjectRequestTests {
 		bom.getAdditionalBoms().add("bar-bom");
 		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
 				"1.1.0");
-		metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
-				.addDependencyGroup("test", dependency).build();
+		metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
+				.addBom("bar-bom", additionalBom).addDependencyGroup("test", dependency)
+				.build();
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("foo");
 		request.resolve(metadata);
@@ -332,8 +332,8 @@ public class ProjectRequestTests {
 		bom.getAdditionalBoms().add("bar-bom");
 		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
 				"1.1.0");
-		metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
+		metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
+				.addBom("bar-bom", additionalBom)
 				.addDependencyGroup("test", dependency, anotherDependency).build();
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("foo", "bar"));
@@ -351,8 +351,7 @@ public class ProjectRequestTests {
 		dependency.setRepository("foo-repo");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getRepositories().add("bar-repo");
-		metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom)
+		metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
 				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
 				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
 				.addDependencyGroup("test", dependency).build();
@@ -379,8 +378,7 @@ public class ProjectRequestTests {
 		bom.getRepositories().add("bar-repo");
 		Dependency anotherDependency = Dependency.withId("bar");
 		anotherDependency.setRepository("bar-repo");
-		metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom)
+		metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
 				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
 				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
 				.addDependencyGroup("test", dependency, anotherDependency).build();
@@ -423,4 +421,5 @@ public class ProjectRequestTests {
 		assertEquals(artifactId, actual.getArtifactId());
 		assertEquals(version, actual.getVersion());
 	}
+
 }

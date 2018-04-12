@@ -24,9 +24,7 @@ import static org.springframework.boot.test.context.SpringBootTest.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureStubRunner(
-		ids = "io.spring.initializr:initializr-web:${project.version}",
-		workOffline = true)
+@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:${project.version}", workOffline = true)
 // tag::test[]
 public class ClientApplicationTests {
 
@@ -42,8 +40,8 @@ public class ClientApplicationTests {
 				.accept(MediaType.valueOf("application/vnd.initializr.v2.1+json"))
 				.build();
 
-		ResponseEntity<String> response = this.restTemplate
-				.exchange(request, String.class);
+		ResponseEntity<String> response = this.restTemplate.exchange(request,
+				String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		// other assertions here
 	}

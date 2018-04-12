@@ -44,8 +44,8 @@ public class LinkMapper {
 	public static ObjectNode mapLinks(List<Link> links) {
 		ObjectNode result = nodeFactory.objectNode();
 		Map<String, List<Link>> byRel = new LinkedHashMap<>();
-		links.forEach(it -> byRel.computeIfAbsent(it.getRel(),
-				k -> new ArrayList<>()).add(it));
+		links.forEach(
+				it -> byRel.computeIfAbsent(it.getRel(), k -> new ArrayList<>()).add(it));
 		byRel.forEach((rel, l) -> {
 			if (l.size() == 1) {
 				ObjectNode root = JsonNodeFactory.instance.objectNode();

@@ -40,10 +40,10 @@ public class SpringBootMetadataReader {
 	/**
 	 * Parse the content of the metadata at the specified url
 	 */
-	public SpringBootMetadataReader(ObjectMapper objectMapper,
-			RestTemplate restTemplate, String url) throws IOException {
-		this.content = objectMapper.readTree(
-				restTemplate.getForObject(url, String.class));
+	public SpringBootMetadataReader(ObjectMapper objectMapper, RestTemplate restTemplate,
+			String url) throws IOException {
+		this.content = objectMapper
+				.readTree(restTemplate.getForObject(url, String.class));
 	}
 
 	/**
@@ -56,7 +56,8 @@ public class SpringBootMetadataReader {
 			DefaultMetadataElement version = new DefaultMetadataElement();
 			version.setId(it.get("version").textValue());
 			String name = it.get("versionDisplayName").textValue();
-			version.setName(it.get("snapshot").booleanValue() ? name + " (SNAPSHOT)" : name);
+			version.setName(
+					it.get("snapshot").booleanValue() ? name + " (SNAPSHOT)" : name);
 			version.setDefault(it.get("current").booleanValue());
 			list.add(version);
 		}

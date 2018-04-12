@@ -42,7 +42,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public abstract class AbstractInitializrController {
 
 	protected final InitializrMetadataProvider metadataProvider;
+
 	private final Function<String, String> linkTo;
+
 	private Boolean forceSsl;
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,

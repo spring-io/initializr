@@ -30,8 +30,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A default {@link InitializrMetadataProvider} that is able to refresh
- * the metadata with the status of the main spring.io site.
+ * A default {@link InitializrMetadataProvider} that is able to refresh the metadata with
+ * the status of the main spring.io site.
  *
  * @author Stephane Nicoll
  */
@@ -41,7 +41,9 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 			.getLogger(DefaultInitializrMetadataProvider.class);
 
 	private final InitializrMetadata metadata;
+
 	private final ObjectMapper objectMapper;
+
 	private final RestTemplate restTemplate;
 
 	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,

@@ -49,7 +49,8 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy());
+		configurer
+				.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy());
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 				throws HttpMediaTypeNotAcceptableException {
 			String path = urlPathHelper.getPathWithinApplication(
 					request.getNativeRequest(HttpServletRequest.class));
-			if (!StringUtils.hasText(path) || !path.equals("/")) {  // Only care about "/"
+			if (!StringUtils.hasText(path) || !path.equals("/")) { // Only care about "/"
 				return MEDIA_TYPE_ALL_LIST;
 			}
 			String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
@@ -81,7 +82,7 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 			}
 			return Collections.singletonList(MediaType.APPLICATION_JSON);
 		}
+
 	}
 
 }
-

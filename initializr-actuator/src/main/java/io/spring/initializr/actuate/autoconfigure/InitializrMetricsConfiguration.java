@@ -39,8 +39,7 @@ public class InitializrMetricsConfiguration {
 
 	@Bean
 	@ConditionalOnSingleCandidate(MeterRegistry.class)
-	public ProjectGenerationMetricsListener metricsListener(
-			MeterRegistry meterRegistry) {
+	public ProjectGenerationMetricsListener metricsListener(MeterRegistry meterRegistry) {
 		return new ProjectGenerationMetricsListener(meterRegistry);
 	}
 

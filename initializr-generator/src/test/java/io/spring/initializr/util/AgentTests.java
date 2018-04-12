@@ -74,7 +74,8 @@ public class AgentTests {
 
 	@Test
 	public void checkIntelliJIDEAWithVersion() {
-		Agent agent = Agent.fromUserAgent("IntelliJ IDEA/144.2 (Community edition; en-us)");
+		Agent agent = Agent
+				.fromUserAgent("IntelliJ IDEA/144.2 (Community edition; en-us)");
 		assertThat(agent.getId(), equalTo(Agent.AgentId.INTELLIJ_IDEA));
 		assertThat(agent.getVersion(), is("144.2"));
 	}

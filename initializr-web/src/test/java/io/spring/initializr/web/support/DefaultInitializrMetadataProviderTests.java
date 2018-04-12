@@ -60,19 +60,17 @@ public class DefaultInitializrMetadataProviderTests {
 	public void bootVersionsAreReplaced() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addBootVersion("0.0.9.RELEASE", true)
-				.addBootVersion("0.0.8.RELEASE", false)
-				.build();
+				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
-		DefaultInitializrMetadataProvider provider =
-				new DefaultInitializrMetadataProvider(metadata, objectMapper,
-						restTemplate);
+		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(
+				metadata, objectMapper, restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot.json");
 
 		InitializrMetadata updatedMetadata = provider.get();
 		assertNotNull(updatedMetadata.getBootVersions());
-		List<DefaultMetadataElement> updatedBootVersions =
-				updatedMetadata.getBootVersions().getContent();
+		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata
+				.getBootVersions().getContent();
 		assertEquals(4, updatedBootVersions.size());
 		assertBootVersion(updatedBootVersions.get(0), "1.4.1 (SNAPSHOT)", false);
 		assertBootVersion(updatedBootVersions.get(1), "1.4.0", true);
@@ -86,16 +84,15 @@ public class DefaultInitializrMetadataProviderTests {
 				.addBootVersion("0.0.9.RELEASE", true)
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
-		DefaultInitializrMetadataProvider provider =
-				new DefaultInitializrMetadataProvider(metadata, objectMapper,
-						restTemplate);
+		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(
+				metadata, objectMapper, restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot-no-default.json");
 
 		InitializrMetadata updatedMetadata = provider.get();
 		assertNotNull(updatedMetadata.getBootVersions());
-		List<DefaultMetadataElement> updatedBootVersions =
-				updatedMetadata.getBootVersions().getContent();
+		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata
+				.getBootVersions().getContent();
 		assertEquals(4, updatedBootVersions.size());
 		assertBootVersion(updatedBootVersions.get(0), "1.3.1 (SNAPSHOT)", true);
 		assertBootVersion(updatedBootVersions.get(1), "1.3.0", false);
@@ -112,11 +109,9 @@ public class DefaultInitializrMetadataProviderTests {
 	private void expectJson(String url, String bodyPath) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		this.mockServer.expect(requestTo(url))
-				.andExpect(method(HttpMethod.GET))
+		this.mockServer.expect(requestTo(url)).andExpect(method(HttpMethod.GET))
 				.andRespond(withStatus(HttpStatus.OK)
-						.body(new ClassPathResource(bodyPath))
-						.headers(httpHeaders));
+						.body(new ClassPathResource(bodyPath)).headers(httpHeaders));
 	}
 
 }

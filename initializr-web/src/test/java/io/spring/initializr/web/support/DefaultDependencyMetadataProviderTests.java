@@ -33,8 +33,7 @@ import static org.junit.Assert.assertSame;
  */
 public class DefaultDependencyMetadataProviderTests {
 
-	private final DependencyMetadataProvider provider =
-			new DefaultDependencyMetadataProvider();
+	private final DependencyMetadataProvider provider = new DefaultDependencyMetadataProvider();
 
 	@Test
 	public void filterDependencies() {
@@ -181,8 +180,8 @@ public class DefaultDependencyMetadataProviderTests {
 						"2.0.0.RELEASE", "repo-foo", "repo-bar"));
 		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.0.RELEASE",
 				"3.0.0.RELEASE", "repo-biz"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder
-				.withDefaults().addBom("bom-foo", bom)
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addBom("bom-foo", bom)
 				.addRepository("repo-foo", "foo", "http://localhost", false)
 				.addRepository("repo-bar", "bar", "http://localhost", false)
 				.addRepository("repo-biz", "biz", "http://localhost", false)

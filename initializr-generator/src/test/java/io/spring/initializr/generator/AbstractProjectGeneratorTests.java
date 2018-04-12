@@ -101,17 +101,18 @@ public abstract class AbstractProjectGeneratorTests {
 	}
 
 	protected void applyMetadata(InitializrMetadata metadata) {
-		projectGenerator.setMetadataProvider(new SimpleInitializrMetadataProvider(metadata));
+		projectGenerator
+				.setMetadataProvider(new SimpleInitializrMetadataProvider(metadata));
 	}
 
 	protected void verifyProjectSuccessfulEventFor(ProjectRequest request) {
-		verify(eventPublisher, times(1)).publishEvent(
-				argThat(new ProjectGeneratedEventMatcher(request)));
+		verify(eventPublisher, times(1))
+				.publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
 	}
 
 	protected void verifyProjectFailedEventFor(ProjectRequest request, Exception ex) {
-		verify(eventPublisher, times(1)).publishEvent(
-				argThat(new ProjectFailedEventMatcher(request, ex)));
+		verify(eventPublisher, times(1))
+				.publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
 	}
 
 	protected static class ProjectGeneratedEventMatcher
@@ -127,6 +128,7 @@ public abstract class AbstractProjectGeneratorTests {
 		public boolean matches(ProjectGeneratedEvent event) {
 			return request.equals(event.getProjectRequest());
 		}
+
 	}
 
 	private static class ProjectFailedEventMatcher
@@ -146,6 +148,7 @@ public abstract class AbstractProjectGeneratorTests {
 			return request.equals(event.getProjectRequest())
 					&& cause.equals(event.getCause());
 		}
+
 	}
 
 }

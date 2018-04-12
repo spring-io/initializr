@@ -56,8 +56,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleZipProject() {
 		downloadZip("/starter.zip?style=web&style=jpa").isJavaProject()
-				.hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
+				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
@@ -67,8 +66,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleTgzProject() {
 		downloadTgz("/starter.tgz?style=org.acme:foo").isJavaProject()
-				.hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
+				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				.hasDependency("org.acme", "foo", "1.3.5");
 	}
@@ -84,7 +82,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void dependencyNotInRange() {
 		try {
-			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[]) null);
+			execute("/starter.tgz?style=org.acme:bur", byte[].class, null,
+					(String[]) null);
 		}
 		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.NOT_ACCEPTABLE, ex.getStatusCode());
@@ -96,8 +95,7 @@ public class MainControllerIntegrationTests
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				// the root dep is added if none is specified
-				.hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterTest();
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
 	}
 
 	@Test
@@ -121,8 +119,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void kotlinRange() {
 		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=1.2.1.RELEASE")
-				.isKotlinProject().isMavenProject()
-				.pomAssert().hasDependenciesCount(4)
+				.isKotlinProject().isMavenProject().pomAssert().hasDependenciesCount(4)
 				.hasProperty("kotlin.version", "1.1");
 	}
 
@@ -318,39 +315,32 @@ public class MainControllerIntegrationTests
 	private void validateCurlHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				containsString("Examples:"),
-				containsString("curl")));
+		assertThat(response.getBody(), allOf(containsString("Spring Initializr"),
+				containsString("Examples:"), containsString("curl")));
 	}
 
 	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				containsString("Examples:"),
-				not(containsString("curl")),
-				containsString("http")));
+		assertThat(response.getBody(),
+				allOf(containsString("Spring Initializr"), containsString("Examples:"),
+						not(containsString("curl")), containsString("http")));
 	}
 
 	private void validateGenericHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				not(containsString("Examples:")),
-				not(containsString("curl"))));
+		assertThat(response.getBody(), allOf(containsString("Spring Initializr"),
+				not(containsString("Examples:")), not(containsString("curl"))));
 	}
 
 	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Service capabilities"),
-				containsString("Supported dependencies"),
-				not(containsString("Examples:")),
-				not(containsString("curl"))));
+		assertThat(response.getBody(),
+				allOf(containsString("Service capabilities"),
+						containsString("Supported dependencies"),
+						not(containsString("Examples:")), not(containsString("curl"))));
 	}
 
 	@Test
@@ -387,16 +377,16 @@ public class MainControllerIntegrationTests
 
 	@Test
 	public void webIsAddedPom() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/pom.xml?packaging=war"), String.class);
+		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"),
+				String.class);
 		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
 		assertTrue("Wrong body:\n" + body, body.contains("provided"));
 	}
 
 	@Test
 	public void webIsAddedGradle() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/build.gradle?packaging=war"), String.class);
+		String body = getRestTemplate()
+				.getForObject(createUrl("/build.gradle?packaging=war"), String.class);
 		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
 		assertTrue("Wrong body:\n" + body, body.contains("providedRuntime"));
 	}
@@ -424,15 +414,16 @@ public class MainControllerIntegrationTests
 
 	@Test
 	public void downloadStarter() {
-		byte[] body = getRestTemplate().getForObject(
-				createUrl("starter.zip"), byte[].class);
+		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
+				byte[].class);
 		assertNotNull(body);
 		assertTrue(body.length > 100);
 	}
 
 	@Test
 	public void installer() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("install.sh"), String.class);
+		ResponseEntity<String> response = getRestTemplate()
+				.getForEntity(createUrl("install.sh"), String.class);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertNotNull(response.getBody());
 	}
@@ -440,7 +431,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void googleAnalyticsDisabledByDefault() {
 		String body = htmlHome();
-		assertFalse("google analytics should be disabled", body.contains("GoogleAnalyticsObject"));
+		assertFalse("google analytics should be disabled",
+				body.contains("GoogleAnalyticsObject"));
 	}
 
 	private String getMetadataJson() {

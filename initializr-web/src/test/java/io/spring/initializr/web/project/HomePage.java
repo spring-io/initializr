@@ -30,13 +30,13 @@ import org.openqa.selenium.support.ui.Select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- *
  * @author Stephane Nicoll
  */
 class HomePage {
 
 	@FindBy(id = "form")
 	private WebElement form;
+
 	private final WebDriver driver;
 
 	public HomePage(WebDriver driver) {
@@ -91,8 +91,8 @@ class HomePage {
 	}
 
 	public void advanced() {
-		form.findElement(By.cssSelector(".tofullversion"))
-				.findElement(By.tagName("a")).click();
+		form.findElement(By.cssSelector(".tofullversion")).findElement(By.tagName("a"))
+				.click();
 	}
 
 	public void simple() {

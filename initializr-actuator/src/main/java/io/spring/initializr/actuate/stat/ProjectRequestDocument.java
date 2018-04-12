@@ -29,27 +29,45 @@ public class ProjectRequestDocument {
 	private long generationTimestamp;
 
 	private String requestIp;
+
 	private String requestIpv4;
+
 	private String requestCountry;
+
 	private String clientId;
+
 	private String clientVersion;
 
 	private String groupId;
+
 	private String artifactId;
+
 	private String packageName;
+
 	private String bootVersion;
+
 	private String javaVersion;
+
 	private String language;
+
 	private String packaging;
+
 	private String type;
+
 	private final List<String> dependencies = new ArrayList<>();
 
 	private String errorMessage;
+
 	private boolean invalid;
+
 	private boolean invalidJavaVersion;
+
 	private boolean invalidLanguage;
+
 	private boolean invalidPackaging;
+
 	private boolean invalidType;
+
 	private final List<String> invalidDependencies = new ArrayList<>();
 
 	public long getGenerationTimestamp() {

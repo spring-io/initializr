@@ -166,17 +166,18 @@ public class InitializrMetadataTests {
 	public void updateSpringBootVersions() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
-		bom.getMappings().add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
+		bom.getMappings()
+				.add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
 		Dependency dependency = Dependency.withId("bar");
-		dependency.getMappings().add(Dependency.Mapping.create(
-				"[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping.create(
-				"1.3.x.BUILD-SNAPSHOT", null, null, "0.2.0.RELEASE"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder
-				.withDefaults().addDependencyGroup("test", dependency)
-				.addBom("foo-bom", bom)
+		dependency.getMappings().add(Dependency.Mapping
+				.create("[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings().add(Dependency.Mapping.create("1.3.x.BUILD-SNAPSHOT",
+				null, null, "0.2.0.RELEASE"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", dependency).addBom("foo-bom", bom)
 				.setKotlinEnv("1.3",
-						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.1"),
+						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]",
+								"1.1"),
 						createKotlinVersionMapping("1.3.x.BUILD-SNAPSHOT", "1.2"))
 				.build();
 
@@ -187,13 +188,17 @@ public class InitializrMetadataTests {
 		assertThat(metadata.getConfiguration().getEnv().getBoms().get("foo-bom")
 				.resolve(Version.parse("1.3.6.RELEASE")).getVersion()).isEqualTo("1.0.0");
 		assertThat(metadata.getConfiguration().getEnv().getBoms().get("foo-bom")
-				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion()).isEqualTo("1.1.0-BUILD-SNAPSHOT");
+				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion())
+						.isEqualTo("1.1.0-BUILD-SNAPSHOT");
 		assertThat(metadata.getDependencies().get("bar")
-				.resolve(Version.parse("1.3.6.RELEASE")).getVersion()).isEqualTo("0.1.0.RELEASE");
+				.resolve(Version.parse("1.3.6.RELEASE")).getVersion())
+						.isEqualTo("0.1.0.RELEASE");
 		assertThat(metadata.getDependencies().get("bar")
-				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion()).isEqualTo("0.2.0.RELEASE");
+				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion())
+						.isEqualTo("0.2.0.RELEASE");
 		assertThat(metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(Version.parse("1.3.7.BUILD-SNAPSHOT"))).isEqualTo("1.2");
+				.resolveKotlinVersion(Version.parse("1.3.7.BUILD-SNAPSHOT")))
+						.isEqualTo("1.2");
 	}
 
 	@Test
@@ -208,7 +213,8 @@ public class InitializrMetadataTests {
 
 	@Test
 	public void stripInvalidCharsFromPackage() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.build();
 		metadata.getGroupId().setContent("org.acme");
 		metadata.getArtifactId().setContent("2foo.bar");
 		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foo.bar");
@@ -220,7 +226,7 @@ public class InitializrMetadataTests {
 	}
 
 	private Kotlin.Mapping createKotlinVersionMapping(String versionRange,
-			String kotlinVersion){
+			String kotlinVersion) {
 		Kotlin.Mapping mapping = new Kotlin.Mapping();
 		mapping.setVersionRange(versionRange);
 		mapping.setVersion(kotlinVersion);

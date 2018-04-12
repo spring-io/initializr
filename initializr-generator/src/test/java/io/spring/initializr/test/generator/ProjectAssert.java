@@ -41,6 +41,7 @@ public class ProjectAssert {
 	public static final String DEFAULT_APPLICATION_NAME = "DemoApplication";
 
 	private final File dir;
+
 	private Boolean mavenProject;
 
 	public File getDir() {
@@ -70,8 +71,9 @@ public class ProjectAssert {
 	 */
 	public ProjectAssert hasBaseDir(String name) {
 		File projectDir = file(name);
-		assertThat(projectDir).describedAs("No directory %s found in %s", name,
-				dir.getAbsolutePath()).exists();
+		assertThat(projectDir)
+				.describedAs("No directory %s found in %s", name, dir.getAbsolutePath())
+				.exists();
 		assertThat(projectDir).isDirectory();
 		// Replacing the root dir so that other assertions match the root
 		return new ProjectAssert(projectDir);
@@ -108,8 +110,9 @@ public class ProjectAssert {
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
 		try {
-			return new GradleSettingsAssert(StreamUtils.copyToString(
-					new FileInputStream(file("settings.gradle")), Charset.forName("UTF-8")));
+			return new GradleSettingsAssert(
+					StreamUtils.copyToString(new FileInputStream(file("settings.gradle")),
+							Charset.forName("UTF-8")));
 		}
 		catch (IOException e) {
 			throw new IllegalArgumentException("Cannot resolve settings.gradle", e);
@@ -212,8 +215,8 @@ public class ProjectAssert {
 		String packageName = expectedPackageName.replace(".", "/");
 		return isGenericProject(expectedPackageName, expectedApplicationName,
 				codeLocation, extension).hasStaticAndTemplatesResources(true)
-				.hasFile("src/main/" + codeLocation + "/" + packageName
-						+ "/ServletInitializer." + extension);
+						.hasFile("src/main/" + codeLocation + "/" + packageName
+								+ "/ServletInitializer." + extension);
 	}
 
 	public ProjectAssert hasStaticAndTemplatesResources(boolean web) {
@@ -244,8 +247,9 @@ public class ProjectAssert {
 
 	public ProjectAssert assertFile(String localPath, boolean exist) {
 		File candidate = file(localPath);
-		assertThat(candidate.exists()).describedAs("Invalid presence (%s) exist for %s",
-				exist, localPath).isEqualTo(exist);
+		assertThat(candidate.exists())
+				.describedAs("Invalid presence (%s) exist for %s", exist, localPath)
+				.isEqualTo(exist);
 		return this;
 	}
 

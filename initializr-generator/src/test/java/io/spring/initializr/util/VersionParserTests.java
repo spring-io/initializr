@@ -90,8 +90,7 @@ public class VersionParserTests {
 		List<Version> currentVersions = Arrays.asList(parser.parse("1.3.8.RELEASE"),
 				parser.parse("1.3.9.BUILD-SNAPSHOT"));
 		parser = new VersionParser(currentVersions);
-		assertThat(parser.parse("1.x.x.RELEASE").toString(),
-				equalTo("1.3.8.RELEASE"));
+		assertThat(parser.parse("1.x.x.RELEASE").toString(), equalTo("1.3.8.RELEASE"));
 	}
 
 	@Test
@@ -99,8 +98,7 @@ public class VersionParserTests {
 		List<Version> currentVersions = Arrays.asList(parser.parse("1.3.8.RELEASE"),
 				parser.parse("1.4.0.BUILD-SNAPSHOT"));
 		parser = new VersionParser(currentVersions);
-		assertThat(parser.parse("1.4.x").toString(),
-				equalTo("1.4.0.BUILD-SNAPSHOT"));
+		assertThat(parser.parse("1.4.x").toString(), equalTo("1.4.0.BUILD-SNAPSHOT"));
 	}
 
 	@Test

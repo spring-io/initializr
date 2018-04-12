@@ -54,4 +54,3 @@ public class TextCapability extends ServiceCapability<String> {
 	}
 
 }
-

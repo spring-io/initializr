@@ -54,8 +54,8 @@ public class UiController {
 	@GetMapping(path = "/ui/dependencies", produces = "application/json")
 	public ResponseEntity<String> dependencies(
 			@RequestParam(required = false) String version) {
-		List<DependencyGroup> dependencyGroups = metadataProvider.get()
-				.getDependencies().getContent();
+		List<DependencyGroup> dependencyGroups = metadataProvider.get().getDependencies()
+				.getContent();
 		List<DependencyItem> content = new ArrayList<>();
 		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
 		dependencyGroups.forEach(g -> g.getContent().forEach(d -> {
@@ -69,8 +69,8 @@ public class UiController {
 			}
 		}));
 		String json = writeDependencies(content);
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).
-				eTag(createUniqueId(json)).body(json);
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.eTag(createUniqueId(json)).body(json);
 	}
 
 	private static String writeDependencies(List<DependencyItem> items) {
@@ -93,7 +93,8 @@ public class UiController {
 		if (d.getWeight() > 0) {
 			node.put("weight", d.getWeight());
 		}
-		if (!CollectionUtils.isEmpty(d.getKeywords()) || !CollectionUtils.isEmpty(d.getAliases())) {
+		if (!CollectionUtils.isEmpty(d.getKeywords())
+				|| !CollectionUtils.isEmpty(d.getAliases())) {
 			List<String> all = new ArrayList<>(d.getKeywords());
 			all.addAll(d.getAliases());
 			node.put("keywords", StringUtils.collectionToCommaDelimitedString(all));
@@ -102,18 +103,22 @@ public class UiController {
 	}
 
 	private static class DependencyItem {
+
 		private final String group;
+
 		private final Dependency dependency;
 
 		DependencyItem(String group, Dependency dependency) {
 			this.group = group;
 			this.dependency = dependency;
 		}
+
 	}
 
 	private String createUniqueId(String content) {
 		StringBuilder builder = new StringBuilder();
-		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8),
+				builder);
 		return builder.toString();
 	}
 

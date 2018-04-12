@@ -44,20 +44,21 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 
 	private RetryTemplate retryTemplate;
-	private ProjectGenerationStatPublisher statPublisher;
-	private MockRestServiceServer mockServer;
 
+	private ProjectGenerationStatPublisher statPublisher;
+
+	private MockRestServiceServer mockServer;
 
 	@Before
 	public void setUp() {
 		StatsProperties properties = createProperties();
-		ProjectRequestDocumentFactory documentFactory =
-				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
+		ProjectRequestDocumentFactory documentFactory = new ProjectRequestDocumentFactory(
+				createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
 		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
 				properties, new RestTemplateBuilder(), retryTemplate);
-		mockServer = MockRestServiceServer.createServer(
-				this.statPublisher.getRestTemplate());
+		mockServer = MockRestServiceServer
+				.createServer(this.statPublisher.getRestTemplate());
 	}
 
 	@Test
@@ -119,8 +120,10 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	private static String mockResponse(String id, boolean created) {
-		return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id + "\",\"_version\":1,\"_shards\"" +
-				":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created + "}";
+		return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id
+				+ "\",\"_version\":1,\"_shards\""
+				+ ":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created
+				+ "}";
 	}
 
 	private static StatsProperties createProperties() {

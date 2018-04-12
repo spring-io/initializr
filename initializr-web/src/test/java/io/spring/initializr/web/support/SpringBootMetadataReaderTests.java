@@ -42,15 +42,15 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 public class SpringBootMetadataReaderTests {
 
-	private final InitializrMetadata metadata =
-			InitializrMetadataBuilder.create().build();
+	private final InitializrMetadata metadata = InitializrMetadataBuilder.create()
+			.build();
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	private final MockRestServiceServer server =
-			MockRestServiceServer.bindTo(restTemplate).build();
+	private final MockRestServiceServer server = MockRestServiceServer
+			.bindTo(restTemplate).build();
 
 	@Test
 	public void readAvailableVersions() throws IOException {
@@ -59,8 +59,9 @@ public class SpringBootMetadataReaderTests {
 						new ClassPathResource("metadata/sagan/spring-boot.json"),
 						MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(objectMapper,
-				restTemplate, metadata.getConfiguration().getEnv()
-				.getSpringBootMetadataUrl()).getBootVersions();
+				restTemplate,
+				metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
+						.getBootVersions();
 		assertNotNull("spring boot versions should not be null", versions);
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
 		versions.forEach(it -> {

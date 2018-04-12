@@ -27,7 +27,9 @@ import java.net.URL;
 public class Repository {
 
 	private String name;
+
 	private URL url;
+
 	private boolean snapshotsEnabled;
 
 	public Repository() {

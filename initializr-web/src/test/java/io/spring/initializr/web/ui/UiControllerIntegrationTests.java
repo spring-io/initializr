@@ -55,4 +55,5 @@ public class UiControllerIntegrationTests
 				"metadata/ui/test-dependencies-" + version + ".json");
 		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
 	}
+
 }

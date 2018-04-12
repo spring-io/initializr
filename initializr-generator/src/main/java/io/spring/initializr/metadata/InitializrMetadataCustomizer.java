@@ -24,8 +24,8 @@ package io.spring.initializr.metadata;
 public interface InitializrMetadataCustomizer {
 
 	/**
-	 * Customize the {@link InitializrMetadata}, updating or moving around
-	 * capabilities before they are validated.
+	 * Customize the {@link InitializrMetadata}, updating or moving around capabilities
+	 * before they are validated.
 	 */
 	void customize(InitializrMetadata metadata);
 

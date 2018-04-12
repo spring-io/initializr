@@ -112,7 +112,8 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 		for (String field : this.fields) {
 			snippets.add(new ResponseFieldSnippet(field));
 		}
-		actions.andDo(document(label, preprocessResponse(prettyPrint()), snippets.toArray(new Snippet[0])));
+		actions.andDo(document(label, preprocessResponse(prettyPrint()),
+				snippets.toArray(new Snippet[0])));
 		this.fields = new ArrayList<>();
 		return actions;
 	}

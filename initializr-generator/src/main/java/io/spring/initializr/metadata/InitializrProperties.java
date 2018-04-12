@@ -209,6 +209,7 @@ public class InitializrProperties extends InitializrConfiguration {
 				capability.setContent(value);
 			}
 		}
+
 	}
 
 }

@@ -43,7 +43,9 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	private final String language;
+
 	private final String extension;
+
 	private final String expectedExtension;
 
 	public ProjectGeneratorLanguageTests(String language, String extension) {
@@ -87,8 +89,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		request.setLanguage(language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTests." + expectedExtension));
 	}
@@ -99,8 +101,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		request.setLanguage(language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTestsWeb." + expectedExtension));
 	}
@@ -125,7 +127,6 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		testServletInitializr("2.0.0.M3", "spring-boot-2.0");
 	}
 
-
 	private void testServletInitializr(String bootVersion, String expectedOutput) {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);
@@ -134,10 +135,10 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 			request.setBootVersion(bootVersion);
 		}
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/demo/ServletInitializer." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/" + expectedOutput + "/ServletInitializer." + expectedExtension));
+		project.sourceCodeAssert("src/main/" + language
+				+ "/com/example/demo/ServletInitializer." + extension)
+				.equalsTo(new ClassPathResource("project/" + language + "/"
+						+ expectedOutput + "/ServletInitializer." + expectedExtension));
 	}
 
 	@Test
@@ -147,8 +148,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		request.setBootVersion("1.4.0.M1");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/standard/DemoApplicationTests." + expectedExtension));
 	}
@@ -160,8 +161,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		request.setBootVersion("1.4.0.M2");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
 	}
@@ -173,8 +174,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		request.setBootVersion("1.4.0.M2");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/test/" + language + "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource("project/" + language
 						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
 	}

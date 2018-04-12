@@ -38,12 +38,19 @@ import io.spring.initializr.util.VersionRange;
 public class BillOfMaterials {
 
 	private String groupId;
+
 	private String artifactId;
+
 	private String version;
+
 	private VersionProperty versionProperty;
+
 	private Integer order = Integer.MAX_VALUE;
+
 	private List<String> additionalBoms = new ArrayList<>();
+
 	private List<String> repositories = new ArrayList<>();
+
 	private final List<Mapping> mappings = new ArrayList<>();
 
 	public BillOfMaterials() {
@@ -88,8 +95,8 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the {@link VersionProperty} to use to externalize the version of the BOM.
-	 * When this is set, a version property is automatically added rather than setting
-	 * the version in the bom declaration itself.
+	 * When this is set, a version property is automatically added rather than setting the
+	 * version in the bom declaration itself.
 	 */
 	public VersionProperty getVersionProperty() {
 		return versionProperty;
@@ -187,8 +194,8 @@ public class BillOfMaterials {
 				return resolvedBom;
 			}
 		}
-		throw new IllegalStateException(
-				"No suitable mapping was found for " + this + " and version " + bootVersion);
+		throw new IllegalStateException("No suitable mapping was found for " + this
+				+ " and version " + bootVersion);
 	}
 
 	@Override
@@ -196,8 +203,8 @@ public class BillOfMaterials {
 		return "BillOfMaterials [" + (groupId != null ? "groupId=" + groupId + ", " : "")
 				+ (artifactId != null ? "artifactId=" + artifactId + ", " : "")
 				+ (version != null ? "version=" + version + ", " : "")
-				+ (versionProperty != null ? "versionProperty=" + versionProperty + ", "
-						: "")
+				+ (versionProperty != null
+						? "versionProperty=" + versionProperty + ", " : "")
 				+ (order != null ? "order=" + order + ", " : "")
 				+ (additionalBoms != null ? "additionalBoms=" + additionalBoms + ", "
 						: "")

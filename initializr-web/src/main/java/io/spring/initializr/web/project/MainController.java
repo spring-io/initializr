@@ -85,7 +85,9 @@ public class MainController extends AbstractInitializrController {
 			.parseMediaType("application/hal+json");
 
 	private final ProjectGenerator projectGenerator;
+
 	private final DependencyMetadataProvider dependencyMetadataProvider;
+
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
 
 	public MainController(InitializrMetadataProvider metadataProvider,
@@ -183,10 +185,10 @@ public class MainController extends AbstractInitializrController {
 	private static InitializrMetadataJsonMapper getJsonMapper(
 			InitializrMetadataVersion version) {
 		switch (version) {
-			case V2:
-				return new InitializrMetadataV2JsonMapper();
-			default:
-				return new InitializrMetadataV21JsonMapper();
+		case V2:
+			return new InitializrMetadataV2JsonMapper();
+		default:
+			return new InitializrMetadataV21JsonMapper();
 		}
 	}
 
@@ -309,7 +311,7 @@ public class MainController extends AbstractInitializrController {
 		zip.setDestFile(download.getCanonicalFile());
 		Tar.TarCompressionMethod method = new Tar.TarCompressionMethod();
 		method.setValue("gzip");
-		zip.setCompression(method );
+		zip.setCompression(method);
 		zip.execute();
 		return upload(download, dir, generateFileName(request, "tar.gz"),
 				"application/x-compress");
@@ -327,8 +329,8 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ProjectRequest request) {
 		String script = "gradle".equals(request.getBuild()) ? "gradlew" : "mvnw";
-		return request.getBaseDir() != null
-				? request.getBaseDir() + "/" + script : script;
+		return request.getBaseDir() != null ? request.getBaseDir() + "/" + script
+				: script;
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
@@ -356,5 +358,3 @@ public class MainController extends AbstractInitializrController {
 	}
 
 }
-
-

@@ -40,22 +40,36 @@ import org.springframework.util.StringUtils;
 public class Dependency extends MetadataElement implements Describable {
 
 	public static final String SCOPE_COMPILE = "compile";
+
 	public static final String SCOPE_COMPILE_ONLY = "compileOnly";
+
 	public static final String SCOPE_RUNTIME = "runtime";
+
 	public static final String SCOPE_PROVIDED = "provided";
+
 	public static final String SCOPE_TEST = "test";
+
 	public static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
 			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
 
 	private List<String> aliases = new ArrayList<>();
+
 	private List<String> facets = new ArrayList<>();
+
 	private String groupId;
+
 	private String artifactId;
+
 	private String version;
+
 	private String type;
+
 	private List<Mapping> mappings = new ArrayList<>();
+
 	private String scope = SCOPE_COMPILE;
+
 	private String description;
+
 	private String versionRange;
 
 	@JsonIgnore
@@ -65,6 +79,7 @@ public class Dependency extends MetadataElement implements Describable {
 	private VersionRange range;
 
 	private String bom;
+
 	private String repository;
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -394,10 +409,9 @@ public class Dependency extends MetadataElement implements Describable {
 
 	@Override
 	public String toString() {
-		return "Dependency{" + "id='" + getId() + '\'' +
-				", groupId='" + groupId + '\'' +
-				", artifactId='" + artifactId + '\'' +
-				", version='" + version + '\'' + '}';
+		return "Dependency{" + "id='" + getId() + '\'' + ", groupId='" + groupId + '\''
+				+ ", artifactId='" + artifactId + '\'' + ", version='" + version + '\''
+				+ '}';
 	}
 
 	/**
@@ -473,6 +487,7 @@ public class Dependency extends MetadataElement implements Describable {
 			mapping.version = version;
 			return mapping;
 		}
+
 	}
 
 	public static Dependency create(String groupId, String artifactId, String version,

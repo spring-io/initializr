@@ -44,9 +44,13 @@ public class ProjectGenerationStatPublisher {
 			.getLogger(ProjectGenerationStatPublisher.class);
 
 	private final ProjectRequestDocumentFactory documentFactory;
+
 	private final StatsProperties statsProperties;
+
 	private final ObjectMapper objectMapper;
+
 	private final RestTemplate restTemplate;
+
 	private final RetryTemplate retryTemplate;
 
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
@@ -58,10 +62,10 @@ public class ProjectGenerationStatPublisher {
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
 		if (StringUtils.hasText(elastic.getUsername())) {
 			this.restTemplate = restTemplateBuilder
-					.basicAuthorization(elastic.getUsername(),
-							elastic.getPassword())
+					.basicAuthorization(elastic.getUsername(), elastic.getPassword())
 					.build();
-		} else {
+		}
+		else {
 			this.restTemplate = restTemplateBuilder.build();
 		}
 		this.retryTemplate = retryTemplate;
@@ -82,10 +86,11 @@ public class ProjectGenerationStatPublisher {
 					.post(this.statsProperties.getElastic().getEntityUrl())
 					.contentType(MediaType.APPLICATION_JSON).body(json);
 
-			this.retryTemplate.execute((RetryCallback<Void, RuntimeException>) context -> {
-				restTemplate.exchange(request, String.class);
-				return null;
-			});
+			this.retryTemplate
+					.execute((RetryCallback<Void, RuntimeException>) context -> {
+						restTemplate.exchange(request, String.class);
+						return null;
+					});
 		}
 		catch (Exception ex) {
 			log.warn(String.format(

@@ -39,23 +39,23 @@ public class InitializrMetadata {
 
 	private final TypeCapability types = new TypeCapability();
 
-	private final SingleSelectCapability bootVersions = new SingleSelectCapability("bootVersion",
-			"Spring Boot Version", "spring boot version");
+	private final SingleSelectCapability bootVersions = new SingleSelectCapability(
+			"bootVersion", "Spring Boot Version", "spring boot version");
 
-	private final SingleSelectCapability packagings = new SingleSelectCapability("packaging",
-			"Packaging", "project packaging");
+	private final SingleSelectCapability packagings = new SingleSelectCapability(
+			"packaging", "Packaging", "project packaging");
 
-	private final SingleSelectCapability javaVersions = new SingleSelectCapability("javaVersion",
-			"Java Version", "language level");
+	private final SingleSelectCapability javaVersions = new SingleSelectCapability(
+			"javaVersion", "Java Version", "language level");
 
-	private final SingleSelectCapability languages = new SingleSelectCapability("language",
-			"Language", "programming language");
+	private final SingleSelectCapability languages = new SingleSelectCapability(
+			"language", "Language", "programming language");
 
 	private final TextCapability name = new TextCapability("name", "Name",
 			"project name (infer application name)");
 
-	private final TextCapability description = new TextCapability("description", "Description",
-			"project description");
+	private final TextCapability description = new TextCapability("description",
+			"Description", "project description");
 
 	private final TextCapability groupId = new TextCapability("groupId", "Group",
 			"project coordinates");
@@ -235,7 +235,8 @@ public class InitializrMetadata {
 	/**
 	 * Create a {@link BillOfMaterials} for the spring boot BOM.
 	 */
-	public BillOfMaterials createSpringBootBom(String bootVersion, String versionProperty) {
+	public BillOfMaterials createSpringBootBom(String bootVersion,
+			String versionProperty) {
 		BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot",
 				"spring-boot-dependencies", bootVersion);
 		bom.setVersionProperty(new VersionProperty(versionProperty));
@@ -262,12 +263,14 @@ public class InitializrMetadata {
 		return defaults;
 	}
 
-	private static String defaultId(Defaultable<? extends DefaultMetadataElement> element) {
+	private static String defaultId(
+			Defaultable<? extends DefaultMetadataElement> element) {
 		DefaultMetadataElement defaultValue = element.getDefault();
 		return defaultValue != null ? defaultValue.getId() : null;
 	}
 
 	private static class ArtifactIdCapability extends TextCapability {
+
 		private final TextCapability nameCapability;
 
 		ArtifactIdCapability(TextCapability nameCapability) {
@@ -280,10 +283,13 @@ public class InitializrMetadata {
 			String value = super.getContent();
 			return value == null ? nameCapability.getContent() : value;
 		}
+
 	}
 
 	private static class PackageCapability extends TextCapability {
+
 		private final TextCapability groupId;
+
 		private final TextCapability artifactId;
 
 		PackageCapability(TextCapability groupId, TextCapability artifactId) {
@@ -305,6 +311,7 @@ public class InitializrMetadata {
 			}
 			return null;
 		}
+
 	}
 
 }

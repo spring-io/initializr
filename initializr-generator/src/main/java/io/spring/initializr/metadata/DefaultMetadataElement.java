@@ -17,8 +17,7 @@
 package io.spring.initializr.metadata;
 
 /**
- * A {@link MetadataElement} that specifies if its
- * the default for a given capability.
+ * A {@link MetadataElement} that specifies if its the default for a given capability.
  *
  * @author Stephane Nicoll
  */
@@ -50,7 +49,8 @@ public class DefaultMetadataElement extends MetadataElement {
 		return new DefaultMetadataElement(id, defaultValue);
 	}
 
-	public static DefaultMetadataElement create(String id, String name, boolean defaultValue) {
+	public static DefaultMetadataElement create(String id, String name,
+			boolean defaultValue) {
 		return new DefaultMetadataElement(id, name, defaultValue);
 	}
 

@@ -51,6 +51,7 @@ public class ProjectGenerationSmokeTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	private File downloadDir;
+
 	private WebDriver driver;
 
 	private Action enterAction;
@@ -379,4 +380,3 @@ public class ProjectGenerationSmokeTests
 	}
 
 }
-

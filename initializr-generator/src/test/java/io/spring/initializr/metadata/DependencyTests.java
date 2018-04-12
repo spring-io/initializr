@@ -231,15 +231,16 @@ public class DependencyTests {
 		dependency.getFacets().add("web");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.1.x.RELEASE]", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings().add(Dependency.Mapping.create(
+				"[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE"));
 		dependency.resolve();
 
 		dependency.updateVersionRanges(new VersionParser(Arrays.asList(
 				Version.parse("1.1.5.RELEASE"), Version.parse("1.1.6.BUILD-SNAPSHOT"))));
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.6.BUILD-SNAPSHOT")),
+		validateResolvedWebDependency(
+				dependency.resolve(Version.parse("1.1.6.BUILD-SNAPSHOT")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.2.0.RELEASE");
 		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
@@ -250,7 +251,8 @@ public class DependencyTests {
 				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.6.RELEASE")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.7.BUILD-SNAPSHOT")),
+		validateResolvedWebDependency(
+				dependency.resolve(Version.parse("1.1.7.BUILD-SNAPSHOT")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.2.0.RELEASE");
 		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
@@ -273,8 +275,8 @@ public class DependencyTests {
 
 	private static void validateResolvedWebDependency(Dependency dependency,
 			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
-		validateResolvedDependency(dependency, "web", expectedGroupId,
-				expectedArtifactId, expectedVersion);
+		validateResolvedDependency(dependency, "web", expectedGroupId, expectedArtifactId,
+				expectedVersion);
 		assertEquals(2, dependency.getKeywords().size());
 		assertEquals(1, dependency.getAliases().size());
 		assertEquals(1, dependency.getFacets().size());

@@ -32,12 +32,12 @@ import org.springframework.restdocs.snippet.WriterResolver;
 import org.springframework.restdocs.templates.TemplateEngine;
 
 /**
- * Creates a separate snippet for a single field in a larger payload. The output
- * comes in a sub-directory ("response-fields") of one containing the request and
- * response snippets, with a file name the same as the path. An exception to the last
- * rule is if you pick a single array element by using a path like `foo.bar[0]`, the
- * snippet file name is then just the array name (because asciidoctor cannot import
- * snippets with brackets in the name).
+ * Creates a separate snippet for a single field in a larger payload. The output comes in
+ * a sub-directory ("response-fields") of one containing the request and response
+ * snippets, with a file name the same as the path. An exception to the last rule is if
+ * you pick a single array element by using a path like `foo.bar[0]`, the snippet file
+ * name is then just the array name (because asciidoctor cannot import snippets with
+ * brackets in the name).
  *
  * @author Dave Syer
  */

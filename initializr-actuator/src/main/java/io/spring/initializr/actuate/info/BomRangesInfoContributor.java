@@ -25,8 +25,8 @@ import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 
 /**
- * An {@link InfoContributor} that exposes the actual ranges used by each bom
- * defined in the project.
+ * An {@link InfoContributor} that exposes the actual ranges used by each bom defined in
+ * the project.
  *
  * @author Stephane Nicoll
  */
@@ -45,7 +45,8 @@ public class BomRangesInfoContributor implements InfoContributor {
 			if (v.getMappings() != null && !v.getMappings().isEmpty()) {
 				Map<String, Object> bom = new LinkedHashMap<>();
 				v.getMappings().forEach(it -> {
-					String requirement = "Spring Boot " + it.determineVersionRangeRequirement();
+					String requirement = "Spring Boot "
+							+ it.determineVersionRangeRequirement();
 					bom.put(it.getVersion(), requirement);
 				});
 				details.put(k, bom);

@@ -71,8 +71,8 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
-			InitializrMetadataVersion.V2_1.getMediaType();
+	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1
+			.getMediaType();
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -138,7 +138,8 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected void validateCurrentMetadata(String json) {
 		try {
 			JSONObject expected = readMetadataJson("2.1.0");
-			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
+			JSONAssert.assertEquals(expected, new JSONObject(json),
+					JSONCompareMode.STRICT);
 		}
 		catch (JSONException ex) {
 			throw new IllegalArgumentException("Invalid json", ex);
@@ -208,12 +209,12 @@ public abstract class AbstractInitializrIntegrationTests {
 
 			File project = folder.newFolder();
 			switch (archiveType) {
-				case ZIP:
-					unzip(archiveFile, project);
-					break;
-				case TGZ:
-					untar(archiveFile, project);
-					break;
+			case ZIP:
+				unzip(archiveFile, project);
+				break;
+			case TGZ:
+				untar(archiveFile, project);
+				break;
 			}
 			return new ProjectAssert(project);
 		}
@@ -259,8 +260,7 @@ public abstract class AbstractInitializrIntegrationTests {
 					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
 				}
 				if (this instanceof AbstractFullStackInitializrIntegrationTests) {
-					AbstractFullStackInitializrIntegrationTests test =
-							(AbstractFullStackInitializrIntegrationTests) this;
+					AbstractFullStackInitializrIntegrationTests test = (AbstractFullStackInitializrIntegrationTests) this;
 					placeholder = test.host + ":" + test.port;
 				}
 				// Let's parse the port as it is random
@@ -279,9 +279,11 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	private enum ArchiveType {
+
 		ZIP,
 
 		TGZ
+
 	}
 
 	@EnableAutoConfiguration
@@ -301,4 +303,5 @@ public abstract class AbstractInitializrIntegrationTests {
 		}
 
 	}
+
 }

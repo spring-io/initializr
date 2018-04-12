@@ -38,6 +38,7 @@ import org.springframework.util.StringUtils;
 public class InitializrMetadataBuilder {
 
 	private final List<InitializrMetadataCustomizer> customizers = new ArrayList<>();
+
 	private final InitializrConfiguration configuration;
 
 	private InitializrMetadataBuilder(InitializrConfiguration configuration) {
@@ -168,6 +169,7 @@ public class InitializrMetadataBuilder {
 			properties.getDescription().apply(metadata.getDescription());
 			properties.getPackageName().apply(metadata.getPackageName());
 		}
+
 	}
 
 	private static class ResourceInitializrMetadataCustomizer

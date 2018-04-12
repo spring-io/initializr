@@ -31,7 +31,8 @@ import static org.hamcrest.Matchers.lessThan;
  */
 public class VersionTests {
 
-	private static final VersionParser parser = new VersionParser(Collections.emptyList());
+	private static final VersionParser parser = new VersionParser(
+			Collections.emptyList());
 
 	@Test
 	public void equalNoQualifier() {

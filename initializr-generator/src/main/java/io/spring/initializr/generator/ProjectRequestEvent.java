@@ -26,6 +26,7 @@ package io.spring.initializr.generator;
 public abstract class ProjectRequestEvent {
 
 	private final ProjectRequest projectRequest;
+
 	private final long timestamp;
 
 	protected ProjectRequestEvent(ProjectRequest projectRequest) {

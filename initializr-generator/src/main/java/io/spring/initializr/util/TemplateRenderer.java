@@ -43,8 +43,8 @@ public class TemplateRenderer {
 	private boolean cache = true;
 
 	private final Compiler mustache;
-	private final ConcurrentMap<String, Template> templateCaches =
-			new ConcurrentReferenceHashMap<>();
+
+	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
 
 	public TemplateRenderer(Compiler mustache) {
 		this.mustache = mustache;

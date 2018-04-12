@@ -77,7 +77,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectAssert gradleProject = generateProject(request).isGradleProject();
 		gradleProject.gradleBuildAssert()
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
-				.contains("testCompile('org.springframework.boot:spring-boot-starter-test')");
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')");
 		gradleProject.gradleSettingsAssert().hasProjectName("demo");
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -181,8 +182,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setType("gradle-project");
 		generateProject(request).isJavaWarProject().isGradleProject().gradleBuildAssert()
 				// This is tagged as web facet so it brings the web one
-				.contains("apply plugin: 'war'")
-				.contains("compile('org.foo:thymeleaf')")
+				.contains("apply plugin: 'war'").contains("compile('org.foo:thymeleaf')")
 				.doesNotContain(
 						"compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
@@ -196,9 +196,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void gradleWarPomWithoutWebFacet() {
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setPackaging("war");
-		generateGradleBuild(request)
-				.contains(
-						"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
+		generateGradleBuild(request).contains(
+				"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
 				// Added by warpackaging
 				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
@@ -213,8 +212,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setGroupId("org.acme");
 		request.setArtifactId("42foo");
-		generateProject(request)
-				.isJavaProject("org/acme/foo", "DemoApplication");
+		generateProject(request).isJavaProject("org/acme/foo", "DemoApplication");
 	}
 
 	@Test
@@ -235,10 +233,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	private void assertProjectWithPackageNameWithVersion(ProjectRequest request) {
-		generateProject(request)
-				.isJavaProject("org/acme/foo145", "DemoApplication")
-				.sourceCodeAssert(
-						"src/main/java/org/acme/foo145/DemoApplication.java")
+		generateProject(request).isJavaProject("org/acme/foo145", "DemoApplication")
+				.sourceCodeAssert("src/main/java/org/acme/foo145/DemoApplication.java")
 				.contains("package org.acme.foo145;");
 	}
 
@@ -769,8 +765,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getMaven().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put(
-				new VersionProperty("foo.version"), () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
+				() -> "1.2.3");
 		request.getBuildProperties().getGradle().put("ignore.property", () -> "yes");
 
 		generateMavenPom(request).hasProperty("name", "test")
@@ -781,14 +777,12 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesGradle() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getGradle().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put(
-				new VersionProperty("foo.version"), () -> "1.2.3");
+		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
+				() -> "1.2.3");
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");
 
-		generateGradleBuild(request).contains("name = 'test'")
-				.contains("ext {")
-				.contains("fooVersion = '1.2.3'")
-				.doesNotContain("ignore.property");
+		generateGradleBuild(request).contains("name = 'test'").contains("ext {")
+				.contains("fooVersion = '1.2.3'").doesNotContain("ignore.property");
 	}
 
 	@Test
@@ -847,12 +841,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.addDependencyGroup("sample", depOne, depTwo).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("one", "web", "two", "data-jpa");
-		assertThat(generateGradleBuild(request).getGradleBuild())
-				.containsSubsequence(
-						"compile('org.springframework.boot:spring-boot-starter-data-jpa')",
-						"compile('org.springframework.boot:spring-boot-starter-web')",
-						"compile('com.example:second:1.2.3')",
-						"compile('org.acme:first:1.2.3')");
+		assertThat(generateGradleBuild(request).getGradleBuild()).containsSubsequence(
+				"compile('org.springframework.boot:spring-boot-starter-data-jpa')",
+				"compile('org.springframework.boot:spring-boot-starter-web')",
+				"compile('com.example:second:1.2.3')", "compile('org.acme:first:1.2.3')");
 	}
 
 	@Test

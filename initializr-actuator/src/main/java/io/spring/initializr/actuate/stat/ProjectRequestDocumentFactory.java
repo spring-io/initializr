@@ -37,8 +37,8 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequestDocumentFactory {
 
-	private static final Pattern IP_PATTERN =
-			Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
+	private static final Pattern IP_PATTERN = Pattern
+			.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
 	private final InitializrMetadataProvider metadataProvider;
 

@@ -24,7 +24,8 @@ import java.util.List;
  *
  * @author Stephane Nicoll
  */
-public class TypeCapability extends ServiceCapability<List<Type>> implements Defaultable<Type> {
+public class TypeCapability extends ServiceCapability<List<Type>>
+		implements Defaultable<Type> {
 
 	private final List<Type> content = new ArrayList<>();
 
@@ -52,8 +53,8 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 	 */
 	@Override
 	public Type getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault)
-				.findFirst().orElse(null);
+		return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
+				.orElse(null);
 	}
 
 	@Override

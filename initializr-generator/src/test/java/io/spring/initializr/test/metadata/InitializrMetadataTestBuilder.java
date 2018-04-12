@@ -158,7 +158,8 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultBootVersions() {
-		return addBootVersion("1.1.2.RELEASE", false).addBootVersion("1.2.3.RELEASE", true)
+		return addBootVersion("1.1.2.RELEASE", false)
+				.addBootVersion("1.2.3.RELEASE", true)
 				.addBootVersion("1.3.0.BUILD-SNAPSHOT", false);
 	}
 
@@ -180,14 +181,15 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addBom(String id, BillOfMaterials bom) {
-		builder.withCustomizer(it -> it.getConfiguration().getEnv()
-				.getBoms().put(id, bom));
+		builder.withCustomizer(
+				it -> it.getConfiguration().getEnv().getBoms().put(id, bom));
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setGradleEnv(String dependencyManagementPluginVersion) {
-		builder.withCustomizer(it -> it.getConfiguration().getEnv().getGradle().
-				setDependencyManagementPluginVersion(dependencyManagementPluginVersion));
+	public InitializrMetadataTestBuilder setGradleEnv(
+			String dependencyManagementPluginVersion) {
+		builder.withCustomizer(it -> it.getConfiguration().getEnv().getGradle()
+				.setDependencyManagementPluginVersion(dependencyManagementPluginVersion));
 		return this;
 	}
 

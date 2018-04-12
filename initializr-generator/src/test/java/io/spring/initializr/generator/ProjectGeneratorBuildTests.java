@@ -44,7 +44,9 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	private final String build;
+
 	private final String fileName;
+
 	private final String assertFileName;
 
 	public ProjectGeneratorBuildTests(String build, String fileName) {
@@ -96,17 +98,17 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setPackaging("war");
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/war/" + assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(
+				new ClassPathResource("project/" + language + "/war/" + assertFileName));
 	}
 
 	@Test
 	public void versionOverride() {
 		ProjectRequest request = createProjectRequest("web");
-		request.getBuildProperties().getVersions().put(
-				new VersionProperty("spring-foo.version"), () -> "0.1.0.RELEASE");
-		request.getBuildProperties().getVersions().put(
-				new VersionProperty("spring-bar.version"), () -> "0.2.0.RELEASE");
+		request.getBuildProperties().getVersions()
+				.put(new VersionProperty("spring-foo.version"), () -> "0.1.0.RELEASE");
+		request.getBuildProperties().getVersions()
+				.put(new VersionProperty("spring-bar.version"), () -> "0.2.0.RELEASE");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
 				"project/" + build + "/version-override-" + assertFileName));
@@ -133,8 +135,7 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		foo.setScope(Dependency.SCOPE_COMPILE_ONLY);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("core", "web", "data-jpa")
-				.addDependencyGroup("foo", foo)
-				.build();
+				.addDependencyGroup("foo", foo).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo", "web", "data-jpa");
 		ProjectAssert project = generateProject(request);
@@ -146,24 +147,19 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	public void bomWithOrdering() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("foo-bom");
-		BillOfMaterials barBom = BillOfMaterials.create("org.acme", "bar-bom",
-				"1.0");
+		BillOfMaterials barBom = BillOfMaterials.create("org.acme", "bar-bom", "1.0");
 		barBom.setOrder(50);
 		BillOfMaterials bizBom = BillOfMaterials.create("org.acme", "biz-bom");
 		bizBom.setOrder(40);
 		bizBom.getAdditionalBoms().add("bar-bom");
 		bizBom.getMappings().add(BillOfMaterials.Mapping.create("1.0.0.RELEASE", "1.0"));
-		BillOfMaterials fooBom = BillOfMaterials.create("org.acme", "foo-bom",
-				"1.0");
+		BillOfMaterials fooBom = BillOfMaterials.create("org.acme", "foo-bom", "1.0");
 		fooBom.setOrder(20);
 		fooBom.getAdditionalBoms().add("biz-bom");
 
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("foo", foo)
-				.addBom("foo-bom", fooBom)
-				.addBom("bar-bom", barBom)
-				.addBom("biz-bom", bizBom)
-				.build();
+				.addDependencyGroup("foo", foo).addBom("foo-bom", fooBom)
+				.addBom("bar-bom", barBom).addBom("biz-bom", bizBom).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo");
 		ProjectAssert project = generateProject(request);
@@ -198,7 +194,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setBootVersion("2.0.0.M5");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
-				.equalsTo(new ClassPathResource("project/kotlin/spring-boot-2.0/DemoApplicationLegacy.kt.gen"));
+				.equalsTo(new ClassPathResource(
+						"project/kotlin/spring-boot-2.0/DemoApplicationLegacy.kt.gen"));
 		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
 				"project/" + build + "/kotlin-springboot2-legacy-" + assertFileName));
 	}
@@ -210,7 +207,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setBootVersion("2.0.0.M6");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
-				.equalsTo(new ClassPathResource("project/kotlin/spring-boot-2.0/DemoApplication.kt.gen"));
+				.equalsTo(new ClassPathResource(
+						"project/kotlin/spring-boot-2.0/DemoApplication.kt.gen"));
 		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
 				"project/" + build + "/kotlin-springboot2-" + assertFileName));
 	}

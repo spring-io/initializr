@@ -39,8 +39,8 @@ public class MainControllerEnvIntegrationTests
 
 	@Test
 	public void downloadCliWithCustomRepository() throws Exception {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(
-				createUrl("/spring"), String.class);
+		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
+				String.class);
 		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
 		assertEquals(new URI(expected), entity.getHeaders().getLocation());
@@ -58,10 +58,8 @@ public class MainControllerEnvIntegrationTests
 	public void generateProjectWithInvalidName() {
 		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
 				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
-				.isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(2)
-				.hasSpringBootStarterDependency("data-jpa")
+				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
+				.hasDependenciesCount(2).hasSpringBootStarterDependency("data-jpa")
 				.hasSpringBootStarterTest();
 	}
 

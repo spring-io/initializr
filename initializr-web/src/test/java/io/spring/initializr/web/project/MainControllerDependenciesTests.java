@@ -49,8 +49,9 @@ public class MainControllerDependenciesTests
 
 	@Test
 	public void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=1.2.1.RELEASE",
-				String.class, null, "application/json");
+		ResponseEntity<String> response = execute(
+				"/dependencies?bootVersion=1.2.1.RELEASE", String.class, null,
+				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("1.2.1", response.getBody());

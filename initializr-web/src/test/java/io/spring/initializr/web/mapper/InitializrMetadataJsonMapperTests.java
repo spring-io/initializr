@@ -36,8 +36,7 @@ public class InitializrMetadataJsonMapperTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	private final InitializrMetadataJsonMapper jsonMapper =
-			new InitializrMetadataV21JsonMapper();
+	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataV21JsonMapper();
 
 	@Test
 	public void withNoAppUrl() throws IOException {
@@ -46,8 +45,10 @@ public class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
-		assertEquals("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion," +
-				"groupId,artifactId,version,name,description,packageName}", get(result, "_links.foo.href"));
+		assertEquals(
+				"/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
+						+ "groupId,artifactId,version,name,description,packageName}",
+				get(result, "_links.foo.href"));
 	}
 
 	@Test
@@ -57,8 +58,9 @@ public class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
 		JsonNode result = objectMapper.readTree(json);
-		assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
-						"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+		assertEquals(
+				"http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
+						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}",
 				get(result, "_links.foo.href"));
 	}
 

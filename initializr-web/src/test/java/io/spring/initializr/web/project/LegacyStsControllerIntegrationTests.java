@@ -50,10 +50,10 @@ public class LegacyStsControllerIntegrationTests
 		assertTrue("artifactId not found", body.contains("demo"));
 		assertTrue("custom description not found",
 				body.contains("Demo project for Spring Boot"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
+		assertTrue("Wrong body:\n" + body, body
+				.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
+		assertTrue("Wrong body:\n" + body, body.contains(
+				"<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
 	}
 
 	@Override

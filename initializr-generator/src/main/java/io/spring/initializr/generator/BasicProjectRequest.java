@@ -22,26 +22,38 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 /**
- * The base settings of a project request. Only these can be bound by user's
- * input.
+ * The base settings of a project request. Only these can be bound by user's input.
  *
  * @author Stephane Nicoll
  */
 public class BasicProjectRequest {
 
 	private List<String> style = new ArrayList<>();
+
 	private List<String> dependencies = new ArrayList<>();
+
 	private String name;
+
 	private String type;
+
 	private String description;
+
 	private String groupId;
+
 	private String artifactId;
+
 	private String version;
+
 	private String bootVersion;
+
 	private String packaging;
+
 	private String applicationName;
+
 	private String language;
+
 	private String packageName;
+
 	private String javaVersion;
 
 	// The base directory to create in the archive - no baseDir by default

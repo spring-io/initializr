@@ -47,11 +47,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PomAssert {
 
 	private final XpathEngine eng;
+
 	private final Document doc;
+
 	private final ParentPom parentPom;
+
 	private final Map<String, String> properties = new LinkedHashMap<>();
+
 	private final Map<String, Dependency> dependencies = new LinkedHashMap<>();
+
 	private final Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
+
 	private final Map<String, Repository> repositories = new LinkedHashMap<>();
 
 	public PomAssert(String content) {
@@ -129,8 +135,7 @@ public class PomAssert {
 
 	public PomAssert hasName(String name) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("name"), doc))
-					.isEqualTo(name);
+			assertThat(eng.evaluate(createRootNodeXPath("name"), doc)).isEqualTo(name);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -392,11 +397,8 @@ public class PomAssert {
 	private void parseBoms() {
 		NodeList nodes;
 		try {
-			nodes = eng
-					.getMatchingNodes(
-							createRootNodeXPath(
-									"dependencyManagement/pom:dependencies/pom:dependency"),
-							doc);
+			nodes = eng.getMatchingNodes(createRootNodeXPath(
+					"dependencyManagement/pom:dependencies/pom:dependency"), doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);

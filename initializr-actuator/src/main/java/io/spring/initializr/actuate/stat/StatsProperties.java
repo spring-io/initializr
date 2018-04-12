@@ -124,7 +124,8 @@ public class StatsProperties {
 				return new URI(string);
 			}
 			catch (URISyntaxException ex) {
-				throw new IllegalStateException("Cannot create entity URL: " + string, ex);
+				throw new IllegalStateException("Cannot create entity URL: " + string,
+						ex);
 			}
 		}
 

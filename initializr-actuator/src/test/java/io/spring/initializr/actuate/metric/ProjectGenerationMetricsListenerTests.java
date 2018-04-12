@@ -38,6 +38,7 @@ public class ProjectGenerationMetricsListenerTests {
 			.addDependencyGroup("core", "web", "security", "spring-data").build();
 
 	private ProjectGenerationMetricsListener listener;
+
 	private MetricsAssert metricsAssert;
 
 	@Before
@@ -224,11 +225,10 @@ public class ProjectGenerationMetricsListenerTests {
 
 		request.resolve(metadata);
 		fireProjectGeneratedEvent(request);
-		metricsAssert.hasValue(1, "initializr.requests",
-				"initializr.dependency.web", "initializr.dependency.security",
-				"initializr.type.gradle-project", "initializr.packaging.jar",
-				"initializr.java_version.1_6", "initializr.language.groovy",
-				"initializr.boot_version.1_0_2_RELEASE",
+		metricsAssert.hasValue(1, "initializr.requests", "initializr.dependency.web",
+				"initializr.dependency.security", "initializr.type.gradle-project",
+				"initializr.packaging.jar", "initializr.java_version.1_6",
+				"initializr.language.groovy", "initializr.boot_version.1_0_2_RELEASE",
 				"initializr.client_id.spring").metricsCount(9);
 	}
 
@@ -238,8 +238,8 @@ public class ProjectGenerationMetricsListenerTests {
 		request.getStyle().addAll(Arrays.asList("security", "spring-data"));
 		request.resolve(metadata);
 		fireProjectGeneratedEvent(request);
-		metricsAssert.hasValue(1, "initializr.requests",
-				"initializr.dependency.security", "initializr.dependency.spring-data");
+		metricsAssert.hasValue(1, "initializr.requests", "initializr.dependency.security",
+				"initializr.dependency.spring-data");
 
 		ProjectRequest anotherRequest = initialize();
 		anotherRequest.getStyle().addAll(Arrays.asList("web", "spring-data"));

@@ -39,8 +39,8 @@ public enum ServiceCapabilityType {
 	SINGLE_SELECT("single-select"),
 
 	/**
-	 * A hierarchical set of values (values in values) with the ability to
-	 * select multiple values.
+	 * A hierarchical set of values (values in values) with the ability to select multiple
+	 * values.
 	 */
 	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
 

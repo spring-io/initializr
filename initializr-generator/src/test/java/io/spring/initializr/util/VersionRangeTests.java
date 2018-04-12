@@ -100,30 +100,34 @@ public class VersionRangeTests {
 
 	@Test
 	public void matchLatestVersion() {
-		assertThat("1.2.8.RELEASE", match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Collections.singletonList(
-						Version.parse("1.2.9.BUILD-SNAPSHOT")))));
+		assertThat("1.2.8.RELEASE",
+				match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
+						new VersionParser(Collections
+								.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	public void matchOverLatestVersion() {
-		assertThat("1.2.10.RELEASE", not(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Collections.singletonList(
-						Version.parse("1.2.9.BUILD-SNAPSHOT"))))));
+		assertThat("1.2.10.RELEASE",
+				not(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
+						new VersionParser(Collections
+								.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT"))))));
 	}
 
 	@Test
 	public void matchAsOfCurrentVersion() {
-		assertThat("1.3.5.RELEASE", match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.3.4.RELEASE"),
-						Version.parse("1.3.6.BUILD-SNAPSHOT")))));
+		assertThat("1.3.5.RELEASE",
+				match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
+						new VersionParser(Arrays.asList(Version.parse("1.3.4.RELEASE"),
+								Version.parse("1.3.6.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	public void matchOverAsOfCurrentVersion() {
-		assertThat("1.3.5.RELEASE", not(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.3.7.RELEASE"),
-						Version.parse("1.3.6.BUILD-SNAPSHOT"))))));
+		assertThat("1.3.5.RELEASE",
+				not(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
+						new VersionParser(Arrays.asList(Version.parse("1.3.7.RELEASE"),
+								Version.parse("1.3.6.BUILD-SNAPSHOT"))))));
 	}
 
 	private static VersionRangeMatcher match(String range) {
@@ -134,10 +138,10 @@ public class VersionRangeTests {
 		return new VersionRangeMatcher(range, parser);
 	}
 
-
 	static class VersionRangeMatcher extends BaseMatcher<String> {
 
 		private final VersionRange range;
+
 		private final VersionParser parser;
 
 		VersionRangeMatcher(String text, VersionParser parser) {
@@ -157,6 +161,7 @@ public class VersionRangeTests {
 		public void describeTo(Description description) {
 			description.appendText(range.toString());
 		}
+
 	}
 
 }

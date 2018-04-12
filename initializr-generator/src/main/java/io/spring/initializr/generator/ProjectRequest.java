@@ -59,6 +59,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	private final BuildProperties buildProperties = new BuildProperties();
 
 	private List<String> facets = new ArrayList<>();
+
 	private String build;
 
 	public List<Dependency> getResolvedDependencies() {
@@ -214,8 +215,8 @@ public class ProjectRequest extends BasicProjectRequest {
 					.getRepositories().get("spring-milestones"));
 		}
 		boms.values().forEach(it -> it.getRepositories().forEach(key -> {
-			repositories.computeIfAbsent(key, s -> metadata.getConfiguration()
-					.getEnv().getRepositories().get(s));
+			repositories.computeIfAbsent(key,
+					s -> metadata.getConfiguration().getEnv().getRepositories().get(s));
 		}));
 	}
 
@@ -245,8 +246,8 @@ public class ProjectRequest extends BasicProjectRequest {
 	private void resolveBom(InitializrMetadata metadata, String bomId,
 			Version requestedVersion) {
 		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(bomId)
-					.resolve(requestedVersion);
+			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms()
+					.get(bomId).resolve(requestedVersion);
 			bom.getAdditionalBoms()
 					.forEach(id -> resolveBom(metadata, id, requestedVersion));
 			boms.put(bomId, bom);
@@ -303,12 +304,10 @@ public class ProjectRequest extends BasicProjectRequest {
 	public String toString() {
 		return "ProjectRequest [" + "parameters=" + parameters + ", "
 				+ (resolvedDependencies != null
-				? "resolvedDependencies=" + resolvedDependencies + ", "
-				: "")
-				+ "boms=" + boms + ", " + "repositories="
-				+ repositories + ", " + "buildProperties="
-				+ buildProperties + ", " + (facets != null
-				? "facets=" + facets + ", " : "")
+						? "resolvedDependencies=" + resolvedDependencies + ", " : "")
+				+ "boms=" + boms + ", " + "repositories=" + repositories + ", "
+				+ "buildProperties=" + buildProperties + ", "
+				+ (facets != null ? "facets=" + facets + ", " : "")
 				+ (build != null ? "build=" + build : "") + "]";
 	}
 

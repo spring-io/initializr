@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @author Andy Wilkinson
  * @author Jeremy Rickard
  */
-//Copied from RestDocs to make it visible
+// Copied from RestDocs to make it visible
 final class JsonFieldPath {
 
 	private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern

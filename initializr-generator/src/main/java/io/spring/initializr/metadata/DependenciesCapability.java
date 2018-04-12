@@ -87,8 +87,7 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 		indexedDependencies.clear();
 		content.forEach(group -> group.content.forEach(dependency -> {
 			// Apply defaults
-			if (dependency.getVersionRange() == null
-					&& group.getVersionRange() != null) {
+			if (dependency.getVersionRange() == null && group.getVersionRange() != null) {
 				dependency.setVersionRange(group.getVersionRange());
 			}
 			if (dependency.getBom() == null && group.getBom() != null) {

@@ -28,8 +28,8 @@ import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.util.ObjectUtils;
 
 /**
- * An {@link InfoContributor} that exposes the actual ranges used by dependencies
- * defined in the project that have an explicit version (i.e. not relying on a bom).
+ * An {@link InfoContributor} that exposes the actual ranges used by dependencies defined
+ * in the project that have an explicit version (i.e. not relying on a bom).
  *
  * @author Stephane Nicoll
  */
@@ -55,8 +55,8 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 					});
 					if (!dep.isEmpty()) {
 						if (d.getRange() == null) {
-							boolean openRange = dep.values().stream().anyMatch(
-									v -> v.getHigherVersion() == null);
+							boolean openRange = dep.values().stream()
+									.anyMatch(v -> v.getHigherVersion() == null);
 							if (!openRange) {
 								Version higher = null;
 								for (VersionRange versionRange : dep.values()) {
@@ -67,7 +67,8 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 									else if (candidate.compareTo(higher) > 0) {
 										higher = candidate;
 									}
-								} ;
+								}
+								;
 								dep.put("managed", new VersionRange(higher));
 							}
 						}

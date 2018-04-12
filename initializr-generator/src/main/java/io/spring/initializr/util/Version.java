@@ -25,31 +25,32 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 /**
- * Define the version number of a module. A typical version is represented
- * as {@code MAJOR.MINOR.PATCH.QUALIFIER} where the qualifier can have an
- * extra version.
+ * Define the version number of a module. A typical version is represented as
+ * {@code MAJOR.MINOR.PATCH.QUALIFIER} where the qualifier can have an extra version.
  * <p>
- * For example: {@code 1.2.0.RC1} is the first release candidate of 1.2.0
- * and {@code 1.5.0.M4} is the fourth milestone of 1.5.0. The special
- * {@code RELEASE} qualifier indicates a final release (a.k.a. GA)
+ * For example: {@code 1.2.0.RC1} is the first release candidate of 1.2.0 and
+ * {@code 1.5.0.M4} is the fourth milestone of 1.5.0. The special {@code RELEASE}
+ * qualifier indicates a final release (a.k.a. GA)
  * <p>
- * The main purpose of parsing a version is to compare it with another
- * version, see {@link Comparable}.
+ * The main purpose of parsing a version is to compare it with another version, see
+ * {@link Comparable}.
  *
  * @author Stephane Nicoll
  */
 @SuppressWarnings("serial")
 public final class Version implements Serializable, Comparable<Version> {
 
-	private static final VersionQualifierComparator qualifierComparator =
-			new VersionQualifierComparator();
+	private static final VersionQualifierComparator qualifierComparator = new VersionQualifierComparator();
 
-	private static final VersionParser parser =
-			new VersionParser(Collections.emptyList());
+	private static final VersionParser parser = new VersionParser(
+			Collections.emptyList());
 
 	private final Integer major;
+
 	private final Integer minor;
+
 	private final Integer patch;
+
 	private final Qualifier qualifier;
 
 	// For Jackson
@@ -83,9 +84,11 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return major + "." + minor + "." + patch +
-				(qualifier != null ? "." + qualifier.qualifier +
-						(qualifier.version != null ? qualifier.version : "") : "");
+		return major + "." + minor + "." + patch
+				+ (qualifier != null
+						? "." + qualifier.qualifier
+								+ (qualifier.version != null ? qualifier.version : "")
+						: "");
 	}
 
 	/**
@@ -150,6 +153,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		private String qualifier;
+
 		private Integer version;
 
 		public String getQualifier() {
@@ -207,8 +211,8 @@ public final class Version implements Serializable, Comparable<Version> {
 				return false;
 			return true;
 		}
-	}
 
+	}
 
 	@Override
 	public int hashCode() {
@@ -299,6 +303,7 @@ public final class Version implements Serializable, Comparable<Version> {
 			return StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier)
 					: 0;
 		}
+
 	}
 
 }

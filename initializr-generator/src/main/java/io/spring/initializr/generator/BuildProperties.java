@@ -35,8 +35,8 @@ public class BuildProperties {
 	private final TreeMap<String, Supplier<String>> maven = new TreeMap<>();
 
 	/**
-	 * Gradle-specific build properties, added to the {@code buildscript} section
-	 * of the gradle build.
+	 * Gradle-specific build properties, added to the {@code buildscript} section of the
+	 * gradle build.
 	 */
 	private final TreeMap<String, Supplier<String>> gradle = new TreeMap<>();
 
