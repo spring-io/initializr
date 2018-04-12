@@ -124,6 +124,9 @@ public class InitializrAutoConfiguration {
 		return new DefaultDependencyMetadataProvider();
 	}
 
+	/**
+	 * Initializr web configuration.
+	 */
 	@Configuration
 	@ConditionalOnWebApplication
 	static class InitializrWebConfiguration {
@@ -154,13 +157,16 @@ public class InitializrAutoConfiguration {
 
 	}
 
+	/**
+	 * Initializr cache configuration.
+	 */
 	@Configuration
 	@ConditionalOnClass(javax.cache.CacheManager.class)
 	static class InitializrCacheConfiguration {
 
 		@Bean
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
-			return cm -> {
+			return (cm) -> {
 				cm.createCache("initializr.metadata", config().setExpiryPolicyFactory(
 						CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
 				cm.createCache("initializr.dependency-metadata", config());

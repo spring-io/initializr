@@ -43,6 +43,7 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 
 	/**
 	 * Return a camel cased representation of this instance.
+	 * @return the property in camel case format
 	 */
 	public String toCamelCaseFormat() {
 		String[] tokens = this.property.split("\\-|\\.");

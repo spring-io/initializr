@@ -79,7 +79,7 @@ public class InitializrStatsAutoConfigurationTests {
 
 		@Bean
 		public RestTemplateCustomizer testRestTemplateCustomizer() {
-			return b -> b.setErrorHandler(errorHandler);
+			return (b) -> b.setErrorHandler(errorHandler);
 		}
 
 	}

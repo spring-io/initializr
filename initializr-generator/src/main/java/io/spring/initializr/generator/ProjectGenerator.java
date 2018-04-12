@@ -142,6 +142,8 @@ public class ProjectGenerator {
 
 	/**
 	 * Generate a Maven pom for the specified {@link ProjectRequest}.
+	 * @param request the project request
+	 * @return the Maven POM
 	 */
 	public byte[] generateMavenPom(ProjectRequest request) {
 		try {
@@ -162,6 +164,8 @@ public class ProjectGenerator {
 
 	/**
 	 * Generate a Gradle build file for the specified {@link ProjectRequest}.
+	 * @param request the project request
+	 * @return the gradle build
 	 */
 	public byte[] generateGradleBuild(ProjectRequest request) {
 		try {
@@ -184,6 +188,8 @@ public class ProjectGenerator {
 	/**
 	 * Generate a project structure for the specified {@link ProjectRequest}. Returns a
 	 * directory containing the project.
+	 * @param request the project request
+	 * @return the generated project structure
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
 		try {
@@ -201,6 +207,9 @@ public class ProjectGenerator {
 	/**
 	 * Generate a project structure for the specified {@link ProjectRequest} and resolved
 	 * model.
+	 * @param request the project request
+	 * @param model the source model
+	 * @return the generated project structure
 	 */
 	protected File generateProjectStructure(ProjectRequest request,
 			Map<String, Object> model) {
@@ -268,7 +277,10 @@ public class ProjectGenerator {
 
 	/**
 	 * Create a distribution file for the specified project structure directory and
-	 * extension
+	 * extension.
+	 * @param dir the directory
+	 * @param extension the file extension
+	 * @return the distribution file
 	 */
 	public File createDistributionFile(File dir, String extension) {
 		File download = new File(getTemporaryDirectory(), dir.getName() + extension);
@@ -286,6 +298,7 @@ public class ProjectGenerator {
 
 	/**
 	 * Clean all the temporary files that are related to this root directory.
+	 * @param dir the directory to clean
 	 * @see #createDistributionFile
 	 */
 	public void cleanTempFiles(File dir) {
@@ -313,7 +326,7 @@ public class ProjectGenerator {
 	}
 
 	/**
-	 * Generate a {@code .gitignore} file for the specified {@link ProjectRequest}
+	 * Generate a {@code .gitignore} file for the specified {@link ProjectRequest}.
 	 * @param dir the root directory of the project
 	 * @param request the request to handle
 	 */
@@ -331,7 +344,7 @@ public class ProjectGenerator {
 
 	/**
 	 * Resolve the specified {@link ProjectRequest} and return the model to use to
-	 * generate the project
+	 * generate the project.
 	 * @param originalRequest the request to handle
 	 * @return a model for that request
 	 */
@@ -399,7 +412,7 @@ public class ProjectGenerator {
 		request.getBoms().forEach((k, v) -> {
 			if (v.getVersionProperty() != null) {
 				request.getBuildProperties().getVersions()
-						.computeIfAbsent(v.getVersionProperty(), key -> v::getVersion);
+						.computeIfAbsent(v.getVersionProperty(), (key) -> v::getVersion);
 			}
 		});
 
@@ -470,7 +483,7 @@ public class ProjectGenerator {
 	private List<Map<String, String>> buildResolvedBoms(ProjectRequest request) {
 		return request.getBoms().values().stream()
 				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
-				.map(bom -> toBomModel(request, bom)).collect(Collectors.toList());
+				.map((bom) -> toBomModel(request, bom)).collect(Collectors.toList());
 	}
 
 	private Map<String, String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
@@ -684,12 +697,12 @@ public class ProjectGenerator {
 	}
 
 	private void addTempFile(String group, File file) {
-		this.temporaryFiles.computeIfAbsent(group, key -> new ArrayList<>()).add(file);
+		this.temporaryFiles.computeIfAbsent(group, (key) -> new ArrayList<>()).add(file);
 	}
 
 	private static List<Dependency> filterDependencies(List<Dependency> dependencies,
 			String scope) {
-		return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
+		return dependencies.stream().filter((dep) -> scope.equals(dep.getScope()))
 				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
 	}
 
@@ -729,7 +742,7 @@ public class ProjectGenerator {
 
 		private boolean finalCarriageReturn;
 
-		public Imports(String language) {
+		Imports(String language) {
 			this.language = language;
 		}
 

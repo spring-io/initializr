@@ -147,7 +147,7 @@ public class Link {
 	 */
 	public URI expand(Map<String, String> parameters) {
 		AtomicReference<String> result = new AtomicReference<>(this.href);
-		this.templateVariables.forEach(var -> {
+		this.templateVariables.forEach((var) -> {
 			Object value = parameters.get(var);
 			if (value == null) {
 				throw new IllegalArgumentException("Could not expand " + this.href

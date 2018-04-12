@@ -27,7 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stephane Nicoll
@@ -66,8 +65,7 @@ public class MainControllerEnvIntegrationTests
 	@Test
 	public void googleAnalytics() {
 		String body = htmlHome();
-		assertTrue("google tag manager should be enabled",
-				body.contains("https://www.googletagmanager.com/gtm.js"));
+		assertThat(body).contains("https://www.googletagmanager.com/gtm.js");
 	}
 
 }

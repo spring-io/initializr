@@ -35,6 +35,7 @@ import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
+import io.spring.initializr.util.Agent.AgentId;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
@@ -65,10 +66,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
-import static io.spring.initializr.util.Agent.AgentId.CURL;
-import static io.spring.initializr.util.Agent.AgentId.HTTPIE;
-import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI;
-
 /**
  * The main initializr controller provides access to the configured metadata and serves as
  * a central endpoint to generate projects or build files.
@@ -81,6 +78,9 @@ public class MainController extends AbstractInitializrController {
 
 	private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
+	/**
+	 * HAL JSON content type.
+	 */
 	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
 			.parseMediaType("application/hal+json");
 
@@ -130,17 +130,17 @@ public class MainController extends AbstractInitializrController {
 		if (userAgent != null) {
 			Agent agent = Agent.fromUserAgent(userAgent);
 			if (agent != null) {
-				if (CURL.equals(agent.getId())) {
+				if (AgentId.CURL.equals(agent.getId())) {
 					String content = this.commandLineHelpGenerator
 							.generateCurlCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
-				if (HTTPIE.equals(agent.getId())) {
+				if (AgentId.HTTPIE.equals(agent.getId())) {
 					String content = this.commandLineHelpGenerator
 							.generateHttpieCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
-				if (SPRING_BOOT_CLI.equals(agent.getId())) {
+				if (AgentId.SPRING_BOOT_CLI.equals(agent.getId())) {
 					String content = this.commandLineHelpGenerator
 							.generateSpringBootCliCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);

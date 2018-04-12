@@ -88,6 +88,7 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	/**
 	 * Return the additional parameters that can be used to further identify the request.
+	 * @return the parameters
 	 */
 	public Map<String, Object> getParameters() {
 		return this.parameters;
@@ -103,6 +104,7 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	/**
 	 * Return the build properties.
+	 * @return the build properties
 	 */
 	public BuildProperties getBuildProperties() {
 		return this.buildProperties;
@@ -111,6 +113,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * Initializes this instance with the defaults defined in the specified
 	 * {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	public void initialize(InitializrMetadata metadata) {
 		BeanWrapperImpl bean = new BeanWrapperImpl(this);
@@ -126,14 +129,15 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
-	 * Resolve this instance against the specified {@link InitializrMetadata}
+	 * Resolve this instance against the specified {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	public void resolve(InitializrMetadata metadata) {
 		List<String> depIds = !getStyle().isEmpty() ? getStyle() : getDependencies();
 		String actualBootVersion = getBootVersion() != null ? getBootVersion()
 				: metadata.getBootVersions().getDefault().getId();
 		Version requestedVersion = Version.parse(actualBootVersion);
-		this.resolvedDependencies = depIds.stream().map(it -> {
+		this.resolvedDependencies = depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
 			if (dependency == null) {
 				throw new InvalidProjectRequestException(
@@ -141,8 +145,8 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 			return dependency.resolve(requestedVersion);
 		}).collect(Collectors.toList());
-		this.resolvedDependencies.forEach(it -> {
-			it.getFacets().forEach(facet -> {
+		this.resolvedDependencies.forEach((it) -> {
+			it.getFacets().forEach((facet) -> {
 				if (!this.facets.contains(facet)) {
 					this.facets.add(facet);
 				}
@@ -157,7 +161,7 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 			if (it.getRepository() != null) {
 				String repositoryId = it.getRepository();
-				this.repositories.computeIfAbsent(repositoryId, s -> metadata
+				this.repositories.computeIfAbsent(repositoryId, (s) -> metadata
 						.getConfiguration().getEnv().getRepositories().get(s));
 			}
 		});
@@ -205,6 +209,8 @@ public class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * Set the repositories that this instance should use based on the
 	 * {@link InitializrMetadata} and the requested Spring Boot {@link Version}.
+	 * @param metadata the initializr metadata
+	 * @param requestedVersion the requested version
 	 */
 	protected void initializeRepositories(InitializrMetadata metadata,
 			Version requestedVersion) {
@@ -214,9 +220,9 @@ public class ProjectRequest extends BasicProjectRequest {
 			this.repositories.put("spring-milestones", metadata.getConfiguration()
 					.getEnv().getRepositories().get("spring-milestones"));
 		}
-		this.boms.values().forEach(it -> it.getRepositories().forEach(key -> {
+		this.boms.values().forEach((it) -> it.getRepositories().forEach((key) -> {
 			this.repositories.computeIfAbsent(key,
-					s -> metadata.getConfiguration().getEnv().getRepositories().get(s));
+					(s) -> metadata.getConfiguration().getEnv().getRepositories().get(s));
 		}));
 	}
 
@@ -252,7 +258,7 @@ public class ProjectRequest extends BasicProjectRequest {
 			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms()
 					.get(bomId).resolve(requestedVersion);
 			bom.getAdditionalBoms()
-					.forEach(id -> resolveBom(metadata, id, requestedVersion));
+					.forEach((id) -> resolveBom(metadata, id, requestedVersion));
 			this.boms.put(bomId, bom);
 		}
 	}
@@ -260,6 +266,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * Update this request once it has been resolved with the specified
 	 * {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	protected void afterResolution(InitializrMetadata metadata) {
 		if ("war".equals(getPackaging())) {
@@ -280,7 +287,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
-	 * Add a default dependency if the project does not define any dependency
+	 * Add a default dependency if the project does not define any dependency.
 	 */
 	protected void addDefaultDependency() {
 		Dependency root = new Dependency();
@@ -291,13 +298,16 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	/**
 	 * Specify if this request has the web facet enabled.
+	 * @return {@code true} if the project has the web facet
 	 */
 	public boolean hasWebFacet() {
 		return hasFacet("web");
 	}
 
 	/**
-	 * Specify if this request has the specified facet enabled
+	 * Specify if this request has the specified facet enabled.
+	 * @param facet the facet to check
+	 * @return {@code true} if the project has the facet
 	 */
 	public boolean hasFacet(String facet) {
 		return this.facets.contains(facet);

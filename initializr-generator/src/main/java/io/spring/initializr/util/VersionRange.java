@@ -36,13 +36,13 @@ import org.springframework.util.Assert;
  */
 public class VersionRange {
 
-	final Version lowerVersion;
+	private final Version lowerVersion;
 
-	final boolean lowerInclusive;
+	private final boolean lowerInclusive;
 
-	final Version higherVersion;
+	private final Version higherVersion;
 
-	final boolean higherInclusive;
+	private final boolean higherInclusive;
 
 	// For Jackson
 	@SuppressWarnings("unused")
@@ -65,22 +65,24 @@ public class VersionRange {
 	/**
 	 * Specify if the {@link Version} matches this range. Returns {@code true} if the
 	 * version is contained within this range, {@code false} otherwise.
+	 * @param version the version to check
+	 * @return {@code true} if the version matches
 	 */
 	public boolean match(Version version) {
 		Assert.notNull(version, "Version must not be null");
-		int lower = lowerVersion.compareTo(version);
+		int lower = this.lowerVersion.compareTo(version);
 		if (lower > 0) {
 			return false;
 		}
-		else if (!lowerInclusive && lower == 0) {
+		else if (!this.lowerInclusive && lower == 0) {
 			return false;
 		}
-		if (higherVersion != null) {
-			int higher = higherVersion.compareTo(version);
+		if (this.higherVersion != null) {
+			int higher = this.higherVersion.compareTo(version);
 			if (higher < 0) {
 				return false;
 			}
-			else if (!higherInclusive && higher == 0) {
+			else if (!this.higherInclusive && higher == 0) {
 				return false;
 			}
 		}
@@ -88,29 +90,30 @@ public class VersionRange {
 	}
 
 	public Version getLowerVersion() {
-		return lowerVersion;
+		return this.lowerVersion;
 	}
 
 	public boolean isLowerInclusive() {
-		return lowerInclusive;
+		return this.lowerInclusive;
 	}
 
 	public Version getHigherVersion() {
-		return higherVersion;
+		return this.higherVersion;
 	}
 
 	public boolean isHigherInclusive() {
-		return higherInclusive;
+		return this.higherInclusive;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		if (lowerVersion != null) {
-			sb.append(lowerInclusive ? ">=" : ">").append(lowerVersion);
+		if (this.lowerVersion != null) {
+			sb.append(this.lowerInclusive ? ">=" : ">").append(this.lowerVersion);
 		}
-		if (higherVersion != null) {
-			sb.append(" and ").append(higherInclusive ? "<=" : "<").append(higherVersion);
+		if (this.higherVersion != null) {
+			sb.append(" and ").append(this.higherInclusive ? "<=" : "<")
+					.append(this.higherVersion);
 		}
 		return sb.toString();
 	}
@@ -119,11 +122,12 @@ public class VersionRange {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (higherInclusive ? 1231 : 1237);
+		result = prime * result + (this.higherInclusive ? 1231 : 1237);
 		result = prime * result
-				+ ((higherVersion == null) ? 0 : higherVersion.hashCode());
-		result = prime * result + (lowerInclusive ? 1231 : 1237);
-		result = prime * result + ((lowerVersion == null) ? 0 : lowerVersion.hashCode());
+				+ ((this.higherVersion == null) ? 0 : this.higherVersion.hashCode());
+		result = prime * result + (this.lowerInclusive ? 1231 : 1237);
+		result = prime * result
+				+ ((this.lowerVersion == null) ? 0 : this.lowerVersion.hashCode());
 		return result;
 	}
 
@@ -139,26 +143,26 @@ public class VersionRange {
 			return false;
 		}
 		VersionRange other = (VersionRange) obj;
-		if (higherInclusive != other.higherInclusive) {
+		if (this.higherInclusive != other.higherInclusive) {
 			return false;
 		}
-		if (higherVersion == null) {
+		if (this.higherVersion == null) {
 			if (other.higherVersion != null) {
 				return false;
 			}
 		}
-		else if (!higherVersion.equals(other.higherVersion)) {
+		else if (!this.higherVersion.equals(other.higherVersion)) {
 			return false;
 		}
-		if (lowerInclusive != other.lowerInclusive) {
+		if (this.lowerInclusive != other.lowerInclusive) {
 			return false;
 		}
-		if (lowerVersion == null) {
+		if (this.lowerVersion == null) {
 			if (other.lowerVersion != null) {
 				return false;
 			}
 		}
-		else if (!lowerVersion.equals(other.lowerVersion)) {
+		else if (!this.lowerVersion.equals(other.lowerVersion)) {
 			return false;
 		}
 		return true;

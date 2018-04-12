@@ -129,7 +129,7 @@ public class InitializrMetadata {
 	}
 
 	/**
-	 * Merge this instance with the specified argument
+	 * Merge this instance with the specified argument.
 	 * @param other the other instance
 	 */
 	public void merge(InitializrMetadata other) {
@@ -215,17 +215,19 @@ public class InitializrMetadata {
 		this.bootVersions.getContent().clear();
 		this.bootVersions.getContent().addAll(versionsMetadata);
 		List<Version> bootVersions = this.bootVersions.getContent().stream()
-				.map(it -> Version.parse(it.getId())).collect(Collectors.toList());
+				.map((it) -> Version.parse(it.getId())).collect(Collectors.toList());
 		VersionParser parser = new VersionParser(bootVersions);
 		this.dependencies.updateVersionRange(parser);
 		this.configuration.getEnv().getBoms().values()
-				.forEach(it -> it.updateVersionRange(parser));
+				.forEach((it) -> it.updateVersionRange(parser));
 		this.configuration.getEnv().getKotlin().updateVersionRange(parser);
 	}
 
 	/**
 	 * Create an URL suitable to download Spring Boot cli for the specified version and
 	 * extension.
+	 * @param extension the required extension
+	 * @return the download URL
 	 */
 	public String createCliDistributionURl(String extension) {
 		String bootVersion = defaultId(this.bootVersions);
@@ -236,6 +238,9 @@ public class InitializrMetadata {
 
 	/**
 	 * Create a {@link BillOfMaterials} for the spring boot BOM.
+	 * @param bootVersion the Spring Boot version
+	 * @param versionProperty the property that contains the version
+	 * @return a new {@link BillOfMaterials} instance
 	 */
 	public BillOfMaterials createSpringBootBom(String bootVersion,
 			String versionProperty) {
@@ -248,6 +253,7 @@ public class InitializrMetadata {
 
 	/**
 	 * Return the defaults for the capabilities defined on this instance.
+	 * @return the default capabilities
 	 */
 	public Map<String, Object> defaults() {
 		Map<String, Object> defaults = new LinkedHashMap<>();

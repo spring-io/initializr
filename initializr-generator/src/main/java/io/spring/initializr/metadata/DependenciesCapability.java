@@ -52,13 +52,16 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	/**
 	 * Return the {@link Dependency} with the specified id or {@code null} if no such
 	 * dependency exists.
+	 * @param id the ID of the dependency
+	 * @return the dependency or {@code null}
 	 */
 	public Dependency get(String id) {
 		return this.indexedDependencies.get(id);
 	}
 
 	/**
-	 * Return all dependencies as a flat collection
+	 * Return all dependencies as a flat collection.
+	 * @return all dependencies
 	 */
 	public Collection<Dependency> getAll() {
 		return Collections.unmodifiableCollection(this.indexedDependencies.values());
@@ -70,13 +73,13 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 
 	public void updateVersionRange(VersionParser versionParser) {
 		this.indexedDependencies.values()
-				.forEach(it -> it.updateVersionRanges(versionParser));
+				.forEach((it) -> it.updateVersionRanges(versionParser));
 	}
 
 	@Override
 	public void merge(List<DependencyGroup> otherContent) {
-		otherContent.forEach(group -> {
-			if (this.content.stream().noneMatch(it -> group.getName() != null
+		otherContent.forEach((group) -> {
+			if (this.content.stream().noneMatch((it) -> group.getName() != null
 					&& group.getName().equals(it.getName()))) {
 				this.content.add(group);
 			}
@@ -86,7 +89,7 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 
 	private void index() {
 		this.indexedDependencies.clear();
-		this.content.forEach(group -> group.content.forEach(dependency -> {
+		this.content.forEach((group) -> group.content.forEach((dependency) -> {
 			// Apply defaults
 			if (dependency.getVersionRange() == null && group.getVersionRange() != null) {
 				dependency.setVersionRange(group.getVersionRange());

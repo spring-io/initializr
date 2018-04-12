@@ -103,7 +103,7 @@ public class ProjectRequestDocumentFactory {
 		List<String> dependencies = new ArrayList<>();
 		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
-		dependencies.forEach(id -> {
+		dependencies.forEach((id) -> {
 			if (metadata.getDependencies().get(id) != null) {
 				document.getDependencies().add(id);
 			}

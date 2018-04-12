@@ -39,8 +39,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for stats processing.
@@ -88,8 +86,7 @@ public class MainControllerStatsIntegrationTests
 
 		String authorization = content.authorization;
 		assertThat(authorization).as("Authorization header must be set").isNotNull();
-		assertTrue("Wrong value for authorization header",
-				authorization.startsWith("Basic "));
+		assertThat(authorization).startsWith("Basic ");
 		String token = authorization.substring("Basic ".length(), authorization.length());
 		String[] data = new String(Base64Utils.decodeFromString(token)).split(":");
 		assertThat(data[0]).as("Wrong user from " + token).isEqualTo("test-user");
@@ -129,8 +126,9 @@ public class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
-				json.has("requestIpv4"));
+		assertThat(json.has("requestIpv4"))
+				.as("requestIpv4 property should not be set if value is not a valid IPv4")
+				.isFalse();
 	}
 
 	@Test
@@ -142,8 +140,9 @@ public class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertFalse("requestCountry property should not be set if value is set to xx",
-				json.has("requestCountry"));
+		assertThat(json.has("requestCountry"))
+				.as("requestCountry property should not be set if value is set to xx")
+				.isFalse();
 	}
 
 	@Test

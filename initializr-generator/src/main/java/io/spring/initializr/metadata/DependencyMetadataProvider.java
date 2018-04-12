@@ -27,6 +27,9 @@ public interface DependencyMetadataProvider {
 
 	/**
 	 * Return the dependency metadata to use for the specified {@code bootVersion}.
+	 * @param metadata the intializr metadata
+	 * @param bootVersion the Spring Boot version
+	 * @return the dependency metadata
 	 */
 	DependencyMetadata get(InitializrMetadata metadata, Version bootVersion);
 

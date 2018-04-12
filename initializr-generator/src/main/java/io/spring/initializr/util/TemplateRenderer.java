@@ -34,6 +34,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
+ * A template renderer backed by Mustache.
+ *
  * @author Dave Syer
  */
 public class TemplateRenderer {
@@ -46,12 +48,12 @@ public class TemplateRenderer {
 
 	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
 
-	public TemplateRenderer(Compiler mustache) {
-		this.mustache = mustache;
-	}
-
 	public TemplateRenderer() {
 		this(mustacheCompiler());
+	}
+
+	public TemplateRenderer(Compiler mustache) {
+		this.mustache = mustache;
 	}
 
 	public boolean isCache() {
@@ -99,7 +101,7 @@ public class TemplateRenderer {
 		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		String prefix = "classpath:/templates/";
 		Charset charset = Charset.forName("UTF-8");
-		return name -> new InputStreamReader(
+		return (name) -> new InputStreamReader(
 				resourceLoader.getResource(prefix + name).getInputStream(), charset);
 	}
 

@@ -33,14 +33,15 @@ final class JsonFieldProcessor {
 
 	boolean hasField(JsonFieldPath fieldPath, Object payload) {
 		final AtomicReference<Boolean> hasField = new AtomicReference<>(false);
-		traverse(new ProcessingContext(payload, fieldPath), match -> hasField.set(true));
+		traverse(new ProcessingContext(payload, fieldPath),
+				(match) -> hasField.set(true));
 		return hasField.get();
 	}
 
 	Object extract(JsonFieldPath path, Object payload) {
 		final List<Object> matches = new ArrayList<>();
 		traverse(new ProcessingContext(payload, path),
-				match -> matches.add(match.getValue()));
+				(match) -> matches.add(match.getValue()));
 		if (matches.isEmpty()) {
 			throw new IllegalArgumentException("Field does not exist: " + path);
 		}

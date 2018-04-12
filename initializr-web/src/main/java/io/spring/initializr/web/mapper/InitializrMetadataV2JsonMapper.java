@@ -101,7 +101,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 
 	protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {
 		ObjectNode content = nodeFactory.objectNode();
-		types.forEach(it -> content.set(it.getId(), link(appUrl, it)));
+		types.forEach((it) -> content.set(it.getId(), link(appUrl, it)));
 		parent.set("_links", content);
 		return content;
 	}
@@ -176,7 +176,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 			result.put("description", ((Describable) group).getDescription());
 		}
 		ArrayNode items = nodeFactory.arrayNode();
-		group.getContent().forEach(it -> {
+		group.getContent().forEach((it) -> {
 			JsonNode dependency = mapDependency(it);
 			if (dependency != null) {
 				items.add(dependency);

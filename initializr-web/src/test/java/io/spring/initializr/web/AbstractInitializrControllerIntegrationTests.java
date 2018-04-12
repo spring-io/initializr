@@ -60,7 +60,7 @@ public abstract class AbstractInitializrControllerIntegrationTests
 
 		@Bean
 		RestTemplateCustomizer mockMvcCustomizer(BeanFactory beanFactory) {
-			return template -> template.setRequestFactory(
+			return (template) -> template.setRequestFactory(
 					beanFactory.getBean(MockMvcClientHttpRequestFactory.class));
 		}
 

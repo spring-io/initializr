@@ -84,6 +84,7 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
+	 * @return The version of the BOM or {@code null}
 	 */
 	public String getVersion() {
 		return this.version;
@@ -96,7 +97,8 @@ public class BillOfMaterials {
 	/**
 	 * Return the {@link VersionProperty} to use to externalize the version of the BOM.
 	 * When this is set, a version property is automatically added rather than setting the
-	 * version in the bom declaration itself.
+	 * version in the BOM declaration itself.
+	 * @return the version property
 	 */
 	public VersionProperty getVersionProperty() {
 		return this.versionProperty;
@@ -113,7 +115,8 @@ public class BillOfMaterials {
 	/**
 	 * Return the relative order of this BOM where lower values have higher priority. The
 	 * default value is {@code Integer.MAX_VALUE}, indicating lowest priority. The Spring
-	 * Boot dependencies bom has an order of 100.
+	 * Boot dependencies BOM has an order of 100.
+	 * @return the relative order of this BOM
 	 */
 	public Integer getOrder() {
 		return this.order;
@@ -126,6 +129,7 @@ public class BillOfMaterials {
 	/**
 	 * Return the BOM(s) that should be automatically included if this BOM is required.
 	 * Can be {@code null} if it is provided via a mapping.
+	 * @return the additional BOMs
 	 */
 	public List<String> getAdditionalBoms() {
 		return this.additionalBoms;
@@ -138,6 +142,7 @@ public class BillOfMaterials {
 	/**
 	 * Return the repositories that are required if this BOM is required. Can be
 	 * {@code null} if it is provided via a mapping.
+	 * @return the repositories
 	 */
 	public List<String> getRepositories() {
 		return this.repositories;
@@ -160,7 +165,7 @@ public class BillOfMaterials {
 	}
 
 	public void updateVersionRange(VersionParser versionParser) {
-		this.mappings.forEach(it -> {
+		this.mappings.forEach((it) -> {
 			try {
 				it.range = versionParser.parseRange(it.versionRange);
 			}
@@ -175,6 +180,8 @@ public class BillOfMaterials {
 	 * Resolve this instance according to the specified Spring Boot {@link Version}.
 	 * Return a {@link BillOfMaterials} instance that holds the version, repositories and
 	 * additional BOMs to use, if any.
+	 * @param bootVersion the Spring Boot version
+	 * @return the bill of materials
 	 */
 	public BillOfMaterials resolve(Version bootVersion) {
 		if (this.mappings.isEmpty()) {
@@ -213,6 +220,18 @@ public class BillOfMaterials {
 				+ "]";
 	}
 
+	public static BillOfMaterials create(String groupId, String artifactId) {
+		return new BillOfMaterials(groupId, artifactId);
+	}
+
+	public static BillOfMaterials create(String groupId, String artifactId,
+			String version) {
+		return new BillOfMaterials(groupId, artifactId, version);
+	}
+
+	/**
+	 * Mapping information.
+	 */
 	public static class Mapping {
 
 		private String versionRange;
@@ -301,15 +320,6 @@ public class BillOfMaterials {
 					+ (this.range != null ? "range=" + this.range : "") + "]";
 		}
 
-	}
-
-	public static BillOfMaterials create(String groupId, String artifactId) {
-		return new BillOfMaterials(groupId, artifactId);
-	}
-
-	public static BillOfMaterials create(String groupId, String artifactId,
-			String version) {
-		return new BillOfMaterials(groupId, artifactId, version);
 	}
 
 }

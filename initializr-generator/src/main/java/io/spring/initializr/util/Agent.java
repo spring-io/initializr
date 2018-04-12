@@ -32,7 +32,7 @@ public class Agent {
 	private final AgentId id;
 
 	/**
-	 * The version of the agent, if any
+	 * The version of the agent, if any.
 	 */
 	private final String version;
 
@@ -63,22 +63,49 @@ public class Agent {
 	 */
 	public enum AgentId {
 
+		/**
+		 * CURL.
+		 */
 		CURL("curl", "curl"),
 
+		/**
+		 * HTTPie.
+		 */
 		HTTPIE("httpie", "HTTPie"),
 
+		/**
+		 * JBoss Forge.
+		 */
 		JBOSS_FORGE("jbossforge", "SpringBootForgeCli"),
 
+		/**
+		 * The Spring Boot CLI.
+		 */
 		SPRING_BOOT_CLI("spring", "SpringBootCli"),
 
+		/**
+		 * Spring Tools Suite.
+		 */
 		STS("sts", "STS"),
 
+		/**
+		 * IntelliJ IDEA.
+		 */
 		INTELLIJ_IDEA("intellijidea", "IntelliJ IDEA"),
 
+		/**
+		 * Netbeans.
+		 */
 		NETBEANS("netbeans", "NetBeans"),
 
+		/**
+		 * Visual Studio Code.
+		 */
 		VSCODE("vscode", "vscode"),
 
+		/**
+		 * A generic browser.
+		 */
 		BROWSER("browser", "Browser");
 
 		final String id;

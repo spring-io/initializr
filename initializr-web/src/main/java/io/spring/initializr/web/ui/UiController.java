@@ -58,7 +58,7 @@ public class UiController {
 				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
 		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
-		dependencyGroups.forEach(g -> g.getContent().forEach(d -> {
+		dependencyGroups.forEach((g) -> g.getContent().forEach((d) -> {
 			if (v != null && d.getVersionRange() != null) {
 				if (d.match(v)) {
 					content.add(new DependencyItem(g.getName(), d));
@@ -76,7 +76,7 @@ public class UiController {
 	private static String writeDependencies(List<DependencyItem> items) {
 		ObjectNode json = JsonNodeFactory.instance.objectNode();
 		ArrayNode maps = JsonNodeFactory.instance.arrayNode();
-		items.forEach(d -> maps.add(mapDependency(d)));
+		items.forEach((d) -> maps.add(mapDependency(d)));
 		json.set("dependencies", maps);
 		return json.toString();
 	}
@@ -102,6 +102,13 @@ public class UiController {
 		return node;
 	}
 
+	private String createUniqueId(String content) {
+		StringBuilder builder = new StringBuilder();
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8),
+				builder);
+		return builder.toString();
+	}
+
 	private static class DependencyItem {
 
 		private final String group;
@@ -113,13 +120,6 @@ public class UiController {
 			this.dependency = dependency;
 		}
 
-	}
-
-	private String createUniqueId(String content) {
-		StringBuilder builder = new StringBuilder();
-		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8),
-				builder);
-		return builder.toString();
 	}
 
 }

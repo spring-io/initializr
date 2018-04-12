@@ -16,8 +16,17 @@
 
 package io.spring.initializr.metadata;
 
+/**
+ * An item that can describe itself.
+ *
+ * @author Stephane Nicoll
+ */
 public interface Describable {
 
+	/**
+	 * Returns the item description.
+	 * @return the description
+	 */
 	String getDescription();
 
 }

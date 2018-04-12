@@ -26,7 +26,6 @@ import io.spring.initializr.util.Version;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertSame;
 
 /**
  * @author Stephane Nicoll
@@ -101,8 +100,8 @@ public class DefaultDependencyMetadataProviderTests {
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).hasSize(1);
 		assertThat(dependencyMetadata.getBoms()).isEmpty();
-		assertSame(metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"),
-				dependencyMetadata.getRepositories().get("repo-foo"));
+		assertThat(dependencyMetadata.getRepositories().get("repo-foo")).isSameAs(
+				metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"));
 	}
 
 	@Test

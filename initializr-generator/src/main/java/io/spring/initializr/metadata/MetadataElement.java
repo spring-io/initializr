@@ -17,7 +17,7 @@
 package io.spring.initializr.metadata;
 
 /**
- * A basic metadata element
+ * A basic metadata element.
  *
  * @author Stephane Nicoll
  */

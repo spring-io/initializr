@@ -42,6 +42,9 @@ import org.springframework.util.StringUtils;
  */
 public class VersionParser {
 
+	/**
+	 * The default {@link VersionParser}.
+	 */
 	public static final VersionParser DEFAULT = new VersionParser(
 			Collections.emptyList());
 
@@ -144,7 +147,7 @@ public class VersionParser {
 
 	private Version findLatestVersion(Integer major, Integer minor,
 			Version.Qualifier qualifier) {
-		List<Version> matches = this.latestVersions.stream().filter(it -> {
+		List<Version> matches = this.latestVersions.stream().filter((it) -> {
 			if (major != null && !major.equals(it.getMajor())) {
 				return false;
 			}

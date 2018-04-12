@@ -25,10 +25,10 @@ import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Tests for actuator specific features.
@@ -36,7 +36,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info,metrics")
+@SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info,metrics")
 public class ActuatorIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 

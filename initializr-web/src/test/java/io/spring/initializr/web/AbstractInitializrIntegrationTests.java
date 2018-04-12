@@ -62,7 +62,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -100,12 +100,15 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	/**
 	 * Validate the "Content-Type" header of the specified response.
+	 * @param response the response
+	 * @param expected the expected result
 	 */
 	protected void validateContentType(ResponseEntity<String> response,
 			MediaType expected) {
 		MediaType actual = response.getHeaders().getContentType();
-		assertTrue("Non compatible media-type, expected " + expected + ", got " + actual,
-				actual.isCompatibleWith(expected));
+		assertThat(actual.isCompatibleWith(expected))
+				.as("Non compatible media-type, expected " + expected + ", got " + actual)
+				.isTrue();
 	}
 
 	protected JsonNode parseJson(String text) {

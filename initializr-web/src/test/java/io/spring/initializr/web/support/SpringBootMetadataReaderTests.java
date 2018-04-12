@@ -64,7 +64,7 @@ public class SpringBootMetadataReaderTests {
 						.getBootVersions();
 		assertThat(versions).as("spring boot versions should not be null").isNotNull();
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
-		versions.forEach(it -> {
+		versions.forEach((it) -> {
 			assertThat(it.getId()).as("Id must be set").isNotNull();
 			assertThat(it.getName()).as("Name must be set").isNotNull();
 			if (it.isDefault()) {

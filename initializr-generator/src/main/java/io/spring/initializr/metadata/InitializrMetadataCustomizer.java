@@ -26,6 +26,7 @@ public interface InitializrMetadataCustomizer {
 	/**
 	 * Customize the {@link InitializrMetadata}, updating or moving around capabilities
 	 * before they are validated.
+	 * @param metadata the initalizr metadata
 	 */
 	void customize(InitializrMetadata metadata);
 

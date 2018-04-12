@@ -38,6 +38,9 @@ public class StatsProperties {
 		return this.elastic;
 	}
 
+	/**
+	 * Elasicsearch configuration.
+	 */
 	public static final class Elastic {
 
 		/**
@@ -51,7 +54,7 @@ public class StatsProperties {
 		private String username;
 
 		/**
-		 * Elastic service password
+		 * Elastic service password.
 		 */
 		private String password;
 

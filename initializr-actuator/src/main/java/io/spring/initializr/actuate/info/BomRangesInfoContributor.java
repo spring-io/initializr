@@ -45,7 +45,7 @@ public class BomRangesInfoContributor implements InfoContributor {
 				.forEach((k, v) -> {
 					if (v.getMappings() != null && !v.getMappings().isEmpty()) {
 						Map<String, Object> bom = new LinkedHashMap<>();
-						v.getMappings().forEach(it -> {
+						v.getMappings().forEach((it) -> {
 							String requirement = "Spring Boot "
 									+ it.determineVersionRangeRequirement();
 							bom.put(it.getVersion(), requirement);

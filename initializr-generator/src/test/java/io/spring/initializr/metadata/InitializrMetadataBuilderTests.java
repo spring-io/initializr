@@ -193,7 +193,8 @@ public class InitializrMetadataBuilderTests {
 		Dependency dependency = Dependency.withId("com.foo:foo:1.0.0");
 		group.getContent().add(dependency);
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withCustomizer(m -> m.getDependencies().getContent().add(group)).build();
+				.withCustomizer((m) -> m.getDependencies().getContent().add(group))
+				.build();
 		assertThat(metadata.getDependencies().getContent()).hasSize(1);
 		assertThat(metadata.getDependencies().getContent().get(0)).isEqualTo(group);
 	}

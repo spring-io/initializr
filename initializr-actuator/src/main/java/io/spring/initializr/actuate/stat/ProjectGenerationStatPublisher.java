@@ -27,7 +27,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
@@ -86,11 +85,10 @@ public class ProjectGenerationStatPublisher {
 					.post(this.statsProperties.getElastic().getEntityUrl())
 					.contentType(MediaType.APPLICATION_JSON).body(json);
 
-			this.retryTemplate
-					.execute((RetryCallback<Void, RuntimeException>) context -> {
-						this.restTemplate.exchange(request, String.class);
-						return null;
-					});
+			this.retryTemplate.execute((context) -> {
+				this.restTemplate.exchange(request, String.class);
+				return null;
+			});
 		}
 		catch (Exception ex) {
 			log.warn(String.format(

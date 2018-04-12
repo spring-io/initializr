@@ -18,6 +18,7 @@ package io.spring.initializr.metadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -39,18 +40,37 @@ import org.springframework.util.StringUtils;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Dependency extends MetadataElement implements Describable {
 
+	/**
+	 * Compile Scope.
+	 */
 	public static final String SCOPE_COMPILE = "compile";
 
+	/**
+	 * Compile Only Scope.
+	 */
 	public static final String SCOPE_COMPILE_ONLY = "compileOnly";
 
+	/**
+	 * Runtime Scope.
+	 */
 	public static final String SCOPE_RUNTIME = "runtime";
 
+	/**
+	 * Provided Scope.
+	 */
 	public static final String SCOPE_PROVIDED = "provided";
 
+	/**
+	 * Test Scope.
+	 */
 	public static final String SCOPE_TEST = "test";
 
-	public static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
-			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
+	/**
+	 * All scope types.
+	 */
+	public static final List<String> SCOPE_ALL = Collections
+			.unmodifiableList(Arrays.asList(SCOPE_COMPILE, SCOPE_RUNTIME,
+					SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST));
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -134,17 +154,19 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	/**
-	 * Specify if the dependency has its coordinates set, i.e. {@code groupId} and
+	 * Returns if the dependency has its coordinates set, i.e. {@code groupId} and
 	 * {@code artifactId}.
+	 * @return if the dependency has coordinates
 	 */
 	private boolean hasCoordinates() {
 		return this.groupId != null && this.artifactId != null;
 	}
 
 	/**
-	 * Define this dependency as a standard spring boot starter with the specified name
-	 * <p>
+	 * Define this dependency as a standard spring boot starter with the specified name.
 	 * If no name is specified, the root "spring-boot-starter" is assumed.
+	 * @param name the starter name or {@code null}
+	 * @return this instance
 	 */
 	public Dependency asSpringBootStarter(String name) {
 		this.groupId = "org.springframework.boot";
@@ -203,7 +225,7 @@ public class Dependency extends MetadataElement implements Describable {
 						ex);
 			}
 		}
-		this.mappings.forEach(it -> {
+		this.mappings.forEach((it) -> {
 			try {
 				it.range = versionParser.parseRange(it.versionRange);
 			}
@@ -218,6 +240,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 * Resolve this instance according to the specified Spring Boot {@link Version}.
 	 * Return a {@link Dependency} instance that has its state resolved against the
 	 * specified version.
+	 * @param bootVersion the Spring Boot version
+	 * @return this instance
 	 */
 	public Dependency resolve(Version bootVersion) {
 		for (Mapping mapping : this.mappings) {
@@ -239,6 +263,8 @@ public class Dependency extends MetadataElement implements Describable {
 
 	/**
 	 * Specify if this dependency is available for the specified Spring Boot version.
+	 * @param version the version the check
+	 * @return of the version matches
 	 */
 	public boolean match(Version version) {
 		if (this.range != null) {
@@ -248,7 +274,8 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	/**
-	 * Generate an id using the groupId and artifactId
+	 * Generate an id using the groupId and artifactId.
+	 * @return the generated ID
 	 */
 	public String generateId() {
 		if (this.groupId == null || this.artifactId == null) {
@@ -294,6 +321,7 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * Return the default version, can be {@code null} to indicate that the version is
 	 * managed by the project and does not need to be specified.
+	 * @return The default version or {@code null}
 	 */
 	public String getVersion() {
 		return this.version;
@@ -306,6 +334,7 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * Return the type, can be {@code null} to indicate that the default type should be
 	 * used (i.e. {@code jar}).
+	 * @return the type or {@code null}
 	 */
 	public String getType() {
 		return this.type;
@@ -318,6 +347,7 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * Return the dependency mapping if an attribute of the dependency differs according
 	 * to the Spring Boot version. If no mapping matches, default attributes are used.
+	 * @return the dependency mappings
 	 */
 	public List<Mapping> getMappings() {
 		return this.mappings;
@@ -415,6 +445,43 @@ public class Dependency extends MetadataElement implements Describable {
 				+ this.version + '\'' + '}';
 	}
 
+	public static Dependency create(String groupId, String artifactId, String version,
+			String scope) {
+		Dependency dependency = withId(null, groupId, artifactId, version);
+		dependency.setScope(scope);
+		return dependency;
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId,
+			String version, String scope) {
+		Dependency dependency = new Dependency();
+		dependency.setId(id);
+		dependency.groupId = groupId;
+		dependency.artifactId = artifactId;
+		dependency.version = version;
+		dependency.scope = (scope != null ? scope : SCOPE_COMPILE);
+		return dependency;
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId,
+			String version) {
+		return withId(id, groupId, artifactId, version, null);
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId) {
+		return withId(id, groupId, artifactId, null);
+	}
+
+	public static Dependency withId(String id, String scope) {
+		Dependency dependency = withId(id, null, null);
+		dependency.setScope(scope);
+		return dependency;
+	}
+
+	public static Dependency withId(String id) {
+		return withId(id, SCOPE_COMPILE);
+	}
+
 	/**
 	 * Map several attribute of the dependency for a given version range.
 	 */
@@ -489,43 +556,6 @@ public class Dependency extends MetadataElement implements Describable {
 			return mapping;
 		}
 
-	}
-
-	public static Dependency create(String groupId, String artifactId, String version,
-			String scope) {
-		Dependency dependency = withId(null, groupId, artifactId, version);
-		dependency.setScope(scope);
-		return dependency;
-	}
-
-	public static Dependency withId(String id, String groupId, String artifactId,
-			String version, String scope) {
-		Dependency dependency = new Dependency();
-		dependency.setId(id);
-		dependency.groupId = groupId;
-		dependency.artifactId = artifactId;
-		dependency.version = version;
-		dependency.scope = (scope != null ? scope : SCOPE_COMPILE);
-		return dependency;
-	}
-
-	public static Dependency withId(String id, String groupId, String artifactId,
-			String version) {
-		return withId(id, groupId, artifactId, version, null);
-	}
-
-	public static Dependency withId(String id, String groupId, String artifactId) {
-		return withId(id, groupId, artifactId, null);
-	}
-
-	public static Dependency withId(String id, String scope) {
-		Dependency dependency = withId(id, null, null);
-		dependency.setScope(scope);
-		return dependency;
-	}
-
-	public static Dependency withId(String id) {
-		return withId(id, SCOPE_COMPILE);
 	}
 
 }

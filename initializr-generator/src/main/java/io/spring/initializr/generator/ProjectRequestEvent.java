@@ -36,6 +36,7 @@ public abstract class ProjectRequestEvent {
 
 	/**
 	 * Return the {@link ProjectRequest} used to generate the project.
+	 * @return the project request
 	 */
 	public ProjectRequest getProjectRequest() {
 		return this.projectRequest;
@@ -43,6 +44,7 @@ public abstract class ProjectRequestEvent {
 
 	/**
 	 * Return the timestamp at which the request was processed.
+	 * @return the timestamp that the request was processed
 	 */
 	public long getTimestamp() {
 		return this.timestamp;

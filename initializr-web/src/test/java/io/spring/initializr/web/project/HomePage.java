@@ -39,7 +39,7 @@ class HomePage {
 
 	private final WebDriver driver;
 
-	public HomePage(WebDriver driver) {
+	HomePage(WebDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 	}

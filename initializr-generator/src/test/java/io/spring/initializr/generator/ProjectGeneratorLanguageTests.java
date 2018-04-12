@@ -23,9 +23,6 @@ import org.junit.runners.Parameterized;
 
 import org.springframework.core.io.ClassPathResource;
 
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME;
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME;
-
 /**
  * Project generator tests for supported languages.
  *
@@ -58,8 +55,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	public void standardJar() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
-		generateProject(request).isGenericProject(DEFAULT_PACKAGE_NAME,
-				DEFAULT_APPLICATION_NAME, this.language, this.extension);
+		generateProject(request).isGenericProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
+				ProjectAssert.DEFAULT_APPLICATION_NAME, this.language, this.extension);
 	}
 
 	@Test
@@ -67,8 +64,8 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		ProjectRequest request = createProjectRequest("web");
 		request.setLanguage(this.language);
 		request.setPackaging("war");
-		generateProject(request).isGenericWarProject(DEFAULT_PACKAGE_NAME,
-				DEFAULT_APPLICATION_NAME, this.language, this.extension);
+		generateProject(request).isGenericWarProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
+				ProjectAssert.DEFAULT_APPLICATION_NAME, this.language, this.extension);
 	}
 
 	@Test

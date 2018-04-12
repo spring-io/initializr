@@ -153,6 +153,9 @@ public class InitializrProperties extends InitializrConfiguration {
 		return this.packageName;
 	}
 
+	/**
+	 * A simple element from the properties.
+	 */
 	public static class SimpleElement {
 
 		/**

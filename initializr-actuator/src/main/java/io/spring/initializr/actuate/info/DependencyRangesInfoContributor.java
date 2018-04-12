@@ -19,6 +19,7 @@ package io.spring.initializr.actuate.info;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionRange;
@@ -44,52 +45,60 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 	@Override
 	public void contribute(Info.Builder builder) {
 		Map<String, Object> details = new LinkedHashMap<>();
-		this.metadataProvider.get().getDependencies().getAll().forEach(d -> {
+		this.metadataProvider.get().getDependencies().getAll().forEach((d) -> {
 			if (d.getBom() == null) {
-				if (!ObjectUtils.isEmpty(d.getMappings())) {
-					Map<String, VersionRange> dep = new LinkedHashMap<>();
-					d.getMappings().forEach(it -> {
-						if (it.getRange() != null && it.getVersion() != null) {
-							dep.put(it.getVersion(), it.getRange());
-						}
-					});
-					if (!dep.isEmpty()) {
-						if (d.getRange() == null) {
-							boolean openRange = dep.values().stream()
-									.anyMatch(v -> v.getHigherVersion() == null);
-							if (!openRange) {
-								Version higher = null;
-								for (VersionRange versionRange : dep.values()) {
-									Version candidate = versionRange.getHigherVersion();
-									if (higher == null) {
-										higher = candidate;
-									}
-									else if (candidate.compareTo(higher) > 0) {
-										higher = candidate;
-									}
-								}
-								;
-								dep.put("managed", new VersionRange(higher));
-							}
-						}
-						Map<String, Object> depInfo = new LinkedHashMap<>();
-						dep.forEach((k, r) -> {
-							depInfo.put(k, "Spring Boot " + r);
-						});
-						details.put(d.getId(), depInfo);
-					}
-				}
-				else if (d.getVersion() != null && d.getRange() != null) {
-					Map<String, Object> dep = new LinkedHashMap<>();
-					String requirement = "Spring Boot " + d.getRange();
-					dep.put(d.getVersion(), requirement);
-					details.put(d.getId(), dep);
-				}
+				contribute(details, d);
 			}
 		});
 		if (!details.isEmpty()) {
 			builder.withDetail("dependency-ranges", details);
 		}
+	}
+
+	private void contribute(Map<String, Object> details, Dependency d) {
+		if (!ObjectUtils.isEmpty(d.getMappings())) {
+			Map<String, VersionRange> dep = new LinkedHashMap<>();
+			d.getMappings().forEach((it) -> {
+				if (it.getRange() != null && it.getVersion() != null) {
+					dep.put(it.getVersion(), it.getRange());
+				}
+			});
+			if (!dep.isEmpty()) {
+				if (d.getRange() == null) {
+					boolean openRange = dep.values().stream()
+							.anyMatch((v) -> v.getHigherVersion() == null);
+					if (!openRange) {
+						Version higher = getHigher(dep);
+						dep.put("managed", new VersionRange(higher));
+					}
+				}
+				Map<String, Object> depInfo = new LinkedHashMap<>();
+				dep.forEach((k, r) -> {
+					depInfo.put(k, "Spring Boot " + r);
+				});
+				details.put(d.getId(), depInfo);
+			}
+		}
+		else if (d.getVersion() != null && d.getRange() != null) {
+			Map<String, Object> dep = new LinkedHashMap<>();
+			String requirement = "Spring Boot " + d.getRange();
+			dep.put(d.getVersion(), requirement);
+			details.put(d.getId(), dep);
+		}
+	}
+
+	private Version getHigher(Map<String, VersionRange> dep) {
+		Version higher = null;
+		for (VersionRange versionRange : dep.values()) {
+			Version candidate = versionRange.getHigherVersion();
+			if (higher == null) {
+				higher = candidate;
+			}
+			else if (candidate.compareTo(higher) > 0) {
+				higher = candidate;
+			}
+		}
+		return higher;
 	}
 
 }

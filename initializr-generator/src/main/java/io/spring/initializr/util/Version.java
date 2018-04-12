@@ -145,6 +145,68 @@ public final class Version implements Serializable, Comparable<Version> {
 		return firstIndex.compareTo(secondIndex);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
+		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
+		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
+		result = prime * result
+				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Version other = (Version) obj;
+		if (this.major == null) {
+			if (other.major != null) {
+				return false;
+			}
+		}
+		else if (!this.major.equals(other.major)) {
+			return false;
+		}
+		if (this.minor == null) {
+			if (other.minor != null) {
+				return false;
+			}
+		}
+		else if (!this.minor.equals(other.minor)) {
+			return false;
+		}
+		if (this.patch == null) {
+			if (other.patch != null) {
+				return false;
+			}
+		}
+		else if (!this.patch.equals(other.patch)) {
+			return false;
+		}
+		if (this.qualifier == null) {
+			if (other.qualifier != null) {
+				return false;
+			}
+		}
+		else if (!this.qualifier.equals(other.qualifier)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * A version qualifier.
+	 */
 	public static class Qualifier implements Serializable {
 
 		public Qualifier(String qualifier) {
@@ -220,65 +282,6 @@ public final class Version implements Serializable, Comparable<Version> {
 			return true;
 		}
 
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
-		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
-		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
-		result = prime * result
-				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Version other = (Version) obj;
-		if (this.major == null) {
-			if (other.major != null) {
-				return false;
-			}
-		}
-		else if (!this.major.equals(other.major)) {
-			return false;
-		}
-		if (this.minor == null) {
-			if (other.minor != null) {
-				return false;
-			}
-		}
-		else if (!this.minor.equals(other.minor)) {
-			return false;
-		}
-		if (this.patch == null) {
-			if (other.patch != null) {
-				return false;
-			}
-		}
-		else if (!this.patch.equals(other.patch)) {
-			return false;
-		}
-		if (this.qualifier == null) {
-			if (other.qualifier != null) {
-				return false;
-			}
-		}
-		else if (!this.qualifier.equals(other.qualifier)) {
-			return false;
-		}
-		return true;
 	}
 
 	private static class VersionQualifierComparator implements Comparator<Qualifier> {

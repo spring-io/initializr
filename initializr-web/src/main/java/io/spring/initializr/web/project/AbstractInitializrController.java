@@ -35,7 +35,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- * A base controller that uses a {@link InitializrMetadataProvider}
+ * A base controller that uses a {@link InitializrMetadataProvider}.
  *
  * @author Stephane Nicoll
  */
@@ -50,7 +50,7 @@ public abstract class AbstractInitializrController {
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
 			ResourceUrlProvider resourceUrlProvider) {
 		this.metadataProvider = metadataProvider;
-		this.linkTo = link -> {
+		this.linkTo = (link) -> {
 			String result = resourceUrlProvider.getForLookupPath(link);
 			return result == null ? link : result;
 		};
@@ -73,6 +73,7 @@ public abstract class AbstractInitializrController {
 
 	/**
 	 * Render the home page with the specified template.
+	 * @param model the model data
 	 */
 	protected void renderHome(Map<String, Object> model) {
 		InitializrMetadata metadata = this.metadataProvider.get();
@@ -105,13 +106,14 @@ public abstract class AbstractInitializrController {
 		result.setTitle(types.getTitle());
 		result.getContent().addAll(types.getContent());
 		// Only keep project type
-		result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")));
+		result.getContent().removeIf((t) -> !"project".equals(t.getTags().get("format")));
 		return result;
 	}
 
 	/**
 	 * Generate a full URL of the service, mostly for use in templates.
-	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#forceSsl
+	 * @return the app URL
+	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
 	 */
 	protected String generateAppUrl() {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder

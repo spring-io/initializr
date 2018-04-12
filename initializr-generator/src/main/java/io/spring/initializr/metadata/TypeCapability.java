@@ -41,10 +41,12 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 	/**
 	 * Return the {@link Type} with the specified id or {@code null} if no such type
 	 * exists.
+	 * @param id the ID to find
+	 * @return the Type or {@code null}
 	 */
 	public Type get(String id) {
 		return this.content.stream()
-				.filter(it -> id.equals(it.getId()) || id.equals(it.getStsId()))
+				.filter((it) -> id.equals(it.getId()) || id.equals(it.getStsId()))
 				.findFirst().orElse(null);
 	}
 
@@ -59,7 +61,7 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 
 	@Override
 	public void merge(List<Type> otherContent) {
-		otherContent.forEach(it -> {
+		otherContent.forEach((it) -> {
 			if (get(it.getId()) == null) {
 				this.content.add(it);
 			}

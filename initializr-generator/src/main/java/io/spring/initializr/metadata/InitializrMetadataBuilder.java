@@ -35,7 +35,7 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  * @see InitializrMetadataCustomizer
  */
-public class InitializrMetadataBuilder {
+public final class InitializrMetadataBuilder {
 
 	private final List<InitializrMetadataCustomizer> customizers = new ArrayList<>();
 
@@ -46,26 +46,10 @@ public class InitializrMetadataBuilder {
 	}
 
 	/**
-	 * Create a builder instance from the specified {@link InitializrProperties}.
-	 * Initialize the configuration to use.
-	 * @see #withInitializrProperties(InitializrProperties)
-	 */
-	public static InitializrMetadataBuilder fromInitializrProperties(
-			InitializrProperties configuration) {
-		return new InitializrMetadataBuilder(configuration)
-				.withInitializrProperties(configuration);
-	}
-
-	/**
-	 * Create an empty builder instance with a default {@link InitializrConfiguration}
-	 */
-	public static InitializrMetadataBuilder create() {
-		return new InitializrMetadataBuilder(new InitializrConfiguration());
-	}
-
-	/**
 	 * Add a {@link InitializrProperties} to be merged with other content. Merges the
 	 * settings only and not the configuration.
+	 * @param properties the properties to use
+	 * @return this instance
 	 * @see #withInitializrProperties(InitializrProperties, boolean)
 	 */
 	public InitializrMetadataBuilder withInitializrProperties(
@@ -77,6 +61,7 @@ public class InitializrMetadataBuilder {
 	 * Add a {@link InitializrProperties} to be merged with other content.
 	 * @param properties the settings to merge onto this instance
 	 * @param mergeConfiguration specify if service configuration should be merged as well
+	 * @return this instance
 	 */
 	public InitializrMetadataBuilder withInitializrProperties(
 			InitializrProperties properties, boolean mergeConfiguration) {
@@ -89,6 +74,7 @@ public class InitializrMetadataBuilder {
 	/**
 	 * Add a {@link InitializrMetadata} to be merged with other content.
 	 * @param resource a resource to a json document describing the metadata to include
+	 * @return this instance
 	 */
 	public InitializrMetadataBuilder withInitializrMetadata(Resource resource) {
 		return withCustomizer(new ResourceInitializrMetadataCustomizer(resource));
@@ -97,6 +83,8 @@ public class InitializrMetadataBuilder {
 	/**
 	 * Add a {@link InitializrMetadataCustomizer}. customizers are invoked in their order
 	 * of addition.
+	 * @param customizer the customizer to add
+	 * @return this instance
 	 * @see InitializrMetadataCustomizer
 	 */
 	public InitializrMetadataBuilder withCustomizer(
@@ -107,6 +95,7 @@ public class InitializrMetadataBuilder {
 
 	/**
 	 * Build a {@link InitializrMetadata} based on the state of this builder.
+	 * @return a new {@link InitializrMetadata} instance
 	 */
 	public InitializrMetadata build() {
 		InitializrConfiguration config = this.configuration != null ? this.configuration
@@ -121,7 +110,9 @@ public class InitializrMetadataBuilder {
 	}
 
 	/**
-	 * Creates an empty instance based on the specified {@link InitializrConfiguration}
+	 * Creates an empty instance based on the specified {@link InitializrConfiguration}.
+	 * @param configuration the configuration
+	 * @return a new {@link InitializrMetadata} instance
 	 */
 	protected InitializrMetadata createInstance(InitializrConfiguration configuration) {
 		return new InitializrMetadata(configuration);
@@ -129,6 +120,7 @@ public class InitializrMetadataBuilder {
 
 	/**
 	 * Apply defaults to capabilities that have no value.
+	 * @param metadata the initializr metadata
 	 */
 	protected void applyDefaults(InitializrMetadata metadata) {
 		if (!StringUtils.hasText(metadata.getName().getContent())) {
@@ -143,6 +135,27 @@ public class InitializrMetadataBuilder {
 		if (!StringUtils.hasText(metadata.getVersion().getContent())) {
 			metadata.getVersion().setContent("0.0.1-SNAPSHOT");
 		}
+	}
+
+	/**
+	 * Create a builder instance from the specified {@link InitializrProperties}.
+	 * Initialize the configuration to use.
+	 * @param configuration the configuration to use
+	 * @return a new {@link InitializrMetadataBuilder} instance
+	 * @see #withInitializrProperties(InitializrProperties)
+	 */
+	public static InitializrMetadataBuilder fromInitializrProperties(
+			InitializrProperties configuration) {
+		return new InitializrMetadataBuilder(configuration)
+				.withInitializrProperties(configuration);
+	}
+
+	/**
+	 * Create an empty builder instance with a default {@link InitializrConfiguration}.
+	 * @return a new {@link InitializrMetadataBuilder} instance
+	 */
+	public static InitializrMetadataBuilder create() {
+		return new InitializrMetadataBuilder(new InitializrConfiguration());
 	}
 
 	private static class InitializerPropertiesCustomizer

@@ -62,12 +62,14 @@ public class InitializrConfiguration {
 	/**
 	 * Generate a suitable application name based on the specified name. If no suitable
 	 * application name can be generated from the specified {@code name}, the
-	 * {@link Env#fallbackApplicationName} is used instead.
+	 * {@link Env#getFallbackApplicationName()} is used instead.
 	 * <p>
 	 * No suitable application name can be generated if the name is {@code null} or if it
 	 * contains an invalid character for a class identifier.
-	 * @see Env#fallbackApplicationName
-	 * @see Env#invalidApplicationNames
+	 * @param name The the source name
+	 * @return the generated application name
+	 * @see Env#getFallbackApplicationName()
+	 * @see Env#getInvalidApplicationNames()
 	 */
 	public String generateApplicationName(String name) {
 		if (!StringUtils.hasText(name)) {
@@ -96,7 +98,10 @@ public class InitializrConfiguration {
 	 * <p>
 	 * The package name cannot be cleaned if the specified {@code packageName} is
 	 * {@code null} or if it contains an invalid character for a class identifier.
-	 * @see Env#invalidPackageNames
+	 * @param packageName The package name
+	 * @param defaultPackageName the default package name
+	 * @return the cleaned package name
+	 * @see Env#getInvalidPackageNames()
 	 */
 	public String cleanPackageName(String packageName, String defaultPackageName) {
 		if (!StringUtils.hasText(packageName)) {
@@ -133,7 +138,7 @@ public class InitializrConfiguration {
 	private static String splitCamelCase(String text) {
 		return String.join("",
 				Arrays.stream(text.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
-						.map(it -> StringUtils.capitalize(it.toLowerCase()))
+						.map((it) -> StringUtils.capitalize(it.toLowerCase()))
 						.toArray(String[]::new));
 	}
 
@@ -339,6 +344,9 @@ public class InitializrConfiguration {
 			other.repositories.forEach(this.repositories::putIfAbsent);
 		}
 
+		/**
+		 * Gradle details.
+		 */
 		public static class Gradle {
 
 			/**
@@ -361,6 +369,9 @@ public class InitializrConfiguration {
 
 		}
 
+		/**
+		 * Kotlin details.
+		 */
 		public static class Kotlin {
 
 			/**
@@ -405,7 +416,7 @@ public class InitializrConfiguration {
 
 			public void validate() {
 				VersionParser simpleParser = new VersionParser(Collections.emptyList());
-				this.mappings.forEach(m -> {
+				this.mappings.forEach((m) -> {
 					if (m.versionRange == null) {
 						throw new InvalidInitializrMetadataException(
 								"VersionRange is mandatory, invalid version mapping for "
@@ -421,7 +432,7 @@ public class InitializrConfiguration {
 			}
 
 			public void updateVersionRange(VersionParser versionParser) {
-				this.mappings.forEach(it -> {
+				this.mappings.forEach((it) -> {
 					try {
 						it.range = versionParser.parseRange(it.versionRange);
 					}
@@ -478,6 +489,9 @@ public class InitializrConfiguration {
 
 		}
 
+		/**
+		 * Maven details.
+		 */
 		public static class Maven {
 
 			/**
@@ -499,6 +513,8 @@ public class InitializrConfiguration {
 			/**
 			 * Resolve the parent pom to use. If no custom parent pom is set, the standard
 			 * spring boot parent pom with the specified {@code bootVersion} is used.
+			 * @param bootVersion The Spring Boot version
+			 * @return the parent POM
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
 				return StringUtils.hasText(this.parent.groupId) ? this.parent
@@ -506,6 +522,9 @@ public class InitializrConfiguration {
 								"spring-boot-starter-parent", bootVersion);
 			}
 
+			/**
+			 * Parent POM details.
+			 */
 			public static class ParentPom {
 
 				/**

@@ -49,7 +49,7 @@ class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;
 
-	public InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
+	InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
 		this.statsProperties = statsProperties;
 	}
 
