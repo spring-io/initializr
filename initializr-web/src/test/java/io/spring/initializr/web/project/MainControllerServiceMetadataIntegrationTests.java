@@ -34,7 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -53,18 +53,18 @@ public class MainControllerServiceMetadataIntegrationTests
 				.withInitializrMetadata(new UrlResource(createUrl("/metadata/config")))
 				.build();
 		// Basic assertions
-		assertEquals(localMetadata.getDependencies().getContent().size(),
-				metadata.getDependencies().getContent().size());
-		assertEquals(localMetadata.getTypes().getContent().size(),
-				metadata.getTypes().getContent().size());
-		assertEquals(localMetadata.getBootVersions().getContent().size(),
-				metadata.getBootVersions().getContent().size());
-		assertEquals(localMetadata.getPackagings().getContent().size(),
-				metadata.getPackagings().getContent().size());
-		assertEquals(localMetadata.getJavaVersions().getContent().size(),
-				metadata.getJavaVersions().getContent().size());
-		assertEquals(localMetadata.getLanguages().getContent().size(),
-				metadata.getLanguages().getContent().size());
+		assertThat(metadata.getDependencies().getContent())
+				.hasSameSizeAs(localMetadata.getDependencies().getContent());
+		assertThat(metadata.getTypes().getContent())
+				.hasSameSizeAs(localMetadata.getTypes().getContent());
+		assertThat(metadata.getBootVersions().getContent())
+				.hasSameSizeAs(localMetadata.getBootVersions().getContent());
+		assertThat(metadata.getPackagings().getContent())
+				.hasSameSizeAs(localMetadata.getPackagings().getContent());
+		assertThat(metadata.getJavaVersions().getContent())
+				.hasSameSizeAs(localMetadata.getJavaVersions().getContent());
+		assertThat(metadata.getLanguages().getContent())
+				.hasSameSizeAs(localMetadata.getLanguages().getContent());
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class MainControllerServiceMetadataIntegrationTests
 			execute("/metadata/config", String.class, null, "text/plain");
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.NOT_ACCEPTABLE, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 

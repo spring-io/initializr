@@ -18,7 +18,7 @@ package io.spring.initializr.metadata;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -30,7 +30,7 @@ public class TypeTests {
 		Type type = new Type();
 		type.setId("foo");
 		type.setAction("my-action.zip");
-		assertEquals("/my-action.zip", type.getAction());
+		assertThat(type.getAction()).isEqualTo("/my-action.zip");
 	}
 
 }

@@ -27,9 +27,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -42,7 +42,7 @@ public class MainControllerDependenciesTests
 	public void noBootVersion() throws JSONException {
 		ResponseEntity<String> response = execute("/dependencies", String.class, null,
 				"application/json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("1.1.4", response.getBody());
 	}
@@ -52,7 +52,7 @@ public class MainControllerDependenciesTests
 		ResponseEntity<String> response = execute(
 				"/dependencies?bootVersion=1.2.1.RELEASE", String.class, null,
 				"application/json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("1.2.1", response.getBody());
 	}

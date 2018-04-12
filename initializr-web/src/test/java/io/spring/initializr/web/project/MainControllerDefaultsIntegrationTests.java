@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -46,11 +46,12 @@ public class MainControllerDefaultsIntegrationTests
 	@Test
 	public void defaultsAppliedToHome() {
 		String body = htmlHome();
-		assertTrue("custom groupId not found", body.contains("org.foo"));
-		assertTrue("custom artifactId not found", body.contains("foo-bar"));
-		assertTrue("custom name not found", body.contains("FooBar"));
-		assertTrue("custom description not found", body.contains("FooBar Project"));
-		assertTrue("custom package not found", body.contains("org.foo.demo"));
+		assertThat(body.contains("org.foo")).as("custom groupId not found").isTrue();
+		assertThat(body.contains("foo-bar")).as("custom artifactId not found").isTrue();
+		assertThat(body.contains("FooBar")).as("custom name not found").isTrue();
+		assertThat(body.contains("FooBar Project")).as("custom description not found")
+				.isTrue();
+		assertThat(body.contains("org.foo.demo")).as("custom package not found").isTrue();
 	}
 
 }

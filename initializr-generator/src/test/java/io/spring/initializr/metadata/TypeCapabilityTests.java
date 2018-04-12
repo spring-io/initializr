@@ -18,8 +18,7 @@ package io.spring.initializr.metadata;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -29,7 +28,7 @@ public class TypeCapabilityTests {
 	@Test
 	public void defaultEmpty() {
 		TypeCapability capability = new TypeCapability();
-		assertNull(capability.getDefault());
+		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
@@ -43,7 +42,7 @@ public class TypeCapabilityTests {
 		second.setDefault(false);
 		capability.getContent().add(first);
 		capability.getContent().add(second);
-		assertNull(capability.getDefault());
+		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
@@ -57,7 +56,7 @@ public class TypeCapabilityTests {
 		second.setDefault(true);
 		capability.getContent().add(first);
 		capability.getContent().add(second);
-		assertEquals(second, capability.getDefault());
+		assertThat(capability.getDefault()).isEqualTo(second);
 	}
 
 	@Test
@@ -79,10 +78,10 @@ public class TypeCapabilityTests {
 		anotherCapability.getContent().add(second);
 
 		capability.merge(anotherCapability);
-		assertEquals(2, capability.getContent().size());
-		assertEquals(first, capability.get("foo"));
-		assertEquals(second, capability.get("bar"));
-		assertEquals(second, capability.getDefault());
+		assertThat(capability.getContent()).hasSize(2);
+		assertThat(capability.get("foo")).isEqualTo(first);
+		assertThat(capability.get("bar")).isEqualTo(second);
+		assertThat(capability.getDefault()).isEqualTo(second);
 	}
 
 }

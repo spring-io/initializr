@@ -24,8 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Link;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link LinkMapper}.
@@ -39,12 +38,12 @@ public class LinkMapperTests {
 		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com", "some description"));
 		ObjectNode model = LinkMapper.mapLinks(links);
-		assertEquals(1, model.size());
-		assertTrue(model.has("a"));
+		assertThat(model).hasSize(1);
+		assertThat(model.has("a")).isTrue();
 		ObjectNode linkModel = (ObjectNode) model.get("a");
-		assertEquals(2, linkModel.size());
-		assertEquals("https://example.com", linkModel.get("href").textValue());
-		assertEquals("some description", linkModel.get("title").textValue());
+		assertThat(linkModel).hasSize(2);
+		assertThat(linkModel.get("href").textValue()).isEqualTo("https://example.com");
+		assertThat(linkModel.get("title").textValue()).isEqualTo("some description");
 	}
 
 	@Test
@@ -52,13 +51,13 @@ public class LinkMapperTests {
 		List<Link> links = new ArrayList<>();
 		links.add(Link.create("a", "https://example.com/{bootVersion}/a", true));
 		ObjectNode model = LinkMapper.mapLinks(links);
-		assertEquals(1, model.size());
-		assertTrue(model.has("a"));
+		assertThat(model).hasSize(1);
+		assertThat(model.has("a")).isTrue();
 		ObjectNode linkModel = (ObjectNode) model.get("a");
-		assertEquals(2, linkModel.size());
-		assertEquals("https://example.com/{bootVersion}/a",
-				linkModel.get("href").textValue());
-		assertEquals(true, linkModel.get("templated").booleanValue());
+		assertThat(linkModel).hasSize(2);
+		assertThat(linkModel.get("href").textValue())
+				.isEqualTo("https://example.com/{bootVersion}/a");
+		assertThat(linkModel.get("templated").booleanValue()).isEqualTo(true);
 	}
 
 	@Test
@@ -67,12 +66,14 @@ public class LinkMapperTests {
 		links.add(Link.create("a", "https://example.com", "some description"));
 		links.add(Link.create("a", "https://example.com/2"));
 		ObjectNode model = LinkMapper.mapLinks(links);
-		assertEquals(1, model.size());
-		assertTrue(model.has("a"));
+		assertThat(model).hasSize(1);
+		assertThat(model.has("a")).isTrue();
 		ArrayNode linksModel = (ArrayNode) model.get("a");
-		assertEquals(2, linksModel.size());
-		assertEquals("https://example.com", linksModel.get(0).get("href").textValue());
-		assertEquals("https://example.com/2", linksModel.get(1).get("href").textValue());
+		assertThat(linksModel).hasSize(2);
+		assertThat(linksModel.get(0).get("href").textValue())
+				.isEqualTo("https://example.com");
+		assertThat(linksModel.get(1).get("href").textValue())
+				.isEqualTo("https://example.com/2");
 	}
 
 	@Test
@@ -82,7 +83,7 @@ public class LinkMapperTests {
 		links.add(Link.create("second", "https://example.com"));
 		ObjectNode model = LinkMapper.mapLinks(links);
 		String json = model.toString();
-		assertTrue(json.indexOf("first") < json.indexOf("second"));
+		assertThat(json.indexOf("first") < json.indexOf("second")).isTrue();
 	}
 
 	@Test
@@ -93,7 +94,7 @@ public class LinkMapperTests {
 		links.add(Link.create("first", "https://example.com"));
 		ObjectNode model = LinkMapper.mapLinks(links);
 		String json = model.toString();
-		assertTrue(json.indexOf("first") < json.indexOf("second"));
+		assertThat(json.indexOf("first") < json.indexOf("second")).isTrue();
 	}
 
 }

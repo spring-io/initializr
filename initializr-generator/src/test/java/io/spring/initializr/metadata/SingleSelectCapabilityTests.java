@@ -18,8 +18,7 @@ package io.spring.initializr.metadata;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -29,7 +28,7 @@ public class SingleSelectCapabilityTests {
 	@Test
 	public void defaultEmpty() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
-		assertNull(capability.getDefault());
+		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
@@ -37,7 +36,7 @@ public class SingleSelectCapabilityTests {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
 		capability.getContent().add(DefaultMetadataElement.create("bar", false));
-		assertNull(capability.getDefault());
+		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
@@ -46,7 +45,7 @@ public class SingleSelectCapabilityTests {
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
 		DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
 		capability.getContent().add(second);
-		assertEquals(second, capability.getDefault());
+		assertThat(capability.getDefault()).isEqualTo(second);
 	}
 
 	@Test
@@ -60,9 +59,9 @@ public class SingleSelectCapabilityTests {
 		anotherCapability.getContent().add(bar);
 
 		capability.merge(anotherCapability);
-		assertEquals(2, capability.getContent().size());
-		assertEquals(foo, capability.get("foo"));
-		assertEquals(bar, capability.get("bar"));
+		assertThat(capability.getContent()).hasSize(2);
+		assertThat(capability.get("foo")).isEqualTo(foo);
+		assertThat(capability.get("bar")).isEqualTo(bar);
 	}
 
 }

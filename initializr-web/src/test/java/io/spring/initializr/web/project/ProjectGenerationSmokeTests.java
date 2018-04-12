@@ -39,8 +39,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dave Syer
@@ -313,8 +311,8 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void customizationShowsUpInDefaultView() throws Exception {
 		HomePage page = toHome("/#!language=groovy&packageName=com.example.acme");
-		assertEquals("groovy", page.value("language"));
-		assertEquals("com.example.acme", page.value("packageName"));
+		assertThat(page.value("language")).isEqualTo("groovy");
+		assertThat(page.value("packageName")).isEqualTo("com.example.acme");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
 		projectAssert.hasBaseDir("demo").isMavenProject()
@@ -328,14 +326,14 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void customizationsShowsUpWhenViewIsSwitched() throws Exception {
 		HomePage page = toHome("/#!packaging=war&javaVersion=1.7");
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 		page.advanced();
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 		page.simple();
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 	}
 
 	@Test
@@ -376,7 +374,7 @@ public class ProjectGenerationSmokeTests
 
 	private File getArchive(String fileName) {
 		File archive = new File(this.downloadDir, fileName);
-		assertTrue("Expected content with name " + fileName, archive.exists());
+		assertThat(archive.exists()).isTrue();
 		return archive;
 	}
 

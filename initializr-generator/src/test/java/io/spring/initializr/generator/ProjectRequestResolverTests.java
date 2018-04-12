@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import org.springframework.beans.BeanWrapperImpl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link ProjectRequestResolver}.
@@ -38,6 +38,9 @@ import static org.junit.Assert.assertEquals;
  * @author Stephane Nicoll
  */
 public class ProjectRequestResolverTests {
+
+	private static final VersionProperty VERSION_PROPERTY = new VersionProperty(
+			"java.version");
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", "web", "security", "data-jpa").build();
@@ -56,9 +59,9 @@ public class ProjectRequestResolverTests {
 		this.processor.before.put("javaVersion", "1.2");
 		ProjectRequest request = resolve(createMavenProjectRequest(),
 				this.postProcessors);
-		assertEquals("1.2", request.getJavaVersion());
-		assertEquals("1.2", request.getBuildProperties().getVersions()
-				.get(new VersionProperty("java.version")).get());
+		assertThat(request.getJavaVersion()).isEqualTo("1.2");
+		assertThat(request.getBuildProperties().getVersions().get(VERSION_PROPERTY).get())
+				.isEqualTo("1.2");
 	}
 
 	@Test
@@ -73,8 +76,9 @@ public class ProjectRequestResolverTests {
 		});
 		ProjectRequest request = resolve(createMavenProjectRequest(),
 				this.postProcessors);
-		assertEquals(1, request.getBuildProperties().getMaven().size());
-		assertEquals("bar", request.getBuildProperties().getMaven().get("foo").get());
+		assertThat(request.getBuildProperties().getMaven()).hasSize(1);
+		assertThat(request.getBuildProperties().getMaven().get("foo").get())
+				.isEqualTo("bar");
 	}
 
 	ProjectRequest resolve(ProjectRequest request,

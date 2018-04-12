@@ -31,8 +31,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
@@ -62,11 +62,11 @@ public class SpringBootMetadataReaderTests {
 				this.objectMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 						.getBootVersions();
-		assertNotNull("spring boot versions should not be null", versions);
+		assertThat(versions).as("spring boot versions should not be null").isNotNull();
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
 		versions.forEach(it -> {
-			assertNotNull("Id must be set", it.getId());
-			assertNotNull("Name must be set", it.getName());
+			assertThat(it.getId()).as("Id must be set").isNotNull();
+			assertThat(it.getName()).as("Name must be set").isNotNull();
 			if (it.isDefault()) {
 				if (defaultFound.get()) {
 					fail("One default version was already found " + it.getId());

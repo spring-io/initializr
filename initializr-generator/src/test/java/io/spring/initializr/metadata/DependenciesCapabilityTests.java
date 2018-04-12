@@ -20,10 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link DependenciesCapability}.
@@ -43,9 +40,9 @@ public class DependenciesCapabilityTests {
 				dependency, dependency2);
 		capability.validate();
 
-		assertSame(dependency, capability.get("first"));
-		assertSame(dependency2, capability.get("second"));
-		assertNull(capability.get("anotherId"));
+		assertThat(capability.get("first")).isSameAs(dependency);
+		assertThat(capability.get("second")).isSameAs(dependency2);
+		assertThat(capability.get("anotherId")).isNull();
 	}
 
 	@Test
@@ -69,9 +66,9 @@ public class DependenciesCapabilityTests {
 				dependency);
 		capability.validate();
 
-		assertSame(dependency, capability.get("first"));
-		assertSame(dependency, capability.get("alias1"));
-		assertSame(dependency, capability.get("alias2"));
+		assertThat(capability.get("first")).isSameAs(dependency);
+		assertThat(capability.get("alias1")).isSameAs(dependency);
+		assertThat(capability.get("alias2")).isSameAs(dependency);
 	}
 
 	@Test
@@ -101,10 +98,10 @@ public class DependenciesCapabilityTests {
 				.add(createDependencyGroup("bar", Dependency.withId("third")));
 
 		capability.merge(anotherCapability);
-		assertEquals(2, capability.getContent().size());
-		assertNotNull(capability.get("first"));
-		assertNotNull(capability.get("second"));
-		assertNotNull(capability.get("third"));
+		assertThat(capability.getContent()).hasSize(2);
+		assertThat(capability.get("first")).isNotNull();
+		assertThat(capability.get("second")).isNotNull();
+		assertThat(capability.get("third")).isNotNull();
 	}
 
 	@Test
@@ -119,8 +116,8 @@ public class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertEquals("1.2.0.RELEASE", capability.get("first").getVersionRange());
-		assertEquals("1.2.3.RELEASE", capability.get("second").getVersionRange());
+		assertThat(capability.get("first").getVersionRange()).isEqualTo("1.2.0.RELEASE");
+		assertThat(capability.get("second").getVersionRange()).isEqualTo("1.2.3.RELEASE");
 	}
 
 	@Test
@@ -135,8 +132,8 @@ public class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertEquals("test-bom", capability.get("first").getBom());
-		assertEquals("da-bom", capability.get("second").getBom());
+		assertThat(capability.get("first").getBom()).isEqualTo("test-bom");
+		assertThat(capability.get("second").getBom()).isEqualTo("da-bom");
 	}
 
 	@Test
@@ -151,8 +148,8 @@ public class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertEquals("test-repo", capability.get("first").getRepository());
-		assertEquals("da-repo", capability.get("second").getRepository());
+		assertThat(capability.get("first").getRepository()).isEqualTo("test-repo");
+		assertThat(capability.get("second").getRepository()).isEqualTo("da-repo");
 	}
 
 	private static DependenciesCapability createDependenciesCapability(String groupName,

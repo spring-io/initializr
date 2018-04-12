@@ -37,11 +37,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Integration tests for stats processing.
@@ -70,41 +69,42 @@ public class MainControllerStatsIntegrationTests
 	@Test
 	public void simpleProject() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertEquals("com.foo", json.get("groupId").textValue());
-		assertEquals("bar", json.get("artifactId").textValue());
+		assertThat(json.get("groupId").textValue()).isEqualTo("com.foo");
+		assertThat(json.get("artifactId").textValue()).isEqualTo("bar");
 		JsonNode list = json.get("dependencies");
-		assertEquals(1, list.size());
-		assertEquals("web", list.get(0).textValue());
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0).textValue()).isEqualTo("web");
 	}
 
 	@Test
 	public void authorizationHeaderIsSet() {
 		downloadArchive("/starter.zip");
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		String authorization = content.authorization;
-		assertNotNull("Authorization header must be set", authorization);
+		assertThat(authorization).as("Authorization header must be set").isNotNull();
 		assertTrue("Wrong value for authorization header",
 				authorization.startsWith("Basic "));
 		String token = authorization.substring("Basic ".length(), authorization.length());
 		String[] data = new String(Base64Utils.decodeFromString(token)).split(":");
-		assertEquals("Wrong user from " + token, "test-user", data[0]);
-		assertEquals("Wrong password " + token, "test-password", data[1]);
+		assertThat(data[0]).as("Wrong user from " + token).isEqualTo("test-user");
+		assertThat(data[1]).as("Wrong password " + token).isEqualTo("test-password");
 	}
 
 	@Test
 	public void requestIpNotSetByDefault() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertFalse("requestIp property should not be set", json.has("requestIp"));
+		assertThat(json.has("requestIp")).as("requestIp property should not be set")
+				.isFalse();
 	}
 
 	@Test
@@ -112,11 +112,12 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("X-FORWARDED-FOR", "10.0.0.123").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp").textValue());
+		assertThat(json.get("requestIp").textValue()).as("Wrong requestIp")
+				.isEqualTo("10.0.0.123");
 	}
 
 	@Test
@@ -124,7 +125,7 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("x-forwarded-for", "foo-bar").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
@@ -137,7 +138,7 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("cf-ipcountry", "XX").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
@@ -152,18 +153,19 @@ public class MainControllerStatsIntegrationTests
 			fail("Should have failed to generate project with invalid type");
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 		}
-		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertEquals("com.example", json.get("groupId").textValue());
-		assertEquals("demo", json.get("artifactId").textValue());
-		assertEquals(true, json.get("invalid").booleanValue());
-		assertEquals(true, json.get("invalidType").booleanValue());
-		assertNotNull(json.get("errorMessage"));
-		assertTrue(json.get("errorMessage").textValue().contains("invalid-type"));
+		assertThat(json.get("groupId").textValue()).isEqualTo("com.example");
+		assertThat(json.get("artifactId").textValue()).isEqualTo("demo");
+		assertThat(json.get("invalid").booleanValue()).isEqualTo(true);
+		assertThat(json.get("invalidType").booleanValue()).isEqualTo(true);
+		assertThat(json.get("errorMessage")).isNotNull();
+		assertThat(json.get("errorMessage").textValue().contains("invalid-type"))
+				.isTrue();
 	}
 
 	@Test
@@ -171,8 +173,8 @@ public class MainControllerStatsIntegrationTests
 		this.statsProperties.getElastic()
 				.setUri("http://localhost:" + this.port + "/elastic-error");
 		downloadArchive("/starter.zip");
-		assertEquals("No stat should be available", 0,
-				this.statsMockController.stats.size());
+		assertThat(this.statsMockController.stats).as("No stat should be available")
+				.isEmpty();
 	}
 
 	@RestController

@@ -26,8 +26,7 @@ import io.spring.initializr.metadata.Link;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -45,10 +44,9 @@ public class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
-		assertEquals(
+		assertThat(get(result, "_links.foo.href")).isEqualTo(
 				"/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
-						+ "groupId,artifactId,version,name,description,packageName}",
-				get(result, "_links.foo.href"));
+						+ "groupId,artifactId,version,name,description,packageName}");
 	}
 
 	@Test
@@ -58,10 +56,9 @@ public class InitializrMetadataJsonMapperTests {
 				.addDependencyGroup("foo", "one", "two").build();
 		String json = this.jsonMapper.write(metadata, "http://server:8080/my-app");
 		JsonNode result = objectMapper.readTree(json);
-		assertEquals(
+		assertThat(get(result, "_links.foo.href")).isEqualTo(
 				"http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
-						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}",
-				get(result, "_links.foo.href"));
+						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
 	}
 
 	@Test
@@ -75,8 +72,8 @@ public class InitializrMetadataJsonMapperTests {
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
 		// JSON objects are not ordered
-		assertTrue(first > 0);
-		assertTrue(second > 0);
+		assertThat(first > 0).isTrue();
+		assertThat(second > 0).isTrue();
 	}
 
 	private Object get(JsonNode result, String path) {

@@ -27,7 +27,7 @@ import io.spring.initializr.util.Version;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -51,16 +51,16 @@ public class DependencyMetadataJsonMapperTests {
 				Collections.singletonMap("repo-id", repository),
 				Collections.singletonMap("bom-id", bom));
 		JSONObject content = new JSONObject(this.mapper.write(metadata));
-		assertEquals("my-bom", content.getJSONObject("dependencies").getJSONObject("foo")
-				.getString("bom"));
-		assertEquals("my-repo", content.getJSONObject("dependencies").getJSONObject("foo")
-				.getString("repository"));
-		assertEquals("foo-repo", content.getJSONObject("repositories")
-				.getJSONObject("repo-id").getString("name"));
-		assertEquals("foo-bom", content.getJSONObject("boms").getJSONObject("bom-id")
-				.getString("artifactId"));
-		assertEquals("1.0.0.RELEASE", content.getJSONObject("boms")
-				.getJSONObject("bom-id").getString("version"));
+		assertThat(content.getJSONObject("dependencies").getJSONObject("foo")
+				.getString("bom")).isEqualTo("my-bom");
+		assertThat(content.getJSONObject("dependencies").getJSONObject("foo")
+				.getString("repository")).isEqualTo("my-repo");
+		assertThat(content.getJSONObject("repositories").getJSONObject("repo-id")
+				.getString("name")).isEqualTo("foo-repo");
+		assertThat(content.getJSONObject("boms").getJSONObject("bom-id")
+				.getString("artifactId")).isEqualTo("foo-bom");
+		assertThat(content.getJSONObject("boms").getJSONObject("bom-id")
+				.getString("version")).isEqualTo("1.0.0.RELEASE");
 	}
 
 }

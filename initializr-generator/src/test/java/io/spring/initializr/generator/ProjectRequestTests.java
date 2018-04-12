@@ -29,8 +29,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author Stephane Nicoll
@@ -49,24 +47,28 @@ public class ProjectRequestTests {
 		this.metadata.getGroupId().setContent("org.acme");
 		this.metadata.getArtifactId().setContent("my-project");
 		ProjectRequest request = initProjectRequest();
-		assertEquals("org.acme", request.getGroupId());
-		assertEquals("my-project", request.getArtifactId());
+		assertThat(request.getGroupId()).isEqualTo("org.acme");
+		assertThat(request.getArtifactId()).isEqualTo("my-project");
 	}
 
 	@Test
 	public void initializeSetsMetadataDefaults() {
 		ProjectRequest request = initProjectRequest();
-		assertEquals(this.metadata.getName().getContent(), request.getName());
-		assertEquals(this.metadata.getTypes().getDefault().getId(), request.getType());
-		assertEquals(this.metadata.getDescription().getContent(),
-				request.getDescription());
-		assertEquals(this.metadata.getGroupId().getContent(), request.getGroupId());
-		assertEquals(this.metadata.getArtifactId().getContent(), request.getArtifactId());
-		assertEquals(this.metadata.getVersion().getContent(), request.getVersion());
-		assertEquals(this.metadata.getBootVersions().getDefault().getId(),
-				request.getBootVersion());
-		assertEquals(this.metadata.getPackagings().getDefault().getId(),
-				request.getPackaging());
+		assertThat(request.getName()).isEqualTo(this.metadata.getName().getContent());
+		assertThat(request.getType())
+				.isEqualTo(this.metadata.getTypes().getDefault().getId());
+		assertThat(request.getDescription())
+				.isEqualTo(this.metadata.getDescription().getContent());
+		assertThat(request.getGroupId())
+				.isEqualTo(this.metadata.getGroupId().getContent());
+		assertThat(request.getArtifactId())
+				.isEqualTo(this.metadata.getArtifactId().getContent());
+		assertThat(request.getVersion())
+				.isEqualTo(this.metadata.getVersion().getContent());
+		assertThat(request.getBootVersion())
+				.isEqualTo(this.metadata.getBootVersions().getDefault().getId());
+		assertThat(request.getPackaging())
+				.isEqualTo(this.metadata.getPackagings().getDefault().getId());
 	}
 
 	@Test
@@ -77,7 +79,7 @@ public class ProjectRequestTests {
 		request.setType("maven-project");
 		request.getStyle().addAll(Arrays.asList("web", "spring-data"));
 		request.resolve(this.metadata);
-		assertEquals("Build type not detected", "maven", request.getBuild());
+		assertThat(request.getBuild()).as("Build type not detected").isEqualTo("maven");
 		assertBootStarter(request.getResolvedDependencies().get(0), "web");
 		assertBootStarter(request.getResolvedDependencies().get(1), "spring-data");
 	}
@@ -90,7 +92,7 @@ public class ProjectRequestTests {
 		request.setType("maven-project");
 		request.getDependencies().addAll(Arrays.asList("web", "spring-data"));
 		request.resolve(this.metadata);
-		assertEquals("Build type not detected", "maven", request.getBuild());
+		assertThat(request.getBuild()).as("Build type not detected").isEqualTo("maven");
 		assertBootStarter(request.getResolvedDependencies().get(0), "web");
 		assertBootStarter(request.getResolvedDependencies().get(1), "spring-data");
 	}
@@ -117,7 +119,7 @@ public class ProjectRequestTests {
 		this.thrown.expect(InvalidProjectRequestException.class);
 		this.thrown.expectMessage("foo-bar");
 		request.resolve(this.metadata);
-		assertEquals(1, request.getResolvedDependencies().size());
+		assertThat(request.getResolvedDependencies()).hasSize(1);
 	}
 
 	@Test
@@ -130,7 +132,7 @@ public class ProjectRequestTests {
 		this.thrown.expect(InvalidProjectRequestException.class);
 		this.thrown.expectMessage("org.foo:acme");
 		request.resolve(this.metadata);
-		assertEquals(1, request.getResolvedDependencies().size());
+		assertThat(request.getResolvedDependencies()).hasSize(1);
 	}
 
 	@Test
@@ -191,7 +193,7 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.setType("gradle-project");
 		request.resolve(this.metadata);
-		assertEquals("gradle", request.getBuild());
+		assertThat(request.getBuild()).isEqualTo("gradle");
 	}
 
 	@Test
@@ -201,7 +203,7 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.setType("foo");
 		request.resolve(this.metadata);
-		assertNull(request.getBuild());
+		assertThat(request.getBuild()).isNull();
 	}
 
 	@Test
@@ -219,9 +221,8 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.setName(null);
 		request.resolve(this.metadata);
-		assertEquals(
-				this.metadata.getConfiguration().getEnv().getFallbackApplicationName(),
-				request.getApplicationName());
+		assertThat(request.getApplicationName()).isEqualTo(
+				this.metadata.getConfiguration().getEnv().getFallbackApplicationName());
 	}
 
 	@Test
@@ -229,7 +230,7 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.setName("Foo2");
 		request.resolve(this.metadata);
-		assertEquals("Foo2Application", request.getApplicationName());
+		assertThat(request.getApplicationName()).isEqualTo("Foo2Application");
 	}
 
 	@Test
@@ -239,7 +240,7 @@ public class ProjectRequestTests {
 		request.setApplicationName("MyApplicationName");
 
 		request.resolve(this.metadata);
-		assertEquals("MyApplicationName", request.getApplicationName());
+		assertThat(request.getApplicationName()).isEqualTo("MyApplicationName");
 	}
 
 	@Test
@@ -293,8 +294,8 @@ public class ProjectRequestTests {
 	public void cleanPackageNameWithNoName() {
 		ProjectRequest request = initProjectRequest();
 		request.resolve(this.metadata);
-		assertEquals(this.metadata.getPackageName().getContent(),
-				request.getPackageName());
+		assertThat(request.getPackageName())
+				.isEqualTo(this.metadata.getPackageName().getContent());
 	}
 
 	@Test
@@ -302,7 +303,7 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.setPackageName("com:foo  bar");
 		request.resolve(this.metadata);
-		assertEquals("com.foo.bar", request.getPackageName());
+		assertThat(request.getPackageName()).isEqualTo("com.foo.bar");
 	}
 
 	@Test
@@ -319,10 +320,10 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("foo");
 		request.resolve(this.metadata);
-		assertEquals(1, (request.getResolvedDependencies().size()));
-		assertEquals(2, request.getBoms().size());
-		assertEquals(bom, request.getBoms().get("foo-bom"));
-		assertEquals(additionalBom, request.getBoms().get("bar-bom"));
+		assertThat(request.getResolvedDependencies()).hasSize(1);
+		assertThat(request.getBoms()).hasSize(2);
+		assertThat(request.getBoms().get("foo-bom")).isEqualTo(bom);
+		assertThat(request.getBoms().get("bar-bom")).isEqualTo(additionalBom);
 	}
 
 	@Test
@@ -341,10 +342,10 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("foo", "bar"));
 		request.resolve(this.metadata);
-		assertEquals(2, request.getResolvedDependencies().size());
-		assertEquals(2, request.getBoms().size());
-		assertEquals(bom, request.getBoms().get("foo-bom"));
-		assertEquals(additionalBom, request.getBoms().get("bar-bom"));
+		assertThat(request.getResolvedDependencies()).hasSize(2);
+		assertThat(request.getBoms()).hasSize(2);
+		assertThat(request.getBoms().get("foo-bom")).isEqualTo(bom);
+		assertThat(request.getBoms().get("bar-bom")).isEqualTo(additionalBom);
 	}
 
 	@Test
@@ -362,13 +363,13 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("foo");
 		request.resolve(this.metadata);
-		assertEquals(1, request.getResolvedDependencies().size());
-		assertEquals(1, request.getBoms().size());
-		assertEquals(2, request.getRepositories().size());
-		assertEquals(this.metadata.getConfiguration().getEnv().getRepositories()
-				.get("foo-repo"), request.getRepositories().get("foo-repo"));
-		assertEquals(this.metadata.getConfiguration().getEnv().getRepositories()
-				.get("bar-repo"), request.getRepositories().get("bar-repo"));
+		assertThat(request.getResolvedDependencies()).hasSize(1);
+		assertThat(request.getBoms()).hasSize(1);
+		assertThat(request.getRepositories()).hasSize(2);
+		assertThat(request.getRepositories().get("foo-repo")).isEqualTo(this.metadata
+				.getConfiguration().getEnv().getRepositories().get("foo-repo"));
+		assertThat(request.getRepositories().get("bar-repo")).isEqualTo(this.metadata
+				.getConfiguration().getEnv().getRepositories().get("bar-repo"));
 	}
 
 	@Test
@@ -388,13 +389,13 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("foo", "bar"));
 		request.resolve(this.metadata);
-		assertEquals(2, request.getResolvedDependencies().size());
-		assertEquals(1, request.getBoms().size());
-		assertEquals(2, request.getRepositories().size());
-		assertEquals(this.metadata.getConfiguration().getEnv().getRepositories()
-				.get("foo-repo"), request.getRepositories().get("foo-repo"));
-		assertEquals(this.metadata.getConfiguration().getEnv().getRepositories()
-				.get("bar-repo"), request.getRepositories().get("bar-repo"));
+		assertThat(request.getResolvedDependencies()).hasSize(2);
+		assertThat(request.getBoms()).hasSize(1);
+		assertThat(request.getRepositories()).hasSize(2);
+		assertThat(request.getRepositories().get("foo-repo")).isEqualTo(this.metadata
+				.getConfiguration().getEnv().getRepositories().get("foo-repo"));
+		assertThat(request.getRepositories().get("bar-repo")).isEqualTo(this.metadata
+				.getConfiguration().getEnv().getRepositories().get("bar-repo"));
 	}
 
 	private ProjectRequest initProjectRequest() {
@@ -408,7 +409,7 @@ public class ProjectRequestTests {
 		expected.asSpringBootStarter(name);
 		assertDependency(actual, expected.getGroupId(), expected.getArtifactId(),
 				expected.getVersion());
-		assertEquals(name, actual.getId());
+		assertThat(actual.getId()).isEqualTo(name);
 	}
 
 	private static Dependency createDependency(String groupId, String artifactId,
@@ -418,9 +419,9 @@ public class ProjectRequestTests {
 
 	private static void assertDependency(Dependency actual, String groupId,
 			String artifactId, String version) {
-		assertEquals(groupId, actual.getGroupId());
-		assertEquals(artifactId, actual.getArtifactId());
-		assertEquals(version, actual.getVersion());
+		assertThat(actual.getGroupId()).isEqualTo(groupId);
+		assertThat(actual.getArtifactId()).isEqualTo(artifactId);
+		assertThat(actual.getVersion()).isEqualTo(version);
 	}
 
 }

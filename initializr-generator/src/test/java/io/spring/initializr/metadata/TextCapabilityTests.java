@@ -18,7 +18,7 @@ package io.spring.initializr.metadata;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -32,29 +32,29 @@ public class TextCapabilityTests {
 		TextCapability another = new TextCapability("foo");
 		another.setContent("4567");
 		capability.merge(another);
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("4567", capability.getContent());
+		assertThat(capability.getId()).isEqualTo("foo");
+		assertThat(capability.getType()).isEqualTo(ServiceCapabilityType.TEXT);
+		assertThat(capability.getContent()).isEqualTo("4567");
 	}
 
 	@Test
 	public void mergeTitle() {
 		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
 		capability.merge(new TextCapability("foo", "AnotherFoo", ""));
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("AnotherFoo", capability.getTitle());
-		assertEquals("my desc", capability.getDescription());
+		assertThat(capability.getId()).isEqualTo("foo");
+		assertThat(capability.getType()).isEqualTo(ServiceCapabilityType.TEXT);
+		assertThat(capability.getTitle()).isEqualTo("AnotherFoo");
+		assertThat(capability.getDescription()).isEqualTo("my desc");
 	}
 
 	@Test
 	public void mergeDescription() {
 		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
 		capability.merge(new TextCapability("foo", "", "another desc"));
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("Foo", capability.getTitle());
-		assertEquals("another desc", capability.getDescription());
+		assertThat(capability.getId()).isEqualTo("foo");
+		assertThat(capability.getType()).isEqualTo(ServiceCapabilityType.TEXT);
+		assertThat(capability.getTitle()).isEqualTo("Foo");
+		assertThat(capability.getDescription()).isEqualTo("another desc");
 	}
 
 }

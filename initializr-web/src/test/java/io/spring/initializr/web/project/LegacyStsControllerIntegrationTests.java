@@ -33,6 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -46,8 +47,8 @@ public class LegacyStsControllerIntegrationTests
 	@Test
 	public void legacyStsHome() {
 		String body = htmlHome();
-		assertTrue("groupId not found", body.contains("com.example"));
-		assertTrue("artifactId not found", body.contains("demo"));
+		assertThat(body.contains("com.example")).as("groupId not found").isTrue();
+		assertThat(body.contains("demo")).as("artifactId not found").isTrue();
 		assertTrue("custom description not found",
 				body.contains("Demo project for Spring Boot"));
 		assertTrue("Wrong body:\n" + body, body

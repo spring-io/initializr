@@ -29,8 +29,7 @@ import org.springframework.boot.context.properties.source.MapConfigurationProper
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link InitializrMetadataBuilder}.
@@ -68,12 +67,12 @@ public class InitializrMetadataBuilderTests {
 				.fromInitializrProperties(config)
 				.withInitializrProperties(customDefaultsConfig).build();
 		assertDefaultConfig(metadata);
-		assertEquals("org.foo", metadata.getGroupId().getContent());
-		assertEquals("foo-bar", metadata.getArtifactId().getContent());
-		assertEquals("1.2.4-SNAPSHOT", metadata.getVersion().getContent());
-		assertEquals("FooBar", metadata.getName().getContent());
-		assertEquals("FooBar Project", metadata.getDescription().getContent());
-		assertEquals("org.foo.demo", metadata.getPackageName().getContent());
+		assertThat(metadata.getGroupId().getContent()).isEqualTo("org.foo");
+		assertThat(metadata.getArtifactId().getContent()).isEqualTo("foo-bar");
+		assertThat(metadata.getVersion().getContent()).isEqualTo("1.2.4-SNAPSHOT");
+		assertThat(metadata.getName().getContent()).isEqualTo("FooBar");
+		assertThat(metadata.getDescription().getContent()).isEqualTo("FooBar Project");
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.foo.demo");
 	}
 
 	@Test
@@ -82,23 +81,23 @@ public class InitializrMetadataBuilderTests {
 				.withInitializrMetadata(
 						new ClassPathResource("metadata/config/test-min.json"))
 				.build();
-		assertEquals(false, metadata.getConfiguration().getEnv().isForceSsl());
-		assertEquals(1, metadata.getDependencies().getContent().size());
+		assertThat(metadata.getConfiguration().getEnv().isForceSsl()).isEqualTo(false);
+		assertThat(metadata.getDependencies().getContent()).hasSize(1);
 		Dependency dependency = metadata.getDependencies().get("test");
-		assertNotNull(dependency);
-		assertEquals("org.springframework.boot", dependency.getGroupId());
-		assertEquals(1, metadata.getTypes().getContent().size());
-		assertEquals(2, metadata.getBootVersions().getContent().size());
-		assertEquals(2, metadata.getPackagings().getContent().size());
-		assertEquals(1, metadata.getJavaVersions().getContent().size());
-		assertEquals(3, metadata.getLanguages().getContent().size());
-		assertEquals("metadata-merge", metadata.getName().getContent());
-		assertEquals("Demo project for metadata merge",
-				metadata.getDescription().getContent());
-		assertEquals("org.acme", metadata.getGroupId().getContent());
-		assertEquals("metadata", metadata.getArtifactId().getContent());
-		assertEquals("1.0.0-SNAPSHOT", metadata.getVersion().getContent());
-		assertEquals("org.acme.demo", metadata.getPackageName().getContent());
+		assertThat(dependency).isNotNull();
+		assertThat(dependency.getGroupId()).isEqualTo("org.springframework.boot");
+		assertThat(metadata.getTypes().getContent()).hasSize(1);
+		assertThat(metadata.getBootVersions().getContent()).hasSize(2);
+		assertThat(metadata.getPackagings().getContent()).hasSize(2);
+		assertThat(metadata.getJavaVersions().getContent()).hasSize(1);
+		assertThat(metadata.getLanguages().getContent()).hasSize(3);
+		assertThat(metadata.getName().getContent()).isEqualTo("metadata-merge");
+		assertThat(metadata.getDescription().getContent())
+				.isEqualTo("Demo project for metadata merge");
+		assertThat(metadata.getGroupId().getContent()).isEqualTo("org.acme");
+		assertThat(metadata.getArtifactId().getContent()).isEqualTo("metadata");
+		assertThat(metadata.getVersion().getContent()).isEqualTo("1.0.0-SNAPSHOT");
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.demo");
 	}
 
 	@Test
@@ -110,18 +109,18 @@ public class InitializrMetadataBuilderTests {
 
 		Map<String, BillOfMaterials> boms = metadata.getConfiguration().getEnv()
 				.getBoms();
-		assertEquals(2, boms.size());
+		assertThat(boms).hasSize(2);
 		BillOfMaterials myBom = boms.get("my-bom");
-		assertNotNull(myBom);
-		assertEquals("org.acme", myBom.getGroupId());
-		assertEquals("my-bom", myBom.getArtifactId());
-		assertEquals("1.2.3.RELEASE", myBom.getVersion());
+		assertThat(myBom).isNotNull();
+		assertThat(myBom.getGroupId()).isEqualTo("org.acme");
+		assertThat(myBom.getArtifactId()).isEqualTo("my-bom");
+		assertThat(myBom.getVersion()).isEqualTo("1.2.3.RELEASE");
 
 		BillOfMaterials anotherBom = boms.get("another-bom");
-		assertNotNull(anotherBom);
-		assertEquals("org.acme", anotherBom.getGroupId());
-		assertEquals("another-bom", anotherBom.getArtifactId());
-		assertEquals("4.5.6.RELEASE", anotherBom.getVersion());
+		assertThat(anotherBom).isNotNull();
+		assertThat(anotherBom.getGroupId()).isEqualTo("org.acme");
+		assertThat(anotherBom.getArtifactId()).isEqualTo("another-bom");
+		assertThat(anotherBom.getVersion()).isEqualTo("4.5.6.RELEASE");
 	}
 
 	@Test
@@ -133,18 +132,18 @@ public class InitializrMetadataBuilderTests {
 
 		Map<String, Repository> repositories = metadata.getConfiguration().getEnv()
 				.getRepositories();
-		assertEquals(4, repositories.size()); // 2 standard repos
+		assertThat(repositories).hasSize(4); // 2 standard repos
 		Repository myRepo = repositories.get("my-repo");
-		assertNotNull(myRepo);
-		assertEquals("my repo", myRepo.getName());
-		assertEquals(new URL("http://example.com/my"), myRepo.getUrl());
-		assertEquals(true, myRepo.isSnapshotsEnabled());
+		assertThat(myRepo).isNotNull();
+		assertThat(myRepo.getName()).isEqualTo("my repo");
+		assertThat(myRepo.getUrl()).isEqualTo(new URL("http://example.com/my"));
+		assertThat(myRepo.isSnapshotsEnabled()).isEqualTo(true);
 
 		Repository anotherRepo = repositories.get("another-repo");
-		assertNotNull(anotherRepo);
-		assertEquals("another repo", anotherRepo.getName());
-		assertEquals(new URL("http://example.com/another"), anotherRepo.getUrl());
-		assertEquals(false, anotherRepo.isSnapshotsEnabled());
+		assertThat(anotherRepo).isNotNull();
+		assertThat(anotherRepo.getName()).isEqualTo("another repo");
+		assertThat(anotherRepo.getUrl()).isEqualTo(new URL("http://example.com/another"));
+		assertThat(anotherRepo.isSnapshotsEnabled()).isEqualTo(false);
 	}
 
 	@Test
@@ -158,13 +157,13 @@ public class InitializrMetadataBuilderTests {
 				.withInitializrProperties(customDefaultsConfig).build();
 		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
-		assertEquals(defaultEnv.getArtifactRepository(),
-				actualEnv.getArtifactRepository());
-		assertEquals(defaultEnv.getSpringBootMetadataUrl(),
-				actualEnv.getSpringBootMetadataUrl());
-		assertEquals(defaultEnv.getFallbackApplicationName(),
-				actualEnv.getFallbackApplicationName());
-		assertEquals(defaultEnv.isForceSsl(), actualEnv.isForceSsl());
+		assertThat(actualEnv.getArtifactRepository())
+				.isEqualTo(defaultEnv.getArtifactRepository());
+		assertThat(actualEnv.getSpringBootMetadataUrl())
+				.isEqualTo(defaultEnv.getSpringBootMetadataUrl());
+		assertThat(actualEnv.getFallbackApplicationName())
+				.isEqualTo(defaultEnv.getFallbackApplicationName());
+		assertThat(actualEnv.isForceSsl()).isEqualTo(defaultEnv.isForceSsl());
 	}
 
 	@Test
@@ -178,13 +177,14 @@ public class InitializrMetadataBuilderTests {
 				.withInitializrProperties(customDefaultsConfig, true).build();
 		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
-		assertEquals("https://repo.spring.io/lib-release/",
-				actualEnv.getArtifactRepository());
-		assertEquals(defaultEnv.getSpringBootMetadataUrl(),
-				actualEnv.getSpringBootMetadataUrl());
-		assertEquals("FooBarApplication", actualEnv.getFallbackApplicationName());
-		assertEquals(false, actualEnv.isForceSsl());
-		assertEquals("1.0.0-beta-2423", actualEnv.getKotlin().getDefaultVersion());
+		assertThat(actualEnv.getArtifactRepository())
+				.isEqualTo("https://repo.spring.io/lib-release/");
+		assertThat(actualEnv.getSpringBootMetadataUrl())
+				.isEqualTo(defaultEnv.getSpringBootMetadataUrl());
+		assertThat(actualEnv.getFallbackApplicationName()).isEqualTo("FooBarApplication");
+		assertThat(actualEnv.isForceSsl()).isEqualTo(false);
+		assertThat(actualEnv.getKotlin().getDefaultVersion())
+				.isEqualTo("1.0.0-beta-2423");
 	}
 
 	@Test
@@ -194,17 +194,15 @@ public class InitializrMetadataBuilderTests {
 		group.getContent().add(dependency);
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
 				.withCustomizer(m -> m.getDependencies().getContent().add(group)).build();
-		assertEquals(1, metadata.getDependencies().getContent().size());
-		assertEquals(group, metadata.getDependencies().getContent().get(0));
+		assertThat(metadata.getDependencies().getContent()).hasSize(1);
+		assertThat(metadata.getDependencies().getContent().get(0)).isEqualTo(group);
 	}
 
 	private static void assertDefaultConfig(InitializrMetadata metadata) {
-		assertNotNull(metadata);
-		assertEquals("Wrong number of dependencies", 9,
-				metadata.getDependencies().getAll().size());
-		assertEquals("Wrong number of dependency group", 2,
-				metadata.getDependencies().getContent().size());
-		assertEquals("Wrong number of types", 4, metadata.getTypes().getContent().size());
+		assertThat(metadata).isNotNull();
+		assertThat(metadata.getDependencies().getAll()).hasSize(9);
+		assertThat(metadata.getDependencies().getContent()).hasSize(2);
+		assertThat(metadata.getTypes().getContent()).hasSize(4);
 	}
 
 	private static InitializrProperties load(Resource resource) {

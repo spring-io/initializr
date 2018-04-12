@@ -26,8 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -41,17 +40,18 @@ public class MainControllerEnvIntegrationTests
 	public void downloadCliWithCustomRepository() throws Exception {
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
 				String.class);
-		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
-		assertEquals(new URI(expected), entity.getHeaders().getLocation());
+		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
 
 	@Test
 	public void doNotForceSsl() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
-		assertTrue("Must not force https", body.contains("http://start.spring.io/"));
-		assertFalse("Must not force https", body.contains("https://"));
+		assertThat(body.contains("http://start.spring.io/")).as("Must not force https")
+				.isTrue();
+		assertThat(body.contains("https://")).as("Must not force https").isFalse();
 	}
 
 	@Test

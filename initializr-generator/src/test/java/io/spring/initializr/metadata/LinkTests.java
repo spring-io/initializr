@@ -25,9 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link Link}.
@@ -58,18 +56,18 @@ public class LinkTests {
 	public void resolveLinkNoVariables() {
 		Link link = Link.create("reference", "https://example.com/2");
 		link.resolve();
-		assertFalse(link.isTemplated());
-		assertEquals(0, link.getTemplateVariables().size());
+		assertThat(link.isTemplated()).isFalse();
+		assertThat(link.getTemplateVariables()).isEmpty();
 	}
 
 	@Test
 	public void resolveLinkWithVariables() {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
-		assertTrue(link.isTemplated());
-		assertEquals(2, link.getTemplateVariables().size());
-		assertTrue(link.getTemplateVariables().contains("a"));
-		assertTrue(link.getTemplateVariables().contains("b"));
+		assertThat(link.isTemplated()).isTrue();
+		assertThat(link.getTemplateVariables()).hasSize(2);
+		assertThat(link.getTemplateVariables().contains("a")).isTrue();
+		assertThat(link.getTemplateVariables().contains("b")).isTrue();
 	}
 
 	@Test
@@ -79,7 +77,8 @@ public class LinkTests {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("a", "test");
 		map.put("b", "another");
-		assertEquals(new URI("https://example.com/test/2/another"), link.expand(map));
+		assertThat(link.expand(map))
+				.isEqualTo(new URI("https://example.com/test/2/another"));
 	}
 
 	@Test
@@ -89,7 +88,8 @@ public class LinkTests {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("a", "test");
 		map.put("b", "another");
-		assertEquals(new URI("https://example.com/test/2/test"), link.expand(map));
+		assertThat(link.expand(map))
+				.isEqualTo(new URI("https://example.com/test/2/test"));
 	}
 
 	@Test

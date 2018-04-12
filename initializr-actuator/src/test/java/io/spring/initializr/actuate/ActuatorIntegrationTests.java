@@ -28,8 +28,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -46,9 +44,8 @@ public class ActuatorIntegrationTests
 	public void infoHasExternalProperties() {
 		String body = getRestTemplate().getForObject(createUrl("/actuator/info"),
 				String.class);
-		assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("\"version\":\"1.1.4.RELEASE\""));
+		assertThat(body).contains("\"spring-boot\"");
+		assertThat(body).contains("\"version\":\"1.1.4.RELEASE\"");
 	}
 
 	@Test
@@ -73,16 +70,20 @@ public class ActuatorIntegrationTests
 		// No jpa dep this time
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
 
-		assertEquals("Number of request should have increased", requests + 1,
-				metricValue("initializr.requests"));
-		assertEquals("jar packaging metric should have increased", packaging + 1,
-				metricValue("initializr.packaging.jar"));
-		assertEquals("java version metric should have increased", javaVersion + 1,
-				metricValue("initializr.java_version.1_8"));
-		assertEquals("web dependency metric should have increased", webDependency + 1,
-				metricValue("initializr.dependency.web"));
-		assertEquals("jpa dependency metric should not have increased", jpaDependency,
-				metricValue("initializr.dependency.data-jpa"));
+		assertThat(metricValue("initializr.requests"))
+				.as("Number of request should have increased").isEqualTo(requests + 1);
+		assertThat(metricValue("initializr.packaging.jar"))
+				.as("jar packaging metric should have increased")
+				.isEqualTo(packaging + 1);
+		assertThat(metricValue("initializr.java_version.1_8"))
+				.as("java version metric should have increased")
+				.isEqualTo(javaVersion + 1);
+		assertThat(metricValue("initializr.dependency.web"))
+				.as("web dependency metric should have increased")
+				.isEqualTo(webDependency + 1);
+		assertThat(metricValue("initializr.dependency.data-jpa"))
+				.as("jpa dependency metric should not have increased")
+				.isEqualTo(jpaDependency);
 	}
 
 	private JsonNode metricsEndpoint() {

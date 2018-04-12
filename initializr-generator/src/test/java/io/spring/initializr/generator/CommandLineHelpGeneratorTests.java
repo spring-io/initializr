@@ -24,9 +24,7 @@ import io.spring.initializr.util.TemplateRenderer;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -49,11 +47,11 @@ public class CommandLineHelpGeneratorTests {
 		String content = this.generator.generateGenericCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
-		assertThat(content, containsString("id-a | and some description |"));
-		assertThat(content, containsString("id-b | depB"));
-		assertThat(content, containsString("https://fake-service"));
-		assertThat(content, not(containsString("Examples:")));
-		assertThat(content, not(containsString("curl")));
+		assertThat(content).contains("id-a | and some description |");
+		assertThat(content).contains("id-b | depB");
+		assertThat(content).contains("https://fake-service");
+		assertThat(content).doesNotContain("Examples:");
+		assertThat(content).doesNotContain("curl");
 	}
 
 	@Test
@@ -67,8 +65,8 @@ public class CommandLineHelpGeneratorTests {
 		String content = this.generator.generateGenericCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
-		assertThat(content, containsString("| foo"));
-		assertThat(content, containsString("| foo-desc"));
+		assertThat(content).contains("| foo");
+		assertThat(content).contains("| foo-desc");
 	}
 
 	@Test
@@ -80,11 +78,11 @@ public class CommandLineHelpGeneratorTests {
 		String content = this.generator.generateCurlCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
-		assertThat(content, containsString("id-a | and some description |"));
-		assertThat(content, containsString("id-b | depB"));
-		assertThat(content, containsString("https://fake-service"));
-		assertThat(content, containsString("Examples:"));
-		assertThat(content, containsString("curl https://fake-service"));
+		assertThat(content).contains("id-a | and some description |");
+		assertThat(content).contains("id-b | depB");
+		assertThat(content).contains("https://fake-service");
+		assertThat(content).contains("Examples:");
+		assertThat(content).contains("curl https://fake-service");
 	}
 
 	@Test
@@ -96,12 +94,12 @@ public class CommandLineHelpGeneratorTests {
 		String content = this.generator.generateHttpieCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
-		assertThat(content, containsString("id-a | and some description |"));
-		assertThat(content, containsString("id-b | depB"));
-		assertThat(content, containsString("https://fake-service"));
-		assertThat(content, containsString("Examples:"));
-		assertThat(content, not(containsString("curl")));
-		assertThat(content, containsString("http https://fake-service"));
+		assertThat(content).contains("id-a | and some description |");
+		assertThat(content).contains("id-b | depB");
+		assertThat(content).contains("https://fake-service");
+		assertThat(content).contains("Examples:");
+		assertThat(content).doesNotContain("curl");
+		assertThat(content).contains("http https://fake-service");
 	}
 
 	@Test
@@ -112,17 +110,17 @@ public class CommandLineHelpGeneratorTests {
 				.build();
 		String content = this.generator.generateSpringBootCliCapabilities(metadata,
 				"https://fake-service");
-		assertThat(content, containsString("| Id"));
-		assertThat(content, containsString("| Tags"));
-		assertThat(content, containsString("id-a | and some description |"));
-		assertThat(content, containsString("id-b | depB"));
-		assertThat(content, containsString("https://fake-service"));
-		assertThat(content, not(containsString("Examples:")));
-		assertThat(content, not(containsString("curl")));
-		assertThat(content, not(containsString("| Rel")));
-		assertThat(content, not(containsString("| dependencies")));
-		assertThat(content, not(containsString("| applicationName")));
-		assertThat(content, not(containsString("| baseDir")));
+		assertThat(content).contains("| Id");
+		assertThat(content).contains("| Tags");
+		assertThat(content).contains("id-a | and some description |");
+		assertThat(content).contains("id-b | depB");
+		assertThat(content).contains("https://fake-service");
+		assertThat(content).doesNotContain("Examples:");
+		assertThat(content).doesNotContain("curl");
+		assertThat(content).doesNotContain("| Rel");
+		assertThat(content).doesNotContain("| dependencies");
+		assertThat(content).doesNotContain("| applicationName");
+		assertThat(content).doesNotContain("| baseDir");
 	}
 
 	@Test
@@ -137,18 +135,18 @@ public class CommandLineHelpGeneratorTests {
 				.addDependencyGroup("test", first, second).build();
 		String content = this.generator.generateSpringBootCliCapabilities(metadata,
 				"https://fake-service");
-		assertThat(content, containsString(
-				"| first  | first desc  | >=1.2.0.RELEASE               |"));
-		assertThat(content, containsString(
-				"| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |"));
+		assertThat(content)
+				.contains("| first  | first desc  | >=1.2.0.RELEASE               |");
+		assertThat(content)
+				.contains("| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |");
 	}
 
 	private static void assertCommandLineCapabilities(String content) {
-		assertThat(content, containsString("| Rel"));
-		assertThat(content, containsString("| dependencies"));
-		assertThat(content, containsString("| applicationName"));
-		assertThat(content, containsString("| baseDir"));
-		assertThat(content, not(containsString("| Tags")));
+		assertThat(content).contains("| Rel");
+		assertThat(content).contains("| dependencies");
+		assertThat(content).contains("| applicationName");
+		assertThat(content).contains("| baseDir");
+		assertThat(content).doesNotContain("| Tags");
 	}
 
 	private static Dependency createDependency(String id, String name) {
