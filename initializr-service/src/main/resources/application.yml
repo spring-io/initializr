@@ -100,7 +100,7 @@ initializr:
             version: 1.2.1.RELEASE
           - versionRange: "[1.4.0.RELEASE,1.4.x.RELEASE]"
             version: 1.5.0.RELEASE
-          - versionRange: "[1.5.0.RELEASE,1.5.x.RELEASE]"
+          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT]"
             version: 1.6.3.RELEASE
           - versionRange: "[2.0.0.RELEASE,2.0.x.RELEASE]"
             version: 2.0.0.M1
