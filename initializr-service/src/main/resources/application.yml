@@ -1,3 +1,7 @@
+local:
+  gcp:
+    version: 1.0.0.M3
+
 logging:
   level:
     org.springframework.core.env: warn
@@ -83,10 +87,9 @@ initializr:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-gcp-dependencies
         versionProperty: spring-cloud-gcp.version
-        mappings:
-          - versionRange: "1.0.0.M3"
-            version: 1.0.0.M3
-            repositories: spring-milestones
+        additionalBoms: [spring-cloud]
+        version: ${local.gcp.version}
+        repositories: spring-milestones
       spring-cloud-services:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
@@ -1140,6 +1143,46 @@ initializr:
             - rel: reference
               href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-storage-spring-boot-starter
               description: Reference doc
+    - name: Spring Cloud GCP
+      bom: spring-cloud-gcp
+      versionRange: 2.0.0.RELEASE
+      content:
+        - name: GCP Support
+          id: cloud-gcp
+          description: Support for Google Cloud Platform services
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-gcp-starter
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-gcp/docs/${local.gcp.version}/reference/htmlsingle/
+              description: Reference doc
+            - rel: guide
+              href: https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples
+              description: Samples
+        - name: GCP Messaging
+          id: cloud-gcp-pubsub
+          description: Publish to and subcribe from Google Cloud Pub/Sub topics
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-gcp-starter-pubsub
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-gcp/docs/${local.gcp.version}/reference/htmlsingle/#_spring_cloud_gcp_for_pub_sub
+              description: Reference doc
+            - rel: guide
+              href: https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-pubsub-sample
+              description: Sample
+        - name: GCP Storage
+          id: cloud-gcp-storage
+          description: Access Google Cloud Storage objects
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-gcp-starter-storage
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-gcp/docs/${local.gcp.version}/reference/htmlsingle/#_spring_resources
+              description: Reference doc
+            - rel: guide
+              href: https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-storage-resource-sample
+              description: Sample
     - name: I/O
       content:
         - name: Batch
@@ -1246,38 +1289,6 @@ initializr:
           versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
-    - name: Spring Cloud GCP
-      bom: spring-cloud-gcp
-      versionRange: 2.0.0.RELEASE
-      content:
-        - name: GCP Support
-          id: cloud-gcp
-          description: Support for Google Cloud Platform services
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-gcp-starter
-          links:
-            - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/
-              description: Reference doc
-        - name: GCP Messaging
-          id: cloud-gcp-pubsub
-          description: GCP Pub/Sub service integration
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-gcp-starter-pubsub
-          links:
-            - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/#_spring_cloud_gcp_for_pub_sub
-              description: Reference document
-        - name: GCP Storage
-          id: cloud-gcp-storage
-          description: GCP Storage service integration
-          groupId: org.springframework.cloud
-          artifactId: spring-cloud-gcp-starter-storage
-          links:
-            - rel: reference
-              href: https://docs.spring.io/spring-cloud-gcp/docs/1.0.0.M3/reference/htmlsingle/#_spring_resources
-              description: Reference doc
-
   types:
     - name: Maven Project
       id: maven-project
