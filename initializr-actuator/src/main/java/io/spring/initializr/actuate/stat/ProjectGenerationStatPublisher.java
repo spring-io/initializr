@@ -76,7 +76,7 @@ public class ProjectGenerationStatPublisher {
 	public void handleEvent(ProjectRequestEvent event) {
 		String json = null;
 		try {
-			ProjectRequestDocument document = documentFactory.createDocument(event);
+			ProjectRequestDocument document = this.documentFactory.createDocument(event);
 			if (log.isDebugEnabled()) {
 				log.debug("Publishing " + document);
 			}
@@ -88,7 +88,7 @@ public class ProjectGenerationStatPublisher {
 
 			this.retryTemplate
 					.execute((RetryCallback<Void, RuntimeException>) context -> {
-						restTemplate.exchange(request, String.class);
+						this.restTemplate.exchange(request, String.class);
 						return null;
 					});
 		}

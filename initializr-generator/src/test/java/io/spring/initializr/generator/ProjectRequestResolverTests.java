@@ -48,13 +48,14 @@ public class ProjectRequestResolverTests {
 
 	@Before
 	public void setup() {
-		this.postProcessors.add(processor);
+		this.postProcessors.add(this.processor);
 	}
 
 	@Test
 	public void beforeResolution() {
-		processor.before.put("javaVersion", "1.2");
-		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
+		this.processor.before.put("javaVersion", "1.2");
+		ProjectRequest request = resolve(createMavenProjectRequest(),
+				this.postProcessors);
 		assertEquals("1.2", request.getJavaVersion());
 		assertEquals("1.2", request.getBuildProperties().getVersions()
 				.get(new VersionProperty("java.version")).get());
@@ -62,7 +63,7 @@ public class ProjectRequestResolverTests {
 
 	@Test
 	public void afterResolution() {
-		postProcessors.add(new ProjectRequestPostProcessor() {
+		this.postProcessors.add(new ProjectRequestPostProcessor() {
 			@Override
 			public void postProcessAfterResolution(ProjectRequest request,
 					InitializrMetadata metadata) {
@@ -70,14 +71,15 @@ public class ProjectRequestResolverTests {
 				request.getBuildProperties().getMaven().put("foo", () -> "bar");
 			}
 		});
-		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
+		ProjectRequest request = resolve(createMavenProjectRequest(),
+				this.postProcessors);
 		assertEquals(1, request.getBuildProperties().getMaven().size());
 		assertEquals("bar", request.getBuildProperties().getMaven().get("foo").get());
 	}
 
 	ProjectRequest resolve(ProjectRequest request,
 			List<ProjectRequestPostProcessor> processors) {
-		return new ProjectRequestResolver(processors).resolve(request, metadata);
+		return new ProjectRequestResolver(processors).resolve(request, this.metadata);
 	}
 
 	ProjectRequest createMavenProjectRequest(String... styles) {
@@ -88,7 +90,7 @@ public class ProjectRequestResolverTests {
 
 	ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+		request.initialize(this.metadata);
 		request.getStyle().addAll(Arrays.asList(styles));
 		return request;
 	}
@@ -104,14 +106,14 @@ public class ProjectRequestResolverTests {
 		public void postProcessBeforeResolution(ProjectRequest request,
 				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			before.forEach(wrapper::setPropertyValue);
+			this.before.forEach(wrapper::setPropertyValue);
 		}
 
 		@Override
 		public void postProcessAfterResolution(ProjectRequest request,
 				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			after.forEach(wrapper::setPropertyValue);
+			this.after.forEach(wrapper::setPropertyValue);
 		}
 
 	}

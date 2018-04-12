@@ -55,7 +55,7 @@ public class TemplateRenderer {
 	}
 
 	public boolean isCache() {
-		return cache;
+		return this.cache;
 	}
 
 	public void setCache(boolean cache) {
@@ -74,7 +74,7 @@ public class TemplateRenderer {
 	}
 
 	public Template getTemplate(String name) {
-		if (cache) {
+		if (this.cache) {
 			return this.templateCaches.computeIfAbsent(name, this::loadTemplate);
 		}
 		return loadTemplate(name);
@@ -83,8 +83,8 @@ public class TemplateRenderer {
 	protected Template loadTemplate(String name) {
 		try {
 			Reader template;
-			template = mustache.loader.getTemplate(name);
-			return mustache.compile(template);
+			template = this.mustache.loader.getTemplate(name);
+			return this.mustache.compile(template);
 		}
 		catch (Exception e) {
 			throw new IllegalStateException("Cannot load template " + name, e);

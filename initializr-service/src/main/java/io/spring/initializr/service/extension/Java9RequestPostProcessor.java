@@ -36,10 +36,12 @@ class Java9RequestPostProcessor implements ProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
-	private static final List<String> UNSUPPORTED_LANGUAGES = Arrays.asList("groovy", "kotlin");
+	private static final List<String> UNSUPPORTED_LANGUAGES = Arrays.asList("groovy",
+			"kotlin");
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
 		Version requestVersion = Version.safeParse(request.getBootVersion());
 		if (!"9".equals(request.getJavaVersion())) {
 			return;

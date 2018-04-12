@@ -112,8 +112,8 @@ public class BillOfMaterialsTests {
 				.add(BillOfMaterials.Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
 		bom.validate();
 
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("1.4.1.RELEASE");
+		this.thrown.expect(IllegalStateException.class);
+		this.thrown.expectMessage("1.4.1.RELEASE");
 		bom.resolve(Version.parse("1.4.1.RELEASE"));
 	}
 

@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spring.initializr.util.InvalidVersionException;
@@ -49,15 +48,15 @@ public class InitializrConfiguration {
 	private final Env env = new Env();
 
 	public Env getEnv() {
-		return env;
+		return this.env;
 	}
 
 	public void validate() {
-		env.validate();
+		this.env.validate();
 	}
 
 	public void merge(InitializrConfiguration other) {
-		env.merge(other.env);
+		this.env.merge(other.env);
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class InitializrConfiguration {
 	 */
 	public String generateApplicationName(String name) {
 		if (!StringUtils.hasText(name)) {
-			return env.fallbackApplicationName;
+			return this.env.fallbackApplicationName;
 		}
 		String text = splitCamelCase(name.trim());
 		// TODO: fix this
@@ -82,8 +81,8 @@ public class InitializrConfiguration {
 		}
 		String candidate = StringUtils.capitalize(result);
 		if (hasInvalidChar(candidate)
-				|| env.invalidApplicationNames.contains(candidate)) {
-			return env.fallbackApplicationName;
+				|| this.env.invalidApplicationNames.contains(candidate)) {
+			return this.env.fallbackApplicationName;
 		}
 		else {
 			return candidate;
@@ -105,7 +104,7 @@ public class InitializrConfiguration {
 		}
 		String candidate = cleanPackageName(packageName);
 		if (hasInvalidChar(candidate.replace(".", ""))
-				|| env.invalidPackageNames.contains(candidate)) {
+				|| this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
 		}
 		else {
@@ -229,10 +228,12 @@ public class InitializrConfiguration {
 
 		public Env() {
 			try {
-				repositories.put("spring-snapshots", new Repository("Spring Snapshots",
-						new URL("https://repo.spring.io/snapshot"), true));
-				repositories.put("spring-milestones", new Repository("Spring Milestones",
-						new URL("https://repo.spring.io/milestone"), false));
+				this.repositories.put("spring-snapshots",
+						new Repository("Spring Snapshots",
+								new URL("https://repo.spring.io/snapshot"), true));
+				this.repositories.put("spring-milestones",
+						new Repository("Spring Milestones",
+								new URL("https://repo.spring.io/milestone"), false));
 			}
 			catch (MalformedURLException e) {
 				throw new IllegalStateException("Cannot parse URL", e);
@@ -240,7 +241,7 @@ public class InitializrConfiguration {
 		}
 
 		public String getSpringBootMetadataUrl() {
-			return springBootMetadataUrl;
+			return this.springBootMetadataUrl;
 		}
 
 		public void setSpringBootMetadataUrl(String springBootMetadataUrl) {
@@ -248,7 +249,7 @@ public class InitializrConfiguration {
 		}
 
 		public String getGoogleAnalyticsTrackingCode() {
-			return googleAnalyticsTrackingCode;
+			return this.googleAnalyticsTrackingCode;
 		}
 
 		public void setGoogleAnalyticsTrackingCode(String googleAnalyticsTrackingCode) {
@@ -256,7 +257,7 @@ public class InitializrConfiguration {
 		}
 
 		public String getFallbackApplicationName() {
-			return fallbackApplicationName;
+			return this.fallbackApplicationName;
 		}
 
 		public void setFallbackApplicationName(String fallbackApplicationName) {
@@ -264,7 +265,7 @@ public class InitializrConfiguration {
 		}
 
 		public List<String> getInvalidApplicationNames() {
-			return invalidApplicationNames;
+			return this.invalidApplicationNames;
 		}
 
 		public void setInvalidApplicationNames(List<String> invalidApplicationNames) {
@@ -272,7 +273,7 @@ public class InitializrConfiguration {
 		}
 
 		public List<String> getInvalidPackageNames() {
-			return invalidPackageNames;
+			return this.invalidPackageNames;
 		}
 
 		public void setInvalidPackageNames(List<String> invalidPackageNames) {
@@ -280,7 +281,7 @@ public class InitializrConfiguration {
 		}
 
 		public boolean isForceSsl() {
-			return forceSsl;
+			return this.forceSsl;
 		}
 
 		public void setForceSsl(boolean forceSsl) {
@@ -288,27 +289,27 @@ public class InitializrConfiguration {
 		}
 
 		public String getArtifactRepository() {
-			return artifactRepository;
+			return this.artifactRepository;
 		}
 
 		public Map<String, BillOfMaterials> getBoms() {
-			return boms;
+			return this.boms;
 		}
 
 		public Map<String, Repository> getRepositories() {
-			return repositories;
+			return this.repositories;
 		}
 
 		public Gradle getGradle() {
-			return gradle;
+			return this.gradle;
 		}
 
 		public Kotlin getKotlin() {
-			return kotlin;
+			return this.kotlin;
 		}
 
 		public Maven getMaven() {
-			return maven;
+			return this.maven;
 		}
 
 		public void setArtifactRepository(String artifactRepository) {
@@ -319,23 +320,23 @@ public class InitializrConfiguration {
 		}
 
 		public void validate() {
-			maven.parent.validate();
-			boms.forEach((k, v) -> v.validate());
-			kotlin.validate();
+			this.maven.parent.validate();
+			this.boms.forEach((k, v) -> v.validate());
+			this.kotlin.validate();
 		}
 
 		public void merge(Env other) {
-			artifactRepository = other.artifactRepository;
-			springBootMetadataUrl = other.springBootMetadataUrl;
-			googleAnalyticsTrackingCode = other.googleAnalyticsTrackingCode;
-			fallbackApplicationName = other.fallbackApplicationName;
-			invalidApplicationNames = other.invalidApplicationNames;
-			forceSsl = other.forceSsl;
-			gradle.merge(other.gradle);
-			kotlin.merge(other.kotlin);
-			maven.merge(other.maven);
-			other.boms.forEach(boms::putIfAbsent);
-			other.repositories.forEach(repositories::putIfAbsent);
+			this.artifactRepository = other.artifactRepository;
+			this.springBootMetadataUrl = other.springBootMetadataUrl;
+			this.googleAnalyticsTrackingCode = other.googleAnalyticsTrackingCode;
+			this.fallbackApplicationName = other.fallbackApplicationName;
+			this.invalidApplicationNames = other.invalidApplicationNames;
+			this.forceSsl = other.forceSsl;
+			this.gradle.merge(other.gradle);
+			this.kotlin.merge(other.kotlin);
+			this.maven.merge(other.maven);
+			other.boms.forEach(this.boms::putIfAbsent);
+			other.repositories.forEach(this.repositories::putIfAbsent);
 		}
 
 		public static class Gradle {
@@ -346,11 +347,11 @@ public class InitializrConfiguration {
 			private String dependencyManagementPluginVersion = "1.0.0.RELEASE";
 
 			private void merge(Gradle other) {
-				dependencyManagementPluginVersion = other.dependencyManagementPluginVersion;
+				this.dependencyManagementPluginVersion = other.dependencyManagementPluginVersion;
 			}
 
 			public String getDependencyManagementPluginVersion() {
-				return dependencyManagementPluginVersion;
+				return this.dependencyManagementPluginVersion;
 			}
 
 			public void setDependencyManagementPluginVersion(
@@ -383,7 +384,7 @@ public class InitializrConfiguration {
 						return mapping.version;
 					}
 				}
-				if (defaultVersion == null) {
+				if (this.defaultVersion == null) {
 					throw new InvalidInitializrMetadataException(
 							"No Kotlin version mapping available for " + bootVersion);
 				}
@@ -404,7 +405,7 @@ public class InitializrConfiguration {
 
 			public void validate() {
 				VersionParser simpleParser = new VersionParser(Collections.emptyList());
-				mappings.forEach(m -> {
+				this.mappings.forEach(m -> {
 					if (m.versionRange == null) {
 						throw new InvalidInitializrMetadataException(
 								"VersionRange is mandatory, invalid version mapping for "
@@ -420,7 +421,7 @@ public class InitializrConfiguration {
 			}
 
 			public void updateVersionRange(VersionParser versionParser) {
-				mappings.forEach(it -> {
+				this.mappings.forEach(it -> {
 					try {
 						it.range = versionParser.parseRange(it.versionRange);
 					}
@@ -485,14 +486,14 @@ public class InitializrConfiguration {
 			private final ParentPom parent = new ParentPom();
 
 			public ParentPom getParent() {
-				return parent;
+				return this.parent;
 			}
 
 			private void merge(Maven other) {
-				parent.groupId = other.parent.groupId;
-				parent.artifactId = other.parent.artifactId;
-				parent.version = other.parent.version;
-				parent.includeSpringBootBom = other.parent.includeSpringBootBom;
+				this.parent.groupId = other.parent.groupId;
+				this.parent.artifactId = other.parent.artifactId;
+				this.parent.version = other.parent.version;
+				this.parent.includeSpringBootBom = other.parent.includeSpringBootBom;
 			}
 
 			/**
@@ -500,7 +501,7 @@ public class InitializrConfiguration {
 			 * spring boot parent pom with the specified {@code bootVersion} is used.
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
-				return StringUtils.hasText(parent.groupId) ? parent
+				return StringUtils.hasText(this.parent.groupId) ? this.parent
 						: new ParentPom("org.springframework.boot",
 								"spring-boot-starter-parent", bootVersion);
 			}
@@ -537,7 +538,7 @@ public class InitializrConfiguration {
 				}
 
 				public String getGroupId() {
-					return groupId;
+					return this.groupId;
 				}
 
 				public void setGroupId(String groupId) {
@@ -545,7 +546,7 @@ public class InitializrConfiguration {
 				}
 
 				public String getArtifactId() {
-					return artifactId;
+					return this.artifactId;
 				}
 
 				public void setArtifactId(String artifactId) {
@@ -553,7 +554,7 @@ public class InitializrConfiguration {
 				}
 
 				public String getVersion() {
-					return version;
+					return this.version;
 				}
 
 				public void setVersion(String version) {
@@ -561,7 +562,7 @@ public class InitializrConfiguration {
 				}
 
 				public boolean isIncludeSpringBootBom() {
-					return includeSpringBootBom;
+					return this.includeSpringBootBom;
 				}
 
 				public void setIncludeSpringBootBom(boolean includeSpringBootBom) {
@@ -569,12 +570,12 @@ public class InitializrConfiguration {
 				}
 
 				public void validate() {
-					if (!((!StringUtils.hasText(groupId)
-							&& !StringUtils.hasText(artifactId)
-							&& !StringUtils.hasText(version))
-							|| (StringUtils.hasText(groupId)
-									&& StringUtils.hasText(artifactId)
-									&& StringUtils.hasText(version)))) {
+					if (!((!StringUtils.hasText(this.groupId)
+							&& !StringUtils.hasText(this.artifactId)
+							&& !StringUtils.hasText(this.version))
+							|| (StringUtils.hasText(this.groupId)
+									&& StringUtils.hasText(this.artifactId)
+									&& StringUtils.hasText(this.version)))) {
 						throw new InvalidInitializrMetadataException("Custom maven pom "
 								+ "requires groupId, artifactId and version");
 					}

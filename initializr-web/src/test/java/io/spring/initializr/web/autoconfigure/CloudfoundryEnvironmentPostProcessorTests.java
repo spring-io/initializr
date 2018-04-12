@@ -36,37 +36,41 @@ public class CloudfoundryEnvironmentPostProcessorTests {
 
 	@Test
 	public void parseCredentials() {
-		environment.setProperty("vcap.services.stats-index.credentials.uri",
+		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
 				"http://user:pass@example.com/bar/biz?param=one");
-		postProcessor.postProcessEnvironment(environment, application);
+		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri"))
+		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
 				.isEqualTo("http://example.com/bar/biz?param=one");
-		assertThat(environment.getProperty("initializr.stats.elastic.username"))
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
 				.isEqualTo("user");
-		assertThat(environment.getProperty("initializr.stats.elastic.password"))
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
 				.isEqualTo("pass");
 	}
 
 	@Test
 	public void parseNoCredentials() {
-		environment.setProperty("vcap.services.stats-index.credentials.uri",
+		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
 				"http://example.com/bar/biz?param=one");
-		postProcessor.postProcessEnvironment(environment, application);
+		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri"))
+		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
 				.isEqualTo("http://example.com/bar/biz?param=one");
-		assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
+				.isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
+				.isNull();
 	}
 
 	@Test
 	public void parseNoVcapUri() {
-		postProcessor.postProcessEnvironment(environment, application);
+		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.uri")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
+				.isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
+				.isNull();
 	}
 
 }

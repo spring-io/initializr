@@ -48,7 +48,7 @@ public class MainControllerServiceMetadataIntegrationTests
 
 	@Test
 	public void initializeRemoteConfig() throws Exception {
-		InitializrMetadata localMetadata = metadataProvider.get();
+		InitializrMetadata localMetadata = this.metadataProvider.get();
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
 				.withInitializrMetadata(new UrlResource(createUrl("/metadata/config")))
 				.build();

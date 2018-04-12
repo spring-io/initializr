@@ -39,12 +39,12 @@ abstract class AbstractInitializrStatTests {
 
 	protected ProjectRequest createProjectRequest() {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+		request.initialize(this.metadata);
 		return request;
 	}
 
 	public InitializrMetadata getMetadata() {
-		return metadata;
+		return this.metadata;
 	}
 
 }

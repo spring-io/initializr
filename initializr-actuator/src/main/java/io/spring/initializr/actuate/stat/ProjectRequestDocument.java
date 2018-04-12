@@ -71,7 +71,7 @@ public class ProjectRequestDocument {
 	private final List<String> invalidDependencies = new ArrayList<>();
 
 	public long getGenerationTimestamp() {
-		return generationTimestamp;
+		return this.generationTimestamp;
 	}
 
 	public void setGenerationTimestamp(long generationTimestamp) {
@@ -79,7 +79,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getRequestIp() {
-		return requestIp;
+		return this.requestIp;
 	}
 
 	public void setRequestIp(String requestIp) {
@@ -87,7 +87,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getRequestIpv4() {
-		return requestIpv4;
+		return this.requestIpv4;
 	}
 
 	public void setRequestIpv4(String requestIpv4) {
@@ -95,7 +95,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getRequestCountry() {
-		return requestCountry;
+		return this.requestCountry;
 	}
 
 	public void setRequestCountry(String requestCountry) {
@@ -103,7 +103,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getClientId() {
-		return clientId;
+		return this.clientId;
 	}
 
 	public void setClientId(String clientId) {
@@ -111,7 +111,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getClientVersion() {
-		return clientVersion;
+		return this.clientVersion;
 	}
 
 	public void setClientVersion(String clientVersion) {
@@ -119,7 +119,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 	public void setGroupId(String groupId) {
@@ -127,7 +127,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getArtifactId() {
-		return artifactId;
+		return this.artifactId;
 	}
 
 	public void setArtifactId(String artifactId) {
@@ -135,7 +135,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
 	public void setPackageName(String packageName) {
@@ -143,7 +143,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getBootVersion() {
-		return bootVersion;
+		return this.bootVersion;
 	}
 
 	public void setBootVersion(String bootVersion) {
@@ -151,7 +151,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getJavaVersion() {
-		return javaVersion;
+		return this.javaVersion;
 	}
 
 	public void setJavaVersion(String javaVersion) {
@@ -159,7 +159,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getLanguage() {
-		return language;
+		return this.language;
 	}
 
 	public void setLanguage(String language) {
@@ -167,7 +167,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getPackaging() {
-		return packaging;
+		return this.packaging;
 	}
 
 	public void setPackaging(String packaging) {
@@ -175,7 +175,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -183,7 +183,7 @@ public class ProjectRequestDocument {
 	}
 
 	public String getErrorMessage() {
-		return errorMessage;
+		return this.errorMessage;
 	}
 
 	public void setErrorMessage(String errorMessage) {
@@ -191,7 +191,7 @@ public class ProjectRequestDocument {
 	}
 
 	public boolean isInvalid() {
-		return invalid;
+		return this.invalid;
 	}
 
 	public void setInvalid(boolean invalid) {
@@ -199,7 +199,7 @@ public class ProjectRequestDocument {
 	}
 
 	public boolean isInvalidJavaVersion() {
-		return invalidJavaVersion;
+		return this.invalidJavaVersion;
 	}
 
 	public void setInvalidJavaVersion(boolean invalidJavaVersion) {
@@ -207,7 +207,7 @@ public class ProjectRequestDocument {
 	}
 
 	public boolean isInvalidLanguage() {
-		return invalidLanguage;
+		return this.invalidLanguage;
 	}
 
 	public void setInvalidLanguage(boolean invalidLanguage) {
@@ -215,7 +215,7 @@ public class ProjectRequestDocument {
 	}
 
 	public boolean isInvalidPackaging() {
-		return invalidPackaging;
+		return this.invalidPackaging;
 	}
 
 	public void setInvalidPackaging(boolean invalidPackaging) {
@@ -223,7 +223,7 @@ public class ProjectRequestDocument {
 	}
 
 	public boolean isInvalidType() {
-		return invalidType;
+		return this.invalidType;
 	}
 
 	public void setInvalidType(boolean invalidType) {
@@ -231,37 +231,45 @@ public class ProjectRequestDocument {
 	}
 
 	public List<String> getDependencies() {
-		return dependencies;
+		return this.dependencies;
 	}
 
 	public List<String> getInvalidDependencies() {
-		return invalidDependencies;
+		return this.invalidDependencies;
 	}
 
 	@Override
 	public String toString() {
-		return "ProjectRequestDocument [generationTimestamp=" + generationTimestamp + ", "
-				+ (requestIp != null ? "requestIp=" + requestIp + ", " : "")
-				+ (requestIpv4 != null ? "requestIpv4=" + requestIpv4 + ", " : "")
-				+ (requestCountry != null ? "requestCountry=" + requestCountry + ", "
+		return "ProjectRequestDocument [generationTimestamp=" + this.generationTimestamp
+				+ ", "
+				+ (this.requestIp != null ? "requestIp=" + this.requestIp + ", " : "")
+				+ (this.requestIpv4 != null ? "requestIpv4=" + this.requestIpv4 + ", "
 						: "")
-				+ (clientId != null ? "clientId=" + clientId + ", " : "")
-				+ (clientVersion != null ? "clientVersion=" + clientVersion + ", " : "")
-				+ (groupId != null ? "groupId=" + groupId + ", " : "")
-				+ (artifactId != null ? "artifactId=" + artifactId + ", " : "")
-				+ (packageName != null ? "packageName=" + packageName + ", " : "")
-				+ (bootVersion != null ? "bootVersion=" + bootVersion + ", " : "")
-				+ (javaVersion != null ? "javaVersion=" + javaVersion + ", " : "")
-				+ (language != null ? "language=" + language + ", " : "")
-				+ (packaging != null ? "packaging=" + packaging + ", " : "")
-				+ (type != null ? "type=" + type + ", " : "")
-				+ (dependencies != null ? "dependencies=" + dependencies + ", " : "")
-				+ (errorMessage != null ? "errorMessage=" + errorMessage + ", " : "")
-				+ "invalid=" + invalid + ", invalidJavaVersion=" + invalidJavaVersion
-				+ ", invalidLanguage=" + invalidLanguage + ", invalidPackaging="
-				+ invalidPackaging + ", invalidType=" + invalidType + ", "
-				+ (invalidDependencies != null
-						? "invalidDependencies=" + invalidDependencies : "")
+				+ (this.requestCountry != null
+						? "requestCountry=" + this.requestCountry + ", " : "")
+				+ (this.clientId != null ? "clientId=" + this.clientId + ", " : "")
+				+ (this.clientVersion != null
+						? "clientVersion=" + this.clientVersion + ", " : "")
+				+ (this.groupId != null ? "groupId=" + this.groupId + ", " : "")
+				+ (this.artifactId != null ? "artifactId=" + this.artifactId + ", " : "")
+				+ (this.packageName != null ? "packageName=" + this.packageName + ", "
+						: "")
+				+ (this.bootVersion != null ? "bootVersion=" + this.bootVersion + ", "
+						: "")
+				+ (this.javaVersion != null ? "javaVersion=" + this.javaVersion + ", "
+						: "")
+				+ (this.language != null ? "language=" + this.language + ", " : "")
+				+ (this.packaging != null ? "packaging=" + this.packaging + ", " : "")
+				+ (this.type != null ? "type=" + this.type + ", " : "")
+				+ (this.dependencies != null ? "dependencies=" + this.dependencies + ", "
+						: "")
+				+ (this.errorMessage != null ? "errorMessage=" + this.errorMessage + ", "
+						: "")
+				+ "invalid=" + this.invalid + ", invalidJavaVersion="
+				+ this.invalidJavaVersion + ", invalidLanguage=" + this.invalidLanguage
+				+ ", invalidPackaging=" + this.invalidPackaging + ", invalidType="
+				+ this.invalidType + ", " + (this.invalidDependencies != null
+						? "invalidDependencies=" + this.invalidDependencies : "")
 				+ "]";
 	}
 

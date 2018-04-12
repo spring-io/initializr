@@ -41,7 +41,7 @@ public abstract class AbstractFullStackInitializrIntegrationTests
 
 	@Override
 	protected String createUrl(String context) {
-		return "http://" + host + ":" + port
+		return "http://" + this.host + ":" + this.port
 				+ (context.startsWith("/") ? context : "/" + context);
 	}
 

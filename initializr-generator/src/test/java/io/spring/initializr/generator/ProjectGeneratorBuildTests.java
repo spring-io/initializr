@@ -74,8 +74,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/standard/" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/standard/" + this.assertFileName));
 	}
 
 	@Test
@@ -98,8 +98,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setPackaging("war");
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(
-				new ClassPathResource("project/" + language + "/war/" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/war/" + this.assertFileName));
 	}
 
 	@Test
@@ -110,8 +110,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.getBuildProperties().getVersions()
 				.put(new VersionProperty("spring-bar.version"), () -> "0.2.0.RELEASE");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/version-override-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/version-override-" + this.assertFileName));
 	}
 
 	@Test
@@ -125,8 +125,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/bom-property-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/bom-property-" + this.assertFileName));
 	}
 
 	@Test
@@ -139,8 +139,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo", "web", "data-jpa");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/compile-only-dependency-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
+				+ this.build + "/compile-only-dependency-" + this.assertFileName));
 	}
 
 	@Test
@@ -163,8 +163,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("foo");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/bom-ordering-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/bom-ordering-" + this.assertFileName));
 	}
 
 	@Test
@@ -173,8 +173,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setLanguage("kotlin");
 		request.setJavaVersion("1.6");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-java6-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/kotlin-java6-" + this.assertFileName));
 	}
 
 	@Test
@@ -183,8 +183,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setLanguage("kotlin");
 		request.setJavaVersion("1.7");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-java7-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/kotlin-java7-" + this.assertFileName));
 	}
 
 	@Test
@@ -196,8 +196,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
 				.equalsTo(new ClassPathResource(
 						"project/kotlin/spring-boot-2.0/DemoApplicationLegacy.kt.gen"));
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-springboot2-legacy-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
+				+ this.build + "/kotlin-springboot2-legacy-" + this.assertFileName));
 	}
 
 	@Test
@@ -209,8 +209,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
 				.equalsTo(new ClassPathResource(
 						"project/kotlin/spring-boot-2.0/DemoApplication.kt.gen"));
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-springboot2-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/kotlin-springboot2-" + this.assertFileName));
 	}
 
 	@Test
@@ -220,14 +220,14 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		request.setBootVersion("2.0.0.M6");
 		request.setJavaVersion("9");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-java9-" + assertFileName));
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/kotlin-java9-" + this.assertFileName));
 	}
 
 	@Override
 	public ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = super.createProjectRequest(styles);
-		request.setType(build + "-project");
+		request.setType(this.build + "-project");
 		return request;
 	}
 

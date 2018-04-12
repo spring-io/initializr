@@ -37,7 +37,7 @@ public class CommandLineHelpGeneratorTests {
 
 	@Before
 	public void init() {
-		generator = new CommandLineHelpGenerator(new TemplateRenderer());
+		this.generator = new CommandLineHelpGenerator(new TemplateRenderer());
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class CommandLineHelpGeneratorTests {
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
 				.build();
-		String content = generator.generateGenericCapabilities(metadata,
+		String content = this.generator.generateGenericCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content, containsString("id-a | and some description |"));
@@ -64,7 +64,7 @@ public class CommandLineHelpGeneratorTests {
 		type.setDescription("foo-desc");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addType(type).build();
-		String content = generator.generateGenericCapabilities(metadata,
+		String content = this.generator.generateGenericCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content, containsString("| foo"));
@@ -77,7 +77,7 @@ public class CommandLineHelpGeneratorTests {
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
 				.build();
-		String content = generator.generateCurlCapabilities(metadata,
+		String content = this.generator.generateCurlCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content, containsString("id-a | and some description |"));
@@ -93,7 +93,7 @@ public class CommandLineHelpGeneratorTests {
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
 				.build();
-		String content = generator.generateHttpieCapabilities(metadata,
+		String content = this.generator.generateHttpieCapabilities(metadata,
 				"https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content, containsString("id-a | and some description |"));
@@ -110,7 +110,7 @@ public class CommandLineHelpGeneratorTests {
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
 				.build();
-		String content = generator.generateSpringBootCliCapabilities(metadata,
+		String content = this.generator.generateSpringBootCliCapabilities(metadata,
 				"https://fake-service");
 		assertThat(content, containsString("| Id"));
 		assertThat(content, containsString("| Tags"));
@@ -135,7 +135,7 @@ public class CommandLineHelpGeneratorTests {
 		second.setVersionRange(" [1.2.0.RELEASE,1.3.0.M1)  ");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second).build();
-		String content = generator.generateSpringBootCliCapabilities(metadata,
+		String content = this.generator.generateSpringBootCliCapabilities(metadata,
 				"https://fake-service");
 		assertThat(content, containsString(
 				"| first  | first desc  | >=1.2.0.RELEASE               |"));

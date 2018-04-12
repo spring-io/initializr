@@ -31,10 +31,8 @@ public class SpringBatchTestRequestPostProcessorTests
 	@Test
 	public void batchTestIsAddedWithBatch() {
 		ProjectRequest request = createProjectRequest("batch");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("batch")
-				.hasSpringBootStarterTest()
-				.hasDependency(springBatchTest())
+		generateMavenPom(request).hasSpringBootStarterDependency("batch")
+				.hasSpringBootStarterTest().hasDependency(springBatchTest())
 				.hasDependenciesCount(3);
 	}
 
@@ -42,19 +40,15 @@ public class SpringBatchTestRequestPostProcessorTests
 	public void batchTestIsNotAddedBefore13() {
 		ProjectRequest request = createProjectRequest("batch");
 		request.setBootVersion("1.2.7.RELEASE");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("batch")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		generateMavenPom(request).hasSpringBootStarterDependency("batch")
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
 	public void batchTestIsNotAddedWithoutSpringBatch() {
 		ProjectRequest request = createProjectRequest("web");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		generateMavenPom(request).hasSpringBootStarterDependency("web")
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	private static Dependency springBatchTest() {

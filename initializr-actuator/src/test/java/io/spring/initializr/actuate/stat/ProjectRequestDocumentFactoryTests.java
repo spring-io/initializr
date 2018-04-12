@@ -40,7 +40,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	public void createDocumentForSimpleProject() {
 		ProjectRequest request = createProjectRequest();
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals(event.getTimestamp(), document.getGenerationTimestamp());
 		assertEquals(null, document.getRequestIp());
 		assertEquals("com.example", document.getGroupId());
@@ -60,7 +60,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("x-forwarded-for", "10.0.0.123");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("10.0.0.123", document.getRequestIp());
 		assertEquals("10.0.0.123", document.getRequestIpv4());
 		assertNull(document.getRequestCountry());
@@ -71,7 +71,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("x-forwarded-for", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("2001:db8:a0b:12f0::1", document.getRequestIp());
 		assertNull(document.getRequestIpv4());
 		assertNull(document.getRequestCountry());
@@ -83,7 +83,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		request.getParameters().put("cf-connecting-ip", "10.0.0.123");
 		request.getParameters().put("cf-ipcountry", "BE");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("10.0.0.123", document.getRequestIp());
 		assertEquals("10.0.0.123", document.getRequestIpv4());
 		assertEquals("BE", document.getRequestCountry());
@@ -94,7 +94,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("2001:db8:a0b:12f0::1", document.getRequestIp());
 		assertNull(document.getRequestIpv4());
 		assertNull(document.getRequestCountry());
@@ -106,7 +106,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		request.getParameters().put("cf-connecting-ip", "10.0.0.123");
 		request.getParameters().put("x-forwarded-for", "192.168.1.101");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("10.0.0.123", document.getRequestIp());
 		assertEquals("10.0.0.123", document.getRequestIpv4());
 		assertNull(document.getRequestCountry());
@@ -117,7 +117,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "Xx"); // case insensitive
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertNull(document.getRequestCountry());
 	}
 
@@ -126,7 +126,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("user-agent", "HTTPie/0.8.0");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("httpie", document.getClientId());
 		assertEquals("0.8.0", document.getClientVersion());
 	}
@@ -136,7 +136,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("user-agent", "IntelliJ IDEA");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("intellijidea", document.getClientId());
 		assertEquals(null, document.getClientVersion());
 	}
@@ -146,7 +146,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.setJavaVersion("1.2");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("1.2", document.getJavaVersion());
 		assertTrue(document.isInvalid());
 		assertTrue(document.isInvalidJavaVersion());
@@ -157,7 +157,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage("c++");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("c++", document.getLanguage());
 		assertTrue(document.isInvalid());
 		assertTrue(document.isInvalidLanguage());
@@ -168,7 +168,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("ear");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("ear", document.getPackaging());
 		assertTrue(document.isInvalid());
 		assertTrue(document.isInvalidPackaging());
@@ -179,7 +179,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.setType("ant-project");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("ant-project", document.getType());
 		assertTrue(document.isInvalid());
 		assertTrue(document.isInvalidType());
@@ -190,7 +190,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Arrays.asList("web", "invalid", "data-jpa", "invalid-2"));
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertEquals("web", document.getDependencies().get(0));
 		assertEquals("data-jpa", document.getDependencies().get(1));
 		assertEquals(2, document.getDependencies().size());
@@ -205,7 +205,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		ProjectRequest request = createProjectRequest();
 		ProjectFailedEvent event = new ProjectFailedEvent(request,
 				new IllegalStateException("my test message"));
-		ProjectRequestDocument document = factory.createDocument(event);
+		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertTrue(document.isInvalid());
 		assertEquals("my test message", document.getErrorMessage());
 	}

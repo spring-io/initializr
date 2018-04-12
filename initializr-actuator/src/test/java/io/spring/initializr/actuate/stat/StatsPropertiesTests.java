@@ -30,16 +30,16 @@ public class StatsPropertiesTests {
 
 	@Test
 	public void cleanTrailingSlash() {
-		properties.getElastic().setUri("http://example.com/");
-		assertThat(properties.getElastic().getUri(), is("http://example.com"));
+		this.properties.getElastic().setUri("http://example.com/");
+		assertThat(this.properties.getElastic().getUri(), is("http://example.com"));
 	}
 
 	@Test
 	public void provideEntityUrl() {
-		properties.getElastic().setUri("http://example.com/");
-		properties.getElastic().setIndexName("my-index");
-		properties.getElastic().setEntityName("foo");
-		assertThat(properties.getElastic().getEntityUrl().toString(),
+		this.properties.getElastic().setUri("http://example.com/");
+		this.properties.getElastic().setIndexName("my-index");
+		this.properties.getElastic().setEntityName("foo");
+		assertThat(this.properties.getElastic().getEntityUrl().toString(),
 				is("http://example.com/my-index/foo"));
 	}
 

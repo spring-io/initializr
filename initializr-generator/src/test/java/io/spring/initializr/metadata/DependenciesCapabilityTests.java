@@ -55,8 +55,8 @@ public class DependenciesCapabilityTests {
 		DependenciesCapability capability = createDependenciesCapability("foo",
 				dependency, dependency2);
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("conflict");
+		this.thrown.expect(IllegalArgumentException.class);
+		this.thrown.expectMessage("conflict");
 		capability.validate();
 	}
 
@@ -85,8 +85,8 @@ public class DependenciesCapabilityTests {
 		capability.getContent().add(createDependencyGroup("foo", dependency));
 		capability.getContent().add(createDependencyGroup("bar", dependency2));
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("alias2");
+		this.thrown.expect(IllegalArgumentException.class);
+		this.thrown.expectMessage("alias2");
 		capability.validate();
 	}
 

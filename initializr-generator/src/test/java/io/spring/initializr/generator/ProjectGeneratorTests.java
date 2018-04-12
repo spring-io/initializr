@@ -802,7 +802,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.hasDependency(Dependency.withId("foo", "org.acme", "foo", "1.0.0"));
 
 		// First after processor that flips Spring Boot version
-		projectGenerator.setRequestResolver(new ProjectRequestResolver(
+		this.projectGenerator.setRequestResolver(new ProjectRequestResolver(
 				Collections.singletonList(new ProjectRequestPostProcessor() {
 					@Override
 					public void postProcessBeforeResolution(ProjectRequest r,
@@ -853,7 +853,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setType("gradle-build");
 		this.thrown.expect(InvalidProjectRequestException.class);
 		this.thrown.expectMessage("gradle-build");
-		projectGenerator.generateMavenPom(request);
+		this.projectGenerator.generateMavenPom(request);
 	}
 
 	@Test
@@ -862,7 +862,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setType("maven-build");
 		this.thrown.expect(InvalidProjectRequestException.class);
 		this.thrown.expectMessage("maven-build");
-		projectGenerator.generateGradleBuild(request);
+		this.projectGenerator.generateGradleBuild(request);
 	}
 
 	@Test

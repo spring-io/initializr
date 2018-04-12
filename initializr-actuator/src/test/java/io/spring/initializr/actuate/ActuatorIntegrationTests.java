@@ -21,12 +21,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static io.spring.initializr.web.AbstractInitializrIntegrationTests.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

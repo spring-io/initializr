@@ -45,7 +45,7 @@ public class DependencyGroup {
 	 * Return the name of this group.
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -57,7 +57,7 @@ public class DependencyGroup {
 	 * specified otherwise.
 	 */
 	public String getVersionRange() {
-		return versionRange;
+		return this.versionRange;
 	}
 
 	public void setVersionRange(String versionRange) {
@@ -69,7 +69,7 @@ public class DependencyGroup {
 	 * specified otherwise.
 	 */
 	public String getBom() {
-		return bom;
+		return this.bom;
 	}
 
 	public void setBom(String bom) {
@@ -81,7 +81,7 @@ public class DependencyGroup {
 	 * specified otherwise.
 	 */
 	public String getRepository() {
-		return repository;
+		return this.repository;
 	}
 
 	public void setRepository(String repository) {
@@ -92,7 +92,7 @@ public class DependencyGroup {
 	 * Return the {@link Dependency dependencies} of this group.
 	 */
 	public List<Dependency> getContent() {
-		return content;
+		return this.content;
 	}
 
 	public static DependencyGroup create(String name) {

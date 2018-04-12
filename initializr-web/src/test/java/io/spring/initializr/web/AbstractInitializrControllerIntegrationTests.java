@@ -52,7 +52,7 @@ public abstract class AbstractInitializrControllerIntegrationTests
 	}
 
 	public MockMvcClientHttpRequestFactory getRequests() {
-		return requests;
+		return this.requests;
 	}
 
 	@Configuration

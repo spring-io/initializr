@@ -58,7 +58,7 @@ public class CommandLineHelpGenerator {
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
@@ -67,9 +67,9 @@ public class CommandLineHelpGenerator {
 	public String generateCurlCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", template.process("curl-examples.txt", model));
+		model.put("examples", this.template.process("curl-examples.txt", model));
 		model.put("hasExamples", true);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class CommandLineHelpGenerator {
 	public String generateHttpieCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", template.process("httpie-examples.txt", model));
+		model.put("examples", this.template.process("httpie-examples.txt", model));
 		model.put("hasExamples", true);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class CommandLineHelpGenerator {
 			String serviceUrl) {
 		Map<String, Object> model = initializeSpringBootCliModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return template.process("boot-cli-capabilities.txt", model);
+		return this.template.process("boot-cli-capabilities.txt", model);
 	}
 
 	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata,

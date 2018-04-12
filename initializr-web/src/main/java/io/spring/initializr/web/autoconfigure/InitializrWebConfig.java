@@ -65,7 +65,7 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 		@Override
 		public List<MediaType> resolveMediaTypes(NativeWebRequest request)
 				throws HttpMediaTypeNotAcceptableException {
-			String path = urlPathHelper.getPathWithinApplication(
+			String path = this.urlPathHelper.getPathWithinApplication(
 					request.getNativeRequest(HttpServletRequest.class));
 			if (!StringUtils.hasText(path) || !path.equals("/")) { // Only care about "/"
 				return MEDIA_TYPE_ALL_LIST;

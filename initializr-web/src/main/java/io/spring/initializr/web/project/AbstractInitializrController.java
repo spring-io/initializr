@@ -58,7 +58,7 @@ public abstract class AbstractInitializrController {
 
 	public boolean isForceSsl() {
 		if (this.forceSsl == null) {
-			this.forceSsl = metadataProvider.get().getConfiguration().getEnv()
+			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv()
 					.isForceSsl();
 		}
 		return this.forceSsl;
@@ -75,7 +75,7 @@ public abstract class AbstractInitializrController {
 	 * Render the home page with the specified template.
 	 */
 	protected void renderHome(Map<String, Object> model) {
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 
 		model.put("serviceUrl", generateAppUrl());
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
@@ -96,7 +96,7 @@ public abstract class AbstractInitializrController {
 	}
 
 	public Function<String, String> getLinkTo() {
-		return linkTo;
+		return this.linkTo;
 	}
 
 	private TypeCapability removeTypes(TypeCapability types) {

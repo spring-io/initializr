@@ -44,7 +44,7 @@ public class DefaultDependencyMetadataProviderTests {
 		third.setVersionRange("1.1.8.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second, third).build();
-		DependencyMetadata dependencyMetadata = provider.get(metadata,
+		DependencyMetadata dependencyMetadata = this.provider.get(metadata,
 				Version.parse("1.1.5.RELEASE"));
 		assertEquals(2, dependencyMetadata.getDependencies().size());
 		assertEquals(0, dependencyMetadata.getRepositories().size());
@@ -64,7 +64,7 @@ public class DefaultDependencyMetadataProviderTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second).build();
 
-		DependencyMetadata dependencyMetadata = provider.get(metadata,
+		DependencyMetadata dependencyMetadata = this.provider.get(metadata,
 				Version.parse("1.0.5.RELEASE"));
 		assertEquals(2, dependencyMetadata.getDependencies().size());
 		assertEquals("org.bar",
@@ -74,7 +74,7 @@ public class DefaultDependencyMetadataProviderTests {
 		assertEquals("0.1.0.RELEASE",
 				dependencyMetadata.getDependencies().get("first").getVersion());
 
-		DependencyMetadata anotherDependencyMetadata = provider.get(metadata,
+		DependencyMetadata anotherDependencyMetadata = this.provider.get(metadata,
 				Version.parse("1.1.0.RELEASE"));
 		assertEquals(2, anotherDependencyMetadata.getDependencies().size());
 		assertEquals("org.biz",
@@ -95,7 +95,7 @@ public class DefaultDependencyMetadataProviderTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addRepository("repo-foo", "my-repo", "http://localhost", false)
 				.addDependencyGroup("test", first, second, third).build();
-		DependencyMetadata dependencyMetadata = provider.get(metadata,
+		DependencyMetadata dependencyMetadata = this.provider.get(metadata,
 				Version.parse("1.1.5.RELEASE"));
 		assertEquals(3, dependencyMetadata.getDependencies().size());
 		assertEquals(1, dependencyMetadata.getRepositories().size());
@@ -120,7 +120,7 @@ public class DefaultDependencyMetadataProviderTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("bom-foo", bom).addDependencyGroup("test", first, second, third)
 				.build();
-		DependencyMetadata dependencyMetadata = provider.get(metadata,
+		DependencyMetadata dependencyMetadata = this.provider.get(metadata,
 				Version.parse("1.1.5.RELEASE"));
 		assertEquals(3, dependencyMetadata.getDependencies().size());
 		assertEquals(0, dependencyMetadata.getRepositories().size());
@@ -186,7 +186,7 @@ public class DefaultDependencyMetadataProviderTests {
 				.addRepository("repo-bar", "bar", "http://localhost", false)
 				.addRepository("repo-biz", "biz", "http://localhost", false)
 				.addDependencyGroup("test", first, second, third).build();
-		return provider.get(metadata, Version.parse(bootVersion));
+		return this.provider.get(metadata, Version.parse(bootVersion));
 	}
 
 }

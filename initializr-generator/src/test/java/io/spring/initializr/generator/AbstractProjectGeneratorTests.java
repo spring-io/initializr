@@ -70,48 +70,48 @@ public abstract class AbstractProjectGeneratorTests {
 						"data-jpa", "aop", "batch", "integration")
 				.build();
 		applyMetadata(metadata);
-		projectGenerator.setEventPublisher(eventPublisher);
-		projectGenerator
+		this.projectGenerator.setEventPublisher(this.eventPublisher);
+		this.projectGenerator
 				.setRequestResolver(new ProjectRequestResolver(new ArrayList<>()));
-		projectGenerator.setTmpdir(folder.newFolder().getAbsolutePath());
+		this.projectGenerator.setTmpdir(this.folder.newFolder().getAbsolutePath());
 	}
 
 	protected PomAssert generateMavenPom(ProjectRequest request) {
 		request.setType("maven-build");
-		String content = new String(projectGenerator.generateMavenPom(request));
+		String content = new String(this.projectGenerator.generateMavenPom(request));
 		return new PomAssert(content).validateProjectRequest(request);
 	}
 
 	protected GradleBuildAssert generateGradleBuild(ProjectRequest request) {
 		request.setType("gradle-build");
-		String content = new String(projectGenerator.generateGradleBuild(request));
+		String content = new String(this.projectGenerator.generateGradleBuild(request));
 		return new GradleBuildAssert(content).validateProjectRequest(request);
 	}
 
 	protected ProjectAssert generateProject(ProjectRequest request) {
-		File dir = projectGenerator.generateProjectStructure(request);
+		File dir = this.projectGenerator.generateProjectStructure(request);
 		return new ProjectAssert(dir);
 	}
 
 	public ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(projectGenerator.getMetadataProvider().get());
+		request.initialize(this.projectGenerator.getMetadataProvider().get());
 		request.getStyle().addAll(Arrays.asList(styles));
 		return request;
 	}
 
 	protected void applyMetadata(InitializrMetadata metadata) {
-		projectGenerator
+		this.projectGenerator
 				.setMetadataProvider(new SimpleInitializrMetadataProvider(metadata));
 	}
 
 	protected void verifyProjectSuccessfulEventFor(ProjectRequest request) {
-		verify(eventPublisher, times(1))
+		verify(this.eventPublisher, times(1))
 				.publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
 	}
 
 	protected void verifyProjectFailedEventFor(ProjectRequest request, Exception ex) {
-		verify(eventPublisher, times(1))
+		verify(this.eventPublisher, times(1))
 				.publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
 	}
 
@@ -126,7 +126,7 @@ public abstract class AbstractProjectGeneratorTests {
 
 		@Override
 		public boolean matches(ProjectGeneratedEvent event) {
-			return request.equals(event.getProjectRequest());
+			return this.request.equals(event.getProjectRequest());
 		}
 
 	}
@@ -145,8 +145,8 @@ public abstract class AbstractProjectGeneratorTests {
 
 		@Override
 		public boolean matches(ProjectFailedEvent event) {
-			return request.equals(event.getProjectRequest())
-					&& cause.equals(event.getCause());
+			return this.request.equals(event.getProjectRequest())
+					&& this.cause.equals(event.getCause());
 		}
 
 	}

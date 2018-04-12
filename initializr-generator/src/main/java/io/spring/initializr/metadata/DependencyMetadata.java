@@ -48,19 +48,19 @@ public class DependencyMetadata {
 	}
 
 	public Version getBootVersion() {
-		return bootVersion;
+		return this.bootVersion;
 	}
 
 	public Map<String, Dependency> getDependencies() {
-		return dependencies;
+		return this.dependencies;
 	}
 
 	public Map<String, Repository> getRepositories() {
-		return repositories;
+		return this.repositories;
 	}
 
 	public Map<String, BillOfMaterials> getBoms() {
-		return boms;
+		return this.boms;
 	}
 
 }

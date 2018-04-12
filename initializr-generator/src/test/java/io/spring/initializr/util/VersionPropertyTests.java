@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link VersionProperty}.
- * 
+ *
  * @author Stephane Nicoll
  */
 public class VersionPropertyTests {

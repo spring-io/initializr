@@ -35,7 +35,7 @@ public class StatsProperties {
 	private final Elastic elastic = new Elastic();
 
 	public Elastic getElastic() {
-		return elastic;
+		return this.elastic;
 	}
 
 	public static final class Elastic {
@@ -71,7 +71,7 @@ public class StatsProperties {
 		private int maxAttempts = 3;
 
 		public String getUsername() {
-			return username;
+			return this.username;
 		}
 
 		public void setUsername(String username) {
@@ -79,7 +79,7 @@ public class StatsProperties {
 		}
 
 		public String getPassword() {
-			return password;
+			return this.password;
 		}
 
 		public void setPassword(String password) {
@@ -87,7 +87,7 @@ public class StatsProperties {
 		}
 
 		public String getIndexName() {
-			return indexName;
+			return this.indexName;
 		}
 
 		public void setIndexName(String indexName) {
@@ -95,7 +95,7 @@ public class StatsProperties {
 		}
 
 		public String getEntityName() {
-			return entityName;
+			return this.entityName;
 		}
 
 		public void setEntityName(String entityName) {
@@ -103,7 +103,7 @@ public class StatsProperties {
 		}
 
 		public int getMaxAttempts() {
-			return maxAttempts;
+			return this.maxAttempts;
 		}
 
 		public void setMaxAttempts(int maxAttempts) {
@@ -111,7 +111,7 @@ public class StatsProperties {
 		}
 
 		public String getUri() {
-			return uri;
+			return this.uri;
 		}
 
 		public void setUri(String uri) {
@@ -119,7 +119,7 @@ public class StatsProperties {
 		}
 
 		public URI getEntityUrl() {
-			String string = uri + "/" + indexName + "/" + entityName;
+			String string = this.uri + "/" + this.indexName + "/" + this.entityName;
 			try {
 				return new URI(string);
 			}

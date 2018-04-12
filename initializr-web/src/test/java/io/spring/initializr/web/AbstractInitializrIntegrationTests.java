@@ -86,7 +86,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	@Before
 	public void before() {
-		restTemplate = restTemplateBuilder.build();
+		this.restTemplate = this.restTemplateBuilder.build();
 	}
 
 	protected abstract String createUrl(String context);
@@ -94,7 +94,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected String htmlHome() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-		return restTemplate.exchange(createUrl("/"), HttpMethod.GET,
+		return this.restTemplate.exchange(createUrl("/"), HttpMethod.GET,
 				new HttpEntity<Void>(headers), String.class).getBody();
 	}
 
@@ -175,7 +175,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected byte[] downloadArchive(String context) {
-		return restTemplate.getForObject(createUrl(context), byte[].class);
+		return this.restTemplate.getForObject(createUrl(context), byte[].class);
 	}
 
 	protected ResponseEntity<String> invokeHome(String userAgentHeader,
@@ -199,7 +199,7 @@ public abstract class AbstractInitializrIntegrationTests {
 		else {
 			headers.setAccept(Collections.emptyList());
 		}
-		return restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
+		return this.restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
 				new HttpEntity<Void>(headers), responseType);
 	}
 
@@ -207,7 +207,7 @@ public abstract class AbstractInitializrIntegrationTests {
 		try {
 			File archiveFile = writeArchive(content);
 
-			File project = folder.newFolder();
+			File project = this.folder.newFolder();
 			switch (archiveType) {
 			case ZIP:
 				unzip(archiveFile, project);
@@ -243,7 +243,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected File writeArchive(byte[] body) throws IOException {
-		File archiveFile = folder.newFile();
+		File archiveFile = this.folder.newFile();
 		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
 			stream.write(body);
 		}
@@ -275,7 +275,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	public RestTemplate getRestTemplate() {
-		return restTemplate;
+		return this.restTemplate;
 	}
 
 	private enum ArchiveType {

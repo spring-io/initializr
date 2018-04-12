@@ -50,7 +50,7 @@ public class DependencyMetadataJsonMapperTests {
 				Version.parse("1.2.0.RELEASE"), Collections.singletonMap(d.getId(), d),
 				Collections.singletonMap("repo-id", repository),
 				Collections.singletonMap("bom-id", bom));
-		JSONObject content = new JSONObject(mapper.write(metadata));
+		JSONObject content = new JSONObject(this.mapper.write(metadata));
 		assertEquals("my-bom", content.getJSONObject("dependencies").getJSONObject("foo")
 				.getString("bom"));
 		assertEquals("my-repo", content.getJSONObject("dependencies").getJSONObject("foo")

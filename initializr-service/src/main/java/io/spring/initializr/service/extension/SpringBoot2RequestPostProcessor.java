@@ -26,8 +26,8 @@ import io.spring.initializr.util.Version;
 import org.springframework.stereotype.Component;
 
 /**
- * As of Spring Boot 2.0, Java8 is mandatory so this extension makes sure that the
- * java version is forced.
+ * As of Spring Boot 2.0, Java8 is mandatory so this extension makes sure that the java
+ * version is forced.
  *
  * @author Stephane Nicoll
  */

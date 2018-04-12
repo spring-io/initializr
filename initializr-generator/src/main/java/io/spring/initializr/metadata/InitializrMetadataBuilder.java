@@ -101,7 +101,7 @@ public class InitializrMetadataBuilder {
 	 */
 	public InitializrMetadataBuilder withCustomizer(
 			InitializrMetadataCustomizer customizer) {
-		customizers.add(customizer);
+		this.customizers.add(customizer);
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class InitializrMetadataBuilder {
 		InitializrConfiguration config = this.configuration != null ? this.configuration
 				: new InitializrConfiguration();
 		InitializrMetadata metadata = createInstance(config);
-		for (InitializrMetadataCustomizer customizer : customizers) {
+		for (InitializrMetadataCustomizer customizer : this.customizers) {
 			customizer.customize(metadata);
 		}
 		applyDefaults(metadata);
@@ -156,18 +156,18 @@ public class InitializrMetadataBuilder {
 
 		@Override
 		public void customize(InitializrMetadata metadata) {
-			metadata.getDependencies().merge(properties.getDependencies());
-			metadata.getTypes().merge(properties.getTypes());
-			metadata.getBootVersions().merge(properties.getBootVersions());
-			metadata.getPackagings().merge(properties.getPackagings());
-			metadata.getJavaVersions().merge(properties.getJavaVersions());
-			metadata.getLanguages().merge(properties.getLanguages());
-			properties.getGroupId().apply(metadata.getGroupId());
-			properties.getArtifactId().apply(metadata.getArtifactId());
-			properties.getVersion().apply(metadata.getVersion());
-			properties.getName().apply(metadata.getName());
-			properties.getDescription().apply(metadata.getDescription());
-			properties.getPackageName().apply(metadata.getPackageName());
+			metadata.getDependencies().merge(this.properties.getDependencies());
+			metadata.getTypes().merge(this.properties.getTypes());
+			metadata.getBootVersions().merge(this.properties.getBootVersions());
+			metadata.getPackagings().merge(this.properties.getPackagings());
+			metadata.getJavaVersions().merge(this.properties.getJavaVersions());
+			metadata.getLanguages().merge(this.properties.getLanguages());
+			this.properties.getGroupId().apply(metadata.getGroupId());
+			this.properties.getArtifactId().apply(metadata.getArtifactId());
+			this.properties.getVersion().apply(metadata.getVersion());
+			this.properties.getName().apply(metadata.getName());
+			this.properties.getDescription().apply(metadata.getDescription());
+			this.properties.getPackageName().apply(metadata.getPackageName());
 		}
 
 	}
@@ -188,9 +188,9 @@ public class InitializrMetadataBuilder {
 
 		@Override
 		public void customize(InitializrMetadata metadata) {
-			log.info("Loading initializr metadata from " + resource);
+			log.info("Loading initializr metadata from " + this.resource);
 			try {
-				String content = StreamUtils.copyToString(resource.getInputStream(),
+				String content = StreamUtils.copyToString(this.resource.getInputStream(),
 						UTF_8);
 				ObjectMapper objectMapper = new ObjectMapper();
 				InitializrMetadata anotherMetadata = objectMapper.readValue(content,

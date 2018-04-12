@@ -35,9 +35,9 @@ class SpringSecurityTestRequestPostProcessor extends AbstractProjectRequestPostP
 
 	private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
 
-	static final Dependency SPRING_SECURITY_TEST = Dependency.withId(
-			"security-test", "org.springframework.security",
-			"spring-security-test", null, Dependency.SCOPE_TEST);
+	static final Dependency SPRING_SECURITY_TEST = Dependency.withId("security-test",
+			"org.springframework.security", "spring-security-test", null,
+			Dependency.SCOPE_TEST);
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,

@@ -23,8 +23,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import org.springframework.stereotype.Component;
 
 /**
- * Determine the appropriate Spring Cloud stream dependency to use based on the
- * selected integration technology.
+ * Determine the appropriate Spring Cloud stream dependency to use based on the selected
+ * integration technology.
  * <p>
  * Does not replace the integration technology jar by the relevant binder. If more than
  * one tech is selected, it is far more easier to remove the unnecessary binder jar than
@@ -33,8 +33,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-class SpringCloudStreamRequestPostProcessor
-		extends AbstractProjectRequestPostProcessor {
+class SpringCloudStreamRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
 	static final Dependency KAFKA_BINDER = Dependency.withId("cloud-stream-binder-kafka",
 			"org.springframework.cloud", "spring-cloud-stream-binder-kafka");
@@ -79,4 +78,3 @@ class SpringCloudStreamRequestPostProcessor
 	}
 
 }
-

@@ -38,14 +38,14 @@ public abstract class ProjectRequestEvent {
 	 * Return the {@link ProjectRequest} used to generate the project.
 	 */
 	public ProjectRequest getProjectRequest() {
-		return projectRequest;
+		return this.projectRequest;
 	}
 
 	/**
 	 * Return the timestamp at which the request was processed.
 	 */
 	public long getTimestamp() {
-		return timestamp;
+		return this.timestamp;
 	}
 
 }

@@ -55,7 +55,7 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -63,7 +63,7 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -71,11 +71,11 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public ServiceCapabilityType getType() {
-		return type;
+		return this.type;
 	}
 
 	/**

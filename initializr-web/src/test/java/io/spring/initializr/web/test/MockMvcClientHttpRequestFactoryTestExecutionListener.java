@@ -34,20 +34,20 @@ public final class MockMvcClientHttpRequestFactoryTestExecutionListener
 		ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) testContext
 				.getApplicationContext().getAutowireCapableBeanFactory();
 		if (!beanFactory.containsBean("mockMvcClientHttpRequestFactory")) {
-			factory = new MockMvcClientHttpRequestFactory(
+			this.factory = new MockMvcClientHttpRequestFactory(
 					beanFactory.getBean(MockMvc.class));
 			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
 					this.factory);
 		}
 		else {
-			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory",
+			this.factory = beanFactory.getBean("mockMvcClientHttpRequestFactory",
 					MockMvcClientHttpRequestFactory.class);
 		}
 	}
 
 	@Override
 	public void beforeTestMethod(TestContext testContext) throws Exception {
-		if (factory != null) {
+		if (this.factory != null) {
 			this.factory.setTest(testContext.getTestClass(), testContext.getTestMethod());
 		}
 	}

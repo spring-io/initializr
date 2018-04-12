@@ -60,12 +60,13 @@ public class InitializrMetadata {
 	private final TextCapability groupId = new TextCapability("groupId", "Group",
 			"project coordinates");
 
-	private final TextCapability artifactId = new ArtifactIdCapability(name);
+	private final TextCapability artifactId = new ArtifactIdCapability(this.name);
 
 	private final TextCapability version = new TextCapability("version", "Version",
 			"project version");
 
-	private final TextCapability packageName = new PackageCapability(groupId, artifactId);
+	private final TextCapability packageName = new PackageCapability(this.groupId,
+			this.artifactId);
 
 	public InitializrMetadata() {
 		this(new InitializrConfiguration());
@@ -76,55 +77,55 @@ public class InitializrMetadata {
 	}
 
 	public InitializrConfiguration getConfiguration() {
-		return configuration;
+		return this.configuration;
 	}
 
 	public DependenciesCapability getDependencies() {
-		return dependencies;
+		return this.dependencies;
 	}
 
 	public TypeCapability getTypes() {
-		return types;
+		return this.types;
 	}
 
 	public SingleSelectCapability getBootVersions() {
-		return bootVersions;
+		return this.bootVersions;
 	}
 
 	public SingleSelectCapability getPackagings() {
-		return packagings;
+		return this.packagings;
 	}
 
 	public SingleSelectCapability getJavaVersions() {
-		return javaVersions;
+		return this.javaVersions;
 	}
 
 	public SingleSelectCapability getLanguages() {
-		return languages;
+		return this.languages;
 	}
 
 	public TextCapability getName() {
-		return name;
+		return this.name;
 	}
 
 	public TextCapability getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public TextCapability getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 	public TextCapability getArtifactId() {
-		return artifactId;
+		return this.artifactId;
 	}
 
 	public TextCapability getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public TextCapability getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
 	/**
@@ -152,11 +153,12 @@ public class InitializrMetadata {
 	 */
 	public void validate() {
 		this.configuration.validate();
-		dependencies.validate();
+		this.dependencies.validate();
 
-		Map<String, Repository> repositories = configuration.getEnv().getRepositories();
-		Map<String, BillOfMaterials> boms = configuration.getEnv().getBoms();
-		for (Dependency dependency : dependencies.getAll()) {
+		Map<String, Repository> repositories = this.configuration.getEnv()
+				.getRepositories();
+		Map<String, BillOfMaterials> boms = this.configuration.getEnv().getBoms();
+		for (Dependency dependency : this.dependencies.getAll()) {
 			if (dependency.getBom() != null && !boms.containsKey(dependency.getBom())) {
 				throw new InvalidInitializrMetadataException(
 						"Dependency " + dependency + "defines an invalid BOM id "
@@ -215,10 +217,10 @@ public class InitializrMetadata {
 		List<Version> bootVersions = this.bootVersions.getContent().stream()
 				.map(it -> Version.parse(it.getId())).collect(Collectors.toList());
 		VersionParser parser = new VersionParser(bootVersions);
-		dependencies.updateVersionRange(parser);
-		configuration.getEnv().getBoms().values()
+		this.dependencies.updateVersionRange(parser);
+		this.configuration.getEnv().getBoms().values()
 				.forEach(it -> it.updateVersionRange(parser));
-		configuration.getEnv().getKotlin().updateVersionRange(parser);
+		this.configuration.getEnv().getKotlin().updateVersionRange(parser);
 	}
 
 	/**
@@ -226,8 +228,8 @@ public class InitializrMetadata {
 	 * extension.
 	 */
 	public String createCliDistributionURl(String extension) {
-		String bootVersion = defaultId(bootVersions);
-		return configuration.getEnv().getArtifactRepository()
+		String bootVersion = defaultId(this.bootVersions);
+		return this.configuration.getEnv().getArtifactRepository()
 				+ "org/springframework/boot/spring-boot-cli/" + bootVersion
 				+ "/spring-boot-cli-" + bootVersion + "-bin." + extension;
 	}
@@ -249,17 +251,17 @@ public class InitializrMetadata {
 	 */
 	public Map<String, Object> defaults() {
 		Map<String, Object> defaults = new LinkedHashMap<>();
-		defaults.put("type", defaultId(types));
-		defaults.put("bootVersion", defaultId(bootVersions));
-		defaults.put("packaging", defaultId(packagings));
-		defaults.put("javaVersion", defaultId(javaVersions));
-		defaults.put("language", defaultId(languages));
-		defaults.put("groupId", groupId.getContent());
-		defaults.put("artifactId", artifactId.getContent());
-		defaults.put("version", version.getContent());
-		defaults.put("name", name.getContent());
-		defaults.put("description", description.getContent());
-		defaults.put("packageName", packageName.getContent());
+		defaults.put("type", defaultId(this.types));
+		defaults.put("bootVersion", defaultId(this.bootVersions));
+		defaults.put("packaging", defaultId(this.packagings));
+		defaults.put("javaVersion", defaultId(this.javaVersions));
+		defaults.put("language", defaultId(this.languages));
+		defaults.put("groupId", this.groupId.getContent());
+		defaults.put("artifactId", this.artifactId.getContent());
+		defaults.put("version", this.version.getContent());
+		defaults.put("name", this.name.getContent());
+		defaults.put("description", this.description.getContent());
+		defaults.put("packageName", this.packageName.getContent());
 		return defaults;
 	}
 
@@ -281,7 +283,7 @@ public class InitializrMetadata {
 		@Override
 		public String getContent() {
 			String value = super.getContent();
-			return value == null ? nameCapability.getContent() : value;
+			return value == null ? this.nameCapability.getContent() : value;
 		}
 
 	}

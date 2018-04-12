@@ -43,14 +43,14 @@ public class LinkTests {
 	public void resolveInvalidLinkNoRel() {
 		Link link = new Link();
 		link.setHref("https://example.com");
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		link.resolve();
 	}
 
 	@Test
 	public void resolveInvalidLinkNoHref() {
 		Link link = Link.create("reference", null, "foo doc");
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		link.resolve();
 	}
 
@@ -97,8 +97,8 @@ public class LinkTests {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("missing value for 'b'");
+		this.thrown.expect(IllegalArgumentException.class);
+		this.thrown.expectMessage("missing value for 'b'");
 		link.expand(Collections.singletonMap("a", "test"));
 	}
 

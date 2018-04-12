@@ -52,8 +52,8 @@ public class DefaultInitializrMetadataProviderTests {
 
 	@Before
 	public void setUp() {
-		restTemplate = new RestTemplate();
-		mockServer = MockRestServiceServer.createServer(restTemplate);
+		this.restTemplate = new RestTemplate();
+		this.mockServer = MockRestServiceServer.createServer(this.restTemplate);
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class DefaultInitializrMetadataProviderTests {
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
 		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(
-				metadata, objectMapper, restTemplate);
+				metadata, objectMapper, this.restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot.json");
 
@@ -85,7 +85,7 @@ public class DefaultInitializrMetadataProviderTests {
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertEquals("0.0.9.RELEASE", metadata.getBootVersions().getDefault().getId());
 		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(
-				metadata, objectMapper, restTemplate);
+				metadata, objectMapper, this.restTemplate);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot-no-default.json");
 

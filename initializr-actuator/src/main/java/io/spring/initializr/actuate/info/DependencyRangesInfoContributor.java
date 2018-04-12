@@ -44,7 +44,7 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 	@Override
 	public void contribute(Info.Builder builder) {
 		Map<String, Object> details = new LinkedHashMap<>();
-		metadataProvider.get().getDependencies().getAll().forEach(d -> {
+		this.metadataProvider.get().getDependencies().getAll().forEach(d -> {
 			if (d.getBom() == null) {
 				if (!ObjectUtils.isEmpty(d.getMappings())) {
 					Map<String, VersionRange> dep = new LinkedHashMap<>();

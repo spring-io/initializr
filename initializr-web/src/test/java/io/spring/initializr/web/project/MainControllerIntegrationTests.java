@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -171,8 +172,8 @@ public class MainControllerIntegrationTests
 	public void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, "*/*");
 		validateMetadata(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE,
-				"2.0.0", JSONCompareMode.LENIENT);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
+				JSONCompareMode.LENIENT);
 	}
 
 	@Test
@@ -192,7 +193,7 @@ public class MainControllerIntegrationTests
 				"application/vnd.initializr.v2.1+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -202,7 +203,7 @@ public class MainControllerIntegrationTests
 				"application/vnd.initializr.v2.1+json",
 				"application/vnd.initializr.v2+json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -249,7 +250,7 @@ public class MainControllerIntegrationTests
 	public void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -276,7 +277,7 @@ public class MainControllerIntegrationTests
 	public void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -296,7 +297,7 @@ public class MainControllerIntegrationTests
 	public void springBootCliReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 

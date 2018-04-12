@@ -60,25 +60,26 @@ public class ProjectGenerationSmokeTests
 	public void setup() throws IOException {
 		Assume.assumeTrue("Smoke tests disabled (set System property 'smoke.test')",
 				Boolean.getBoolean("smoke.test"));
-		downloadDir = folder.newFolder();
+		this.downloadDir = this.folder.newFolder();
 		FirefoxProfile fxProfile = new FirefoxProfile();
 		fxProfile.setPreference("browser.download.folderList", 2);
 		fxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-		fxProfile.setPreference("browser.download.dir", downloadDir.getAbsolutePath());
+		fxProfile.setPreference("browser.download.dir",
+				this.downloadDir.getAbsolutePath());
 		fxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/zip,application/x-compress,application/octet-stream");
 		FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
-		driver = new FirefoxDriver(options);
-		((JavascriptExecutor) driver).executeScript("window.focus();");
+		this.driver = new FirefoxDriver(options);
+		((JavascriptExecutor) this.driver).executeScript("window.focus();");
 
-		Actions actions = new Actions(driver);
-		enterAction = actions.sendKeys(Keys.ENTER).build();
+		Actions actions = new Actions(this.driver);
+		this.enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 
 	@After
 	public void destroy() {
-		if (driver != null) {
-			driver.close();
+		if (this.driver != null) {
+			this.driver.close();
 		}
 	}
 
@@ -355,8 +356,8 @@ public class ProjectGenerationSmokeTests
 	}
 
 	private HomePage toHome(String path) {
-		driver.get("http://localhost:" + port + path);
-		return new HomePage(driver);
+		this.driver.get("http://localhost:" + this.port + path);
+		return new HomePage(this.driver);
 	}
 
 	private ProjectAssert assertSimpleProject() throws Exception {
@@ -366,7 +367,7 @@ public class ProjectGenerationSmokeTests
 
 	private void selectDependency(HomePage page, String text) {
 		page.autocomplete(text);
-		enterAction.perform();
+		this.enterAction.perform();
 	}
 
 	private byte[] from(String fileName) throws Exception {
@@ -374,7 +375,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	private File getArchive(String fileName) {
-		File archive = new File(downloadDir, fileName);
+		File archive = new File(this.downloadDir, fileName);
 		assertTrue("Expected content with name " + fileName, archive.exists());
 		return archive;
 	}

@@ -105,7 +105,7 @@ public class ProjectGenerator {
 	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
 
 	public InitializrMetadataProvider getMetadataProvider() {
-		return metadataProvider;
+		return this.metadataProvider;
 	}
 
 	public void setEventPublisher(ApplicationEventPublisher eventPublisher) {
@@ -277,11 +277,11 @@ public class ProjectGenerator {
 	}
 
 	private File getTemporaryDirectory() {
-		if (temporaryDirectory == null) {
-			temporaryDirectory = new File(tmpdir, "initializr");
-			temporaryDirectory.mkdirs();
+		if (this.temporaryDirectory == null) {
+			this.temporaryDirectory = new File(this.tmpdir, "initializr");
+			this.temporaryDirectory.mkdirs();
 		}
-		return temporaryDirectory;
+		return this.temporaryDirectory;
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class ProjectGenerator {
 	 * @see #createDistributionFile
 	 */
 	public void cleanTempFiles(File dir) {
-		List<File> tempFiles = temporaryFiles.remove(dir.getName());
+		List<File> tempFiles = this.temporaryFiles.remove(dir.getName());
 		if (!tempFiles.isEmpty()) {
 			tempFiles.forEach((File file) -> {
 				if (file.isDirectory()) {
@@ -304,12 +304,12 @@ public class ProjectGenerator {
 
 	private void publishProjectGeneratedEvent(ProjectRequest request) {
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		eventPublisher.publishEvent(event);
+		this.eventPublisher.publishEvent(event);
 	}
 
 	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, cause);
-		eventPublisher.publishEvent(event);
+		this.eventPublisher.publishEvent(event);
 	}
 
 	/**
@@ -338,9 +338,9 @@ public class ProjectGenerator {
 	protected Map<String, Object> resolveModel(ProjectRequest originalRequest) {
 		Assert.notNull(originalRequest.getBootVersion(), "boot version must not be null");
 		Map<String, Object> model = new LinkedHashMap<>();
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 
-		ProjectRequest request = requestResolver.resolve(originalRequest, metadata);
+		ProjectRequest request = this.requestResolver.resolve(originalRequest, metadata);
 
 		// request resolved so we can log what has been requested
 		Version bootVersion = Version.safeParse(request.getBootVersion());
@@ -590,15 +590,15 @@ public class ProjectGenerator {
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
-		return templateRenderer.process("starter-pom.xml", model).getBytes();
+		return this.templateRenderer.process("starter-pom.xml", model).getBytes();
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
-		return templateRenderer.process("starter-build.gradle", model).getBytes();
+		return this.templateRenderer.process("starter-build.gradle", model).getBytes();
 	}
 
 	private byte[] doGenerateGradleSettings(Map<String, Object> model) {
-		return templateRenderer.process("starter-settings.gradle", model).getBytes();
+		return this.templateRenderer.process("starter-settings.gradle", model).getBytes();
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
@@ -639,11 +639,11 @@ public class ProjectGenerator {
 			boolean binary) {
 		File target = new File(dir, name);
 		if (binary) {
-			writeBinary(target, projectResourceLocator
+			writeBinary(target, this.projectResourceLocator
 					.getBinaryResource("classpath:project/" + location));
 		}
 		else {
-			writeText(target, projectResourceLocator
+			writeText(target, this.projectResourceLocator
 					.getTextResource("classpath:project/" + location));
 		}
 		return target;
@@ -661,7 +661,7 @@ public class ProjectGenerator {
 	}
 
 	public void write(File target, String templateName, Map<String, Object> model) {
-		String body = templateRenderer.process(templateName, model);
+		String body = this.templateRenderer.process(templateName, model);
 		writeText(target, body);
 	}
 
@@ -684,7 +684,7 @@ public class ProjectGenerator {
 	}
 
 	private void addTempFile(String group, File file) {
-		temporaryFiles.computeIfAbsent(group, key -> new ArrayList<>()).add(file);
+		this.temporaryFiles.computeIfAbsent(group, key -> new ArrayList<>()).add(file);
 	}
 
 	private static List<Dependency> filterDependencies(List<Dependency> dependencies,
@@ -734,7 +734,7 @@ public class ProjectGenerator {
 		}
 
 		public Imports add(String type) {
-			this.statements.add(generateImport(type, language));
+			this.statements.add(generateImport(type, this.language));
 			return this;
 		}
 
@@ -749,12 +749,13 @@ public class ProjectGenerator {
 			return "import " + type + end;
 		}
 
+		@Override
 		public String toString() {
 			if (this.statements.isEmpty()) {
 				return "";
 			}
 			String content = String.join(String.format("%n"), this.statements);
-			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+			return (this.finalCarriageReturn ? String.format("%s%n", content) : content);
 		}
 
 	}
@@ -775,12 +776,13 @@ public class ProjectGenerator {
 			return this;
 		}
 
+		@Override
 		public String toString() {
 			if (this.statements.isEmpty()) {
 				return "";
 			}
 			String content = String.join(String.format("%n"), this.statements);
-			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+			return (this.finalCarriageReturn ? String.format("%s%n", content) : content);
 		}
 
 	}

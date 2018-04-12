@@ -88,7 +88,7 @@ public class Link {
 	}
 
 	public String getRel() {
-		return rel;
+		return this.rel;
 	}
 
 	public void setRel(String rel) {
@@ -96,7 +96,7 @@ public class Link {
 	}
 
 	public boolean isTemplated() {
-		return templated;
+		return this.templated;
 	}
 
 	public void setTemplated(boolean templated) {
@@ -104,7 +104,7 @@ public class Link {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -112,11 +112,11 @@ public class Link {
 	}
 
 	public String getHref() {
-		return href;
+		return this.href;
 	}
 
 	public Set<String> getTemplateVariables() {
-		return Collections.unmodifiableSet(templateVariables);
+		return Collections.unmodifiableSet(this.templateVariables);
 	}
 
 	public void setHref(String href) {
@@ -124,15 +124,15 @@ public class Link {
 	}
 
 	public void resolve() {
-		if (rel == null) {
+		if (this.rel == null) {
 			throw new InvalidInitializrMetadataException(
 					"Invalid link " + this + ": rel attribute is mandatory");
 		}
-		if (href == null) {
+		if (this.href == null) {
 			throw new InvalidInitializrMetadataException(
 					"Invalid link " + this + ": href attribute is mandatory");
 		}
-		Matcher matcher = VARIABLE_REGEX.matcher(href);
+		Matcher matcher = VARIABLE_REGEX.matcher(this.href);
 		while (matcher.find()) {
 			String variable = matcher.group(1);
 			this.templateVariables.add(variable);
@@ -146,12 +146,12 @@ public class Link {
 	 * @return an URI where all variables have been expanded
 	 */
 	public URI expand(Map<String, String> parameters) {
-		AtomicReference<String> result = new AtomicReference<>(href);
-		templateVariables.forEach(var -> {
+		AtomicReference<String> result = new AtomicReference<>(this.href);
+		this.templateVariables.forEach(var -> {
 			Object value = parameters.get(var);
 			if (value == null) {
-				throw new IllegalArgumentException(
-						"Could not expand " + href + ", missing value for '" + var + "'");
+				throw new IllegalArgumentException("Could not expand " + this.href
+						+ ", missing value for '" + var + "'");
 			}
 			result.set(result.get().replace("{" + var + "}", value.toString()));
 		});

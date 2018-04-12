@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 /**
  * A {@link ProjectRequestPostProcessor} that automatically adds "reactor-test" when
  * webflux is selected.
- * 
+ *
  * @author Stephane Nicoll
  */
 @Component
@@ -35,11 +35,12 @@ class ReactorTestRequestPostProcessor extends AbstractProjectRequestPostProcesso
 
 	private static final Version VERSION_2_0_0_M2 = Version.parse("2.0.0.M2");
 
-	static  final Dependency REACTOR_TEST = Dependency.withId("reactor-test",
+	static final Dependency REACTOR_TEST = Dependency.withId("reactor-test",
 			"io.projectreactor", "reactor-test", null, Dependency.SCOPE_TEST);
 
 	@Override
-	public void postProcessAfterResolution(ProjectRequest request, InitializrMetadata metadata) {
+	public void postProcessAfterResolution(ProjectRequest request,
+			InitializrMetadata metadata) {
 		if (hasDependency(request, "webflux")
 				&& isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M2)) {
 			request.getResolvedDependencies().add(REACTOR_TEST);

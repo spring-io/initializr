@@ -138,7 +138,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * {@code artifactId}.
 	 */
 	private boolean hasCoordinates() {
-		return groupId != null && artifactId != null;
+		return this.groupId != null && this.artifactId != null;
 	}
 
 	/**
@@ -147,8 +147,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 * If no name is specified, the root "spring-boot-starter" is assumed.
 	 */
 	public Dependency asSpringBootStarter(String name) {
-		groupId = "org.springframework.boot";
-		artifactId = StringUtils.hasText(name) ? "spring-boot-starter-" + name
+		this.groupId = "org.springframework.boot";
+		this.artifactId = StringUtils.hasText(name) ? "spring-boot-starter-" + name
 				: "spring-boot-starter";
 		if (StringUtils.hasText(name)) {
 			setId(name);
@@ -174,10 +174,10 @@ public class Dependency extends MetadataElement implements Describable {
 				asSpringBootStarter(getId());
 			}
 			else if (st.countTokens() == 2 || st.countTokens() == 3) {
-				groupId = st.nextToken();
-				artifactId = st.nextToken();
+				this.groupId = st.nextToken();
+				this.artifactId = st.nextToken();
 				if (st.hasMoreTokens()) {
-					version = st.nextToken();
+					this.version = st.nextToken();
 				}
 			}
 			else {
@@ -186,23 +186,24 @@ public class Dependency extends MetadataElement implements Describable {
 								+ getId());
 			}
 		}
-		links.forEach(Link::resolve);
+		this.links.forEach(Link::resolve);
 		updateVersionRanges(VersionParser.DEFAULT);
 	}
 
 	public void updateVersionRanges(VersionParser versionParser) {
-		if (versionRange != null) {
+		if (this.versionRange != null) {
 			try {
-				range = versionParser.parseRange(versionRange);
-				versionRequirement = range.toString();
+				this.range = versionParser.parseRange(this.versionRange);
+				this.versionRequirement = this.range.toString();
 			}
 			catch (InvalidVersionException ex) {
-				throw new InvalidInitializrMetadataException("Invalid version range '"
-						+ versionRange + " for " + "dependency with id '" + getId() + "'",
+				throw new InvalidInitializrMetadataException(
+						"Invalid version range '" + this.versionRange + " for "
+								+ "dependency with id '" + getId() + "'",
 						ex);
 			}
 		}
-		mappings.forEach(it -> {
+		this.mappings.forEach(it -> {
 			try {
 				it.range = versionParser.parseRange(it.versionRange);
 			}
@@ -219,7 +220,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * specified version.
 	 */
 	public Dependency resolve(Version bootVersion) {
-		for (Mapping mapping : mappings) {
+		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
 				Dependency dependency = new Dependency(this);
 				dependency.groupId = mapping.groupId != null ? mapping.groupId
@@ -240,8 +241,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 * Specify if this dependency is available for the specified Spring Boot version.
 	 */
 	public boolean match(Version version) {
-		if (range != null) {
-			return range.match(version);
+		if (this.range != null) {
+			return this.range.match(version);
 		}
 		return true;
 	}
@@ -250,16 +251,16 @@ public class Dependency extends MetadataElement implements Describable {
 	 * Generate an id using the groupId and artifactId
 	 */
 	public String generateId() {
-		if (groupId == null || artifactId == null) {
+		if (this.groupId == null || this.artifactId == null) {
 			throw new IllegalArgumentException("Could not generate id for " + this
 					+ ": at least groupId and artifactId must be set.");
 		}
-		setId(groupId + ":" + artifactId);
+		setId(this.groupId + ":" + this.artifactId);
 		return getId();
 	}
 
 	public List<String> getAliases() {
-		return aliases;
+		return this.aliases;
 	}
 
 	public void setAliases(List<String> aliases) {
@@ -267,7 +268,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public List<String> getFacets() {
-		return facets;
+		return this.facets;
 	}
 
 	public void setFacets(List<String> facets) {
@@ -275,7 +276,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 	public void setGroupId(String groupId) {
@@ -283,7 +284,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getArtifactId() {
-		return artifactId;
+		return this.artifactId;
 	}
 
 	public void setArtifactId(String artifactId) {
@@ -295,7 +296,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * managed by the project and does not need to be specified.
 	 */
 	public String getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public void setVersion(String version) {
@@ -307,7 +308,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * used (i.e. {@code jar}).
 	 */
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -319,7 +320,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * to the Spring Boot version. If no mapping matches, default attributes are used.
 	 */
 	public List<Mapping> getMappings() {
-		return mappings;
+		return this.mappings;
 	}
 
 	public void setMappings(List<Mapping> mappings) {
@@ -328,7 +329,7 @@ public class Dependency extends MetadataElement implements Describable {
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -336,7 +337,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getVersionRequirement() {
-		return versionRequirement;
+		return this.versionRequirement;
 	}
 
 	public void setVersionRequirement(String versionRequirement) {
@@ -344,7 +345,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public VersionRange getRange() {
-		return range;
+		return this.range;
 	}
 
 	public void setRange(VersionRange range) {
@@ -352,7 +353,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getBom() {
-		return bom;
+		return this.bom;
 	}
 
 	public void setBom(String bom) {
@@ -360,7 +361,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getRepository() {
-		return repository;
+		return this.repository;
 	}
 
 	public void setRepository(String repository) {
@@ -368,7 +369,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public int getWeight() {
-		return weight;
+		return this.weight;
 	}
 
 	public void setWeight(int weight) {
@@ -376,7 +377,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public boolean isStarter() {
-		return starter;
+		return this.starter;
 	}
 
 	public void setStarter(boolean starter) {
@@ -384,7 +385,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public List<String> getKeywords() {
-		return keywords;
+		return this.keywords;
 	}
 
 	public void setKeywords(List<String> keywords) {
@@ -392,7 +393,7 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public List<Link> getLinks() {
-		return links;
+		return this.links;
 	}
 
 	public void setLinks(List<Link> links) {
@@ -400,18 +401,18 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public String getScope() {
-		return scope;
+		return this.scope;
 	}
 
 	public String getVersionRange() {
-		return versionRange;
+		return this.versionRange;
 	}
 
 	@Override
 	public String toString() {
-		return "Dependency{" + "id='" + getId() + '\'' + ", groupId='" + groupId + '\''
-				+ ", artifactId='" + artifactId + '\'' + ", version='" + version + '\''
-				+ '}';
+		return "Dependency{" + "id='" + getId() + '\'' + ", groupId='" + this.groupId
+				+ '\'' + ", artifactId='" + this.artifactId + '\'' + ", version='"
+				+ this.version + '\'' + '}';
 	}
 
 	/**
@@ -443,7 +444,7 @@ public class Dependency extends MetadataElement implements Describable {
 		private VersionRange range;
 
 		public String getGroupId() {
-			return groupId;
+			return this.groupId;
 		}
 
 		public void setGroupId(String groupId) {
@@ -451,7 +452,7 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 
 		public String getArtifactId() {
-			return artifactId;
+			return this.artifactId;
 		}
 
 		public void setArtifactId(String artifactId) {
@@ -459,7 +460,7 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 
 		public String getVersion() {
-			return version;
+			return this.version;
 		}
 
 		public void setVersion(String version) {
@@ -467,11 +468,11 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 
 		public VersionRange getRange() {
-			return range;
+			return this.range;
 		}
 
 		public String getVersionRange() {
-			return versionRange;
+			return this.versionRange;
 		}
 
 		public void setVersionRange(String versionRange) {

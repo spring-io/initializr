@@ -159,7 +159,7 @@ public class VersionRangeTests {
 
 		@Override
 		public void describeTo(Description description) {
-			description.appendText(range.toString());
+			description.appendText(this.range.toString());
 		}
 
 	}

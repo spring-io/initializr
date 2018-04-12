@@ -88,19 +88,21 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		VersionProperty that = (VersionProperty) o;
 
-		return property.equals(that.property);
+		return this.property.equals(that.property);
 	}
 
 	@Override
 	public int hashCode() {
-		return property.hashCode();
+		return this.property.hashCode();
 	}
 
 }

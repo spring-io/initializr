@@ -50,17 +50,17 @@ public class SpringBootMetadataReaderTests {
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	private final MockRestServiceServer server = MockRestServiceServer
-			.bindTo(restTemplate).build();
+			.bindTo(this.restTemplate).build();
 
 	@Test
 	public void readAvailableVersions() throws IOException {
-		server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
+		this.server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
 				.andRespond(withSuccess(
 						new ClassPathResource("metadata/sagan/spring-boot.json"),
 						MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(objectMapper,
-				restTemplate,
-				metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(
+				this.objectMapper, this.restTemplate,
+				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 						.getBootVersions();
 		assertNotNull("spring boot versions should not be null", versions);
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
@@ -74,7 +74,7 @@ public class SpringBootMetadataReaderTests {
 				defaultFound.set(true);
 			}
 		});
-		server.verify();
+		this.server.verify();
 	}
 
 }

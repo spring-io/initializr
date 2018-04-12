@@ -37,8 +37,8 @@ public class MetricsAssert {
 	}
 
 	public MetricsAssert hasValue(long value, String... metrics) {
-		Arrays.asList(metrics)
-				.forEach(metric -> assertThat(meterRegistry.get(metric).counter().count())
+		Arrays.asList(metrics).forEach(
+				metric -> assertThat(this.meterRegistry.get(metric).counter().count())
 						.isEqualTo(value));
 		return this;
 	}

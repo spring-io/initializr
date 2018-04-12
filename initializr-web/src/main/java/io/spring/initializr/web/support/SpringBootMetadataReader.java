@@ -50,7 +50,7 @@ public class SpringBootMetadataReader {
 	 * Return the boot versions parsed by this instance.
 	 */
 	public List<DefaultMetadataElement> getBootVersions() {
-		ArrayNode array = (ArrayNode) content.get("projectReleases");
+		ArrayNode array = (ArrayNode) this.content.get("projectReleases");
 		List<DefaultMetadataElement> list = new ArrayList<>();
 		for (JsonNode it : array) {
 			DefaultMetadataElement version = new DefaultMetadataElement();

@@ -122,7 +122,7 @@ public class ProjectGenerationMetricsListener {
 	}
 
 	protected void increment(String key) {
-		meterRegistry.counter(key).increment();
+		this.meterRegistry.counter(key).increment();
 	}
 
 	protected String key(String part) {

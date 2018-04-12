@@ -44,7 +44,7 @@ public enum InitializrMetadataVersion {
 	}
 
 	public MediaType getMediaType() {
-		return mediaType;
+		return this.mediaType;
 	}
 
 }

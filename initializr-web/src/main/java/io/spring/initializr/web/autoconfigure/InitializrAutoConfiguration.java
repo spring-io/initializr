@@ -99,7 +99,7 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public ProjectRequestResolver projectRequestResolver() {
-		return new ProjectRequestResolver(postProcessors);
+		return new ProjectRequestResolver(this.postProcessors);
 	}
 
 	@Bean

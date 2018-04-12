@@ -43,7 +43,7 @@ public class InitializrMetadataJsonMapperTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
-		String json = jsonMapper.write(metadata, null);
+		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
 		assertEquals(
 				"/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
@@ -56,7 +56,7 @@ public class InitializrMetadataJsonMapperTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
-		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
+		String json = this.jsonMapper.write(metadata, "http://server:8080/my-app");
 		JsonNode result = objectMapper.readTree(json);
 		assertEquals(
 				"http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
@@ -71,7 +71,7 @@ public class InitializrMetadataJsonMapperTests {
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
-		String json = jsonMapper.write(metadata, null);
+		String json = this.jsonMapper.write(metadata, null);
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
 		// JSON objects are not ordered

@@ -129,29 +129,38 @@ public class VersionRange {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		VersionRange other = (VersionRange) obj;
-		if (higherInclusive != other.higherInclusive)
+		if (higherInclusive != other.higherInclusive) {
 			return false;
+		}
 		if (higherVersion == null) {
-			if (other.higherVersion != null)
+			if (other.higherVersion != null) {
 				return false;
+			}
 		}
-		else if (!higherVersion.equals(other.higherVersion))
+		else if (!higherVersion.equals(other.higherVersion)) {
 			return false;
-		if (lowerInclusive != other.lowerInclusive)
+		}
+		if (lowerInclusive != other.lowerInclusive) {
 			return false;
+		}
 		if (lowerVersion == null) {
-			if (other.lowerVersion != null)
+			if (other.lowerVersion != null) {
 				return false;
+			}
 		}
-		else if (!lowerVersion.equals(other.lowerVersion))
+		else if (!lowerVersion.equals(other.lowerVersion)) {
 			return false;
+		}
 		return true;
 	}
 

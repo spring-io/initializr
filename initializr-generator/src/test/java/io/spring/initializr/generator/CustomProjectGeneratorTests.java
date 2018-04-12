@@ -69,11 +69,11 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateProject(request);
 		verifyProjectSuccessfulEventFor(request);
 
-		Runnable customFileGenerated = ((MyProjectGenerator) projectGenerator).customFileGenerated;
-		InOrder inOrder = Mockito.inOrder(eventPublisher, customFileGenerated);
+		Runnable customFileGenerated = ((MyProjectGenerator) this.projectGenerator).customFileGenerated;
+		InOrder inOrder = Mockito.inOrder(this.eventPublisher, customFileGenerated);
 
 		inOrder.verify(customFileGenerated, times(1)).run();
-		inOrder.verify(eventPublisher, times(1))
+		inOrder.verify(this.eventPublisher, times(1))
 				.publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
 	}
 
@@ -88,7 +88,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			File dir = super.generateProjectStructure(request, model);
 			if ("maven".equals(request.getBuild())) {
 				write(new File(dir, "custom.txt"), "custom.txt", model);
-				customFileGenerated.run();
+				this.customFileGenerated.run();
 			}
 			return dir;
 		}

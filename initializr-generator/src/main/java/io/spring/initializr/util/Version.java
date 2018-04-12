@@ -67,27 +67,26 @@ public final class Version implements Serializable, Comparable<Version> {
 	}
 
 	public Integer getMajor() {
-		return major;
+		return this.major;
 	}
 
 	public Integer getMinor() {
-		return minor;
+		return this.minor;
 	}
 
 	public Integer getPatch() {
-		return patch;
+		return this.patch;
 	}
 
 	public Qualifier getQualifier() {
-		return qualifier;
+		return this.qualifier;
 	}
 
 	@Override
 	public String toString() {
-		return major + "." + minor + "." + patch
-				+ (qualifier != null
-						? "." + qualifier.qualifier
-								+ (qualifier.version != null ? qualifier.version : "")
+		return this.major + "." + this.minor + "." + this.patch
+				+ (this.qualifier != null ? "." + this.qualifier.qualifier
+						+ (this.qualifier.version != null ? this.qualifier.version : "")
 						: "");
 	}
 
@@ -157,7 +156,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		private Integer version;
 
 		public String getQualifier() {
-			return qualifier;
+			return this.qualifier;
 		}
 
 		public void setQualifier(String qualifier) {
@@ -165,7 +164,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		public Integer getVersion() {
-			return version;
+			return this.version;
 		}
 
 		public void setVersion(Integer version) {
@@ -175,40 +174,49 @@ public final class Version implements Serializable, Comparable<Version> {
 		@Override
 		public String toString() {
 			return "Qualifier ["
-					+ (qualifier != null ? "qualifier=" + qualifier + ", " : "")
-					+ (version != null ? "version=" + version : "") + "]";
+					+ (this.qualifier != null ? "qualifier=" + this.qualifier + ", " : "")
+					+ (this.version != null ? "version=" + this.version : "") + "]";
 		}
 
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((qualifier == null) ? 0 : qualifier.hashCode());
-			result = prime * result + ((version == null) ? 0 : version.hashCode());
+			result = prime * result
+					+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+			result = prime * result
+					+ ((this.version == null) ? 0 : this.version.hashCode());
 			return result;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			Qualifier other = (Qualifier) obj;
-			if (qualifier == null) {
-				if (other.qualifier != null)
+			if (this.qualifier == null) {
+				if (other.qualifier != null) {
 					return false;
+				}
 			}
-			else if (!qualifier.equals(other.qualifier))
+			else if (!this.qualifier.equals(other.qualifier)) {
 				return false;
-			if (version == null) {
-				if (other.version != null)
+			}
+			if (this.version == null) {
+				if (other.version != null) {
 					return false;
+				}
 			}
-			else if (!version.equals(other.version))
+			else if (!this.version.equals(other.version)) {
 				return false;
+			}
 			return true;
 		}
 
@@ -218,46 +226,58 @@ public final class Version implements Serializable, Comparable<Version> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((major == null) ? 0 : major.hashCode());
-		result = prime * result + ((minor == null) ? 0 : minor.hashCode());
-		result = prime * result + ((patch == null) ? 0 : patch.hashCode());
-		result = prime * result + ((qualifier == null) ? 0 : qualifier.hashCode());
+		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
+		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
+		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
+		result = prime * result
+				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Version other = (Version) obj;
-		if (major == null) {
-			if (other.major != null)
+		if (this.major == null) {
+			if (other.major != null) {
 				return false;
+			}
 		}
-		else if (!major.equals(other.major))
+		else if (!this.major.equals(other.major)) {
 			return false;
-		if (minor == null) {
-			if (other.minor != null)
+		}
+		if (this.minor == null) {
+			if (other.minor != null) {
 				return false;
+			}
 		}
-		else if (!minor.equals(other.minor))
+		else if (!this.minor.equals(other.minor)) {
 			return false;
-		if (patch == null) {
-			if (other.patch != null)
+		}
+		if (this.patch == null) {
+			if (other.patch != null) {
 				return false;
+			}
 		}
-		else if (!patch.equals(other.patch))
+		else if (!this.patch.equals(other.patch)) {
 			return false;
-		if (qualifier == null) {
-			if (other.qualifier != null)
+		}
+		if (this.qualifier == null) {
+			if (other.qualifier != null) {
 				return false;
+			}
 		}
-		else if (!qualifier.equals(other.qualifier))
+		else if (!this.qualifier.equals(other.qualifier)) {
 			return false;
+		}
 		return true;
 	}
 

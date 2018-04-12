@@ -63,14 +63,15 @@ public class MainControllerStatsIntegrationTests
 	public void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
-		this.statsProperties.getElastic().setUri("http://localhost:" + port + "/elastic");
+		this.statsProperties.getElastic()
+				.setUri("http://localhost:" + this.port + "/elastic");
 	}
 
 	@Test
 	public void simpleProject() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertEquals("com.foo", json.get("groupId").textValue());
@@ -83,8 +84,8 @@ public class MainControllerStatsIntegrationTests
 	@Test
 	public void authorizationHeaderIsSet() {
 		downloadArchive("/starter.zip");
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		String authorization = content.authorization;
 		assertNotNull("Authorization header must be set", authorization);
@@ -99,8 +100,8 @@ public class MainControllerStatsIntegrationTests
 	@Test
 	public void requestIpNotSetByDefault() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertFalse("requestIp property should not be set", json.has("requestIp"));
@@ -111,8 +112,8 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("X-FORWARDED-FOR", "10.0.0.123").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertEquals("Wrong requestIp", "10.0.0.123", json.get("requestIp").textValue());
@@ -123,8 +124,8 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("x-forwarded-for", "foo-bar").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertFalse("requestIpv4 property should not be set if value is not a valid IPv4",
@@ -136,8 +137,8 @@ public class MainControllerStatsIntegrationTests
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("cf-ipcountry", "XX").build();
 		getRestTemplate().exchange(request, String.class);
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertFalse("requestCountry property should not be set if value is set to xx",
@@ -153,8 +154,8 @@ public class MainControllerStatsIntegrationTests
 		catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
 		}
-		assertEquals("No stat got generated", 1, statsMockController.stats.size());
-		StatsMockController.Content content = statsMockController.stats.get(0);
+		assertEquals("No stat got generated", 1, this.statsMockController.stats.size());
+		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertEquals("com.example", json.get("groupId").textValue());
@@ -168,9 +169,10 @@ public class MainControllerStatsIntegrationTests
 	@Test
 	public void errorPublishingStatsDoesNotBubbleUp() {
 		this.statsProperties.getElastic()
-				.setUri("http://localhost:" + port + "/elastic-error");
+				.setUri("http://localhost:" + this.port + "/elastic-error");
 		downloadArchive("/starter.zip");
-		assertEquals("No stat should be available", 0, statsMockController.stats.size());
+		assertEquals("No stat should be available", 0,
+				this.statsMockController.stats.size());
 	}
 
 	@RestController
@@ -198,7 +200,7 @@ public class MainControllerStatsIntegrationTests
 
 			Content(String authorization, String body) {
 				this.authorization = authorization;
-				json = body;
+				this.json = body;
 			}
 
 		}

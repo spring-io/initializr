@@ -71,7 +71,7 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 		}
 		this.file = file;
 		this.path = path;
-		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+		this.objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
 
 	/*
@@ -84,8 +84,8 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 				.getAttributes().get(RestDocumentationContext.class.getName());
 		WriterResolver writerResolver = (WriterResolver) operation.getAttributes()
 				.get(WriterResolver.class.getName());
-		try (Writer writer = writerResolver
-				.resolve(operation.getName() + "/" + getSnippetName(), file, context)) {
+		try (Writer writer = writerResolver.resolve(
+				operation.getName() + "/" + getSnippetName(), this.file, context)) {
 			Map<String, Object> model = createModel(operation);
 			model.putAll(getAttributes());
 			TemplateEngine templateEngine = (TemplateEngine) operation.getAttributes()
@@ -97,14 +97,15 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	@Override
 	protected Map<String, Object> createModel(Operation operation) {
 		try {
-			Object object = objectMapper.readValue(
+			Object object = this.objectMapper.readValue(
 					operation.getResponse().getContentAsString(), Object.class);
-			Object field = fieldProcessor.extract(JsonFieldPath.compile(path), object);
-			if (field instanceof List && index != null) {
-				field = ((List<?>) field).get(index);
+			Object field = this.fieldProcessor.extract(JsonFieldPath.compile(this.path),
+					object);
+			if (field instanceof List && this.index != null) {
+				field = ((List<?>) field).get(this.index);
 			}
 			return Collections.singletonMap("value",
-					objectMapper.writeValueAsString(field));
+					this.objectMapper.writeValueAsString(field));
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);

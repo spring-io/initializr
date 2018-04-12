@@ -97,7 +97,7 @@ public class DependencyTests {
 
 	@Test
 	public void invalidDependency() {
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		new Dependency().resolve();
 	}
 
@@ -105,7 +105,7 @@ public class DependencyTests {
 	public void invalidDependencyScope() {
 		Dependency dependency = Dependency.withId("web");
 
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		dependency.setScope("whatever");
 	}
 
@@ -114,8 +114,8 @@ public class DependencyTests {
 		Dependency dependency = Dependency.withId("web");
 		dependency.setVersionRange("A.B.C");
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("A.B.C");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("A.B.C");
 		dependency.resolve();
 	}
 
@@ -123,7 +123,7 @@ public class DependencyTests {
 	public void invalidIdFormatTooManyColons() {
 		Dependency dependency = Dependency.withId("org.foo:bar:1.0:test:external");
 
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		dependency.resolve();
 	}
 
@@ -132,7 +132,7 @@ public class DependencyTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.getLinks().add(Link.create(null, "https://example.com"));
 
-		thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expect(InvalidInitializrMetadataException.class);
 		dependency.resolve();
 	}
 
@@ -140,7 +140,7 @@ public class DependencyTests {
 	public void generateIdWithNoGroupId() {
 		Dependency dependency = new Dependency();
 		dependency.setArtifactId("bar");
-		thrown.expect(IllegalArgumentException.class);
+		this.thrown.expect(IllegalArgumentException.class);
 		dependency.generateId();
 	}
 
@@ -148,7 +148,7 @@ public class DependencyTests {
 	public void generateIdWithNoArtifactId() {
 		Dependency dependency = new Dependency();
 		dependency.setGroupId("foo");
-		thrown.expect(IllegalArgumentException.class);
+		this.thrown.expect(IllegalArgumentException.class);
 		dependency.generateId();
 	}
 
@@ -164,8 +164,8 @@ public class DependencyTests {
 		Dependency dependency = Dependency.withId("web");
 		dependency.getMappings()
 				.add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE"));
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("foo-bar");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("foo-bar");
 		dependency.resolve();
 	}
 

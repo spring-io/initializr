@@ -45,9 +45,9 @@ public class InitializrMetadataTests {
 				.withDefaults().addBom("my-bom", "org.acme", "foo", "1.2.3")
 				.addDependencyGroup("test", foo);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("foo-bom");
-		thrown.expectMessage("my-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("foo-bom");
+		this.thrown.expectMessage("my-bom");
 		builder.build();
 	}
 
@@ -60,9 +60,9 @@ public class InitializrMetadataTests {
 				.addRepository("my-repo", "repo", "http://example.com/repo", true)
 				.addDependencyGroup("test", foo);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("foo-repo");
-		thrown.expectMessage("my-repo");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("foo-repo");
+		this.thrown.expectMessage("my-repo");
 		builder.build();
 	}
 
@@ -73,9 +73,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("No version");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("No version");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -88,9 +88,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid repository id foo-repo");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid repository id foo-repo");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -105,9 +105,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom).addBom("bar-bom", barBom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid additional bom");
-		thrown.expectMessage("biz-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid additional bom");
+		this.thrown.expectMessage("biz-bom");
 		builder.build();
 	}
 
@@ -120,9 +120,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("FOO_BAR");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("FOO_BAR");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -137,10 +137,10 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid repository id foo-repo");
-		thrown.expectMessage("1.3.0.M2");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid repository id foo-repo");
+		this.thrown.expectMessage("1.3.0.M2");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -155,10 +155,10 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid additional bom");
-		thrown.expectMessage("1.3.0.M2");
-		thrown.expectMessage("bar-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid additional bom");
+		this.thrown.expectMessage("1.3.0.M2");
+		this.thrown.expectMessage("bar-bom");
 		builder.build();
 	}
 
@@ -206,8 +206,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().setMavenParent("org.foo", "foo-parent", null, false);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("Custom maven pom requires groupId, artifactId and version");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage(
+				"Custom maven pom requires groupId, artifactId and version");
 		builder.build();
 	}
 

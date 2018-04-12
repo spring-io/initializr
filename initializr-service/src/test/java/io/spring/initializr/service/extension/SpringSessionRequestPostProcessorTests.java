@@ -36,8 +36,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("1.5.4.RELEASE");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterTest()
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
 				.hasDependenciesCount(3);
 	}
 
@@ -47,8 +46,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("1.5.4.RELEASE");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterDependency("data-redis")
-				.hasSpringBootStarterTest()
+				.hasSpringBootStarterDependency("data-redis").hasSpringBootStarterTest()
 				.hasDependenciesCount(3);
 	}
 
@@ -58,8 +56,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("1.5.4.RELEASE");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterDependency("jdbc")
-				.hasSpringBootStarterTest()
+				.hasSpringBootStarterDependency("jdbc").hasSpringBootStarterTest()
 				.hasDependenciesCount(3);
 	}
 
@@ -69,19 +66,16 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("2.0.0.M2");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterTest()
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
 				.hasDependenciesCount(3);
 	}
-	
+
 	@Test
 	public void noSessionWithRedis() {
 		ProjectRequest request = createProjectRequest("data-redis");
 		request.setBootVersion("2.0.0.M3");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("data-redis")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		generateMavenPom(request).hasSpringBootStarterDependency("data-redis")
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
@@ -90,8 +84,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("2.0.0.M3");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session-core")
-				.hasSpringBootStarterDependency("data-jpa")
-				.hasSpringBootStarterTest()
+				.hasSpringBootStarterDependency("data-jpa").hasSpringBootStarterTest()
 				.hasDependenciesCount(3);
 	}
 
@@ -99,46 +92,33 @@ public class SpringSessionRequestPostProcessorTests
 	public void sessionWithRedis() {
 		ProjectRequest request = createProjectRequest("session", "data-redis");
 		request.setBootVersion("2.0.0.M3");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("data-redis")
-				.hasSpringBootStarterTest()
-				.hasDependency(REDIS)
-				.hasDependenciesCount(3);
+		generateMavenPom(request).hasSpringBootStarterDependency("data-redis")
+				.hasSpringBootStarterTest().hasDependency(REDIS).hasDependenciesCount(3);
 	}
 
 	@Test
 	public void sessionWithRedisReactive() {
 		ProjectRequest request = createProjectRequest("session", "data-redis-reactive");
 		request.setBootVersion("2.0.0.M7");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("data-redis-reactive")
-				.hasSpringBootStarterTest()
-				.hasDependency(REDIS)
-				.hasDependenciesCount(3);
+		generateMavenPom(request).hasSpringBootStarterDependency("data-redis-reactive")
+				.hasSpringBootStarterTest().hasDependency(REDIS).hasDependenciesCount(3);
 	}
 
 	@Test
 	public void sessionWithJdbc() {
 		ProjectRequest request = createProjectRequest("session", "jdbc");
 		request.setBootVersion("2.0.0.M3");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("jdbc")
-				.hasSpringBootStarterTest()
-				.hasDependency(JDBC)
-				.hasDependenciesCount(3);
+		generateMavenPom(request).hasSpringBootStarterDependency("jdbc")
+				.hasSpringBootStarterTest().hasDependency(JDBC).hasDependenciesCount(3);
 	}
 
 	@Test
 	public void sessionWithRedisAndJdbc() {
 		ProjectRequest request = createProjectRequest("session", "data-redis", "jdbc");
 		request.setBootVersion("2.0.0.M3");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("data-redis")
-				.hasSpringBootStarterDependency("jdbc")
-				.hasSpringBootStarterTest()
-				.hasDependency(REDIS)
-				.hasDependency(JDBC)
-				.hasDependenciesCount(5);
+		generateMavenPom(request).hasSpringBootStarterDependency("data-redis")
+				.hasSpringBootStarterDependency("jdbc").hasSpringBootStarterTest()
+				.hasDependency(REDIS).hasDependency(JDBC).hasDependenciesCount(5);
 	}
 
 }

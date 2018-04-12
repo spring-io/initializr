@@ -48,8 +48,8 @@ public class CloudFoundryInfoContributorTests {
 		assertThat(info.getDetails()).containsOnlyKeys("app");
 		Object appDetails = info.getDetails().get("app");
 		assertThat(appDetails).isInstanceOf(Map.class);
-		assertThat((Map<String, Object>) appDetails).containsOnly(
-				entry("name", "foo-bar"));
+		assertThat((Map<String, Object>) appDetails)
+				.containsOnly(entry("name", "foo-bar"));
 	}
 
 	private static Info getInfo(Environment env) {

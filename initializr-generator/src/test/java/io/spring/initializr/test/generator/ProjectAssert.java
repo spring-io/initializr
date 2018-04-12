@@ -45,11 +45,11 @@ public class ProjectAssert {
 	private Boolean mavenProject;
 
 	public File getDir() {
-		return dir;
+		return this.dir;
 	}
 
 	public Boolean getMavenProject() {
-		return mavenProject;
+		return this.mavenProject;
 	}
 
 	/**
@@ -71,9 +71,8 @@ public class ProjectAssert {
 	 */
 	public ProjectAssert hasBaseDir(String name) {
 		File projectDir = file(name);
-		assertThat(projectDir)
-				.describedAs("No directory %s found in %s", name, dir.getAbsolutePath())
-				.exists();
+		assertThat(projectDir).describedAs("No directory %s found in %s", name,
+				this.dir.getAbsolutePath()).exists();
 		assertThat(projectDir).isDirectory();
 		// Replacing the root dir so that other assertions match the root
 		return new ProjectAssert(projectDir);
@@ -138,7 +137,7 @@ public class ProjectAssert {
 		hasFile("pom.xml").hasNoFile("build.gradle");
 		hasFile("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
-		mavenProject = true;
+		this.mavenProject = true;
 		return this;
 	}
 
@@ -146,7 +145,7 @@ public class ProjectAssert {
 		hasFile("build.gradle").hasNoFile("pom.xml");
 		hasFile("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		mavenProject = false;
+		this.mavenProject = false;
 		if (StringUtils.hasText(version)) {
 			Properties properties = properties(
 					"gradle/wrapper/gradle-wrapper.properties");
@@ -254,7 +253,7 @@ public class ProjectAssert {
 	}
 
 	private File file(String localPath) {
-		return new File(dir, localPath);
+		return new File(this.dir, localPath);
 	}
 
 	private Properties properties(String localPath) {

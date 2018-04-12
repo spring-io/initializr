@@ -56,8 +56,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	@Override
 	@Cacheable(value = "initializr.metadata", key = "'metadata'")
 	public InitializrMetadata get() {
-		updateInitializrMetadata(metadata);
-		return metadata;
+		updateInitializrMetadata(this.metadata);
+		return this.metadata;
 	}
 
 	protected void updateInitializrMetadata(InitializrMetadata metadata) {
@@ -72,12 +72,12 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	}
 
 	protected List<DefaultMetadataElement> fetchBootVersions() {
-		String url = metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
+		String url = this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
 		if (StringUtils.hasText(url)) {
 			try {
 				log.info("Fetching boot metadata from {}", url);
-				return new SpringBootMetadataReader(objectMapper, restTemplate, url)
-						.getBootVersions();
+				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+						url).getBootVersions();
 			}
 			catch (Exception e) {
 				log.warn("Failed to fetch spring boot metadata", e);

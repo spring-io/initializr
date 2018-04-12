@@ -47,7 +47,7 @@ public class ProjectRequestDocumentFactory {
 	}
 
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 		ProjectRequest request = event.getProjectRequest();
 
 		ProjectRequestDocument document = new ProjectRequestDocument();

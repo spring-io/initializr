@@ -35,7 +35,7 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 
 	@Override
 	public List<Type> getContent() {
-		return content;
+		return this.content;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 	 * exists.
 	 */
 	public Type get(String id) {
-		return content.stream()
+		return this.content.stream()
 				.filter(it -> id.equals(it.getId()) || id.equals(it.getStsId()))
 				.findFirst().orElse(null);
 	}
@@ -53,7 +53,7 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 	 */
 	@Override
 	public Type getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
+		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
 				.orElse(null);
 	}
 
@@ -61,7 +61,7 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 	public void merge(List<Type> otherContent) {
 		otherContent.forEach(it -> {
 			if (get(it.getId()) == null) {
-				content.add(it);
+				this.content.add(it);
 			}
 		});
 	}

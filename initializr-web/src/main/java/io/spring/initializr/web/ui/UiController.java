@@ -54,8 +54,8 @@ public class UiController {
 	@GetMapping(path = "/ui/dependencies", produces = "application/json")
 	public ResponseEntity<String> dependencies(
 			@RequestParam(required = false) String version) {
-		List<DependencyGroup> dependencyGroups = metadataProvider.get().getDependencies()
-				.getContent();
+		List<DependencyGroup> dependencyGroups = this.metadataProvider.get()
+				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
 		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
 		dependencyGroups.forEach(g -> g.getContent().forEach(d -> {

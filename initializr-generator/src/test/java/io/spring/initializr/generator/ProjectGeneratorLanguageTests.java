@@ -57,54 +57,54 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	@Test
 	public void standardJar() {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		generateProject(request).isGenericProject(DEFAULT_PACKAGE_NAME,
-				DEFAULT_APPLICATION_NAME, language, extension);
+				DEFAULT_APPLICATION_NAME, this.language, this.extension);
 	}
 
 	@Test
 	public void standardWar() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		request.setPackaging("war");
 		generateProject(request).isGenericWarProject(DEFAULT_PACKAGE_NAME,
-				DEFAULT_APPLICATION_NAME, language, extension);
+				DEFAULT_APPLICATION_NAME, this.language, this.extension);
 	}
 
 	@Test
 	public void standardMainClass() {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/standard/DemoApplication." + expectedExtension));
+		project.sourceCodeAssert("src/main/" + this.language
+				+ "/com/example/demo/DemoApplication." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/standard/DemoApplication." + this.expectedExtension));
 	}
 
 	@Test
 	public void standardTestClass() {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/standard/DemoApplicationTests." + expectedExtension));
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/standard/DemoApplicationTests." + this.expectedExtension));
 	}
 
 	@Test
 	public void standardTestClassWeb() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/standard/DemoApplicationTestsWeb." + expectedExtension));
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/standard/DemoApplicationTestsWeb." + this.expectedExtension));
 	}
 
 	@Test
@@ -129,55 +129,58 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 	private void testServletInitializr(String bootVersion, String expectedOutput) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		request.setPackaging("war");
 		if (bootVersion != null) {
 			request.setBootVersion(bootVersion);
 		}
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/" + language
-				+ "/com/example/demo/ServletInitializer." + extension)
-				.equalsTo(new ClassPathResource("project/" + language + "/"
-						+ expectedOutput + "/ServletInitializer." + expectedExtension));
+		project.sourceCodeAssert("src/main/" + this.language
+				+ "/com/example/demo/ServletInitializer." + this.extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + this.language + "/" + expectedOutput
+								+ "/ServletInitializer." + this.expectedExtension));
 	}
 
 	@Test
 	public void springBoot14M1TestClass() {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		request.setBootVersion("1.4.0.M1");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/standard/DemoApplicationTests." + expectedExtension));
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/standard/DemoApplicationTests." + this.expectedExtension));
 	}
 
 	@Test
 	public void springBoot14TestClass() {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		request.setBootVersion("1.4.0.M2");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/spring-boot-1.4/DemoApplicationTests."
+						+ this.expectedExtension));
 	}
 
 	@Test
 	public void springBoot14TestClassWeb() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(language);
+		request.setLanguage(this.language);
 		request.setBootVersion("1.4.0.M2");
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
-				.equalsTo(new ClassPathResource("project/" + language
-						+ "/spring-boot-1.4/DemoApplicationTests." + expectedExtension));
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/spring-boot-1.4/DemoApplicationTests."
+						+ this.expectedExtension));
 	}
 
 }

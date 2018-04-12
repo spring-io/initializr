@@ -42,11 +42,11 @@ public class Agent {
 	}
 
 	public AgentId getId() {
-		return id;
+		return this.id;
 	}
 
 	public String getVersion() {
-		return version;
+		return this.version;
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class Agent {
 		final String name;
 
 		public String getId() {
-			return id;
+			return this.id;
 		}
 
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
 		AgentId(String id, String name) {
