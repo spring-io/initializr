@@ -102,8 +102,11 @@ initializr:
             version: 1.5.0.RELEASE
           - versionRange: "[1.5.0.RELEASE,1.5.x.RELEASE]"
             version: 1.6.3.RELEASE
-          - versionRange: "[1.5.x.BUILD-SNAPSHOT, 2.0.0.M1)"
-            version: 1.6.4.BUILD-SNAPSHOT
+          - versionRange: "[2.0.0.RELEASE,2.0.x.RELEASE]"
+            version: 2.0.0.M1
+            repositories: spring-milestones
+          - versionRange: "2.0.x.BUILD-SNAPSHOT"
+            version: 2.0.0.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-task:
         groupId: org.springframework.cloud
@@ -1077,7 +1080,7 @@ initializr:
           starter: false
     - name: Pivotal Cloud Foundry
       bom: spring-cloud-services
-      versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
+      versionRange: 1.3.0.RELEASE
       content:
         - name: Config Client (PCF)
           id: scs-config-client
