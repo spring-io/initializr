@@ -32,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -44,9 +45,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Basic smoke tests for {@link InitializrService}.
  *
  * @author Stephane Nicoll
+ * @author Madhura Bhave
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
+		properties = "server.tomcat.protocol-header=X-Forwarded-Proto")
 public class InitializrServiceSmokeTests {
 
 	@Autowired
@@ -58,6 +61,7 @@ public class InitializrServiceSmokeTests {
 	@Test
 	public void metadataCanBeSerialized() throws URISyntaxException, IOException {
 		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
+				.header("X-Forwarded-Proto", "https")
 				.accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
 				.build();
 		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
@@ -68,6 +72,7 @@ public class InitializrServiceSmokeTests {
 	@Test
 	public void configurationCanBeSerialized() throws URISyntaxException {
 		RequestEntity<Void> request = RequestEntity.get(new URI("/metadata/config"))
+				.header("X-Forwarded-Proto", "https")
 				.accept(MediaType.APPLICATION_JSON)
 				.build();
 		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
@@ -82,6 +87,17 @@ public class InitializrServiceSmokeTests {
 				.isEqualTo(expected.getDependencies().getAll().size());
 		assertThat(actual.getConfiguration().getEnv().getBoms().size())
 				.isEqualTo(expected.getConfiguration().getEnv().getBoms().size());
+	}
+
+	@Test
+	public void securityHeadersSetOnResponse() throws Exception {
+		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
+				.header("X-Forwarded-Proto", "https")
+				.accept(MediaType.APPLICATION_JSON)
+				.build();
+		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
+		HttpHeaders headers = response.getHeaders();
+		assertThat(headers.get("Strict-Transport-Security")).isNotNull();
 	}
 
 }
