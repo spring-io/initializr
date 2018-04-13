@@ -11,6 +11,7 @@
 	<name>Spring Initializr :: Docs</name>
 
 	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
 		<snippets.location>${project.build.directory}/snippets</snippets.location>
 	</properties>
 

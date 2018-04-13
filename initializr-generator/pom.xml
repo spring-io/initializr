@@ -10,6 +10,10 @@
 	<artifactId>initializr-generator</artifactId>
 	<name>Spring Initializr :: Generator</name>
 
+	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

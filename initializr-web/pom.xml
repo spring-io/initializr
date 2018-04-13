@@ -10,6 +10,10 @@
 	<artifactId>initializr-web</artifactId>
 	<name>Spring Initializr :: Web</name>
 
+	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
