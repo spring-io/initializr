@@ -155,6 +155,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	/**
 	 * Return a {@link ProjectAssert} for the following archive content.
+	 * @param content the source content
+	 * @return a project assert
 	 */
 	protected ProjectAssert zipProjectAssert(byte[] content) {
 		return projectAssert(content, ArchiveType.ZIP);
@@ -162,6 +164,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	/**
 	 * Return a {@link ProjectAssert} for the following TGZ archive.
+	 * @param content the source content
+	 * @return a project assert
 	 */
 	protected ProjectAssert tgzProjectAssert(byte[] content) {
 		return projectAssert(content, ArchiveType.TGZ);

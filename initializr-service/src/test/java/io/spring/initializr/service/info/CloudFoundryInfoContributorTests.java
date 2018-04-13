@@ -42,6 +42,7 @@ public class CloudFoundryInfoContributorTests {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void applicationName() {
 		this.environment.setProperty("vcap.application.name", "foo-bar");
 		Info info = getInfo(this.environment);

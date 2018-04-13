@@ -80,6 +80,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link PomAssert} for this project.
+	 * @return a POM assert
 	 */
 	public PomAssert pomAssert() {
 		try {
@@ -93,6 +94,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link GradleBuildAssert} for this project.
+	 * @return a gradle assert
 	 */
 	public GradleBuildAssert gradleBuildAssert() {
 		try {
@@ -106,6 +108,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link GradleSettingsAssert} for this project.
+	 * @return A gradle settings assert
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
 		try {
@@ -120,6 +123,8 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link SourceCodeAssert} for the specified source code.
+	 * @param sourceCodePath the source code path
+	 * @return a source assert
 	 */
 	public SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
 		hasFile(sourceCodePath);

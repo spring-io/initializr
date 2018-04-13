@@ -81,6 +81,8 @@ public class PomAssert {
 
 	/**
 	 * Validate that this generated pom validates against its request.
+	 * @param request the source request
+	 * @return a POM assert
 	 */
 	public PomAssert validateProjectRequest(ProjectRequest request) {
 		return hasGroupId(request.getGroupId()).hasArtifactId(request.getArtifactId())
