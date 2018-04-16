@@ -104,6 +104,11 @@ public class Agent {
 		VSCODE("vscode", "vscode"),
 
 		/**
+		 * Jenkins X.
+		 */
+		JENKINSX("jenkinsx", "jx"),
+
+		/**
 		 * A generic browser.
 		 */
 		BROWSER("browser", "Browser");

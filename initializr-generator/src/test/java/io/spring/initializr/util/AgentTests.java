@@ -92,6 +92,13 @@ public class AgentTests {
 	}
 
 	@Test
+	public void checkJenkinsX() {
+		Agent agent = Agent.fromUserAgent("jx/1.1.71");
+		assertThat(agent.getId()).isEqualTo(Agent.AgentId.JENKINSX);
+		assertThat(agent.getVersion()).isEqualTo("1.1.71");
+	}
+
+	@Test
 	public void checkGenericBrowser() {
 		Agent agent = Agent.fromUserAgent(
 				"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ");
