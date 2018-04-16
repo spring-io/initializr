@@ -19,7 +19,7 @@ package io.spring.initializr.metadata;
 /**
  * An item that can describe itself.
  *
- * @author Stephane Nicoll
+ * @author Dave Syer
  */
 public interface Describable {
 

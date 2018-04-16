@@ -163,8 +163,7 @@ public class MainControllerStatsIntegrationTests
 		assertThat(json.get("invalid").booleanValue()).isEqualTo(true);
 		assertThat(json.get("invalidType").booleanValue()).isEqualTo(true);
 		assertThat(json.get("errorMessage")).isNotNull();
-		assertThat(json.get("errorMessage").textValue().contains("invalid-type"))
-				.isTrue();
+		assertThat(json.get("errorMessage").textValue()).contains("invalid-type");
 	}
 
 	@Test

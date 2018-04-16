@@ -374,7 +374,7 @@ public class ProjectGenerationSmokeTests
 
 	private File getArchive(String fileName) {
 		File archive = new File(this.downloadDir, fileName);
-		assertThat(archive.exists()).isTrue();
+		assertThat(archive).exists();
 		return archive;
 	}
 

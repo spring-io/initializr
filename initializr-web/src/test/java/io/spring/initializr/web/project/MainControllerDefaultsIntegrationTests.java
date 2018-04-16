@@ -46,12 +46,11 @@ public class MainControllerDefaultsIntegrationTests
 	@Test
 	public void defaultsAppliedToHome() {
 		String body = htmlHome();
-		assertThat(body.contains("org.foo")).as("custom groupId not found").isTrue();
-		assertThat(body.contains("foo-bar")).as("custom artifactId not found").isTrue();
-		assertThat(body.contains("FooBar")).as("custom name not found").isTrue();
-		assertThat(body.contains("FooBar Project")).as("custom description not found")
-				.isTrue();
-		assertThat(body.contains("org.foo.demo")).as("custom package not found").isTrue();
+		assertThat(body).as("custom groupId not found").contains("org.foo");
+		assertThat(body).as("custom artifactId not found").contains("foo-bar");
+		assertThat(body).as("custom name not found").contains("FooBar");
+		assertThat(body).as("custom description not found").contains("FooBar Project");
+		assertThat(body).as("custom package not found").contains("org.foo.demo");
 	}
 
 }

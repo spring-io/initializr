@@ -106,6 +106,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected void validateContentType(ResponseEntity<String> response,
 			MediaType expected) {
 		MediaType actual = response.getHeaders().getContentType();
+		assertThat(actual).isNotNull();
 		assertThat(actual.isCompatibleWith(expected))
 				.as("Non compatible media-type, expected " + expected + ", got " + actual)
 				.isTrue();

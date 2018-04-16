@@ -406,7 +406,7 @@ public class MainControllerIntegrationTests
 		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
 				byte[].class);
 		assertThat(body).isNotNull();
-		assertThat(body.length > 100).isTrue();
+		assertThat(body.length).isGreaterThan(100);
 	}
 
 	@Test

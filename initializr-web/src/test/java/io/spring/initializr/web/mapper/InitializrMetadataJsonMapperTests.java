@@ -72,8 +72,8 @@ public class InitializrMetadataJsonMapperTests {
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
 		// JSON objects are not ordered
-		assertThat(first > 0).isTrue();
-		assertThat(second > 0).isTrue();
+		assertThat(first).isGreaterThan(0);
+		assertThat(second).isGreaterThan(0);
 	}
 
 	private Object get(JsonNode result, String path) {

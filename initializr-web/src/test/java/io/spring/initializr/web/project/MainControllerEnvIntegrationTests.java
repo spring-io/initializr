@@ -48,9 +48,8 @@ public class MainControllerEnvIntegrationTests
 	public void doNotForceSsl() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
-		assertThat(body.contains("http://start.spring.io/")).as("Must not force https")
-				.isTrue();
-		assertThat(body.contains("https://")).as("Must not force https").isFalse();
+		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
+		assertThat(body).as("Must not force https").doesNotContain("https://");
 	}
 
 	@Test

@@ -83,7 +83,7 @@ public class LinkMapperTests {
 		links.add(Link.create("second", "https://example.com"));
 		ObjectNode model = LinkMapper.mapLinks(links);
 		String json = model.toString();
-		assertThat(json.indexOf("first") < json.indexOf("second")).isTrue();
+		assertThat(json.indexOf("first")).isLessThan(json.indexOf("second"));
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class LinkMapperTests {
 		links.add(Link.create("first", "https://example.com"));
 		ObjectNode model = LinkMapper.mapLinks(links);
 		String json = model.toString();
-		assertThat(json.indexOf("first") < json.indexOf("second")).isTrue();
+		assertThat(json.indexOf("first")).isLessThan(json.indexOf("second"));
 	}
 
 }

@@ -65,9 +65,7 @@ public class LinkTests {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
 		assertThat(link.isTemplated()).isTrue();
-		assertThat(link.getTemplateVariables()).hasSize(2);
-		assertThat(link.getTemplateVariables().contains("a")).isTrue();
-		assertThat(link.getTemplateVariables().contains("b")).isTrue();
+		assertThat(link.getTemplateVariables()).containsExactlyInAnyOrder("a", "b");
 	}
 
 	@Test
