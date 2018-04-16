@@ -27,7 +27,9 @@ import java.net.URL;
 public class Repository {
 
 	private String name;
+
 	private URL url;
+
 	private boolean snapshotsEnabled;
 
 	public Repository() {
@@ -40,7 +42,7 @@ public class Repository {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -48,7 +50,7 @@ public class Repository {
 	}
 
 	public URL getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(URL url) {
@@ -56,7 +58,7 @@ public class Repository {
 	}
 
 	public boolean isSnapshotsEnabled() {
-		return snapshotsEnabled;
+		return this.snapshotsEnabled;
 	}
 
 	public void setSnapshotsEnabled(boolean snapshotsEnabled) {
@@ -65,44 +67,52 @@ public class Repository {
 
 	@Override
 	public String toString() {
-		return "Repository [" + (name != null ? "name=" + name + ", " : "")
-				+ (url != null ? "url=" + url + ", " : "") + "snapshotsEnabled="
-				+ snapshotsEnabled + "]";
+		return "Repository [" + (this.name != null ? "name=" + this.name + ", " : "")
+				+ (this.url != null ? "url=" + this.url + ", " : "") + "snapshotsEnabled="
+				+ this.snapshotsEnabled + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + (snapshotsEnabled ? 1231 : 1237);
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + (this.snapshotsEnabled ? 1231 : 1237);
+		result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Repository other = (Repository) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (this.name == null) {
+			if (other.name != null) {
 				return false;
+			}
 		}
-		else if (!name.equals(other.name))
+		else if (!this.name.equals(other.name)) {
 			return false;
-		if (snapshotsEnabled != other.snapshotsEnabled)
+		}
+		if (this.snapshotsEnabled != other.snapshotsEnabled) {
 			return false;
-		if (url == null) {
-			if (other.url != null)
+		}
+		if (this.url == null) {
+			if (other.url != null) {
 				return false;
+			}
 		}
-		else if (!url.equals(other.url))
+		else if (!this.url.equals(other.url)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -55,7 +55,6 @@ public class DependencyRangesInfoContributorTests {
 		assertThat(info.getDetails()).doesNotContainKeys("dependency-ranges");
 	}
 
-
 	@Test
 	public void dependencyWithRangeOnArtifact() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
@@ -77,8 +76,7 @@ public class DependencyRangesInfoContributorTests {
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
 		dependency.setBom("bom");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("bom", bom)
-				.addDependencyGroup("foo", dependency).build();
+				.addBom("bom", bom).addDependencyGroup("foo", dependency).build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("dependency-ranges");
 	}
@@ -107,8 +105,8 @@ public class DependencyRangesInfoContributorTests {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping
-				.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		Info info = getInfo(metadata);
@@ -146,7 +144,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String,Object> getDependencyRangeInfo(Info info, String id) {
+	private Map<String, Object> getDependencyRangeInfo(Info info, String id) {
 		assertThat(info.getDetails()).containsKeys("dependency-ranges");
 		Map<String, Object> ranges = (Map<String, Object>) info.getDetails()
 				.get("dependency-ranges");
@@ -155,8 +153,8 @@ public class DependencyRangesInfoContributorTests {
 
 	private static Info getInfo(InitializrMetadata metadata) {
 		Info.Builder builder = new Info.Builder();
-		new DependencyRangesInfoContributor(new SimpleInitializrMetadataProvider(metadata))
-				.contribute(builder);
+		new DependencyRangesInfoContributor(
+				new SimpleInitializrMetadataProvider(metadata)).contribute(builder);
 		return builder.build();
 	}
 

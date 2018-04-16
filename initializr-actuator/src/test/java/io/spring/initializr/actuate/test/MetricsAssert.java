@@ -37,15 +37,16 @@ public class MetricsAssert {
 	}
 
 	public MetricsAssert hasValue(long value, String... metrics) {
-		Arrays.asList(metrics).forEach(metric ->
-				assertThat(meterRegistry.get(metric).counter().count()).isEqualTo(value));
+		Arrays.asList(metrics).forEach(
+				(metric) -> assertThat(this.meterRegistry.get(metric).counter().count())
+						.isEqualTo(value));
 		return this;
 	}
 
 	public MetricsAssert hasNoValue(String... metrics) {
-		Arrays.asList(metrics).forEach(metric ->
-				assertThat(Search.in(this.meterRegistry).name(n -> n.startsWith(metric))
-						.counter()).isNull());
+		Arrays.asList(metrics).forEach((metric) -> assertThat(
+				Search.in(this.meterRegistry).name((n) -> n.startsWith(metric)).counter())
+						.isNull());
 		return this;
 	}
 

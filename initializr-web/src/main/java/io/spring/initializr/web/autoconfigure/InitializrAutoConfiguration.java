@@ -58,12 +58,11 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
- * Auto-configuration} to configure Spring initializr. In a web environment,
- * configures the necessary controller to serve the applications from the
- * root context.
+ * Auto-configuration} to configure Spring initializr. In a web environment, configures
+ * the necessary controller to serve the applications from the root context.
  *
- * <p>Project generation can be customized by defining a custom
- * {@link ProjectGenerator}.
+ * <p>
+ * Project generation can be customized by defining a custom {@link ProjectGenerator}.
  *
  * @author Stephane Nicoll
  */
@@ -100,7 +99,7 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public ProjectRequestResolver projectRequestResolver() {
-		return new ProjectRequestResolver(postProcessors);
+		return new ProjectRequestResolver(this.postProcessors);
 	}
 
 	@Bean
@@ -111,13 +110,12 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
 	public InitializrMetadataProvider initializrMetadataProvider(
-			InitializrProperties properties,
-			ObjectMapper objectMapper,
+			InitializrProperties properties, ObjectMapper objectMapper,
 			RestTemplateBuilder restTemplateBuilder) {
 		InitializrMetadata metadata = InitializrMetadataBuilder
 				.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata,
-				objectMapper, restTemplateBuilder.build());
+		return new DefaultInitializrMetadataProvider(metadata, objectMapper,
+				restTemplateBuilder.build());
 	}
 
 	@Bean
@@ -126,10 +124,12 @@ public class InitializrAutoConfiguration {
 		return new DefaultDependencyMetadataProvider();
 	}
 
+	/**
+	 * Initializr web configuration.
+	 */
 	@Configuration
 	@ConditionalOnWebApplication
 	static class InitializrWebConfiguration {
-
 
 		@Bean
 		public InitializrWebConfig initializrWebConfig() {
@@ -144,8 +144,8 @@ public class InitializrAutoConfiguration {
 				ResourceUrlProvider resourceUrlProvider,
 				ProjectGenerator projectGenerator,
 				DependencyMetadataProvider dependencyMetadataProvider) {
-			return new MainController(metadataProvider, templateRenderer, resourceUrlProvider
-					, projectGenerator, dependencyMetadataProvider);
+			return new MainController(metadataProvider, templateRenderer,
+					resourceUrlProvider, projectGenerator, dependencyMetadataProvider);
 		}
 
 		@Bean
@@ -157,13 +157,16 @@ public class InitializrAutoConfiguration {
 
 	}
 
+	/**
+	 * Initializr cache configuration.
+	 */
 	@Configuration
 	@ConditionalOnClass(javax.cache.CacheManager.class)
 	static class InitializrCacheConfiguration {
 
 		@Bean
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
-			return cm -> {
+			return (cm) -> {
 				cm.createCache("initializr.metadata", config().setExpiryPolicyFactory(
 						CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
 				cm.createCache("initializr.dependency-metadata", config());
@@ -172,8 +175,7 @@ public class InitializrAutoConfiguration {
 		}
 
 		private MutableConfiguration<Object, Object> config() {
-			return new MutableConfiguration<>()
-					.setStoreByValue(false)
+			return new MutableConfiguration<>().setStoreByValue(false)
 					.setManagementEnabled(true).setStatisticsEnabled(true);
 		}
 

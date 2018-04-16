@@ -34,8 +34,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-class SpringSessionRequestPostProcessor
-		extends AbstractProjectRequestPostProcessor {
+class SpringSessionRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
 
@@ -44,7 +43,6 @@ class SpringSessionRequestPostProcessor
 
 	static final Dependency JDBC = Dependency.withId("session-jdbc",
 			"org.springframework.session", "spring-session-jdbc");
-
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,

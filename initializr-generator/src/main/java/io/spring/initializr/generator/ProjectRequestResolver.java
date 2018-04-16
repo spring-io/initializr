@@ -46,14 +46,14 @@ public class ProjectRequestResolver {
 
 	private void applyPostProcessBeforeResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		for (ProjectRequestPostProcessor processor : postProcessors) {
+		for (ProjectRequestPostProcessor processor : this.postProcessors) {
 			processor.postProcessBeforeResolution(request, metadata);
 		}
 	}
 
 	private void applyPostProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		for (ProjectRequestPostProcessor processor : postProcessors) {
+		for (ProjectRequestPostProcessor processor : this.postProcessors) {
 			processor.postProcessAfterResolution(request, metadata);
 		}
 	}

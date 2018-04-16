@@ -33,13 +33,15 @@ final class JsonFieldProcessor {
 
 	boolean hasField(JsonFieldPath fieldPath, Object payload) {
 		final AtomicReference<Boolean> hasField = new AtomicReference<>(false);
-		traverse(new ProcessingContext(payload, fieldPath), match -> hasField.set(true));
+		traverse(new ProcessingContext(payload, fieldPath),
+				(match) -> hasField.set(true));
 		return hasField.get();
 	}
 
 	Object extract(JsonFieldPath path, Object payload) {
 		final List<Object> matches = new ArrayList<>();
-		traverse(new ProcessingContext(payload, path), match -> matches.add(match.getValue()));
+		traverse(new ProcessingContext(payload, path),
+				(match) -> matches.add(match.getValue()));
 		if (matches.isEmpty()) {
 			throw new IllegalArgumentException("Field does not exist: " + path);
 		}
@@ -179,6 +181,7 @@ final class JsonFieldProcessor {
 		Object getValue();
 
 		void remove();
+
 	}
 
 	private static final class ProcessingContext {
@@ -224,6 +227,7 @@ final class JsonFieldProcessor {
 			return new ProcessingContext(payload, this.path,
 					this.segments.subList(1, this.segments.size()), match);
 		}
+
 	}
 
 }

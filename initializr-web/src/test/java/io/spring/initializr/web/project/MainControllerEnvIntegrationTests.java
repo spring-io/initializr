@@ -26,9 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -39,37 +37,34 @@ public class MainControllerEnvIntegrationTests
 
 	@Test
 	public void downloadCliWithCustomRepository() throws Exception {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(
-				createUrl("/spring"), String.class);
-		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
+		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
+				String.class);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
-		assertEquals(new URI(expected), entity.getHeaders().getLocation());
+		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
 
 	@Test
 	public void doNotForceSsl() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
-		assertTrue("Must not force https", body.contains("http://start.spring.io/"));
-		assertFalse("Must not force https", body.contains("https://"));
+		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
+		assertThat(body).as("Must not force https").doesNotContain("https://");
 	}
 
 	@Test
 	public void generateProjectWithInvalidName() {
 		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
 				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
-				.isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(2)
-				.hasSpringBootStarterDependency("data-jpa")
+				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
+				.hasDependenciesCount(2).hasSpringBootStarterDependency("data-jpa")
 				.hasSpringBootStarterTest();
 	}
 
 	@Test
 	public void googleAnalytics() {
 		String body = htmlHome();
-		assertTrue("google tag manager should be enabled",
-				body.contains("https://www.googletagmanager.com/gtm.js"));
+		assertThat(body).contains("https://www.googletagmanager.com/gtm.js");
 	}
 
 }

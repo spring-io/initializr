@@ -38,12 +38,19 @@ import io.spring.initializr.util.VersionRange;
 public class BillOfMaterials {
 
 	private String groupId;
+
 	private String artifactId;
+
 	private String version;
+
 	private VersionProperty versionProperty;
+
 	private Integer order = Integer.MAX_VALUE;
+
 	private List<String> additionalBoms = new ArrayList<>();
+
 	private List<String> repositories = new ArrayList<>();
+
 	private final List<Mapping> mappings = new ArrayList<>();
 
 	public BillOfMaterials() {
@@ -60,7 +67,7 @@ public class BillOfMaterials {
 	}
 
 	public String getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 	public void setGroupId(String groupId) {
@@ -68,7 +75,7 @@ public class BillOfMaterials {
 	}
 
 	public String getArtifactId() {
-		return artifactId;
+		return this.artifactId;
 	}
 
 	public void setArtifactId(String artifactId) {
@@ -77,9 +84,10 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
+	 * @return The version of the BOM or {@code null}
 	 */
 	public String getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public void setVersion(String version) {
@@ -88,11 +96,12 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the {@link VersionProperty} to use to externalize the version of the BOM.
-	 * When this is set, a version property is automatically added rather than setting
-	 * the version in the bom declaration itself.
+	 * When this is set, a version property is automatically added rather than setting the
+	 * version in the BOM declaration itself.
+	 * @return the version property
 	 */
 	public VersionProperty getVersionProperty() {
-		return versionProperty;
+		return this.versionProperty;
 	}
 
 	public void setVersionProperty(VersionProperty versionProperty) {
@@ -106,10 +115,11 @@ public class BillOfMaterials {
 	/**
 	 * Return the relative order of this BOM where lower values have higher priority. The
 	 * default value is {@code Integer.MAX_VALUE}, indicating lowest priority. The Spring
-	 * Boot dependencies bom has an order of 100.
+	 * Boot dependencies BOM has an order of 100.
+	 * @return the relative order of this BOM
 	 */
 	public Integer getOrder() {
-		return order;
+		return this.order;
 	}
 
 	public void setOrder(Integer order) {
@@ -119,9 +129,10 @@ public class BillOfMaterials {
 	/**
 	 * Return the BOM(s) that should be automatically included if this BOM is required.
 	 * Can be {@code null} if it is provided via a mapping.
+	 * @return the additional BOMs
 	 */
 	public List<String> getAdditionalBoms() {
-		return additionalBoms;
+		return this.additionalBoms;
 	}
 
 	public void setAdditionalBoms(List<String> additionalBoms) {
@@ -131,9 +142,10 @@ public class BillOfMaterials {
 	/**
 	 * Return the repositories that are required if this BOM is required. Can be
 	 * {@code null} if it is provided via a mapping.
+	 * @return the repositories
 	 */
 	public List<String> getRepositories() {
-		return repositories;
+		return this.repositories;
 	}
 
 	public void setRepositories(List<String> repositories) {
@@ -141,11 +153,11 @@ public class BillOfMaterials {
 	}
 
 	public List<Mapping> getMappings() {
-		return mappings;
+		return this.mappings;
 	}
 
 	public void validate() {
-		if (version == null && mappings.isEmpty()) {
+		if (this.version == null && this.mappings.isEmpty()) {
 			throw new InvalidInitializrMetadataException(
 					"No version available for " + this);
 		}
@@ -153,7 +165,7 @@ public class BillOfMaterials {
 	}
 
 	public void updateVersionRange(VersionParser versionParser) {
-		mappings.forEach(it -> {
+		this.mappings.forEach((it) -> {
 			try {
 				it.range = versionParser.parseRange(it.versionRange);
 			}
@@ -168,42 +180,58 @@ public class BillOfMaterials {
 	 * Resolve this instance according to the specified Spring Boot {@link Version}.
 	 * Return a {@link BillOfMaterials} instance that holds the version, repositories and
 	 * additional BOMs to use, if any.
+	 * @param bootVersion the Spring Boot version
+	 * @return the bill of materials
 	 */
 	public BillOfMaterials resolve(Version bootVersion) {
-		if (mappings.isEmpty()) {
+		if (this.mappings.isEmpty()) {
 			return this;
 		}
 
-		for (Mapping mapping : mappings) {
+		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
-				BillOfMaterials resolvedBom = new BillOfMaterials(groupId, artifactId,
-						mapping.version);
-				resolvedBom.setVersionProperty(versionProperty);
-				resolvedBom.setOrder(order);
+				BillOfMaterials resolvedBom = new BillOfMaterials(this.groupId,
+						this.artifactId, mapping.version);
+				resolvedBom.setVersionProperty(this.versionProperty);
+				resolvedBom.setOrder(this.order);
 				resolvedBom.repositories.addAll(!mapping.repositories.isEmpty()
-						? mapping.repositories : repositories);
+						? mapping.repositories : this.repositories);
 				resolvedBom.additionalBoms.addAll(!mapping.additionalBoms.isEmpty()
-						? mapping.additionalBoms : additionalBoms);
+						? mapping.additionalBoms : this.additionalBoms);
 				return resolvedBom;
 			}
 		}
-		throw new IllegalStateException(
-				"No suitable mapping was found for " + this + " and version " + bootVersion);
+		throw new IllegalStateException("No suitable mapping was found for " + this
+				+ " and version " + bootVersion);
 	}
 
 	@Override
 	public String toString() {
-		return "BillOfMaterials [" + (groupId != null ? "groupId=" + groupId + ", " : "")
-				+ (artifactId != null ? "artifactId=" + artifactId + ", " : "")
-				+ (version != null ? "version=" + version + ", " : "")
-				+ (versionProperty != null ? "versionProperty=" + versionProperty + ", "
-						: "")
-				+ (order != null ? "order=" + order + ", " : "")
-				+ (additionalBoms != null ? "additionalBoms=" + additionalBoms + ", "
-						: "")
-				+ (repositories != null ? "repositories=" + repositories : "") + "]";
+		return "BillOfMaterials ["
+				+ (this.groupId != null ? "groupId=" + this.groupId + ", " : "")
+				+ (this.artifactId != null ? "artifactId=" + this.artifactId + ", " : "")
+				+ (this.version != null ? "version=" + this.version + ", " : "")
+				+ (this.versionProperty != null
+						? "versionProperty=" + this.versionProperty + ", " : "")
+				+ (this.order != null ? "order=" + this.order + ", " : "")
+				+ (this.additionalBoms != null
+						? "additionalBoms=" + this.additionalBoms + ", " : "")
+				+ (this.repositories != null ? "repositories=" + this.repositories : "")
+				+ "]";
 	}
 
+	public static BillOfMaterials create(String groupId, String artifactId) {
+		return new BillOfMaterials(groupId, artifactId);
+	}
+
+	public static BillOfMaterials create(String groupId, String artifactId,
+			String version) {
+		return new BillOfMaterials(groupId, artifactId, version);
+	}
+
+	/**
+	 * Mapping information.
+	 */
 	public static class Mapping {
 
 		private String versionRange;
@@ -227,7 +255,7 @@ public class BillOfMaterials {
 		}
 
 		public String determineVersionRangeRequirement() {
-			return range.toString();
+			return this.range.toString();
 		}
 
 		public static Mapping create(String range, String version) {
@@ -240,23 +268,23 @@ public class BillOfMaterials {
 		}
 
 		public String getVersionRange() {
-			return versionRange;
+			return this.versionRange;
 		}
 
 		public String getVersion() {
-			return version;
+			return this.version;
 		}
 
 		public List<String> getRepositories() {
-			return repositories;
+			return this.repositories;
 		}
 
 		public List<String> getAdditionalBoms() {
-			return additionalBoms;
+			return this.additionalBoms;
 		}
 
 		public VersionRange getRange() {
-			return range;
+			return this.range;
 		}
 
 		public void setVersionRange(String versionRange) {
@@ -282,23 +310,16 @@ public class BillOfMaterials {
 		@Override
 		public String toString() {
 			return "Mapping ["
-					+ (versionRange != null ? "versionRange=" + versionRange + ", " : "")
-					+ (version != null ? "version=" + version + ", " : "")
-					+ (repositories != null ? "repositories=" + repositories + ", " : "")
-					+ (additionalBoms != null ? "additionalBoms=" + additionalBoms + ", "
-							: "")
-					+ (range != null ? "range=" + range : "") + "]";
+					+ (this.versionRange != null
+							? "versionRange=" + this.versionRange + ", " : "")
+					+ (this.version != null ? "version=" + this.version + ", " : "")
+					+ (this.repositories != null
+							? "repositories=" + this.repositories + ", " : "")
+					+ (this.additionalBoms != null
+							? "additionalBoms=" + this.additionalBoms + ", " : "")
+					+ (this.range != null ? "range=" + this.range : "") + "]";
 		}
 
-	}
-
-	public static BillOfMaterials create(String groupId, String artifactId) {
-		return new BillOfMaterials(groupId, artifactId);
-	}
-
-	public static BillOfMaterials create(String groupId, String artifactId,
-			String version) {
-		return new BillOfMaterials(groupId, artifactId, version);
 	}
 
 }

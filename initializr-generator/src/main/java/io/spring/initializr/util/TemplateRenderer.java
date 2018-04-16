@@ -34,6 +34,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
+ * A template renderer backed by Mustache.
+ *
  * @author Dave Syer
  */
 public class TemplateRenderer {
@@ -43,19 +45,19 @@ public class TemplateRenderer {
 	private boolean cache = true;
 
 	private final Compiler mustache;
-	private final ConcurrentMap<String, Template> templateCaches =
-			new ConcurrentReferenceHashMap<>();
 
-	public TemplateRenderer(Compiler mustache) {
-		this.mustache = mustache;
-	}
+	private final ConcurrentMap<String, Template> templateCaches = new ConcurrentReferenceHashMap<>();
 
 	public TemplateRenderer() {
 		this(mustacheCompiler());
 	}
 
+	public TemplateRenderer(Compiler mustache) {
+		this.mustache = mustache;
+	}
+
 	public boolean isCache() {
-		return cache;
+		return this.cache;
 	}
 
 	public void setCache(boolean cache) {
@@ -74,7 +76,7 @@ public class TemplateRenderer {
 	}
 
 	public Template getTemplate(String name) {
-		if (cache) {
+		if (this.cache) {
 			return this.templateCaches.computeIfAbsent(name, this::loadTemplate);
 		}
 		return loadTemplate(name);
@@ -83,8 +85,8 @@ public class TemplateRenderer {
 	protected Template loadTemplate(String name) {
 		try {
 			Reader template;
-			template = mustache.loader.getTemplate(name);
-			return mustache.compile(template);
+			template = this.mustache.loader.getTemplate(name);
+			return this.mustache.compile(template);
 		}
 		catch (Exception e) {
 			throw new IllegalStateException("Cannot load template " + name, e);
@@ -99,7 +101,7 @@ public class TemplateRenderer {
 		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		String prefix = "classpath:/templates/";
 		Charset charset = Charset.forName("UTF-8");
-		return name -> new InputStreamReader(
+		return (name) -> new InputStreamReader(
 				resourceLoader.getResource(prefix + name).getInputStream(), charset);
 	}
 

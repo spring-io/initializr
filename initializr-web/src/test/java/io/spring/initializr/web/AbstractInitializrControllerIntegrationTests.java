@@ -35,8 +35,7 @@ import org.springframework.test.context.TestExecutionListeners.MergeMode;
  * @author Stephane Nicoll
  */
 @ContextConfiguration(classes = RestTemplateConfig.class)
-@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS,
-		listeners = MockMvcClientHttpRequestFactoryTestExecutionListener.class)
+@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS, listeners = MockMvcClientHttpRequestFactoryTestExecutionListener.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80, uriHost = "start.spring.io")
 public abstract class AbstractInitializrControllerIntegrationTests
@@ -45,8 +44,7 @@ public abstract class AbstractInitializrControllerIntegrationTests
 	protected String host = "start.spring.io";
 
 	@Autowired
-	private
-	MockMvcClientHttpRequestFactory requests;
+	private MockMvcClientHttpRequestFactory requests;
 
 	@Override
 	protected String createUrl(String context) {
@@ -54,7 +52,7 @@ public abstract class AbstractInitializrControllerIntegrationTests
 	}
 
 	public MockMvcClientHttpRequestFactory getRequests() {
-		return requests;
+		return this.requests;
 	}
 
 	@Configuration
@@ -62,8 +60,10 @@ public abstract class AbstractInitializrControllerIntegrationTests
 
 		@Bean
 		RestTemplateCustomizer mockMvcCustomizer(BeanFactory beanFactory) {
-			return template -> template.setRequestFactory(
+			return (template) -> template.setRequestFactory(
 					beanFactory.getBean(MockMvcClientHttpRequestFactory.class));
 		}
+
 	}
+
 }

@@ -46,29 +46,27 @@ public class Type extends DefaultMetadataElement implements Describable {
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	@SuppressWarnings("deprecation")
 	public String getStsId() {
-		return stsId;
+		return this.stsId;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setStsId(String stsId) {
 		this.stsId = stsId;
 	}
 
 	public String getAction() {
-		return action;
+		return this.action;
 	}
 
 	public Map<String, String> getTags() {
-		return tags;
+		return this.tags;
 	}
 
 }

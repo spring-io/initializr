@@ -60,7 +60,8 @@ public class InitializrServiceSmokeTests {
 		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
 				.accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
 				.build();
-		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
+		ResponseEntity<String> response = this.restTemplate.exchange(request,
+				String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		new ObjectMapper().readTree(response.getBody());
 	}
@@ -68,16 +69,16 @@ public class InitializrServiceSmokeTests {
 	@Test
 	public void configurationCanBeSerialized() throws URISyntaxException {
 		RequestEntity<Void> request = RequestEntity.get(new URI("/metadata/config"))
-				.accept(MediaType.APPLICATION_JSON)
-				.build();
-		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
+				.accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<String> response = this.restTemplate.exchange(request,
+				String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		InitializrMetadata actual = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new ByteArrayResource(
-						response.getBody().getBytes()))
+				.withInitializrMetadata(
+						new ByteArrayResource(response.getBody().getBytes()))
 				.build();
 		assertThat(actual).isNotNull();
-		InitializrMetadata expected = metadataProvider.get();
+		InitializrMetadata expected = this.metadataProvider.get();
 		assertThat(actual.getDependencies().getAll().size())
 				.isEqualTo(expected.getDependencies().getAll().size());
 		assertThat(actual.getConfiguration().getEnv().getBoms().size())

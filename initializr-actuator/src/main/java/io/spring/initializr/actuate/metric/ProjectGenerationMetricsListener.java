@@ -54,7 +54,7 @@ public class ProjectGenerationMetricsListener {
 	}
 
 	protected void handleProjectRequest(ProjectRequest request) {
-		increment(key("requests"));// Total number of requests
+		increment(key("requests")); // Total number of requests
 		handleDependencies(request);
 		handleType(request);
 		handleJavaVersion(request);
@@ -67,7 +67,7 @@ public class ProjectGenerationMetricsListener {
 	protected void handleDependencies(ProjectRequest request) {
 		List<Dependency> dependencies = request.getResolvedDependencies();
 		if (dependencies != null) {
-			dependencies.forEach(it -> {
+			dependencies.forEach((it) -> {
 				if (!ProjectRequest.DEFAULT_STARTER.equals(it.getId())) {
 					String id = sanitize(it.getId());
 					increment(key("dependency." + id));
@@ -122,7 +122,7 @@ public class ProjectGenerationMetricsListener {
 	}
 
 	protected void increment(String key) {
-		meterRegistry.counter(key).increment();
+		this.meterRegistry.counter(key).increment();
 	}
 
 	protected String key(String part) {

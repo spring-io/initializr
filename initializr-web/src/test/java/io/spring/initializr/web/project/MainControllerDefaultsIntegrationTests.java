@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -35,22 +35,22 @@ public class MainControllerDefaultsIntegrationTests
 
 	@Test
 	public void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(
-				createUrl("/pom.xml?style=web"), String.class);
+		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"),
+				String.class);
 		PomAssert pomAssert = new PomAssert(content);
 		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
-				.hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar")
-				.hasName("FooBar").hasDescription("FooBar Project");
+				.hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar").hasName("FooBar")
+				.hasDescription("FooBar Project");
 	}
 
 	@Test
 	public void defaultsAppliedToHome() {
 		String body = htmlHome();
-		assertTrue("custom groupId not found", body.contains("org.foo"));
-		assertTrue("custom artifactId not found", body.contains("foo-bar"));
-		assertTrue("custom name not found", body.contains("FooBar"));
-		assertTrue("custom description not found", body.contains("FooBar Project"));
-		assertTrue("custom package not found", body.contains("org.foo.demo"));
+		assertThat(body).as("custom groupId not found").contains("org.foo");
+		assertThat(body).as("custom artifactId not found").contains("foo-bar");
+		assertThat(body).as("custom name not found").contains("FooBar");
+		assertThat(body).as("custom description not found").contains("FooBar Project");
+		assertThat(body).as("custom package not found").contains("org.foo.demo");
 	}
 
 }

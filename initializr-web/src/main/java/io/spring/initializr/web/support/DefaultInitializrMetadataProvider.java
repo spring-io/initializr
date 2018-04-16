@@ -30,8 +30,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A default {@link InitializrMetadataProvider} that is able to refresh
- * the metadata with the status of the main spring.io site.
+ * A default {@link InitializrMetadataProvider} that is able to refresh the metadata with
+ * the status of the main spring.io site.
  *
  * @author Stephane Nicoll
  */
@@ -41,7 +41,9 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 			.getLogger(DefaultInitializrMetadataProvider.class);
 
 	private final InitializrMetadata metadata;
+
 	private final ObjectMapper objectMapper;
+
 	private final RestTemplate restTemplate;
 
 	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
@@ -54,8 +56,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	@Override
 	@Cacheable(value = "initializr.metadata", key = "'metadata'")
 	public InitializrMetadata get() {
-		updateInitializrMetadata(metadata);
-		return metadata;
+		updateInitializrMetadata(this.metadata);
+		return this.metadata;
 	}
 
 	protected void updateInitializrMetadata(InitializrMetadata metadata) {
@@ -70,12 +72,12 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 	}
 
 	protected List<DefaultMetadataElement> fetchBootVersions() {
-		String url = metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
+		String url = this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
 		if (StringUtils.hasText(url)) {
 			try {
 				log.info("Fetching boot metadata from {}", url);
-				return new SpringBootMetadataReader(objectMapper, restTemplate, url)
-						.getBootVersions();
+				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+						url).getBootVersions();
 			}
 			catch (Exception e) {
 				log.warn("Failed to fetch spring boot metadata", e);

@@ -26,6 +26,7 @@ package io.spring.initializr.generator;
 public abstract class ProjectRequestEvent {
 
 	private final ProjectRequest projectRequest;
+
 	private final long timestamp;
 
 	protected ProjectRequestEvent(ProjectRequest projectRequest) {
@@ -35,16 +36,18 @@ public abstract class ProjectRequestEvent {
 
 	/**
 	 * Return the {@link ProjectRequest} used to generate the project.
+	 * @return the project request
 	 */
 	public ProjectRequest getProjectRequest() {
-		return projectRequest;
+		return this.projectRequest;
 	}
 
 	/**
 	 * Return the timestamp at which the request was processed.
+	 * @return the timestamp that the request was processed
 	 */
 	public long getTimestamp() {
-		return timestamp;
+		return this.timestamp;
 	}
 
 }

@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SourceCodeAssert {
 
 	private final String name;
+
 	private final String content;
 
 	public SourceCodeAssert(String name, String content) {
@@ -44,7 +45,7 @@ public class SourceCodeAssert {
 		try (InputStream stream = expected.getInputStream()) {
 			String expectedContent = StreamUtils.copyToString(stream,
 					Charset.forName("UTF-8"));
-			assertThat(content).describedAs("Content for %s", this.name)
+			assertThat(this.content).describedAs("Content for %s", this.name)
 					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));
 		}
 		catch (IOException e) {

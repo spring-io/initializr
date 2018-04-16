@@ -52,19 +52,19 @@ public abstract class AbstractRequestPostProcessorTests {
 
 	protected PomAssert generateMavenPom(ProjectRequest request) {
 		request.setType("maven-build");
-		String content = new String(projectGenerator.generateMavenPom(request));
+		String content = new String(this.projectGenerator.generateMavenPom(request));
 		return new PomAssert(content);
 	}
 
 	protected GradleBuildAssert generateGradleBuild(ProjectRequest request) {
 		request.setType("gradle-build");
-		String content = new String(projectGenerator.generateGradleBuild(request));
+		String content = new String(this.projectGenerator.generateGradleBuild(request));
 		return new GradleBuildAssert(content);
 	}
 
 	protected ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadataProvider.get());
+		request.initialize(this.metadataProvider.get());
 		request.getStyle().addAll(Arrays.asList(styles));
 		return request;
 	}

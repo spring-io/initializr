@@ -17,7 +17,7 @@
 package io.spring.initializr.metadata;
 
 /**
- * A basic metadata element
+ * A basic metadata element.
  *
  * @author Stephane Nicoll
  */
@@ -46,11 +46,11 @@ public class MetadataElement {
 	}
 
 	public String getName() {
-		return name != null ? name : id;
+		return this.name != null ? this.name : this.id;
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(String id) {
@@ -60,4 +60,5 @@ public class MetadataElement {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

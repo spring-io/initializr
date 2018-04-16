@@ -34,16 +34,12 @@ import org.springframework.test.context.ActiveProfiles;
 public class ProjectGenerationPostProcessorTests
 		extends AbstractInitializrControllerIntegrationTests {
 
-
 	@Test
 	public void postProcessorsInvoked() {
 		downloadZip("/starter.zip?bootVersion=1.2.4.RELEASE&javaVersion=1.6")
-				.isJavaProject()
-				.isMavenProject().pomAssert()
-				.hasSpringBootParent("1.2.3.RELEASE")
-				.hasProperty("java.version", "1.7");
+				.isJavaProject().isMavenProject().pomAssert()
+				.hasSpringBootParent("1.2.3.RELEASE").hasProperty("java.version", "1.7");
 	}
-
 
 	@Configuration
 	static class ProjectRequestPostProcessorConfiguration {
@@ -53,7 +49,8 @@ public class ProjectGenerationPostProcessorTests
 		ProjectRequestPostProcessor secondPostProcessor() {
 			return new ProjectRequestPostProcessor() {
 				@Override
-				public void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata) {
+				public void postProcessBeforeResolution(ProjectRequest request,
+						InitializrMetadata metadata) {
 					request.setJavaVersion("1.7");
 				}
 			};
@@ -64,7 +61,8 @@ public class ProjectGenerationPostProcessorTests
 		ProjectRequestPostProcessor firstPostProcessor() {
 			return new ProjectRequestPostProcessor() {
 				@Override
-				public void postProcessBeforeResolution(ProjectRequest request, InitializrMetadata metadata) {
+				public void postProcessBeforeResolution(ProjectRequest request,
+						InitializrMetadata metadata) {
 					request.setJavaVersion("1.2");
 					request.setBootVersion("1.2.3.RELEASE");
 				}

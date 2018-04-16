@@ -33,7 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -46,14 +46,9 @@ public class LegacyStsControllerIntegrationTests
 	@Test
 	public void legacyStsHome() {
 		String body = htmlHome();
-		assertTrue("groupId not found", body.contains("com.example"));
-		assertTrue("artifactId not found", body.contains("demo"));
-		assertTrue("custom description not found",
-				body.contains("Demo project for Spring Boot"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
+		assertThat(body).contains("com.example", "demo", "Demo project for Spring Boot",
+				"<input type=\"radio\" name=\"language\" value=\"groovy\"/>",
+				"<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>");
 	}
 
 	@Override

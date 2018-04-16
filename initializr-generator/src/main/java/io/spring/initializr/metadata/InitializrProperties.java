@@ -106,53 +106,56 @@ public class InitializrProperties extends InitializrConfiguration {
 	private final SimpleElement packageName = new SimpleElement(null);
 
 	public List<DependencyGroup> getDependencies() {
-		return dependencies;
+		return this.dependencies;
 	}
 
 	public List<Type> getTypes() {
-		return types;
+		return this.types;
 	}
 
 	public List<DefaultMetadataElement> getPackagings() {
-		return packagings;
+		return this.packagings;
 	}
 
 	public List<DefaultMetadataElement> getJavaVersions() {
-		return javaVersions;
+		return this.javaVersions;
 	}
 
 	public List<DefaultMetadataElement> getLanguages() {
-		return languages;
+		return this.languages;
 	}
 
 	public List<DefaultMetadataElement> getBootVersions() {
-		return bootVersions;
+		return this.bootVersions;
 	}
 
 	public SimpleElement getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 	public SimpleElement getArtifactId() {
-		return artifactId;
+		return this.artifactId;
 	}
 
 	public SimpleElement getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public SimpleElement getName() {
-		return name;
+		return this.name;
 	}
 
 	public SimpleElement getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public SimpleElement getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
+	/**
+	 * A simple element from the properties.
+	 */
 	public static class SimpleElement {
 
 		/**
@@ -175,7 +178,7 @@ public class InitializrProperties extends InitializrConfiguration {
 		}
 
 		public String getTitle() {
-			return title;
+			return this.title;
 		}
 
 		public void setTitle(String title) {
@@ -183,7 +186,7 @@ public class InitializrProperties extends InitializrConfiguration {
 		}
 
 		public String getDescription() {
-			return description;
+			return this.description;
 		}
 
 		public void setDescription(String description) {
@@ -191,7 +194,7 @@ public class InitializrProperties extends InitializrConfiguration {
 		}
 
 		public String getValue() {
-			return value;
+			return this.value;
 		}
 
 		public void setValue(String value) {
@@ -199,16 +202,17 @@ public class InitializrProperties extends InitializrConfiguration {
 		}
 
 		public void apply(TextCapability capability) {
-			if (StringUtils.hasText(title)) {
-				capability.setTitle(title);
+			if (StringUtils.hasText(this.title)) {
+				capability.setTitle(this.title);
 			}
-			if (StringUtils.hasText(description)) {
-				capability.setDescription(description);
+			if (StringUtils.hasText(this.description)) {
+				capability.setDescription(this.description);
 			}
-			if (StringUtils.hasText(value)) {
-				capability.setContent(value);
+			if (StringUtils.hasText(this.value)) {
+				capability.setContent(this.value);
 			}
 		}
+
 	}
 
 }

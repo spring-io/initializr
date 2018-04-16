@@ -47,21 +47,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PomAssert {
 
 	private final XpathEngine eng;
+
 	private final Document doc;
+
 	private final ParentPom parentPom;
+
 	private final Map<String, String> properties = new LinkedHashMap<>();
+
 	private final Map<String, Dependency> dependencies = new LinkedHashMap<>();
+
 	private final Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
+
 	private final Map<String, Repository> repositories = new LinkedHashMap<>();
 
 	public PomAssert(String content) {
-		eng = XMLUnit.newXpathEngine();
+		this.eng = XMLUnit.newXpathEngine();
 		Map<String, String> context = new LinkedHashMap<>();
 		context.put("pom", "http://maven.apache.org/POM/4.0.0");
 		SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext(context);
-		eng.setNamespaceContext(namespaceContext);
+		this.eng.setNamespaceContext(namespaceContext);
 		try {
-			doc = XMLUnit.buildControlDocument(content);
+			this.doc = XMLUnit.buildControlDocument(content);
 		}
 		catch (Exception e) {
 			throw new IllegalArgumentException("Cannot parse XML", e);
@@ -75,6 +81,8 @@ public class PomAssert {
 
 	/**
 	 * Validate that this generated pom validates against its request.
+	 * @param request the source request
+	 * @return a POM assert
 	 */
 	public PomAssert validateProjectRequest(ProjectRequest request) {
 		return hasGroupId(request.getGroupId()).hasArtifactId(request.getArtifactId())
@@ -85,7 +93,7 @@ public class PomAssert {
 
 	public PomAssert hasGroupId(String groupId) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("groupId"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("groupId"), this.doc))
 					.isEqualTo(groupId);
 		}
 		catch (XpathException e) {
@@ -96,7 +104,7 @@ public class PomAssert {
 
 	public PomAssert hasArtifactId(String artifactId) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("artifactId"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("artifactId"), this.doc))
 					.isEqualTo(artifactId);
 		}
 		catch (XpathException e) {
@@ -107,7 +115,7 @@ public class PomAssert {
 
 	public PomAssert hasVersion(String version) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("version"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("version"), this.doc))
 					.isEqualTo(version);
 		}
 		catch (XpathException e) {
@@ -118,7 +126,7 @@ public class PomAssert {
 
 	public PomAssert hasPackaging(String packaging) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("packaging"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("packaging"), this.doc))
 					.isEqualTo(packaging);
 		}
 		catch (XpathException e) {
@@ -129,7 +137,7 @@ public class PomAssert {
 
 	public PomAssert hasName(String name) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("name"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("name"), this.doc))
 					.isEqualTo(name);
 		}
 		catch (XpathException e) {
@@ -140,7 +148,7 @@ public class PomAssert {
 
 	public PomAssert hasDescription(String description) {
 		try {
-			assertThat(eng.evaluate(createRootNodeXPath("description"), doc))
+			assertThat(this.eng.evaluate(createRootNodeXPath("description"), this.doc))
 					.isEqualTo(description);
 		}
 		catch (XpathException e) {
@@ -151,8 +159,9 @@ public class PomAssert {
 
 	public PomAssert hasJavaVersion(String javaVersion) {
 		try {
-			assertThat(eng.evaluate(createPropertyNodeXpath("java.version"), doc))
-					.isEqualTo(javaVersion);
+			assertThat(
+					this.eng.evaluate(createPropertyNodeXpath("java.version"), this.doc))
+							.isEqualTo(javaVersion);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -218,7 +227,7 @@ public class PomAssert {
 	public PomAssert hasDependency(Dependency expected) {
 		String id = generateDependencyId(expected.getGroupId(), expected.getArtifactId());
 		assertThat(this.dependencies).containsKey(id);
-		Dependency dependency = dependencies.get(id);
+		Dependency dependency = this.dependencies.get(id);
 		if (expected.getVersion() != null) {
 			assertThat(dependency.getVersion()).isEqualTo(expected.getVersion());
 		}
@@ -234,7 +243,7 @@ public class PomAssert {
 	public PomAssert hasBom(String groupId, String artifactId, String version) {
 		String id = generateBomId(groupId, artifactId);
 		assertThat(this.boms).containsKey(id);
-		BillOfMaterials bom = boms.get(id);
+		BillOfMaterials bom = this.boms.get(id);
 		assertThat(bom.getVersion()).isEqualTo(version);
 		return this;
 	}
@@ -246,9 +255,9 @@ public class PomAssert {
 
 	public PomAssert hasNoRepository() {
 		try {
-			Assert.assertEquals(0,
-					eng.getMatchingNodes(createRootNodeXPath("repositories"), doc)
-							.getLength());
+			Assert.assertEquals(0, this.eng
+					.getMatchingNodes(createRootNodeXPath("repositories"), this.doc)
+					.getLength());
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -266,7 +275,7 @@ public class PomAssert {
 	public PomAssert hasRepository(String id, String name, String url,
 			Boolean snapshotsEnabled) {
 		assertThat(this.repositories).containsKeys(id);
-		Repository repository = repositories.get(id);
+		Repository repository = this.repositories.get(id);
 		if (name != null) {
 			assertThat(repository.getName()).isEqualTo(name);
 		}
@@ -292,9 +301,9 @@ public class PomAssert {
 	private PomAssert hasPluginRepository(String name) {
 		NodeList nodes;
 		try {
-			nodes = eng.getMatchingNodes(
+			nodes = this.eng.getMatchingNodes(
 					createRootNodeXPath("pluginRepositories/pom:pluginRepository/pom:id"),
-					doc);
+					this.doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -318,12 +327,12 @@ public class PomAssert {
 	private ParentPom parseParent() {
 		ParentPom parent = new ParentPom();
 		try {
-			parent.setGroupId(
-					eng.evaluate(createRootNodeXPath("parent/pom:groupId"), doc));
-			parent.setArtifactId(
-					eng.evaluate(createRootNodeXPath("parent/pom:artifactId"), doc));
-			parent.setVersion(
-					eng.evaluate(createRootNodeXPath("parent/pom:version"), doc));
+			parent.setGroupId(this.eng.evaluate(createRootNodeXPath("parent/pom:groupId"),
+					this.doc));
+			parent.setArtifactId(this.eng
+					.evaluate(createRootNodeXPath("parent/pom:artifactId"), this.doc));
+			parent.setVersion(this.eng.evaluate(createRootNodeXPath("parent/pom:version"),
+					this.doc));
 			return parent;
 		}
 		catch (XpathException e) {
@@ -334,7 +343,8 @@ public class PomAssert {
 	private void parseProperties() {
 		NodeList nodes;
 		try {
-			nodes = eng.getMatchingNodes(createRootNodeXPath("properties/*"), doc);
+			nodes = this.eng.getMatchingNodes(createRootNodeXPath("properties/*"),
+					this.doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -343,7 +353,7 @@ public class PomAssert {
 			Node item = nodes.item(i);
 			if (item instanceof Element) {
 				Element element = (Element) item;
-				properties.put(element.getTagName(), element.getTextContent());
+				this.properties.put(element.getTagName(), element.getTextContent());
 			}
 		}
 	}
@@ -351,8 +361,8 @@ public class PomAssert {
 	private void parseDependencies() {
 		NodeList nodes;
 		try {
-			nodes = eng.getMatchingNodes(
-					createRootNodeXPath("dependencies/pom:dependency"), doc);
+			nodes = this.eng.getMatchingNodes(
+					createRootNodeXPath("dependencies/pom:dependency"), this.doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -383,8 +393,8 @@ public class PomAssert {
 					dependency.setType(type.item(0).getTextContent());
 				}
 				String id = dependency.generateId();
-				assertThat(dependencies).doesNotContainKeys(id);
-				dependencies.put(id, dependency);
+				assertThat(this.dependencies).doesNotContainKeys(id);
+				this.dependencies.put(id, dependency);
 			}
 		}
 	}
@@ -392,11 +402,10 @@ public class PomAssert {
 	private void parseBoms() {
 		NodeList nodes;
 		try {
-			nodes = eng
-					.getMatchingNodes(
-							createRootNodeXPath(
-									"dependencyManagement/pom:dependencies/pom:dependency"),
-							doc);
+			nodes = this.eng.getMatchingNodes(
+					createRootNodeXPath(
+							"dependencyManagement/pom:dependencies/pom:dependency"),
+					this.doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -423,7 +432,7 @@ public class PomAssert {
 					}
 					String id = generateBomId(bom.getGroupId(), bom.getArtifactId());
 					assertThat(this.boms).doesNotContainKeys(id);
-					boms.put(id, bom);
+					this.boms.put(id, bom);
 				}
 			}
 		}
@@ -432,8 +441,8 @@ public class PomAssert {
 	private void parseRepositories() {
 		NodeList nodes;
 		try {
-			nodes = eng.getMatchingNodes(
-					createRootNodeXPath("repositories/pom:repository"), doc);
+			nodes = this.eng.getMatchingNodes(
+					createRootNodeXPath("repositories/pom:repository"), this.doc);
 		}
 		catch (XpathException e) {
 			throw new IllegalStateException("Cannot find path", e);
@@ -470,7 +479,7 @@ public class PomAssert {
 					}
 				}
 				assertThat(this.repositories).doesNotContainKeys(id);
-				repositories.put(id, repository);
+				this.repositories.put(id, repository);
 			}
 		}
 	}

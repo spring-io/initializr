@@ -53,45 +53,57 @@ public class CommandLineHelpGenerator {
 	/**
 	 * Generate the capabilities of the service as a generic plain text document. Used
 	 * when no particular agent was detected.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the generic capabilities text document
 	 */
 	public String generateGenericCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
 	 * Generate the capabilities of the service using "curl" as a plain text document.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the generic capabilities text document
 	 */
 	public String generateCurlCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", template.process("curl-examples.txt", model));
+		model.put("examples", this.template.process("curl-examples.txt", model));
 		model.put("hasExamples", true);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
 	 * Generate the capabilities of the service using "HTTPie" as a plain text document.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the generic capabilities text document
 	 */
 	public String generateHttpieCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", template.process("httpie-examples.txt", model));
+		model.put("examples", this.template.process("httpie-examples.txt", model));
 		model.put("hasExamples", true);
-		return template.process("cli-capabilities.txt", model);
+		return this.template.process("cli-capabilities.txt", model);
 	}
 
 	/**
 	 * Generate the capabilities of the service using Spring Boot CLI as a plain text
 	 * document.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the generic capabilities text document
 	 */
 	public String generateSpringBootCliCapabilities(InitializrMetadata metadata,
 			String serviceUrl) {
 		Map<String, Object> model = initializeSpringBootCliModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return template.process("boot-cli-capabilities.txt", model);
+		return this.template.process("boot-cli-capabilities.txt", model);
 	}
 
 	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata,
@@ -216,10 +228,13 @@ public class CommandLineHelpGenerator {
 		}
 		return String.join(",",
 				type.getTags().entrySet().stream()
-						.map(entry -> entry.getKey() + ":" + entry.getValue())
+						.map((entry) -> entry.getKey() + ":" + entry.getValue())
 						.toArray(String[]::new));
 	}
 
+	/**
+	 * Utility to generate a text table.
+	 */
 	private static class TableGenerator {
 
 		static final String NEW_LINE = System.getProperty("line.separator");
@@ -229,6 +244,8 @@ public class CommandLineHelpGenerator {
 		 * <p>
 		 * The {@code content} is a two-dimensional array holding the rows of the table.
 		 * The first entry holds the header of the table.
+		 * @param content the table content
+		 * @return the generated table
 		 */
 		public static String generate(String[][] content) {
 			StringBuilder sb = new StringBuilder();

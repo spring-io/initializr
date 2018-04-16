@@ -39,7 +39,7 @@ public class TextCapability extends ServiceCapability<String> {
 
 	@Override
 	public String getContent() {
-		return content;
+		return this.content;
 	}
 
 	public void setContent(String content) {
@@ -54,4 +54,3 @@ public class TextCapability extends ServiceCapability<String> {
 	}
 
 }
-

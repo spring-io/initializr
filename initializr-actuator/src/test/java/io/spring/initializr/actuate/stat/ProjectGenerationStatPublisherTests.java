@@ -44,20 +44,21 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 
 	private RetryTemplate retryTemplate;
-	private ProjectGenerationStatPublisher statPublisher;
-	private MockRestServiceServer mockServer;
 
+	private ProjectGenerationStatPublisher statPublisher;
+
+	private MockRestServiceServer mockServer;
 
 	@Before
 	public void setUp() {
 		StatsProperties properties = createProperties();
-		ProjectRequestDocumentFactory documentFactory =
-				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
+		ProjectRequestDocumentFactory documentFactory = new ProjectRequestDocumentFactory(
+				createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
 		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
-				properties, new RestTemplateBuilder(), retryTemplate);
-		mockServer = MockRestServiceServer.createServer(
-				this.statPublisher.getRestTemplate());
+				properties, new RestTemplateBuilder(), this.retryTemplate);
+		this.mockServer = MockRestServiceServer
+				.createServer(this.statPublisher.getRestTemplate());
 	}
 
 	@Test
@@ -66,7 +67,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 		request.setGroupId("com.example.foo");
 		request.setArtifactId("my-project");
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andExpect(jsonPath("$.groupId").value("com.example.foo"))
 				.andExpect(jsonPath("$.artifactId").value("my-project"))
@@ -75,29 +76,29 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 						.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
+		this.mockServer.verify();
 	}
 
 	@Test
 	public void recoverFromError() {
 		ProjectRequest request = createProjectRequest();
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.CREATED)
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
+		this.mockServer.verify();
 	}
 
 	@Test
@@ -106,21 +107,23 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 		this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2,
 				Collections.singletonMap(Exception.class, true)));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
+		this.mockServer.verify();
 	}
 
 	private static String mockResponse(String id, boolean created) {
-		return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id + "\",\"_version\":1,\"_shards\"" +
-				":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created + "}";
+		return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id
+				+ "\",\"_version\":1,\"_shards\""
+				+ ":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created
+				+ "}";
 	}
 
 	private static StatsProperties createProperties() {

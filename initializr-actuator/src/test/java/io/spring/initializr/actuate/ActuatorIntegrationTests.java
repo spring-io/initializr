@@ -21,16 +21,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 
-import static io.spring.initializr.web.AbstractInitializrIntegrationTests.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Tests for actuator specific features.
@@ -38,18 +36,16 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT,
-		properties = "management.endpoints.web.exposure.include=info,metrics")
+@SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info,metrics")
 public class ActuatorIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
 	public void infoHasExternalProperties() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/actuator/info"), String.class);
-		assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("\"version\":\"1.1.4.RELEASE\""));
+		String body = getRestTemplate().getForObject(createUrl("/actuator/info"),
+				String.class);
+		assertThat(body).contains("\"spring-boot\"");
+		assertThat(body).contains("\"version\":\"1.1.4.RELEASE\"");
 	}
 
 	@Test
@@ -74,26 +70,30 @@ public class ActuatorIntegrationTests
 		// No jpa dep this time
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
 
-		assertEquals("Number of request should have increased", requests + 1,
-				metricValue("initializr.requests"));
-		assertEquals("jar packaging metric should have increased", packaging + 1,
-				metricValue("initializr.packaging.jar"));
-		assertEquals("java version metric should have increased", javaVersion + 1,
-				metricValue("initializr.java_version.1_8"));
-		assertEquals("web dependency metric should have increased", webDependency + 1,
-				metricValue("initializr.dependency.web"));
-		assertEquals("jpa dependency metric should not have increased", jpaDependency,
-				metricValue("initializr.dependency.data-jpa"));
+		assertThat(metricValue("initializr.requests"))
+				.as("Number of request should have increased").isEqualTo(requests + 1);
+		assertThat(metricValue("initializr.packaging.jar"))
+				.as("jar packaging metric should have increased")
+				.isEqualTo(packaging + 1);
+		assertThat(metricValue("initializr.java_version.1_8"))
+				.as("java version metric should have increased")
+				.isEqualTo(javaVersion + 1);
+		assertThat(metricValue("initializr.dependency.web"))
+				.as("web dependency metric should have increased")
+				.isEqualTo(webDependency + 1);
+		assertThat(metricValue("initializr.dependency.data-jpa"))
+				.as("jpa dependency metric should not have increased")
+				.isEqualTo(jpaDependency);
 	}
 
 	private JsonNode metricsEndpoint() {
-		return parseJson(getRestTemplate().getForObject(
-				createUrl("/actuator/metrics"), String.class));
+		return parseJson(getRestTemplate().getForObject(createUrl("/actuator/metrics"),
+				String.class));
 	}
 
 	private int metricValue(String metric) {
-		JsonNode root =  parseJson(getRestTemplate().getForObject(
-				createUrl("/actuator/metrics/" + metric), String.class));
+		JsonNode root = parseJson(getRestTemplate()
+				.getForObject(createUrl("/actuator/metrics/" + metric), String.class));
 		JsonNode measurements = root.get("measurements");
 		assertThat(measurements.isArray());
 		assertThat(measurements.size()).isEqualTo(1);

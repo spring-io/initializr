@@ -35,6 +35,7 @@ import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
+import io.spring.initializr.util.Agent.AgentId;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
@@ -65,10 +66,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
-import static io.spring.initializr.util.Agent.AgentId.CURL;
-import static io.spring.initializr.util.Agent.AgentId.HTTPIE;
-import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI;
-
 /**
  * The main initializr controller provides access to the configured metadata and serves as
  * a central endpoint to generate projects or build files.
@@ -81,11 +78,16 @@ public class MainController extends AbstractInitializrController {
 
 	private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
+	/**
+	 * HAL JSON content type.
+	 */
 	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
 			.parseMediaType("application/hal+json");
 
 	private final ProjectGenerator projectGenerator;
+
 	private final DependencyMetadataProvider dependencyMetadataProvider;
+
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
 
 	public MainController(InitializrMetadataProvider metadataProvider,
@@ -103,14 +105,14 @@ public class MainController extends AbstractInitializrController {
 			@RequestHeader Map<String, String> headers) {
 		ProjectRequest request = new ProjectRequest();
 		request.getParameters().putAll(headers);
-		request.initialize(metadataProvider.get());
+		request.initialize(this.metadataProvider.get());
 		return request;
 	}
 
 	@RequestMapping(path = "/metadata/config", produces = "application/json")
 	@ResponseBody
 	public InitializrMetadata config() {
-		return metadataProvider.get();
+		return this.metadataProvider.get();
 	}
 
 	@RequestMapping("/metadata/client")
@@ -122,31 +124,31 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
 		String appUrl = generateAppUrl();
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 
 		BodyBuilder builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN);
 		if (userAgent != null) {
 			Agent agent = Agent.fromUserAgent(userAgent);
 			if (agent != null) {
-				if (CURL.equals(agent.getId())) {
-					String content = commandLineHelpGenerator
+				if (AgentId.CURL.equals(agent.getId())) {
+					String content = this.commandLineHelpGenerator
 							.generateCurlCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
-				if (HTTPIE.equals(agent.getId())) {
-					String content = commandLineHelpGenerator
+				if (AgentId.HTTPIE.equals(agent.getId())) {
+					String content = this.commandLineHelpGenerator
 							.generateHttpieCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
-				if (SPRING_BOOT_CLI.equals(agent.getId())) {
-					String content = commandLineHelpGenerator
+				if (AgentId.SPRING_BOOT_CLI.equals(agent.getId())) {
+					String content = this.commandLineHelpGenerator
 							.generateSpringBootCliCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
 			}
 		}
-		String content = commandLineHelpGenerator.generateGenericCapabilities(metadata,
-				appUrl);
+		String content = this.commandLineHelpGenerator
+				.generateGenericCapabilities(metadata, appUrl);
 		return builder.eTag(createUniqueId(content)).body(content);
 	}
 
@@ -175,7 +177,8 @@ public class MainController extends AbstractInitializrController {
 	private ResponseEntity<String> serviceCapabilitiesFor(
 			InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl();
-		String content = getJsonMapper(version).write(metadataProvider.get(), appUrl);
+		String content = getJsonMapper(version).write(this.metadataProvider.get(),
+				appUrl);
 		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content))
 				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
 	}
@@ -183,10 +186,10 @@ public class MainController extends AbstractInitializrController {
 	private static InitializrMetadataJsonMapper getJsonMapper(
 			InitializrMetadataVersion version) {
 		switch (version) {
-			case V2:
-				return new InitializrMetadataV2JsonMapper();
-			default:
-				return new InitializrMetadataV21JsonMapper();
+		case V2:
+			return new InitializrMetadataV2JsonMapper();
+		default:
+			return new InitializrMetadataV21JsonMapper();
 		}
 	}
 
@@ -199,11 +202,11 @@ public class MainController extends AbstractInitializrController {
 
 	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version,
 			String bootVersion) {
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 		Version v = bootVersion != null ? Version.parse(bootVersion)
 				: Version.parse(metadata.getBootVersions().getDefault().getId());
-		DependencyMetadata dependencyMetadata = dependencyMetadataProvider.get(metadata,
-				v);
+		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider
+				.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
 		return ResponseEntity.ok().contentType(version.getMediaType())
 				.eTag(createUniqueId(content))
@@ -223,13 +226,13 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = { "/spring", "/spring.zip" })
 	public String spring() {
-		String url = metadataProvider.get().createCliDistributionURl("zip");
+		String url = this.metadataProvider.get().createCliDistributionURl("zip");
 		return "redirect:" + url;
 	}
 
 	@RequestMapping(path = { "/spring.tar.gz", "spring.tgz" })
 	public String springTgz() {
-		String url = metadataProvider.get().createCliDistributionURl("tar.gz");
+		String url = this.metadataProvider.get().createCliDistributionURl("tar.gz");
 		return "redirect:" + url;
 	}
 
@@ -237,7 +240,8 @@ public class MainController extends AbstractInitializrController {
 	@ResponseBody
 	public ResponseEntity<byte[]> pom(BasicProjectRequest request) {
 		request.setType("maven-build");
-		byte[] mavenPom = projectGenerator.generateMavenPom((ProjectRequest) request);
+		byte[] mavenPom = this.projectGenerator
+				.generateMavenPom((ProjectRequest) request);
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
@@ -245,7 +249,7 @@ public class MainController extends AbstractInitializrController {
 	@ResponseBody
 	public ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
 		request.setType("gradle-build");
-		byte[] gradleBuild = projectGenerator
+		byte[] gradleBuild = this.projectGenerator
 				.generateGradleBuild((ProjectRequest) request);
 		return createResponseEntity(gradleBuild, "application/octet-stream",
 				"build.gradle");
@@ -256,9 +260,9 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest)
 			throws IOException {
 		ProjectRequest request = (ProjectRequest) basicRequest;
-		File dir = projectGenerator.generateProjectStructure(request);
+		File dir = this.projectGenerator.generateProjectStructure(request);
 
-		File download = projectGenerator.createDistributionFile(dir, ".zip");
+		File download = this.projectGenerator.createDistributionFile(dir, ".zip");
 
 		String wrapperScript = getWrapperScript(request);
 		new File(dir, wrapperScript).setExecutable(true);
@@ -287,9 +291,9 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest)
 			throws IOException {
 		ProjectRequest request = (ProjectRequest) basicRequest;
-		File dir = projectGenerator.generateProjectStructure(request);
+		File dir = this.projectGenerator.generateProjectStructure(request);
 
-		File download = projectGenerator.createDistributionFile(dir, ".tar.gz");
+		File download = this.projectGenerator.createDistributionFile(dir, ".tar.gz");
 
 		String wrapperScript = getWrapperScript(request);
 		new File(dir, wrapperScript).setExecutable(true);
@@ -309,7 +313,7 @@ public class MainController extends AbstractInitializrController {
 		zip.setDestFile(download.getCanonicalFile());
 		Tar.TarCompressionMethod method = new Tar.TarCompressionMethod();
 		method.setValue("gzip");
-		zip.setCompression(method );
+		zip.setCompression(method);
 		zip.execute();
 		return upload(download, dir, generateFileName(request, "tar.gz"),
 				"application/x-compress");
@@ -327,8 +331,8 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ProjectRequest request) {
 		String script = "gradle".equals(request.getBuild()) ? "gradlew" : "mvnw";
-		return request.getBaseDir() != null
-				? request.getBaseDir() + "/" + script : script;
+		return request.getBaseDir() != null ? request.getBaseDir() + "/" + script
+				: script;
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
@@ -337,7 +341,7 @@ public class MainController extends AbstractInitializrController {
 		log.info("Uploading: {} ({} bytes)", download, bytes.length);
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType,
 				fileName);
-		projectGenerator.cleanTempFiles(dir);
+		this.projectGenerator.cleanTempFiles(dir);
 		return result;
 	}
 
@@ -356,5 +360,3 @@ public class MainController extends AbstractInitializrController {
 	}
 
 }
-
-

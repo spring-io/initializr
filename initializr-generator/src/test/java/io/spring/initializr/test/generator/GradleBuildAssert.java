@@ -35,6 +35,8 @@ public class GradleBuildAssert {
 
 	/**
 	 * Validate that this generated gradle build validates against its request.
+	 * @param request the source request
+	 * @return a gradle assert
 	 */
 	public GradleBuildAssert validateProjectRequest(ProjectRequest request) {
 		return hasVersion(request.getVersion()).hasBootVersion(request.getBootVersion())

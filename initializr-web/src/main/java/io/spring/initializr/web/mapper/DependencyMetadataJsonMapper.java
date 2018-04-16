@@ -27,6 +27,8 @@ interface DependencyMetadataJsonMapper {
 
 	/**
 	 * Write a json representation of the specified metadata.
+	 * @param metadata the dependency metadata
+	 * @return the JSON representation
 	 */
 	String write(DependencyMetadata metadata);
 

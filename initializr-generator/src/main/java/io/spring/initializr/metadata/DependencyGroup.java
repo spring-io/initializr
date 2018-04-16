@@ -43,9 +43,10 @@ public class DependencyGroup {
 
 	/**
 	 * Return the name of this group.
+	 * @return the name of the group
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -55,9 +56,10 @@ public class DependencyGroup {
 	/**
 	 * Return the default version range to apply to all dependencies of this group unless
 	 * specified otherwise.
+	 * @return the version range
 	 */
 	public String getVersionRange() {
-		return versionRange;
+		return this.versionRange;
 	}
 
 	public void setVersionRange(String versionRange) {
@@ -67,9 +69,10 @@ public class DependencyGroup {
 	/**
 	 * Return the default bom to associate to all dependencies of this group unless
 	 * specified otherwise.
+	 * @return the BOM
 	 */
 	public String getBom() {
-		return bom;
+		return this.bom;
 	}
 
 	public void setBom(String bom) {
@@ -79,9 +82,10 @@ public class DependencyGroup {
 	/**
 	 * Return the default repository to associate to all dependencies of this group unless
 	 * specified otherwise.
+	 * @return the repository
 	 */
 	public String getRepository() {
-		return repository;
+		return this.repository;
 	}
 
 	public void setRepository(String repository) {
@@ -90,11 +94,17 @@ public class DependencyGroup {
 
 	/**
 	 * Return the {@link Dependency dependencies} of this group.
+	 * @return the content
 	 */
 	public List<Dependency> getContent() {
-		return content;
+		return this.content;
 	}
 
+	/**
+	 * Create a new {@link DependencyGroup} instance with the given name.
+	 * @param name the name of the group
+	 * @return a new {@link DependencyGroup} instance
+	 */
 	public static DependencyGroup create(String name) {
 		DependencyGroup group = new DependencyGroup();
 		group.setName(name);

@@ -33,4 +33,5 @@ public class InvalidInitializrMetadataException extends InitializrException {
 	public InvalidInitializrMetadataException(String message) {
 		super(message);
 	}
+
 }

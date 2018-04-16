@@ -37,8 +37,8 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequestDocumentFactory {
 
-	private static final Pattern IP_PATTERN =
-			Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
+	private static final Pattern IP_PATTERN = Pattern
+			.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
 	private final InitializrMetadataProvider metadataProvider;
 
@@ -47,7 +47,7 @@ public class ProjectRequestDocumentFactory {
 	}
 
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 		ProjectRequest request = event.getProjectRequest();
 
 		ProjectRequestDocument document = new ProjectRequestDocument();
@@ -103,7 +103,7 @@ public class ProjectRequestDocumentFactory {
 		List<String> dependencies = new ArrayList<>();
 		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
-		dependencies.forEach(id -> {
+		dependencies.forEach((id) -> {
 			if (metadata.getDependencies().get(id) != null) {
 				document.getDependencies().add(id);
 			}

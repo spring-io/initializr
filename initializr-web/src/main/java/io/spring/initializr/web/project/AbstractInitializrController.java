@@ -35,20 +35,22 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- * A base controller that uses a {@link InitializrMetadataProvider}
+ * A base controller that uses a {@link InitializrMetadataProvider}.
  *
  * @author Stephane Nicoll
  */
 public abstract class AbstractInitializrController {
 
 	protected final InitializrMetadataProvider metadataProvider;
+
 	private final Function<String, String> linkTo;
+
 	private Boolean forceSsl;
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
 			ResourceUrlProvider resourceUrlProvider) {
 		this.metadataProvider = metadataProvider;
-		this.linkTo = link -> {
+		this.linkTo = (link) -> {
 			String result = resourceUrlProvider.getForLookupPath(link);
 			return result == null ? link : result;
 		};
@@ -56,7 +58,7 @@ public abstract class AbstractInitializrController {
 
 	public boolean isForceSsl() {
 		if (this.forceSsl == null) {
-			this.forceSsl = metadataProvider.get().getConfiguration().getEnv()
+			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv()
 					.isForceSsl();
 		}
 		return this.forceSsl;
@@ -71,9 +73,10 @@ public abstract class AbstractInitializrController {
 
 	/**
 	 * Render the home page with the specified template.
+	 * @param model the model data
 	 */
 	protected void renderHome(Map<String, Object> model) {
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 
 		model.put("serviceUrl", generateAppUrl());
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
@@ -94,7 +97,7 @@ public abstract class AbstractInitializrController {
 	}
 
 	public Function<String, String> getLinkTo() {
-		return linkTo;
+		return this.linkTo;
 	}
 
 	private TypeCapability removeTypes(TypeCapability types) {
@@ -103,13 +106,14 @@ public abstract class AbstractInitializrController {
 		result.setTitle(types.getTitle());
 		result.getContent().addAll(types.getContent());
 		// Only keep project type
-		result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")));
+		result.getContent().removeIf((t) -> !"project".equals(t.getTags().get("format")));
 		return result;
 	}
 
 	/**
 	 * Generate a full URL of the service, mostly for use in templates.
-	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#forceSsl
+	 * @return the app URL
+	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
 	 */
 	protected String generateAppUrl() {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder

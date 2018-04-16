@@ -41,14 +41,15 @@ public class ProjectAssert {
 	public static final String DEFAULT_APPLICATION_NAME = "DemoApplication";
 
 	private final File dir;
+
 	private Boolean mavenProject;
 
 	public File getDir() {
-		return dir;
+		return this.dir;
 	}
 
 	public Boolean getMavenProject() {
-		return mavenProject;
+		return this.mavenProject;
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class ProjectAssert {
 	public ProjectAssert hasBaseDir(String name) {
 		File projectDir = file(name);
 		assertThat(projectDir).describedAs("No directory %s found in %s", name,
-				dir.getAbsolutePath()).exists();
+				this.dir.getAbsolutePath()).exists();
 		assertThat(projectDir).isDirectory();
 		// Replacing the root dir so that other assertions match the root
 		return new ProjectAssert(projectDir);
@@ -79,6 +80,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link PomAssert} for this project.
+	 * @return a POM assert
 	 */
 	public PomAssert pomAssert() {
 		try {
@@ -92,6 +94,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link GradleBuildAssert} for this project.
+	 * @return a gradle assert
 	 */
 	public GradleBuildAssert gradleBuildAssert() {
 		try {
@@ -105,11 +108,13 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link GradleSettingsAssert} for this project.
+	 * @return A gradle settings assert
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
 		try {
-			return new GradleSettingsAssert(StreamUtils.copyToString(
-					new FileInputStream(file("settings.gradle")), Charset.forName("UTF-8")));
+			return new GradleSettingsAssert(
+					StreamUtils.copyToString(new FileInputStream(file("settings.gradle")),
+							Charset.forName("UTF-8")));
 		}
 		catch (IOException e) {
 			throw new IllegalArgumentException("Cannot resolve settings.gradle", e);
@@ -118,6 +123,8 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link SourceCodeAssert} for the specified source code.
+	 * @param sourceCodePath the source code path
+	 * @return a source assert
 	 */
 	public SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
 		hasFile(sourceCodePath);
@@ -135,7 +142,7 @@ public class ProjectAssert {
 		hasFile("pom.xml").hasNoFile("build.gradle");
 		hasFile("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
-		mavenProject = true;
+		this.mavenProject = true;
 		return this;
 	}
 
@@ -143,7 +150,7 @@ public class ProjectAssert {
 		hasFile("build.gradle").hasNoFile("pom.xml");
 		hasFile("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		mavenProject = false;
+		this.mavenProject = false;
 		if (StringUtils.hasText(version)) {
 			Properties properties = properties(
 					"gradle/wrapper/gradle-wrapper.properties");
@@ -212,8 +219,8 @@ public class ProjectAssert {
 		String packageName = expectedPackageName.replace(".", "/");
 		return isGenericProject(expectedPackageName, expectedApplicationName,
 				codeLocation, extension).hasStaticAndTemplatesResources(true)
-				.hasFile("src/main/" + codeLocation + "/" + packageName
-						+ "/ServletInitializer." + extension);
+						.hasFile("src/main/" + codeLocation + "/" + packageName
+								+ "/ServletInitializer." + extension);
 	}
 
 	public ProjectAssert hasStaticAndTemplatesResources(boolean web) {
@@ -244,13 +251,14 @@ public class ProjectAssert {
 
 	public ProjectAssert assertFile(String localPath, boolean exist) {
 		File candidate = file(localPath);
-		assertThat(candidate.exists()).describedAs("Invalid presence (%s) exist for %s",
-				exist, localPath).isEqualTo(exist);
+		assertThat(candidate.exists())
+				.describedAs("Invalid presence (%s) exist for %s", exist, localPath)
+				.isEqualTo(exist);
 		return this;
 	}
 
 	private File file(String localPath) {
-		return new File(dir, localPath);
+		return new File(this.dir, localPath);
 	}
 
 	private Properties properties(String localPath) {

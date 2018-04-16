@@ -35,8 +35,8 @@ public class BuildProperties {
 	private final TreeMap<String, Supplier<String>> maven = new TreeMap<>();
 
 	/**
-	 * Gradle-specific build properties, added to the {@code buildscript} section
-	 * of the gradle build.
+	 * Gradle-specific build properties, added to the {@code buildscript} section of the
+	 * gradle build.
 	 */
 	private final TreeMap<String, Supplier<String>> gradle = new TreeMap<>();
 
@@ -46,15 +46,15 @@ public class BuildProperties {
 	private final TreeMap<VersionProperty, Supplier<String>> versions = new TreeMap<>();
 
 	public Map<String, Supplier<String>> getMaven() {
-		return maven;
+		return this.maven;
 	}
 
 	public Map<String, Supplier<String>> getGradle() {
-		return gradle;
+		return this.gradle;
 	}
 
 	public Map<VersionProperty, Supplier<String>> getVersions() {
-		return versions;
+		return this.versions;
 	}
 
 }

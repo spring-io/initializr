@@ -44,7 +44,7 @@ public class SingleSelectCapability
 
 	@Override
 	public List<DefaultMetadataElement> getContent() {
-		return content;
+		return this.content;
 	}
 
 	/**
@@ -52,23 +52,25 @@ public class SingleSelectCapability
 	 */
 	@Override
 	public DefaultMetadataElement getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
+		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
 				.orElse(null);
 	}
 
 	/**
 	 * Return the element with the specified id or {@code null} if no such element exists.
+	 * @param id the ID of the element to find
+	 * @return the element or {@code null}
 	 */
 	public DefaultMetadataElement get(String id) {
-		return content.stream().filter(it -> id.equals(it.getId())).findFirst()
+		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst()
 				.orElse(null);
 	}
 
 	@Override
 	public void merge(List<DefaultMetadataElement> otherContent) {
-		otherContent.forEach(it -> {
+		otherContent.forEach((it) -> {
 			if (get(it.getId()) == null) {
-				content.add(it);
+				this.content.add(it);
 			}
 		});
 	}

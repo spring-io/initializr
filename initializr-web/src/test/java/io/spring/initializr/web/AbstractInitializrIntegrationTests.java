@@ -62,7 +62,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -71,8 +71,8 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
-			InitializrMetadataVersion.V2_1.getMediaType();
+	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1
+			.getMediaType();
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -86,7 +86,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	@Before
 	public void before() {
-		restTemplate = restTemplateBuilder.build();
+		this.restTemplate = this.restTemplateBuilder.build();
 	}
 
 	protected abstract String createUrl(String context);
@@ -94,18 +94,22 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected String htmlHome() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-		return restTemplate.exchange(createUrl("/"), HttpMethod.GET,
+		return this.restTemplate.exchange(createUrl("/"), HttpMethod.GET,
 				new HttpEntity<Void>(headers), String.class).getBody();
 	}
 
 	/**
 	 * Validate the "Content-Type" header of the specified response.
+	 * @param response the response
+	 * @param expected the expected result
 	 */
 	protected void validateContentType(ResponseEntity<String> response,
 			MediaType expected) {
 		MediaType actual = response.getHeaders().getContentType();
-		assertTrue("Non compatible media-type, expected " + expected + ", got " + actual,
-				actual.isCompatibleWith(expected));
+		assertThat(actual).isNotNull();
+		assertThat(actual.isCompatibleWith(expected))
+				.as("Non compatible media-type, expected " + expected + ", got " + actual)
+				.isTrue();
 	}
 
 	protected JsonNode parseJson(String text) {
@@ -138,7 +142,8 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected void validateCurrentMetadata(String json) {
 		try {
 			JSONObject expected = readMetadataJson("2.1.0");
-			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
+			JSONAssert.assertEquals(expected, new JSONObject(json),
+					JSONCompareMode.STRICT);
 		}
 		catch (JSONException ex) {
 			throw new IllegalArgumentException("Invalid json", ex);
@@ -151,6 +156,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	/**
 	 * Return a {@link ProjectAssert} for the following archive content.
+	 * @param content the source content
+	 * @return a project assert
 	 */
 	protected ProjectAssert zipProjectAssert(byte[] content) {
 		return projectAssert(content, ArchiveType.ZIP);
@@ -158,6 +165,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	/**
 	 * Return a {@link ProjectAssert} for the following TGZ archive.
+	 * @param content the source content
+	 * @return a project assert
 	 */
 	protected ProjectAssert tgzProjectAssert(byte[] content) {
 		return projectAssert(content, ArchiveType.TGZ);
@@ -174,7 +183,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected byte[] downloadArchive(String context) {
-		return restTemplate.getForObject(createUrl(context), byte[].class);
+		return this.restTemplate.getForObject(createUrl(context), byte[].class);
 	}
 
 	protected ResponseEntity<String> invokeHome(String userAgentHeader,
@@ -198,7 +207,7 @@ public abstract class AbstractInitializrIntegrationTests {
 		else {
 			headers.setAccept(Collections.emptyList());
 		}
-		return restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
+		return this.restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
 				new HttpEntity<Void>(headers), responseType);
 	}
 
@@ -206,14 +215,14 @@ public abstract class AbstractInitializrIntegrationTests {
 		try {
 			File archiveFile = writeArchive(content);
 
-			File project = folder.newFolder();
+			File project = this.folder.newFolder();
 			switch (archiveType) {
-				case ZIP:
-					unzip(archiveFile, project);
-					break;
-				case TGZ:
-					untar(archiveFile, project);
-					break;
+			case ZIP:
+				unzip(archiveFile, project);
+				break;
+			case TGZ:
+				untar(archiveFile, project);
+				break;
 			}
 			return new ProjectAssert(project);
 		}
@@ -242,7 +251,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected File writeArchive(byte[] body) throws IOException {
-		File archiveFile = folder.newFile();
+		File archiveFile = this.folder.newFile();
 		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
 			stream.write(body);
 		}
@@ -259,8 +268,7 @@ public abstract class AbstractInitializrIntegrationTests {
 					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
 				}
 				if (this instanceof AbstractFullStackInitializrIntegrationTests) {
-					AbstractFullStackInitializrIntegrationTests test =
-							(AbstractFullStackInitializrIntegrationTests) this;
+					AbstractFullStackInitializrIntegrationTests test = (AbstractFullStackInitializrIntegrationTests) this;
 					placeholder = test.host + ":" + test.port;
 				}
 				// Let's parse the port as it is random
@@ -275,13 +283,15 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	public RestTemplate getRestTemplate() {
-		return restTemplate;
+		return this.restTemplate;
 	}
 
 	private enum ArchiveType {
+
 		ZIP,
 
 		TGZ
+
 	}
 
 	@EnableAutoConfiguration
@@ -301,4 +311,5 @@ public abstract class AbstractInitializrIntegrationTests {
 		}
 
 	}
+
 }

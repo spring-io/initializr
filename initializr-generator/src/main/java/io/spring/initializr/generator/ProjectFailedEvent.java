@@ -32,9 +32,10 @@ public class ProjectFailedEvent extends ProjectRequestEvent {
 
 	/**
 	 * Return the cause of the failure.
+	 * @return the cause of the failure
 	 */
 	public Exception getCause() {
-		return cause;
+		return this.cause;
 	}
 
 }

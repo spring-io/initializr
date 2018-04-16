@@ -32,7 +32,7 @@ public class Agent {
 	private final AgentId id;
 
 	/**
-	 * The version of the agent, if any
+	 * The version of the agent, if any.
 	 */
 	private final String version;
 
@@ -42,11 +42,11 @@ public class Agent {
 	}
 
 	public AgentId getId() {
-		return id;
+		return this.id;
 	}
 
 	public String getVersion() {
-		return version;
+		return this.version;
 	}
 
 	/**
@@ -63,48 +63,79 @@ public class Agent {
 	 */
 	public enum AgentId {
 
+		/**
+		 * CURL.
+		 */
 		CURL("curl", "curl"),
 
+		/**
+		 * HTTPie.
+		 */
 		HTTPIE("httpie", "HTTPie"),
 
+		/**
+		 * JBoss Forge.
+		 */
 		JBOSS_FORGE("jbossforge", "SpringBootForgeCli"),
 
+		/**
+		 * The Spring Boot CLI.
+		 */
 		SPRING_BOOT_CLI("spring", "SpringBootCli"),
 
+		/**
+		 * Spring Tools Suite.
+		 */
 		STS("sts", "STS"),
 
+		/**
+		 * IntelliJ IDEA.
+		 */
 		INTELLIJ_IDEA("intellijidea", "IntelliJ IDEA"),
 
+		/**
+		 * Netbeans.
+		 */
 		NETBEANS("netbeans", "NetBeans"),
 
+		/**
+		 * Visual Studio Code.
+		 */
 		VSCODE("vscode", "vscode"),
 
+		/**
+		 * A generic browser.
+		 */
 		BROWSER("browser", "Browser");
 
 		final String id;
+
 		final String name;
 
 		public String getId() {
-			return id;
+			return this.id;
 		}
 
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
 		AgentId(String id, String name) {
 			this.id = id;
 			this.name = name;
 		}
+
 	}
 
 	private static class UserAgentHandler {
 
-		private static final Pattern TOOL_REGEX = Pattern.compile("([^\\/]*)\\/([^ ]*).*");
+		private static final Pattern TOOL_REGEX = Pattern
+				.compile("([^\\/]*)\\/([^ ]*).*");
 
 		private static final Pattern STS_REGEX = Pattern.compile("STS (.*)");
 
-		private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
+		private static final Pattern NETBEANS_REGEX = Pattern
+				.compile("nb-springboot-plugin\\/(.*)");
 
 		public static Agent parse(String userAgent) {
 			Matcher matcher = TOOL_REGEX.matcher(userAgent);

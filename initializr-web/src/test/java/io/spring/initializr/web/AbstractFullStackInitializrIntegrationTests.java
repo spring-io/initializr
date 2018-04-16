@@ -20,17 +20,16 @@ import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.runner.RunWith;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * @author Stephane Nicoll
  * @author Dave Syer
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AbstractFullStackInitializrIntegrationTests
 		extends AbstractInitializrIntegrationTests {
 
@@ -41,7 +40,7 @@ public abstract class AbstractFullStackInitializrIntegrationTests
 
 	@Override
 	protected String createUrl(String context) {
-		return "http://" + host + ":" + port
+		return "http://" + this.host + ":" + this.port
 				+ (context.startsWith("/") ? context : "/" + context);
 	}
 

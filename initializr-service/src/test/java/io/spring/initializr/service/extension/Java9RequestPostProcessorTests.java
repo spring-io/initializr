@@ -24,8 +24,7 @@ import org.junit.Test;
  *
  * @author Stephane Nicoll
  */
-public class Java9RequestPostProcessorTests
-		extends AbstractRequestPostProcessorTests {
+public class Java9RequestPostProcessorTests extends AbstractRequestPostProcessorTests {
 
 	@Test
 	public void java9CannotBeUsedWithSpringBoot1Maven() {

@@ -18,8 +18,7 @@ package io.spring.initializr.actuate.stat;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
@@ -30,17 +29,17 @@ public class StatsPropertiesTests {
 
 	@Test
 	public void cleanTrailingSlash() {
-		properties.getElastic().setUri("http://example.com/");
-		assertThat(properties.getElastic().getUri(), is("http://example.com"));
+		this.properties.getElastic().setUri("http://example.com/");
+		assertThat(this.properties.getElastic().getUri()).isEqualTo("http://example.com");
 	}
 
 	@Test
 	public void provideEntityUrl() {
-		properties.getElastic().setUri("http://example.com/");
-		properties.getElastic().setIndexName("my-index");
-		properties.getElastic().setEntityName("foo");
-		assertThat(properties.getElastic().getEntityUrl().toString(),
-				is("http://example.com/my-index/foo"));
+		this.properties.getElastic().setUri("http://example.com/");
+		this.properties.getElastic().setIndexName("my-index");
+		this.properties.getElastic().setEntityName("foo");
+		assertThat(this.properties.getElastic().getEntityUrl().toString())
+				.isEqualTo("http://example.com/my-index/foo");
 	}
 
 }

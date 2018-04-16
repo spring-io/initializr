@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.util.StringUtils;
 
 /**
- * Represents a valid property for a version. A property must be lower case and
- * can define a dot or an hyphen to separate words. For instance, "foo-acme.version",
+ * Represents a valid property for a version. A property must be lower case and can define
+ * a dot or an hyphen to separate words. For instance, "foo-acme.version",
  * "foo.acme.version" or "foo-acme-version" are valid properties.
  *
  * @author Stephane Nicoll
@@ -43,11 +43,12 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 
 	/**
 	 * Return a camel cased representation of this instance.
+	 * @return the property in camel case format
 	 */
 	public String toCamelCaseFormat() {
 		String[] tokens = this.property.split("\\-|\\.");
 		StringBuilder sb = new StringBuilder();
-		for (int i  = 0; i < tokens.length; i++) {
+		for (int i = 0; i < tokens.length; i++) {
 			String part = tokens[i];
 			if (i > 0) {
 				part = StringUtils.capitalize(part);
@@ -62,12 +63,11 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 		return this.property;
 	}
 
-
 	private static String validateFormat(String property) {
 		for (char c : property.toCharArray()) {
 			if (Character.isUpperCase(c)) {
-				throw new IllegalArgumentException(
-						"Invalid property '" + property + "', must not contain upper case");
+				throw new IllegalArgumentException("Invalid property '" + property
+						+ "', must not contain upper case");
 			}
 			if (!Character.isLetterOrDigit(c) && !SUPPORTED_CHARS.contains(c)) {
 				throw new IllegalArgumentException(
@@ -89,17 +89,21 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		VersionProperty that = (VersionProperty) o;
 
-		return property.equals(that.property);
+		return this.property.equals(that.property);
 	}
 
 	@Override
 	public int hashCode() {
-		return property.hashCode();
+		return this.property.hashCode();
 	}
 
 }

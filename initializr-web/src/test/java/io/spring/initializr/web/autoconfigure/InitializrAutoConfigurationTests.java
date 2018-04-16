@@ -42,9 +42,7 @@ public class InitializrAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
-					JacksonAutoConfiguration.class,
-					InitializrAutoConfiguration.class));
-
+					JacksonAutoConfiguration.class, InitializrAutoConfiguration.class));
 
 	@Test
 	public void customRestTemplateBuilderIsUsed() {
@@ -53,20 +51,21 @@ public class InitializrAutoConfigurationTests {
 					assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
 					RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
 							context.getBean(InitializrMetadataProvider.class))
-							.getPropertyValue("restTemplate");
-					assertThat(restTemplate.getErrorHandler()).isSameAs(
-							CustomRestTemplateConfiguration.errorHandler);
+									.getPropertyValue("restTemplate");
+					assertThat(restTemplate.getErrorHandler())
+							.isSameAs(CustomRestTemplateConfiguration.errorHandler);
 				});
 	}
 
 	@Configuration
 	static class CustomRestTemplateConfiguration {
 
-		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
+		private static final ResponseErrorHandler errorHandler = mock(
+				ResponseErrorHandler.class);
 
 		@Bean
 		public RestTemplateCustomizer testRestTemplateCustomizer() {
-			return b -> b.setErrorHandler(errorHandler);
+			return (b) -> b.setErrorHandler(errorHandler);
 		}
 
 	}

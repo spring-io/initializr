@@ -36,10 +36,8 @@ public class JacksonKotlinRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("webflux");
 		request.setBootVersion("2.0.0.M2");
 		request.setLanguage("kotlin");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("webflux")
-				.hasDependency(JACKSON_KOTLIN)
-				.hasSpringBootStarterTest()
+		generateMavenPom(request).hasSpringBootStarterDependency("webflux")
+				.hasDependency(JACKSON_KOTLIN).hasSpringBootStarterTest()
 				.hasDependency(REACTOR_TEST)
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -50,10 +48,8 @@ public class JacksonKotlinRequestPostProcessorTests
 	public void jacksonModuleKotlinIsNotAddedWithoutKotlin() {
 		ProjectRequest request = createProjectRequest("webflux");
 		request.setBootVersion("2.0.0.M2");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("webflux")
-				.hasSpringBootStarterTest()
-				.hasDependency(REACTOR_TEST)
+		generateMavenPom(request).hasSpringBootStarterDependency("webflux")
+				.hasSpringBootStarterTest().hasDependency(REACTOR_TEST)
 				.hasDependenciesCount(3);
 	}
 
@@ -62,8 +58,7 @@ public class JacksonKotlinRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("actuator");
 		request.setBootVersion("2.0.0.M2");
 		request.setLanguage("kotlin");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("actuator")
+		generateMavenPom(request).hasSpringBootStarterDependency("actuator")
 				.hasSpringBootStarterTest()
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

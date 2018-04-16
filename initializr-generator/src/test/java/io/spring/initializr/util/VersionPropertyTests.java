@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link VersionProperty}.
- * 
+ *
  * @author Stephane Nicoll
  */
 public class VersionPropertyTests {
@@ -34,26 +34,26 @@ public class VersionPropertyTests {
 
 	@Test
 	public void testStandardProperty() {
-		assertThat(new VersionProperty("spring-boot.version")
-				.toStandardFormat()).isEqualTo("spring-boot.version");
+		assertThat(new VersionProperty("spring-boot.version").toStandardFormat())
+				.isEqualTo("spring-boot.version");
 	}
 
 	@Test
 	public void testCamelCaseProperty() {
-		assertThat(new VersionProperty("spring-boot.version")
-				.toCamelCaseFormat()).isEqualTo("springBootVersion");
+		assertThat(new VersionProperty("spring-boot.version").toCamelCaseFormat())
+				.isEqualTo("springBootVersion");
 	}
 
 	@Test
 	public void testStandardPropertyWithNoSeparator() {
-		assertThat(new VersionProperty("springbootversion")
-				.toStandardFormat()).isEqualTo("springbootversion");
+		assertThat(new VersionProperty("springbootversion").toStandardFormat())
+				.isEqualTo("springbootversion");
 	}
 
 	@Test
 	public void testCamelCasePropertyWithNoSeparator() {
-		assertThat(new VersionProperty("springbootversion")
-				.toCamelCaseFormat()).isEqualTo("springbootversion");
+		assertThat(new VersionProperty("springbootversion").toCamelCaseFormat())
+				.isEqualTo("springbootversion");
 	}
 
 	@Test

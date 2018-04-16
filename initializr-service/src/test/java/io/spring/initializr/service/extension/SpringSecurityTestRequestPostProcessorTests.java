@@ -31,10 +31,8 @@ public class SpringSecurityTestRequestPostProcessorTests
 	@Test
 	public void securityTestIsAddedWithSecurity() {
 		ProjectRequest request = createProjectRequest("security");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("security")
-				.hasSpringBootStarterTest()
-				.hasDependency(springSecurityTest())
+		generateMavenPom(request).hasSpringBootStarterDependency("security")
+				.hasSpringBootStarterTest().hasDependency(springSecurityTest())
 				.hasDependenciesCount(3);
 	}
 
@@ -42,21 +40,16 @@ public class SpringSecurityTestRequestPostProcessorTests
 	public void securityTestIsNotAddedBefore13() {
 		ProjectRequest request = createProjectRequest("security");
 		request.setBootVersion("1.2.7.RELEASE");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("security")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		generateMavenPom(request).hasSpringBootStarterDependency("security")
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
 	public void securityTestIsNotAddedWithoutSpringSecurity() {
 		ProjectRequest request = createProjectRequest("web");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		generateMavenPom(request).hasSpringBootStarterDependency("web")
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
-
 
 	private static Dependency springSecurityTest() {
 		Dependency dependency = Dependency.withId("spring-security-test",

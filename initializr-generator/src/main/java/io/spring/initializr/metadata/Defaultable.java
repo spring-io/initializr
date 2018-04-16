@@ -16,8 +16,18 @@
 
 package io.spring.initializr.metadata;
 
+/**
+ * Metadata with a default value.
+ *
+ * @param <T> The value type
+ * @author Dave Syer
+ */
 public interface Defaultable<T> {
 
+	/**
+	 * Return the default value.
+	 * @return the default value
+	 */
 	T getDefault();
 
 }

@@ -24,7 +24,8 @@ import java.util.List;
  *
  * @author Stephane Nicoll
  */
-public class TypeCapability extends ServiceCapability<List<Type>> implements Defaultable<Type> {
+public class TypeCapability extends ServiceCapability<List<Type>>
+		implements Defaultable<Type> {
 
 	private final List<Type> content = new ArrayList<>();
 
@@ -34,16 +35,18 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 
 	@Override
 	public List<Type> getContent() {
-		return content;
+		return this.content;
 	}
 
 	/**
 	 * Return the {@link Type} with the specified id or {@code null} if no such type
 	 * exists.
+	 * @param id the ID to find
+	 * @return the Type or {@code null}
 	 */
 	public Type get(String id) {
-		return content.stream()
-				.filter(it -> id.equals(it.getId()) || id.equals(it.getStsId()))
+		return this.content.stream()
+				.filter((it) -> id.equals(it.getId()) || id.equals(it.getStsId()))
 				.findFirst().orElse(null);
 	}
 
@@ -52,15 +55,15 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 	 */
 	@Override
 	public Type getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault)
-				.findFirst().orElse(null);
+		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
+				.orElse(null);
 	}
 
 	@Override
 	public void merge(List<Type> otherContent) {
-		otherContent.forEach(it -> {
+		otherContent.forEach((it) -> {
 			if (get(it.getId()) == null) {
-				content.add(it);
+				this.content.add(it);
 			}
 		});
 	}

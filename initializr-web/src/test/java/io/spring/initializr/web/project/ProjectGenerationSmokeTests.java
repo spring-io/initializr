@@ -39,8 +39,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dave Syer
@@ -51,6 +49,7 @@ public class ProjectGenerationSmokeTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	private File downloadDir;
+
 	private WebDriver driver;
 
 	private Action enterAction;
@@ -59,25 +58,26 @@ public class ProjectGenerationSmokeTests
 	public void setup() throws IOException {
 		Assume.assumeTrue("Smoke tests disabled (set System property 'smoke.test')",
 				Boolean.getBoolean("smoke.test"));
-		downloadDir = folder.newFolder();
+		this.downloadDir = this.folder.newFolder();
 		FirefoxProfile fxProfile = new FirefoxProfile();
 		fxProfile.setPreference("browser.download.folderList", 2);
 		fxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-		fxProfile.setPreference("browser.download.dir", downloadDir.getAbsolutePath());
+		fxProfile.setPreference("browser.download.dir",
+				this.downloadDir.getAbsolutePath());
 		fxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/zip,application/x-compress,application/octet-stream");
 		FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
-		driver = new FirefoxDriver(options);
-		((JavascriptExecutor) driver).executeScript("window.focus();");
+		this.driver = new FirefoxDriver(options);
+		((JavascriptExecutor) this.driver).executeScript("window.focus();");
 
-		Actions actions = new Actions(driver);
-		enterAction = actions.sendKeys(Keys.ENTER).build();
+		Actions actions = new Actions(this.driver);
+		this.enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 
 	@After
 	public void destroy() {
-		if (driver != null) {
-			driver.close();
+		if (this.driver != null) {
+			this.driver.close();
 		}
 	}
 
@@ -311,8 +311,8 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void customizationShowsUpInDefaultView() throws Exception {
 		HomePage page = toHome("/#!language=groovy&packageName=com.example.acme");
-		assertEquals("groovy", page.value("language"));
-		assertEquals("com.example.acme", page.value("packageName"));
+		assertThat(page.value("language")).isEqualTo("groovy");
+		assertThat(page.value("packageName")).isEqualTo("com.example.acme");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
 		projectAssert.hasBaseDir("demo").isMavenProject()
@@ -326,14 +326,14 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void customizationsShowsUpWhenViewIsSwitched() throws Exception {
 		HomePage page = toHome("/#!packaging=war&javaVersion=1.7");
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 		page.advanced();
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 		page.simple();
-		assertEquals("war", page.value("packaging"));
-		assertEquals("1.7", page.value("javaVersion"));
+		assertThat(page.value("packaging")).isEqualTo("war");
+		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 	}
 
 	@Test
@@ -354,8 +354,8 @@ public class ProjectGenerationSmokeTests
 	}
 
 	private HomePage toHome(String path) {
-		driver.get("http://localhost:" + port + path);
-		return new HomePage(driver);
+		this.driver.get("http://localhost:" + this.port + path);
+		return new HomePage(this.driver);
 	}
 
 	private ProjectAssert assertSimpleProject() throws Exception {
@@ -365,7 +365,7 @@ public class ProjectGenerationSmokeTests
 
 	private void selectDependency(HomePage page, String text) {
 		page.autocomplete(text);
-		enterAction.perform();
+		this.enterAction.perform();
 	}
 
 	private byte[] from(String fileName) throws Exception {
@@ -373,10 +373,9 @@ public class ProjectGenerationSmokeTests
 	}
 
 	private File getArchive(String fileName) {
-		File archive = new File(downloadDir, fileName);
-		assertTrue("Expected content with name " + fileName, archive.exists());
+		File archive = new File(this.downloadDir, fileName);
+		assertThat(archive).exists();
 		return archive;
 	}
 
 }
-

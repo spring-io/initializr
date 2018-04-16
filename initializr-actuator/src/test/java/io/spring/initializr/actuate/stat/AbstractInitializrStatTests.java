@@ -28,12 +28,10 @@ import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 abstract class AbstractInitializrStatTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataTestBuilder
-			.withDefaults()
-			.addDependencyGroup("core", "security", "validation", "aop")
+			.withDefaults().addDependencyGroup("core", "security", "validation", "aop")
 			.addDependencyGroup("web", "web", "data-rest", "jersey")
 			.addDependencyGroup("data", "data-jpa", "jdbc")
-			.addDependencyGroup("database", "h2", "mysql")
-			.build();
+			.addDependencyGroup("database", "h2", "mysql").build();
 
 	protected InitializrMetadataProvider createProvider(InitializrMetadata metadata) {
 		return new SimpleInitializrMetadataProvider(metadata);
@@ -41,12 +39,12 @@ abstract class AbstractInitializrStatTests {
 
 	protected ProjectRequest createProjectRequest() {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+		request.initialize(this.metadata);
 		return request;
 	}
 
 	public InitializrMetadata getMetadata() {
-		return metadata;
+		return this.metadata;
 	}
 
 }

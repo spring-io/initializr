@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
+import io.spring.initializr.web.AbstractInitializrIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,16 +36,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Stephane Nicoll
@@ -56,8 +49,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleZipProject() {
 		downloadZip("/starter.zip?style=web&style=jpa").isJavaProject()
-				.hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
+				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
@@ -67,8 +59,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void simpleTgzProject() {
 		downloadTgz("/starter.tgz?style=org.acme:foo").isJavaProject()
-				.hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
+				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				.hasDependency("org.acme", "foo", "1.3.5");
 	}
@@ -84,10 +75,11 @@ public class MainControllerIntegrationTests
 	@Test
 	public void dependencyNotInRange() {
 		try {
-			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[]) null);
+			execute("/starter.tgz?style=org.acme:bur", byte[].class, null,
+					(String[]) null);
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.NOT_ACCEPTABLE, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
@@ -96,8 +88,7 @@ public class MainControllerIntegrationTests
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				// the root dep is added if none is specified
-				.hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterTest();
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
 	}
 
 	@Test
@@ -121,8 +112,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void kotlinRange() {
 		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=1.2.1.RELEASE")
-				.isKotlinProject().isMavenProject()
-				.pomAssert().hasDependenciesCount(4)
+				.isKotlinProject().isMavenProject().pomAssert().hasDependenciesCount(4)
 				.hasProperty("kotlin.version", "1.1");
 	}
 
@@ -156,10 +146,10 @@ public class MainControllerIntegrationTests
 			throws URISyntaxException {
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context),
 				ResponseEntity.class);
-		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin."
 				+ extension;
-		assertEquals(new URI(expected), entity.getHeaders().getLocation());
+		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
 
 	@Test
@@ -174,8 +164,8 @@ public class MainControllerIntegrationTests
 	public void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, "*/*");
 		validateMetadata(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE,
-				"2.0.0", JSONCompareMode.LENIENT);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
+				JSONCompareMode.LENIENT);
 	}
 
 	@Test
@@ -193,9 +183,9 @@ public class MainControllerIntegrationTests
 				"bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null,
 				"application/vnd.initializr.v2.1+json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -205,14 +195,14 @@ public class MainControllerIntegrationTests
 				"application/vnd.initializr.v2.1+json",
 				"application/vnd.initializr.v2+json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
 	@Test
 	public void metadataWithHalAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, "application/hal+json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, MainController.HAL_JSON_CONTENT_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
@@ -223,7 +213,7 @@ public class MainControllerIntegrationTests
 			invokeHome(null, "application/vnd.initializr.v5.4+json");
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.NOT_ACCEPTABLE, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
@@ -252,7 +242,7 @@ public class MainControllerIntegrationTests
 	public void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -279,7 +269,7 @@ public class MainControllerIntegrationTests
 	public void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -299,7 +289,7 @@ public class MainControllerIntegrationTests
 	public void springBootCliReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
 		validateContentType(response,
-				AbstractInitializrControllerIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -317,40 +307,30 @@ public class MainControllerIntegrationTests
 
 	private void validateCurlHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				containsString("Examples:"),
-				containsString("curl")));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "curl");
 	}
 
 	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				containsString("Examples:"),
-				not(containsString("curl")),
-				containsString("http")));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "http")
+				.doesNotContain("curl");
 	}
 
 	private void validateGenericHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Spring Initializr"),
-				not(containsString("Examples:")),
-				not(containsString("curl"))));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		assertThat(response.getBody()).contains("Spring Initializr")
+				.doesNotContain("Examples:", "curl");
 	}
 
 	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		assertThat(response.getBody(), allOf(
-				containsString("Service capabilities"),
-				containsString("Supported dependencies"),
-				not(containsString("Examples:")),
-				not(containsString("curl"))));
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		assertThat(response.getBody())
+				.contains("Service capabilities", "Supported dependencies")
+				.doesNotContain("Examples:", "curl");
 	}
 
 	@Test
@@ -360,7 +340,7 @@ public class MainControllerIntegrationTests
 			fail("Should have failed");
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			assertStandardErrorBody(ex.getResponseBodyAsString(),
 					"Unknown dependency 'foo:bar' check project metadata");
 		}
@@ -373,7 +353,7 @@ public class MainControllerIntegrationTests
 			fail("Should have failed");
 		}
 		catch (HttpClientErrorException ex) {
-			assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			assertStandardErrorBody(ex.getResponseBodyAsString(),
 					"Unknown dependency 'foo' check project metadata");
 		}
@@ -382,65 +362,65 @@ public class MainControllerIntegrationTests
 	@Test
 	public void homeIsJson() {
 		String body = invokeHome(null, (String[]) null).getBody();
-		assertTrue("Wrong body:\n" + body, body.contains("\"dependencies\""));
+		assertThat(body).contains("\"dependencies\"");
 	}
 
 	@Test
 	public void webIsAddedPom() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/pom.xml?packaging=war"), String.class);
-		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
-		assertTrue("Wrong body:\n" + body, body.contains("provided"));
+		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"),
+				String.class);
+		assertThat(body).contains("spring-boot-starter-web");
+		assertThat(body).contains("provided");
 	}
 
 	@Test
 	public void webIsAddedGradle() {
-		String body = getRestTemplate().getForObject(
-				createUrl("/build.gradle?packaging=war"), String.class);
-		assertTrue("Wrong body:\n" + body, body.contains("spring-boot-starter-web"));
-		assertTrue("Wrong body:\n" + body, body.contains("providedRuntime"));
+		String body = getRestTemplate()
+				.getForObject(createUrl("/build.gradle?packaging=war"), String.class);
+		assertThat(body).contains("spring-boot-starter-web");
+		assertThat(body).contains("providedRuntime");
 	}
 
 	@Test
 	public void homeHasWebStyle() {
 		String body = htmlHome();
-		assertTrue("Wrong body:\n" + body, body.contains("name=\"style\" value=\"web\""));
+		assertThat(body).contains("name=\"style\" value=\"web\"");
 	}
 
 	@Test
 	public void homeHasBootVersion() {
 		String body = htmlHome();
-		assertTrue("Wrong body:\n" + body, body.contains("name=\"bootVersion\""));
-		assertTrue("Wrong body:\n" + body, body.contains("1.2.0.BUILD-SNAPSHOT\""));
+		assertThat(body).contains("name=\"bootVersion\"");
+		assertThat(body).contains("1.2.0.BUILD-SNAPSHOT\"");
 	}
 
 	@Test
 	public void homeHasOnlyProjectFormatTypes() {
 		String body = htmlHome();
-		assertTrue("maven project not found", body.contains("Maven Project"));
-		assertFalse("maven pom type should have been filtered",
-				body.contains("Maven POM"));
+		assertThat(body).contains("Maven Project");
+		assertThat(body).doesNotContain("Maven POM");
 	}
 
 	@Test
 	public void downloadStarter() {
-		byte[] body = getRestTemplate().getForObject(
-				createUrl("starter.zip"), byte[].class);
-		assertNotNull(body);
-		assertTrue(body.length > 100);
+		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
+				byte[].class);
+		assertThat(body).isNotNull();
+		assertThat(body.length).isGreaterThan(100);
 	}
 
 	@Test
 	public void installer() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("install.sh"), String.class);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertNotNull(response.getBody());
+		ResponseEntity<String> response = getRestTemplate()
+				.getForEntity(createUrl("install.sh"), String.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).isNotNull();
 	}
 
 	@Test
 	public void googleAnalyticsDisabledByDefault() {
 		String body = htmlHome();
-		assertFalse("google analytics should be disabled", body.contains("GoogleAnalyticsObject"));
+		assertThat(body).doesNotContain("GoogleAnalyticsObject");
 	}
 
 	private String getMetadataJson() {
@@ -452,10 +432,10 @@ public class MainControllerIntegrationTests
 	}
 
 	private static void assertStandardErrorBody(String body, String message) {
-		assertNotNull("error body must be available", body);
+		assertThat(body).as("error body must be available").isNotNull();
 		try {
 			JSONObject model = new JSONObject(body);
-			assertEquals(message, model.get("message"));
+			assertThat(model.get("message")).isEqualTo(message);
 		}
 		catch (JSONException ex) {
 			throw new IllegalArgumentException(ex);

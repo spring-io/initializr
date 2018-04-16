@@ -50,13 +50,13 @@ public class InitializrStatsAutoConfigurationTests {
 		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
 				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
 				.run((context) -> {
-					assertThat(context).hasSingleBean(
-							ProjectGenerationStatPublisher.class);
+					assertThat(context)
+							.hasSingleBean(ProjectGenerationStatPublisher.class);
 					RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
 							context.getBean(ProjectGenerationStatPublisher.class))
-							.getPropertyValue("restTemplate");
-					assertThat(restTemplate.getErrorHandler()).isSameAs(
-							CustomRestTemplateConfiguration.errorHandler);
+									.getPropertyValue("restTemplate");
+					assertThat(restTemplate.getErrorHandler())
+							.isSameAs(CustomRestTemplateConfiguration.errorHandler);
 				});
 	}
 
@@ -67,17 +67,19 @@ public class InitializrStatsAutoConfigurationTests {
 		public InitializrMetadataProvider initializrMetadataProvider() {
 			return mock(InitializrMetadataProvider.class);
 		}
+
 	}
 
 	@Configuration
 	@Import(InfrastructureConfiguration.class)
 	static class CustomRestTemplateConfiguration {
 
-		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
+		private static final ResponseErrorHandler errorHandler = mock(
+				ResponseErrorHandler.class);
 
 		@Bean
 		public RestTemplateCustomizer testRestTemplateCustomizer() {
-			return b -> b.setErrorHandler(errorHandler);
+			return (b) -> b.setErrorHandler(errorHandler);
 		}
 
 	}

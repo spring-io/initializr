@@ -21,7 +21,6 @@ import io.spring.initializr.util.Version;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for {@link InitializrConfiguration}.
@@ -34,142 +33,167 @@ public class InitializrConfigurationTests {
 
 	@Test
 	public void generateApplicationNameSimple() {
-		assertEquals("DemoApplication", this.properties.generateApplicationName("demo"));
+		assertThat(this.properties.generateApplicationName("demo"))
+				.isEqualTo("DemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleApplication() {
-		assertEquals("DemoApplication", this.properties.generateApplicationName("demoApplication"));
+		assertThat(this.properties.generateApplicationName("demoApplication"))
+				.isEqualTo("DemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleCamelCase() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("myDemo"));
+		assertThat(this.properties.generateApplicationName("myDemo"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleUnderscore() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("my_demo"));
+		assertThat(this.properties.generateApplicationName("my_demo"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleColon() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("my:demo"));
+		assertThat(this.properties.generateApplicationName("my:demo"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleSpace() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("my demo"));
+		assertThat(this.properties.generateApplicationName("my demo"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleDash() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("my-demo"));
+		assertThat(this.properties.generateApplicationName("my-demo"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameUpperCaseUnderscore() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("MY_DEMO"));
+		assertThat(this.properties.generateApplicationName("MY_DEMO"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameUpperCaseDash() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("MY-DEMO"));
+		assertThat(this.properties.generateApplicationName("MY-DEMO"))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameMultiSpaces() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("   my    demo "));
+		assertThat(this.properties.generateApplicationName("   my    demo "))
+				.isEqualTo("MyDemoApplication");
 	}
 
 	@Test
 	public void generateApplicationNameMultiSpacesUpperCase() {
-		assertEquals("MyDemoApplication", this.properties.generateApplicationName("   MY    DEMO "));
+		assertThat("MyDemoApplication")
+				.isEqualTo(this.properties.generateApplicationName("   MY    DEMO "));
 	}
 
 	@Test
 	public void generateApplicationNameNull() {
-		assertEquals(this.properties.getEnv().getFallbackApplicationName(), this.properties.generateApplicationName(null));
+		assertThat(this.properties.generateApplicationName(null))
+				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	public void generateApplicationNameInvalidStartCharacter() {
-		assertEquals(this.properties.getEnv().getFallbackApplicationName(), this.properties.generateApplicationName("1MyDemo"));
+		assertThat(this.properties.generateApplicationName("1MyDemo"))
+				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	public void generateApplicationNameInvalidPartCharacter() {
-		assertEquals(this.properties.getEnv().getFallbackApplicationName(), this.properties.generateApplicationName("MyDe|mo"));
+		assertThat(this.properties.generateApplicationName("MyDe|mo"))
+				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	public void generateApplicationNameInvalidApplicationName() {
-		assertEquals(this.properties.getEnv().getFallbackApplicationName(), this.properties.generateApplicationName("SpringBoot"));
+		assertThat(this.properties.generateApplicationName("SpringBoot"))
+				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	public void generateApplicationNameAnotherInvalidApplicationName() {
-		assertEquals(this.properties.getEnv().getFallbackApplicationName(), this.properties.generateApplicationName("Spring"));
+		assertThat(this.properties.generateApplicationName("Spring"))
+				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	public void generatePackageNameSimple() {
-		assertEquals("com.foo", this.properties.cleanPackageName("com.foo", "com.example"));
+		assertThat(this.properties.cleanPackageName("com.foo", "com.example"))
+				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameSimpleUnderscore() {
-		assertEquals("com.my_foo", this.properties.cleanPackageName("com.my_foo", "com.example"));
+		assertThat(this.properties.cleanPackageName("com.my_foo", "com.example"))
+				.isEqualTo("com.my_foo");
 	}
 
 	@Test
 	public void generatePackageNameSimpleColon() {
-		assertEquals("com.foo", this.properties.cleanPackageName("com:foo", "com.example"));
+		assertThat(this.properties.cleanPackageName("com:foo", "com.example"))
+				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameMultipleDashers() {
-		assertEquals("com.foobar", this.properties.cleanPackageName("com.foo--bar", "com.example"));
+		assertThat(this.properties.cleanPackageName("com.foo--bar", "com.example"))
+				.isEqualTo("com.foobar");
 	}
 
 	@Test
 	public void generatePackageNameMultipleSpaces() {
-		assertEquals("com.foo", this.properties.cleanPackageName("  com   foo  ", "com.example"));
+		assertThat(this.properties.cleanPackageName("  com   foo  ", "com.example"))
+				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameNull() {
-		assertEquals("com.example", this.properties.cleanPackageName(null, "com.example"));
+		assertThat(this.properties.cleanPackageName(null, "com.example"))
+				.isEqualTo("com.example");
 	}
 
 	@Test
 	public void generatePackageNameInvalidStartCharacter() {
-		assertEquals("com.foo", this.properties.cleanPackageName("0com.foo", "com.example"));
+		assertThat(this.properties.cleanPackageName("0com.foo", "com.example"))
+				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameVersion() {
-		assertEquals("com.foo.test145", this.properties.cleanPackageName(
-				"com.foo.test-1.4.5", "com.example"));
+		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", "com.example"))
+				.isEqualTo("com.foo.test145");
 	}
 
 	@Test
 	public void generatePackageNameInvalidPackageName() {
-		assertEquals("com.example", this.properties.cleanPackageName("org.springframework", "com.example"));
+		assertThat(this.properties.cleanPackageName("org.springframework", "com.example"))
+				.isEqualTo("com.example");
 	}
 
 	@Test
 	public void validateArtifactRepository() {
 		this.properties.getEnv().setArtifactRepository("http://foo/bar");
-		assertEquals("http://foo/bar/", this.properties.getEnv().getArtifactRepository());
+		assertThat(this.properties.getEnv().getArtifactRepository())
+				.isEqualTo("http://foo/bar/");
 	}
 
 	@Test
 	public void resolveKotlinVersionMatchingMapping() {
 		Kotlin kotlin = this.properties.getEnv().getKotlin();
 		kotlin.setDefaultVersion("1.2.3");
-		kotlin.getMappings().add(createKotlinVersionMapping(
-				"[1.4.0.RELEASE,1.5.0.RELEASE)", "1.5"));
+		kotlin.getMappings()
+				.add(createKotlinVersionMapping("[1.4.0.RELEASE,1.5.0.RELEASE)", "1.5"));
 		kotlin.getMappings().add(createKotlinVersionMapping("1.5.0.RELEASE", "1.6"));
 		kotlin.validate();
 		assertThat(kotlin.resolveKotlinVersion(Version.parse("1.5.3.RELEASE")))
@@ -180,15 +204,15 @@ public class InitializrConfigurationTests {
 	public void resolveKotlinVersionUsingDefault() {
 		Kotlin kotlin = this.properties.getEnv().getKotlin();
 		kotlin.setDefaultVersion("1.2.3");
-		kotlin.getMappings().add(createKotlinVersionMapping(
-				"[1.4.0.RELEASE,1.5.0.RELEASE)", "1.5"));
+		kotlin.getMappings()
+				.add(createKotlinVersionMapping("[1.4.0.RELEASE,1.5.0.RELEASE)", "1.5"));
 		kotlin.validate();
 		assertThat(kotlin.resolveKotlinVersion(Version.parse("1.3.2.RELEASE")))
 				.isEqualTo("1.2.3");
 	}
 
 	private Kotlin.Mapping createKotlinVersionMapping(String versionRange,
-			String kotlinVersion){
+			String kotlinVersion) {
 		Kotlin.Mapping mapping = new Kotlin.Mapping();
 		mapping.setVersionRange(versionRange);
 		mapping.setVersion(kotlinVersion);

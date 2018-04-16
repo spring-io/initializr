@@ -27,7 +27,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
@@ -44,9 +43,13 @@ public class ProjectGenerationStatPublisher {
 			.getLogger(ProjectGenerationStatPublisher.class);
 
 	private final ProjectRequestDocumentFactory documentFactory;
+
 	private final StatsProperties statsProperties;
+
 	private final ObjectMapper objectMapper;
+
 	private final RestTemplate restTemplate;
+
 	private final RetryTemplate retryTemplate;
 
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
@@ -58,10 +61,10 @@ public class ProjectGenerationStatPublisher {
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
 		if (StringUtils.hasText(elastic.getUsername())) {
 			this.restTemplate = restTemplateBuilder
-					.basicAuthorization(elastic.getUsername(),
-							elastic.getPassword())
+					.basicAuthorization(elastic.getUsername(), elastic.getPassword())
 					.build();
-		} else {
+		}
+		else {
 			this.restTemplate = restTemplateBuilder.build();
 		}
 		this.retryTemplate = retryTemplate;
@@ -72,7 +75,7 @@ public class ProjectGenerationStatPublisher {
 	public void handleEvent(ProjectRequestEvent event) {
 		String json = null;
 		try {
-			ProjectRequestDocument document = documentFactory.createDocument(event);
+			ProjectRequestDocument document = this.documentFactory.createDocument(event);
 			if (log.isDebugEnabled()) {
 				log.debug("Publishing " + document);
 			}
@@ -82,8 +85,8 @@ public class ProjectGenerationStatPublisher {
 					.post(this.statsProperties.getElastic().getEntityUrl())
 					.contentType(MediaType.APPLICATION_JSON).body(json);
 
-			this.retryTemplate.execute((RetryCallback<Void, RuntimeException>) context -> {
-				restTemplate.exchange(request, String.class);
+			this.retryTemplate.execute((context) -> {
+				this.restTemplate.exchange(request, String.class);
 				return null;
 			});
 		}

@@ -27,6 +27,9 @@ public interface InitializrMetadataJsonMapper {
 
 	/**
 	 * Write a json representation of the specified metadata.
+	 * @param metadata The intializr metadata
+	 * @param appUrl the app URL
+	 * @return the JSON representation
 	 */
 	String write(InitializrMetadata metadata, String appUrl);
 

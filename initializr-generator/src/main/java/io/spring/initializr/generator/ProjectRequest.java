@@ -59,10 +59,11 @@ public class ProjectRequest extends BasicProjectRequest {
 	private final BuildProperties buildProperties = new BuildProperties();
 
 	private List<String> facets = new ArrayList<>();
+
 	private String build;
 
 	public List<Dependency> getResolvedDependencies() {
-		return resolvedDependencies;
+		return this.resolvedDependencies;
 	}
 
 	public void setResolvedDependencies(List<Dependency> resolvedDependencies) {
@@ -70,7 +71,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	public List<String> getFacets() {
-		return facets;
+		return this.facets;
 	}
 
 	public void setFacets(List<String> facets) {
@@ -78,7 +79,7 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	public String getBuild() {
-		return build;
+		return this.build;
 	}
 
 	public void setBuild(String build) {
@@ -87,29 +88,32 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	/**
 	 * Return the additional parameters that can be used to further identify the request.
+	 * @return the parameters
 	 */
 	public Map<String, Object> getParameters() {
-		return parameters;
+		return this.parameters;
 	}
 
 	public Map<String, BillOfMaterials> getBoms() {
-		return boms;
+		return this.boms;
 	}
 
 	public Map<String, Repository> getRepositories() {
-		return repositories;
+		return this.repositories;
 	}
 
 	/**
 	 * Return the build properties.
+	 * @return the build properties
 	 */
 	public BuildProperties getBuildProperties() {
-		return buildProperties;
+		return this.buildProperties;
 	}
 
 	/**
 	 * Initializes this instance with the defaults defined in the specified
 	 * {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	public void initialize(InitializrMetadata metadata) {
 		BeanWrapperImpl bean = new BeanWrapperImpl(this);
@@ -125,14 +129,15 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
-	 * Resolve this instance against the specified {@link InitializrMetadata}
+	 * Resolve this instance against the specified {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	public void resolve(InitializrMetadata metadata) {
 		List<String> depIds = !getStyle().isEmpty() ? getStyle() : getDependencies();
 		String actualBootVersion = getBootVersion() != null ? getBootVersion()
 				: metadata.getBootVersions().getDefault().getId();
 		Version requestedVersion = Version.parse(actualBootVersion);
-		this.resolvedDependencies = depIds.stream().map(it -> {
+		this.resolvedDependencies = depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
 			if (dependency == null) {
 				throw new InvalidProjectRequestException(
@@ -140,10 +145,10 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 			return dependency.resolve(requestedVersion);
 		}).collect(Collectors.toList());
-		this.resolvedDependencies.forEach(it -> {
-			it.getFacets().forEach(facet -> {
-				if (!facets.contains(facet)) {
-					facets.add(facet);
+		this.resolvedDependencies.forEach((it) -> {
+			it.getFacets().forEach((facet) -> {
+				if (!this.facets.contains(facet)) {
+					this.facets.add(facet);
 				}
 			});
 			if (!it.match(requestedVersion)) {
@@ -156,7 +161,7 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 			if (it.getRepository() != null) {
 				String repositoryId = it.getRepository();
-				this.repositories.computeIfAbsent(repositoryId, s -> metadata
+				this.repositories.computeIfAbsent(repositoryId, (s) -> metadata
 						.getConfiguration().getEnv().getRepositories().get(s));
 			}
 		});
@@ -204,18 +209,20 @@ public class ProjectRequest extends BasicProjectRequest {
 	/**
 	 * Set the repositories that this instance should use based on the
 	 * {@link InitializrMetadata} and the requested Spring Boot {@link Version}.
+	 * @param metadata the initializr metadata
+	 * @param requestedVersion the requested version
 	 */
 	protected void initializeRepositories(InitializrMetadata metadata,
 			Version requestedVersion) {
 		if (!"RELEASE".equals(requestedVersion.getQualifier().getQualifier())) {
-			repositories.put("spring-snapshots", metadata.getConfiguration().getEnv()
+			this.repositories.put("spring-snapshots", metadata.getConfiguration().getEnv()
 					.getRepositories().get("spring-snapshots"));
-			repositories.put("spring-milestones", metadata.getConfiguration().getEnv()
-					.getRepositories().get("spring-milestones"));
+			this.repositories.put("spring-milestones", metadata.getConfiguration()
+					.getEnv().getRepositories().get("spring-milestones"));
 		}
-		boms.values().forEach(it -> it.getRepositories().forEach(key -> {
-			repositories.computeIfAbsent(key, s -> metadata.getConfiguration()
-					.getEnv().getRepositories().get(s));
+		this.boms.values().forEach((it) -> it.getRepositories().forEach((key) -> {
+			this.repositories.computeIfAbsent(key,
+					(s) -> metadata.getConfiguration().getEnv().getRepositories().get(s));
 		}));
 	}
 
@@ -223,93 +230,98 @@ public class ProjectRequest extends BasicProjectRequest {
 			Version requestedVersion) {
 		String kotlinVersion = metadata.getConfiguration().getEnv().getKotlin()
 				.resolveKotlinVersion(requestedVersion);
-		if ("gradle".equals(build)) {
-			buildProperties.getGradle().put("springBootVersion", this::getBootVersion);
+		if ("gradle".equals(this.build)) {
+			this.buildProperties.getGradle().put("springBootVersion",
+					this::getBootVersion);
 			if ("kotlin".equals(getLanguage())) {
-				buildProperties.getGradle().put("kotlinVersion", () -> kotlinVersion);
+				this.buildProperties.getGradle().put("kotlinVersion",
+						() -> kotlinVersion);
 			}
 		}
 		else {
-			buildProperties.getMaven().put("project.build.sourceEncoding", () -> "UTF-8");
-			buildProperties.getMaven().put("project.reporting.outputEncoding",
+			this.buildProperties.getMaven().put("project.build.sourceEncoding",
 					() -> "UTF-8");
-			buildProperties.getVersions().put(new VersionProperty("java.version"),
+			this.buildProperties.getMaven().put("project.reporting.outputEncoding",
+					() -> "UTF-8");
+			this.buildProperties.getVersions().put(new VersionProperty("java.version"),
 					this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {
-				buildProperties.getVersions().put(new VersionProperty("kotlin.version"),
-						() -> kotlinVersion);
+				this.buildProperties.getVersions()
+						.put(new VersionProperty("kotlin.version"), () -> kotlinVersion);
 			}
 		}
 	}
 
 	private void resolveBom(InitializrMetadata metadata, String bomId,
 			Version requestedVersion) {
-		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(bomId)
-					.resolve(requestedVersion);
+		if (!this.boms.containsKey(bomId)) {
+			BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms()
+					.get(bomId).resolve(requestedVersion);
 			bom.getAdditionalBoms()
-					.forEach(id -> resolveBom(metadata, id, requestedVersion));
-			boms.put(bomId, bom);
+					.forEach((id) -> resolveBom(metadata, id, requestedVersion));
+			this.boms.put(bomId, bom);
 		}
 	}
 
 	/**
 	 * Update this request once it has been resolved with the specified
 	 * {@link InitializrMetadata}.
+	 * @param metadata the initializr metadata
 	 */
 	protected void afterResolution(InitializrMetadata metadata) {
 		if ("war".equals(getPackaging())) {
 			if (!hasWebFacet()) {
 				// Need to be able to bootstrap the web app
-				resolvedDependencies.add(metadata.getDependencies().get("web"));
-				facets.add("web");
+				this.resolvedDependencies.add(metadata.getDependencies().get("web"));
+				this.facets.add("web");
 			}
 			// Add the tomcat starter in provided scope
 			Dependency tomcat = new Dependency().asSpringBootStarter("tomcat");
 			tomcat.setScope(Dependency.SCOPE_PROVIDED);
-			resolvedDependencies.add(tomcat);
+			this.resolvedDependencies.add(tomcat);
 		}
-		if (resolvedDependencies.stream().noneMatch(Dependency::isStarter)) {
+		if (this.resolvedDependencies.stream().noneMatch(Dependency::isStarter)) {
 			// There"s no starter so we add the default one
 			addDefaultDependency();
 		}
 	}
 
 	/**
-	 * Add a default dependency if the project does not define any dependency
+	 * Add a default dependency if the project does not define any dependency.
 	 */
 	protected void addDefaultDependency() {
 		Dependency root = new Dependency();
 		root.setId(DEFAULT_STARTER);
 		root.asSpringBootStarter("");
-		resolvedDependencies.add(root);
+		this.resolvedDependencies.add(root);
 	}
 
 	/**
 	 * Specify if this request has the web facet enabled.
+	 * @return {@code true} if the project has the web facet
 	 */
 	public boolean hasWebFacet() {
 		return hasFacet("web");
 	}
 
 	/**
-	 * Specify if this request has the specified facet enabled
+	 * Specify if this request has the specified facet enabled.
+	 * @param facet the facet to check
+	 * @return {@code true} if the project has the facet
 	 */
 	public boolean hasFacet(String facet) {
-		return facets.contains(facet);
+		return this.facets.contains(facet);
 	}
 
 	@Override
 	public String toString() {
-		return "ProjectRequest [" + "parameters=" + parameters + ", "
-				+ (resolvedDependencies != null
-				? "resolvedDependencies=" + resolvedDependencies + ", "
-				: "")
-				+ "boms=" + boms + ", " + "repositories="
-				+ repositories + ", " + "buildProperties="
-				+ buildProperties + ", " + (facets != null
-				? "facets=" + facets + ", " : "")
-				+ (build != null ? "build=" + build : "") + "]";
+		return "ProjectRequest [" + "parameters=" + this.parameters + ", "
+				+ (this.resolvedDependencies != null
+						? "resolvedDependencies=" + this.resolvedDependencies + ", " : "")
+				+ "boms=" + this.boms + ", " + "repositories=" + this.repositories + ", "
+				+ "buildProperties=" + this.buildProperties + ", "
+				+ (this.facets != null ? "facets=" + this.facets + ", " : "")
+				+ (this.build != null ? "build=" + this.build : "") + "]";
 	}
 
 }

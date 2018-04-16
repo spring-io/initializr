@@ -45,9 +45,9 @@ public class InitializrMetadataTests {
 				.withDefaults().addBom("my-bom", "org.acme", "foo", "1.2.3")
 				.addDependencyGroup("test", foo);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("foo-bom");
-		thrown.expectMessage("my-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("foo-bom");
+		this.thrown.expectMessage("my-bom");
 		builder.build();
 	}
 
@@ -60,9 +60,9 @@ public class InitializrMetadataTests {
 				.addRepository("my-repo", "repo", "http://example.com/repo", true)
 				.addDependencyGroup("test", foo);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("foo-repo");
-		thrown.expectMessage("my-repo");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("foo-repo");
+		this.thrown.expectMessage("my-repo");
 		builder.build();
 	}
 
@@ -73,9 +73,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("No version");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("No version");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -88,9 +88,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid repository id foo-repo");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid repository id foo-repo");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -105,9 +105,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom).addBom("bar-bom", barBom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid additional bom");
-		thrown.expectMessage("biz-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid additional bom");
+		this.thrown.expectMessage("biz-bom");
 		builder.build();
 	}
 
@@ -120,9 +120,9 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("FOO_BAR");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("FOO_BAR");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -137,10 +137,10 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid repository id foo-repo");
-		thrown.expectMessage("1.3.0.M2");
-		thrown.expectMessage("foo-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid repository id foo-repo");
+		this.thrown.expectMessage("1.3.0.M2");
+		this.thrown.expectMessage("foo-bom");
 		builder.build();
 	}
 
@@ -155,10 +155,10 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().addBom("foo-bom", bom);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("invalid additional bom");
-		thrown.expectMessage("1.3.0.M2");
-		thrown.expectMessage("bar-bom");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage("invalid additional bom");
+		this.thrown.expectMessage("1.3.0.M2");
+		this.thrown.expectMessage("bar-bom");
 		builder.build();
 	}
 
@@ -166,17 +166,18 @@ public class InitializrMetadataTests {
 	public void updateSpringBootVersions() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
-		bom.getMappings().add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
+		bom.getMappings()
+				.add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
 		Dependency dependency = Dependency.withId("bar");
-		dependency.getMappings().add(Dependency.Mapping.create(
-				"[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping.create(
-				"1.3.x.BUILD-SNAPSHOT", null, null, "0.2.0.RELEASE"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder
-				.withDefaults().addDependencyGroup("test", dependency)
-				.addBom("foo-bom", bom)
+		dependency.getMappings().add(Dependency.Mapping
+				.create("[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings().add(Dependency.Mapping.create("1.3.x.BUILD-SNAPSHOT",
+				null, null, "0.2.0.RELEASE"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", dependency).addBom("foo-bom", bom)
 				.setKotlinEnv("1.3",
-						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.1"),
+						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]",
+								"1.1"),
 						createKotlinVersionMapping("1.3.x.BUILD-SNAPSHOT", "1.2"))
 				.build();
 
@@ -187,13 +188,17 @@ public class InitializrMetadataTests {
 		assertThat(metadata.getConfiguration().getEnv().getBoms().get("foo-bom")
 				.resolve(Version.parse("1.3.6.RELEASE")).getVersion()).isEqualTo("1.0.0");
 		assertThat(metadata.getConfiguration().getEnv().getBoms().get("foo-bom")
-				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion()).isEqualTo("1.1.0-BUILD-SNAPSHOT");
+				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion())
+						.isEqualTo("1.1.0-BUILD-SNAPSHOT");
 		assertThat(metadata.getDependencies().get("bar")
-				.resolve(Version.parse("1.3.6.RELEASE")).getVersion()).isEqualTo("0.1.0.RELEASE");
+				.resolve(Version.parse("1.3.6.RELEASE")).getVersion())
+						.isEqualTo("0.1.0.RELEASE");
 		assertThat(metadata.getDependencies().get("bar")
-				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion()).isEqualTo("0.2.0.RELEASE");
+				.resolve(Version.parse("1.3.7.BUILD-SNAPSHOT")).getVersion())
+						.isEqualTo("0.2.0.RELEASE");
 		assertThat(metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(Version.parse("1.3.7.BUILD-SNAPSHOT"))).isEqualTo("1.2");
+				.resolveKotlinVersion(Version.parse("1.3.7.BUILD-SNAPSHOT")))
+						.isEqualTo("1.2");
 	}
 
 	@Test
@@ -201,14 +206,16 @@ public class InitializrMetadataTests {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().setMavenParent("org.foo", "foo-parent", null, false);
 
-		thrown.expect(InvalidInitializrMetadataException.class);
-		thrown.expectMessage("Custom maven pom requires groupId, artifactId and version");
+		this.thrown.expect(InvalidInitializrMetadataException.class);
+		this.thrown.expectMessage(
+				"Custom maven pom requires groupId, artifactId and version");
 		builder.build();
 	}
 
 	@Test
 	public void stripInvalidCharsFromPackage() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.build();
 		metadata.getGroupId().setContent("org.acme");
 		metadata.getArtifactId().setContent("2foo.bar");
 		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foo.bar");
@@ -220,7 +227,7 @@ public class InitializrMetadataTests {
 	}
 
 	private Kotlin.Mapping createKotlinVersionMapping(String versionRange,
-			String kotlinVersion){
+			String kotlinVersion) {
 		Kotlin.Mapping mapping = new Kotlin.Mapping();
 		mapping.setVersionRange(versionRange);
 		mapping.setVersion(kotlinVersion);

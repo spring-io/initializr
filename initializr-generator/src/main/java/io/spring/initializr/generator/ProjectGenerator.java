@@ -101,10 +101,11 @@ public class ProjectGenerator {
 	private String tmpdir;
 
 	private File temporaryDirectory;
+
 	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
 
 	public InitializrMetadataProvider getMetadataProvider() {
-		return metadataProvider;
+		return this.metadataProvider;
 	}
 
 	public void setEventPublisher(ApplicationEventPublisher eventPublisher) {
@@ -141,6 +142,8 @@ public class ProjectGenerator {
 
 	/**
 	 * Generate a Maven pom for the specified {@link ProjectRequest}.
+	 * @param request the project request
+	 * @return the Maven POM
 	 */
 	public byte[] generateMavenPom(ProjectRequest request) {
 		try {
@@ -161,6 +164,8 @@ public class ProjectGenerator {
 
 	/**
 	 * Generate a Gradle build file for the specified {@link ProjectRequest}.
+	 * @param request the project request
+	 * @return the gradle build
 	 */
 	public byte[] generateGradleBuild(ProjectRequest request) {
 		try {
@@ -183,6 +188,8 @@ public class ProjectGenerator {
 	/**
 	 * Generate a project structure for the specified {@link ProjectRequest}. Returns a
 	 * directory containing the project.
+	 * @param request the project request
+	 * @return the generated project structure
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
 		try {
@@ -200,6 +207,9 @@ public class ProjectGenerator {
 	/**
 	 * Generate a project structure for the specified {@link ProjectRequest} and resolved
 	 * model.
+	 * @param request the project request
+	 * @param model the source model
+	 * @return the generated project structure
 	 */
 	protected File generateProjectStructure(ProjectRequest request,
 			Map<String, Object> model) {
@@ -267,7 +277,10 @@ public class ProjectGenerator {
 
 	/**
 	 * Create a distribution file for the specified project structure directory and
-	 * extension
+	 * extension.
+	 * @param dir the directory
+	 * @param extension the file extension
+	 * @return the distribution file
 	 */
 	public File createDistributionFile(File dir, String extension) {
 		File download = new File(getTemporaryDirectory(), dir.getName() + extension);
@@ -276,19 +289,20 @@ public class ProjectGenerator {
 	}
 
 	private File getTemporaryDirectory() {
-		if (temporaryDirectory == null) {
-			temporaryDirectory = new File(tmpdir, "initializr");
-			temporaryDirectory.mkdirs();
+		if (this.temporaryDirectory == null) {
+			this.temporaryDirectory = new File(this.tmpdir, "initializr");
+			this.temporaryDirectory.mkdirs();
 		}
-		return temporaryDirectory;
+		return this.temporaryDirectory;
 	}
 
 	/**
 	 * Clean all the temporary files that are related to this root directory.
+	 * @param dir the directory to clean
 	 * @see #createDistributionFile
 	 */
 	public void cleanTempFiles(File dir) {
-		List<File> tempFiles = temporaryFiles.remove(dir.getName());
+		List<File> tempFiles = this.temporaryFiles.remove(dir.getName());
 		if (!tempFiles.isEmpty()) {
 			tempFiles.forEach((File file) -> {
 				if (file.isDirectory()) {
@@ -303,16 +317,16 @@ public class ProjectGenerator {
 
 	private void publishProjectGeneratedEvent(ProjectRequest request) {
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
-		eventPublisher.publishEvent(event);
+		this.eventPublisher.publishEvent(event);
 	}
 
 	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, cause);
-		eventPublisher.publishEvent(event);
+		this.eventPublisher.publishEvent(event);
 	}
 
 	/**
-	 * Generate a {@code .gitignore} file for the specified {@link ProjectRequest}
+	 * Generate a {@code .gitignore} file for the specified {@link ProjectRequest}.
 	 * @param dir the root directory of the project
 	 * @param request the request to handle
 	 */
@@ -330,16 +344,16 @@ public class ProjectGenerator {
 
 	/**
 	 * Resolve the specified {@link ProjectRequest} and return the model to use to
-	 * generate the project
+	 * generate the project.
 	 * @param originalRequest the request to handle
 	 * @return a model for that request
 	 */
 	protected Map<String, Object> resolveModel(ProjectRequest originalRequest) {
 		Assert.notNull(originalRequest.getBootVersion(), "boot version must not be null");
 		Map<String, Object> model = new LinkedHashMap<>();
-		InitializrMetadata metadata = metadataProvider.get();
+		InitializrMetadata metadata = this.metadataProvider.get();
 
-		ProjectRequest request = requestResolver.resolve(originalRequest, metadata);
+		ProjectRequest request = this.requestResolver.resolve(originalRequest, metadata);
 
 		// request resolved so we can log what has been requested
 		Version bootVersion = Version.safeParse(request.getBootVersion());
@@ -354,8 +368,7 @@ public class ProjectGenerator {
 		}
 
 		// Kotlin supported as of M6
-		final boolean kotlinSupport = VERSION_2_0_0_M6
-				.compareTo(bootVersion) <= 0;
+		final boolean kotlinSupport = VERSION_2_0_0_M6.compareTo(bootVersion) <= 0;
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
@@ -379,9 +392,9 @@ public class ProjectGenerator {
 			model.put("hasRepositories", true);
 		}
 
-		List<Map<String,String>> resolvedBoms = buildResolvedBoms(request);
+		List<Map<String, String>> resolvedBoms = buildResolvedBoms(request);
 		model.put("resolvedBoms", resolvedBoms);
-		ArrayList<Map<String,String>> reversedBoms = new ArrayList<>(resolvedBoms);
+		ArrayList<Map<String, String>> reversedBoms = new ArrayList<>(resolvedBoms);
 		Collections.reverse(reversedBoms);
 		model.put("reversedBoms", reversedBoms);
 
@@ -398,19 +411,19 @@ public class ProjectGenerator {
 
 		request.getBoms().forEach((k, v) -> {
 			if (v.getVersionProperty() != null) {
-				request.getBuildProperties().getVersions().computeIfAbsent(
-						v.getVersionProperty(), key -> v::getVersion);
+				request.getBuildProperties().getVersions()
+						.computeIfAbsent(v.getVersionProperty(), (key) -> v::getVersion);
 			}
 		});
 
 		Map<String, String> versions = new LinkedHashMap<>();
 		model.put("buildPropertiesVersions", versions.entrySet());
-		request.getBuildProperties().getVersions().forEach((k, v) ->
-				versions.put(computeVersionProperty(request,k), v.get()));
+		request.getBuildProperties().getVersions().forEach(
+				(k, v) -> versions.put(computeVersionProperty(request, k), v.get()));
 		Map<String, String> gradle = new LinkedHashMap<>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
-		request.getBuildProperties().getGradle().forEach((k, v) ->
-				gradle.put(k, v.get()));
+		request.getBuildProperties().getGradle()
+				.forEach((k, v) -> gradle.put(k, v.get()));
 		Map<String, String> maven = new LinkedHashMap<>();
 		model.put("buildPropertiesMaven", maven.entrySet());
 		request.getBuildProperties().getMaven().forEach((k, v) -> maven.put(k, v.get()));
@@ -431,24 +444,20 @@ public class ProjectGenerator {
 		setupApplicationModel(request, model);
 
 		// Gradle plugin has changed as from 1.3.0
-		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1
-				.compareTo(bootVersion) <= 0);
+		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1.compareTo(bootVersion) <= 0);
 
-		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1
-				.compareTo(bootVersion) <= 0);
+		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName",
-				(VERSION_1_4_2_M1
-						.compareTo(bootVersion) <= 0
-						? "org.springframework.boot" : "spring-boot"));
+		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0
+				? "org.springframework.boot" : "spring-boot"));
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
 		// Servlet Initializer
-		model.put("servletInitializrImport", new Imports(request.getLanguage()).add(
-				getServletInitializrClass(request)).toString());
+		model.put("servletInitializrImport", new Imports(request.getLanguage())
+				.add(getServletInitializrClass(request)).toString());
 
 		// Kotlin-specific dep
 		model.put("kotlinStdlibArtifactId", getKotlinStdlibArtifactId(request));
@@ -471,20 +480,20 @@ public class ProjectGenerator {
 		return model;
 	}
 
-	private List<Map<String,String>> buildResolvedBoms(ProjectRequest request) {
+	private List<Map<String, String>> buildResolvedBoms(ProjectRequest request) {
 		return request.getBoms().values().stream()
 				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
-				.map(bom -> toBomModel(request, bom))
-				.collect(Collectors.toList());
+				.map((bom) -> toBomModel(request, bom)).collect(Collectors.toList());
 	}
 
-	private Map<String,String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
+	private Map<String, String> toBomModel(ProjectRequest request, BillOfMaterials bom) {
 		Map<String, String> model = new HashMap<>();
 		model.put("groupId", bom.getGroupId());
 		model.put("artifactId", bom.getArtifactId());
-		model.put("versionToken", (bom.getVersionProperty() != null
-				? "${" + computeVersionProperty(request, bom.getVersionProperty()) + "}"
-				: bom.getVersion()));
+		model.put("versionToken",
+				(bom.getVersionProperty() != null ? "${"
+						+ computeVersionProperty(request, bom.getVersionProperty()) + "}"
+						: bom.getVersion()));
 		return model;
 	}
 
@@ -510,13 +519,11 @@ public class ProjectGenerator {
 			imports.add("org.springframework.boot.autoconfigure.EnableAutoConfiguration")
 					.add("org.springframework.context.annotation.ComponentScan")
 					.add("org.springframework.context.annotation.Configuration");
-			annotations.add("@EnableAutoConfiguration")
-					.add("@ComponentScan")
+			annotations.add("@EnableAutoConfiguration").add("@ComponentScan")
 					.add("@Configuration");
 		}
 		model.put("applicationImports", imports.toString());
 		model.put("applicationAnnotations", annotations.toString());
-
 
 	}
 
@@ -537,7 +544,8 @@ public class ProjectGenerator {
 			testAnnotations.add("@WebAppConfiguration");
 		}
 		model.put("testImports", imports.withFinalCarriageReturn().toString());
-		model.put("testAnnotations", testAnnotations.withFinalCarriageReturn().toString());
+		model.put("testAnnotations",
+				testAnnotations.withFinalCarriageReturn().toString());
 	}
 
 	protected String getServletInitializrClass(ProjectRequest request) {
@@ -595,20 +603,20 @@ public class ProjectGenerator {
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
-		return templateRenderer.process("starter-pom.xml", model).getBytes();
+		return this.templateRenderer.process("starter-pom.xml", model).getBytes();
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
-		return templateRenderer.process("starter-build.gradle", model).getBytes();
+		return this.templateRenderer.process("starter-build.gradle", model).getBytes();
 	}
 
 	private byte[] doGenerateGradleSettings(Map<String, Object> model) {
-		return templateRenderer.process("starter-settings.gradle", model).getBytes();
+		return this.templateRenderer.process("starter-settings.gradle", model).getBytes();
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
-		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4" :
-				isGradle3Available(bootVersion) ? "gradle3" : "gradle";
+		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4"
+				: isGradle3Available(bootVersion) ? "gradle3" : "gradle";
 		writeTextResource(dir, "gradlew.bat", gradlePrefix + "/gradlew.bat");
 		writeTextResource(dir, "gradlew", gradlePrefix + "/gradlew");
 
@@ -644,11 +652,11 @@ public class ProjectGenerator {
 			boolean binary) {
 		File target = new File(dir, name);
 		if (binary) {
-			writeBinary(target, projectResourceLocator
+			writeBinary(target, this.projectResourceLocator
 					.getBinaryResource("classpath:project/" + location));
 		}
 		else {
-			writeText(target, projectResourceLocator
+			writeText(target, this.projectResourceLocator
 					.getTextResource("classpath:project/" + location));
 		}
 		return target;
@@ -666,7 +674,7 @@ public class ProjectGenerator {
 	}
 
 	public void write(File target, String templateName, Map<String, Object> model) {
-		String body = templateRenderer.process(templateName, model);
+		String body = this.templateRenderer.process(templateName, model);
 		writeText(target, body);
 	}
 
@@ -689,14 +697,13 @@ public class ProjectGenerator {
 	}
 
 	private void addTempFile(String group, File file) {
-		temporaryFiles.computeIfAbsent(group, key -> new ArrayList<>()).add(file);
+		this.temporaryFiles.computeIfAbsent(group, (key) -> new ArrayList<>()).add(file);
 	}
 
 	private static List<Dependency> filterDependencies(List<Dependency> dependencies,
 			String scope) {
-		return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
-				.sorted(DependencyComparator.INSTANCE)
-				.collect(Collectors.toList());
+		return dependencies.stream().filter((dep) -> scope.equals(dep.getScope()))
+				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
 	}
 
 	private static class DependencyComparator implements Comparator<Dependency> {
@@ -730,15 +737,17 @@ public class ProjectGenerator {
 	private static class Imports {
 
 		private final List<String> statements = new ArrayList<>();
+
 		private final String language;
+
 		private boolean finalCarriageReturn;
 
-		public Imports(String language) {
+		Imports(String language) {
 			this.language = language;
 		}
 
 		public Imports add(String type) {
-			this.statements.add(generateImport(type, language));
+			this.statements.add(generateImport(type, this.language));
 			return this;
 		}
 
@@ -748,16 +757,18 @@ public class ProjectGenerator {
 		}
 
 		private String generateImport(String type, String language) {
-			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? "" : ";";
+			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? ""
+					: ";";
 			return "import " + type + end;
 		}
 
+		@Override
 		public String toString() {
 			if (this.statements.isEmpty()) {
 				return "";
 			}
 			String content = String.join(String.format("%n"), this.statements);
-			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+			return (this.finalCarriageReturn ? String.format("%s%n", content) : content);
 		}
 
 	}
@@ -765,6 +776,7 @@ public class ProjectGenerator {
 	private static class Annotations {
 
 		private final List<String> statements = new ArrayList<>();
+
 		private boolean finalCarriageReturn;
 
 		public Annotations add(String type) {
@@ -777,12 +789,13 @@ public class ProjectGenerator {
 			return this;
 		}
 
+		@Override
 		public String toString() {
 			if (this.statements.isEmpty()) {
 				return "";
 			}
 			String content = String.join(String.format("%n"), this.statements);
-			return (finalCarriageReturn ? String.format("%s%n", content) : content);
+			return (this.finalCarriageReturn ? String.format("%s%n", content) : content);
 		}
 
 	}

@@ -49,7 +49,7 @@ class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;
 
-	public InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
+	InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
 		this.statsProperties = statsProperties;
 	}
 
@@ -58,7 +58,7 @@ class InitializrStatsAutoConfiguration {
 			InitializrMetadataProvider provider,
 			RestTemplateBuilder restTemplateBuilder) {
 		return new ProjectGenerationStatPublisher(
-				new ProjectRequestDocumentFactory(provider), statsProperties,
+				new ProjectRequestDocumentFactory(provider), this.statsProperties,
 				restTemplateBuilder, statsRetryTemplate());
 	}
 
@@ -70,7 +70,7 @@ class InitializrStatsAutoConfiguration {
 		backOffPolicy.setInitialInterval(3000L);
 		backOffPolicy.setMultiplier(3);
 		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(
-				statsProperties.getElastic().getMaxAttempts(),
+				this.statsProperties.getElastic().getMaxAttempts(),
 				Collections.singletonMap(Exception.class, true));
 		retryTemplate.setBackOffPolicy(backOffPolicy);
 		retryTemplate.setRetryPolicy(retryPolicy);

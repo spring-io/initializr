@@ -42,14 +42,15 @@ public class CloudFoundryInfoContributorTests {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void applicationName() {
 		this.environment.setProperty("vcap.application.name", "foo-bar");
 		Info info = getInfo(this.environment);
 		assertThat(info.getDetails()).containsOnlyKeys("app");
 		Object appDetails = info.getDetails().get("app");
 		assertThat(appDetails).isInstanceOf(Map.class);
-		assertThat((Map<String, Object>) appDetails).containsOnly(
-				entry("name", "foo-bar"));
+		assertThat((Map<String, Object>) appDetails)
+				.containsOnly(entry("name", "foo-bar"));
 	}
 
 	private static Info getInfo(Environment env) {

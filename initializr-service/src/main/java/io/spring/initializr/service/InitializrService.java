@@ -32,8 +32,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
- * Initializr service application. Enables legacy STS support for older
- * clients.
+ * Initializr service application. Enables legacy STS support for older clients.
  *
  * @author Stephane Nicoll
  */
@@ -46,8 +45,8 @@ public class InitializrService {
 	}
 
 	@Bean
-	@SuppressWarnings("deprecation")
-	public LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
+	public LegacyStsController legacyStsController(
+			InitializrMetadataProvider metadataProvider,
 			ResourceUrlProvider resourceUrlProvider) {
 		return new LegacyStsController(metadataProvider, resourceUrlProvider);
 	}

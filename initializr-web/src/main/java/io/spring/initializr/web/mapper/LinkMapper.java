@@ -27,13 +27,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Link;
 
 /**
- * Generate a json representation for {@link Link}
+ * Generate a json representation for {@link Link}.
  *
  * @author Stephane Nicoll
  */
-public class LinkMapper {
+public final class LinkMapper {
 
 	private static final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+
+	private LinkMapper() {
+	}
 
 	/**
 	 * Map the specified links to a json model. If several links share the same relation,
@@ -44,8 +47,8 @@ public class LinkMapper {
 	public static ObjectNode mapLinks(List<Link> links) {
 		ObjectNode result = nodeFactory.objectNode();
 		Map<String, List<Link>> byRel = new LinkedHashMap<>();
-		links.forEach(it -> byRel.computeIfAbsent(it.getRel(),
-				k -> new ArrayList<>()).add(it));
+		links.forEach((it) -> byRel.computeIfAbsent(it.getRel(), (k) -> new ArrayList<>())
+				.add(it));
 		byRel.forEach((rel, l) -> {
 			if (l.size() == 1) {
 				ObjectNode root = JsonNodeFactory.instance.objectNode();
@@ -54,7 +57,7 @@ public class LinkMapper {
 			}
 			else {
 				ArrayNode root = JsonNodeFactory.instance.arrayNode();
-				l.forEach(link -> {
+				l.forEach((link) -> {
 					ObjectNode node = JsonNodeFactory.instance.objectNode();
 					mapLink(link, node);
 					root.add(node);

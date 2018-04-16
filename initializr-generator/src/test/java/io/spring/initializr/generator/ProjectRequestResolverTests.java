@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import org.springframework.beans.BeanWrapperImpl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link ProjectRequestResolver}.
@@ -39,31 +39,34 @@ import static org.junit.Assert.assertEquals;
  */
 public class ProjectRequestResolverTests {
 
+	private static final VersionProperty VERSION_PROPERTY = new VersionProperty(
+			"java.version");
+
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", "web", "security", "data-jpa")
-			.build();
+			.addDependencyGroup("test", "web", "security", "data-jpa").build();
 
 	final List<ProjectRequestPostProcessor> postProcessors = new ArrayList<>();
-	final GenericProjectRequestPostProcessor processor =
-			new GenericProjectRequestPostProcessor();
+
+	final GenericProjectRequestPostProcessor processor = new GenericProjectRequestPostProcessor();
 
 	@Before
 	public void setup() {
-		this.postProcessors.add(processor);
+		this.postProcessors.add(this.processor);
 	}
 
 	@Test
 	public void beforeResolution() {
-		processor.before.put("javaVersion", "1.2");
-		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
-		assertEquals("1.2", request.getJavaVersion());
-		assertEquals("1.2", request.getBuildProperties().getVersions()
-				.get(new VersionProperty("java.version")).get());
+		this.processor.before.put("javaVersion", "1.2");
+		ProjectRequest request = resolve(createMavenProjectRequest(),
+				this.postProcessors);
+		assertThat(request.getJavaVersion()).isEqualTo("1.2");
+		assertThat(request.getBuildProperties().getVersions().get(VERSION_PROPERTY).get())
+				.isEqualTo("1.2");
 	}
 
 	@Test
 	public void afterResolution() {
-		postProcessors.add(new ProjectRequestPostProcessor() {
+		this.postProcessors.add(new ProjectRequestPostProcessor() {
 			@Override
 			public void postProcessAfterResolution(ProjectRequest request,
 					InitializrMetadata metadata) {
@@ -71,14 +74,16 @@ public class ProjectRequestResolverTests {
 				request.getBuildProperties().getMaven().put("foo", () -> "bar");
 			}
 		});
-		ProjectRequest request = resolve(createMavenProjectRequest(), postProcessors);
-		assertEquals(1, request.getBuildProperties().getMaven().size());
-		assertEquals("bar", request.getBuildProperties().getMaven().get("foo").get());
+		ProjectRequest request = resolve(createMavenProjectRequest(),
+				this.postProcessors);
+		assertThat(request.getBuildProperties().getMaven()).hasSize(1);
+		assertThat(request.getBuildProperties().getMaven().get("foo").get())
+				.isEqualTo("bar");
 	}
 
 	ProjectRequest resolve(ProjectRequest request,
 			List<ProjectRequestPostProcessor> processors) {
-		return new ProjectRequestResolver(processors).resolve(request, metadata);
+		return new ProjectRequestResolver(processors).resolve(request, this.metadata);
 	}
 
 	ProjectRequest createMavenProjectRequest(String... styles) {
@@ -89,7 +94,7 @@ public class ProjectRequestResolverTests {
 
 	ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
+		request.initialize(this.metadata);
 		request.getStyle().addAll(Arrays.asList(styles));
 		return request;
 	}
@@ -98,20 +103,21 @@ public class ProjectRequestResolverTests {
 			implements ProjectRequestPostProcessor {
 
 		final Map<String, Object> before = new LinkedHashMap<>();
+
 		final Map<String, Object> after = new LinkedHashMap<>();
 
 		@Override
 		public void postProcessBeforeResolution(ProjectRequest request,
 				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			before.forEach(wrapper::setPropertyValue);
+			this.before.forEach(wrapper::setPropertyValue);
 		}
 
 		@Override
 		public void postProcessAfterResolution(ProjectRequest request,
 				InitializrMetadata metadata) {
 			BeanWrapperImpl wrapper = new BeanWrapperImpl(request);
-			after.forEach(wrapper::setPropertyValue);
+			this.after.forEach(wrapper::setPropertyValue);
 		}
 
 	}

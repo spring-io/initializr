@@ -25,8 +25,8 @@ import io.spring.initializr.util.Version;
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link ProjectRequestPostProcessor} that automatically adds
- * {@code spring-batch-test} when Spring Batch is selected.
+ * A {@link ProjectRequestPostProcessor} that automatically adds {@code spring-batch-test}
+ * when Spring Batch is selected.
  *
  * @author Tim Riemer
  */
@@ -36,7 +36,8 @@ class SpringBatchTestRequestPostProcessor extends AbstractProjectRequestPostProc
 	private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
 
 	static final Dependency SPRING_BATCH_TEST = Dependency.withId("spring-batch-test",
-			"org.springframework.batch", "spring-batch-test", null, Dependency.SCOPE_TEST);
+			"org.springframework.batch", "spring-batch-test", null,
+			Dependency.SCOPE_TEST);
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
