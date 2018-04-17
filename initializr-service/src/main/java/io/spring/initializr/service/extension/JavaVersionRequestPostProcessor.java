@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,17 @@ import io.spring.initializr.util.Version;
 import org.springframework.stereotype.Component;
 
 /**
- * Handle corner cases when Java9 is required.
+ * Validate that the requested java version is compatible with the chosen Spring Boot
+ * generation and adapt the request if necessary.
  *
  * @author Stephane Nicoll
  */
 @Component
-class Java9RequestPostProcessor implements ProjectRequestPostProcessor {
+class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
+
+	private static final Version VERSION_2_0_1 = Version.parse("2.0.1.RELEASE");
 
 	private static final List<String> UNSUPPORTED_LANGUAGES = Arrays.asList("groovy",
 			"kotlin");
@@ -42,10 +45,11 @@ class Java9RequestPostProcessor implements ProjectRequestPostProcessor {
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		Version requestVersion = Version.safeParse(request.getBootVersion());
-		if (!"9".equals(request.getJavaVersion())) {
+		Integer javaGeneration = determineJavaGeneration(request.getJavaVersion());
+		if (javaGeneration == null) {
 			return;
 		}
+		Version requestVersion = Version.safeParse(request.getBootVersion());
 		// Not supported for Spring Boot 1.x
 		if (VERSION_2_0_0_M1.compareTo(requestVersion) > 0) {
 			request.setJavaVersion("1.8");
@@ -53,6 +57,20 @@ class Java9RequestPostProcessor implements ProjectRequestPostProcessor {
 		// Not supported for Kotlin & Groovy
 		if (UNSUPPORTED_LANGUAGES.contains(request.getLanguage())) {
 			request.setJavaVersion("1.8");
+		}
+		// 10 support only as of 2.0.1
+		if (javaGeneration == 10 && VERSION_2_0_1.compareTo(requestVersion) > 0) {
+			request.setJavaVersion("1.8");
+		}
+	}
+
+	private Integer determineJavaGeneration(String javaVersion) {
+		try {
+			int generation = Integer.valueOf(javaVersion);
+			return ((generation > 8 && generation <=10)  ? generation : null);
+		}
+		catch (NumberFormatException e) {
+			return null;
 		}
 	}
 

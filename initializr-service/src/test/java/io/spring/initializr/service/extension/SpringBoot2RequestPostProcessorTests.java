@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,22 @@ public class SpringBoot2RequestPostProcessorTests
 		request.setBootVersion("2.0.0.M3");
 		request.setJavaVersion("9");
 		generateGradleBuild(request).hasJavaVersion("9");
+	}
+
+	@Test
+	public void java10CanBeUsedMaven() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setBootVersion("2.1.0.BUILD-SNAPSHOT");
+		request.setJavaVersion("10");
+		generateMavenPom(request).hasJavaVersion("10");
+	}
+
+	@Test
+	public void java10CanBeUsedGradle() {
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setBootVersion("2.0.2.RELEASE");
+		request.setJavaVersion("10");
+		generateGradleBuild(request).hasJavaVersion("10");
 	}
 
 }

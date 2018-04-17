@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class SpringBoot2RequestPostProcessor extends AbstractProjectRequestPostProcesso
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
-	private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9");
+	private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9", "10");
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
