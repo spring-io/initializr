@@ -55,7 +55,7 @@ jobs:
     params: { file: version/version }
   - put: nexus-release
     params:
-      file: nexus-rc/initializr-service.jar
+      file: nexus-rc/initializr-service*.jar
       version_file: version/version
 
 - name: deploy-to-tools
@@ -109,12 +109,19 @@ jobs:
   - put: version
     params: {file: version/version}
 
+resource_types:
+- name: maven-resource
+  type: docker-image
+  source:
+    repository: patrickcrocker/maven-resource
+    tag: latest
+
 resources:
 - name: initializr-service
   type: git
   source:
     uri: git@github.com:Identifix/initializr.git
-    branch: customize
+    branch: master
     private_key: ((github.ssh_key))
 - name: concourse-ci-repo
   type: git
