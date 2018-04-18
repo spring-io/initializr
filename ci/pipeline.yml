@@ -1,0 +1,165 @@
+---
+jobs:
+- name: build
+  max_in_flight: 1
+  plan:
+  - aggregate:
+    - get: initializr-service
+      trigger: true
+    - get: version
+      params: { pre: RC }
+  - task: maven-build
+    file: initializr-service/ci/tasks/maven-build.yml
+  - put: nexus-rc
+    params:
+      file: release/initializr-service.jar
+      version_file: version/version
+  - put: version
+    params: { file: version/version }
+
+- name: deploy-to-dev
+  serial: true
+  plan:
+  - aggregate:
+    - get: nexus-rc
+      passed: [build]
+      trigger: true
+    - get: version
+      passed: [build]
+    - get: concourse-ci-repo
+  - task: prepare-manifest
+    file: concourse-ci-repo/ci/tasks/generate-manifest.yml
+    params:
+      MF_NAME: ((initializr-dev.app_name))
+      MF_MEMORY: ((initializr-dev.memory))
+      MF_DISK_QUOTA: ((initializr-dev.disk_quota))
+      MF_BUILDPACK: ((initializr-dev.buildpack))
+      MF_TIMEOUT: ((initializr-dev.timeout))
+  - put: cloud-foundry-dev
+    params:
+      manifest: task-output/manifest.yml
+      path: nexus-rc/initializr-service-*.jar
+
+- name: shipit
+  public: true
+  serial_groups: [version]
+  plan:
+  - aggregate:
+    - get: nexus-rc
+      trigger: true
+      passed: [deploy-to-dev]
+    - get: version
+      passed: [deploy-to-dev]
+      params: { bump: final }
+  - put: version
+    params: { file: version/version }
+  - put: nexus-release
+    params:
+      file: nexus-rc/initializr-service.jar
+      version_file: version/version
+
+- name: deploy-to-tools
+  serial: true
+  plan:
+  - get: nexus-release
+    passed: [shipit]
+    trigger: true
+  - get: version
+    passed: [shipit]
+  - get: concourse-ci-repo
+  - task: prepare-manifest
+    file: concourse-ci-repo/ci/tasks/generate-manifest.yml
+    params:
+      MF_NAME: ((initializr-tools.app_name))
+      MF_MEMORY: ((initializr-tools.memory))
+      MF_DISK_QUOTA: ((initializr-tools.disk_quota))
+      MF_BUILDPACK: ((initializr-tools.buildpack))
+      MF_TIMEOUT: ((initializr-tools.timeout))
+  - put: cloud-foundry-tools
+    params:
+      manifest: task-output/manifest.yml
+      path: nexus-release/initializr-service-*.jar
+
+- name: major
+  public: true
+  serial_groups: [version]
+  plan:
+  - get: version
+    params: {bump: major, pre: rc}
+  - put: version
+    params: {file: version/version}
+
+- name: minor
+  public: true
+  serial_groups: [version]
+  plan:
+  - get: version
+    params: {bump: minor, pre: rc}
+  - put: version
+    params: {file: version/version}
+
+- name: patch
+  public: true
+  serial_groups: [version]
+  plan:
+  - get: version
+    passed: [shipit]
+    params: {bump: patch, pre: rc}
+    trigger: true
+  - put: version
+    params: {file: version/version}
+
+resources:
+- name: initializr-service
+  type: git
+  source:
+    uri: git@github.com:Identifix/initializr.git
+    branch: customize
+    private_key: ((github.ssh_key))
+- name: concourse-ci-repo
+  type: git
+  source:
+    uri: git@github.com:Identifix/concourse-ci.git
+    branch: master
+    private_key: ((github.ssh_key))
+- name: nexus-rc
+  type: maven-resource
+  source:
+    url: ((artifact-repo.rc_url))
+    artifact: com.identifix:initializr-service:jar
+    username: ((artifact-repo.username))
+    password: ((artifact-repo.password))
+- name: nexus-release
+  type: maven-resource
+  source:
+    url: ((artifact-repo.url))
+    artifact: com.identifix:initializr-service:jar
+    username: ((artifact-repo.username))
+    password: ((artifact-repo.password))
+- name: version
+  type: semver
+  source:
+    driver: git
+    initial_version: 0.0.1-RC.0
+    uri: git@github.com:Identifix/initializr.git
+    branch: version
+    file: version
+    private_key: ((github.ssh_key))
+- name: cloud-foundry-dev
+  type: cf
+  source:
+    api: ((pcf-dev-environment.api))
+    username: ((cf-preprd-username))
+    password: ((cf-preprd-password))
+    organization: ((pcf-dev-environment.organization))
+    space: ((pcf-dev-environment.space))
+    skip_cert_check: true
+- name: cloud-foundry-tools
+  type: cf
+  source:
+    api: ((pcf-tools-environment.api))
+    username: ((cf-preprd-username))
+    password: ((cf-preprd-password))
+    organization: ((pcf-tools-environment.organization))
+    space: ((pcf-tools-environment.space))
+    skip_cert_check: true

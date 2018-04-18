@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-cd initializr-service/initializr-service
-../mvnw package -DskipTests
+cd initializr-service
+./mvnw install
+cd initializr-service
+../mvnw package
 mv target/*.jar ../release
