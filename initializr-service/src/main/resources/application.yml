@@ -161,6 +161,37 @@ initializr:
     kotlin:
       default-version: 1.2.20
   dependencies:
+    - name: Identifix
+      content:
+      - name: SpockCore
+        id: spockcore
+        groupId: org.spockframework
+        artifactId: spock-core
+        scope: test
+        description: Spock framework for BDD testing
+        starter: false
+      - name: SpockSpring
+        id: spockspring
+        groupId: org.spockframework
+        artifactId: spock-spring
+        scope: test
+        description: Spock framework for BDD testing with spring
+        starter: false
+      - name: RestDocs Rest Assured
+        id: restDocsRestAssured
+        groupId: org.springframework.restdocs
+        artifactId: spring-restdocs-restassured
+        scope: test
+        description: Rest assured support for spring Rest Docs
+        starter: false
+      - name: Rest Assured
+        id: restAssured
+        groupId: io.rest-assured
+        artifactId: rest-assured
+        version: 3.0.2
+        scope: test
+        description: Rest assured testing framework
+        starter: false
     - name: Core
       content:
         - name: DevTools
@@ -1303,7 +1334,7 @@ initializr:
       tags:
         build: maven
         format: project
-      default: true
+      default: false
       action: /starter.zip
     - name: Maven POM
       id: maven-build
@@ -1321,7 +1352,7 @@ initializr:
       tags:
         build: gradle
         format: project
-      default: false
+      default: true
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
@@ -1353,13 +1384,13 @@ initializr:
   languages:
     - name: Java
       id: java
-      default: true
+      default: false
     - name: Kotlin
       id: kotlin
       default: false
     - name: Groovy
       id: groovy
-      default: false
+      default: true
   bootVersions:
     - name : Latest SNAPSHOT
       id: 1.2.4.BUILD-SNAPSHOT
