@@ -22,6 +22,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.VersionProperty;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -33,6 +34,7 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Stephane Nicoll
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 

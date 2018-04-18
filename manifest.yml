@@ -1,0 +1,7 @@
+---
+applications:
+- name: identifix-initializr
+  memory: 800M
+  disk_quota: 512M
+  buildpack: java_buildpack_offline
+  path: initializr-service/target/initializr-service.jar
