@@ -4,5 +4,5 @@ set -e
 cd initializr-service
 ./mvnw install
 cd initializr-service
-../mvnw package
+../mvnw package -DskipTests
 mv target/*.jar ../release
