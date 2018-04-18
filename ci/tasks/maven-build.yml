@@ -4,8 +4,8 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: maven
-    tag: 3-jdk-8-alpine
+    repository: openjdk
+    tag: 8-jdk
 
 inputs:
 - name: initializr-service
