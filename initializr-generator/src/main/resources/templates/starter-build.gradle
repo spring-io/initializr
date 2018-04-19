@@ -3,8 +3,11 @@ buildscript {
 		{{#buildPropertiesGradle}}
 		{{key}} = '{{value}}'
 		{{/buildPropertiesGradle}}
+		asciidoctorVersion = '1.5.3'
 	}
 	repositories {
+		maven { url "http://oemut03.mpifix.com:8081/nexus/content/groups/public/" }
+		maven { url "https://plugins.gradle.org/m2" }
 		mavenCentral()
 		{{^isRelease}}
 		maven { url "https://repo.spring.io/snapshot" }
@@ -12,7 +15,9 @@ buildscript {
 		{{/isRelease}}
 	}
 	dependencies {
+		classpath("com.identifix:identifix-project:+")
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.asciidoctor:asciidoctor-gradle-plugin:${asciidoctorVersion}")
 		{{^bootOneThreeAvailable}}
 		classpath('io.spring.gradle:dependency-management-plugin:{{dependencyManagementPluginVersion}}')
 		{{/bootOneThreeAvailable}}
@@ -43,6 +48,8 @@ apply plugin: 'io.spring.dependency-management'
 {{#war}}
 apply plugin: 'war'
 {{/war}}
+apply plugin: 'com.identifix.identifix-project'
+apply plugin: 'org.asciidoctor.convert'
 
 group = '{{groupId}}'
 version = '{{version}}'
@@ -61,6 +68,7 @@ compileTestKotlin {
 }{{/kotlin}}
 
 repositories {
+	maven { url "http://oemut03.mpifix.com:8081/nexus/content/groups/public/" }
 	mavenCentral()
 	{{#repositoryValues}}
 	maven { url "{{value.url}}" }
@@ -73,15 +81,14 @@ configurations {
 }
 {{/providedDependencies}}
 
-{{^buildPropertiesVersions.empty}}
 ext {
 	{{#buildPropertiesVersions}}
 	{{key}} = '{{value}}'
 {{/buildPropertiesVersions}}
 }
 
-{{/buildPropertiesVersions.empty}}
 dependencies {
+	asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${springRestDocsVersion}"
 	{{#compileDependencies}}
 	compile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileDependencies}}
@@ -116,3 +123,12 @@ dependencyManagement {
 	}
 }
 {{/hasBoms}}
+
+asciidoctor {
+    outputDir "$buildDir/resources/main/public"
+	dependsOn test
+}
+
+bootJar {
+	dependsOn { asciidoctor }
+}
