@@ -85,8 +85,6 @@ ext {
 	{{#buildPropertiesVersions}}
 	{{key}} = '{{value}}'
 {{/buildPropertiesVersions}}
-	spockVersion = '1.1-groovy-2.4'
-	springRestDocsVersion = '2.0.0.RELEASE'
 }
 
 dependencies {
@@ -114,8 +112,6 @@ dependencies {
 	{{#testDependencies}}
 	testCompile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
-	testCompile "org.spockframework:spock-spring:${spockVersion}"
-    testCompile "org.spockframework:spock-core:${spockVersion}"
 }
 {{#hasBoms}}
 
@@ -133,6 +129,6 @@ asciidoctor {
 	dependsOn test
 }
 
-	bootJar {
-		dependsOn { asciidoctor }
-	}
+bootJar {
+	dependsOn { asciidoctor }
+}
