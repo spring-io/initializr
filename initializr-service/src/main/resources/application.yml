@@ -1104,6 +1104,15 @@ initializr:
       bom: azure
       versionRange: "1.5.4.RELEASE"
       content:
+        - name: Azure Config Server
+          id: azure-config-server
+          groupId: com.microsoft.azure.configserver
+          artifactId: azure-config-server
+          description:
+          links:
+            - rel: reference
+              href: https://github.com/microsoft/spring-cloud-azure
+              description: Reference doc
         - name: Azure Support
           id: azure-support
           groupId: com.microsoft.azure
