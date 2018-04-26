@@ -65,7 +65,6 @@ public class ProjectRequest extends BasicProjectRequest {
 		super(parentProject);
 		this.resolvedDependencies = parentProject.resolvedDependencies;
 		this.facets = parentProject.facets;
-		this.services = parentProject.services;
 		this.build = parentProject.build;
 	}
 

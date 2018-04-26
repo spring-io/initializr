@@ -529,6 +529,8 @@ public class ProjectGenerator {
 			model.put("hasBoms", true);
 		}
 
+		setupModulesModel(request, model);
+
 		return model;
 	}
 
@@ -638,6 +640,12 @@ public class ProjectGenerator {
 			return "kotlin-stdlib-jdk7";
 		}
 		return "kotlin-stdlib-jdk8";
+	}
+
+	private void setupModulesModel(ProjectRequest request, Map<String, Object> model){
+		if(!request.getServices().isEmpty()) {
+			model.put("modules", request.getServices());
+		}
 	}
 
 	private static boolean isJava8OrLater(ProjectRequest request) {
