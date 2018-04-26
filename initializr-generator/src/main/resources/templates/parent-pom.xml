@@ -27,12 +27,11 @@
 		{{/buildPropertiesVersions}}
 	</properties>
 
+	{{#modules}}
 	<modules>
-		{{#modules}}
 		<module>{{.}}</module>
-		{{/modules}}
 	</modules>
-
+	{{/modules}}
 	<dependencies>
 		{{#compileDependencies}}
 		<dependency>
