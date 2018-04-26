@@ -430,12 +430,23 @@ public class ProjectGenerator {
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
+			model.put("mavenBuild", true);
+			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
+					.resolveParentPom(request.getBootVersion());
+			if (parentPom.isIncludeSpringBootBom()
+					&& !request.getBoms().containsKey("spring-boot")) {
+				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
+						request.getBootVersion(), "spring-boot.version"));
+			}
 			if(request.getParent() != null){
 				model.put("mavenParentGroupId", request.getParent().getGroupId());
 				model.put("mavenParentArtifactId", request.getParent().getArtifactId());
 				model.put("mavenParentVersion", request.getParent().getVersion());
 			} else {
-				generateParentProject(model, metadata, request);
+				model.put("mavenParentGroupId", parentPom.getGroupId());
+				model.put("mavenParentArtifactId", parentPom.getArtifactId());
+				model.put("mavenParentVersion", parentPom.getVersion());
+				model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
 			}
 		}
 
@@ -532,22 +543,6 @@ public class ProjectGenerator {
 		setupModulesModel(request, model);
 
 		return model;
-	}
-
-	private void generateParentProject(Map<String, Object> model, InitializrMetadata metadata, ProjectRequest request) {
-		model.put("mavenBuild", true);
-		ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
-                .resolveParentPom(request.getBootVersion());
-		if (parentPom.isIncludeSpringBootBom()
-                && !request.getBoms().containsKey("spring-boot")) {
-            request.getBoms().put("spring-boot", metadata.createSpringBootBom(
-                    request.getBootVersion(), "spring-boot.version"));
-        }
-
-		model.put("mavenParentGroupId", parentPom.getGroupId());
-		model.put("mavenParentArtifactId", parentPom.getArtifactId());
-		model.put("mavenParentVersion", parentPom.getVersion());
-		model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
 	}
 
 	private List<Map<String, String>> buildResolvedBoms(ProjectRequest request) {
