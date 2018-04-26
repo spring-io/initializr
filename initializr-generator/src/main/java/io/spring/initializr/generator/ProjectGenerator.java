@@ -22,13 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
@@ -193,7 +187,8 @@ public class ProjectGenerator {
 			Map<String, Object> model = resolveModel(request);
 			File rootDir = generateProjectStructure(request, model);
 			for(ProjectRequest subModule: request.getModules()){
-				generateProjectModuleStructure(subModule, resolveModel(subModule), new File(rootDir, request.getBaseDir()));
+				generateProjectModuleStructure(subModule, resolveModel(subModule),
+						new File(rootDir, request.getBaseDir()), request);
 			}
 			publishProjectGeneratedEvent(request);
 			return rootDir;
@@ -283,7 +278,7 @@ public class ProjectGenerator {
 	 * @return the generated project structure
 	 */
 	protected File generateProjectModuleStructure(ProjectRequest request,
-											Map<String, Object> model, File rootDir) {
+											Map<String, Object> model, File rootDir, ProjectRequest parentModule) {
 
 
 		File dir = initializerProjectDir(rootDir, request);
@@ -324,13 +319,74 @@ public class ProjectGenerator {
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+		writePropertiesFile(request, resources, parentModule);
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
 		return rootDir;
+	}
+
+	private void writePropertiesFile(ProjectRequest request, File resourceDir, ProjectRequest parentRequest) {
+		if(ModulePropertiesResolver.isConfigServer(request.getName())) {
+			// Write bootstap.yml
+			writeBootstrapYaml(request, resourceDir);
+
+			// Write shared property files for all modules in config server
+			File sharedPropFolder = new File(resourceDir, "shared");
+			sharedPropFolder.mkdirs();
+
+			// Write common properties among all microservices to application.yml
+			String applicationYmlTemplate = ModulePropertiesResolver.getSharedCommonPropTemplate();
+			String applicationYmlContent = templateRenderer.process(applicationYmlTemplate, null);
+			writeText(new File(sharedPropFolder, "application.yml"), applicationYmlContent);
+
+			// Write other microservice modules' yaml to shared folder
+			// How many properties file will be written is decided by parent request
+			List<ApplicationProperty> nonBasicServices = parentRequest.getModules().stream()
+					.filter(module -> !ModulePropertiesResolver.isInfraModule(module.getName()))
+					.map(module -> new ApplicationProperty(module.getName(), 0))
+					.collect(Collectors.toList());
+
+			for(ProjectRequest module : parentRequest.getModules()) {
+				String templateFile = ModulePropertiesResolver.getSharedPropTemplate(module.getName());
+				Map<String, Object> model = new HashMap<>();
+
+				String moduleName = module.getName();
+				if(ModulePropertiesResolver.isConfigServer(moduleName)) {
+					// No shared properties file is required to be generated for config server itself
+					continue;
+				}
+
+				if(ModulePropertiesResolver.isGatewayModule(moduleName)) {
+					model.put("services", nonBasicServices);
+				} else if(!ModulePropertiesResolver.isInfraModule(moduleName)){
+					model.put("applicationName", module.getName());
+					model.put("port", randomPort());
+				}
+
+				String content = templateRenderer.process(templateFile, model);
+				writeText(new File(sharedPropFolder,  module.getName() + ".yml"), content);
+			}
+		} else {
+			// Write bootstrap.yml
+			writeBootstrapYaml(request, resourceDir);
+		}
+	}
+
+	private void writeBootstrapYaml(ProjectRequest request, File resourceDir) {
+		Map<String, String> model = new HashMap<>();
+		model.put("applicationName", request.getName());
+
+		String templateFile = ModulePropertiesResolver.getBootstrapTemplate(request.getName());
+		String content = templateRenderer.process(templateFile, model);
+		writeText(new File(resourceDir, "bootstrap.yml"), content);
+	}
+
+	private int randomPort() {
+		// Generate random port between 9100 and 9200
+		return new Random().nextInt(100) + 9100;
 	}
 
 	/**

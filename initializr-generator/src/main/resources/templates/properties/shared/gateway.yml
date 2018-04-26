@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      {{#services}}
+      - id: {{applicationName}}
+        uri: lb://{{applicationName}}
+        predicates:
+        - Path=/{{applicationName}}/**
+      {{/services}}
