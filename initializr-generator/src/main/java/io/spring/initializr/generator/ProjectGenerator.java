@@ -32,11 +32,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.*;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
@@ -152,7 +149,7 @@ public class ProjectGenerator {
 				throw new InvalidProjectRequestException("Could not generate Maven pom, "
 						+ "invalid project type " + request.getType());
 			}
-			byte[] content = doGenerateMavenPom(model);
+			byte[] content = doGenerateMavenPom(model, "starter-pom.xml");
 			publishProjectGeneratedEvent(request);
 			return content;
 		}
@@ -195,6 +192,9 @@ public class ProjectGenerator {
 		try {
 			Map<String, Object> model = resolveModel(request);
 			File rootDir = generateProjectStructure(request, model);
+			for(ProjectRequest subModule: request.getModules()){
+				generateProjectModuleStructure(subModule, resolveModel(subModule), new File(rootDir, request.getBaseDir()));
+			}
 			publishProjectGeneratedEvent(request);
 			return rootDir;
 		}
@@ -234,12 +234,70 @@ public class ProjectGenerator {
 			writeGradleWrapper(dir, Version.safeParse(request.getBootVersion()));
 		}
 		else {
-			String pom = new String(doGenerateMavenPom(model));
+			String pom = new String(doGenerateMavenPom(model, "parent-pom.xml"));
 			writeText(new File(dir, "pom.xml"), pom);
 			writeMavenWrapper(dir);
 		}
 
 		generateGitIgnore(dir, request);
+
+		String applicationName = request.getApplicationName();
+		String language = request.getLanguage();
+
+		String codeLocation = language;
+		File src = new File(new File(dir, "src/main/" + codeLocation),
+				request.getPackageName().replace(".", "/"));
+		src.mkdirs();
+		String extension = ("kotlin".equals(language) ? "kt" : language);
+		write(new File(src, applicationName + "." + extension),
+				"Application." + extension, model);
+
+		if ("war".equals(request.getPackaging())) {
+			String fileName = "ServletInitializer." + extension;
+			write(new File(src, fileName), fileName, model);
+		}
+
+		File test = new File(new File(dir, "src/test/" + codeLocation),
+				request.getPackageName().replace(".", "/"));
+		test.mkdirs();
+		setupTestModel(request, model);
+		write(new File(test, applicationName + "Tests." + extension),
+				"ApplicationTests." + extension, model);
+
+		File resources = new File(dir, "src/main/resources");
+		resources.mkdirs();
+		writeText(new File(resources, "application.properties"), "");
+
+		if (request.hasWebFacet()) {
+			new File(dir, "src/main/resources/templates").mkdirs();
+			new File(dir, "src/main/resources/static").mkdirs();
+		}
+		return rootDir;
+	}
+
+	/**
+	 * Generate a module structure for the specified {@link ProjectRequest} and resolved
+	 * model.
+	 * @param request the project request
+	 * @param model the source model
+	 * @return the generated project structure
+	 */
+	protected File generateProjectModuleStructure(ProjectRequest request,
+											Map<String, Object> model, File rootDir) {
+
+
+		File dir = initializerProjectDir(rootDir, request);
+
+		if (isGradleBuild(request)) {
+			String gradle = new String(doGenerateGradleBuild(model));
+			writeText(new File(dir, "build.gradle"), gradle);
+			String settings = new String(doGenerateGradleSettings(model));
+			writeText(new File(dir, "settings.gradle"), settings);
+		}
+		else {
+			String pom = new String(doGenerateMavenPom(model, "module-pom.xml"));
+			writeText(new File(dir, "pom.xml"), pom);
+		}
 
 		String applicationName = request.getApplicationName();
 		String language = request.getLanguage();
@@ -372,19 +430,13 @@ public class ProjectGenerator {
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
-			model.put("mavenBuild", true);
-			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
-					.resolveParentPom(request.getBootVersion());
-			if (parentPom.isIncludeSpringBootBom()
-					&& !request.getBoms().containsKey("spring-boot")) {
-				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
-						request.getBootVersion(), "spring-boot.version"));
+			if(request.getParent() != null){
+				model.put("mavenParentGroupId", request.getParent().getGroupId());
+				model.put("mavenParentArtifactId", request.getParent().getArtifactId());
+				model.put("mavenParentVersion", request.getParent().getVersion());
+			} else {
+				generateParentProject(model, metadata, request);
 			}
-
-			model.put("mavenParentGroupId", parentPom.getGroupId());
-			model.put("mavenParentArtifactId", parentPom.getArtifactId());
-			model.put("mavenParentVersion", parentPom.getVersion());
-			model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
 		}
 
 		model.put("repositoryValues", request.getRepositories().entrySet());
@@ -478,6 +530,22 @@ public class ProjectGenerator {
 		}
 
 		return model;
+	}
+
+	private void generateParentProject(Map<String, Object> model, InitializrMetadata metadata, ProjectRequest request) {
+		model.put("mavenBuild", true);
+		ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
+                .resolveParentPom(request.getBootVersion());
+		if (parentPom.isIncludeSpringBootBom()
+                && !request.getBoms().containsKey("spring-boot")) {
+            request.getBoms().put("spring-boot", metadata.createSpringBootBom(
+                    request.getBootVersion(), "spring-boot.version"));
+        }
+
+		model.put("mavenParentGroupId", parentPom.getGroupId());
+		model.put("mavenParentArtifactId", parentPom.getArtifactId());
+		model.put("mavenParentVersion", parentPom.getVersion());
+		model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
 	}
 
 	private List<Map<String, String>> buildResolvedBoms(ProjectRequest request) {
@@ -602,8 +670,8 @@ public class ProjectGenerator {
 		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
 	}
 
-	private byte[] doGenerateMavenPom(Map<String, Object> model) {
-		return this.templateRenderer.process("starter-pom.xml", model).getBytes();
+	private byte[] doGenerateMavenPom(Map<String, Object> model, String template) {
+		return this.templateRenderer.process(template, model).getBytes();
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
