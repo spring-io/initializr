@@ -16,22 +16,15 @@
 
 package io.spring.initializr.generator;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import io.spring.initializr.api.ParentProject;
-import io.spring.initializr.api.Project;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.DefaultMetadataElement;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.Repository;
-import io.spring.initializr.metadata.Type;
+import io.spring.initializr.metadata.*;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
-
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A request to generate a project.
@@ -82,6 +75,13 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	public void setResolvedDependencies(List<Dependency> resolvedDependencies) {
 		this.resolvedDependencies = resolvedDependencies;
+	}
+
+	public void removeDependency(String id) {
+		if (this.resolvedDependencies != null) {
+			Predicate<Dependency> filter = d -> d.getId().equals(id);
+			this.resolvedDependencies.removeIf(filter);
+		}
 	}
 
 	public List<String> getFacets() {

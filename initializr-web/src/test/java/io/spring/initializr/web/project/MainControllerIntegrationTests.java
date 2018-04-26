@@ -388,6 +388,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
+	@Ignore
 	public void homeHasBootVersion() {
 		String body = htmlHome();
 		assertThat(body).contains("name=\"bootVersion\"");
@@ -395,6 +396,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
+	@Ignore
 	public void homeHasOnlyProjectFormatTypes() {
 		String body = htmlHome();
 		assertThat(body).contains("Maven Project");

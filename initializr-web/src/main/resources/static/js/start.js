@@ -145,8 +145,8 @@ $(function () {
     var removeTag = function (id) {
         $("#starters div[data-id='" + id + "']").remove();
     };
-    var initializeSearchEngine = function (engine, bootVersion) {
-        $.getJSON("/ui/dependencies?version=" + bootVersion, function (data) {
+    var initializeSearchEngine = function (engine) {
+        $.getJSON("/ui/dependencies", function (data) {
             engine.clear();
             $.each(data.dependencies, function(idx, item) {
                 if(item.weight === undefined) {
@@ -174,10 +174,6 @@ $(function () {
         $("#name").val($(this).val());
         $("#baseDir").attr('value', this.value)
         generatePackageName();
-    });
-    $("#bootVersion").on("change", function (e) {
-        refreshDependencies(this.value);
-        initializeSearchEngine(starters, this.value);
     });
     $(".tofullversion a").on("click", function() {
         $(".full").removeClass("hidden");
@@ -207,7 +203,7 @@ $(function () {
         limit: maxSuggestions,
         cache: false
     });
-    initializeSearchEngine(starters, $("#bootVersion").val());
+    initializeSearchEngine(starters);
     $('#autocomplete').typeahead(
         {
             minLength: 2,

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Spring Initializr</title>
+    <title>Azure Spring Cloud Playground</title>
     <link href="//fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap.min.css{{/linkTo}}"/>
     <link rel="stylesheet" href="{{#linkTo}}/css/bootstrap-theme.min.css{{/linkTo}}"/>
@@ -21,48 +21,16 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     <div class="container-fluid">
         <div class="row start-header">
             <div class="container">
-                <h1>Spring Initializr <small>bootstrap your application now</small></h1>
+                <h1>Azure Spring Cloud Playground <small>generate your Spring Cloud application</small></h1>
             </div>
         </div>
         <div class="container start-main">
-            <div class="row form-inline text-center">
-                <div class="form-group project-choice">
-                    <h2>
-                        <span class="rwd-line">
-                        <label for="type">Generate a</label>
-                        <select tabindex="1" class="form-control" id="type" name="type">
-                            {{#types.content}}
-                            <option data-action="{{action}}" value="{{id}}" {{#default}}
-                                    selected{{/default}}>{{name}}</option>
-                            {{/types.content}}
-                        </select>
-                        <label for="language">with</label>
-                        <select tabindex="2" class="form-control" name="language" id="language">
-                            {{#languages.content}}
-                            <option value="{{id}}" {{#default}} selected{{/default}}>{{name}}</option>
-                            {{/languages.content}}
-                        </select>
-                        </span>
-                        <span class="rwd-line">
-                        <label for="bootVersion">and Spring Boot</label>
-                        <select tabindex="3" class="form-control" name="bootVersion" id="bootVersion">
-                            {{#bootVersions.content}}
-                            <option value="{{id}}" {{#default}} selected{{/default}}>{{name}}</option>
-                            {{/bootVersions.content}}
-                        </select>
-                    </span>
-                    </h2>
-                </div>
-            </div>
-
             <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
 
             <div class="row">
+                <h2>Project Metadata</h2>
+                <p>Artifact coordinates</p>
                 <div class="col-sm-12 col-md-6">
-                    <h2>Project Metadata</h2>
-
-                    <p>Artifact coordinates</p>
-
                     <div class="form-group groupid-form-group">
                         <label for="groupId" class="control-label">{{groupId.title}}</label>
                         <input tabindex="4" id="groupId" class="form-control" type="text" value="{{groupId.content}}"
@@ -90,57 +58,10 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                                value="{{packageName.content}}"
                                name="packageName">
                     </div>
-                    <div class="form-group full hidden packaging-form-group">
-                        <label for="packaging" class="control-label">{{packagings.title}}</label>
-                        <select tabindex="9" class="form-control" id="packaging" name="packaging">
-                            {{#packagings.content}}
-                            <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
-                            {{/packagings.content}}
-                        </select>
-                    </div>
-                    <div class="form-group full hidden javaversion-form-group">
-                        <label for="javaVersion" class="control-label">{{javaVersions.title}}</label>
-                        <select tabindex="10" class="form-control" name="javaVersion" id="javaVersion">
-                            {{#javaVersions.content}}
-                            <option value="{{id}}"{{#default}} selected{{/default}}>{{name}}</option>
-                            {{/javaVersions.content}}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <h2>Dependencies</h2>
-
-                    <p>Add Spring Boot Starters and dependencies to your application</p>
-
-                    <div class="form-group">
-                        <label for="autocomplete" class="control-label">Search for dependencies</label>
-                        <input tabindex="11" id="autocomplete" class="form-control" type="text"
-                               placeholder="Web, Security, JPA, Actuator, Devtools..."
-                               name="autocomplete">
-                    </div>
-                    <div class="form-group">
-                        <label for="starters" class="control-label">Selected Dependencies</label>
-                        <div id="starters">
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div class="row hidden tosimpleversion">
-                <p>Too many options? <a href="#">Switch back to the simple version.</a></p>
-            </div>
             <div class="row">
-                <p class="text-center">
-                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary"
-                            role="button">
-                        Generate Project
-                    </button>
-                </p>
-            </div>
-            <div class="row tofullversion">
-                <p>Don't know what to look for? Want more options? <a href="#">Switch to the full version.</a></p>
-            </div>
-            <div class="row">
-                <div id="dependencies" class="full hidden">
+                <div id="dependencies" class="full">
                     {{#dependencies.content}}
                     <div class="form-group col-sm-6">
                         <h3>{{name}}</h3>
@@ -159,9 +80,9 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                    {{/dependencies.content}}
                 </div>
             </div>
-            <div class="row full hidden">
+            <div class="row">
                 <p class="text-center">
-                    <button tabindex="14" name="generate-project" type="submit" class="btn btn-lg btn-primary"
+                    <button tabindex="12" name="generate-project" type="submit" class="btn btn-lg btn-primary"
                             role="button">
                         Generate Project
                     </button>
@@ -170,12 +91,6 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         </div>
     </div>
 </form>
-<footer>
-    <div class="container">
-        <p>start.spring.io is powered by <a href="https://github.com/spring-io/initializr/">Spring Initializr</a>
-            and <a href="https://run.pivotal.io">Pivotal Web Services</a></p>
-    </div>
-</footer>
 <script src="{{#linkTo}}/js/jquery-3.1.1.min.js{{/linkTo}}"></script>
 <script src="{{#linkTo}}/js/typeahead.bundle.min.js{{/linkTo}}"></script>
 <script src="{{#linkTo}}/js/mousetrap.min.js{{/linkTo}}"></script>
