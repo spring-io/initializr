@@ -16,23 +16,15 @@
 
 package io.spring.initializr.generator;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.DefaultMetadataElement;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.Repository;
-import io.spring.initializr.metadata.Type;
+import io.spring.initializr.metadata.*;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
-
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A request to generate a project.
@@ -60,7 +52,21 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	private List<String> facets = new ArrayList<>();
 
+	private List<String> services = new ArrayList<>();
+
+	private final Map<String, ProjectRequest> subModules = new HashMap<>();
+
 	private String build;
+
+	public ProjectRequest() {
+	}
+
+	public ProjectRequest(ProjectRequest parentProject) {
+		super(parentProject);
+		this.resolvedDependencies = parentProject.resolvedDependencies;
+		this.facets = parentProject.facets;
+		this.build = parentProject.build;
+	}
 
 	public List<Dependency> getResolvedDependencies() {
 		return this.resolvedDependencies;
@@ -68,6 +74,13 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	public void setResolvedDependencies(List<Dependency> resolvedDependencies) {
 		this.resolvedDependencies = resolvedDependencies;
+	}
+
+	public void removeDependency(String id) {
+		if (this.resolvedDependencies != null) {
+			Predicate<Dependency> filter = d -> d.getId().equals(id);
+			this.resolvedDependencies.removeIf(filter);
+		}
 	}
 
 	public List<String> getFacets() {
@@ -324,4 +337,19 @@ public class ProjectRequest extends BasicProjectRequest {
 				+ (this.build != null ? "build=" + this.build : "") + "]";
 	}
 
+	public List<String> getServices() {
+		return services;
+	}
+
+	public void setServices(List<String> services) {
+		this.services = services;
+	}
+
+	public Collection<ProjectRequest> getModules() {
+		return this.subModules.values();
+	}
+
+	public void addModule(ProjectRequest module) {
+		this.subModules.put(module.getName(), module);
+	}
 }

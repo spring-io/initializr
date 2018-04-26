@@ -22,21 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.*;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
@@ -152,7 +143,7 @@ public class ProjectGenerator {
 				throw new InvalidProjectRequestException("Could not generate Maven pom, "
 						+ "invalid project type " + request.getType());
 			}
-			byte[] content = doGenerateMavenPom(model);
+			byte[] content = doGenerateMavenPom(model, "starter-pom.xml");
 			publishProjectGeneratedEvent(request);
 			return content;
 		}
@@ -195,6 +186,10 @@ public class ProjectGenerator {
 		try {
 			Map<String, Object> model = resolveModel(request);
 			File rootDir = generateProjectStructure(request, model);
+			for(ProjectRequest subModule: request.getModules()){
+				generateProjectModuleStructure(subModule, resolveModel(subModule),
+						new File(rootDir, request.getBaseDir()), request);
+			}
 			publishProjectGeneratedEvent(request);
 			return rootDir;
 		}
@@ -234,7 +229,7 @@ public class ProjectGenerator {
 			writeGradleWrapper(dir, Version.safeParse(request.getBootVersion()));
 		}
 		else {
-			String pom = new String(doGenerateMavenPom(model));
+			String pom = new String(doGenerateMavenPom(model, "parent-pom.xml"));
 			writeText(new File(dir, "pom.xml"), pom);
 			writeMavenWrapper(dir);
 		}
@@ -273,6 +268,125 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
 		return rootDir;
+	}
+
+	/**
+	 * Generate a module structure for the specified {@link ProjectRequest} and resolved
+	 * model.
+	 * @param request the project request
+	 * @param model the source model
+	 * @return the generated project structure
+	 */
+	protected File generateProjectModuleStructure(ProjectRequest request,
+											Map<String, Object> model, File rootDir, ProjectRequest parentModule) {
+
+
+		File dir = initializerProjectDir(rootDir, request);
+
+		if (isGradleBuild(request)) {
+			String gradle = new String(doGenerateGradleBuild(model));
+			writeText(new File(dir, "build.gradle"), gradle);
+			String settings = new String(doGenerateGradleSettings(model));
+			writeText(new File(dir, "settings.gradle"), settings);
+		}
+		else {
+			String pom = new String(doGenerateMavenPom(model, "module-pom.xml"));
+			writeText(new File(dir, "pom.xml"), pom);
+		}
+
+		String applicationName = request.getApplicationName();
+		String language = request.getLanguage();
+
+		String codeLocation = language;
+		File src = new File(new File(dir, "src/main/" + codeLocation),
+				request.getPackageName().replace(".", "/"));
+		src.mkdirs();
+		String extension = ("kotlin".equals(language) ? "kt" : language);
+		write(new File(src, applicationName + "." + extension),
+				"Application." + extension, model);
+
+		if ("war".equals(request.getPackaging())) {
+			String fileName = "ServletInitializer." + extension;
+			write(new File(src, fileName), fileName, model);
+		}
+
+		File test = new File(new File(dir, "src/test/" + codeLocation),
+				request.getPackageName().replace(".", "/"));
+		test.mkdirs();
+		setupTestModel(request, model);
+		write(new File(test, applicationName + "Tests." + extension),
+				"ApplicationTests." + extension, model);
+
+		File resources = new File(dir, "src/main/resources");
+		resources.mkdirs();
+		writePropertiesFile(request, resources, parentModule);
+
+		if (request.hasWebFacet()) {
+			new File(dir, "src/main/resources/templates").mkdirs();
+			new File(dir, "src/main/resources/static").mkdirs();
+		}
+		return rootDir;
+	}
+
+	private void writePropertiesFile(ProjectRequest request, File resourceDir, ProjectRequest parentRequest) {
+		if(ModulePropertiesResolver.isConfigServer(request.getName())) {
+			// Write bootstap.yml
+			writeBootstrapYaml(request, resourceDir);
+
+			// Write shared property files for all modules in config server
+			File sharedPropFolder = new File(resourceDir, "shared");
+			sharedPropFolder.mkdirs();
+
+			// Write common properties among all microservices to application.yml
+			String applicationYmlTemplate = ModulePropertiesResolver.getSharedCommonPropTemplate();
+			String applicationYmlContent = templateRenderer.process(applicationYmlTemplate, null);
+			writeText(new File(sharedPropFolder, "application.yml"), applicationYmlContent);
+
+			// Write other microservice modules' yaml to shared folder
+			// How many properties file will be written is decided by parent request
+			List<ApplicationProperty> nonBasicServices = parentRequest.getModules().stream()
+					.filter(module -> !ModulePropertiesResolver.isInfraModule(module.getName()))
+					.map(module -> new ApplicationProperty(module.getName(), 0))
+					.collect(Collectors.toList());
+
+			for(ProjectRequest module : parentRequest.getModules()) {
+				String templateFile = ModulePropertiesResolver.getSharedPropTemplate(module.getName());
+				Map<String, Object> model = new HashMap<>();
+
+				String moduleName = module.getName();
+				if(ModulePropertiesResolver.isConfigServer(moduleName)) {
+					// No shared properties file is required to be generated for config server itself
+					continue;
+				}
+
+				if(ModulePropertiesResolver.isGatewayModule(moduleName)) {
+					model.put("services", nonBasicServices);
+				} else if(!ModulePropertiesResolver.isInfraModule(moduleName)){
+					model.put("applicationName", module.getName());
+					model.put("port", randomPort());
+				}
+
+				String content = templateRenderer.process(templateFile, model);
+				writeText(new File(sharedPropFolder,  module.getName() + ".yml"), content);
+			}
+		} else {
+			// Write bootstrap.yml
+			writeBootstrapYaml(request, resourceDir);
+		}
+	}
+
+	private void writeBootstrapYaml(ProjectRequest request, File resourceDir) {
+		Map<String, String> model = new HashMap<>();
+		model.put("applicationName", request.getName());
+
+		String templateFile = ModulePropertiesResolver.getBootstrapTemplate(request.getName());
+		String content = templateRenderer.process(templateFile, model);
+		writeText(new File(resourceDir, "bootstrap.yml"), content);
+	}
+
+	private int randomPort() {
+		// Generate random port between 9100 and 9200
+		return new Random().nextInt(100) + 9100;
 	}
 
 	/**
@@ -380,11 +494,16 @@ public class ProjectGenerator {
 				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
 						request.getBootVersion(), "spring-boot.version"));
 			}
-
-			model.put("mavenParentGroupId", parentPom.getGroupId());
-			model.put("mavenParentArtifactId", parentPom.getArtifactId());
-			model.put("mavenParentVersion", parentPom.getVersion());
-			model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
+			if(request.getParent() != null){
+				model.put("mavenParentGroupId", request.getParent().getGroupId());
+				model.put("mavenParentArtifactId", request.getParent().getArtifactId());
+				model.put("mavenParentVersion", request.getParent().getVersion());
+			} else {
+				model.put("mavenParentGroupId", parentPom.getGroupId());
+				model.put("mavenParentArtifactId", parentPom.getArtifactId());
+				model.put("mavenParentVersion", parentPom.getVersion());
+				model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
+			}
 		}
 
 		model.put("repositoryValues", request.getRepositories().entrySet());
@@ -476,6 +595,8 @@ public class ProjectGenerator {
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
 		}
+
+		setupModulesModel(request, model);
 
 		return model;
 	}
@@ -572,6 +693,12 @@ public class ProjectGenerator {
 		return "kotlin-stdlib-jdk8";
 	}
 
+	private void setupModulesModel(ProjectRequest request, Map<String, Object> model){
+		if(!request.getServices().isEmpty()) {
+			model.put("modules", request.getServices());
+		}
+	}
+
 	private static boolean isJava8OrLater(ProjectRequest request) {
 		return !request.getJavaVersion().equals("1.6")
 				&& !request.getJavaVersion().equals("1.7");
@@ -602,8 +729,8 @@ public class ProjectGenerator {
 		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
 	}
 
-	private byte[] doGenerateMavenPom(Map<String, Object> model) {
-		return this.templateRenderer.process("starter-pom.xml", model).getBytes();
+	private byte[] doGenerateMavenPom(Map<String, Object> model, String template) {
+		return this.templateRenderer.process(template, model).getBytes();
 	}
 
 	private byte[] doGenerateGradleBuild(Map<String, Object> model) {
