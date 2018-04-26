@@ -205,7 +205,7 @@ initializr:
       bom: azure
       content:
         - name: Azure Service Bus
-          id: azureservicebus
+          id: azure-service-bus
           description: Azure Service Bus
           groupId: com.microsoft.azure
           artifactId: azure-servicebus-spring-boot-starter
