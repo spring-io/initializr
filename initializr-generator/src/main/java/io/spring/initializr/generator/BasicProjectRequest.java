@@ -59,6 +59,15 @@ public class BasicProjectRequest {
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
 
+	private BasicProjectRequest parent;
+
+	public BasicProjectRequest(BasicProjectRequest parentProject) {
+		this.parent = parentProject;
+	}
+
+	public BasicProjectRequest() {
+	}
+
 	public List<String> getStyle() {
 		return this.style;
 	}
@@ -84,6 +93,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getType() {
+		if(this.parent != null){
+			return this.parent.type;
+		}
 		return this.type;
 	}
 
@@ -92,6 +104,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getDescription() {
+		if(this.parent != null){
+			return this.parent.getDescription();
+		}
 		return this.description;
 	}
 
@@ -100,6 +115,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getGroupId() {
+		if(this.parent != null){
+			return this.parent.groupId;
+		}
 		return this.groupId;
 	}
 
@@ -116,6 +134,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getVersion() {
+		if(this.parent != null){
+			return this.parent.version;
+		}
 		return this.version;
 	}
 
@@ -124,6 +145,10 @@ public class BasicProjectRequest {
 	}
 
 	public String getBootVersion() {
+		if(this.parent != null) {
+			return this.parent.bootVersion;
+		}
+
 		return this.bootVersion;
 	}
 
@@ -132,6 +157,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getPackaging() {
+		if(this.parent != null){
+			return this.parent.getPackaging();
+		}
 		return this.packaging;
 	}
 
@@ -148,6 +176,9 @@ public class BasicProjectRequest {
 	}
 
 	public String getLanguage() {
+		if(this.parent != null){
+			return this.parent.language;
+		}
 		return this.language;
 	}
 
@@ -185,4 +216,7 @@ public class BasicProjectRequest {
 		this.baseDir = baseDir;
 	}
 
+	public BasicProjectRequest getParent() {
+		return parent;
+	}
 }
