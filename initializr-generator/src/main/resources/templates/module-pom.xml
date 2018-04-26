@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>{{groupId}}</groupId>
+	<artifactId>{{artifactId}}</artifactId>
+	<version>{{version}}</version>
+	<packaging>{{packaging}}</packaging>
+
+	<name>{{name}}</name>
+	<description>{{description}}</description>
+
+	<parent>
+		<groupId>{{mavenParentGroupId}}</groupId>
+		<artifactId>{{mavenParentArtifactId}}</artifactId>
+		<version>{{mavenParentVersion}}</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		{{#buildPropertiesMaven}}
+		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
+		{{/buildPropertiesMaven}}
+		{{#buildPropertiesVersions}}
+		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
+		{{/buildPropertiesVersions}}
+	</properties>
+
+	<dependencies>
+		{{#compileDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/compileDependencies}}
+		{{#groovy}}
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+		</dependency>
+		{{/groovy}}
+		{{#kotlin}}
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>
+			{{^kotlinSupport}}
+			<version>${kotlin.version}</version>
+			{{/kotlinSupport}}
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			{{^kotlinSupport}}
+			<version>${kotlin.version}</version>
+			{{/kotlinSupport}}
+		</dependency>
+		{{/kotlin}}
+
+		{{#runtimeDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>runtime</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/runtimeDependencies}}
+		{{#compileOnlyDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<optional>true</optional>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/compileOnlyDependencies}}
+		{{#providedDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>provided</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/providedDependencies}}
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		{{#testDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<scope>test</scope>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/testDependencies}}
+	</dependencies>
+
+</project>
