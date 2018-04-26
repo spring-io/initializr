@@ -27,6 +27,12 @@
 		{{/buildPropertiesVersions}}
 	</properties>
 
+	<modules>
+		{{#modules}}
+		<module>{{.}}</module>
+		{{/modules}}
+	</modules>
+
 	<dependencies>
 		{{#compileDependencies}}
 		<dependency>
