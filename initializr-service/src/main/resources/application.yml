@@ -175,31 +175,40 @@ initializr:
               href: https://spring.io/guides/gs/centralized-configuration/
               description: Centralized Configuration
         - name: Spring Cloud Gateway
-          id: gateway
-          description: Spring Cloud Gateway
-          weight: 100
+          id: cloud-gateway
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-gateway
+          description: Intelligent and programmable routing with the reactive Spring Cloud Gateway
           links:
             - rel: guide
-              href: https://cloud.spring.io/spring-cloud-gateway/
-              description: Spring Cloud Gateway
-        - name: Spring Cloud Registry and Discovery
-          id: serviceregistry
+              href: https://github.com/spring-cloud-samples/spring-cloud-gateway-sample
+              description: Using Spring Cloud Gateway
+        - name: Spring Cloud Eureka Server
+          id: cloud-eureka-server
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-netflix-eureka-server
           description: Spring Cloud Service Registry and Discovery
-          weight: 100
           links:
             - rel: guide
               href: https://spring.io/guides/gs/service-registration-and-discovery/
               description: Service Registration and Discovery
+        - name: Spring Cloud Hystrix Dashboard
+          id: cloud-hystrix-dashboard
+          description: Circuit breaker dashboard with spring-cloud-netflix Hystrix
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-netflix-hystrix-dashboard
+          links:
+            - rel: guide
+              href: https://cloud.spring.io/spring-cloud-netflix/single/spring-cloud-netflix.html#_circuit_breaker_hystrix_dashboard
+              description: Circuit Breaker Hystrix Dashboard
     - name: Azure Spring Cloud Modules
       bom: azure
       content:
         - name: Azure Service Bus
           id: azureservicebus
           description: Azure Service Bus
-          weight: 100
-          facets:
-            - web
-            - json
+          groupId: com.microsoft.azure
+          artifactId: azure-servicebus-spring-boot-starter
           links:
             - rel: guide
               href: https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-servicebus-spring-boot-sample
