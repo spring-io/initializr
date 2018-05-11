@@ -440,7 +440,7 @@ initializr:
       content:
         - name: Thymeleaf
           id: thymeleaf
-          description: Thymeleaf templating engine, including integration with Spring
+          description: Thymeleaf templating engine
           weight: 90
           facets:
             - web
@@ -497,7 +497,7 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jpa-and-spring-data
         - name: MySQL
           id: mysql
-          description: MySQL jdbc driver
+          description: MySQL JDBC driver
           groupId: mysql
           artifactId: mysql-connector-java
           scope: runtime
@@ -545,7 +545,7 @@ initializr:
               version: 1.3.2
         - name: PostgreSQL
           id: postgresql
-          description: PostgreSQL jdbc driver
+          description: PostgreSQL JDBC driver
           groupId: org.postgresql
           artifactId: postgresql
           mappings:
@@ -555,7 +555,7 @@ initializr:
           starter: false
         - name: SQL Server
           id: sqlserver
-          description: Microsoft SQL Server jdbc driver
+          description: Microsoft SQL Server JDBC driver
           versionRange: 1.5.0.RC1
           groupId: com.microsoft.sqlserver
           artifactId: mssql-jdbc
@@ -1202,7 +1202,7 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-batch-applications
         - name: Mail
           id: mail
-          description: javax.mail
+          description: Send email using Java Mail and Spring Framework's JavaMailSender
           versionRange: 1.2.0.RC1
           links:
             - rel: reference
