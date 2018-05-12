@@ -42,6 +42,11 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
+      keycloak:
+        groupId: org.keycloak.bom
+        artifactId: keycloak-adapter-bom
+        versionProperty: keycloak.version
+        version: 3.4.2.Final
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -150,11 +155,6 @@ initializr:
             version: 7.7.7
           - versionRange: "1.5.0.M1"
             version: 8.4.1
-      keycloak:
-        groupId: org.keycloak.bom
-        artifactId: keycloak-adapter-bom
-        versionProperty: keycloak.version
-        version: 3.4.2.Final
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
