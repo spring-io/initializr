@@ -442,8 +442,6 @@ initializr:
           id: thymeleaf
           description: Thymeleaf templating engine
           weight: 90
-          facets:
-            - web
           keywords:
             - template
           links:
@@ -455,8 +453,6 @@ initializr:
         - name: Freemarker
           id: freemarker
           description: FreeMarker templating engine
-          facets:
-            - web
           keywords:
             - template
           links:
@@ -466,8 +462,6 @@ initializr:
           id: mustache
           description: Mustache templating engine
           versionRange: 1.2.2.RELEASE
-          facets:
-            - web
           keywords:
             - template
           links:
