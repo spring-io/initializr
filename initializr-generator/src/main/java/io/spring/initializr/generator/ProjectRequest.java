@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.metadata.BillOfMaterials;
@@ -228,14 +229,13 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	protected void initializeProperties(InitializrMetadata metadata,
 			Version requestedVersion) {
-		String kotlinVersion = metadata.getConfiguration().getEnv().getKotlin()
+		Supplier<String> kotlinVersion = () -> metadata.getConfiguration().getEnv().getKotlin()
 				.resolveKotlinVersion(requestedVersion);
 		if ("gradle".equals(this.build)) {
 			this.buildProperties.getGradle().put("springBootVersion",
 					this::getBootVersion);
 			if ("kotlin".equals(getLanguage())) {
-				this.buildProperties.getGradle().put("kotlinVersion",
-						() -> kotlinVersion);
+				this.buildProperties.getGradle().put("kotlinVersion", kotlinVersion);
 			}
 		}
 		else {
@@ -247,7 +247,7 @@ public class ProjectRequest extends BasicProjectRequest {
 					this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {
 				this.buildProperties.getVersions()
-						.put(new VersionProperty("kotlin.version"), () -> kotlinVersion);
+						.put(new VersionProperty("kotlin.version"), kotlinVersion);
 			}
 		}
 	}

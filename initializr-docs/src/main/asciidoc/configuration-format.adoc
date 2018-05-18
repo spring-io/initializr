@@ -45,7 +45,7 @@ generation uses one of these names, the default is used instead.
 * `googleAnalyticsTrackingCode`: the Google Analytics code to use. If this is set,
 Google analytics is automatically enabled.
 * `kotlin`: kotlin-specific settings. For now, only the kotlin version to use can be
-configured.
+configured and is a mandatory option if Kotlin is enabled.
 * `maven`: maven-specified settings. A custom maven parent POM can be defined and
 whether or not the `spring-boot-dependencies` BOM should be automatically added to
 the project.

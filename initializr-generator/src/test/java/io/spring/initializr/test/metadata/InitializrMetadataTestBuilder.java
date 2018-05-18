@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,11 @@ public class InitializrMetadataTestBuilder {
 	private final InitializrMetadataBuilder builder = InitializrMetadataBuilder.create();
 
 	public static InitializrMetadataTestBuilder withDefaults() {
-		return new InitializrMetadataTestBuilder().addDefaults();
+		return new InitializrMetadataTestBuilder().addAllDefaults();
+	}
+
+	public static InitializrMetadataTestBuilder withBasicDefaults() {
+		return new InitializrMetadataTestBuilder().addBasicDefaults();
 	}
 
 	public InitializrMetadata build() {
@@ -75,10 +79,14 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addDefaults() {
-		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions()
-				.addDefaultLanguages().addDefaultBootVersions()
+	public InitializrMetadataTestBuilder addAllDefaults() {
+		return addBasicDefaults()
 				.setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.1.1");
+	}
+
+	public InitializrMetadataTestBuilder addBasicDefaults() {
+		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions()
+				.addDefaultLanguages().addDefaultBootVersions();
 	}
 
 	public InitializrMetadataTestBuilder addDefaultTypes() {

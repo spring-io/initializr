@@ -65,7 +65,7 @@ public abstract class AbstractProjectGeneratorTests {
 	public void setup() throws IOException {
 		Dependency web = Dependency.withId("web");
 		web.getFacets().add("web");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+		InitializrMetadata metadata = initializeTestMetadataBuilder()
 				.addDependencyGroup("web", web).addDependencyGroup("test", "security",
 						"data-jpa", "aop", "batch", "integration")
 				.build();
@@ -74,6 +74,10 @@ public abstract class AbstractProjectGeneratorTests {
 		this.projectGenerator
 				.setRequestResolver(new ProjectRequestResolver(new ArrayList<>()));
 		this.projectGenerator.setTmpdir(this.folder.newFolder().getAbsolutePath());
+	}
+
+	protected InitializrMetadataTestBuilder initializeTestMetadataBuilder() {
+		return InitializrMetadataTestBuilder.withDefaults();
 	}
 
 	protected PomAssert generateMavenPom(ProjectRequest request) {

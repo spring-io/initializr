@@ -48,6 +48,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none();
 
+	@Override
+	protected InitializrMetadataTestBuilder initializeTestMetadataBuilder() {
+		return InitializrMetadataTestBuilder.withBasicDefaults();
+	}
+
 	@Test
 	public void defaultMavenPom() {
 		ProjectRequest request = createProjectRequest("web");
@@ -348,6 +353,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setBootVersion("1.1.9.RELEASE");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
+
+		applyMetadata(initializeTestMetadataBuilder().addDependencyGroup("core", "web")
+				.setKotlinEnv("1.0.0").build());
 		generateProject(request)
 				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")
 				.hasImports(EnableAutoConfiguration.class.getName(),
@@ -364,6 +372,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setBootVersion("1.2.0.RC1");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
+
+		applyMetadata(initializeTestMetadataBuilder().addDependencyGroup("core", "web")
+				.setKotlinEnv("1.0.0").build());
 		generateProject(request)
 				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")
 				.hasImports(SpringBootApplication.class.getName())

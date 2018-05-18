@@ -431,9 +431,9 @@ public class ProjectGenerator {
 		// Add various versions
 		model.put("dependencyManagementPluginVersion", metadata.getConfiguration()
 				.getEnv().getGradle().getDependencyManagementPluginVersion());
-		model.put("kotlinVersion", metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(bootVersion));
 		if ("kotlin".equals(request.getLanguage())) {
+			model.put("kotlinVersion", metadata.getConfiguration().getEnv().getKotlin()
+					.resolveKotlinVersion(bootVersion));
 			model.put("kotlin", true);
 		}
 		if ("groovy".equals(request.getLanguage())) {
