@@ -1,9 +1,9 @@
 To create a default demo.zip:
 	$ curl {{serviceUrl}}/starter.zip -o demo.zip
 
-To create a web project using Java 7:
+To create a web project using Java 10:
 	$ curl {{serviceUrl}}/starter.zip -d dependencies=web \\
-			-d javaVersion=1.7 -o demo.zip
+			-d javaVersion=10 -o demo.zip
 
 To create a web/data-jpa gradle project unpacked:
 	$ curl {{serviceUrl}}/starter.tgz -d dependencies=web,data-jpa \\

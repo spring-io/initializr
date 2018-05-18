@@ -142,7 +142,7 @@ https://start.spring.io/#!language=kotlin&type=gradle-project
 The following attributes are supported:
 
 * Programming language: `language` (`java`, `groovy` or `kotlin`)
-* Java version: `javaVersion` (`1.6`, `1.7`, `1.8`)
+* Java version: `javaVersion` (`1.8`, `10`)
 * Project type: `type` (`maven-project`, `gradle-project`)
 * Packaging: `packaging` (`jar`, `war`)
 * Group: `groupId`
