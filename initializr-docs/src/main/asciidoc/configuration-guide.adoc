@@ -42,6 +42,9 @@ Or if you are using Gradle:
 compile("io.spring.initializr:initializr-web:{spring-initializr-version}")
 ----
 
+NOTE: Spring Initializr releases are not available on Maven Central so you will need to
+configure the build to add an extra repository at `https://repo.spring.io/release`.
+
 If you start the application, you'll see the familiar interface but none of the drop down
 lists have values (except the one for the Spring Boot version, we will
 <<create-instance-boot-versions,come back to that later>>). In the rest of this section,
