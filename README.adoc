@@ -36,7 +36,8 @@ in many environments (including embedded in your own project)
 * `initializr-web`: REST endpoints and web interface
 * `initializr-actuator`: optional module to provide statistics and metrics on project
 generation
-* `initializr-docs`: documentation
+* `initializr-docs`: documentation (not enabled by default, enable the `docs` profile
+in your IDE)
 
 `initializr-service` is an additional module that represents the production instance
 that is available at link:https://start.spring.io[]. It is not enabled by default but
