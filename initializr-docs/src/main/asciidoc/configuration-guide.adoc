@@ -498,9 +498,11 @@ The same project can now be generated with `dependencies=ws` or
 A "facet" is a label on a dependency which is used to drive a code modification in the
 generated project. In the standard Initializr generator, there is only one facet that is
 actually used (`web`), but custom installations might choose to use it for their own
-purposes. The `web` facet is used to drive the inclusion of `spring-boot-starter-web` if
-any other dependency with that facet is included. The value of the "facets" property of a
-dependency is a list of strings.
+purposes. The `web` facet is used to drive the inclusion of a dependency with id `web`
+(defaulting to `spring-boot-starter-web` if such dependency is not present) when any other
+dependency with that facet is included.
+
+The value of the "facets" property of a dependency is a list of strings.
 
 
 

@@ -272,7 +272,7 @@ public class ProjectRequest extends BasicProjectRequest {
 		if ("war".equals(getPackaging())) {
 			if (!hasWebFacet()) {
 				// Need to be able to bootstrap the web app
-				this.resolvedDependencies.add(metadata.getDependencies().get("web"));
+				this.resolvedDependencies.add(determineWebDependency(metadata));
 				this.facets.add("web");
 			}
 			// Add the tomcat starter in provided scope
@@ -284,6 +284,14 @@ public class ProjectRequest extends BasicProjectRequest {
 			// There"s no starter so we add the default one
 			addDefaultDependency();
 		}
+	}
+
+	private Dependency determineWebDependency(InitializrMetadata metadata) {
+		Dependency web = metadata.getDependencies().get("web");
+		if (web != null) {
+			return web;
+		}
+		return Dependency.withId("web").asSpringBootStarter("web");
 	}
 
 	/**

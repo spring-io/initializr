@@ -169,6 +169,37 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void mavenWarPomWithoutWebFacetAndWithoutWebDependency() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("core", "security", "data-jpa")
+				.build();
+		applyMetadata(metadata);
+
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setPackaging("war");
+		generateMavenPom(request).hasSpringBootStarterTomcat()
+				.hasSpringBootStarterDependency("data-jpa")
+				.hasSpringBootStarterDependency("web") // Added by war packaging
+				.hasSpringBootStarterTest().hasDependenciesCount(4);
+	}
+
+	@Test
+	public void mavenWarPomWithoutWebFacetAndWithCustomWebDependency() {
+		Dependency customWebStarter = Dependency.withId("web", "org.acme", "web-starter");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("core", "security", "data-jpa")
+				.addDependencyGroup("acme", customWebStarter)
+				.build();
+		applyMetadata(metadata);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setPackaging("war");
+		generateMavenPom(request).hasSpringBootStarterTomcat()
+				.hasSpringBootStarterDependency("data-jpa")
+				.hasDependency(customWebStarter) // Added by war packaging
+				.hasSpringBootStarterTest().hasDependenciesCount(4);
+	}
+
+	@Test
 	public void gradleWarWithWebFacet() {
 		Dependency dependency = Dependency.withId("thymeleaf", "org.foo", "thymeleaf");
 		dependency.getFacets().add("web");
