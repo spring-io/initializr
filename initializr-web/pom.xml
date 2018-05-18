@@ -111,28 +111,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>build-assets</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<inherited>false</inherited>
-						<configuration>
-							<attach>true</attach>
-							<descriptors>
-								<descriptor>${basedir}/src/assembly/snippets.xml
-								</descriptor>
-								<descriptor>${basedir}/src/assembly/stub.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<executions>
 					<execution>
@@ -146,6 +124,34 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>docs</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>build-assets</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<inherited>false</inherited>
+								<configuration>
+									<attach>true</attach>
+									<descriptors>
+										<descriptor>${basedir}/src/assembly/snippets.xml</descriptor>
+										<descriptor>${basedir}/src/assembly/stub.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>smokeTests</id>
 			<build>
