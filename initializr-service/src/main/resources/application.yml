@@ -42,6 +42,8 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
+          - versionRange: "2.0.0.M1"
+            version: 2.0.0
       keycloak:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
@@ -1267,7 +1269,7 @@ initializr:
           groupId: de.codecentric
           artifactId: spring-boot-admin-starter-server
           description: An admin interface for Spring Boot applications
-          versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
+          versionRange: "1.5.9.RELEASE"
           bom: codecentric-spring-boot-admin
           links:
             - rel: reference
@@ -1277,7 +1279,7 @@ initializr:
           groupId: de.codecentric
           artifactId: spring-boot-admin-starter-client
           description: Register your application with a Spring Boot Admin instance
-          versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
+          versionRange: "1.5.9.RELEASE"
           bom: codecentric-spring-boot-admin
           links:
             - rel: reference
