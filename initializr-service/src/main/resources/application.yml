@@ -42,8 +42,11 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
-          - versionRange: "2.0.0.M1"
+          - versionRange: "[2.0.0.M1,2.0.x.BUILD-SNAPSHOT)"
             version: 2.0.0
+          - versionRange: "2.0.x.BUILD-SNAPSHOT"
+            version: 2.0.1-SNAPSHOT
+            repositories: sonatype-snapshots
       keycloak:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
@@ -161,6 +164,11 @@ initializr:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
       default-version: 1.2.41
+    repositories:
+      sonatype-snapshots:
+        name: Sonatype Snapshots
+        url: https://oss.sonatype.org/content/repositories/snapshots/
+        snapshotsEnabled: true
   dependencies:
     - name: Core
       content:
