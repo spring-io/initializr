@@ -810,6 +810,16 @@ initializr:
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter
           weight: 100
+        - name: Cloud Functions
+          id: cloud-function
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-function-context
+          description: Functions as Spring Beans
+          versionRange: 2.0.2.RELEASE
+          links:
+            - rel: guide
+              href: https://github.com/spring-cloud/spring-cloud-function
+              description: Using Spring Cloud Function
         - name: Cloud Security
           id: cloud-security
           description: Secure load balancing and routing with spring-cloud-security
