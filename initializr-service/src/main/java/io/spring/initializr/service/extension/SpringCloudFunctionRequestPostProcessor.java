@@ -41,7 +41,7 @@ class SpringCloudFunctionRequestPostProcessor
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		boolean hasSpringCloudStream = hasDependency(request, "cloud-stream");
+		boolean hasSpringCloudStream = hasDependency(request, "cloud-stream") || hasDependency(request, "reactive-cloud-stream");
 		// TODO: add webflux when s-c-f is ready
 		boolean hasWeb = hasDependency(request, "web");
 		if (hasSpringCloudStream) {
