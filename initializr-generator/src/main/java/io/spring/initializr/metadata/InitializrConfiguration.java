@@ -220,6 +220,12 @@ public class InitializrConfiguration {
 		private final Gradle gradle = new Gradle();
 
 		/**
+		 * Scala-specific settings.
+		 */
+		@NestedConfigurationProperty
+		private final Scala scala = new Scala();
+
+		/**
 		 * Kotlin-specific settings.
 		 */
 		@NestedConfigurationProperty
@@ -309,6 +315,10 @@ public class InitializrConfiguration {
 			return this.gradle;
 		}
 
+		public Scala getScala() {
+			return this.scala;
+		}
+
 		public Kotlin getKotlin() {
 			return this.kotlin;
 		}
@@ -328,6 +338,7 @@ public class InitializrConfiguration {
 			this.maven.parent.validate();
 			this.boms.forEach((k, v) -> v.validate());
 			this.kotlin.validate();
+			this.scala.validate();
 		}
 
 		public void merge(Env other) {
@@ -339,6 +350,7 @@ public class InitializrConfiguration {
 			this.forceSsl = other.forceSsl;
 			this.gradle.merge(other.gradle);
 			this.kotlin.merge(other.kotlin);
+			this.scala.merge(other.scala);
 			this.maven.merge(other.maven);
 			other.boms.forEach(this.boms::putIfAbsent);
 			other.repositories.forEach(this.repositories::putIfAbsent);
@@ -367,6 +379,37 @@ public class InitializrConfiguration {
 				this.dependencyManagementPluginVersion = dependencyManagementPluginVersion;
 			}
 
+		}
+
+		/**
+		 * Scala details
+		 */
+		public static class Scala {
+			private String defaultVersion;
+
+			public String getDefaultVersion() {
+				return defaultVersion;
+			}
+
+			public void setDefaultVersion(String defaultVersion) {
+				this.defaultVersion = defaultVersion;
+			}
+
+			public String getScalaLibVersion() {
+				final String[] split = defaultVersion.split("\\.", 3);
+				String sufix = defaultVersion.contains("-") ? defaultVersion : split[0] + "." + split[1];
+				return "_" + sufix;
+			}
+			public String getArtifactId(String artifactId) {
+				return artifactId + getScalaLibVersion();
+			}
+
+			public void validate() {
+			}
+
+			public void merge(Scala scala) {
+				this.defaultVersion = scala.getDefaultVersion();
+			}
 		}
 
 		/**

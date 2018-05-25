@@ -88,6 +88,9 @@ dependencies {
 	{{#groovy}}
 	compile('org.codehaus.groovy:groovy')
 	{{/groovy}}
+	{{#scala}}
+	compile("org.scala-lang:scala-library:${scalaVersion}")
+	{{/scala}}
 	{{#kotlin}}
 	compile("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
 	compile("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")

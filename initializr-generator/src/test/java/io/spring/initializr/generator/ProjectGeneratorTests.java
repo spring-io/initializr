@@ -355,6 +355,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setPackageName("foo");
 
 		applyMetadata(initializeTestMetadataBuilder().addDependencyGroup("core", "web")
+				.setScalaEnv("2.12.6")
 				.setKotlinEnv("1.0.0").build());
 		generateProject(request)
 				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")
@@ -374,6 +375,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setPackageName("foo");
 
 		applyMetadata(initializeTestMetadataBuilder().addDependencyGroup("core", "web")
+				.setScalaEnv("2.12.6")
 				.setKotlinEnv("1.0.0").build());
 		generateProject(request)
 				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")

@@ -22,6 +22,8 @@ initializr:
         artifactId: my-api-dependencies-bom
         version: 1.0.0.RELEASE
         repositories: my-api-repo-3
+    scala:
+        defaultVersion: 2.12.6
     kotlin:
       defaultVersion: 1.2
       mappings:

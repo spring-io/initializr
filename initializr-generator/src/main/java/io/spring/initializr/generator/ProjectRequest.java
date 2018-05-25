@@ -227,6 +227,19 @@ public class ProjectRequest extends BasicProjectRequest {
 		}));
 	}
 
+	private void initializeScalaProperties(InitializrMetadata metadata) {
+		Supplier<String> scalaVersion = () -> metadata.getConfiguration().getEnv().getScala().getDefaultVersion();
+
+		if ("scala".equals(getLanguage())) {
+			if ("gradle".equals(this.build)) {
+				this.buildProperties.getGradle().put("scalaVersion", scalaVersion);
+			} else {
+				this.buildProperties.getVersions()
+						.put(new VersionProperty("scala.version"), scalaVersion);
+			}
+		}
+	}
+
 	protected void initializeProperties(InitializrMetadata metadata,
 			Version requestedVersion) {
 		Supplier<String> kotlinVersion = () -> metadata.getConfiguration().getEnv().getKotlin()
@@ -250,6 +263,8 @@ public class ProjectRequest extends BasicProjectRequest {
 						.put(new VersionProperty("kotlin.version"), kotlinVersion);
 			}
 		}
+
+		initializeScalaProperties(metadata);
 	}
 
 	private void resolveBom(InitializrMetadata metadata, String bomId,
