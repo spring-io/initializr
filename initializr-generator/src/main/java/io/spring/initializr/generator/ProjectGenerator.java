@@ -436,6 +436,12 @@ public class ProjectGenerator {
 					.resolveKotlinVersion(bootVersion));
 			model.put("kotlin", true);
 		}
+
+		if ("scala".equals(request.getLanguage())) {
+			model.put("scalaVersion", metadata.getConfiguration().getEnv().getScala().getDefaultVersion());
+			model.put("scala", true);
+		}
+
 		if ("groovy".equals(request.getLanguage())) {
 			model.put("groovy", true);
 		}
@@ -511,6 +517,15 @@ public class ProjectGenerator {
 		Annotations annotations = new Annotations();
 		boolean useSpringBootApplication = VERSION_1_2_0_RC1
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
+
+		if (request.getFacets().contains("json") && "scala".equals(request.getLanguage())) {
+			imports.add("com.fasterxml.jackson.module.scala.DefaultScalaModule")
+					.add("org.springframework.context.annotation.{Bean, Configuration}");
+			annotations.add("@Configuration");
+
+			model.put("scalaJackson", true);
+		}
+
 		if (useSpringBootApplication) {
 			imports.add("org.springframework.boot.autoconfigure.SpringBootApplication");
 			annotations.add("@SpringBootApplication");

@@ -46,7 +46,14 @@
 			<artifactId>groovy</artifactId>
 		</dependency>
 		{{/groovy}}
-		{{#kotlin}}                                                     
+		{{#scala}}
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>${scala.version}</version>
+		</dependency>
+		{{/scala}}
+		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>
@@ -143,6 +150,10 @@
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		{{/kotlin}}
+		{{#scala}}
+		<sourceDirectory>${project.basedir}/src/main/scala</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/scala</testSourceDirectory>
+		{{/scala}}
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -169,6 +180,13 @@
 				</executions>
 			</plugin>
 			{{/groovy}}
+			{{#scala}}
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
+			{{/scala}}
 			{{#kotlin}}
 			<plugin>
 				<artifactId>kotlin-maven-plugin</artifactId>

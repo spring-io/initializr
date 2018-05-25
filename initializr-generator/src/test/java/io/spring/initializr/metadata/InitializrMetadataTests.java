@@ -175,6 +175,7 @@ public class InitializrMetadataTests {
 				null, null, "0.2.0.RELEASE"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).addBom("foo-bom", bom)
+				.setScalaEnv("2.12.6")
 				.setKotlinEnv("1.3",
 						createKotlinVersionMapping("[1.2.0.RELEASE,1.3.x.RELEASE]",
 								"1.1"),

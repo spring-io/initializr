@@ -81,7 +81,9 @@ public class InitializrMetadataTestBuilder {
 
 	public InitializrMetadataTestBuilder addAllDefaults() {
 		return addBasicDefaults()
-				.setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.1.1");
+				.setGradleEnv("0.5.1.RELEASE")
+				.setKotlinEnv("1.1.1")
+				.setScalaEnv("2.12.6");
 	}
 
 	public InitializrMetadataTestBuilder addBasicDefaults() {
@@ -209,6 +211,14 @@ public class InitializrMetadataTestBuilder {
 			for (Kotlin.Mapping mapping : mappings) {
 				it.getConfiguration().getEnv().getKotlin().getMappings().add(mapping);
 			}
+		});
+		return this;
+	}
+
+	public InitializrMetadataTestBuilder setScalaEnv(String defaultScalaVersion) {
+		this.builder.withCustomizer((it) -> {
+			it.getConfiguration().getEnv().getScala()
+					.setDefaultVersion(defaultScalaVersion);
 		});
 		return this;
 	}
