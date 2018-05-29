@@ -94,6 +94,9 @@ initializr:
             version: Finchley.RC1
             repositories: spring-milestones
           - versionRange: "2.0.2.RELEASE"
+            version: Finchley.RC2
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "2.0.x.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-gcp:
