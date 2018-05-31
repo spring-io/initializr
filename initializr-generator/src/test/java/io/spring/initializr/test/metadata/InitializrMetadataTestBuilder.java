@@ -80,8 +80,7 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addAllDefaults() {
-		return addBasicDefaults()
-				.setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.1.1");
+		return addBasicDefaults().setGradleEnv("0.5.1.RELEASE").setKotlinEnv("1.1.1");
 	}
 
 	public InitializrMetadataTestBuilder addBasicDefaults() {

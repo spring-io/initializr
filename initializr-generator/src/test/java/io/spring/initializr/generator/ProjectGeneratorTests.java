@@ -176,8 +176,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void mavenWarPomWithoutWebFacetAndWithoutWebDependency() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("core", "security", "data-jpa")
-				.build();
+				.addDependencyGroup("core", "security", "data-jpa").build();
 		applyMetadata(metadata);
 
 		ProjectRequest request = createProjectRequest("data-jpa");
@@ -193,8 +192,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		Dependency customWebStarter = Dependency.withId("web", "org.acme", "web-starter");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("core", "security", "data-jpa")
-				.addDependencyGroup("acme", customWebStarter)
-				.build();
+				.addDependencyGroup("acme", customWebStarter).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setPackaging("war");

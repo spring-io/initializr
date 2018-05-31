@@ -229,8 +229,8 @@ public class ProjectRequest extends BasicProjectRequest {
 
 	protected void initializeProperties(InitializrMetadata metadata,
 			Version requestedVersion) {
-		Supplier<String> kotlinVersion = () -> metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(requestedVersion);
+		Supplier<String> kotlinVersion = () -> metadata.getConfiguration().getEnv()
+				.getKotlin().resolveKotlinVersion(requestedVersion);
 		if ("gradle".equals(this.build)) {
 			this.buildProperties.getGradle().put("springBootVersion",
 					this::getBootVersion);
