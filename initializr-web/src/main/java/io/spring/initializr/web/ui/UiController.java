@@ -57,7 +57,7 @@ public class UiController {
 		List<DependencyGroup> dependencyGroups = this.metadataProvider.get()
 				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
-		Version v = StringUtils.isEmpty(version) ? null : Version.parse(version);
+		Version v = (StringUtils.isEmpty(version) ? null : Version.parse(version));
 		dependencyGroups.forEach((g) -> g.getContent().forEach((d) -> {
 			if (v != null && d.getVersionRange() != null) {
 				if (d.match(v)) {

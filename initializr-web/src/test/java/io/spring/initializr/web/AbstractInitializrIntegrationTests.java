@@ -226,8 +226,8 @@ public abstract class AbstractInitializrIntegrationTests {
 			}
 			return new ProjectAssert(project);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot unpack archive", e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Cannot unpack archive", ex);
 		}
 	}
 
@@ -277,7 +277,7 @@ public abstract class AbstractInitializrIntegrationTests {
 				return new JSONObject(content);
 			}
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			throw new IllegalStateException("Cannot read JSON from path=" + path);
 		}
 	}

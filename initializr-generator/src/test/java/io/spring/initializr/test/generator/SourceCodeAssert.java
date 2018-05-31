@@ -48,8 +48,8 @@ public class SourceCodeAssert {
 			assertThat(this.content).describedAs("Content for %s", this.name)
 					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));
 		}
-		catch (IOException e) {
-			throw new IllegalStateException("Cannot read file", e);
+		catch (IOException ex) {
+			throw new IllegalStateException("Cannot read file", ex);
 		}
 		return this;
 	}

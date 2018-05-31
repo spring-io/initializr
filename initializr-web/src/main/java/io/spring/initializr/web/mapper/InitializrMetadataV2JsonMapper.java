@@ -114,7 +114,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	}
 
 	private String generateTemplatedUri(String appUrl, Type type) {
-		String uri = appUrl != null ? appUrl + type.getAction() : type.getAction();
+		String uri = (appUrl != null ? appUrl + type.getAction() : type.getAction());
 		uri = uri + "?type=" + type.getId();
 		UriTemplate uriTemplate = new UriTemplate(uri, this.templateVariables);
 		return uriTemplate.toString();

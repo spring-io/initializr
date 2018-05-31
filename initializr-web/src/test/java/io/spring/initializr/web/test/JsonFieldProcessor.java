@@ -202,7 +202,7 @@ final class JsonFieldProcessor {
 				List<String> segments, Match parent) {
 			this.payload = payload;
 			this.path = path;
-			this.segments = segments == null ? path.getSegments() : segments;
+			this.segments = (segments != null ? segments : path.getSegments());
 			this.parent = parent;
 		}
 

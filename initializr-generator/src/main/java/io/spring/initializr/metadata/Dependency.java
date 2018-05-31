@@ -149,8 +149,8 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public void setVersionRange(String versionRange) {
-		this.versionRange = StringUtils.hasText(versionRange) ? versionRange.trim()
-				: null;
+		this.versionRange = (StringUtils.hasText(versionRange) ? versionRange.trim()
+				: null);
 	}
 
 	/**
@@ -170,8 +170,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 */
 	public Dependency asSpringBootStarter(String name) {
 		this.groupId = "org.springframework.boot";
-		this.artifactId = StringUtils.hasText(name) ? "spring-boot-starter-" + name
-				: "spring-boot-starter";
+		this.artifactId = (StringUtils.hasText(name) ? "spring-boot-starter-" + name
+				: "spring-boot-starter");
 		if (StringUtils.hasText(name)) {
 			setId(name);
 		}
@@ -247,12 +247,12 @@ public class Dependency extends MetadataElement implements Describable {
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
 				Dependency dependency = new Dependency(this);
-				dependency.groupId = mapping.groupId != null ? mapping.groupId
-						: this.groupId;
-				dependency.artifactId = mapping.artifactId != null ? mapping.artifactId
-						: this.artifactId;
-				dependency.version = mapping.version != null ? mapping.version
-						: this.version;
+				dependency.groupId = (mapping.groupId != null ? mapping.groupId
+						: this.groupId);
+				dependency.artifactId = (mapping.artifactId != null ? mapping.artifactId
+						: this.artifactId);
+				dependency.version = (mapping.version != null ? mapping.version
+						: this.version);
 				dependency.versionRequirement = mapping.range.toString();
 				dependency.mappings = null;
 				return dependency;

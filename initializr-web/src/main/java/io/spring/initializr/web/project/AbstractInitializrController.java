@@ -52,7 +52,7 @@ public abstract class AbstractInitializrController {
 		this.metadataProvider = metadataProvider;
 		this.linkTo = (link) -> {
 			String result = resourceUrlProvider.getForLookupPath(link);
-			return result == null ? link : result;
+			return (result != null ? result : link);
 		};
 	}
 

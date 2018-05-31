@@ -217,8 +217,8 @@ public class ProjectGenerator {
 		try {
 			rootDir = File.createTempFile("tmp", "", getTemporaryDirectory());
 		}
-		catch (IOException e) {
-			throw new IllegalStateException("Cannot create temp dir", e);
+		catch (IOException ex) {
+			throw new IllegalStateException("Cannot create temp dir", ex);
 		}
 		addTempFile(rootDir.getName(), rootDir);
 		rootDir.delete();
@@ -615,8 +615,8 @@ public class ProjectGenerator {
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
-		String gradlePrefix = isGradle4Available(bootVersion) ? "gradle4"
-				: isGradle3Available(bootVersion) ? "gradle3" : "gradle";
+		String gradlePrefix = (isGradle4Available(bootVersion) ? "gradle4"
+				: (isGradle3Available(bootVersion) ? "gradle3" : "gradle"));
 		writeTextResource(dir, "gradlew.bat", gradlePrefix + "/gradlew.bat");
 		writeTextResource(dir, "gradlew", gradlePrefix + "/gradlew");
 
@@ -682,8 +682,8 @@ public class ProjectGenerator {
 		try (OutputStream stream = new FileOutputStream(target)) {
 			StreamUtils.copy(body, Charset.forName("UTF-8"), stream);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot write file " + target, e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Cannot write file " + target, ex);
 		}
 	}
 
@@ -691,8 +691,8 @@ public class ProjectGenerator {
 		try (OutputStream stream = new FileOutputStream(target)) {
 			StreamUtils.copy(body, stream);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot write file " + target, e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Cannot write file " + target, ex);
 		}
 	}
 
@@ -757,8 +757,8 @@ public class ProjectGenerator {
 		}
 
 		private String generateImport(String type, String language) {
-			String end = ("groovy".equals(language) || "kotlin".equals(language)) ? ""
-					: ";";
+			String end = (("groovy".equals(language) || "kotlin".equals(language)) ? ""
+					: ";");
 			return "import " + type + end;
 		}
 

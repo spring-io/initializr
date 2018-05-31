@@ -98,8 +98,8 @@ public final class InitializrMetadataBuilder {
 	 * @return a new {@link InitializrMetadata} instance
 	 */
 	public InitializrMetadata build() {
-		InitializrConfiguration config = this.configuration != null ? this.configuration
-				: new InitializrConfiguration();
+		InitializrConfiguration config = (this.configuration != null ? this.configuration
+				: new InitializrConfiguration());
 		InitializrMetadata metadata = createInstance(config);
 		for (InitializrMetadataCustomizer customizer : this.customizers) {
 			customizer.customize(metadata);
@@ -210,8 +210,8 @@ public final class InitializrMetadataBuilder {
 						InitializrMetadata.class);
 				metadata.merge(anotherMetadata);
 			}
-			catch (Exception e) {
-				throw new IllegalStateException("Cannot merge", e);
+			catch (Exception ex) {
+				throw new IllegalStateException("Cannot merge", ex);
 			}
 		}
 

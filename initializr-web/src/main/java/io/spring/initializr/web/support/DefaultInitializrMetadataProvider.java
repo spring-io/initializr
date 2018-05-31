@@ -79,8 +79,8 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
 						url).getBootVersions();
 			}
-			catch (Exception e) {
-				log.warn("Failed to fetch spring boot metadata", e);
+			catch (Exception ex) {
+				log.warn("Failed to fetch spring boot metadata", ex);
 			}
 		}
 		return null;

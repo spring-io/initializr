@@ -87,8 +87,8 @@ public class ProjectAssert {
 			return new PomAssert(StreamUtils.copyToString(
 					new FileInputStream(file("pom.xml")), Charset.forName("UTF-8")));
 		}
-		catch (IOException e) {
-			throw new IllegalArgumentException("Cannot resolve pom.xml", e);
+		catch (IOException ex) {
+			throw new IllegalArgumentException("Cannot resolve pom.xml", ex);
 		}
 	}
 
@@ -101,8 +101,8 @@ public class ProjectAssert {
 			return new GradleBuildAssert(StreamUtils.copyToString(
 					new FileInputStream(file("build.gradle")), Charset.forName("UTF-8")));
 		}
-		catch (IOException e) {
-			throw new IllegalArgumentException("Cannot resolve build.gradle", e);
+		catch (IOException ex) {
+			throw new IllegalArgumentException("Cannot resolve build.gradle", ex);
 		}
 	}
 
@@ -116,8 +116,8 @@ public class ProjectAssert {
 					StreamUtils.copyToString(new FileInputStream(file("settings.gradle")),
 							Charset.forName("UTF-8")));
 		}
-		catch (IOException e) {
-			throw new IllegalArgumentException("Cannot resolve settings.gradle", e);
+		catch (IOException ex) {
+			throw new IllegalArgumentException("Cannot resolve settings.gradle", ex);
 		}
 	}
 
@@ -132,9 +132,9 @@ public class ProjectAssert {
 			return new SourceCodeAssert(sourceCodePath, StreamUtils.copyToString(
 					new FileInputStream(file(sourceCodePath)), Charset.forName("UTF-8")));
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new IllegalArgumentException("Cannot resolve path: " + sourceCodePath,
-					e);
+					ex);
 		}
 	}
 
@@ -266,8 +266,8 @@ public class ProjectAssert {
 		try {
 			return PropertiesLoaderUtils.loadProperties(new FileSystemResource(f));
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot load Properties", e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Cannot load Properties", ex);
 		}
 	}
 

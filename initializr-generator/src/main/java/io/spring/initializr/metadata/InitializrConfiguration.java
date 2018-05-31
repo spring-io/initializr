@@ -240,8 +240,8 @@ public class InitializrConfiguration {
 						new Repository("Spring Milestones",
 								new URL("https://repo.spring.io/milestone"), false));
 			}
-			catch (MalformedURLException e) {
-				throw new IllegalStateException("Cannot parse URL", e);
+			catch (MalformedURLException ex) {
+				throw new IllegalStateException("Cannot parse URL", ex);
 			}
 		}
 
@@ -517,9 +517,9 @@ public class InitializrConfiguration {
 			 * @return the parent POM
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
-				return StringUtils.hasText(this.parent.groupId) ? this.parent
+				return (StringUtils.hasText(this.parent.groupId) ? this.parent
 						: new ParentPom("org.springframework.boot",
-								"spring-boot-starter-parent", bootVersion);
+								"spring-boot-starter-parent", bootVersion));
 			}
 
 			/**

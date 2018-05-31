@@ -48,7 +48,7 @@ public abstract class AbstractInitializrControllerIntegrationTests
 
 	@Override
 	protected String createUrl(String context) {
-		return context.startsWith("/") ? context : "/" + context;
+		return (context.startsWith("/") ? context : "/" + context);
 	}
 
 	public MockMvcClientHttpRequestFactory getRequests() {

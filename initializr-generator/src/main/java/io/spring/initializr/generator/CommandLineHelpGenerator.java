@@ -172,7 +172,8 @@ public class CommandLineHelpGenerator {
 				.collect(Collectors.toList())) {
 			String[] data = new String[3];
 			data[0] = dep.getId();
-			data[1] = dep.getDescription() != null ? dep.getDescription() : dep.getName();
+			data[1] = (dep.getDescription() != null ? dep.getDescription()
+					: dep.getName());
 			data[2] = dep.getVersionRequirement();
 			dependencyTable[i++] = data;
 		}
@@ -194,8 +195,8 @@ public class CommandLineHelpGenerator {
 				.collect(Collectors.toList())) {
 			String[] data = new String[typeTable[0].length];
 			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());
-			data[1] = type.getDescription() != null ? type.getDescription()
-					: type.getName();
+			data[1] = (type.getDescription() != null ? type.getDescription()
+					: type.getName());
 			if (addTags) {
 				data[2] = buildTagRepresentation(type);
 			}

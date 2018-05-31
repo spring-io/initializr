@@ -69,9 +69,9 @@ public class TemplateRenderer {
 			Template template = getTemplate(name);
 			return template.execute(model);
 		}
-		catch (Exception e) {
-			log.error("Cannot render: " + name, e);
-			throw new IllegalStateException("Cannot render template", e);
+		catch (Exception ex) {
+			log.error("Cannot render: " + name, ex);
+			throw new IllegalStateException("Cannot render template", ex);
 		}
 	}
 
@@ -88,8 +88,8 @@ public class TemplateRenderer {
 			template = this.mustache.loader.getTemplate(name);
 			return this.mustache.compile(template);
 		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot load template " + name, e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Cannot load template " + name, ex);
 		}
 	}
 

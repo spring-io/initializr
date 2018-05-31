@@ -158,8 +158,8 @@ public class Link {
 		try {
 			return new URI(result.get());
 		}
-		catch (URISyntaxException e) {
-			throw new IllegalStateException("Invalid URL", e);
+		catch (URISyntaxException ex) {
+			throw new IllegalStateException("Invalid URL", ex);
 		}
 	}
 

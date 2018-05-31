@@ -77,7 +77,7 @@ public class InitializrAutoConfiguration {
 	public InitializrAutoConfiguration(
 			ObjectProvider<List<ProjectRequestPostProcessor>> postProcessors) {
 		List<ProjectRequestPostProcessor> list = postProcessors.getIfAvailable();
-		this.postProcessors = list != null ? list : new ArrayList<>();
+		this.postProcessors = (list != null ? list : new ArrayList<>());
 	}
 
 	@Bean

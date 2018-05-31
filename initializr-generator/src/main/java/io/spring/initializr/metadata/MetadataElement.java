@@ -46,7 +46,7 @@ public class MetadataElement {
 	}
 
 	public String getName() {
-		return this.name != null ? this.name : this.id;
+		return (this.name != null ? this.name : this.id);
 	}
 
 	public String getId() {

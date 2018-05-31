@@ -232,8 +232,8 @@ public class InitializrMetadataTestBuilder {
 			try {
 				repo.setUrl(new URL(url));
 			}
-			catch (MalformedURLException e) {
-				throw new IllegalArgumentException("Cannot create URL", e);
+			catch (MalformedURLException ex) {
+				throw new IllegalArgumentException("Cannot create URL", ex);
 			}
 			repo.setSnapshotsEnabled(snapshotsEnabled);
 			it.getConfiguration().getEnv().getRepositories().put(id, repo);

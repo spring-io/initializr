@@ -274,7 +274,7 @@ public class InitializrMetadata {
 	private static String defaultId(
 			Defaultable<? extends DefaultMetadataElement> element) {
 		DefaultMetadataElement defaultValue = element.getDefault();
-		return defaultValue != null ? defaultValue.getId() : null;
+		return (defaultValue != null ? defaultValue.getId() : null);
 	}
 
 	private static class ArtifactIdCapability extends TextCapability {
@@ -289,7 +289,7 @@ public class InitializrMetadata {
 		@Override
 		public String getContent() {
 			String value = super.getContent();
-			return value == null ? this.nameCapability.getContent() : value;
+			return (value != null ? value : this.nameCapability.getContent());
 		}
 
 	}

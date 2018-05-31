@@ -114,7 +114,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		try {
 			return parse(text);
 		}
-		catch (InvalidVersionException e) {
+		catch (InvalidVersionException ex) {
 			return null;
 		}
 	}
@@ -140,8 +140,8 @@ public final class Version implements Serializable, Comparable<Version> {
 	}
 
 	private static int safeCompare(Integer first, Integer second) {
-		Integer firstIndex = first != null ? first : 0;
-		Integer secondIndex = second != null ? second : 0;
+		Integer firstIndex = (first != null ? first : 0);
+		Integer secondIndex = (second != null ? second : 0);
 		return firstIndex.compareTo(secondIndex);
 	}
 
@@ -296,16 +296,17 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
-			Qualifier first = o1 != null ? o1 : new Qualifier(RELEASE);
-			Qualifier second = o2 != null ? o2 : new Qualifier(RELEASE);
+			Qualifier first = (o1 != null ? o1 : new Qualifier(RELEASE));
+			Qualifier second = (o2 != null ? o2 : new Qualifier(RELEASE));
 
 			int qualifier = compareQualifier(first, second);
-			return qualifier != 0 ? qualifier : compareQualifierVersion(first, second);
+			return (qualifier != 0 ? qualifier : compareQualifierVersion(first, second));
 		}
 
 		private static int compareQualifierVersion(Qualifier first, Qualifier second) {
-			Integer firstVersion = first.getVersion() != null ? first.getVersion() : 0;
-			Integer secondVersion = second.getVersion() != null ? second.getVersion() : 0;
+			Integer firstVersion = (first.getVersion() != null ? first.getVersion() : 0);
+			Integer secondVersion = (second.getVersion() != null ? second.getVersion()
+					: 0);
 			return firstVersion.compareTo(secondVersion);
 		}
 
@@ -323,8 +324,8 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		private static int getQualifierIndex(String qualifier) {
-			return StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier)
-					: 0;
+			return (StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier)
+					: 0);
 		}
 
 	}

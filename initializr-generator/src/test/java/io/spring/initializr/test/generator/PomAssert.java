@@ -69,8 +69,8 @@ public class PomAssert {
 		try {
 			this.doc = XMLUnit.buildControlDocument(content);
 		}
-		catch (Exception e) {
-			throw new IllegalArgumentException("Cannot parse XML", e);
+		catch (Exception ex) {
+			throw new IllegalArgumentException("Cannot parse XML", ex);
 		}
 		this.parentPom = parseParent();
 		parseProperties();
@@ -96,8 +96,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("groupId"), this.doc))
 					.isEqualTo(groupId);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -107,8 +107,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("artifactId"), this.doc))
 					.isEqualTo(artifactId);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -118,8 +118,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("version"), this.doc))
 					.isEqualTo(version);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -129,8 +129,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("packaging"), this.doc))
 					.isEqualTo(packaging);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -140,8 +140,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("name"), this.doc))
 					.isEqualTo(name);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -151,8 +151,8 @@ public class PomAssert {
 			assertThat(this.eng.evaluate(createRootNodeXPath("description"), this.doc))
 					.isEqualTo(description);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -163,8 +163,8 @@ public class PomAssert {
 					this.eng.evaluate(createPropertyNodeXpath("java.version"), this.doc))
 							.isEqualTo(javaVersion);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -259,8 +259,8 @@ public class PomAssert {
 					.getMatchingNodes(createRootNodeXPath("repositories"), this.doc)
 					.getLength());
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		return this;
 	}
@@ -283,8 +283,8 @@ public class PomAssert {
 			try {
 				assertThat(repository.getUrl()).isEqualTo(new URL(url));
 			}
-			catch (MalformedURLException e) {
-				throw new IllegalArgumentException("Cannot parse URL", e);
+			catch (MalformedURLException ex) {
+				throw new IllegalArgumentException("Cannot parse URL", ex);
 			}
 		}
 		if (snapshotsEnabled) {
@@ -305,8 +305,8 @@ public class PomAssert {
 					createRootNodeXPath("pluginRepositories/pom:pluginRepository/pom:id"),
 					this.doc);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		for (int i = 0; i < nodes.getLength(); i++) {
 			if (name.equals(nodes.item(i).getTextContent())) {
@@ -335,8 +335,8 @@ public class PomAssert {
 					this.doc));
 			return parent;
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 	}
 
@@ -346,8 +346,8 @@ public class PomAssert {
 			nodes = this.eng.getMatchingNodes(createRootNodeXPath("properties/*"),
 					this.doc);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node item = nodes.item(i);
@@ -364,8 +364,8 @@ public class PomAssert {
 			nodes = this.eng.getMatchingNodes(
 					createRootNodeXPath("dependencies/pom:dependency"), this.doc);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node item = nodes.item(i);
@@ -407,8 +407,8 @@ public class PomAssert {
 							"dependencyManagement/pom:dependencies/pom:dependency"),
 					this.doc);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 		}
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node item = nodes.item(i);
@@ -444,8 +444,8 @@ public class PomAssert {
 			nodes = this.eng.getMatchingNodes(
 					createRootNodeXPath("repositories/pom:repository"), this.doc);
 		}
-		catch (XpathException e) {
-			throw new IllegalStateException("Cannot find path", e);
+		catch (XpathException ex) {
+			throw new IllegalStateException("Cannot find path", ex);
 
 		}
 		for (int i = 0; i < nodes.getLength(); i++) {
@@ -464,8 +464,8 @@ public class PomAssert {
 					try {
 						repository.setUrl(new URL(url.item(0).getTextContent()));
 					}
-					catch (MalformedURLException | DOMException e) {
-						throw new IllegalStateException("Cannot parse URL", e);
+					catch (MalformedURLException | DOMException ex) {
+						throw new IllegalStateException("Cannot parse URL", ex);
 					}
 				}
 				NodeList snapshots = element.getElementsByTagName("snapshots");

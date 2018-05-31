@@ -134,9 +134,9 @@ public class ProjectRequest extends BasicProjectRequest {
 	 * @param metadata the initializr metadata
 	 */
 	public void resolve(InitializrMetadata metadata) {
-		List<String> depIds = !getStyle().isEmpty() ? getStyle() : getDependencies();
-		String actualBootVersion = getBootVersion() != null ? getBootVersion()
-				: metadata.getBootVersions().getDefault().getId();
+		List<String> depIds = (!getStyle().isEmpty() ? getStyle() : getDependencies());
+		String actualBootVersion = (getBootVersion() != null ? getBootVersion()
+				: metadata.getBootVersions().getDefault().getId());
 		Version requestedVersion = Version.parse(actualBootVersion);
 		this.resolvedDependencies = depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
