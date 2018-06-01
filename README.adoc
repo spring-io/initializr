@@ -25,7 +25,7 @@ of changes
 
 == Installation and Getting Started
 The {docs}/htmlsingle/[reference documentation] is published in
-{docs}/htmlsingle/[HTML] and {docs}/epub/spring-initializr-reference.epub[EPUB] formats.
+{docs}/htmlsingle/[HTML] and {docs}/epub/initializr-reference.epub[EPUB] formats.
 
 
 == Modules
