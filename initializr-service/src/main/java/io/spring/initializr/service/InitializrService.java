@@ -51,6 +51,9 @@ public class InitializrService {
 		return new LegacyStsController(metadataProvider, resourceUrlProvider);
 	}
 
+	/**
+	 * {@link Executor} configuration for event processing.
+	 */
 	@Configuration
 	@EnableAsync
 	static class AsyncConfiguration extends AsyncConfigurerSupport {

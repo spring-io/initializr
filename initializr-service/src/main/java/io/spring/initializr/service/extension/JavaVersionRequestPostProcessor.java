@@ -67,9 +67,9 @@ class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 	private Integer determineJavaGeneration(String javaVersion) {
 		try {
 			int generation = Integer.valueOf(javaVersion);
-			return ((generation > 8 && generation <=10)  ? generation : null);
+			return ((generation > 8 && generation <= 10) ? generation : null);
 		}
-		catch (NumberFormatException e) {
+		catch (NumberFormatException ex) {
 			return null;
 		}
 	}

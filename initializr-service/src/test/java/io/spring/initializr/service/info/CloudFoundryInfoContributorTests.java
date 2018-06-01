@@ -25,10 +25,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.entry;
+import static org.assertj.core.api.Assertions.entry;
 
 /**
- *
  * @author Stephane Nicoll
  */
 public class CloudFoundryInfoContributorTests {

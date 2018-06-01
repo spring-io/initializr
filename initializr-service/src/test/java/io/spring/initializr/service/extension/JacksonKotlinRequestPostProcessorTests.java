@@ -19,9 +19,6 @@ package io.spring.initializr.service.extension;
 import io.spring.initializr.generator.ProjectRequest;
 import org.junit.Test;
 
-import static io.spring.initializr.service.extension.JacksonKotlinRequestPostProcessor.JACKSON_KOTLIN;
-import static io.spring.initializr.service.extension.ReactorTestRequestPostProcessor.REACTOR_TEST;
-
 /**
  * Tests for {@link JacksonKotlinRequestPostProcessor}.
  *
@@ -37,8 +34,9 @@ public class JacksonKotlinRequestPostProcessorTests
 		request.setBootVersion("2.0.0.M2");
 		request.setLanguage("kotlin");
 		generateMavenPom(request).hasSpringBootStarterDependency("webflux")
-				.hasDependency(JACKSON_KOTLIN).hasSpringBootStarterTest()
-				.hasDependency(REACTOR_TEST)
+				.hasDependency(JacksonKotlinRequestPostProcessor.JACKSON_KOTLIN)
+				.hasSpringBootStarterTest()
+				.hasDependency(ReactorTestRequestPostProcessor.REACTOR_TEST)
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
 				.hasDependenciesCount(6);
@@ -49,7 +47,8 @@ public class JacksonKotlinRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("webflux");
 		request.setBootVersion("2.0.0.M2");
 		generateMavenPom(request).hasSpringBootStarterDependency("webflux")
-				.hasSpringBootStarterTest().hasDependency(REACTOR_TEST)
+				.hasSpringBootStarterTest()
+				.hasDependency(ReactorTestRequestPostProcessor.REACTOR_TEST)
 				.hasDependenciesCount(3);
 	}
 

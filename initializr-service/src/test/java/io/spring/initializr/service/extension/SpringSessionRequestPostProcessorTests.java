@@ -19,9 +19,6 @@ package io.spring.initializr.service.extension;
 import io.spring.initializr.generator.ProjectRequest;
 import org.junit.Test;
 
-import static io.spring.initializr.service.extension.SpringSessionRequestPostProcessor.JDBC;
-import static io.spring.initializr.service.extension.SpringSessionRequestPostProcessor.REDIS;
-
 /**
  * Tests for {@link SpringSessionRequestPostProcessor}.
  *
@@ -93,7 +90,9 @@ public class SpringSessionRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("session", "data-redis");
 		request.setBootVersion("2.0.0.M3");
 		generateMavenPom(request).hasSpringBootStarterDependency("data-redis")
-				.hasSpringBootStarterTest().hasDependency(REDIS).hasDependenciesCount(3);
+				.hasSpringBootStarterTest()
+				.hasDependency(SpringSessionRequestPostProcessor.REDIS)
+				.hasDependenciesCount(3);
 	}
 
 	@Test
@@ -101,7 +100,9 @@ public class SpringSessionRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("session", "data-redis-reactive");
 		request.setBootVersion("2.0.0.M7");
 		generateMavenPom(request).hasSpringBootStarterDependency("data-redis-reactive")
-				.hasSpringBootStarterTest().hasDependency(REDIS).hasDependenciesCount(3);
+				.hasSpringBootStarterTest()
+				.hasDependency(SpringSessionRequestPostProcessor.REDIS)
+				.hasDependenciesCount(3);
 	}
 
 	@Test
@@ -109,7 +110,9 @@ public class SpringSessionRequestPostProcessorTests
 		ProjectRequest request = createProjectRequest("session", "jdbc");
 		request.setBootVersion("2.0.0.M3");
 		generateMavenPom(request).hasSpringBootStarterDependency("jdbc")
-				.hasSpringBootStarterTest().hasDependency(JDBC).hasDependenciesCount(3);
+				.hasSpringBootStarterTest()
+				.hasDependency(SpringSessionRequestPostProcessor.JDBC)
+				.hasDependenciesCount(3);
 	}
 
 	@Test
@@ -118,7 +121,9 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("2.0.0.M3");
 		generateMavenPom(request).hasSpringBootStarterDependency("data-redis")
 				.hasSpringBootStarterDependency("jdbc").hasSpringBootStarterTest()
-				.hasDependency(REDIS).hasDependency(JDBC).hasDependenciesCount(5);
+				.hasDependency(SpringSessionRequestPostProcessor.REDIS)
+				.hasDependency(SpringSessionRequestPostProcessor.JDBC)
+				.hasDependenciesCount(5);
 	}
 
 }

@@ -24,7 +24,8 @@ import org.junit.Test;
  *
  * @author Stephane Nicoll
  */
-public class JavaVersionRequestPostProcessorTests extends AbstractRequestPostProcessorTests {
+public class JavaVersionRequestPostProcessorTests
+		extends AbstractRequestPostProcessorTests {
 
 	@Test
 	public void java9CannotBeUsedWithSpringBoot1Maven() {
@@ -125,7 +126,6 @@ public class JavaVersionRequestPostProcessorTests extends AbstractRequestPostPro
 		request.setJavaVersion("10");
 		generateGradleBuild(request).hasJavaVersion("1.8");
 	}
-
 
 	@Test
 	public void java10CanBeUsedWithSpringBoot2Maven() {
