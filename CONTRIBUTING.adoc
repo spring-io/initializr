@@ -43,3 +43,34 @@ added after the original pull request but before a merge.
   message (where XXXX is the issue number).
 
 
+
+== Working with the Code
+
+
+
+=== Building from Source
+Spring Initializer source can be build from the command line using
+http://maven.apache.org/run-maven/index.html[Apache Maven] on JDK 1.8 or above.
+We include '`Maven Wrapper`' scripts (`./mvnw` or `mvnw.bat`) that you can run rather
+than needing to install Maven locally.
+
+
+
+==== Default Build
+The project can be built from the root directory using the standard Maven command:
+
+[indent=0]
+----
+	$ ./mvnw clean install -Pfull
+----
+
+NOTE: The `full` profile includes the `initializr-service` and the documentation. Make
+sure to include that profile when you change code there. It is also recommended to enable
+that profile in your IDE so that refactoring is applied on the entire codebase.
+
+If you want to run the smoke tests, you need Firefox installed and available in the path
+
+[indent=0]
+----
+    $ ./mvnw verify -PsmokeTests
+----
