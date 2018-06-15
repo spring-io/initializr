@@ -34,7 +34,7 @@ initializr:
           - versionRange: "[1.5.4.RELEASE,2.0.0.RELEASE)"
             version: 0.2.3
           - versionRange: "2.0.0.RELEASE"
-            version: 2.0.1
+            version: 2.0.3
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
