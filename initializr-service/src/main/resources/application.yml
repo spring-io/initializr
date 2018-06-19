@@ -168,7 +168,7 @@ initializr:
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      default-version: 1.2.41
+      default-version: 1.2.50
     repositories:
       sonatype-snapshots:
         name: Sonatype Snapshots
