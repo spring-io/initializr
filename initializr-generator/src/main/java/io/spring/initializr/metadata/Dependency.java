@@ -216,6 +216,7 @@ public class Dependency extends MetadataElement implements Describable {
 		if (this.versionRange != null) {
 			try {
 				this.range = versionParser.parseRange(this.versionRange);
+				this.versionRange = this.range.toRangeString();
 				this.versionRequirement = this.range.toString();
 			}
 			catch (InvalidVersionException ex) {

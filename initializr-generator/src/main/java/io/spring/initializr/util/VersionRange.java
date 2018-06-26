@@ -105,6 +105,22 @@ public class VersionRange {
 		return this.higherInclusive;
 	}
 
+	public String toRangeString() {
+		StringBuilder sb = new StringBuilder();
+		if (this.lowerVersion == null && this.higherVersion == null) {
+			return "";
+		}
+		if (this.higherVersion != null) {
+			sb.append(this.lowerInclusive ? "[" : "(").append(this.lowerVersion)
+					.append(",").append(this.higherVersion)
+					.append(this.higherInclusive ? "]" : ")");
+		}
+		else {
+			sb.append(this.lowerVersion);
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

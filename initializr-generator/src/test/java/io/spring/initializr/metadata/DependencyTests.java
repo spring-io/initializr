@@ -272,6 +272,25 @@ public class DependencyTests {
 				"foo", "com.acme", "bar", "0.3.0.RELEASE");
 	}
 
+	@Test
+	public void resolveVersionWithX() {
+		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1",
+				"0.3.0.RELEASE");
+		dependency1.setVersionRange("1.2.x.RELEASE");
+		dependency1.resolve();
+		assertThat(dependency1.getVersionRange()).isEqualTo("1.2.999.RELEASE");
+	}
+
+	@Test
+	public void resolveVersionRangeWithX() {
+		Dependency dependency = Dependency.withId("foo1", "com.acme", "foo1",
+				"0.3.0.RELEASE");
+		dependency.setVersionRange("[1.1.0.RELEASE, 1.2.x.RELEASE)");
+		dependency.resolve();
+		assertThat(dependency.getVersionRange())
+				.isEqualTo("[1.1.0.RELEASE,1.2.999.RELEASE)");
+	}
+
 	private static void validateResolvedWebDependency(Dependency dependency,
 			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
 		validateResolvedDependency(dependency, "web", expectedGroupId, expectedArtifactId,
