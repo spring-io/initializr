@@ -163,8 +163,10 @@ initializr:
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.5.0.M1)"
             version: 7.7.7
-          - versionRange: "1.5.0.M1"
-            version: 8.4.1
+          - versionRange: "[1.5.0.M1, 2.0.0.M1)"
+            version: 8.4.4
+          - versionRange: "2.0.0.M1"
+            version: 10.0.1
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
