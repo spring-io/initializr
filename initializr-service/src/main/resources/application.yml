@@ -32,7 +32,7 @@ initializr:
         versionProperty: azure.version
         mappings:
           - versionRange: "[1.5.4.RELEASE,2.0.0.RELEASE)"
-            version: 0.2.3
+            version: 0.2.4
           - versionRange: "2.0.0.RELEASE"
             version: 2.0.3
       codecentric-spring-boot-admin:
