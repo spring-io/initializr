@@ -1,6 +1,6 @@
 local:
   gcp:
-    version: 1.0.0.M3
+    version: 1.0.0.RC1
 
 logging:
   level:
