@@ -167,6 +167,7 @@ initializr:
             version: 8.4.4
           - versionRange: "2.0.0.M1"
             version: 10.0.1
+            repositories: vaadin-addons
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
@@ -176,6 +177,10 @@ initializr:
         name: Sonatype Snapshots
         url: https://oss.sonatype.org/content/repositories/snapshots/
         snapshotsEnabled: true
+      vaadin-addons:
+        name: Vaadin Addons
+        url: http://vaadin.com/nexus/content/repositories/vaadin-addons/
+        snapshots-enabled: false
   dependencies:
     - name: Core
       content:
