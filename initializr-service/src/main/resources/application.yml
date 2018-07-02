@@ -121,10 +121,9 @@ initializr:
           - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT]"
             version: 1.6.3.RELEASE
           - versionRange: "[2.0.0.RELEASE,2.0.x.RELEASE]"
-            version: 2.0.0.RC1
-            repositories: spring-milestones
+            version: 2.0.0.RELEASE
           - versionRange: "2.0.x.BUILD-SNAPSHOT"
-            version: 2.0.0.BUILD-SNAPSHOT
+            version: 2.0.1.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-task:
         groupId: org.springframework.cloud
