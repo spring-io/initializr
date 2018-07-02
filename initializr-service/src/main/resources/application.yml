@@ -65,7 +65,7 @@ initializr:
           - versionRange: "[1.4.0.RELEASE,1.4.x.RELEASE]"
             version: Camden.SR7
           - versionRange: "[1.5.0.RELEASE,1.5.x.RELEASE]"
-            version: Edgware.SR3
+            version: Edgware.SR4
           - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Edgware.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
