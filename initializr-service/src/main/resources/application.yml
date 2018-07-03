@@ -398,6 +398,17 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.3.0.RC1)"
               version: 1.0.1.RELEASE
           scope: test
+        - name: Spring Cloud Open Service Broker
+          id: open-service-broker
+          description: Create service brokers that conform to the Open Server Broker API specification
+          groupId: org.springframework.cloud
+          artifactId: spring-cloud-starter-open-service-broker-webmvc
+          mappings:
+            - versionRange: 2.0.0.RELEASE
+              version: 2.0.0.RELEASE
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-cloud-open-service-broker/docs/2.0.0.RELEASE/reference/html5/
         - name: Vaadin
           id: vaadin
           facets:
