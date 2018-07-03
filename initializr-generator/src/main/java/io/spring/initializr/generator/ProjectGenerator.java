@@ -404,6 +404,8 @@ public class ProjectGenerator {
 				filterDependencies(dependencies, Dependency.SCOPE_RUNTIME));
 		model.put("compileOnlyDependencies",
 				filterDependencies(dependencies, Dependency.SCOPE_COMPILE_ONLY));
+		model.put("annotationProcessorDependencies",
+				filterDependencies(dependencies, Dependency.SCOPE_ANNOTATION_PROCESSOR));
 		model.put("providedDependencies",
 				filterDependencies(dependencies, Dependency.SCOPE_PROVIDED));
 		model.put("testDependencies",

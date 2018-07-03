@@ -51,6 +51,11 @@ public class Dependency extends MetadataElement implements Describable {
 	public static final String SCOPE_COMPILE_ONLY = "compileOnly";
 
 	/**
+	 * Annotation Processor Scope.
+	 */
+	public static final String SCOPE_ANNOTATION_PROCESSOR = "annotationProcessor";
+
+	/**
 	 * Runtime Scope.
 	 */
 	public static final String SCOPE_RUNTIME = "runtime";
@@ -68,9 +73,9 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * All scope types.
 	 */
-	public static final List<String> SCOPE_ALL = Collections
-			.unmodifiableList(Arrays.asList(SCOPE_COMPILE, SCOPE_RUNTIME,
-					SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST));
+	public static final List<String> SCOPE_ALL = Collections.unmodifiableList(
+			Arrays.asList(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_COMPILE_ONLY,
+					SCOPE_ANNOTATION_PROCESSOR, SCOPE_PROVIDED, SCOPE_TEST));
 
 	private List<String> aliases = new ArrayList<>();
 
