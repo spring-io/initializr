@@ -98,6 +98,9 @@ dependencies {
 	{{#compileOnlyDependencies}}
 	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileOnlyDependencies}}
+	{{#annotationProcessorDependencies}}
+	annotationProcessor('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{/annotationProcessorDependencies}}
 	{{#providedDependencies}}
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}

@@ -89,6 +89,19 @@
 			{{/type}}
 		</dependency>
 		{{/compileOnlyDependencies}}
+		{{#annotationProcessorDependencies}}
+		<dependency>
+			<groupId>{{groupId}}</groupId>
+			<artifactId>{{artifactId}}</artifactId>
+			{{#version}}
+			<version>{{version}}</version>
+			{{/version}}
+			<optional>true</optional>
+			{{#type}}
+			<type>{{type}}</type>
+			{{/type}}
+		</dependency>
+		{{/annotationProcessorDependencies}}
 		{{#providedDependencies}}
 		<dependency>
 			<groupId>{{groupId}}</groupId>

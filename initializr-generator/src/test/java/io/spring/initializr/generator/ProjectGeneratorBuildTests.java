@@ -144,6 +144,24 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void annotationProcessorDependency() {
+		Dependency annotationProcessor = Dependency.withId("configuration-processor",
+				"org.springframework.boot", "spring-boot-configuration-processor");
+		annotationProcessor.setScope(Dependency.SCOPE_ANNOTATION_PROCESSOR);
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("core", "web", "data-jpa")
+				.addDependencyGroup("configuration-processor", annotationProcessor)
+				.build();
+		applyMetadata(metadata);
+		ProjectRequest request = createProjectRequest("configuration-processor", "web",
+				"data-jpa");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(this.fileName)
+				.equalsTo(new ClassPathResource("project/" + this.build
+						+ "/annotation-processor-dependency-" + this.assertFileName));
+	}
+
+	@Test
 	public void bomWithOrdering() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("foo-bom");
