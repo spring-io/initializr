@@ -410,7 +410,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
 		request.setBootVersion("2.0.0.M4");
-		generateProject(request).isGradleProject("4.5.1");
+		generateProject(request).isGradleProject("4.8.1");
 	}
 
 	@Test
@@ -418,7 +418,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
 		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
-		generateProject(request).isGradleProject("4.5.1");
+		generateProject(request).isGradleProject("4.8.1");
 	}
 
 	@Test
