@@ -47,6 +47,7 @@
 
 	<modules>
 		<module>initializr-actuator</module>
+		<module>initializr-docs</module>
 		<module>initializr-generator</module>
 		<module>initializr-web</module>
 	</modules>
@@ -311,15 +312,8 @@
 
 	<profiles>
 		<profile>
-			<id>docs</id>
-			<modules>
-				<module>initializr-docs</module>
-			</modules>
-		</profile>
-		<profile>
 			<id>full</id>
 			<modules>
-				<module>initializr-docs</module>
 				<module>initializr-service</module>
 			</modules>
 		</profile>

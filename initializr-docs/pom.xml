@@ -12,7 +12,7 @@
 
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
-		<snippets.location>${project.build.directory}/snippets</snippets.location>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 
 	<dependencies>
@@ -69,6 +69,10 @@
 	<profiles>
 		<profile>
 			<id>docs</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<snippets.location>${project.build.directory}/snippets</snippets.location>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
