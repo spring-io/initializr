@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.spring.initializr</groupId>
 	<artifactId>initializr</artifactId>
-	<version>0.6.0.BUILD-SNAPSHOT</version>
+	<version>0.6.0.RELEASE</version>
 	<packaging>pom</packaging>
 	<name>Spring Initializr</name>
 	<description>A web-based quickstart generator for Spring projects</description>
@@ -57,28 +55,28 @@
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-actuator</artifactId>
-				<version>0.6.0.BUILD-SNAPSHOT</version>
+				<version>0.6.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-generator</artifactId>
-				<version>0.6.0.BUILD-SNAPSHOT</version>
+				<version>0.6.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-generator</artifactId>
-				<version>0.6.0.BUILD-SNAPSHOT</version>
+				<version>0.6.0.RELEASE</version>
 				<type>test-jar</type>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-web</artifactId>
-				<version>0.6.0.BUILD-SNAPSHOT</version>
+				<version>0.6.0.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-web</artifactId>
-				<version>0.6.0.BUILD-SNAPSHOT</version>
+				<version>0.6.0.RELEASE</version>
 				<type>test-jar</type>
 			</dependency>
 
@@ -299,7 +297,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

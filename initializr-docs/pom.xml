@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr</artifactId>
-		<version>0.6.0.BUILD-SNAPSHOT</version>
+		<version>0.6.0.RELEASE</version>
 	</parent>
 	<artifactId>initializr-docs</artifactId>
 	<name>Spring Initializr :: Docs</name>
@@ -224,8 +223,7 @@
 												<include name="**/*.epub" />
 											</fileset>
 										</copy>
-										<move file="${basedir}/target/contents/reference/epub/index.epub"
-											tofile="${basedir}/target/contents/reference/epub/initializr-reference.epub" />
+										<move file="${basedir}/target/contents/reference/epub/index.epub" tofile="${basedir}/target/contents/reference/epub/initializr-reference.epub" />
 									</postProcess>
 								</configuration>
 							</execution>
@@ -266,8 +264,7 @@
 								</goals>
 								<configuration>
 									<target>
-										<zip
-											destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
+										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
 											<fileset dir="${project.build.directory}/contents" />
 										</zip>
 									</target>
@@ -285,20 +282,15 @@
 										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 										<taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask" />
 										<var name="version-type" value="${project.version}" />
-										<propertyregex property="version-type" override="true"
-											input="${version-type}" regexp=".*\.(.*)" replace="\1" />
-										<propertyregex property="version-type" override="true"
-											input="${version-type}" regexp="(M)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true"
-											input="${version-type}" regexp="(RC)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true"
-											input="${version-type}" regexp="BUILD-(.*)" replace="SNAPSHOT" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp=".*\.(.*)" replace="\1" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(M)\d+" replace="MILESTONE" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(RC)\d+" replace="MILESTONE" />
+										<propertyregex property="version-type" override="true" input="${version-type}" regexp="BUILD-(.*)" replace="SNAPSHOT" />
 										<stringutil string="${version-type}" property="initializr-repo">
 											<lowercase />
 										</stringutil>
 										<var name="github-tag" value="v${project.version}" />
-										<propertyregex property="github-tag" override="true"
-											input="${github-tag}" regexp=".*SNAPSHOT" replace="master" />
+										<propertyregex property="github-tag" override="true" input="${github-tag}" regexp=".*SNAPSHOT" replace="master" />
 									</target>
 								</configuration>
 							</execution>
