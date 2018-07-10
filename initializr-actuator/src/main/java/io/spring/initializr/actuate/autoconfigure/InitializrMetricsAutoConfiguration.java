@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(MeterRegistry.class)
 @AutoConfigureAfter(CompositeMeterRegistryAutoConfiguration.class)
-public class InitializrMetricsConfiguration {
+public class InitializrMetricsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnSingleCandidate(MeterRegistry.class)

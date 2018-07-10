@@ -18,16 +18,21 @@ package io.spring.initializr.actuate.autoconfigure;
 
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
 import org.junit.Test;
 
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.support.RetryTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,12 +43,44 @@ import static org.mockito.Mockito.mock;
  * Tests for {@link InitializrStatsAutoConfiguration}.
  *
  * @author Stephane Nicoll
+ * @author Madhura Bhave
  */
 public class InitializrStatsAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
+			.withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class,
+					InitializrAutoConfiguration.class,
+					RestTemplateAutoConfiguration.class,
 					InitializrStatsAutoConfiguration.class));
+
+	@Test
+	public void autoConfigRegistersProjectGenerationStatPublisher() {
+		this.contextRunner
+				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
+				.run((context) -> assertThat(context)
+						.hasSingleBean(ProjectGenerationStatPublisher.class));
+	}
+
+	@Test
+	public void autoConfigRegistersRetryTemplate() {
+		this.contextRunner
+				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
+				.run((context) -> assertThat(context).hasSingleBean(RetryTemplate.class));
+	}
+
+	@Test
+	public void statsRetryTemplateConditionalOnMissingBean() {
+		this.contextRunner
+				.withUserConfiguration(CustomStatsRetryTemplateConfiguration.class)
+				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
+				.run((context) -> {
+					assertThat(context).hasSingleBean(RetryTemplate.class);
+					RetryTemplate retryTemplate = context.getBean(RetryTemplate.class);
+					ExponentialBackOffPolicy backOffPolicy = (ExponentialBackOffPolicy) ReflectionTestUtils
+							.getField(retryTemplate, "backOffPolicy");
+					assertThat(backOffPolicy.getMultiplier()).isEqualTo(10);
+				});
+	}
 
 	@Test
 	public void customRestTemplateBuilderIsUsed() {
@@ -58,6 +95,20 @@ public class InitializrStatsAutoConfigurationTests {
 					assertThat(restTemplate.getErrorHandler())
 							.isSameAs(CustomRestTemplateConfiguration.errorHandler);
 				});
+	}
+
+	@Configuration
+	static class CustomStatsRetryTemplateConfiguration {
+
+		@Bean
+		public RetryTemplate statsRetryTemplate() {
+			RetryTemplate retryTemplate = new RetryTemplate();
+			ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+			backOffPolicy.setMultiplier(10);
+			retryTemplate.setBackOffPolicy(backOffPolicy);
+			return retryTemplate;
+		}
+
 	}
 
 	@Configuration

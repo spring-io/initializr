@@ -41,7 +41,6 @@ import io.spring.initializr.web.ui.UiController;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -68,7 +67,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  */
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
-@AutoConfigureAfter({ CacheAutoConfiguration.class, JacksonAutoConfiguration.class,
+@AutoConfigureAfter({ JacksonAutoConfiguration.class,
 		RestTemplateAutoConfiguration.class })
 public class InitializrAutoConfiguration {
 
@@ -103,6 +102,7 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean
 	public ProjectResourceLocator projectResourceLocator() {
 		return new ProjectResourceLocator();
 	}
