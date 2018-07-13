@@ -17,11 +17,7 @@
 package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
-
 import org.junit.Test;
-
-import static io.spring.initializr.service.extension.SpringCloudFunctionRequestPostProcessor.STREAM_ADAPTER;
-import static io.spring.initializr.service.extension.SpringCloudFunctionRequestPostProcessor.WEB_ADAPTER;
 
 /**
  * Tests for {@link SpringCloudFunctionRequestPostProcessor}.
@@ -32,20 +28,38 @@ public class SpringCloudFunctionRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
 
 	@Test
+	public void functionOnly() {
+		ProjectRequest request = createProjectRequest("cloud-function");
+		generateMavenPom(request).hasDependency(getDependency("cloud-function"))
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
+	}
+
+	@Test
 	public void springCloudStreamWithRabbit() {
 		ProjectRequest request = createProjectRequest("cloud-stream", "amqp",
 				"cloud-function");
 		generateMavenPom(request).hasDependency(getDependency("cloud-stream"))
-				.hasDependency(getDependency("amqp")).hasDependency(STREAM_ADAPTER)
-				.hasDependenciesCount(7);
+				.hasDependency(getDependency("amqp"))
+				.hasDependency(SpringCloudFunctionRequestPostProcessor.SCS_ADAPTER)
+				.hasDependenciesCount(6);
+	}
+
+	@Test
+	public void reactiveSpringCloudStreamWithKafka() {
+		ProjectRequest request = createProjectRequest("reactive-cloud-stream", "kafka",
+				"cloud-function");
+		generateMavenPom(request).hasDependency(getDependency("reactive-cloud-stream"))
+				.hasDependency(getDependency("kafka"))
+				.hasDependency(SpringCloudFunctionRequestPostProcessor.SCS_ADAPTER)
+				.hasDependenciesCount(6);
 	}
 
 	@Test
 	public void web() {
 		ProjectRequest request = createProjectRequest("web", "cloud-function");
-		generateMavenPom(request).hasDependency(getDependency("cloud-function"))
-				.hasDependency(getDependency("web")).hasDependency(WEB_ADAPTER)
-				.hasDependenciesCount(4);
+		generateMavenPom(request).hasDependency(getDependency("web"))
+				.hasDependency(SpringCloudFunctionRequestPostProcessor.WEB_ADAPTER)
+				.hasDependenciesCount(3);
 	}
 
 }

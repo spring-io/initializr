@@ -16,6 +16,9 @@
 
 package io.spring.initializr.service.extension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -32,7 +35,7 @@ import org.springframework.stereotype.Component;
 class SpringCloudFunctionRequestPostProcessor
 		extends AbstractProjectRequestPostProcessor {
 
-	static final Dependency STREAM_ADAPTER = Dependency.withId("cloud-function-stream",
+	static final Dependency SCS_ADAPTER = Dependency.withId("cloud-function-stream",
 			"org.springframework.cloud", "spring-cloud-function-stream");
 
 	static final Dependency WEB_ADAPTER = Dependency.withId("cloud-function-web",
@@ -41,14 +44,20 @@ class SpringCloudFunctionRequestPostProcessor
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
-		boolean hasSpringCloudStream = hasDependency(request, "cloud-stream") || hasDependency(request, "reactive-cloud-stream");
-		// TODO: add webflux when s-c-f is ready
-		boolean hasWeb = hasDependency(request, "web");
-		if (hasSpringCloudStream) {
-			request.getResolvedDependencies().add(STREAM_ADAPTER);
-		}
-		if (hasWeb) {
-			request.getResolvedDependencies().add(WEB_ADAPTER);
+		Dependency cloudFunction = getDependency(request, "cloud-function");
+		if (cloudFunction != null) {
+			List<Dependency> swap = new ArrayList<>();
+			if (hasDependency(request, "cloud-stream")
+					|| hasDependency(request, "reactive-cloud-stream")) {
+				swap.add(SCS_ADAPTER);
+			}
+			if (hasDependency(request, "web")) {
+				swap.add(WEB_ADAPTER);
+			}
+			if (!swap.isEmpty()) {
+				request.getResolvedDependencies().remove(cloudFunction);
+				request.getResolvedDependencies().addAll(swap);
+			}
 		}
 	}
 

@@ -821,12 +821,11 @@ initializr:
           description: Functions as Spring Beans
           versionRange: 2.0.2.RELEASE
           links:
-            - rel: home
+            - rel: reference
               href: https://cloud.spring.io/spring-cloud-function/
-              description: Spring Cloud Function home page
             - rel: sample
-              href: https://github.com/spring-cloud/spring-cloud-function/tree/master/spring-cloud-function-samples/function-sample
-              description: A sample app using Spring Cloud Function
+              href: https://github.com/spring-cloud/spring-cloud-function/tree/master/spring-cloud-function-samples
+              description: Various sample apps using Spring Cloud Function
         - name: Cloud Security
           id: cloud-security
           description: Secure load balancing and routing with spring-cloud-security
