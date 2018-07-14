@@ -48,11 +48,11 @@ class SpringSessionRequestPostProcessor extends AbstractProjectRequestPostProces
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
 		if (isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M3)) {
-			swapSpringSessionDepenendency(request);
+			swapSpringSessionDependency(request);
 		}
 	}
 
-	private void swapSpringSessionDepenendency(ProjectRequest request) {
+	private void swapSpringSessionDependency(ProjectRequest request) {
 		Dependency session = getDependency(request, "session");
 		if (session != null) {
 			List<Dependency> swap = new ArrayList<>();
