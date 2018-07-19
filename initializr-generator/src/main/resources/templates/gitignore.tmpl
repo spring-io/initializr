@@ -1,0 +1,38 @@
+{{#mavenBuild}}
+target/
+!.mvn/wrapper/maven-wrapper.jar
+{{/mavenBuild}}
+{{^mavenBuild}}
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+{{/mavenBuild}}
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.attach_pid*
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+{{^mavenBuild}}
+out/
+{{/mavenBuild}}
+
+### NetBeans ###
+nbproject/private/
+{{#mavenBuild}}
+build/
+{{/mavenBuild}}
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
