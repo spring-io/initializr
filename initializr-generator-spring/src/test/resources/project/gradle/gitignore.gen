@@ -1,5 +1,3 @@
-!**/src/main/**
-!**/src/test/**
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -22,8 +20,11 @@ build/
 out/
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+!**/src/main/**
+!**/src/test/**

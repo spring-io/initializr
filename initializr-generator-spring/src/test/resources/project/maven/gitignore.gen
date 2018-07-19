@@ -1,5 +1,3 @@
-!**/src/main/**
-!**/src/test/**
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -20,9 +18,12 @@ target/
 *.ipr
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-/build/
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+!**/src/main/**
+!**/src/test/**
