@@ -1,5 +1,5 @@
 .gradle
-/build/
+build/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###
@@ -7,16 +7,17 @@
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
+.attach_pid*
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-/out/
+out/
 
 ### NetBeans ###
 /nbproject/private/
