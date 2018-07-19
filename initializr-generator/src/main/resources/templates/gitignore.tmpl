@@ -1,3 +1,5 @@
+!**/src/main/**
+!**/src/test/**
 {{#mavenBuild}}
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -5,8 +7,6 @@ target/
 {{^mavenBuild}}
 .gradle
 build/
-!**/src/main/**
-!**/src/test/**
 !gradle/wrapper/gradle-wrapper.jar
 {{/mavenBuild}}
 
