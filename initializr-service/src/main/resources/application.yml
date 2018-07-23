@@ -213,6 +213,16 @@ initializr:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
               version: 1.16.6
           starter: false
+        - name: Vavr.io
+          id: vavrio
+          groupId: io.vavr
+          artifactId: vavr
+          scope: compileOnly
+          description: Java functional library which helps to reduce amount of code and to increase the robustness.
+          mappings:
+            - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
+              version: 0.9.2
+          starter: false
         - name: Configuration Processor
           id: configuration-processor
           groupId: org.springframework.boot
