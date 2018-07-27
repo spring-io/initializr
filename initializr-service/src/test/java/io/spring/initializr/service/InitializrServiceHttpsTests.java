@@ -16,14 +16,8 @@
 
 package io.spring.initializr.service;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,7 +26,7 @@ import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -42,49 +36,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Basic smoke tests for {@link InitializrService}.
+ * Integration tests for {@link InitializrService} that force https.
  *
  * @author Stephane Nicoll
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "initializr.env.force-ssl=true")
 @AutoConfigureCache
-public class InitializrServiceSmokeTests {
+public class InitializrServiceHttpsTests {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	@Autowired
-	private InitializrMetadataProvider metadataProvider;
+	@LocalServerPort
+	private int localPort;
 
 	@Test
-	public void metadataCanBeSerialized() throws URISyntaxException, IOException {
-		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
-				.accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
-				.build();
+	public void httpCallRedirectsToHttps() {
+		RequestEntity<Void> request = RequestEntity.get(URI.create("/"))
+				.accept(MediaType.TEXT_HTML).build();
 		ResponseEntity<String> response = this.restTemplate.exchange(request,
 				String.class);
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		new ObjectMapper().readTree(response.getBody());
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+		assertThat(response.getHeaders().getLocation()).isEqualTo(
+				URI.create(String.format("https://localhost:%s/", this.localPort)));
 	}
 
 	@Test
-	public void configurationCanBeSerialized() throws URISyntaxException {
-		RequestEntity<Void> request = RequestEntity.get(new URI("/metadata/config"))
-				.accept(MediaType.APPLICATION_JSON).build();
+	public void securedProxiedCallDoesNotRedirect() {
+		RequestEntity<Void> request = RequestEntity.get(URI.create("/"))
+				.header("X-Forwarded-Proto", "https").accept(MediaType.TEXT_HTML).build();
 		ResponseEntity<String> response = this.restTemplate.exchange(request,
 				String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		InitializrMetadata actual = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(
-						new ByteArrayResource(response.getBody().getBytes()))
-				.build();
-		assertThat(actual).isNotNull();
-		InitializrMetadata expected = this.metadataProvider.get();
-		assertThat(actual.getDependencies().getAll().size())
-				.isEqualTo(expected.getDependencies().getAll().size());
-		assertThat(actual.getConfiguration().getEnv().getBoms().size())
-				.isEqualTo(expected.getConfiguration().getEnv().getBoms().size());
 	}
 
 }

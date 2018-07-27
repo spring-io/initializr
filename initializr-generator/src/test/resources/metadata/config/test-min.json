@@ -1,7 +1,7 @@
 {
   "configuration": {
     "env": {
-      "forceSsl": false
+      "forceSsl": true
     }
   },
   "dependencies": {

@@ -32,7 +32,7 @@
   "configuration": {"env": {
     "artifactRepository": "https://repo.spring.io/release/",
     "fallbackApplicationName": "Application",
-    "forceSsl": true,
+    "forceSsl": false,
     "gradle": {
       "dependencyManagementPluginVersion": "1.0.0.RELEASE"
     },

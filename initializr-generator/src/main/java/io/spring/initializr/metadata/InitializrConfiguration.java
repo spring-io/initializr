@@ -197,9 +197,10 @@ public class InitializrConfiguration {
 				Collections.singletonList("org.springframework"));
 
 		/**
-		 * Force SSL support. When enabled, any access using http generate https links.
+		 * Force SSL support. When enabled, any access using http generate https links and
+		 * browsers are redirected to https for html content.
 		 */
-		private boolean forceSsl = true;
+		private boolean forceSsl;
 
 		/**
 		 * The "BillOfMaterials" that are referenced in this instance, identified by an

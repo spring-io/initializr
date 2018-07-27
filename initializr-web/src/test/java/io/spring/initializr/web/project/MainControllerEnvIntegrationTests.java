@@ -29,6 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Integration tests with custom environment.
+ *
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
@@ -42,14 +44,6 @@ public class MainControllerEnvIntegrationTests
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
-	}
-
-	@Test
-	public void doNotForceSsl() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
-		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
-		assertThat(body).as("Must not force https").doesNotContain("https://");
 	}
 
 	@Test
