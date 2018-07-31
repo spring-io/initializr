@@ -451,8 +451,8 @@ public class ProjectGenerator {
 		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0
-				? "org.springframework.boot" : "spring-boot"));
+		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0)
+				? "org.springframework.boot" : "spring-boot");
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
@@ -493,9 +493,9 @@ public class ProjectGenerator {
 		model.put("groupId", bom.getGroupId());
 		model.put("artifactId", bom.getArtifactId());
 		model.put("versionToken",
-				(bom.getVersionProperty() != null ? "${"
+				(bom.getVersionProperty() != null) ? "${"
 						+ computeVersionProperty(request, bom.getVersionProperty()) + "}"
-						: bom.getVersion()));
+						: bom.getVersion());
 		return model;
 	}
 

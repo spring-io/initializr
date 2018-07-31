@@ -242,33 +242,34 @@ public class ProjectRequestDocument {
 	public String toString() {
 		return "ProjectRequestDocument [generationTimestamp=" + this.generationTimestamp
 				+ ", "
-				+ (this.requestIp != null ? "requestIp=" + this.requestIp + ", " : "")
-				+ (this.requestIpv4 != null ? "requestIpv4=" + this.requestIpv4 + ", "
+				+ ((this.requestIp != null) ? "requestIp=" + this.requestIp + ", " : "")
+				+ ((this.requestIpv4 != null) ? "requestIpv4=" + this.requestIpv4 + ", "
 						: "")
-				+ (this.requestCountry != null
+				+ ((this.requestCountry != null)
 						? "requestCountry=" + this.requestCountry + ", " : "")
-				+ (this.clientId != null ? "clientId=" + this.clientId + ", " : "")
-				+ (this.clientVersion != null
+				+ ((this.clientId != null) ? "clientId=" + this.clientId + ", " : "")
+				+ ((this.clientVersion != null)
 						? "clientVersion=" + this.clientVersion + ", " : "")
-				+ (this.groupId != null ? "groupId=" + this.groupId + ", " : "")
-				+ (this.artifactId != null ? "artifactId=" + this.artifactId + ", " : "")
-				+ (this.packageName != null ? "packageName=" + this.packageName + ", "
+				+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
+				+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
 						: "")
-				+ (this.bootVersion != null ? "bootVersion=" + this.bootVersion + ", "
+				+ ((this.packageName != null) ? "packageName=" + this.packageName + ", "
 						: "")
-				+ (this.javaVersion != null ? "javaVersion=" + this.javaVersion + ", "
+				+ ((this.bootVersion != null) ? "bootVersion=" + this.bootVersion + ", "
 						: "")
-				+ (this.language != null ? "language=" + this.language + ", " : "")
-				+ (this.packaging != null ? "packaging=" + this.packaging + ", " : "")
-				+ (this.type != null ? "type=" + this.type + ", " : "")
-				+ (this.dependencies != null ? "dependencies=" + this.dependencies + ", "
+				+ ((this.javaVersion != null) ? "javaVersion=" + this.javaVersion + ", "
 						: "")
-				+ (this.errorMessage != null ? "errorMessage=" + this.errorMessage + ", "
-						: "")
+				+ ((this.language != null) ? "language=" + this.language + ", " : "")
+				+ ((this.packaging != null) ? "packaging=" + this.packaging + ", " : "")
+				+ ((this.type != null) ? "type=" + this.type + ", " : "")
+				+ ((this.dependencies != null)
+						? "dependencies=" + this.dependencies + ", " : "")
+				+ ((this.errorMessage != null)
+						? "errorMessage=" + this.errorMessage + ", " : "")
 				+ "invalid=" + this.invalid + ", invalidJavaVersion="
 				+ this.invalidJavaVersion + ", invalidLanguage=" + this.invalidLanguage
 				+ ", invalidPackaging=" + this.invalidPackaging + ", invalidType="
-				+ this.invalidType + ", " + (this.invalidDependencies != null
+				+ this.invalidType + ", " + ((this.invalidDependencies != null)
 						? "invalidDependencies=" + this.invalidDependencies : "")
 				+ "]";
 	}
