@@ -98,7 +98,7 @@ initializr:
             version: Finchley.RC2
             repositories: spring-milestones
           - versionRange: "[2.0.3.RELEASE,2.0.x.BUILD-SNAPSHOT)"
-            version: Finchley.RELEASE
+            version: Finchley.SR1
           - versionRange: "2.0.x.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
