@@ -43,10 +43,10 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
-          - versionRange: "[2.0.0.M1,2.0.x.BUILD-SNAPSHOT)"
-            version: 2.0.1
-          - versionRange: "2.0.x.BUILD-SNAPSHOT"
-            version: 2.0.2-SNAPSHOT
+          - versionRange: "[2.0.0.M1,2.1.0.M1)"
+            version: 2.0.2
+          - versionRange: "2.1.0.M1"
+            version: 2.1.0-SNAPSHOT
             repositories: sonatype-snapshots
       keycloak:
         groupId: org.keycloak.bom
