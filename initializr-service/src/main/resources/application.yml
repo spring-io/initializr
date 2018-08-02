@@ -264,36 +264,6 @@ initializr:
           description: Provide declarative retry support via spring-retry
           versionRange: 1.3.0.RELEASE
           starter: false
-        - name: JTA (Atomikos)
-          id: jta-atomikos
-          description: JTA distributed transactions via Atomikos
-          versionRange: 1.2.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-atomikos
-        - name: JTA (Bitronix)
-          id: jta-bitronix
-          description: JTA distributed transactions via Bitronix
-          versionRange: 1.2.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-bitronix
-        - name: JTA (Narayana)
-          id: jta-narayana
-          description: JTA distributed transactions via Narayana
-          versionRange: 1.4.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-narayana
         - name: Aspects
           id: aop
           description: Create your own Aspects using Spring AOP and AspectJ
