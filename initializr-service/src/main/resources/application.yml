@@ -52,7 +52,11 @@ initializr:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
         versionProperty: keycloak.version
-        version: 3.4.2.Final
+        mappings:
+          - versionRange : "[1.5.3.RELEASE,2.0.0.M1)"
+            version: 3.4.2.Final
+          - versionRange : "2.0.0.M1"
+            version: 4.2.0.Final
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -446,7 +450,7 @@ initializr:
           description: Keycloak integration, an open source Identity and Access Management solution.
           groupId: org.keycloak
           artifactId: keycloak-spring-boot-starter
-          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
+          versionRange: "1.5.3.RELEASE"
           bom: keycloak
           links:
             - rel: reference
