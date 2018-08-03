@@ -1,0 +1,8 @@
+github-repo: "https://github.com/spring-io/initializr.git"
+github-repo-name: "spring-io/initializr"
+docker-hub-organization: "springci"
+artifactory-server: "https://repo.spring.io"
+branch: "master"
+build-name: "initializr"
+pipeline-name: "initializr"
+concourse-url: "https://ci.spring.io"
