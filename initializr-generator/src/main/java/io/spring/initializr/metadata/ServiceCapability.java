@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  * Defines a capability of the initializr service. Each capability is defined by a id and
  * a {@link ServiceCapabilityType type}.
  *
- * @param <T> the content type
+ * @param <T> The content type
  * @author Stephane Nicoll
  */
 @JsonIgnoreProperties({ "default", "all" })

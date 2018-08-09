@@ -33,8 +33,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("1.5.4.RELEASE");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependenciesCount(3);
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
@@ -63,8 +62,7 @@ public class SpringSessionRequestPostProcessorTests
 		request.setBootVersion("2.0.0.M2");
 		generateMavenPom(request)
 				.hasDependency("org.springframework.session", "spring-session")
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependenciesCount(3);
+				.hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test

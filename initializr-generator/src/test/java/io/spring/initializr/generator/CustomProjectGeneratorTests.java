@@ -46,7 +46,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void generateCustomResource() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("maven-project");
-		request.setGroupId("com.example.custom");
+		request.setGroupId("com.finastra.chassis.custom");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("custom.txt")
 				.equalsTo(new ClassPathResource("project/custom/custom.txt"));
@@ -56,7 +56,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void generateCustomResourceDisabled() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("gradle-build");
-		request.setGroupId("com.example.custom");
+		request.setGroupId("com.finastra.chassis.custom");
 		ProjectAssert project = generateProject(request);
 		project.hasNoFile("custom.txt");
 	}
@@ -65,7 +65,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void projectGenerationEventFiredAfterCustomization() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("maven-project");
-		request.setGroupId("com.example.custom");
+		request.setGroupId("com.finastra.chassis.custom");
 		generateProject(request);
 		verifyProjectSuccessfulEventFor(request);
 

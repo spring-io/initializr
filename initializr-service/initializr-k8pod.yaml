@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: chassis-initializr-pod
+  labels:
+    app: chassis-initializr
+spec:
+  containers:
+    - name: chassis-initializr-app
+      image: alecoman/chassis-initializr
+      ports:
+        - containerPort: 8080
+  restartPolicy: Never

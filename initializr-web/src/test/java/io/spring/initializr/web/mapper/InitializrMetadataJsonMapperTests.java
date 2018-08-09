@@ -63,7 +63,7 @@ public class InitializrMetadataJsonMapperTests {
 
 	@Test
 	public void linksRendered() {
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo");
+		Dependency dependency = Dependency.withId("foo", "com.finastra.chassis", "foo");
 		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()

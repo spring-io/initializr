@@ -29,10 +29,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
 import io.spring.initializr.metadata.BillOfMaterials;
+import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -252,6 +254,9 @@ public class ProjectGenerator {
 		write(new File(src, applicationName + "." + extension),
 				"Application." + extension, model);
 
+		write(new File(src, applicationName + "Controller." + extension),
+				"ApplicationController." + extension, model);
+
 		if ("war".equals(request.getPackaging())) {
 			String fileName = "ServletInitializer." + extension;
 			write(new File(src, fileName), fileName, model);
@@ -266,7 +271,8 @@ public class ProjectGenerator {
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+		write(new File(resources, "application.properties"), "application.properties",
+				model);
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
@@ -373,8 +379,18 @@ public class ProjectGenerator {
 
 		if (isMavenBuild(request)) {
 			model.put("mavenBuild", true);
+			Optional<String> bootFullName = metadata.getBootVersions().getContent()
+					.stream()
+					.filter((bootElem) -> bootElem.getName().contains(
+							"(with spring-boot " + request.getBootVersion() + ")"))
+					.map(DefaultMetadataElement::getName).findAny();
+			String chassisVersion = "0.0.1-SNAPSHOT";
+			if (bootFullName.isPresent()) {
+				chassisVersion = bootFullName
+						.map((name) -> name.substring(0, name.indexOf(" "))).get();
+			}
 			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
-					.resolveParentPom(request.getBootVersion());
+					.resolveParentPom(chassisVersion);
 			if (parentPom.isIncludeSpringBootBom()
 					&& !request.getBoms().containsKey("spring-boot")) {
 				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
@@ -451,8 +467,8 @@ public class ProjectGenerator {
 		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
 
 		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0)
-				? "org.springframework.boot" : "spring-boot");
+		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0
+				? "org.springframework.boot" : "spring-boot"));
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
@@ -493,9 +509,9 @@ public class ProjectGenerator {
 		model.put("groupId", bom.getGroupId());
 		model.put("artifactId", bom.getArtifactId());
 		model.put("versionToken",
-				(bom.getVersionProperty() != null) ? "${"
+				(bom.getVersionProperty() != null ? "${"
 						+ computeVersionProperty(request, bom.getVersionProperty()) + "}"
-						: bom.getVersion());
+						: bom.getVersion()));
 		return model;
 	}
 
@@ -511,19 +527,10 @@ public class ProjectGenerator {
 			Map<String, Object> model) {
 		Imports imports = new Imports(request.getLanguage());
 		Annotations annotations = new Annotations();
-		boolean useSpringBootApplication = VERSION_1_2_0_RC1
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
-		if (useSpringBootApplication) {
-			imports.add("org.springframework.boot.autoconfigure.SpringBootApplication");
-			annotations.add("@SpringBootApplication");
-		}
-		else {
-			imports.add("org.springframework.boot.autoconfigure.EnableAutoConfiguration")
-					.add("org.springframework.context.annotation.ComponentScan")
-					.add("org.springframework.context.annotation.Configuration");
-			annotations.add("@EnableAutoConfiguration").add("@ComponentScan")
-					.add("@Configuration");
-		}
+
+		imports.add("com.trmsys.fabric.chassis.ChassisApplication");
+		annotations.add("@ChassisApplication");
+
 		model.put("applicationImports", imports.toString());
 		model.put("applicationAnnotations", annotations.toString());
 

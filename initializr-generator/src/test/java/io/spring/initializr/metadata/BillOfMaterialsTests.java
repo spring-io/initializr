@@ -37,7 +37,8 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void resolveSimpleBom() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
 		bom.validate();
 		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
 		assertThat(bom).isSameAs(resolved);
@@ -45,14 +46,15 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void resolveSimpleRange() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
 		bom.setVersionProperty("bom.version");
 		bom.getRepositories().add("repo-main");
 		bom.getAdditionalBoms().add("bom-main");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.validate();
 		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId()).isEqualTo("com.example");
+		assertThat(resolved.getGroupId()).isEqualTo("com.finastra.chassis");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
 		assertThat(resolved.getVersionProperty().toStandardFormat())
@@ -65,7 +67,8 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void resolveRangeOverride() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
 		bom.getRepositories().add("repo-main");
 		bom.getAdditionalBoms().add("bom-main");
 		Mapping mapping = Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0", "repo-foo");
@@ -73,7 +76,7 @@ public class BillOfMaterialsTests {
 		bom.getMappings().add(mapping);
 		bom.validate();
 		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId()).isEqualTo("com.example");
+		assertThat(resolved.getGroupId()).isEqualTo("com.finastra.chassis");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
 		assertThat(resolved.getVersionProperty()).isNull();
@@ -85,12 +88,13 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void resolveRangeOverrideAndMapping() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
 		bom.setVersionProperty("example.version");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.validate();
 		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId()).isEqualTo("com.example");
+		assertThat(resolved.getGroupId()).isEqualTo("com.finastra.chassis");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
 		assertThat(resolved.getVersionProperty().toStandardFormat())
@@ -99,7 +103,7 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void noRangeAvailable() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
 		bom.validate();
@@ -111,7 +115,8 @@ public class BillOfMaterialsTests {
 
 	@Test
 	public void resolveRangeWithVariablePatch() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
 		bom.getMappings().add(Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));
 		bom.getMappings().add(BillOfMaterials.Mapping
 				.create("[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)", "1.1.1-SNAPSHOT"));

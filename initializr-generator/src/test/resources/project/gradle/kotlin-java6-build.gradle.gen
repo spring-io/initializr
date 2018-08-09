@@ -20,7 +20,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 
-group = 'com.example'
+group = 'com.finastra.chassis'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.6
 compileKotlin {
@@ -40,7 +40,6 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter')
 	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')

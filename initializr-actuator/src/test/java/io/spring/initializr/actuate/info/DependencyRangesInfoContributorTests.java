@@ -47,7 +47,7 @@ public class DependencyRangesInfoContributorTests {
 
 	@Test
 	public void dependencyWithNoMapping() {
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
+		Dependency dependency = Dependency.withId("foo", "com.finastra.chassis", "foo",
 				"1.2.3.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", dependency).build();
@@ -57,7 +57,7 @@ public class DependencyRangesInfoContributorTests {
 
 	@Test
 	public void dependencyWithRangeOnArtifact() {
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
+		Dependency dependency = Dependency.withId("foo", "com.finastra.chassis", "foo",
 				"1.2.3.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, "foo2", null));
@@ -69,8 +69,9 @@ public class DependencyRangesInfoContributorTests {
 
 	@Test
 	public void dependencyWithRangeAndBom() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "bom",
+				"1.0.0");
+		Dependency dependency = Dependency.withId("foo", "com.finastra.chassis", "foo",
 				"1.2.3.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
@@ -83,7 +84,7 @@ public class DependencyRangesInfoContributorTests {
 
 	@Test
 	public void dependencyNoMappingSimpleRange() {
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
+		Dependency dependency = Dependency.withId("foo", "com.finastra.chassis", "foo",
 				"1.2.3.RELEASE");
 		dependency.setVersionRange("[1.1.0.RELEASE, 1.5.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()

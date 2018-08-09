@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,7 +202,7 @@ final class JsonFieldProcessor {
 				List<String> segments, Match parent) {
 			this.payload = payload;
 			this.path = path;
-			this.segments = (segments != null) ? segments : path.getSegments();
+			this.segments = (segments != null ? segments : path.getSegments());
 			this.parent = parent;
 		}
 

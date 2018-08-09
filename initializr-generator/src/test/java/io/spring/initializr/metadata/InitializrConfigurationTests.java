@@ -33,14 +33,14 @@ public class InitializrConfigurationTests {
 
 	@Test
 	public void generateApplicationNameSimple() {
-		assertThat(this.properties.generateApplicationName("demo"))
-				.isEqualTo("DemoApplication");
+		assertThat(this.properties.generateApplicationName("starter"))
+				.isEqualTo("StarterApplication");
 	}
 
 	@Test
 	public void generateApplicationNameSimpleApplication() {
-		assertThat(this.properties.generateApplicationName("demoApplication"))
-				.isEqualTo("DemoApplication");
+		assertThat(this.properties.generateApplicationName("StarterApplication"))
+				.isEqualTo("StarterApplication");
 	}
 
 	@Test
@@ -129,56 +129,58 @@ public class InitializrConfigurationTests {
 
 	@Test
 	public void generatePackageNameSimple() {
-		assertThat(this.properties.cleanPackageName("com.foo", "com.example"))
+		assertThat(this.properties.cleanPackageName("com.foo", "com.finastra.chassis"))
 				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameSimpleUnderscore() {
-		assertThat(this.properties.cleanPackageName("com.my_foo", "com.example"))
+		assertThat(this.properties.cleanPackageName("com.my_foo", "com.finastra.chassis"))
 				.isEqualTo("com.my_foo");
 	}
 
 	@Test
 	public void generatePackageNameSimpleColon() {
-		assertThat(this.properties.cleanPackageName("com:foo", "com.example"))
+		assertThat(this.properties.cleanPackageName("com:foo", "com.finastra.chassis"))
 				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameMultipleDashers() {
-		assertThat(this.properties.cleanPackageName("com.foo--bar", "com.example"))
-				.isEqualTo("com.foobar");
+		assertThat(
+				this.properties.cleanPackageName("com.foo--bar", "com.finastra.chassis"))
+						.isEqualTo("com.foobar");
 	}
 
 	@Test
 	public void generatePackageNameMultipleSpaces() {
-		assertThat(this.properties.cleanPackageName("  com   foo  ", "com.example"))
-				.isEqualTo("com.foo");
+		assertThat(
+				this.properties.cleanPackageName("  com   foo  ", "com.finastra.chassis"))
+						.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameNull() {
-		assertThat(this.properties.cleanPackageName(null, "com.example"))
-				.isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName(null, "com.finastra.chassis"))
+				.isEqualTo("com.finastra.chassis");
 	}
 
 	@Test
 	public void generatePackageNameInvalidStartCharacter() {
-		assertThat(this.properties.cleanPackageName("0com.foo", "com.example"))
+		assertThat(this.properties.cleanPackageName("0com.foo", "com.finastra.chassis"))
 				.isEqualTo("com.foo");
 	}
 
 	@Test
 	public void generatePackageNameVersion() {
-		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", "com.example"))
-				.isEqualTo("com.foo.test145");
+		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5",
+				"com.finastra.chassis")).isEqualTo("com.foo.test145");
 	}
 
 	@Test
 	public void generatePackageNameInvalidPackageName() {
-		assertThat(this.properties.cleanPackageName("org.springframework", "com.example"))
-				.isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("org.springframework",
+				"com.finastra.chassis")).isEqualTo("com.finastra.chassis");
 	}
 
 	@Test

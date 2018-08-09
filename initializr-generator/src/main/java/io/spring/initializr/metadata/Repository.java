@@ -66,6 +66,23 @@ public class Repository {
 	}
 
 	@Override
+	public String toString() {
+		return "Repository [" + (this.name != null ? "name=" + this.name + ", " : "")
+				+ (this.url != null ? "url=" + this.url + ", " : "") + "snapshotsEnabled="
+				+ this.snapshotsEnabled + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + (this.snapshotsEnabled ? 1231 : 1237);
+		result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -97,23 +114,6 @@ public class Repository {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result + (this.snapshotsEnabled ? 1231 : 1237);
-		result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "Repository [" + ((this.name != null) ? "name=" + this.name + ", " : "")
-				+ ((this.url != null) ? "url=" + this.url + ", " : "")
-				+ "snapshotsEnabled=" + this.snapshotsEnabled + "]";
 	}
 
 }

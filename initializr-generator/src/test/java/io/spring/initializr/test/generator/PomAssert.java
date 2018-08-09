@@ -200,10 +200,6 @@ public class PomAssert {
 				"spring-boot-starter-" + dependency);
 	}
 
-	public PomAssert hasSpringBootStarterRootDependency() {
-		return hasDependency("org.springframework.boot", "spring-boot-starter");
-	}
-
 	public PomAssert hasDependency(String groupId, String artifactId) {
 		return hasDependency(groupId, artifactId, null);
 	}
@@ -220,8 +216,7 @@ public class PomAssert {
 	}
 
 	public PomAssert hasSpringBootParent(String version) {
-		return hasParent("org.springframework.boot", "spring-boot-starter-parent",
-				version);
+		return hasParent("com.trmsys.fabric.chassis", "chassis-parent", "0.0.1-SNAPSHOT");
 	}
 
 	public PomAssert hasDependency(Dependency expected) {

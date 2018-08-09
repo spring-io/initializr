@@ -98,8 +98,8 @@ public final class InitializrMetadataBuilder {
 	 * @return a new {@link InitializrMetadata} instance
 	 */
 	public InitializrMetadata build() {
-		InitializrConfiguration config = (this.configuration != null) ? this.configuration
-				: new InitializrConfiguration();
+		InitializrConfiguration config = (this.configuration != null ? this.configuration
+				: new InitializrConfiguration());
 		InitializrMetadata metadata = createInstance(config);
 		for (InitializrMetadataCustomizer customizer : this.customizers) {
 			customizer.customize(metadata);
@@ -124,13 +124,13 @@ public final class InitializrMetadataBuilder {
 	 */
 	protected void applyDefaults(InitializrMetadata metadata) {
 		if (!StringUtils.hasText(metadata.getName().getContent())) {
-			metadata.getName().setContent("demo");
+			metadata.getName().setContent("starter");
 		}
 		if (!StringUtils.hasText(metadata.getDescription().getContent())) {
-			metadata.getDescription().setContent("Demo project for Spring Boot");
+			metadata.getDescription().setContent("Demo project for Chassis application");
 		}
 		if (!StringUtils.hasText(metadata.getGroupId().getContent())) {
-			metadata.getGroupId().setContent("com.example");
+			metadata.getGroupId().setContent("com.finastra.chassis");
 		}
 		if (!StringUtils.hasText(metadata.getVersion().getContent())) {
 			metadata.getVersion().setContent("0.0.1-SNAPSHOT");

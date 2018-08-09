@@ -253,12 +253,12 @@ public class Dependency extends MetadataElement implements Describable {
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
 				Dependency dependency = new Dependency(this);
-				dependency.groupId = (mapping.groupId != null) ? mapping.groupId
-						: this.groupId;
-				dependency.artifactId = (mapping.artifactId != null) ? mapping.artifactId
-						: this.artifactId;
-				dependency.version = (mapping.version != null) ? mapping.version
-						: this.version;
+				dependency.groupId = (mapping.groupId != null ? mapping.groupId
+						: this.groupId);
+				dependency.artifactId = (mapping.artifactId != null ? mapping.artifactId
+						: this.artifactId);
+				dependency.version = (mapping.version != null ? mapping.version
+						: this.version);
 				dependency.versionRequirement = mapping.range.toString();
 				dependency.mappings = null;
 				return dependency;
@@ -327,7 +327,7 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * Return the default version, can be {@code null} to indicate that the version is
 	 * managed by the project and does not need to be specified.
-	 * @return the default version or {@code null}
+	 * @return The default version or {@code null}
 	 */
 	public String getVersion() {
 		return this.version;
@@ -465,7 +465,7 @@ public class Dependency extends MetadataElement implements Describable {
 		dependency.groupId = groupId;
 		dependency.artifactId = artifactId;
 		dependency.version = version;
-		dependency.scope = (scope != null) ? scope : SCOPE_COMPILE;
+		dependency.scope = (scope != null ? scope : SCOPE_COMPILE);
 		return dependency;
 	}
 

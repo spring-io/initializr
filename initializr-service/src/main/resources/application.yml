@@ -1,6 +1,6 @@
 local:
   gcp:
-    version: 1.0.0.RELEASE
+    version: 1.0.0.RC1
 
 logging:
   level:
@@ -43,20 +43,16 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
-          - versionRange: "[2.0.0.M1,2.1.0.M1)"
-            version: 2.0.2
-          - versionRange: "2.1.0.M1"
-            version: 2.1.0-SNAPSHOT
+          - versionRange: "[2.0.0.M1,2.0.x.BUILD-SNAPSHOT)"
+            version: 2.0.1
+          - versionRange: "2.0.x.BUILD-SNAPSHOT"
+            version: 2.0.2-SNAPSHOT
             repositories: sonatype-snapshots
       keycloak:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
         versionProperty: keycloak.version
-        mappings:
-          - versionRange : "[1.5.3.RELEASE,2.0.0.M1)"
-            version: 3.4.2.Final
-          - versionRange : "2.0.0.M1"
-            version: 4.2.0.Final
+        version: 3.4.2.Final
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -102,7 +98,7 @@ initializr:
             version: Finchley.RC2
             repositories: spring-milestones
           - versionRange: "[2.0.3.RELEASE,2.0.x.BUILD-SNAPSHOT)"
-            version: Finchley.SR1
+            version: Finchley.RELEASE
           - versionRange: "2.0.x.BUILD-SNAPSHOT"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
@@ -264,6 +260,36 @@ initializr:
           description: Provide declarative retry support via spring-retry
           versionRange: 1.3.0.RELEASE
           starter: false
+        - name: JTA (Atomikos)
+          id: jta-atomikos
+          description: JTA distributed transactions via Atomikos
+          versionRange: 1.2.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-atomikos
+        - name: JTA (Bitronix)
+          id: jta-bitronix
+          description: JTA distributed transactions via Bitronix
+          versionRange: 1.2.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-bitronix
+        - name: JTA (Narayana)
+          id: jta-narayana
+          description: JTA distributed transactions via Narayana
+          versionRange: 1.4.0.RELEASE
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-narayana
         - name: Aspects
           id: aop
           description: Create your own Aspects using Spring AOP and AspectJ
@@ -420,7 +446,7 @@ initializr:
           description: Keycloak integration, an open source Identity and Access Management solution.
           groupId: org.keycloak
           artifactId: keycloak-spring-boot-starter
-          versionRange: "1.5.3.RELEASE"
+          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
           bom: keycloak
           links:
             - rel: reference
@@ -1325,24 +1351,6 @@ initializr:
         format: build
       default: false
       action: /pom.xml
-    - name: Gradle Project
-      id: gradle-project
-      description: Generate a Gradle based project archive
-      sts-id: gradle.zip
-      tags:
-        build: gradle
-        format: project
-      default: false
-      action: /starter.zip
-    - name: Gradle Config
-      id: gradle-build
-      description: Generate a Gradle build file
-      sts-id: build.gradle
-      tags:
-        build: gradle
-        format: build
-      default: false
-      action: /build.gradle
   packagings:
     - name: Jar
       id: jar
@@ -1360,19 +1368,7 @@ initializr:
     - name: Java
       id: java
       default: true
-    - name: Kotlin
-      id: kotlin
-      default: false
-    - name: Groovy
-      id: groovy
-      default: false
   bootVersions:
-    - name : Latest SNAPSHOT
-      id: 1.2.4.BUILD-SNAPSHOT
-      default: false
-    - name: 1.2.3
-      id: 1.2.3.RELEASE
+    - name : 0.0.1-SNAPSHOT (with spring-boot 1.5.8.RELEASE)
+      id: 1.5.8.RELEASE
       default: true
-    - name: 1.1.12
-      id: 1.1.12.RELEASE
-      default: false
