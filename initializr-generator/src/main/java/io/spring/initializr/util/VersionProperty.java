@@ -83,6 +83,11 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 	}
 
 	@Override
+	public String toString() {
+		return this.property;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -99,11 +104,6 @@ public class VersionProperty implements Serializable, Comparable<VersionProperty
 	@Override
 	public int hashCode() {
 		return this.property.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return this.property;
 	}
 
 }

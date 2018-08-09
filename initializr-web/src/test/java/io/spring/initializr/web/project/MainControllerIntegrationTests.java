@@ -86,9 +86,8 @@ public class MainControllerIntegrationTests
 	@Test
 	public void noDependencyProject() {
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
-				// the root dep is added if none is specified
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
+				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(1)
+				.hasSpringBootStarterTest();
 	}
 
 	@Test

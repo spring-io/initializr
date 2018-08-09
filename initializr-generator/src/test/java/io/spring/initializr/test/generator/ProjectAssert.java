@@ -36,9 +36,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ProjectAssert {
 
-	public static final String DEFAULT_PACKAGE_NAME = "com.example.demo";
+	public static final String DEFAULT_PACKAGE_NAME = "com.finastra.chassis.starter";
 
-	public static final String DEFAULT_APPLICATION_NAME = "DemoApplication";
+	public static final String DEFAULT_APPLICATION_NAME = "StarterApplication";
 
 	private final File dir;
 

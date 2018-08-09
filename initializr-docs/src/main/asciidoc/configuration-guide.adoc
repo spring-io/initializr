@@ -266,7 +266,7 @@ If no BOM is available you can specify a version directly:
 		  content:
 			- name: Acme
 			  id: acme
-			  groupId: com.example.acme
+			  groupId: com.finastra.chassis.acme
 			  artifactId: acme
 			  version: 1.2.0.RELEASE
 			  description: A solid description for this dependency
@@ -278,7 +278,7 @@ entry; generating a maven project with it should add the following to the pom:
 [source,xml,indent=0,subs="verbatim"]
 ----
 	<dependency>
-		<groupId>com.example.acme</groupId>
+		<groupId>com.finastra.chassis.acme</groupId>
 		<artifactId>acme</artifactId>
 		<version>1.2.0.RELEASE</version>
 	</dependency>
@@ -441,7 +441,7 @@ initializr:
   env:
     boms:
       cloud-bom:
-        groupId: com.example.foo
+        groupId: com.finastra.chassis.foo
         artifactId: acme-foo-dependencies
         mappings:
           - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
@@ -538,13 +538,13 @@ Here is an example that adds two links to the `acme` dependency:
 		  content:
 			- name: Acme
 			  id: acme
-			  groupId: com.example.acme
+			  groupId: com.finastra.chassis.acme
 			  artifactId: acme
 			  version: 1.2.0.RELEASE
 			  description: A solid description for this dependency
 			  links:
 			    - rel: guide
-				  href: https://com.example/guides/acme/
+				  href: https://com.finastra.chassis/guides/acme/
 				  description: Getting started with Acme
 			    - rel: reference
 				  href: http://docs.example.com/acme/html
@@ -604,7 +604,7 @@ a `version` property in a dependency):
 		  content:
 			- name: Acme
 			  id: acme
-			  groupId: com.example.acme
+			  groupId: com.finastra.chassis.acme
 			  artifactId: acme
 			  version: 1.2.0.RELEASE
 			  description: A solid description for this dependency

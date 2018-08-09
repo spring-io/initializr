@@ -18,7 +18,11 @@ package io.spring.initializr.service;
 
 import java.util.concurrent.Executor;
 
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InitializrProperties;
+import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
 import io.spring.initializr.web.project.LegacyStsController;
 
 import org.springframework.boot.SpringApplication;
@@ -49,6 +53,14 @@ public class InitializrService {
 			InitializrMetadataProvider metadataProvider,
 			ResourceUrlProvider resourceUrlProvider) {
 		return new LegacyStsController(metadataProvider, resourceUrlProvider);
+	}
+
+	@Bean
+	public InitializrMetadataProvider initializrMetadataProvider(
+			InitializrProperties properties) {
+		InitializrMetadata metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(properties).build();
+		return new SimpleInitializrMetadataProvider(metadata);
 	}
 
 	/**

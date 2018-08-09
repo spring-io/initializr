@@ -75,9 +75,9 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/DemoApplication." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplication." + this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplication." + this.expectedExtension));
+						+ "/standard/StarterApplication." + this.expectedExtension));
 	}
 
 	@Test
@@ -87,9 +87,10 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplicationTests."
+				+ this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTests." + this.expectedExtension));
+						+ "/standard/StarterApplicationTests." + this.expectedExtension));
 	}
 
 	@Test
@@ -99,9 +100,11 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplicationTests."
+				+ this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTestsWeb." + this.expectedExtension));
+						+ "/standard/StarterApplicationTestsWeb."
+						+ this.expectedExtension));
 	}
 
 	@Test
@@ -133,7 +136,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 		}
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/ServletInitializer." + this.extension)
+				+ "/com/finastra/chassis/starter/ServletInitializer." + this.extension)
 				.equalsTo(new ClassPathResource(
 						"project/" + this.language + "/" + expectedOutput
 								+ "/ServletInitializer." + this.expectedExtension));
@@ -147,9 +150,10 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplicationTests."
+				+ this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTests." + this.expectedExtension));
+						+ "/standard/StarterApplicationTests." + this.expectedExtension));
 	}
 
 	@Test
@@ -160,9 +164,10 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplicationTests."
+				+ this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/spring-boot-1.4/DemoApplicationTests."
+						+ "/spring-boot-1.4/StarterApplicationTests."
 						+ this.expectedExtension));
 	}
 
@@ -174,9 +179,10 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				+ "/com/finastra/chassis/starter/StarterApplicationTests."
+				+ this.extension)
 				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/spring-boot-1.4/DemoApplicationTests."
+						+ "/spring-boot-1.4/StarterApplicationTests."
 						+ this.expectedExtension));
 	}
 

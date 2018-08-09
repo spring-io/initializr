@@ -1,6 +1,6 @@
 {
   "artifactId": {
-    "content": "demo",
+    "content": "starter",
     "description": "project coordinates (infer archive name)",
     "id": "artifactId",
     "title": "Artifact",
@@ -252,14 +252,14 @@
     "type": "HIERARCHICAL_MULTI_SELECT"
   },
   "description": {
-    "content": "Demo project for Spring Boot",
+    "content": "Demo project for Chassis application",
     "description": "project description",
     "id": "description",
     "title": "Description",
     "type": "TEXT"
   },
   "groupId": {
-    "content": "com.example",
+    "content": "com.finastra.chassis",
     "description": "project coordinates",
     "id": "groupId",
     "title": "Group",
@@ -312,14 +312,14 @@
     "type": "SINGLE_SELECT"
   },
   "name": {
-    "content": "demo",
+    "content": "starter",
     "description": "project name (infer application name)",
     "id": "name",
     "title": "Name",
     "type": "TEXT"
   },
   "packageName": {
-    "content": "com.example.demo",
+    "content": "com.finastra.chassis.starter",
     "description": "root package",
     "id": "packageName",
     "title": "Package Name",

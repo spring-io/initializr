@@ -74,7 +74,7 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	private static JsonNode mapRepository(Repository repo) {
 		ObjectNode node = nodeFactory.objectNode();
 		node.put("name", repo.getName())
-				.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
+				.put("url", (repo.getUrl() != null ? repo.getUrl().toString() : null))
 				.put("snapshotEnabled", repo.isSnapshotsEnabled());
 		return node;
 	}

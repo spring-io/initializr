@@ -1,0 +1,12 @@
+package com.finastra.chassis.starter
+
+import org.springframework.boot.SpringApplication
+import com.trmsys.fabric.chassis.ChassisApplication
+
+@ChassisApplication
+class StarterApplication {
+
+	static void main(String[] args) {
+		SpringApplication.run StarterApplication, args
+	}
+}

@@ -267,7 +267,7 @@ public class ProjectRequestTests {
 		request.setGroupId(null);
 		request.setArtifactId("foo");
 		request.resolve(this.metadata);
-		assertThat(request.getPackageName()).isEqualTo("com.example.demo");
+		assertThat(request.getPackageName()).isEqualTo("com.finastra.chassis.starter");
 	}
 
 	@Test
@@ -276,7 +276,7 @@ public class ProjectRequestTests {
 		request.setGroupId("org.acme");
 		request.setArtifactId(null);
 		request.resolve(this.metadata);
-		assertThat(request.getPackageName()).isEqualTo("com.example.demo");
+		assertThat(request.getPackageName()).isEqualTo("com.finastra.chassis.starter");
 	}
 
 	@Test
@@ -310,10 +310,11 @@ public class ProjectRequestTests {
 	public void resolveAdditionalBoms() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "foo-bom",
+				"1.0.0");
 		bom.getAdditionalBoms().add("bar-bom");
-		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
-				"1.1.0");
+		BillOfMaterials additionalBom = BillOfMaterials.create("com.finastra.chassis",
+				"bar-bom", "1.1.0");
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
 				.addDependencyGroup("test", dependency).build();
@@ -332,10 +333,11 @@ public class ProjectRequestTests {
 		dependency.setBom("foo-bom");
 		Dependency anotherDependency = Dependency.withId("bar");
 		anotherDependency.setBom("bar-bom");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "foo-bom",
+				"1.0.0");
 		bom.getAdditionalBoms().add("bar-bom");
-		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
-				"1.1.0");
+		BillOfMaterials additionalBom = BillOfMaterials.create("com.finastra.chassis",
+				"bar-bom", "1.1.0");
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
 				.addDependencyGroup("test", dependency, anotherDependency).build();
@@ -353,7 +355,8 @@ public class ProjectRequestTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "foo-bom",
+				"1.0.0");
 		bom.getRepositories().add("bar-repo");
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addBom("foo-bom", bom)
@@ -377,7 +380,8 @@ public class ProjectRequestTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+		BillOfMaterials bom = BillOfMaterials.create("com.finastra.chassis", "foo-bom",
+				"1.0.0");
 		bom.getRepositories().add("bar-repo");
 		Dependency anotherDependency = Dependency.withId("bar");
 		anotherDependency.setRepository("bar-repo");

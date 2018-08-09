@@ -36,14 +36,6 @@ public class SpringBoot2RequestPostProcessorTests
 	}
 
 	@Test
-	public void java8IsMandatoryGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.M3");
-		request.setJavaVersion("1.7");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
 	public void java9CanBeUsedMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
@@ -52,27 +44,11 @@ public class SpringBoot2RequestPostProcessorTests
 	}
 
 	@Test
-	public void java9CanBeUsedGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.M3");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("9");
-	}
-
-	@Test
 	public void java10CanBeUsedMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.1.0.BUILD-SNAPSHOT");
 		request.setJavaVersion("10");
 		generateMavenPom(request).hasJavaVersion("10");
-	}
-
-	@Test
-	public void java10CanBeUsedGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.2.RELEASE");
-		request.setJavaVersion("10");
-		generateGradleBuild(request).hasJavaVersion("10");
 	}
 
 }

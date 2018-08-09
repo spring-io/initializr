@@ -206,8 +206,8 @@ public class MainController extends AbstractInitializrController {
 	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version,
 			String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
-		Version v = (bootVersion != null) ? Version.parse(bootVersion)
-				: Version.parse(metadata.getBootVersions().getDefault().getId());
+		Version v = (bootVersion != null ? Version.parse(bootVersion)
+				: Version.parse(metadata.getBootVersions().getDefault().getId()));
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider
 				.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
@@ -339,8 +339,8 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ProjectRequest request) {
 		String script = ("gradle".equals(request.getBuild()) ? "gradlew" : "mvnw");
-		return (request.getBaseDir() != null) ? request.getBaseDir() + "/" + script
-				: script;
+		return (request.getBaseDir() != null ? request.getBaseDir() + "/" + script
+				: script);
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,

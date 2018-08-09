@@ -122,6 +122,32 @@ public class VersionRange {
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (this.lowerVersion != null) {
+			sb.append(this.lowerInclusive ? ">=" : ">").append(this.lowerVersion);
+		}
+		if (this.higherVersion != null) {
+			sb.append(" and ").append(this.higherInclusive ? "<=" : "<")
+					.append(this.higherVersion);
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (this.higherInclusive ? 1231 : 1237);
+		result = prime * result
+				+ ((this.higherVersion == null) ? 0 : this.higherVersion.hashCode());
+		result = prime * result + (this.lowerInclusive ? 1231 : 1237);
+		result = prime * result
+				+ ((this.lowerVersion == null) ? 0 : this.lowerVersion.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -156,32 +182,6 @@ public class VersionRange {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (this.higherInclusive ? 1231 : 1237);
-		result = prime * result
-				+ ((this.higherVersion == null) ? 0 : this.higherVersion.hashCode());
-		result = prime * result + (this.lowerInclusive ? 1231 : 1237);
-		result = prime * result
-				+ ((this.lowerVersion == null) ? 0 : this.lowerVersion.hashCode());
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (this.lowerVersion != null) {
-			sb.append(this.lowerInclusive ? ">=" : ">").append(this.lowerVersion);
-		}
-		if (this.higherVersion != null) {
-			sb.append(" and ").append(this.higherInclusive ? "<=" : "<")
-					.append(this.higherVersion);
-		}
-		return sb.toString();
 	}
 
 }

@@ -86,7 +86,7 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert().hasDependenciesCount(2)
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
+				.hasSpringBootStarterTest();
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class ProjectGenerationSmokeTests
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert()
 				.hasSpringBootParent("1.0.2.RELEASE").hasDependenciesCount(2)
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
+				.hasSpringBootStarterTest();
 
 	}
 
@@ -151,8 +151,8 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		page.groupId("org.foo");
 		page.submit();
-		zipProjectAssert(from("demo.zip")).hasBaseDir("demo")
-				.isJavaProject("org.foo.demo", "DemoApplication");
+		zipProjectAssert(from("demo.zip")).hasBaseDir("starter")
+				.isJavaProject("org.foo.demo", "StarterApplication");
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class ProjectGenerationSmokeTests
 		page.artifactId("my-project");
 		page.submit();
 		zipProjectAssert(from("my-project.zip")).hasBaseDir("my-project")
-				.isJavaProject("com.example.myproject", "MyProjectApplication");
+				.isJavaProject("com.finastra.chassis.myproject", "MyProjectApplication");
 	}
 
 	@Test
@@ -170,7 +170,7 @@ public class ProjectGenerationSmokeTests
 		page.artifactId("42my-project");
 		page.submit();
 		zipProjectAssert(from("42my-project.zip")).hasBaseDir("42my-project")
-				.isJavaProject("com.example.myproject", "Application");
+				.isJavaProject("com.finastra.chassis.myproject", "Application");
 	}
 
 	@Test
@@ -179,9 +179,9 @@ public class ProjectGenerationSmokeTests
 		page.language("groovy");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
-		projectAssert.hasBaseDir("demo").isMavenProject().isGroovyProject()
+		projectAssert.hasBaseDir("starter").isMavenProject().isGroovyProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+				.hasSpringBootStarterTest()
 				.hasDependency("org.codehaus.groovy", "groovy");
 	}
 
@@ -191,9 +191,9 @@ public class ProjectGenerationSmokeTests
 		page.language("kotlin");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
-		projectAssert.hasBaseDir("demo").isMavenProject().isKotlinProject()
+		projectAssert.hasBaseDir("starter").isMavenProject().isKotlinProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(4)
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+				.hasSpringBootStarterTest()
 				.hasDependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
 				.hasDependency("org.jetbrains.kotlin", "kotlin-reflect");
 	}
@@ -205,8 +205,8 @@ public class ProjectGenerationSmokeTests
 		page.packaging("war");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
-		projectAssert.hasBaseDir("demo").isMavenProject().isJavaWarProject().pomAssert()
-				.hasPackaging("war").hasDependenciesCount(3)
+		projectAssert.hasBaseDir("starter").isMavenProject().isJavaWarProject()
+				.pomAssert().hasPackaging("war").hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web") // Added with war packaging
 				.hasSpringBootStarterTomcat().hasSpringBootStarterTest();
 	}
@@ -219,13 +219,13 @@ public class ProjectGenerationSmokeTests
 		page.advanced();
 		page.name("My project");
 		page.description("A description for my project");
-		page.packageName("com.example.foo");
+		page.packageName("com.finastra.chassis.foo");
 		page.dependency("web").click();
 		page.dependency("data-jpa").click();
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
-				.isJavaProject("com.example.foo", "MyProjectApplication")
+				.isJavaProject("com.finastra.chassis.foo", "MyProjectApplication")
 				.hasStaticAndTemplatesResources(true).pomAssert().hasGroupId("com.acme")
 				.hasArtifactId("foo-bar").hasName("My project")
 				.hasDescription("A description for my project")
@@ -242,13 +242,13 @@ public class ProjectGenerationSmokeTests
 		page.advanced();
 		page.name("My project");
 		page.description("A description for my Kotlin project");
-		page.packageName("com.example.foo");
+		page.packageName("com.finastra.chassis.foo");
 		page.dependency("web").click();
 		page.dependency("data-jpa").click();
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
-				.isKotlinProject("com.example.foo", "MyProjectApplication")
+				.isKotlinProject("com.finastra.chassis.foo", "MyProjectApplication")
 				.hasStaticAndTemplatesResources(true).pomAssert().hasGroupId("com.acme")
 				.hasArtifactId("foo-bar").hasName("My project")
 				.hasDescription("A description for my Kotlin project")
@@ -265,13 +265,13 @@ public class ProjectGenerationSmokeTests
 		page.advanced();
 		page.name("My project");
 		page.description("A description for my Groovy project");
-		page.packageName("com.example.foo");
+		page.packageName("com.finastra.chassis.foo");
 		page.dependency("web").click();
 		page.dependency("data-jpa").click();
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
-				.isGroovyProject("com.example.foo", "MyProjectApplication")
+				.isGroovyProject("com.finastra.chassis.foo", "MyProjectApplication")
 				.hasStaticAndTemplatesResources(true).pomAssert().hasGroupId("com.acme")
 				.hasArtifactId("foo-bar").hasName("My project")
 				.hasDescription("A description for my Groovy project")
@@ -280,7 +280,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void dependencyHiddenAccordingToRange() throws Exception {
+	public void dependencyHiddenAccordingToRange() {
 		HomePage page = toHome(); // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
@@ -296,7 +296,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void dependencyUncheckedWhenHidden() throws Exception {
+	public void dependencyUncheckedWhenHidden() {
 		HomePage page = toHome(); // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		page.dependency("org.acme:bur").click();
@@ -310,21 +310,22 @@ public class ProjectGenerationSmokeTests
 
 	@Test
 	public void customizationShowsUpInDefaultView() throws Exception {
-		HomePage page = toHome("/#!language=groovy&packageName=com.example.acme");
+		HomePage page = toHome(
+				"/#!language=groovy&packageName=com.finastra.chassis.acme");
 		assertThat(page.value("language")).isEqualTo("groovy");
-		assertThat(page.value("packageName")).isEqualTo("com.example.acme");
+		assertThat(page.value("packageName")).isEqualTo("com.finastra.chassis.acme");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
-		projectAssert.hasBaseDir("demo").isMavenProject()
-				.isGroovyProject("com.example.acme",
+		projectAssert.hasBaseDir("starter").isMavenProject()
+				.isGroovyProject("com.finastra.chassis.acme",
 						ProjectAssert.DEFAULT_APPLICATION_NAME)
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
+				.hasSpringBootStarterTest()
 				.hasDependency("org.codehaus.groovy", "groovy");
 	}
 
 	@Test
-	public void customizationsShowsUpWhenViewIsSwitched() throws Exception {
+	public void customizationsShowsUpWhenViewIsSwitched() {
 		HomePage page = toHome("/#!packaging=war&javaVersion=1.7");
 		assertThat(page.value("packaging")).isEqualTo("war");
 		assertThat(page.value("javaVersion")).isEqualTo("1.7");
@@ -338,15 +339,16 @@ public class ProjectGenerationSmokeTests
 
 	@Test
 	public void customizationsOnGroupIdAndArtifactId() throws Exception {
-		HomePage page = toHome("/#!groupId=com.example.acme&artifactId=my-project");
+		HomePage page = toHome(
+				"/#!groupId=com.finastra.chassis.acme&artifactId=my-project");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("my-project.zip"));
 		projectAssert.hasBaseDir("my-project").isMavenProject()
-				.isJavaProject("com.example.acme.myproject", "MyProjectApplication")
+				.isJavaProject("com.finastra.chassis.acme.myproject",
+						"MyProjectApplication")
 				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasGroupId("com.example.acme").hasArtifactId("my-project")
-				.hasDependenciesCount(2).hasSpringBootStarterRootDependency()
-				.hasSpringBootStarterTest();
+				.hasGroupId("com.finastra.chassis.acme").hasArtifactId("my-project")
+				.hasDependenciesCount(2).hasSpringBootStarterTest();
 	}
 
 	private HomePage toHome() {
@@ -359,7 +361,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	private ProjectAssert assertSimpleProject() throws Exception {
-		return zipProjectAssert(from("demo.zip")).hasBaseDir("demo").isJavaProject()
+		return zipProjectAssert(from("demo.zip")).hasBaseDir("starter").isJavaProject()
 				.hasStaticAndTemplatesResources(false);
 	}
 

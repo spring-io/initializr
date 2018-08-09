@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: chassis-initializr
+spec:
+  type: NodePort
+  selector:
+    app: chassis-initializr
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30005

@@ -27,7 +27,7 @@ public interface InitializrMetadataJsonMapper {
 
 	/**
 	 * Write a json representation of the specified metadata.
-	 * @param metadata the initializr metadata
+	 * @param metadata The intializr metadata
 	 * @param appUrl the app URL
 	 * @return the JSON representation
 	 */

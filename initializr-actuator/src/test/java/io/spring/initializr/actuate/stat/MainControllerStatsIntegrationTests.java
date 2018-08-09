@@ -158,8 +158,8 @@ public class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("groupId").textValue()).isEqualTo("com.example");
-		assertThat(json.get("artifactId").textValue()).isEqualTo("demo");
+		assertThat(json.get("groupId").textValue()).isEqualTo("com.finastra.chassis");
+		assertThat(json.get("artifactId").textValue()).isEqualTo("starter");
 		assertThat(json.get("invalid").booleanValue()).isEqualTo(true);
 		assertThat(json.get("invalidType").booleanValue()).isEqualTo(true);
 		assertThat(json.get("errorMessage")).isNotNull();

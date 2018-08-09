@@ -64,12 +64,12 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	@Test
 	public void publishSimpleDocument() {
 		ProjectRequest request = createProjectRequest();
-		request.setGroupId("com.example.foo");
+		request.setGroupId("com.finastra.chassis.foo");
 		request.setArtifactId("my-project");
 
 		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
-				.andExpect(jsonPath("$.groupId").value("com.example.foo"))
+				.andExpect(jsonPath("$.groupId").value("com.finastra.chassis.foo"))
 				.andExpect(jsonPath("$.artifactId").value("my-project"))
 				.andRespond(withStatus(HttpStatus.CREATED)
 						.body(mockResponse(UUID.randomUUID().toString(), true))

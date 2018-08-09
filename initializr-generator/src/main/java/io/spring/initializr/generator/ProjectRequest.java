@@ -135,8 +135,8 @@ public class ProjectRequest extends BasicProjectRequest {
 	 */
 	public void resolve(InitializrMetadata metadata) {
 		List<String> depIds = (!getStyle().isEmpty() ? getStyle() : getDependencies());
-		String actualBootVersion = (getBootVersion() != null) ? getBootVersion()
-				: metadata.getBootVersions().getDefault().getId();
+		String actualBootVersion = (getBootVersion() != null ? getBootVersion()
+				: metadata.getBootVersions().getDefault().getId());
 		Version requestedVersion = Version.parse(actualBootVersion);
 		this.resolvedDependencies = depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
@@ -280,10 +280,6 @@ public class ProjectRequest extends BasicProjectRequest {
 			tomcat.setScope(Dependency.SCOPE_PROVIDED);
 			this.resolvedDependencies.add(tomcat);
 		}
-		if (this.resolvedDependencies.stream().noneMatch(Dependency::isStarter)) {
-			// There"s no starter so we add the default one
-			addDefaultDependency();
-		}
 	}
 
 	private Dependency determineWebDependency(InitializrMetadata metadata) {
@@ -324,12 +320,12 @@ public class ProjectRequest extends BasicProjectRequest {
 	@Override
 	public String toString() {
 		return "ProjectRequest [" + "parameters=" + this.parameters + ", "
-				+ ((this.resolvedDependencies != null)
+				+ (this.resolvedDependencies != null
 						? "resolvedDependencies=" + this.resolvedDependencies + ", " : "")
 				+ "boms=" + this.boms + ", " + "repositories=" + this.repositories + ", "
 				+ "buildProperties=" + this.buildProperties + ", "
-				+ ((this.facets != null) ? "facets=" + this.facets + ", " : "")
-				+ ((this.build != null) ? "build=" + this.build : "") + "]";
+				+ (this.facets != null ? "facets=" + this.facets + ", " : "")
+				+ (this.build != null ? "build=" + this.build : "") + "]";
 	}
 
 }

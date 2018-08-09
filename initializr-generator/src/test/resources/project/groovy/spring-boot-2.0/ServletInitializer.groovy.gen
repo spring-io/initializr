@@ -1,4 +1,4 @@
-package com.example.demo
+package com.finastra.chassis.starter
 
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
@@ -7,7 +7,7 @@ class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		application.sources(DemoApplication)
+		application.sources(StarterApplication)
 	}
 
 }

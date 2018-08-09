@@ -39,8 +39,7 @@ public class CommandLineExampleIntegrationTests
 	public void generateDefaultProject() {
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+				.hasSpringBootStarterTest().hasDependenciesCount(1);
 	}
 
 	@Test

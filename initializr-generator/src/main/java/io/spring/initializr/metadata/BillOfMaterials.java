@@ -84,7 +84,7 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
-	 * @return the version of the BOM or {@code null}
+	 * @return The version of the BOM or {@code null}
 	 */
 	public String getVersion() {
 		return this.version;
@@ -208,16 +208,15 @@ public class BillOfMaterials {
 	@Override
 	public String toString() {
 		return "BillOfMaterials ["
-				+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
-				+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
-						: "")
-				+ ((this.version != null) ? "version=" + this.version + ", " : "")
-				+ ((this.versionProperty != null)
+				+ (this.groupId != null ? "groupId=" + this.groupId + ", " : "")
+				+ (this.artifactId != null ? "artifactId=" + this.artifactId + ", " : "")
+				+ (this.version != null ? "version=" + this.version + ", " : "")
+				+ (this.versionProperty != null
 						? "versionProperty=" + this.versionProperty + ", " : "")
-				+ ((this.order != null) ? "order=" + this.order + ", " : "")
-				+ ((this.additionalBoms != null)
+				+ (this.order != null ? "order=" + this.order + ", " : "")
+				+ (this.additionalBoms != null
 						? "additionalBoms=" + this.additionalBoms + ", " : "")
-				+ ((this.repositories != null) ? "repositories=" + this.repositories : "")
+				+ (this.repositories != null ? "repositories=" + this.repositories : "")
 				+ "]";
 	}
 
@@ -311,14 +310,14 @@ public class BillOfMaterials {
 		@Override
 		public String toString() {
 			return "Mapping ["
-					+ ((this.versionRange != null)
+					+ (this.versionRange != null
 							? "versionRange=" + this.versionRange + ", " : "")
-					+ ((this.version != null) ? "version=" + this.version + ", " : "")
-					+ ((this.repositories != null)
+					+ (this.version != null ? "version=" + this.version + ", " : "")
+					+ (this.repositories != null
 							? "repositories=" + this.repositories + ", " : "")
-					+ ((this.additionalBoms != null)
+					+ (this.additionalBoms != null
 							? "additionalBoms=" + this.additionalBoms + ", " : "")
-					+ ((this.range != null) ? "range=" + this.range : "") + "]";
+					+ (this.range != null ? "range=" + this.range : "") + "]";
 		}
 
 	}

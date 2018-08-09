@@ -207,11 +207,11 @@
   },
   "groupId": {
     "type": "text",
-    "default": "com.example"
+    "default": "com.finastra.chassis"
   },
   "artifactId": {
     "type": "text",
-    "default": "demo"
+    "default": "starter"
   },
   "version": {
     "type": "text",
@@ -219,14 +219,14 @@
   },
   "name": {
     "type": "text",
-    "default": "demo"
+    "default": "starter"
   },
   "description": {
     "type": "text",
-    "default": "Demo project for Spring Boot"
+    "default": "Demo project for Chassis application"
   },
   "packageName": {
     "type": "text",
-    "default": "com.example.demo"
+    "default": "com.finastra.chassis.starter"
   }
 }

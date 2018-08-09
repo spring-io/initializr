@@ -1,4 +1,4 @@
 Custom resources
 
-com.example.custom
+com.finastra.chassis.custom
 42

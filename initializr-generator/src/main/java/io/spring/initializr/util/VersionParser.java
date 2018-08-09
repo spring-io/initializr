@@ -159,7 +159,7 @@ public class VersionParser {
 			}
 			return true;
 		}).collect(Collectors.toList());
-		return (matches.size() != 1) ? null : matches.get(0);
+		return (matches.size() != 1 ? null : matches.get(0));
 	}
 
 }

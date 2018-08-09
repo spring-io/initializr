@@ -36,63 +36,11 @@ public class JavaVersionRequestPostProcessorTests
 	}
 
 	@Test
-	public void java9CannotBeUsedWithSpringBoot1Gradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("1.99.99.BUILD-SNAPSHOT");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
-	public void java9CannotBeUsedWithGroovyMaven() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("2.0.1.RELEASE");
-		request.setLanguage("groovy");
-		request.setJavaVersion("9");
-		generateMavenPom(request).hasJavaVersion("1.8");
-	}
-
-	@Test
-	public void java9CannotBeUsedWithKotlinMaven() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("2.0.1.RELEASE");
-		request.setLanguage("kotlin");
-		request.setJavaVersion("9");
-		generateMavenPom(request).hasJavaVersion("1.8");
-	}
-
-	@Test
-	public void java9CannotBeUsedWithGroovyGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.1.RELEASE");
-		request.setLanguage("groovy");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
-	public void java9CannotBeUsedWithKotlinGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.1.RELEASE");
-		request.setLanguage("kotlin");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
 	public void java9CanBeUsedWithSpringBoot2Maven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.0.1.RELEASE");
 		request.setJavaVersion("9");
 		generateMavenPom(request).hasJavaVersion("9");
-	}
-
-	@Test
-	public void java9CanBeUsedWithSpringBoot2Gradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.M3");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("9");
 	}
 
 	@Test
@@ -104,14 +52,6 @@ public class JavaVersionRequestPostProcessorTests
 	}
 
 	@Test
-	public void java10CannotBeUsedWithSpringBoot1Gradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("1.99.99.BUILD-SNAPSHOT");
-		request.setJavaVersion("10");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
 	public void java10CannotBeUsedWithSpringBoot200Maven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.0.0.RELEASE");
@@ -120,27 +60,11 @@ public class JavaVersionRequestPostProcessorTests
 	}
 
 	@Test
-	public void java10CannotBeUsedWithSpringBoot200Gradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.RELEASE");
-		request.setJavaVersion("10");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
-
-	@Test
 	public void java10CanBeUsedWithSpringBoot2Maven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.0.1.RELEASE");
 		request.setJavaVersion("10");
 		generateMavenPom(request).hasJavaVersion("10");
-	}
-
-	@Test
-	public void java10CanBeUsedWithSpringBoot2Gradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.2.RELEASE");
-		request.setJavaVersion("10");
-		generateGradleBuild(request).hasJavaVersion("10");
 	}
 
 }

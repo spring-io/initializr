@@ -82,6 +82,14 @@ public final class Version implements Serializable, Comparable<Version> {
 		return this.qualifier;
 	}
 
+	@Override
+	public String toString() {
+		return this.major + "." + this.minor + "." + this.patch
+				+ (this.qualifier != null ? "." + this.qualifier.qualifier
+						+ (this.qualifier.version != null ? this.qualifier.version : "")
+						: "");
+	}
+
 	/**
 	 * Parse the string representation of a {@link Version}. Throws an
 	 * {@link InvalidVersionException} if the version could not be parsed.
@@ -132,9 +140,21 @@ public final class Version implements Serializable, Comparable<Version> {
 	}
 
 	private static int safeCompare(Integer first, Integer second) {
-		Integer firstIndex = (first != null) ? first : 0;
-		Integer secondIndex = (second != null) ? second : 0;
+		Integer firstIndex = (first != null ? first : 0);
+		Integer secondIndex = (second != null ? second : 0);
 		return firstIndex.compareTo(secondIndex);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
+		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
+		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
+		result = prime * result
+				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+		return result;
 	}
 
 	@Override
@@ -184,26 +204,6 @@ public final class Version implements Serializable, Comparable<Version> {
 		return true;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
-		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
-		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
-		result = prime * result
-				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return this.major + "." + this.minor + "." + this.patch
-				+ ((this.qualifier != null) ? "." + this.qualifier.qualifier
-						+ ((this.qualifier.version != null) ? this.qualifier.version : "")
-						: "");
-	}
-
 	/**
 	 * A version qualifier.
 	 */
@@ -231,6 +231,24 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		public void setVersion(Integer version) {
 			this.version = version;
+		}
+
+		@Override
+		public String toString() {
+			return "Qualifier ["
+					+ (this.qualifier != null ? "qualifier=" + this.qualifier + ", " : "")
+					+ (this.version != null ? "version=" + this.version : "") + "]";
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result
+					+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+			result = prime * result
+					+ ((this.version == null) ? 0 : this.version.hashCode());
+			return result;
 		}
 
 		@Override
@@ -264,25 +282,6 @@ public final class Version implements Serializable, Comparable<Version> {
 			return true;
 		}
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result
-					+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
-			result = prime * result
-					+ ((this.version == null) ? 0 : this.version.hashCode());
-			return result;
-		}
-
-		@Override
-		public String toString() {
-			return "Qualifier ["
-					+ ((this.qualifier != null) ? "qualifier=" + this.qualifier + ", "
-							: "")
-					+ ((this.version != null) ? "version=" + this.version : "") + "]";
-		}
-
 	}
 
 	private static class VersionQualifierComparator implements Comparator<Qualifier> {
@@ -297,17 +296,17 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
-			Qualifier first = (o1 != null) ? o1 : new Qualifier(RELEASE);
-			Qualifier second = (o2 != null) ? o2 : new Qualifier(RELEASE);
+			Qualifier first = (o1 != null ? o1 : new Qualifier(RELEASE));
+			Qualifier second = (o2 != null ? o2 : new Qualifier(RELEASE));
 
 			int qualifier = compareQualifier(first, second);
-			return (qualifier != 0) ? qualifier : compareQualifierVersion(first, second);
+			return (qualifier != 0 ? qualifier : compareQualifierVersion(first, second));
 		}
 
 		private static int compareQualifierVersion(Qualifier first, Qualifier second) {
-			Integer firstVersion = (first.getVersion() != null) ? first.getVersion() : 0;
-			Integer secondVersion = (second.getVersion() != null) ? second.getVersion()
-					: 0;
+			Integer firstVersion = (first.getVersion() != null ? first.getVersion() : 0);
+			Integer secondVersion = (second.getVersion() != null ? second.getVersion()
+					: 0);
 			return firstVersion.compareTo(secondVersion);
 		}
 
