@@ -743,7 +743,6 @@ initializr:
           versionRange: 2.0.0.RELEASE
           groupId: org.apache.kafka
           artifactId: kafka-streams
-          version: 1.0.1
           starter: false
           links:
             - rel: guide
