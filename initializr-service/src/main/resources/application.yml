@@ -830,7 +830,7 @@ initializr:
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-open-service-broker-webmvc
           versionRange: 2.0.0.RELEASE
-          version: 2.0.0.RELEASE
+          version: 2.0.1.RELEASE
           links:
             - rel: reference
               href: https://docs.spring.io/spring-cloud-open-service-broker/docs/current/reference/html5/
