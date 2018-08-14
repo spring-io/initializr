@@ -106,7 +106,6 @@
             "repositories": [
               "my-api-repo-1"
             ],
-            "additionalBoms": [],
             "version": "1.0.0.RELEASE"
           },
           {
@@ -114,7 +113,6 @@
             "repositories": [
               "my-api-repo-2"
             ],
-            "additionalBoms": [],
             "version": "2.0.0.RELEASE"
           }
         ]

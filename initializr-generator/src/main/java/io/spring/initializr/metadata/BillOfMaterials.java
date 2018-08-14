@@ -190,8 +190,11 @@ public class BillOfMaterials {
 
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
-				BillOfMaterials resolvedBom = new BillOfMaterials(this.groupId,
-						this.artifactId, mapping.version);
+				BillOfMaterials resolvedBom = new BillOfMaterials(
+						(mapping.groupId != null) ? mapping.groupId : this.groupId,
+						(mapping.artifactId != null) ? mapping.artifactId
+								: this.artifactId,
+						mapping.version);
 				resolvedBom.setVersionProperty(this.versionProperty);
 				resolvedBom.setOrder(this.order);
 				resolvedBom.repositories.addAll(!mapping.repositories.isEmpty()
@@ -233,9 +236,20 @@ public class BillOfMaterials {
 	/**
 	 * Mapping information.
 	 */
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public static class Mapping {
 
 		private String versionRange;
+
+		/**
+		 * The groupId to use for this mapping or {@code null} to use the default.
+		 */
+		private String groupId;
+
+		/**
+		 * The artifactId to use for this mapping or {@code null} to use the default.
+		 */
+		private String artifactId;
 
 		private String version;
 
@@ -272,8 +286,32 @@ public class BillOfMaterials {
 			return this.versionRange;
 		}
 
+		public void setVersionRange(String versionRange) {
+			this.versionRange = versionRange;
+		}
+
+		public String getGroupId() {
+			return this.groupId;
+		}
+
+		public void setGroupId(String groupId) {
+			this.groupId = groupId;
+		}
+
+		public String getArtifactId() {
+			return this.artifactId;
+		}
+
+		public void setArtifactId(String artifactId) {
+			this.artifactId = artifactId;
+		}
+
 		public String getVersion() {
 			return this.version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
 		}
 
 		public List<String> getRepositories() {
@@ -286,14 +324,6 @@ public class BillOfMaterials {
 
 		public VersionRange getRange() {
 			return this.range;
-		}
-
-		public void setVersionRange(String versionRange) {
-			this.versionRange = versionRange;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
 		}
 
 		public void setRepositories(List<String> repositories) {
@@ -313,6 +343,9 @@ public class BillOfMaterials {
 			return "Mapping ["
 					+ ((this.versionRange != null)
 							? "versionRange=" + this.versionRange + ", " : "")
+					+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
+					+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
+							: "")
 					+ ((this.version != null) ? "version=" + this.version + ", " : "")
 					+ ((this.repositories != null)
 							? "repositories=" + this.repositories + ", " : "")
