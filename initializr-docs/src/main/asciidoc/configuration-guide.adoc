@@ -39,7 +39,7 @@ Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
-compile("io.spring.initializr:initializr-web:{spring-initializr-version}")
+implementation("io.spring.initializr:initializr-web:{spring-initializr-version}")
 ----
 
 NOTE: Spring Initializr releases are not available on Maven Central so you will need to
@@ -785,8 +785,8 @@ Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
-compile("javax.cache:cache-api")
-compile("org.ehcache:ehcache")
+implementation("javax.cache:cache-api")
+implementation("org.ehcache:ehcache")
 ----
 
 You'll notice that the log entry is much more rare. If you do not want to use JSR-107, you
