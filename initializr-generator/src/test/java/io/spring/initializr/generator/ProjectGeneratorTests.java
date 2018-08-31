@@ -80,10 +80,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-build");
 		ProjectAssert gradleProject = generateProject(request).isGradleProject();
-		gradleProject.gradleBuildAssert()
-				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+		gradleProject.gradleBuildAssert().contains(
+				"implementation('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
-						"testCompile('org.springframework.boot:spring-boot-starter-test')");
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')");
 		gradleProject.gradleSettingsAssert().hasProjectName("demo");
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -128,7 +128,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 		ProjectRequest request = createProjectRequest("custom-artifact");
 		generateGradleBuild(request)
-				.contains("compile('org.foo:custom-artifact@tar.gz')");
+				.contains("implementation('org.foo:custom-artifact@tar.gz')");
 	}
 
 	@Test
@@ -216,11 +216,12 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.setType("gradle-project");
 		generateProject(request).isJavaWarProject().isGradleProject().gradleBuildAssert()
 				// This is tagged as web facet so it brings the web one
-				.contains("apply plugin: 'war'").contains("compile('org.foo:thymeleaf')")
+				.contains("apply plugin: 'war'")
+				.contains("implementation('org.foo:thymeleaf')")
 				.doesNotContain(
-						"compile('org.springframework.boot:spring-boot-starter-web')")
+						"implementation('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
-						"testCompile('org.springframework.boot:spring-boot-starter-test')")
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')")
 				.contains("configurations {") // declare providedRuntime config
 				.contains("providedRuntime").contains(
 						"providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')");
@@ -231,11 +232,12 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setPackaging("war");
 		generateGradleBuild(request).contains(
-				"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
+				"implementation('org.springframework.boot:spring-boot-starter-data-jpa')")
 				// Added by warpackaging
-				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
-						"testCompile('org.springframework.boot:spring-boot-starter-test')")
+						"implementation('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')")
 				.contains("configurations {") // declare providedRuntime config
 				.contains("providedRuntime").contains(
 						"providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')");
@@ -529,11 +531,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.addDependencyGroup("foo", whatever).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("whatever", "data-jpa", "web");
-		generateGradleBuild(request)
-				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+		generateGradleBuild(request).contains(
+				"implementation('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
-						"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
-				.contains("compile('org.acme:whatever:1.2.3')");
+						"implementation('org.springframework.boot:spring-boot-starter-data-jpa')")
+				.contains("implementation('org.acme:whatever:1.2.3')");
 	}
 
 	@Test
@@ -575,15 +577,15 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("hamcrest", "h2", "servlet-api",
 				"data-jpa", "web");
-		generateGradleBuild(request)
-				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+		generateGradleBuild(request).contains(
+				"implementation('org.springframework.boot:spring-boot-starter-web')")
 				.contains(
-						"compile('org.springframework.boot:spring-boot-starter-data-jpa')")
+						"implementation('org.springframework.boot:spring-boot-starter-data-jpa')")
 				// declare providedRuntime config
-				.contains("runtime('org.h2:h2')").contains("configurations {")
+				.contains("runtimeOnly('org.h2:h2')").contains("configurations {")
 				.contains("providedRuntime")
 				.contains("providedRuntime('javax.servlet:servlet-api')")
-				.contains("testCompile('org.hamcrest:hamcrest')");
+				.contains("testImplementation('org.hamcrest:hamcrest')");
 	}
 
 	@Test
@@ -882,9 +884,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("one", "web", "two", "data-jpa");
 		assertThat(generateGradleBuild(request).getGradleBuild()).containsSubsequence(
-				"compile('org.springframework.boot:spring-boot-starter-data-jpa')",
-				"compile('org.springframework.boot:spring-boot-starter-web')",
-				"compile('com.example:second:1.2.3')", "compile('org.acme:first:1.2.3')");
+				"implementation('org.springframework.boot:spring-boot-starter-data-jpa')",
+				"implementation('org.springframework.boot:spring-boot-starter-web')",
+				"implementation('com.example:second:1.2.3')",
+				"implementation('org.acme:first:1.2.3')");
 	}
 
 	@Test
