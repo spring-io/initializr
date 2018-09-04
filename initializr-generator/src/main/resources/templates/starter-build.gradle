@@ -83,17 +83,17 @@ ext {
 {{/buildPropertiesVersions.empty}}
 dependencies {
 	{{#compileDependencies}}
-	implementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileDependencies}}
 	{{#groovy}}
-	implementation('org.codehaus.groovy:groovy')
+	{{gradleCompileConfig}}('org.codehaus.groovy:groovy')
 	{{/groovy}}
 	{{#kotlin}}
-	implementation("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
-	implementation("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	{{gradleCompileConfig}}("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	{{gradleCompileConfig}}("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
 	{{/kotlin}}
 	{{#runtimeDependencies}}
-	runtimeOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleRuntimeConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/runtimeDependencies}}
 	{{#compileOnlyDependencies}}
 	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
@@ -104,9 +104,9 @@ dependencies {
 	{{#providedDependencies}}
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	{{gradleTestCompileConfig}}('org.springframework.boot:spring-boot-starter-test')
 	{{#testDependencies}}
-	testImplementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleTestCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
 }
 {{#hasBoms}}

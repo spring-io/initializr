@@ -26,8 +26,8 @@ repositories {
 
 
 dependencies {
-	implementation('org.acme:foo')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	compile('org.acme:foo')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 dependencyManagement {

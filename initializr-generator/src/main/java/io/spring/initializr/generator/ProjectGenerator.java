@@ -448,7 +448,8 @@ public class ProjectGenerator {
 		// Gradle plugin has changed as from 1.3.0
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1.compareTo(bootVersion) <= 0);
 
-		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
+		final boolean bootTwoZeroAvailable = VERSION_2_0_0_M1.compareTo(bootVersion) <= 0;
+		model.put("bootTwoZeroAvailable", bootTwoZeroAvailable);
 
 		// Gradle plugin has changed again as from 1.4.2
 		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0)
@@ -477,6 +478,17 @@ public class ProjectGenerator {
 		}
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
+		}
+
+		if (isGradleBuild(request)) {
+			model.put("gradleCompileConfig",
+					bootTwoZeroAvailable ? "implementation" : "compile");
+			model.put("gradleRuntimeConfig",
+					bootTwoZeroAvailable ? "runtimeOnly" : "runtime");
+			model.put("gradleTestCompileConfig",
+					bootTwoZeroAvailable ? "testImplementation" : "testCompile");
+			model.put("gradleTestRuntimeConfig",
+					bootTwoZeroAvailable ? "testRuntimeOnly" : "testRuntime");
 		}
 
 		return model;

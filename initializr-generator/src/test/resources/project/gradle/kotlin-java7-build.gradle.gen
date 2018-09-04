@@ -40,8 +40,8 @@ repositories {
 
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter')
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}")
-	implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	compile('org.springframework.boot:spring-boot-starter')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
