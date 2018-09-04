@@ -313,6 +313,14 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
+	 * Specify if this request has the jpa facet enabled.
+	 * @return {@code true} if the project has the jpa facet
+	 */
+	public boolean hasJpaFacet() {
+		return hasFacet("jpa");
+	}
+
+	/**
 	 * Specify if this request has the specified facet enabled.
 	 * @param facet the facet to check
 	 * @return {@code true} if the project has the facet

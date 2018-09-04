@@ -483,6 +483,8 @@ initializr:
           id: data-jpa
           description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           weight: 100
+          facets:
+            - jpa
           aliases:
             - jpa
           links:
