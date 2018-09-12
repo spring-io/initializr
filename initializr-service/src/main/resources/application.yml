@@ -1313,6 +1313,18 @@ initializr:
           versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
+    - name: Utilities
+      content:
+        - name: Dozer
+          id: dozer
+          description: Java Bean to Java Bean mapper that recursively copies data from one object to another
+          links:
+            - rel: reference
+              href: https://dozermapper.github.io/gitbook/documentation/springBootIntegration.html
+          groupId: com.github.dozermapper
+          artifactId: dozer-spring-boot-starter
+          version: 6.3.0
+          versionRange: "1.4.0.RELEASE"
   types:
     - name: Maven Project
       id: maven-project
