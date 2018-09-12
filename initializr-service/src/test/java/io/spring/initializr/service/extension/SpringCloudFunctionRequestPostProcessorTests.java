@@ -17,6 +17,7 @@
 package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
+
 import org.junit.Test;
 
 /**
@@ -60,6 +61,15 @@ public class SpringCloudFunctionRequestPostProcessorTests
 		generateMavenPom(request).hasDependency(getDependency("web"))
 				.hasDependency(SpringCloudFunctionRequestPostProcessor.WEB_ADAPTER)
 				.hasDependenciesCount(3);
+	}
+
+	@Test
+	public void webflux() {
+		ProjectRequest request = createProjectRequest("webflux", "cloud-function");
+		request.setBootVersion("2.1.0.BUILD-SNAPSHOT");
+		generateMavenPom(request).hasDependency(getDependency("webflux"))
+				.hasDependency(SpringCloudFunctionRequestPostProcessor.WEB_ADAPTER)
+				.hasDependenciesCount(4);
 	}
 
 }
