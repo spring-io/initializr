@@ -275,6 +275,13 @@ initializr:
         - name: Aspects
           id: aop
           description: Create your own Aspects using Spring AOP and AspectJ
+        - name: Orika Mapper
+          id: orika
+          groupId: net.rakugakibox.spring.boot
+          artifactId: orika-spring-boot-starter
+          description: Java Bean mapping framework that recursively copies data from one object to another
+          versionRange: 1.6.0
+          starter: true
     - name: Web
       content:
         - name: Web
