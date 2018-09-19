@@ -17,6 +17,7 @@
 package io.spring.initializr.service.extension;
 
 import io.spring.initializr.generator.ProjectRequest;
+
 import org.junit.Test;
 
 /**
