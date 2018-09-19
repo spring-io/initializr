@@ -71,4 +71,12 @@ public class SpringCloudFunctionRequestPostProcessorTests
 				.hasDependenciesCount(4);
 	}
 
+	@Test
+	public void webfluxNotAvailableIn20() {
+		ProjectRequest request = createProjectRequest("webflux", "cloud-function");
+		request.setBootVersion("2.0.5.RELEASE");
+		generateMavenPom(request).hasDependency(getDependency("webflux"))
+				.hasDependency(getDependency("cloud-function")).hasDependenciesCount(4);
+	}
+
 }

@@ -42,7 +42,7 @@ class SpringCloudFunctionRequestPostProcessor
 	static final Dependency WEB_ADAPTER = Dependency.withId("cloud-function-web",
 			"org.springframework.cloud", "spring-cloud-function-web");
 
-	static final Version BOOT_21 = Version.parse("2.1.0.x");
+	static final Version VERSION_2_1_0_M1 = Version.parse("2.1.0.M1");
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
@@ -58,7 +58,7 @@ class SpringCloudFunctionRequestPostProcessor
 				swap.add(WEB_ADAPTER);
 			}
 			if (hasDependency(request, "webflux")
-					&& Version.parse(request.getBootVersion()).compareTo(BOOT_21) >= 0) {
+					&& isSpringBootVersionAtLeastAfter(request, VERSION_2_1_0_M1)) {
 				swap.add(WEB_ADAPTER);
 			}
 			if (!swap.isEmpty()) {
