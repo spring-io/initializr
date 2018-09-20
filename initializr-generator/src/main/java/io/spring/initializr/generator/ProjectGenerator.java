@@ -437,6 +437,9 @@ public class ProjectGenerator {
 			model.put("kotlinVersion", metadata.getConfiguration().getEnv().getKotlin()
 					.resolveKotlinVersion(bootVersion));
 			model.put("kotlin", true);
+			Map<String, String> kotlin = new LinkedHashMap<>();
+			model.put("buildPropertiesKotlin", kotlin.entrySet());
+			kotlin.put("kotlin.code.style", "official");
 		}
 		if ("groovy".equals(request.getLanguage())) {
 			model.put("groovy", true);
