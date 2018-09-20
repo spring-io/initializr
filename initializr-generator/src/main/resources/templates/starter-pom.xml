@@ -25,9 +25,6 @@
 		{{#buildPropertiesVersions}}
 		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
 		{{/buildPropertiesVersions}}
-		{{#buildPropertiesKotlin}}
-		<{{key}}>{{#value}}{{.}}{{/value}}</{{key}}>
-		{{/buildPropertiesKotlin}}
 	</properties>
 
 	<dependencies>

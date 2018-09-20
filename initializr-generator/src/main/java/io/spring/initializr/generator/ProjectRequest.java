@@ -232,10 +232,13 @@ public class ProjectRequest extends BasicProjectRequest {
 		Supplier<String> kotlinVersion = () -> metadata.getConfiguration().getEnv()
 				.getKotlin().resolveKotlinVersion(requestedVersion);
 		if ("gradle".equals(this.build)) {
-			this.buildProperties.getGradle().put("springBootVersion",
+			this.buildProperties.getGradle().getBuild().put("springBootVersion",
 					this::getBootVersion);
 			if ("kotlin".equals(getLanguage())) {
-				this.buildProperties.getGradle().put("kotlinVersion", kotlinVersion);
+				this.buildProperties.getGradle().getBuild().put("kotlinVersion",
+						kotlinVersion);
+				this.buildProperties.getGradle().getProperties().put("kotlin.code.style",
+						() -> "official");
 			}
 		}
 		else {
@@ -248,6 +251,8 @@ public class ProjectRequest extends BasicProjectRequest {
 			if ("kotlin".equals(getLanguage())) {
 				this.buildProperties.getVersions()
 						.put(new VersionProperty("kotlin.version"), kotlinVersion);
+				this.buildProperties.getMaven().put("kotlin.code.style",
+						() -> "official");
 			}
 		}
 	}

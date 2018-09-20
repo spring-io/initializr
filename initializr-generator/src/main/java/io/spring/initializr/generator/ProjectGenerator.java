@@ -231,6 +231,8 @@ public class ProjectGenerator {
 			writeText(new File(dir, "build.gradle"), gradle);
 			String settings = new String(doGenerateGradleSettings(model));
 			writeText(new File(dir, "settings.gradle"), settings);
+			String properties = new String(doGenerateGradleProperties(model));
+			writeText(new File(dir, "gradle.properties"), properties);
 			writeGradleWrapper(dir, Version.safeParse(request.getBootVersion()));
 		}
 		else {
@@ -422,10 +424,14 @@ public class ProjectGenerator {
 		model.put("buildPropertiesVersions", versions.entrySet());
 		request.getBuildProperties().getVersions().forEach(
 				(k, v) -> versions.put(computeVersionProperty(request, k), v.get()));
-		Map<String, String> gradle = new LinkedHashMap<>();
-		model.put("buildPropertiesGradle", gradle.entrySet());
-		request.getBuildProperties().getGradle()
-				.forEach((k, v) -> gradle.put(k, v.get()));
+		Map<String, String> gradleBuild = new LinkedHashMap<>();
+		model.put("buildPropertiesGradle", gradleBuild.entrySet());
+		request.getBuildProperties().getGradle().getBuild()
+				.forEach((k, v) -> gradleBuild.put(k, v.get()));
+		Map<String, String> gradleProperties = new LinkedHashMap<>();
+		model.put("buildPropertiesGradleProperties", gradleProperties.entrySet());
+		request.getBuildProperties().getGradle().getProperties()
+				.forEach((k, v) -> gradleProperties.put(k, v.get()));
 		Map<String, String> maven = new LinkedHashMap<>();
 		model.put("buildPropertiesMaven", maven.entrySet());
 		request.getBuildProperties().getMaven().forEach((k, v) -> maven.put(k, v.get()));
@@ -437,9 +443,6 @@ public class ProjectGenerator {
 			model.put("kotlinVersion", metadata.getConfiguration().getEnv().getKotlin()
 					.resolveKotlinVersion(bootVersion));
 			model.put("kotlin", true);
-			Map<String, String> kotlin = new LinkedHashMap<>();
-			model.put("buildPropertiesKotlin", kotlin.entrySet());
-			kotlin.put("kotlin.code.style", "official");
 		}
 		if ("groovy".equals(request.getLanguage())) {
 			model.put("groovy", true);
@@ -617,6 +620,11 @@ public class ProjectGenerator {
 
 	private byte[] doGenerateGradleSettings(Map<String, Object> model) {
 		return this.templateRenderer.process("starter-settings.gradle", model).getBytes();
+	}
+
+	private byte[] doGenerateGradleProperties(Map<String, Object> model) {
+		return this.templateRenderer.process("starter-gradle.properties", model)
+				.getBytes();
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {

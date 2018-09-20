@@ -807,7 +807,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.getBuildProperties().getMaven().put("name", () -> "test");
 		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
 				() -> "1.2.3");
-		request.getBuildProperties().getGradle().put("ignore.property", () -> "yes");
+		request.getBuildProperties().getGradle().getBuild().put("ignore.property",
+				() -> "yes");
 
 		generateMavenPom(request).hasProperty("name", "test")
 				.hasProperty("foo.version", "1.2.3").hasNoProperty("ignore.property");
@@ -816,7 +817,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void buildPropertiesGradle() {
 		ProjectRequest request = createProjectRequest("web");
-		request.getBuildProperties().getGradle().put("name", () -> "test");
+		request.getBuildProperties().getGradle().getBuild().put("name", () -> "test");
 		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
 				() -> "1.2.3");
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");

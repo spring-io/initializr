@@ -35,10 +35,9 @@ public class BuildProperties {
 	private final TreeMap<String, Supplier<String>> maven = new TreeMap<>();
 
 	/**
-	 * Gradle-specific build properties, added to the {@code buildscript} section of the
-	 * gradle build.
+	 * Gradle-specific build properties.
 	 */
-	private final TreeMap<String, Supplier<String>> gradle = new TreeMap<>();
+	private final GradleBuildProperties gradle = new GradleBuildProperties();
 
 	/**
 	 * Version properties. Shared between the two build systems.
@@ -49,12 +48,39 @@ public class BuildProperties {
 		return this.maven;
 	}
 
-	public Map<String, Supplier<String>> getGradle() {
+	public GradleBuildProperties getGradle() {
 		return this.gradle;
 	}
 
 	public Map<VersionProperty, Supplier<String>> getVersions() {
 		return this.versions;
+	}
+
+	/**
+	 * Holds properties for {@code buildscript} section of the gradle build, and for
+	 * {@code gradle.properties} file.
+	 */
+	static class GradleBuildProperties {
+
+		/**
+		 * Gradle-specific build properties, added to the {@code buildscript} section of
+		 * the gradle build.
+		 */
+		private final TreeMap<String, Supplier<String>> build = new TreeMap<>();
+
+		/**
+		 * Gradle-specific build properties, added to the {@code gradle.properties} file.
+		 */
+		private final TreeMap<String, Supplier<String>> properties = new TreeMap<>();
+
+		public TreeMap<String, Supplier<String>> getBuild() {
+			return this.build;
+		}
+
+		public TreeMap<String, Supplier<String>> getProperties() {
+			return this.properties;
+		}
+
 	}
 
 }

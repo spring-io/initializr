@@ -40,7 +40,8 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	public static Object[] parameters() {
 		Object[] maven = new Object[] { "maven", "pom.xml" };
 		Object[] gradle = new Object[] { "gradle", "build.gradle" };
-		return new Object[] { maven, gradle };
+		Object[] gradleProperties = new Object[] { "gradle", "gradle.properties" };
+		return new Object[] { maven, gradle, gradleProperties };
 	}
 
 	private final String build;
