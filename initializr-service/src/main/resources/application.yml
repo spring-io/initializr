@@ -177,7 +177,7 @@ initializr:
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      default-version: 1.2.61
+      default-version: 1.2.70
       mappings:
         - versionRange: "[1.5.0.RELEASE,2.1.0.M1)"
           version: 1.2.51
