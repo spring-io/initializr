@@ -486,6 +486,25 @@ initializr:
               description: Accessing Data with JPA
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jpa-and-spring-data
+        - name: JDBC
+          id: data-jdbc
+          description: JDBC databases including spring-data-jdbc, spring-jdbc
+          versionRange: 2.1.0.M4
+          links:
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-data-jdbc
+        - name: JDBC Core
+          id: jdbc
+          description: JDBC databases including spring-jdbc
+          links:
+            - rel: guide
+              href: https://spring.io/guides/gs/relational-data-access/
+              description: Accessing Relational Data using JDBC with Spring
+            - rel: guide
+              href: https://spring.io/guides/gs/managing-transactions/
+              description: Managing Transactions
+            - rel: reference
+              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-sql
         - name: MySQL
           id: mysql
           description: MySQL JDBC driver
@@ -504,18 +523,6 @@ initializr:
           artifactId: h2
           scope: runtime
           starter: false
-        - name: JDBC
-          id: jdbc
-          description: JDBC databases
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/relational-data-access/
-              description: Accessing Relational Data using JDBC with Spring
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-sql
         - name: MyBatis
           id: mybatis
           description: Persistence support using MyBatis
