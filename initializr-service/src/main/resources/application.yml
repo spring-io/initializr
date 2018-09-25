@@ -1358,6 +1358,8 @@ initializr:
       id: war
       default: false
   javaVersions:
+    - id: 11
+      default: false
     - id: 10
       default: false
     - id: 1.8

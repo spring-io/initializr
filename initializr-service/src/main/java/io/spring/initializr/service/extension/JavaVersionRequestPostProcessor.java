@@ -39,6 +39,8 @@ class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_1 = Version.parse("2.0.1.RELEASE");
 
+	private static final Version VERSION_2_1_0_M1 = Version.parse("2.1.0.M1");
+
 	private static final List<String> UNSUPPORTED_LANGUAGES = Arrays.asList("groovy",
 			"kotlin");
 
@@ -62,12 +64,16 @@ class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 		if (javaGeneration == 10 && VERSION_2_0_1.compareTo(requestVersion) > 0) {
 			request.setJavaVersion("1.8");
 		}
+		// 11 support only as of 2.1.x
+		if (javaGeneration == 11 && VERSION_2_1_0_M1.compareTo(requestVersion) > 0) {
+			request.setJavaVersion("1.8");
+		}
 	}
 
 	private Integer determineJavaGeneration(String javaVersion) {
 		try {
 			int generation = Integer.valueOf(javaVersion);
-			return ((generation > 8 && generation <= 10) ? generation : null);
+			return ((generation > 8 && generation <= 11) ? generation : null);
 		}
 		catch (NumberFormatException ex) {
 			return null;
