@@ -103,10 +103,13 @@ initializr:
             repositories: spring-milestones
           - versionRange: "[2.0.3.RELEASE,2.0.x.BUILD-SNAPSHOT)"
             version: Finchley.SR1
-          - versionRange: "[2.0.x.BUILD-SNAPSHOT,2.1.0.M1)"
+          - versionRange: "[2.0.x.BUILD-SNAPSHOT,2.1.0.M3)"
             version: Finchley.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
-          - versionRange: "2.1.0.M1"
+          - versionRange: "[2.1.0.M3,2.1.x.BUILD-SNAPSHOT)"
+            version: Greenwich.M1
+            repositories: spring-milestones
+          - versionRange: "2.1.x.BUILD-SNAPSHOT"
             version: Greenwich.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-gcp:
