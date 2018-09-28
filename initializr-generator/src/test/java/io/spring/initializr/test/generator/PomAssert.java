@@ -46,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class PomAssert {
 
+	private final String content;
+
 	private final XpathEngine eng;
 
 	private final Document doc;
@@ -61,6 +63,7 @@ public class PomAssert {
 	private final Map<String, Repository> repositories = new LinkedHashMap<>();
 
 	public PomAssert(String content) {
+		this.content = content;
 		this.eng = XMLUnit.newXpathEngine();
 		Map<String, String> context = new LinkedHashMap<>();
 		context.put("pom", "http://maven.apache.org/POM/4.0.0");
@@ -296,6 +299,10 @@ public class PomAssert {
 	public PomAssert hasRepositoriesCount(int count) {
 		assertThat(this.repositories).hasSize(count);
 		return this;
+	}
+
+	public String getMavenPom() {
+		return this.content;
 	}
 
 	private PomAssert hasPluginRepository(String name) {

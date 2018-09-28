@@ -195,6 +195,9 @@
 					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
+						{{#jpaFacet}}
+						<plugin>jpa</plugin>
+						{{/jpaFacet}}
 					</compilerPlugins>
 					{{^kotlinSupport}}
 					{{#java8OrLater}}

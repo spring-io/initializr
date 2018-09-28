@@ -467,6 +467,11 @@ public class ProjectGenerator {
 		// Java versions
 		model.put("java8OrLater", isJava8OrLater(request));
 
+		// Has JPA facet
+		if (request.hasJpaFacet()) {
+			model.put("jpaFacet", true);
+		}
+
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
 		for (PropertyDescriptor descriptor : bean.getPropertyDescriptors()) {
