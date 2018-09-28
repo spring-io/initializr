@@ -305,19 +305,19 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
-	 * Specify if this request has the web facet enabled.
-	 * @return {@code true} if the project has the web facet
-	 */
-	public boolean hasWebFacet() {
-		return hasFacet("web");
-	}
-
-	/**
 	 * Specify if this request has the jpa facet enabled.
 	 * @return {@code true} if the project has the jpa facet
 	 */
 	public boolean hasJpaFacet() {
 		return hasFacet("jpa");
+	}
+
+	/**
+	 * Specify if this request has the web facet enabled.
+	 * @return {@code true} if the project has the web facet
+	 */
+	public boolean hasWebFacet() {
+		return hasFacet("web");
 	}
 
 	/**

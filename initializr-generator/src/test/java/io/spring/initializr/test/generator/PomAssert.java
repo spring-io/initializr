@@ -94,6 +94,16 @@ public class PomAssert {
 				.hasJavaVersion(request.getJavaVersion());
 	}
 
+	public PomAssert contains(String expression) {
+		assertThat(this.content).contains(expression);
+		return this;
+	}
+
+	public PomAssert doesNotContain(String expression) {
+		assertThat(this.content).doesNotContain(expression);
+		return this;
+	}
+
 	public PomAssert hasGroupId(String groupId) {
 		try {
 			assertThat(this.eng.evaluate(createRootNodeXPath("groupId"), this.doc))
@@ -299,10 +309,6 @@ public class PomAssert {
 	public PomAssert hasRepositoriesCount(int count) {
 		assertThat(this.repositories).hasSize(count);
 		return this;
-	}
-
-	public String getMavenPom() {
-		return this.content;
 	}
 
 	private PomAssert hasPluginRepository(String name) {

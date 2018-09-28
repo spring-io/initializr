@@ -962,90 +962,69 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 	@Test
 	public void kotlinWithMavenUseJpaFacetHasJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		jpa.setFacets(Collections.singletonList("jpa"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(true);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("maven-project");
 		request.setLanguage("kotlin");
-		assertThat(generateMavenPom(request).getMavenPom())
-				.contains("<plugin>jpa</plugin>");
+		generateMavenPom(request).contains("<plugin>jpa</plugin>")
+				.contains("kotlin-maven-noarg");
 	}
 
 	@Test
 	public void kotlinWithMavenWithoutJpaFacetDoesNotHaveJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(false);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("maven-project");
 		request.setLanguage("kotlin");
-		assertThat(generateMavenPom(request).getMavenPom())
-				.doesNotContain("<plugin>jpa</plugin>");
+		generateMavenPom(request).doesNotContain("<plugin>jpa</plugin>")
+				.doesNotContain("kotlin-maven-noarg");
 	}
 
 	@Test
 	public void javaWithMavenUseJpaFacetDoesNotHaveJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		jpa.setFacets(Collections.singletonList("jpa"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(true);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("maven-project");
 		request.setLanguage("java");
-		assertThat(generateMavenPom(request).getMavenPom())
-				.doesNotContain("<plugin>jpa</plugin>");
+		generateMavenPom(request).doesNotContain("<plugin>jpa</plugin>")
+				.doesNotContain("kotlin-maven-noarg");
 	}
 
 	@Test
 	public void kotlinWithGradleUseJpaFacetHasJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		jpa.setFacets(Collections.singletonList("jpa"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(true);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("gradle-project");
 		request.setLanguage("kotlin");
-		assertThat(generateGradleBuild(request).getGradleBuild())
-				.contains("apply plugin: 'kotlin-jpa'");
+		generateGradleBuild(request).contains("apply plugin: 'kotlin-jpa'");
 	}
 
 	@Test
 	public void kotlinWithGradleWithoutJpaFacetDoesNotHaveJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(false);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("gradle-project");
 		request.setLanguage("kotlin");
-		assertThat(generateGradleBuild(request).getGradleBuild())
-				.doesNotContain("apply plugin: 'kotlin-jpa'");
+		generateGradleBuild(request).doesNotContain("apply plugin: 'kotlin-jpa'");
 	}
 
 	@Test
 	public void javaWithGradleUseJpaFacetDoesNotHaveJpaKotlinPlugin() {
-		Dependency jpa = Dependency.withId("data-jpa");
-		jpa.setFacets(Collections.singletonList("jpa"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("data-jpa", jpa).build();
-		applyMetadata(metadata);
-
+		applyJpaMetadata(true);
 		ProjectRequest request = createProjectRequest("data-jpa");
 		request.setType("gradle-project");
 		request.setLanguage("java");
-		assertThat(generateGradleBuild(request).getGradleBuild())
-				.doesNotContain("apply plugin: 'kotlin-jpa'");
+		generateGradleBuild(request).doesNotContain("apply plugin: 'kotlin-jpa'");
+	}
+
+	private void applyJpaMetadata(boolean enableJpaFacet) {
+		Dependency jpa = Dependency.withId("data-jpa");
+		if (enableJpaFacet) {
+			jpa.setFacets(Collections.singletonList("jpa"));
+		}
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("data-jpa", jpa).build();
+		applyMetadata(metadata);
 	}
 
 }
