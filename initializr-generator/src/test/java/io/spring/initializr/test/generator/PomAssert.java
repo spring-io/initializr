@@ -46,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class PomAssert {
 
+	private final String content;
+
 	private final XpathEngine eng;
 
 	private final Document doc;
@@ -61,6 +63,7 @@ public class PomAssert {
 	private final Map<String, Repository> repositories = new LinkedHashMap<>();
 
 	public PomAssert(String content) {
+		this.content = content;
 		this.eng = XMLUnit.newXpathEngine();
 		Map<String, String> context = new LinkedHashMap<>();
 		context.put("pom", "http://maven.apache.org/POM/4.0.0");
@@ -89,6 +92,16 @@ public class PomAssert {
 				.hasVersion(request.getVersion()).hasPackaging(request.getPackaging())
 				.hasName(request.getName()).hasDescription(request.getDescription())
 				.hasJavaVersion(request.getJavaVersion());
+	}
+
+	public PomAssert contains(String expression) {
+		assertThat(this.content).contains(expression);
+		return this;
+	}
+
+	public PomAssert doesNotContain(String expression) {
+		assertThat(this.content).doesNotContain(expression);
+		return this;
 	}
 
 	public PomAssert hasGroupId(String groupId) {

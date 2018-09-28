@@ -19,6 +19,9 @@ buildscript {
 		{{#kotlin}}
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		{{#facets.jpa}}
+		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+		{{/facets.jpa}}
 		{{/kotlin}}
 	}
 }
@@ -26,6 +29,9 @@ buildscript {
 apply plugin: '{{language}}'
 {{#kotlin}}
 apply plugin: 'kotlin-spring'
+{{#facets.jpa}}
+apply plugin: 'kotlin-jpa'
+{{/facets.jpa}}
 {{/kotlin}}
 {{#war}}
 apply plugin: 'eclipse-wtp'
