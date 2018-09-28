@@ -598,7 +598,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains(
 						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.contains("apply plugin: 'spring-boot'")
-				.contains("apply plugin: 'io.spring.dependency-management'");
+				.contains("apply plugin: 'io.spring.dependency-management'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')");
 	}
 
 	@Test
@@ -612,6 +615,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'spring-boot'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')")
 				.doesNotContain(
 						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.doesNotContain("apply plugin: 'io.spring.dependency-management'");
@@ -624,6 +630,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.4.2.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')")
 				.doesNotContain("apply plugin: 'spring-boot'");
 	}
 
@@ -635,7 +644,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains("springBootVersion = '2.0.0.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
 				.doesNotContain("apply plugin: 'spring-boot'")
-				.contains("apply plugin: 'io.spring.dependency-management'");
+				.contains("apply plugin: 'io.spring.dependency-management'")
+				.contains(
+						"implementation('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')");
 	}
 
 	@Test
