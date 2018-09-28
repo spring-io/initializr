@@ -56,7 +56,7 @@ initializr:
           - versionRange : "[1.5.3.RELEASE,2.0.0.M1)"
             version: 3.4.2.Final
           - versionRange : "2.0.0.M1"
-            version: 4.2.0.Final
+            version: 4.5.0.Final
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
