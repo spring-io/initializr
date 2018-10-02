@@ -1,6 +1,6 @@
 local:
   gcp:
-    version: 1.0.0.RELEASE
+    version: 1.1.0.M2
 
 logging:
   level:
@@ -117,8 +117,12 @@ initializr:
         artifactId: spring-cloud-gcp-dependencies
         versionProperty: spring-cloud-gcp.version
         additionalBoms: [spring-cloud]
-        version: ${local.gcp.version}
-        repositories: spring-milestones
+        mappings:
+          - versionRange: "[2.0.0.RELEASE,2.1.0.M1)"
+            version: 1.0.0.RELEASE
+          - versionRange: "2.1.0.M1"
+            version: ${local.gcp.version}
+            repositories: spring-milestones
       spring-cloud-services:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
