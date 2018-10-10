@@ -1132,7 +1132,7 @@ initializr:
         - name: Azure Support
           id: azure-support
           groupId: com.microsoft.azure
-          artifactId: azure-spring-boot
+          artifactId: azure-spring-boot-starter
           description: Auto-configuration for Azure Services (service bus, storage, active directory, cosmos DB, key vault and more)
           links:
             - rel: reference
