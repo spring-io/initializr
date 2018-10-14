@@ -180,4 +180,18 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 						+ this.expectedExtension));
 	}
 
+	@Test
+	public void springBoot21M4TestClass() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage(this.language);
+		request.setBootVersion("2.1.0.M4");
+
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert("src/test/" + this.language
+				+ "/com/example/demo/DemoApplicationTests." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language
+						+ "/spring-boot-2.1/DemoApplicationTests."
+						+ this.expectedExtension));
+	}
+
 }

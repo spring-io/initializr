@@ -82,6 +82,8 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_2_0_0_M6 = Version.parse("2.0.0.M6");
 
+	private static final Version Version_2_1_0_M4 = Version.parse("2.1.0.M4");
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
@@ -458,6 +460,9 @@ public class ProjectGenerator {
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
+		// JUnit Jupiter
+		model.put("jupiterAvailable", isJupiterAvailable(request));
+
 		// Servlet Initializer
 		model.put("servletInitializrImport", new Imports(request.getLanguage())
 				.add(getServletInitializrClass(request)).toString());
@@ -548,12 +553,21 @@ public class ProjectGenerator {
 		Imports imports = new Imports(request.getLanguage());
 		Annotations testAnnotations = new Annotations();
 		boolean newTestInfrastructure = isNewTestInfrastructureAvailable(request);
+		boolean jupiterAvailable = isJupiterAvailable(request);
 		if (newTestInfrastructure) {
-			imports.add("org.springframework.boot.test.context.SpringBootTest")
-					.add("org.springframework.test.context.junit4.SpringRunner");
+			if (jupiterAvailable) {
+				imports.add("org.junit.jupiter.api.Test")
+						.add("org.springframework.boot.test.context.SpringBootTest");
+			}
+			else {
+				imports.add("org.junit.Test").add("org.junit.runner.RunWith")
+						.add("org.springframework.boot.test.context.SpringBootTest")
+						.add("org.springframework.test.context.junit4.SpringRunner");
+			}
 		}
 		else {
-			imports.add("org.springframework.boot.test.SpringApplicationConfiguration")
+			imports.add("org.junit.Test").add("org.junit.runner.RunWith")
+					.add("org.springframework.boot.test.SpringApplicationConfiguration")
 					.add("org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
 		}
 		if (request.hasWebFacet() && !newTestInfrastructure) {
@@ -604,6 +618,11 @@ public class ProjectGenerator {
 
 	private static boolean isWar(ProjectRequest request) {
 		return "war".equals(request.getPackaging());
+	}
+
+	private static boolean isJupiterAvailable(ProjectRequest request) {
+		return Version_2_1_0_M4
+				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
 	}
 
 	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {

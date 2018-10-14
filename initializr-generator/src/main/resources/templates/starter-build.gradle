@@ -110,7 +110,7 @@ dependencies {
 	{{#providedDependencies}}
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}
-	{{gradleTestCompileConfig}}('org.springframework.boot:spring-boot-starter-test')
+	{{gradleTestCompileConfig}}('org.springframework.boot:spring-boot-starter-test'{{#jupiterAvailable}},'org.junit.jupiter:junit-jupiter-api','org.junit.jupiter:junit-jupiter-engine'{{/jupiterAvailable}})
 	{{#testDependencies}}
 	{{gradleTestCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
