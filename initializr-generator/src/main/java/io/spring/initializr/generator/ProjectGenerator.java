@@ -555,18 +555,22 @@ public class ProjectGenerator {
 		boolean newTestInfrastructure = isNewTestInfrastructureAvailable(request);
 		boolean jupiterAvailable = isJupiterAvailable(request);
 		if (newTestInfrastructure) {
-			if (!jupiterAvailable) {
+			if (jupiterAvailable) {
 				imports.add("org.springframework.boot.test.context.SpringBootTest")
-						.add("org.springframework.test.context.junit4.SpringRunner");
+						.add("org.junit.jupiter.api.Test");
 			}
 			else {
 				imports.add("org.springframework.boot.test.context.SpringBootTest")
-						.add("org.junit.jupiter.api.Test");
+						.add("org.springframework.test.context.junit4.SpringRunner")
+						.add("org.junit.Test")
+						.add("org.junit.runner.RunWith");
 			}
 		}
 		else {
 			imports.add("org.springframework.boot.test.SpringApplicationConfiguration")
-					.add("org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
+					.add("org.springframework.test.context.junit4.SpringJUnit4ClassRunner")
+					.add("org.junit.Test")
+					.add("org.junit.runner.RunWith");
 		}
 		if (request.hasWebFacet() && !newTestInfrastructure) {
 			imports.add("org.springframework.test.context.web.WebAppConfiguration");
