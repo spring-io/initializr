@@ -1,10 +1,10 @@
 package {{packageName}}
 
-import org.junit.Test
-import org.junit.runner.RunWith
 {{testImports}}
 {{#newTestInfrastructure}}
+{{^jupiterAvailable}}
 @RunWith(SpringRunner)
+{{/jupiterAvailable}}
 @SpringBootTest
 {{/newTestInfrastructure}}
 {{^newTestInfrastructure}}
