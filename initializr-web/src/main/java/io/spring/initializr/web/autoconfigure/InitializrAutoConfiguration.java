@@ -166,11 +166,12 @@ public class InitializrAutoConfiguration {
 
 		@Bean
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
-			return (cm) -> {
-				cm.createCache("initializr.metadata", config().setExpiryPolicyFactory(
-						CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
-				cm.createCache("initializr.dependency-metadata", config());
-				cm.createCache("initializr.project-resources", config());
+			return (cacheManager) -> {
+				cacheManager.createCache("initializr.metadata",
+						config().setExpiryPolicyFactory(
+								CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+				cacheManager.createCache("initializr.dependency-metadata", config());
+				cacheManager.createCache("initializr.project-resources", config());
 			};
 		}
 

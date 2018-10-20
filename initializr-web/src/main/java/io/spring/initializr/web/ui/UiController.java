@@ -57,15 +57,16 @@ public class UiController {
 		List<DependencyGroup> dependencyGroups = this.metadataProvider.get()
 				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
-		Version v = (StringUtils.isEmpty(version) ? null : Version.parse(version));
-		dependencyGroups.forEach((g) -> g.getContent().forEach((d) -> {
-			if (v != null && d.getVersionRange() != null) {
-				if (d.match(v)) {
-					content.add(new DependencyItem(g.getName(), d));
+		Version versionObj = (StringUtils.isEmpty(version) ? null
+				: Version.parse(version));
+		dependencyGroups.forEach((group) -> group.getContent().forEach((dependency) -> {
+			if (versionObj != null && dependency.getVersionRange() != null) {
+				if (dependency.match(versionObj)) {
+					content.add(new DependencyItem(group.getName(), dependency));
 				}
 			}
 			else {
-				content.add(new DependencyItem(g.getName(), d));
+				content.add(new DependencyItem(group.getName(), dependency));
 			}
 		}));
 		String json = writeDependencies(content);
@@ -76,27 +77,27 @@ public class UiController {
 	private static String writeDependencies(List<DependencyItem> items) {
 		ObjectNode json = JsonNodeFactory.instance.objectNode();
 		ArrayNode maps = JsonNodeFactory.instance.arrayNode();
-		items.forEach((d) -> maps.add(mapDependency(d)));
+		items.forEach((dependency) -> maps.add(mapDependency(dependency)));
 		json.set("dependencies", maps);
 		return json.toString();
 	}
 
 	private static ObjectNode mapDependency(DependencyItem item) {
 		ObjectNode node = JsonNodeFactory.instance.objectNode();
-		Dependency d = item.dependency;
-		node.put("id", d.getId());
-		node.put("name", d.getName());
+		Dependency dependency = item.dependency;
+		node.put("id", dependency.getId());
+		node.put("name", dependency.getName());
 		node.put("group", item.group);
-		if (d.getDescription() != null) {
-			node.put("description", d.getDescription());
+		if (dependency.getDescription() != null) {
+			node.put("description", dependency.getDescription());
 		}
-		if (d.getWeight() > 0) {
-			node.put("weight", d.getWeight());
+		if (dependency.getWeight() > 0) {
+			node.put("weight", dependency.getWeight());
 		}
-		if (!CollectionUtils.isEmpty(d.getKeywords())
-				|| !CollectionUtils.isEmpty(d.getAliases())) {
-			List<String> all = new ArrayList<>(d.getKeywords());
-			all.addAll(d.getAliases());
+		if (!CollectionUtils.isEmpty(dependency.getKeywords())
+				|| !CollectionUtils.isEmpty(dependency.getAliases())) {
+			List<String> all = new ArrayList<>(dependency.getKeywords());
+			all.addAll(dependency.getAliases());
 			node.put("keywords", StringUtils.collectionToCommaDelimitedString(all));
 		}
 		return node;

@@ -55,15 +55,15 @@ public class SpringBootMetadataReader {
 	 * @return the versions
 	 */
 	public List<DefaultMetadataElement> getBootVersions() {
-		ArrayNode array = (ArrayNode) this.content.get("projectReleases");
+		ArrayNode projectReleases = (ArrayNode) this.content.get("projectReleases");
 		List<DefaultMetadataElement> list = new ArrayList<>();
-		for (JsonNode it : array) {
+		for (JsonNode jsonNode : projectReleases) {
 			DefaultMetadataElement version = new DefaultMetadataElement();
-			version.setId(it.get("version").textValue());
-			String name = it.get("versionDisplayName").textValue();
-			version.setName(
-					it.get("snapshot").booleanValue() ? name + " (SNAPSHOT)" : name);
-			version.setDefault(it.get("current").booleanValue());
+			version.setId(jsonNode.get("version").textValue());
+			String name = jsonNode.get("versionDisplayName").textValue();
+			version.setName(jsonNode.get("snapshot").booleanValue() ? name + " (SNAPSHOT)"
+					: name);
+			version.setDefault(jsonNode.get("current").booleanValue());
 			list.add(version);
 		}
 		return list;
