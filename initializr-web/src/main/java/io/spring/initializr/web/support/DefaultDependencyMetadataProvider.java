@@ -40,30 +40,30 @@ public class DefaultDependencyMetadataProvider implements DependencyMetadataProv
 	@Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
 	public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
 		Map<String, Dependency> dependencies = new LinkedHashMap<>();
-		for (Dependency d : metadata.getDependencies().getAll()) {
-			if (d.match(bootVersion)) {
-				dependencies.put(d.getId(), d.resolve(bootVersion));
+		for (Dependency dependency : metadata.getDependencies().getAll()) {
+			if (dependency.match(bootVersion)) {
+				dependencies.put(dependency.getId(), dependency.resolve(bootVersion));
 			}
 		}
 
 		Map<String, Repository> repositories = new LinkedHashMap<>();
-		for (Dependency d : dependencies.values()) {
-			if (d.getRepository() != null) {
-				repositories.put(d.getRepository(), metadata.getConfiguration().getEnv()
-						.getRepositories().get(d.getRepository()));
+		for (Dependency dependency : dependencies.values()) {
+			if (dependency.getRepository() != null) {
+				repositories.put(dependency.getRepository(), metadata.getConfiguration().getEnv()
+						.getRepositories().get(dependency.getRepository()));
 			}
 		}
 
 		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
-		for (Dependency d : dependencies.values()) {
-			if (d.getBom() != null) {
-				boms.put(d.getBom(), metadata.getConfiguration().getEnv().getBoms()
-						.get(d.getBom()).resolve(bootVersion));
+		for (Dependency dependency : dependencies.values()) {
+			if (dependency.getBom() != null) {
+				boms.put(dependency.getBom(), metadata.getConfiguration().getEnv().getBoms()
+						.get(dependency.getBom()).resolve(bootVersion));
 			}
 		}
 		// Each resolved bom may require additional repositories
-		for (BillOfMaterials b : boms.values()) {
-			for (String id : b.getRepositories()) {
+		for (BillOfMaterials bom : boms.values()) {
+			for (String id : bom.getRepositories()) {
 				repositories.put(id,
 						metadata.getConfiguration().getEnv().getRepositories().get(id));
 			}
