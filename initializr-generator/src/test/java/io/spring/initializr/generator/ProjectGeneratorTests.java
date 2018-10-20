@@ -598,7 +598,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains(
 						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.contains("apply plugin: 'spring-boot'")
-				.contains("apply plugin: 'io.spring.dependency-management'");
+				.contains("apply plugin: 'io.spring.dependency-management'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')");
 	}
 
 	@Test
@@ -612,6 +615,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'spring-boot'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')")
 				.doesNotContain(
 						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
 				.doesNotContain("apply plugin: 'io.spring.dependency-management'");
@@ -624,6 +630,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateGradleBuild(request)
 				.contains("springBootVersion = '1.4.2.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
+				.contains("compile('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testCompile('org.springframework.boot:spring-boot-starter-test')")
 				.doesNotContain("apply plugin: 'spring-boot'");
 	}
 
@@ -635,7 +644,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains("springBootVersion = '2.0.0.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
 				.doesNotContain("apply plugin: 'spring-boot'")
-				.contains("apply plugin: 'io.spring.dependency-management'");
+				.contains("apply plugin: 'io.spring.dependency-management'")
+				.contains(
+						"implementation('org.springframework.boot:spring-boot-starter-web')")
+				.contains(
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')");
 	}
 
 	@Test
@@ -958,6 +971,73 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 			assertThat(ex.getMessage()).contains("foo-bar");
 			verifyProjectFailedEventFor(request, ex);
 		}
+	}
+
+	@Test
+	public void kotlinWithMavenUseJpaFacetHasJpaKotlinPlugin() {
+		applyJpaMetadata(true);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("maven-project");
+		request.setLanguage("kotlin");
+		generateMavenPom(request).contains("<plugin>jpa</plugin>")
+				.contains("kotlin-maven-noarg");
+	}
+
+	@Test
+	public void kotlinWithMavenWithoutJpaFacetDoesNotHaveJpaKotlinPlugin() {
+		applyJpaMetadata(false);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("maven-project");
+		request.setLanguage("kotlin");
+		generateMavenPom(request).doesNotContain("<plugin>jpa</plugin>")
+				.doesNotContain("kotlin-maven-noarg");
+	}
+
+	@Test
+	public void javaWithMavenUseJpaFacetDoesNotHaveJpaKotlinPlugin() {
+		applyJpaMetadata(true);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("maven-project");
+		request.setLanguage("java");
+		generateMavenPom(request).doesNotContain("<plugin>jpa</plugin>")
+				.doesNotContain("kotlin-maven-noarg");
+	}
+
+	@Test
+	public void kotlinWithGradleUseJpaFacetHasJpaKotlinPlugin() {
+		applyJpaMetadata(true);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("gradle-project");
+		request.setLanguage("kotlin");
+		generateGradleBuild(request).contains("apply plugin: 'kotlin-jpa'");
+	}
+
+	@Test
+	public void kotlinWithGradleWithoutJpaFacetDoesNotHaveJpaKotlinPlugin() {
+		applyJpaMetadata(false);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("gradle-project");
+		request.setLanguage("kotlin");
+		generateGradleBuild(request).doesNotContain("apply plugin: 'kotlin-jpa'");
+	}
+
+	@Test
+	public void javaWithGradleUseJpaFacetDoesNotHaveJpaKotlinPlugin() {
+		applyJpaMetadata(true);
+		ProjectRequest request = createProjectRequest("data-jpa");
+		request.setType("gradle-project");
+		request.setLanguage("java");
+		generateGradleBuild(request).doesNotContain("apply plugin: 'kotlin-jpa'");
+	}
+
+	private void applyJpaMetadata(boolean enableJpaFacet) {
+		Dependency jpa = Dependency.withId("data-jpa");
+		if (enableJpaFacet) {
+			jpa.setFacets(Collections.singletonList("jpa"));
+		}
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("data-jpa", jpa).build();
+		applyMetadata(metadata);
 	}
 
 }

@@ -66,7 +66,7 @@ public class InitializrConfiguration {
 	 * <p>
 	 * No suitable application name can be generated if the name is {@code null} or if it
 	 * contains an invalid character for a class identifier.
-	 * @param name The the source name
+	 * @param name the the source name
 	 * @return the generated application name
 	 * @see Env#getFallbackApplicationName()
 	 * @see Env#getInvalidApplicationNames()
@@ -98,7 +98,7 @@ public class InitializrConfiguration {
 	 * <p>
 	 * The package name cannot be cleaned if the specified {@code packageName} is
 	 * {@code null} or if it contains an invalid character for a class identifier.
-	 * @param packageName The package name
+	 * @param packageName the package name
 	 * @param defaultPackageName the default package name
 	 * @return the cleaned package name
 	 * @see Env#getInvalidPackageNames()
@@ -197,9 +197,10 @@ public class InitializrConfiguration {
 				Collections.singletonList("org.springframework"));
 
 		/**
-		 * Force SSL support. When enabled, any access using http generate https links.
+		 * Force SSL support. When enabled, any access using http generate https links and
+		 * browsers are redirected to https for html content.
 		 */
-		private boolean forceSsl = true;
+		private boolean forceSsl;
 
 		/**
 		 * The "BillOfMaterials" that are referenced in this instance, identified by an
@@ -513,7 +514,7 @@ public class InitializrConfiguration {
 			/**
 			 * Resolve the parent pom to use. If no custom parent pom is set, the standard
 			 * spring boot parent pom with the specified {@code bootVersion} is used.
-			 * @param bootVersion The Spring Boot version
+			 * @param bootVersion the Spring Boot version
 			 * @return the parent POM
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {

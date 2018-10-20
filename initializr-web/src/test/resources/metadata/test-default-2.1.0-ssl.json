@@ -1,19 +1,23 @@
 {
   "_links": {
+    "dependencies": {
+      "href": "https://@host@/dependencies{?bootVersion}",
+      "templated": true
+    },
     "maven-build": {
-      "href": "http://@host@/pom.xml?type=maven-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "https://@host@/pom.xml?type=maven-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "maven-project": {
-      "href": "http://@host@/starter.zip?type=maven-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "https://@host@/starter.zip?type=maven-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "gradle-build": {
-      "href": "http://@host@/build.gradle?type=gradle-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "https://@host@/build.gradle?type=gradle-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "gradle-project": {
-      "href": "http://@host@/starter.zip?type=gradle-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "https://@host@/starter.zip?type=gradle-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     }
   },
@@ -26,7 +30,16 @@
           {
             "id": "web",
             "name": "Web",
-            "description": "Web dependency description"
+            "description": "Web dependency description",
+            "_links": {
+              "guide": {
+                "href": "https://example.com/guide",
+                "title": "Building a RESTful Web Service"
+              },
+              "reference": {
+                "href": "https://example.com/doc"
+              }
+            }
           },
           {
             "id": "security",
@@ -43,11 +56,36 @@
         "values": [
           {
             "id": "org.acme:foo",
-            "name": "Foo"
+            "name": "Foo",
+            "_links": {
+              "guide": [
+                {
+                  "href": "https://example.com/guide1"
+                },
+                {
+                  "href": "https://example.com/guide2",
+                  "title": "Some guide for foo"
+                }
+              ],
+              "reference": {
+                "href": "https://example.com/{bootVersion}/doc",
+                "templated": true
+              }
+            }
           },
           {
             "id": "org.acme:bar",
             "name": "Bar"
+          },
+          {
+            "id": "org.acme:biz",
+            "name": "Biz",
+            "versionRange": "1.2.0.BUILD-SNAPSHOT"
+          },
+          {
+            "id": "org.acme:bur",
+            "name": "Bur",
+            "versionRange": "[1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)"
           },
           {
             "id": "my-api",

@@ -64,6 +64,29 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
+	public void resolveSimpleRangeWithGroupIdArtifactId() {
+		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+		bom.setVersionProperty("bom.version");
+		bom.getRepositories().add("repo-main");
+		bom.getAdditionalBoms().add("bom-main");
+		Mapping mapping = Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0");
+		mapping.setGroupId("com.example.override");
+		mapping.setArtifactId("bom-override");
+		bom.getMappings().add(mapping);
+		bom.validate();
+		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
+		assertThat(resolved.getGroupId()).isEqualTo("com.example.override");
+		assertThat(resolved.getArtifactId()).isEqualTo("bom-override");
+		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
+		assertThat(resolved.getVersionProperty().toStandardFormat())
+				.isEqualTo("bom.version");
+		assertThat(resolved.getRepositories()).hasSize(1);
+		assertThat(resolved.getRepositories().get(0)).isEqualTo("repo-main");
+		assertThat(resolved.getAdditionalBoms()).hasSize(1);
+		assertThat(resolved.getAdditionalBoms().get(0)).isEqualTo("bom-main");
+	}
+
+	@Test
 	public void resolveRangeOverride() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.getRepositories().add("repo-main");

@@ -81,7 +81,7 @@ public class InitializrMetadataBuilderTests {
 				.withInitializrMetadata(
 						new ClassPathResource("metadata/config/test-min.json"))
 				.build();
-		assertThat(metadata.getConfiguration().getEnv().isForceSsl()).isEqualTo(false);
+		assertThat(metadata.getConfiguration().getEnv().isForceSsl()).isEqualTo(true);
 		assertThat(metadata.getDependencies().getContent()).hasSize(1);
 		Dependency dependency = metadata.getDependencies().get("test");
 		assertThat(dependency).isNotNull();
@@ -185,6 +185,20 @@ public class InitializrMetadataBuilderTests {
 		assertThat(actualEnv.isForceSsl()).isEqualTo(false);
 		assertThat(actualEnv.getKotlin().getDefaultVersion())
 				.isEqualTo("1.0.0-beta-2423");
+	}
+
+	@Test
+	public void mergeSslConfiguration() {
+		InitializrProperties config = load(
+				new ClassPathResource("application-test-default.yml"));
+		InitializrProperties forceSslConfig = load(
+				new ClassPathResource("application-test-ssl.yml"));
+		InitializrMetadata metadata = InitializrMetadataBuilder
+				.fromInitializrProperties(config)
+				.withInitializrProperties(forceSslConfig, true).build();
+		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
+		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
+		assertThat(actualEnv.isForceSsl()).isEqualTo(true);
 	}
 
 	@Test

@@ -1,23 +1,23 @@
 {
   "_links": {
     "dependencies": {
-      "href": "https://@host@/dependencies{?bootVersion}",
+      "href": "http://@host@/dependencies{?bootVersion}",
       "templated": true
     },
     "maven-build": {
-      "href": "https://@host@/pom.xml?type=maven-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "http://@host@/pom.xml?type=maven-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "maven-project": {
-      "href": "https://@host@/starter.zip?type=maven-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "http://@host@/starter.zip?type=maven-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "gradle-build": {
-      "href": "https://@host@/build.gradle?type=gradle-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "http://@host@/build.gradle?type=gradle-build{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     },
     "gradle-project": {
-      "href": "https://@host@/starter.zip?type=gradle-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+      "href": "http://@host@/starter.zip?type=gradle-project{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName}",
       "templated": true
     }
   },

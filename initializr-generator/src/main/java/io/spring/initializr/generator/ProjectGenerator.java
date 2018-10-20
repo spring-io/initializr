@@ -448,11 +448,12 @@ public class ProjectGenerator {
 		// Gradle plugin has changed as from 1.3.0
 		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1.compareTo(bootVersion) <= 0);
 
-		model.put("bootTwoZeroAvailable", VERSION_2_0_0_M1.compareTo(bootVersion) <= 0);
+		final boolean bootTwoZeroAvailable = VERSION_2_0_0_M1.compareTo(bootVersion) <= 0;
+		model.put("bootTwoZeroAvailable", bootTwoZeroAvailable);
 
 		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0
-				? "org.springframework.boot" : "spring-boot"));
+		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0)
+				? "org.springframework.boot" : "spring-boot");
 
 		// New testing stuff
 		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
@@ -467,6 +468,9 @@ public class ProjectGenerator {
 		// Java versions
 		model.put("java8OrLater", isJava8OrLater(request));
 
+		// Facets
+		request.getFacets().forEach((facet) -> model.put("facets." + facet, true));
+
 		// Append the project request to the model
 		BeanWrapperImpl bean = new BeanWrapperImpl(request);
 		for (PropertyDescriptor descriptor : bean.getPropertyDescriptors()) {
@@ -477,6 +481,17 @@ public class ProjectGenerator {
 		}
 		if (!request.getBoms().isEmpty()) {
 			model.put("hasBoms", true);
+		}
+
+		if (isGradleBuild(request)) {
+			model.put("gradleCompileConfig",
+					bootTwoZeroAvailable ? "implementation" : "compile");
+			model.put("gradleRuntimeConfig",
+					bootTwoZeroAvailable ? "runtimeOnly" : "runtime");
+			model.put("gradleTestCompileConfig",
+					bootTwoZeroAvailable ? "testImplementation" : "testCompile");
+			model.put("gradleTestRuntimeConfig",
+					bootTwoZeroAvailable ? "testRuntimeOnly" : "testRuntime");
 		}
 
 		return model;
@@ -493,9 +508,9 @@ public class ProjectGenerator {
 		model.put("groupId", bom.getGroupId());
 		model.put("artifactId", bom.getArtifactId());
 		model.put("versionToken",
-				(bom.getVersionProperty() != null ? "${"
+				(bom.getVersionProperty() != null) ? "${"
 						+ computeVersionProperty(request, bom.getVersionProperty()) + "}"
-						: bom.getVersion()));
+						: bom.getVersion());
 		return model;
 	}
 

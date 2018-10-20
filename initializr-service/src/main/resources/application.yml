@@ -1,6 +1,6 @@
 local:
   gcp:
-    version: 1.0.0.RC1
+    version: 1.1.0.M2
 
 logging:
   level:
@@ -12,6 +12,7 @@ server:
     enabled: true
     mime-types: application/json,text/css,text/html
     min-response-size: 2048
+  use-forward-headers: true
 
 spring:
   jackson:
@@ -34,7 +35,7 @@ initializr:
           - versionRange: "[1.5.4.RELEASE,2.0.0.RELEASE)"
             version: 0.2.4
           - versionRange: "2.0.0.RELEASE"
-            version: 2.0.4
+            version: 2.0.5
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
@@ -42,16 +43,20 @@ initializr:
         mappings:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
-          - versionRange: "[2.0.0.M1,2.0.x.BUILD-SNAPSHOT)"
-            version: 2.0.1
-          - versionRange: "2.0.x.BUILD-SNAPSHOT"
-            version: 2.0.2-SNAPSHOT
+          - versionRange: "[2.0.0.M1,2.1.0.M1)"
+            version: 2.0.3
+          - versionRange: "2.1.0.M1"
+            version: 2.1.0-SNAPSHOT
             repositories: sonatype-snapshots
       keycloak:
         groupId: org.keycloak.bom
         artifactId: keycloak-adapter-bom
         versionProperty: keycloak.version
-        version: 3.4.2.Final
+        mappings:
+          - versionRange : "[1.5.3.RELEASE,2.0.0.M1)"
+            version: 3.4.2.Final
+          - versionRange : "2.0.0.M1"
+            version: 4.5.0.Final
       spring-cloud:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-dependencies
@@ -65,7 +70,7 @@ initializr:
           - versionRange: "[1.4.0.RELEASE,1.4.x.RELEASE]"
             version: Camden.SR7
           - versionRange: "[1.5.0.RELEASE,1.5.x.RELEASE]"
-            version: Edgware.SR4
+            version: Edgware.SR5
           - versionRange: "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)"
             version: Edgware.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
@@ -97,17 +102,27 @@ initializr:
             version: Finchley.RC2
             repositories: spring-milestones
           - versionRange: "[2.0.3.RELEASE,2.0.x.BUILD-SNAPSHOT)"
-            version: Finchley.RELEASE
-          - versionRange: "2.0.x.BUILD-SNAPSHOT"
+            version: Finchley.SR1
+          - versionRange: "[2.0.x.BUILD-SNAPSHOT,2.1.0.M3)"
             version: Finchley.BUILD-SNAPSHOT
+            repositories: spring-snapshots,spring-milestones
+          - versionRange: "[2.1.0.M3,2.1.x.BUILD-SNAPSHOT)"
+            version: Greenwich.M1
+            repositories: spring-milestones
+          - versionRange: "2.1.x.BUILD-SNAPSHOT"
+            version: Greenwich.BUILD-SNAPSHOT
             repositories: spring-snapshots,spring-milestones
       spring-cloud-gcp:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-gcp-dependencies
         versionProperty: spring-cloud-gcp.version
         additionalBoms: [spring-cloud]
-        version: ${local.gcp.version}
-        repositories: spring-milestones
+        mappings:
+          - versionRange: "[2.0.0.RELEASE,2.1.0.M1)"
+            version: 1.0.0.RELEASE
+          - versionRange: "2.1.0.M1"
+            version: ${local.gcp.version}
+            repositories: spring-milestones
       spring-cloud-services:
         groupId: io.pivotal.spring.cloud
         artifactId: spring-cloud-services-dependencies
@@ -162,12 +177,17 @@ initializr:
         mappings:
           - versionRange: "[1.3.0.RELEASE, 1.5.0.M1)"
             version: 7.7.7
-          - versionRange: 1.5.0.M1
+          - versionRange: "[1.5.0.M1,2.0.0.M1)"
             version: 8.4.4
+          - versionRange: "2.0.0.M1"
+            version: 10.0.5
     gradle:
       dependency-management-plugin-version: 0.6.0.RELEASE
     kotlin:
-      default-version: 1.2.41
+      default-version: 1.2.70
+      mappings:
+        - versionRange: "[1.5.0.RELEASE,2.1.0.M1)"
+          version: 1.2.51
     repositories:
       sonatype-snapshots:
         name: Sonatype Snapshots
@@ -259,36 +279,6 @@ initializr:
           description: Provide declarative retry support via spring-retry
           versionRange: 1.3.0.RELEASE
           starter: false
-        - name: JTA (Atomikos)
-          id: jta-atomikos
-          description: JTA distributed transactions via Atomikos
-          versionRange: 1.2.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-atomikos
-        - name: JTA (Bitronix)
-          id: jta-bitronix
-          description: JTA distributed transactions via Bitronix
-          versionRange: 1.2.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-bitronix
-        - name: JTA (Narayana)
-          id: jta-narayana
-          description: JTA distributed transactions via Narayana
-          versionRange: 1.4.0.RELEASE
-          links:
-            - rel: guide
-              href: https://spring.io/guides/gs/managing-transactions/
-              description: Managing Transactions
-            - rel: reference
-              href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jta-narayana
         - name: Aspects
           id: aop
           description: Create your own Aspects using Spring AOP and AspectJ
@@ -406,7 +396,7 @@ initializr:
           artifactId: vaadin-spring-boot-starter
           description: Vaadin java web application framework
           bom: vaadin
-          versionRange: 1.2.0.RELEASE
+          versionRange: "[1.2.0.RELEASE,2.1.0.M1)"
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.RELEASE)"
               version: 1.0.2
@@ -445,7 +435,7 @@ initializr:
           description: Keycloak integration, an open source Identity and Access Management solution.
           groupId: org.keycloak
           artifactId: keycloak-spring-boot-starter
-          versionRange: "[1.5.3.RELEASE,2.0.0.M1)"
+          versionRange: "1.5.3.RELEASE"
           bom: keycloak
           links:
             - rel: reference
@@ -495,6 +485,8 @@ initializr:
           id: data-jpa
           description: Java Persistence API including spring-data-jpa, spring-orm and Hibernate
           weight: 100
+          facets:
+            - jpa
           aliases:
             - jpa
           links:
@@ -768,7 +760,6 @@ initializr:
           versionRange: 2.0.0.RELEASE
           groupId: org.apache.kafka
           artifactId: kafka-streams
-          version: 1.0.1
           starter: false
           links:
             - rel: guide
@@ -856,7 +847,7 @@ initializr:
           groupId: org.springframework.cloud
           artifactId: spring-cloud-starter-open-service-broker-webmvc
           versionRange: 2.0.0.RELEASE
-          version: 2.0.0.RELEASE
+          version: 2.0.1.RELEASE
           links:
             - rel: reference
               href: https://docs.spring.io/spring-cloud-open-service-broker/docs/current/reference/html5/
@@ -1141,7 +1132,7 @@ initializr:
         - name: Azure Support
           id: azure-support
           groupId: com.microsoft.azure
-          artifactId: azure-spring-boot
+          artifactId: azure-spring-boot-starter
           description: Auto-configuration for Azure Services (service bus, storage, active directory, cosmos DB, key vault and more)
           links:
             - rel: reference
@@ -1249,9 +1240,9 @@ initializr:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 2.18.5
             - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
-              version: 2.21.1
+              version: 2.21.2
             - versionRange: "2.0.0.M1"
-              version: 2.22.0
+              version: 2.22.1
           description: Integration using Apache Camel
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
@@ -1376,6 +1367,8 @@ initializr:
       id: war
       default: false
   javaVersions:
+    - id: 11
+      default: false
     - id: 10
       default: false
     - id: 1.8

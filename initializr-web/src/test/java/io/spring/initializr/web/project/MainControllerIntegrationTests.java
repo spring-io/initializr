@@ -305,6 +305,14 @@ public class MainControllerIntegrationTests
 		validateCurrentMetadata(getMetadataJson());
 	}
 
+	@Test
+	public void doNotForceSslByDefault() {
+		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
+		String body = response.getBody();
+		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
+		assertThat(body).as("Must not force https").doesNotContain("https://");
+	}
+
 	private void validateCurlHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();

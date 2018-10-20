@@ -84,7 +84,7 @@ public class BillOfMaterials {
 
 	/**
 	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
-	 * @return The version of the BOM or {@code null}
+	 * @return the version of the BOM or {@code null}
 	 */
 	public String getVersion() {
 		return this.version;
@@ -190,8 +190,11 @@ public class BillOfMaterials {
 
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
-				BillOfMaterials resolvedBom = new BillOfMaterials(this.groupId,
-						this.artifactId, mapping.version);
+				BillOfMaterials resolvedBom = new BillOfMaterials(
+						(mapping.groupId != null) ? mapping.groupId : this.groupId,
+						(mapping.artifactId != null) ? mapping.artifactId
+								: this.artifactId,
+						mapping.version);
 				resolvedBom.setVersionProperty(this.versionProperty);
 				resolvedBom.setOrder(this.order);
 				resolvedBom.repositories.addAll(!mapping.repositories.isEmpty()
@@ -208,15 +211,16 @@ public class BillOfMaterials {
 	@Override
 	public String toString() {
 		return "BillOfMaterials ["
-				+ (this.groupId != null ? "groupId=" + this.groupId + ", " : "")
-				+ (this.artifactId != null ? "artifactId=" + this.artifactId + ", " : "")
-				+ (this.version != null ? "version=" + this.version + ", " : "")
-				+ (this.versionProperty != null
+				+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
+				+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
+						: "")
+				+ ((this.version != null) ? "version=" + this.version + ", " : "")
+				+ ((this.versionProperty != null)
 						? "versionProperty=" + this.versionProperty + ", " : "")
-				+ (this.order != null ? "order=" + this.order + ", " : "")
-				+ (this.additionalBoms != null
+				+ ((this.order != null) ? "order=" + this.order + ", " : "")
+				+ ((this.additionalBoms != null)
 						? "additionalBoms=" + this.additionalBoms + ", " : "")
-				+ (this.repositories != null ? "repositories=" + this.repositories : "")
+				+ ((this.repositories != null) ? "repositories=" + this.repositories : "")
 				+ "]";
 	}
 
@@ -232,9 +236,20 @@ public class BillOfMaterials {
 	/**
 	 * Mapping information.
 	 */
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public static class Mapping {
 
 		private String versionRange;
+
+		/**
+		 * The groupId to use for this mapping or {@code null} to use the default.
+		 */
+		private String groupId;
+
+		/**
+		 * The artifactId to use for this mapping or {@code null} to use the default.
+		 */
+		private String artifactId;
 
 		private String version;
 
@@ -271,8 +286,32 @@ public class BillOfMaterials {
 			return this.versionRange;
 		}
 
+		public void setVersionRange(String versionRange) {
+			this.versionRange = versionRange;
+		}
+
+		public String getGroupId() {
+			return this.groupId;
+		}
+
+		public void setGroupId(String groupId) {
+			this.groupId = groupId;
+		}
+
+		public String getArtifactId() {
+			return this.artifactId;
+		}
+
+		public void setArtifactId(String artifactId) {
+			this.artifactId = artifactId;
+		}
+
 		public String getVersion() {
 			return this.version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
 		}
 
 		public List<String> getRepositories() {
@@ -285,14 +324,6 @@ public class BillOfMaterials {
 
 		public VersionRange getRange() {
 			return this.range;
-		}
-
-		public void setVersionRange(String versionRange) {
-			this.versionRange = versionRange;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
 		}
 
 		public void setRepositories(List<String> repositories) {
@@ -310,14 +341,17 @@ public class BillOfMaterials {
 		@Override
 		public String toString() {
 			return "Mapping ["
-					+ (this.versionRange != null
+					+ ((this.versionRange != null)
 							? "versionRange=" + this.versionRange + ", " : "")
-					+ (this.version != null ? "version=" + this.version + ", " : "")
-					+ (this.repositories != null
+					+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
+					+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
+							: "")
+					+ ((this.version != null) ? "version=" + this.version + ", " : "")
+					+ ((this.repositories != null)
 							? "repositories=" + this.repositories + ", " : "")
-					+ (this.additionalBoms != null
+					+ ((this.additionalBoms != null)
 							? "additionalBoms=" + this.additionalBoms + ", " : "")
-					+ (this.range != null ? "range=" + this.range : "") + "]";
+					+ ((this.range != null) ? "range=" + this.range : "") + "]";
 		}
 
 	}

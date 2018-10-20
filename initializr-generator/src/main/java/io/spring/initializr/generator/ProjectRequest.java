@@ -135,8 +135,8 @@ public class ProjectRequest extends BasicProjectRequest {
 	 */
 	public void resolve(InitializrMetadata metadata) {
 		List<String> depIds = (!getStyle().isEmpty() ? getStyle() : getDependencies());
-		String actualBootVersion = (getBootVersion() != null ? getBootVersion()
-				: metadata.getBootVersions().getDefault().getId());
+		String actualBootVersion = (getBootVersion() != null) ? getBootVersion()
+				: metadata.getBootVersions().getDefault().getId();
 		Version requestedVersion = Version.parse(actualBootVersion);
 		this.resolvedDependencies = depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
@@ -305,6 +305,14 @@ public class ProjectRequest extends BasicProjectRequest {
 	}
 
 	/**
+	 * Specify if this request has the jpa facet enabled.
+	 * @return {@code true} if the project has the jpa facet
+	 */
+	public boolean hasJpaFacet() {
+		return hasFacet("jpa");
+	}
+
+	/**
 	 * Specify if this request has the web facet enabled.
 	 * @return {@code true} if the project has the web facet
 	 */
@@ -324,12 +332,12 @@ public class ProjectRequest extends BasicProjectRequest {
 	@Override
 	public String toString() {
 		return "ProjectRequest [" + "parameters=" + this.parameters + ", "
-				+ (this.resolvedDependencies != null
+				+ ((this.resolvedDependencies != null)
 						? "resolvedDependencies=" + this.resolvedDependencies + ", " : "")
 				+ "boms=" + this.boms + ", " + "repositories=" + this.repositories + ", "
 				+ "buildProperties=" + this.buildProperties + ", "
-				+ (this.facets != null ? "facets=" + this.facets + ", " : "")
-				+ (this.build != null ? "build=" + this.build : "") + "]";
+				+ ((this.facets != null) ? "facets=" + this.facets + ", " : "")
+				+ ((this.build != null) ? "build=" + this.build : "") + "]";
 	}
 
 }

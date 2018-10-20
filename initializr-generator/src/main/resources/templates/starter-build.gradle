@@ -19,6 +19,9 @@ buildscript {
 		{{#kotlin}}
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		{{#facets.jpa}}
+		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+		{{/facets.jpa}}
 		{{/kotlin}}
 	}
 }
@@ -26,6 +29,9 @@ buildscript {
 apply plugin: '{{language}}'
 {{#kotlin}}
 apply plugin: 'kotlin-spring'
+{{#facets.jpa}}
+apply plugin: 'kotlin-jpa'
+{{/facets.jpa}}
 {{/kotlin}}
 {{#war}}
 apply plugin: 'eclipse-wtp'
@@ -83,17 +89,17 @@ ext {
 {{/buildPropertiesVersions.empty}}
 dependencies {
 	{{#compileDependencies}}
-	compile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileDependencies}}
 	{{#groovy}}
-	compile('org.codehaus.groovy:groovy')
+	{{gradleCompileConfig}}('org.codehaus.groovy:groovy')
 	{{/groovy}}
 	{{#kotlin}}
-	compile("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
-	compile("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	{{gradleCompileConfig}}("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	{{gradleCompileConfig}}("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
 	{{/kotlin}}
 	{{#runtimeDependencies}}
-	runtime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleRuntimeConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/runtimeDependencies}}
 	{{#compileOnlyDependencies}}
 	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
@@ -104,9 +110,9 @@ dependencies {
 	{{#providedDependencies}}
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	{{gradleTestCompileConfig}}('org.springframework.boot:spring-boot-starter-test')
 	{{#testDependencies}}
-	testCompile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	{{gradleTestCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
 }
 {{#hasBoms}}

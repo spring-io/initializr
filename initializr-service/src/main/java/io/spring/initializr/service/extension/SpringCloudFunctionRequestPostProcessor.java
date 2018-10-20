@@ -22,6 +22,7 @@ import java.util.List;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.util.Version;
 
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,8 @@ class SpringCloudFunctionRequestPostProcessor
 	static final Dependency WEB_ADAPTER = Dependency.withId("cloud-function-web",
 			"org.springframework.cloud", "spring-cloud-function-web");
 
+	static final Version VERSION_2_1_0_M1 = Version.parse("2.1.0.M1");
+
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,
 			InitializrMetadata metadata) {
@@ -52,6 +55,10 @@ class SpringCloudFunctionRequestPostProcessor
 				swap.add(SCS_ADAPTER);
 			}
 			if (hasDependency(request, "web")) {
+				swap.add(WEB_ADAPTER);
+			}
+			if (hasDependency(request, "webflux")
+					&& isSpringBootVersionAtLeastAfter(request, VERSION_2_1_0_M1)) {
 				swap.add(WEB_ADAPTER);
 			}
 			if (!swap.isEmpty()) {

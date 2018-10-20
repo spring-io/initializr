@@ -195,6 +195,9 @@
 					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
+						{{#facets.jpa}}
+						<plugin>jpa</plugin>
+						{{/facets.jpa}}
 					</compilerPlugins>
 					{{^kotlinSupport}}
 					{{#java8OrLater}}
@@ -226,6 +229,13 @@
 						<artifactId>kotlin-maven-allopen</artifactId>
 						<version>${kotlin.version}</version>
 					</dependency>
+					{{#facets.jpa}}
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-noarg</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					{{/facets.jpa}}
 				</dependencies>
 			</plugin>
 			{{/kotlin}}

@@ -36,7 +36,8 @@ class SpringBoot2RequestPostProcessor extends AbstractProjectRequestPostProcesso
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
-	private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9", "10");
+	private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9", "10",
+			"11");
 
 	@Override
 	public void postProcessAfterResolution(ProjectRequest request,

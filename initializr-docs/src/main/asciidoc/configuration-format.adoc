@@ -33,8 +33,9 @@ download the Spring Boot CLI distribution bundle. This is only used by the `/spr
 endpoint at the moment.
 * `springBootMetadataUrl` the URL of the resource that provides the list of available
 Spring Boot versions..
-* `forceSsl`: a boolean flag that determines if we should use `https` even when
-browsing a resource via `http`. This is _enabled_ by default.
+* `forceSsl`: a boolean flag that determines if we should redirect browser to `https` when
+browsing via `http`. Also force the use of `https` in all links. This is not enabled by
+default to ease local use case but should be enabled in production.
 * `fallbackApplicationName`: the name of the _default_ application. Application names
 are generated based on the project's name. However, some user input may result in an
 invalid identifier for a Java class name for instance.

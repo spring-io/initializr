@@ -25,6 +25,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.samskivert.mustache.Mustache;
 import io.spring.initializr.generator.BasicProjectRequest;
 import io.spring.initializr.generator.CommandLineHelpGenerator;
@@ -65,6 +67,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as
@@ -203,8 +206,8 @@ public class MainController extends AbstractInitializrController {
 	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version,
 			String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
-		Version v = (bootVersion != null ? Version.parse(bootVersion)
-				: Version.parse(metadata.getBootVersions().getDefault().getId()));
+		Version v = (bootVersion != null) ? Version.parse(bootVersion)
+				: Version.parse(metadata.getBootVersions().getDefault().getId());
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider
 				.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
@@ -219,7 +222,12 @@ public class MainController extends AbstractInitializrController {
 	}
 
 	@RequestMapping(path = "/", produces = "text/html")
-	public String home(Map<String, Object> model) {
+	public String home(HttpServletRequest request, Map<String, Object> model) {
+		if (isForceSsl() && !request.isSecure()) {
+			String securedUrl = ServletUriComponentsBuilder.fromCurrentRequest()
+					.scheme("https").build().toUriString();
+			return "redirect:" + securedUrl;
+		}
 		renderHome(model);
 		return "home";
 	}
@@ -331,8 +339,8 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ProjectRequest request) {
 		String script = ("gradle".equals(request.getBuild()) ? "gradlew" : "mvnw");
-		return (request.getBaseDir() != null ? request.getBaseDir() + "/" + script
-				: script);
+		return (request.getBaseDir() != null) ? request.getBaseDir() + "/" + script
+				: script;
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
