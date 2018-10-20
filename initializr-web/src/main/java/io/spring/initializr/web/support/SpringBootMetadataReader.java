@@ -61,8 +61,8 @@ public class SpringBootMetadataReader {
 			DefaultMetadataElement version = new DefaultMetadataElement();
 			version.setId(jsonNode.get("version").textValue());
 			String name = jsonNode.get("versionDisplayName").textValue();
-			version.setName(
-					jsonNode.get("snapshot").booleanValue() ? name + " (SNAPSHOT)" : name);
+			version.setName(jsonNode.get("snapshot").booleanValue() ? name + " (SNAPSHOT)"
+					: name);
 			version.setDefault(jsonNode.get("current").booleanValue());
 			list.add(version);
 		}

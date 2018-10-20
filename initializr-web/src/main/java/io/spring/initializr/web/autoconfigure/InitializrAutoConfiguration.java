@@ -167,8 +167,9 @@ public class InitializrAutoConfiguration {
 		@Bean
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
 			return (cacheManager) -> {
-				cacheManager.createCache("initializr.metadata", config().setExpiryPolicyFactory(
-						CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+				cacheManager.createCache("initializr.metadata",
+						config().setExpiryPolicyFactory(
+								CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
 				cacheManager.createCache("initializr.dependency-metadata", config());
 				cacheManager.createCache("initializr.project-resources", config());
 			};
