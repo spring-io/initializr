@@ -44,7 +44,7 @@ initializr:
           - versionRange: "[1.5.9.RELEASE,2.0.0.M1)"
             version: 1.5.7
           - versionRange: "[2.0.0.M1,2.1.0.M1)"
-            version: 2.0.3
+            version: 2.0.4
           - versionRange: "2.1.0.M1"
             version: 2.1.0-SNAPSHOT
             repositories: sonatype-snapshots
