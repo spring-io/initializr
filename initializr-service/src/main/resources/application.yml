@@ -134,7 +134,7 @@ initializr:
           - versionRange: "[1.4.0.RELEASE,1.4.x.RELEASE]"
             version: 1.5.0.RELEASE
           - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT]"
-            version: 1.6.3.RELEASE
+            version: 1.6.6.RELEASE
           - versionRange: "[2.0.0.RELEASE,2.0.x.RELEASE]"
             version: 2.0.1.RELEASE
           - versionRange: "2.0.x.BUILD-SNAPSHOT"
