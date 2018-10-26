@@ -135,11 +135,8 @@ initializr:
             version: 1.5.0.RELEASE
           - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT]"
             version: 1.6.6.RELEASE
-          - versionRange: "[2.0.0.RELEASE,2.0.x.RELEASE]"
+          - versionRange: "2.0.0.RELEASE"
             version: 2.0.2.RELEASE
-          - versionRange: "2.0.x.BUILD-SNAPSHOT"
-            version: 2.0.3.BUILD-SNAPSHOT
-            repositories: spring-snapshots,spring-milestones
       spring-cloud-task:
         groupId: org.springframework.cloud
         artifactId: spring-cloud-task-dependencies
