@@ -45,9 +45,9 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 	@Override
 	public void contribute(Info.Builder builder) {
 		Map<String, Object> details = new LinkedHashMap<>();
-		this.metadataProvider.get().getDependencies().getAll().forEach((d) -> {
-			if (d.getBom() == null) {
-				contribute(details, d);
+		this.metadataProvider.get().getDependencies().getAll().forEach((dependency) -> {
+			if (dependency.getBom() == null) {
+				contribute(details, dependency);
 			}
 		});
 		if (!details.isEmpty()) {
@@ -55,16 +55,16 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 		}
 	}
 
-	private void contribute(Map<String, Object> details, Dependency d) {
-		if (!ObjectUtils.isEmpty(d.getMappings())) {
+	private void contribute(Map<String, Object> details, Dependency dependency) {
+		if (!ObjectUtils.isEmpty(dependency.getMappings())) {
 			Map<String, VersionRange> dep = new LinkedHashMap<>();
-			d.getMappings().forEach((it) -> {
+			dependency.getMappings().forEach((it) -> {
 				if (it.getRange() != null && it.getVersion() != null) {
 					dep.put(it.getVersion(), it.getRange());
 				}
 			});
 			if (!dep.isEmpty()) {
-				if (d.getRange() == null) {
+				if (dependency.getRange() == null) {
 					boolean openRange = dep.values().stream()
 							.anyMatch((v) -> v.getHigherVersion() == null);
 					if (!openRange) {
@@ -76,14 +76,14 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 				dep.forEach((k, r) -> {
 					depInfo.put(k, "Spring Boot " + r);
 				});
-				details.put(d.getId(), depInfo);
+				details.put(dependency.getId(), depInfo);
 			}
 		}
-		else if (d.getVersion() != null && d.getRange() != null) {
+		else if (dependency.getVersion() != null && dependency.getRange() != null) {
 			Map<String, Object> dep = new LinkedHashMap<>();
-			String requirement = "Spring Boot " + d.getRange();
-			dep.put(d.getVersion(), requirement);
-			details.put(d.getId(), dep);
+			String requirement = "Spring Boot " + dependency.getRange();
+			dep.put(dependency.getVersion(), requirement);
+			details.put(dependency.getId(), dep);
 		}
 	}
 
