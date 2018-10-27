@@ -65,7 +65,8 @@ public class AbstractProjectRequestPostProcessor implements ProjectRequestPostPr
 	 */
 	protected Dependency getDependency(ProjectRequest request, String id) {
 		return request.getResolvedDependencies().stream()
-				.filter((dependency) -> id.equals(dependency.getId())).findFirst().orElse(null);
+				.filter((dependency) -> id.equals(dependency.getId())).findFirst()
+				.orElse(null);
 	}
 
 	/**
