@@ -23,6 +23,7 @@ import org.junit.Test;
  * Tests for {@link SpringCloudFunctionRequestPostProcessor}.
  *
  * @author Dave Syer
+ * @author Stephane Nicoll
  */
 public class SpringCloudFunctionRequestPostProcessorTests
 		extends AbstractRequestPostProcessorTests {
@@ -38,6 +39,7 @@ public class SpringCloudFunctionRequestPostProcessorTests
 	public void springCloudStreamWithRabbit() {
 		ProjectRequest request = createProjectRequest("cloud-stream", "amqp",
 				"cloud-function");
+		request.setBootVersion("2.0.6.RELEASE");
 		generateMavenPom(request).hasDependency(getDependency("cloud-stream"))
 				.hasDependency(getDependency("amqp"))
 				.hasDependency(SpringCloudFunctionRequestPostProcessor.SCS_ADAPTER)
@@ -48,10 +50,28 @@ public class SpringCloudFunctionRequestPostProcessorTests
 	public void reactiveSpringCloudStreamWithKafka() {
 		ProjectRequest request = createProjectRequest("reactive-cloud-stream", "kafka",
 				"cloud-function");
+		request.setBootVersion("2.0.6.RELEASE");
 		generateMavenPom(request).hasDependency(getDependency("reactive-cloud-stream"))
 				.hasDependency(getDependency("kafka"))
 				.hasDependency(SpringCloudFunctionRequestPostProcessor.SCS_ADAPTER)
 				.hasDependenciesCount(6);
+	}
+
+	@Test
+	public void springCloudStreamWith21() {
+		ProjectRequest request = createProjectRequest("cloud-stream", "cloud-function");
+		request.setBootVersion("2.1.0.RC1");
+		generateMavenPom(request).hasDependency(getDependency("cloud-stream"))
+				.hasDependency(getDependency("cloud-function")).hasDependenciesCount(4);
+	}
+
+	@Test
+	public void reactiveSpringCloudStreamWith21() {
+		ProjectRequest request = createProjectRequest("reactive-cloud-stream",
+				"cloud-function");
+		request.setBootVersion("2.1.0.RELEASE");
+		generateMavenPom(request).hasDependency(getDependency("reactive-cloud-stream"))
+				.hasDependency(getDependency("cloud-function")).hasDependenciesCount(4);
 	}
 
 	@Test

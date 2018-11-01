@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
  * and/or platform dependencies requested.
  *
  * @author Dave Syer
+ * @author Stephane Nicoll
  */
 @Component
 class SpringCloudFunctionRequestPostProcessor
@@ -50,8 +51,9 @@ class SpringCloudFunctionRequestPostProcessor
 		Dependency cloudFunction = getDependency(request, "cloud-function");
 		if (cloudFunction != null) {
 			List<Dependency> swap = new ArrayList<>();
-			if (hasDependency(request, "cloud-stream")
-					|| hasDependency(request, "reactive-cloud-stream")) {
+			if ((hasDependency(request, "cloud-stream")
+					|| hasDependency(request, "reactive-cloud-stream"))
+					&& isSpringBootVersionBefore(request, VERSION_2_1_0_M1)) {
 				swap.add(SCS_ADAPTER);
 			}
 			if (hasDependency(request, "web")) {

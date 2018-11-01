@@ -83,4 +83,17 @@ public class AbstractProjectRequestPostProcessor implements ProjectRequestPostPr
 		return version.compareTo(requestVersion) <= 0;
 	}
 
+	/**
+	 * Specify if the Spring Boot version of the {@link ProjectRequest request} is lower
+	 * than the specified {@link Version}.
+	 * @param request the request to handle
+	 * @param version the maximum version
+	 * @return {@code true} if the requested version is lower than the specified
+	 * {@code version}
+	 */
+	protected boolean isSpringBootVersionBefore(ProjectRequest request, Version version) {
+		Version requestVersion = Version.safeParse(request.getBootVersion());
+		return version.compareTo(requestVersion) > 0;
+	}
+
 }
