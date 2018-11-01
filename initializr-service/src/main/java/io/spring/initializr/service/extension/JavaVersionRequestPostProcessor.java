@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.util.Version;
 
@@ -33,7 +32,7 @@ import org.springframework.stereotype.Component;
  * @author Stephane Nicoll
  */
 @Component
-class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
+class JavaVersionRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
@@ -51,9 +50,8 @@ class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 		if (javaGeneration == null) {
 			return;
 		}
-		Version requestVersion = Version.safeParse(request.getBootVersion());
 		// Not supported for Spring Boot 1.x
-		if (VERSION_2_0_0_M1.compareTo(requestVersion) > 0) {
+		if (isSpringBootVersionBefore(request, VERSION_2_0_0_M1)) {
 			request.setJavaVersion("1.8");
 		}
 		// Not supported for Kotlin & Groovy
@@ -61,11 +59,12 @@ class JavaVersionRequestPostProcessor implements ProjectRequestPostProcessor {
 			request.setJavaVersion("1.8");
 		}
 		// 10 support only as of 2.0.1
-		if (javaGeneration == 10 && VERSION_2_0_1.compareTo(requestVersion) > 0) {
+		if (javaGeneration == 10 && isSpringBootVersionBefore(request, VERSION_2_0_1)) {
 			request.setJavaVersion("1.8");
 		}
 		// 11 support only as of 2.1.x
-		if (javaGeneration == 11 && VERSION_2_1_0_M1.compareTo(requestVersion) > 0) {
+		if (javaGeneration == 11
+				&& isSpringBootVersionBefore(request, VERSION_2_1_0_M1)) {
 			request.setJavaVersion("1.8");
 		}
 	}
