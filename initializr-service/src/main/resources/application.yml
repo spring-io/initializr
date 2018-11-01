@@ -411,7 +411,7 @@ initializr:
           artifactId: cxf-spring-boot-starter-jaxrs
           version: 3.2.5
           description: RESTful Web Services framework with support of JAX-RS
-          versionRange: 1.4.0.RELEASE
+          versionRange: "[1.4.0.RELEASE,2.1.0.M1)"
           links:
             - rel: reference
               href: https://cxf.apache.org/docs/springboot.html#SpringBoot-SpringBootCXFJAX-RSStarter
@@ -432,7 +432,7 @@ initializr:
           description: Keycloak integration, an open source Identity and Access Management solution.
           groupId: org.keycloak
           artifactId: keycloak-spring-boot-starter
-          versionRange: "1.5.3.RELEASE"
+          versionRange: "[1.5.3.RELEASE,2.1.0.M1)"
           bom: keycloak
           links:
             - rel: reference
@@ -1232,7 +1232,7 @@ initializr:
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email
         - name: Apache Camel
           id: camel
-          versionRange: "1.4.0.RELEASE"
+          versionRange: "[1.4.0.RELEASE,2.1.0.M1)"
           mappings:
             - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
               version: 2.18.5
