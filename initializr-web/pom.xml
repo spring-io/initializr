@@ -124,7 +124,12 @@
 
 	<profiles>
 		<profile>
-			<id>docs</id>
+			<id>full</id>
+			<activation>
+				<property>
+					<name>full</name>
+				</property>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>

@@ -67,7 +67,12 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>docs</id>
+			<id>full</id>
+			<activation>
+				<property>
+					<name>full</name>
+				</property>
+			</activation>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
 				<snippets.location>${project.build.directory}/snippets</snippets.location>

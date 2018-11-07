@@ -3,6 +3,7 @@
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
 :code: https://github.com/spring-io/initializr/blob/master
 :docs: http://docs.spring.io/initializr/docs/current-SNAPSHOT/reference
+:service: https://github.com/spring-io/start.spring.io
 
 Spring Initializr provides an extensible API to generate quickstart projects. It also
 provides a configurable service (you can see our default instance at
@@ -14,14 +15,13 @@ format to allow third-party clients to provide the necessary assistance.
 
 Finally, Initializr offers a configuration structure to define all the aspects
 related to the project to generate: list of dependencies, supported java and boot
-versions, etc. Check
-the {code}/initializr-service/src/main/resources/application.yml[configuration of our
-instance] for an example. Such configuration is also described in details in the
-documentation.
+versions, etc. Check {service}[the companion project] that defines
+https://start.spring.io and, in particular, the
+{service}/blob/master/src/main/resources/application.yml[configuration of our instance]
+for an example. Such configuration is also described in details in the documentation.
 
-NOTE: We use the continuous deployment technique to manage our instance; check the
-https://github.com/spring-io/initializr/milestones[milestones page] for an overview
-of changes
+NOTE: Check the https://github.com/spring-io/initializr/milestones[milestones page] for an
+overview of the changes.
 
 == Installation and Getting Started
 The {docs}/htmlsingle/[reference documentation] is published in
@@ -37,10 +37,6 @@ in many environments (including embedded in your own project)
 * `initializr-actuator`: optional module to provide statistics and metrics on project
 generation
 * `initializr-docs`: documentation
-
-`initializr-service` is an additional module that represents the production instance
-that is available at link:https://start.spring.io[]. It is not enabled by default but
-you can enable the `full` profile in your IDE to easily run it locally.
 
 == Supported interfaces
 
@@ -167,7 +163,7 @@ deploy the service.
 You first need to create or update your configuration to define the necessary
 attributes that your instance will use. Again, check the documentation for a
 {docs}/htmlsingle/#configuration-format[description of the configuration] and
-{code}/initializr-service/application.yml[review our own config] for a sample.
+{service}[review our own config] for a sample.
 
 You can integrate the library in a traditional Java-based project or by writing the
 super-simple script below:
@@ -218,67 +214,11 @@ If you want to run the smoke tests using Geb, you need to enable the
     $ ./mvnw verify -PsmokeTests
 ----
 
-If you want to build both the library and the service, you can enable the `full`
-profile:
+To generate the docs as well, you should enable the `full` profile:
 
 [indent=0]
 ----
     $ ./mvnw clean install -Pfull
-----
-
-
-[[run-app]]
-=== Running the app locally
-
-Once you have <<building, built the library>>, you can easily start the app as any
-other Spring Boot app from the `initializr-service` directory:
-
-[indent=0]
-----
-    $ cd initializr-service
-    $ ../mvnw spring-boot:run
-----
-
-[[run-ide]]
-=== Running the app in an IDE
-
-You should be able to import the projects into your IDE with no problems. Once there you
-can run the `initializr-service` from its main method, debug it, and it will reload if
-you make changes to other modules. (You may need to manually enable the "full" profile.)
-This is the recommended way to operate while you are developing the application,
-especially the UI.
-
-
-## Deploying to Cloud Foundry
-
-If you are on a Mac and using http://brew.sh/[homebrew], install the Cloud Foundry
-CLI:
-
-[indent=0]
-----
-    $ brew install cloudfoundry-cli
-----
-
-Alternatively, download a suitable binary for your platform from
-https://console.run.pivotal.io/tools[Pivotal Web Services].
-
-You should ensure that the application name and URL (name and host values) are
-suitable for your environment before running `cf push`.
-
-First, make sure that you have <<building, built the library>>, then make sure first
-that the jar has been created:
-
-[indent=0]
-----
-    $ cd initializr-service
-    $ ../mvnw package
-----
-
-Once the jar has been created, you can push the application:
-
-[indent=0]
-----
-    $ cf push your-initializr -p target/initializr-service.jar
 ----
 
 == License

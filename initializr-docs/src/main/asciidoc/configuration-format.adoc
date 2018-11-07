@@ -5,10 +5,6 @@ The metadata provided through configuration are driving the options exposed by a
 particular instance and <<metadata-format.adoc#metadata-format,the project metadata
 format>>.
 
-TIP: A good way to get started with the configuration is to look at the
-{sc-initializr-service}/resources/application.yml[configuration of the production
-instance] and check the end-result on https://start.spring.io
-
 The configuration is split in several sections:
 
 * An `env` section used to provide various global settings.

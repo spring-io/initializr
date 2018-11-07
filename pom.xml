@@ -259,12 +259,6 @@
 
 	<profiles>
 		<profile>
-			<id>full</id>
-			<modules>
-				<module>initializr-service</module>
-			</modules>
-		</profile>
-		<profile>
 			<id>m2e</id>
 			<activation>
 				<property>

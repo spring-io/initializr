@@ -61,12 +61,8 @@ The project can be built from the root directory using the standard Maven comman
 
 [indent=0]
 ----
-	$ ./mvnw clean install -Pfull
+	$ ./mvnw clean install
 ----
-
-NOTE: The `full` profile includes the `initializr-service` and the documentation. Make
-sure to include that profile when you change code there. It is also recommended to enable
-that profile in your IDE so that refactoring is applied on the entire codebase.
 
 If you want to run the smoke tests, you need Firefox installed and available in the path
 
