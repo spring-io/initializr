@@ -23,6 +23,9 @@ spring:
       strategy:
         content:
           enabled: true
+  task:
+    execution:
+      thread-name-prefix: initializr-
 
 initializr:
   env:
