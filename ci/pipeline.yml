@@ -14,7 +14,7 @@ resources:
 - name: ci-images-git-repo
   type: git
   source:
-    uri: ((github-repo)
+    uri: ((github-repo))
     branch: ((branch))
     paths: ["ci/images/*"]
 - name: initializr-ci-image
@@ -43,6 +43,7 @@ jobs:
   serial: true
   plan:
   - get: git-repo
+    trigger: true
   - get: initializr-ci-image
   - task: build-project
     image: initializr-ci-image
