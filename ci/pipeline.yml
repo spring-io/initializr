@@ -41,6 +41,7 @@ jobs:
       build: ci-images-git-repo/ci/images/initializr-ci-image
 - name: build
   serial: true
+  public: true
   plan:
   - get: git-repo
     trigger: true
