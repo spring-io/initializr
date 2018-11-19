@@ -87,6 +87,8 @@ jobs:
   - get: git-repo
     trigger: true
   - get: initializr-ci-image
+  - put: repo-status-build
+    params: { state: "pending", commit: "git-repo" }
   - task: build-project
     image: initializr-ci-image
     file: git-repo/ci/tasks/build-project.yml
