@@ -1,0 +1,10 @@
+---
+platform: linux
+inputs:
+- name: git-repo
+outputs:
+- name: distribution-repository
+caches:
+- path: maven
+run:
+  path: git-repo/ci/scripts/build-project.sh

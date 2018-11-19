@@ -1,0 +1,13 @@
+---
+platform: linux
+inputs:
+- name: git-repo
+- name: artifactory-repo
+outputs:
+- name: version
+params:
+  ARTIFACTORY_SERVER:
+  ARTIFACTORY_USERNAME:
+  ARTIFACTORY_PASSWORD:
+run:
+  path: git-repo/ci/scripts/promote.sh

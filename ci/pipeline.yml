@@ -3,14 +3,37 @@ resource_types:
   type: docker-image
   source:
     repository: springio/artifactory-resource
-    tag: 0.0.4
+    tag: 0.0.5
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+- name: github-status-resource
+  type: docker-image
+  source:
+    repository: dpb587/github-status-resource
+    tag: master
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
 resources:
 - name: git-repo
   type: git
   source:
     uri: ((github-repo))
+    username: ((github-username))
+    password: ((github-password))
     branch: ((branch))
     ignore_paths: ["ci/images/*"]
+- name: git-pull-request
+  type: pull-request
+  source:
+    access_token: ((github-access-token))
+    repo: spring-io/initializr
+    base: ((branch))
+    ignore_paths: ["ci/*"]
 - name: ci-images-git-repo
   type: git
   source:
@@ -31,6 +54,24 @@ resources:
     username: ((artifactory-username))
     password: ((artifactory-password))
     build_name: ((build-name))
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: ((slack-webhook-url))
+- name: repo-status-build
+  type: github-status-resource
+  source:
+    repository: spring-io/initializr
+    access_token: ((github-access-token))
+    branch: ((branch))
+    context: build
+- name: github-release
+  type: github-release
+  source:
+    owner: spring-io
+    repository: initializr
+    access_token: ((github-release-notes-access-token))
+    pre_release: false
 jobs:
 - name: build-initializr-ci-image
   plan:
@@ -49,6 +90,24 @@ jobs:
   - task: build-project
     image: initializr-ci-image
     file: git-repo/ci/tasks/build-project.yml
+    on_failure:
+      do:
+      - put: repo-status-build
+        params: { state: "failure", commit: "git-repo" }
+      - put: slack-alert
+        params:
+          text: ":concourse-failed: <https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}|${BUILD_PIPELINE_NAME} ${BUILD_JOB_NAME} failed!>"
+          silent: true
+          icon_emoji: ":concourse:"
+          username: concourse-ci
+  - put: repo-status-build
+    params: { state: "success", commit: "git-repo" }
+  - put: slack-alert
+    params:
+      text: ":concourse-succeeded: <https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}|${BUILD_PIPELINE_NAME} ${BUILD_JOB_NAME} was successful!>"
+      silent: true
+      icon_emoji: ":concourse:"
+      username: concourse-ci
   - put: artifactory-repo
     params: &artifactory-params
       repo: libs-snapshot-local
@@ -56,10 +115,90 @@ jobs:
       build_uri: "https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
       build_number: "${BUILD_PIPELINE_NAME}-${BUILD_JOB_NAME}-${BUILD_NAME}"
       disable_checksum_uploads: true
+- name: build-pull-requests
+  serial: true
+  public: true
+  plan:
+  - get: initializr-ci-image
+  - get: git-repo
+    resource: git-pull-request
+    trigger: true
+    version: every
+  - do:
+    - put: git-pull-request
+      params:
+        path: git-repo
+        status: pending
+    - task: build-project
+      image: initializr-ci-image
+      file: git-repo/ci/tasks/build-pr-project.yml
+      on_success:
+        put: git-pull-request
+        params:
+          path: git-repo
+          status: success
+      on_failure:
+        put: git-pull-request
+        params:
+          path: git-repo
+          status: failure
+- name: stage-release
+  serial: true
+  plan:
+  - get: initializr-ci-image
+  - get: git-repo
+    trigger: false
+  - task: stage
+    image: initializr-ci-image
+    file: git-repo/ci/tasks/stage.yml
+  - put: artifactory-repo
+    params:
+      <<: *artifactory-params
+      repo: libs-staging-local
+  - put: git-repo
+    params:
+      repository: stage-git-repo
+- name: promote-release
+  serial: true
+  plan:
+  - get: initializr-ci-image
+  - get: git-repo
+    trigger: false
+  - get: artifactory-repo
+    trigger: false
+    passed: [stage-release]
+    params:
+      save_build_info: true
+  - task: promote
+    image: initializr-ci-image
+    file: git-repo/ci/tasks/promote.yml
+    params:
+      ARTIFACTORY_SERVER: ((artifactory-server))
+      ARTIFACTORY_USERNAME: ((artifactory-username))
+      ARTIFACTORY_PASSWORD: ((artifactory-password))
+  - task: generate-release-notes
+    file: git-repo/ci/tasks/generate-release-notes.yml
+    params:
+      GITHUB_ORGANIZATION: spring-io
+      GITHUB_REPO: initializr
+      GITHUB_USERNAME: ((github-username))
+      GITHUB_TOKEN: ((github-release-notes-access-token))
+  - put: github-release
+    params:
+      name: generated-release-notes/version
+      tag: generated-release-notes/version
+      body:  generated-release-notes/body
 groups:
 - name: "Build"
   jobs:
   - build
+- name: "Build Pull Requests"
+  jobs:
+  - "build-pull-requests"
 - name: "CI Images"
   jobs:
   - build-initializr-ci-image
+- name: "Release"
+  jobs:
+  - stage-release
+  - promote-release
