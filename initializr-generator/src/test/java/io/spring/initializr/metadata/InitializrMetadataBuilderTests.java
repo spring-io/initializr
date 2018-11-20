@@ -215,7 +215,7 @@ public class InitializrMetadataBuilderTests {
 
 	private static void assertDefaultConfig(InitializrMetadata metadata) {
 		assertThat(metadata).isNotNull();
-		assertThat(metadata.getDependencies().getAll()).hasSize(9);
+		assertThat(metadata.getDependencies().getAll()).hasSize(8);
 		assertThat(metadata.getDependencies().getContent()).hasSize(2);
 		assertThat(metadata.getTypes().getContent()).hasSize(4);
 	}

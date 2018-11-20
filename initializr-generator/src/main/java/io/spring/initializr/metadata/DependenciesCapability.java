@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spring.initializr.util.VersionParser;
@@ -64,7 +65,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	 * @return all dependencies
 	 */
 	public Collection<Dependency> getAll() {
-		return Collections.unmodifiableCollection(this.indexedDependencies.values());
+		return Collections.unmodifiableCollection(this.indexedDependencies.values()
+				.stream().distinct().collect(Collectors.toList()));
 	}
 
 	public void validate() {

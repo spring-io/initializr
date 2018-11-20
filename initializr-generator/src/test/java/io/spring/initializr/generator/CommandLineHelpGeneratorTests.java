@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator;
 
+import java.util.Arrays;
+
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
@@ -67,6 +69,19 @@ public class CommandLineHelpGeneratorTests {
 		assertCommandLineCapabilities(content);
 		assertThat(content).contains("| foo");
 		assertThat(content).contains("| foo-desc");
+	}
+
+	@Test
+	public void generateCapabilitiesWithAlias() {
+		Dependency dependency = createDependency("dep", "some description");
+		dependency.setAliases(Arrays.asList("legacy", "another"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", dependency).build();
+		String content = this.generator.generateGenericCapabilities(metadata,
+				"https://fake-service");
+		assertCommandLineCapabilities(content);
+		assertThat(content).contains("dep | some description |");
+		assertThat(content).doesNotContain("legacy").doesNotContain("another");
 	}
 
 	@Test
