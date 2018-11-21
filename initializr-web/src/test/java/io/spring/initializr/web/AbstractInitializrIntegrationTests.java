@@ -28,11 +28,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;

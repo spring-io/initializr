@@ -16,13 +16,13 @@
 
 package io.spring.initializr.web.autoconfigure;
 
-import io.spring.initializr.generator.ProjectGenerator;
-import io.spring.initializr.generator.ProjectRequestResolver;
-import io.spring.initializr.generator.ProjectResourceLocator;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.TemplateRenderer;
+import io.spring.initializr.web.ProjectResourceLocator;
 import io.spring.initializr.web.project.MainController;
+import io.spring.initializr.web.project.ProjectGenerationInvoker;
+import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.ui.UiController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -59,22 +59,6 @@ class InitializrAutoConfigurationTests {
 					JacksonAutoConfiguration.class, InitializrAutoConfiguration.class));
 
 	@Test
-	void autoConfigRegistersProjectGenerator() {
-		this.contextRunner.run(
-				(context) -> assertThat(context).hasSingleBean(ProjectGenerator.class));
-	}
-
-	@Test
-	void autoConfigWhenProjectGeneratorBeanPresentDoesNotRegisterProjectGenerator() {
-		this.contextRunner
-				.withUserConfiguration(CustomProjectGeneratorConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(ProjectGenerator.class);
-					assertThat(context).hasBean("testProjectGenerator");
-				});
-	}
-
-	@Test
 	void autoConfigRegistersTemplateRenderer() {
 		this.contextRunner.run(
 				(context) -> assertThat(context).hasSingleBean(TemplateRenderer.class));
@@ -87,22 +71,6 @@ class InitializrAutoConfigurationTests {
 				.run((context) -> {
 					assertThat(context).hasSingleBean(TemplateRenderer.class);
 					assertThat(context).hasBean("testTemplateRenderer");
-				});
-	}
-
-	@Test
-	void autoConfigRegistersProjectRequestResolver() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(ProjectRequestResolver.class));
-	}
-
-	@Test
-	void autoConfigWhenProjectRequestResolverBeanPresentDoesNotRegisterProjectRequestResolver() {
-		this.contextRunner
-				.withUserConfiguration(CustomProjectRequestResolverConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(ProjectRequestResolver.class);
-					assertThat(context).hasBean("testProjectRequestResolver");
 				});
 	}
 
@@ -180,6 +148,8 @@ class InitializrAutoConfigurationTests {
 								InitializrAutoConfiguration.class));
 		webContextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
+			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
+			assertThat(context).hasSingleBean(ProjectRequestToDescriptionConverter.class);
 			assertThat(context).hasSingleBean(MainController.class);
 			assertThat(context).hasSingleBean(UiController.class);
 		});
@@ -222,31 +192,11 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Configuration
-	static class CustomProjectGeneratorConfiguration {
-
-		@Bean
-		public ProjectGenerator testProjectGenerator() {
-			return Mockito.mock(ProjectGenerator.class);
-		}
-
-	}
-
-	@Configuration
 	static class CustomTemplateRendererConfiguration {
 
 		@Bean
 		public TemplateRenderer testTemplateRenderer() {
 			return Mockito.mock(TemplateRenderer.class);
-		}
-
-	}
-
-	@Configuration
-	static class CustomProjectRequestResolverConfiguration {
-
-		@Bean
-		public ProjectRequestResolver testProjectRequestResolver() {
-			return Mockito.mock(ProjectRequestResolver.class);
 		}
 
 	}

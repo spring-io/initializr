@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import io.spring.initializr.test.generator.ProjectAssert;
+import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
@@ -208,7 +208,7 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		projectAssert.hasBaseDir("demo").isMavenProject().isJavaWarProject().pomAssert()
 				.hasPackaging("war").hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web") // Added with war packaging
-				.hasSpringBootStarterTomcat().hasSpringBootStarterTest();
+				.hasSpringBootStarterDependency("tomcat").hasSpringBootStarterTest();
 	}
 
 	@Test

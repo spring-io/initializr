@@ -18,7 +18,7 @@ package io.spring.initializr.web.project;
 
 import java.net.URI;
 
-import io.spring.initializr.test.generator.ProjectAssert;
+import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 

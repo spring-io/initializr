@@ -28,9 +28,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import com.samskivert.mustache.Mustache;
-import io.spring.initializr.generator.BasicProjectRequest;
-import io.spring.initializr.generator.ProjectGenerator;
-import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -87,26 +84,25 @@ public class MainController extends AbstractInitializrController {
 	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
 			.parseMediaType("application/hal+json");
 
-	private final ProjectGenerator projectGenerator;
-
 	private final DependencyMetadataProvider dependencyMetadataProvider;
 
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
 
+	private final ProjectGenerationInvoker projectGenerationInvoker;
+
 	public MainController(InitializrMetadataProvider metadataProvider,
 			TemplateRenderer templateRenderer, ResourceUrlProvider resourceUrlProvider,
-			ProjectGenerator projectGenerator,
-			DependencyMetadataProvider dependencyMetadataProvider) {
+			DependencyMetadataProvider dependencyMetadataProvider,
+			ProjectGenerationInvoker projectGenerationInvoker) {
 		super(metadataProvider, resourceUrlProvider);
-		this.projectGenerator = projectGenerator;
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
+		this.projectGenerationInvoker = projectGenerationInvoker;
 	}
 
 	@ModelAttribute
-	public BasicProjectRequest projectRequest(
-			@RequestHeader Map<String, String> headers) {
-		ProjectRequest request = new ProjectRequest();
+	public ProjectRequest projectRequest(@RequestHeader Map<String, String> headers) {
+		WebProjectRequest request = new WebProjectRequest();
 		request.getParameters().putAll(headers);
 		request.initialize(this.metadataProvider.get());
 		return request;
@@ -246,32 +242,27 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = { "/pom", "/pom.xml" })
 	@ResponseBody
-	public ResponseEntity<byte[]> pom(BasicProjectRequest request) {
+	public ResponseEntity<byte[]> pom(ProjectRequest request) {
 		request.setType("maven-build");
-		byte[] mavenPom = this.projectGenerator
-				.generateMavenPom((ProjectRequest) request);
+		byte[] mavenPom = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
 	@RequestMapping(path = { "/build", "/build.gradle" })
 	@ResponseBody
-	public ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
+	public ResponseEntity<byte[]> gradle(ProjectRequest request) {
 		request.setType("gradle-build");
-		byte[] gradleBuild = this.projectGenerator
-				.generateGradleBuild((ProjectRequest) request);
+		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(gradleBuild, "application/octet-stream",
 				"build.gradle");
 	}
 
 	@RequestMapping("/starter.zip")
 	@ResponseBody
-	public ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest)
-			throws IOException {
-		ProjectRequest request = (ProjectRequest) basicRequest;
-		File dir = this.projectGenerator.generateProjectStructure(request);
-
-		File download = this.projectGenerator.createDistributionFile(dir, ".zip");
-
+	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
+		File dir = this.projectGenerationInvoker
+				.invokeProjectStructureGeneration(request);
+		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".zip");
 		String wrapperScript = getWrapperScript(request);
 		new File(dir, wrapperScript).setExecutable(true);
 		Zip zip = new Zip();
@@ -296,13 +287,11 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
-	public ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest)
-			throws IOException {
-		ProjectRequest request = (ProjectRequest) basicRequest;
-		File dir = this.projectGenerator.generateProjectStructure(request);
-
-		File download = this.projectGenerator.createDistributionFile(dir, ".tar.gz");
-
+	public ResponseEntity<byte[]> springTgz(ProjectRequest request) throws IOException {
+		File dir = this.projectGenerationInvoker
+				.invokeProjectStructureGeneration(request);
+		File download = this.projectGenerationInvoker.createDistributionFile(dir,
+				".tar.gz");
 		String wrapperScript = getWrapperScript(request);
 		new File(dir, wrapperScript).setExecutable(true);
 		Tar zip = new Tar();
@@ -338,7 +327,8 @@ public class MainController extends AbstractInitializrController {
 	}
 
 	private static String getWrapperScript(ProjectRequest request) {
-		String script = ("gradle".equals(request.getBuild()) ? "gradlew" : "mvnw");
+		String script = (request.getType() != null
+				&& request.getType().startsWith("gradle")) ? "gradlew" : "mvnw";
 		return (request.getBaseDir() != null) ? request.getBaseDir() + "/" + script
 				: script;
 	}
@@ -349,7 +339,7 @@ public class MainController extends AbstractInitializrController {
 		log.info("Uploading: {} ({} bytes)", download, bytes.length);
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType,
 				fileName);
-		this.projectGenerator.cleanTempFiles(dir);
+		this.projectGenerationInvoker.cleanTempFiles(dir);
 		return result;
 	}
 

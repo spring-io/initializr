@@ -69,7 +69,7 @@ class MainControllerIntegrationTests
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
 		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE")
 				.isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false)
-				.pomAssert().hasDependenciesCount(2).hasDependency(biz);
+				.pomAssert().hasDependenciesCount(3).hasDependency(biz);
 	}
 
 	@Test

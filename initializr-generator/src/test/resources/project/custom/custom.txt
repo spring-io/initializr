@@ -1,4 +1,0 @@
-Custom resources
-
-com.example.custom
-42

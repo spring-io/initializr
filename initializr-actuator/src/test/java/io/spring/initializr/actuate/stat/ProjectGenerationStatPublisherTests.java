@@ -26,8 +26,11 @@ import java.util.Collections;
 import java.util.UUID;
 
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
-import io.spring.initializr.generator.ProjectGeneratedEvent;
-import io.spring.initializr.generator.ProjectRequest;
+import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import io.spring.initializr.web.project.ProjectGeneratedEvent;
+import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.initializr.web.project.WebProjectRequest;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +62,13 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  *
  * @author Stephane Nicoll
  */
-class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
+class ProjectGenerationStatPublisherTests {
+
+	private final InitializrMetadata metadata = InitializrMetadataTestBuilder
+			.withDefaults().addDependencyGroup("core", "security", "validation", "aop")
+			.addDependencyGroup("web", "web", "data-rest", "jersey")
+			.addDependencyGroup("data", "data-jpa", "jdbc")
+			.addDependencyGroup("database", "h2", "mysql").build();
 
 	private RetryTemplate retryTemplate;
 
@@ -132,13 +141,13 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 				.andRespond(withStatus(HttpStatus.CREATED)
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
 	@Test
 	void publishDocument() {
-		ProjectRequest request = createProjectRequest();
+		WebProjectRequest request = createProjectRequest();
 		request.setGroupId("com.example.acme");
 		request.setArtifactId("project");
 		request.setType("maven-project");
@@ -156,7 +165,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -177,7 +186,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -198,7 +207,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -219,7 +228,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -241,7 +250,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -262,7 +271,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -284,7 +293,7 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
@@ -302,12 +311,18 @@ class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		this.statPublisher.handleEvent(createProjectGeneratedEvent(request));
+		handleEvent(request);
 		this.mockServer.verify();
 	}
 
-	private ProjectGeneratedEvent createProjectGeneratedEvent(ProjectRequest request) {
-		return new ProjectGeneratedEvent(request, getMetadata());
+	private WebProjectRequest createProjectRequest() {
+		WebProjectRequest request = new WebProjectRequest();
+		request.initialize(this.metadata);
+		return request;
+	}
+
+	private void handleEvent(ProjectRequest request) {
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request, this.metadata));
 	}
 
 	private static String mockResponse(String id, boolean created) {

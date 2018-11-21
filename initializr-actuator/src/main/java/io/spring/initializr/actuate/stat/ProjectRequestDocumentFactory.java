@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,13 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocument.ClientInformatio
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.DependencyInformation;
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.ErrorStateInformation;
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.VersionInformation;
-import io.spring.initializr.generator.ProjectFailedEvent;
-import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.generator.ProjectRequestEvent;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.util.Agent;
 import io.spring.initializr.util.Version;
+import io.spring.initializr.web.project.ProjectFailedEvent;
+import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.initializr.web.project.ProjectRequestEvent;
+import io.spring.initializr.web.project.WebProjectRequest;
 
 import org.springframework.util.StringUtils;
 
@@ -43,7 +44,6 @@ public class ProjectRequestDocumentFactory {
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
 		InitializrMetadata metadata = event.getMetadata();
 		ProjectRequest request = event.getProjectRequest();
-
 		ProjectRequestDocument document = new ProjectRequestDocument();
 		document.setGenerationTimestamp(event.getTimestamp());
 		document.setGroupId(request.getGroupId());
@@ -118,16 +118,19 @@ public class ProjectRequestDocumentFactory {
 	}
 
 	private ClientInformation determineClientInformation(ProjectRequest request) {
-		Agent agent = determineAgent(request);
-		String ip = determineIp(request);
-		String country = determineCountry(request);
-		if (agent != null || ip != null || country != null) {
-			return new ClientInformation(agent, ip, country);
+		if (request instanceof WebProjectRequest) {
+			WebProjectRequest webProjectRequest = (WebProjectRequest) request;
+			Agent agent = determineAgent(webProjectRequest);
+			String ip = determineIp(webProjectRequest);
+			String country = determineCountry(webProjectRequest);
+			if (agent != null || ip != null || country != null) {
+				return new ClientInformation(agent, ip, country);
+			}
 		}
 		return null;
 	}
 
-	private Agent determineAgent(ProjectRequest request) {
+	private Agent determineAgent(WebProjectRequest request) {
 		String userAgent = (String) request.getParameters().get("user-agent");
 		if (StringUtils.hasText(userAgent)) {
 			return Agent.fromUserAgent(userAgent);
@@ -135,13 +138,13 @@ public class ProjectRequestDocumentFactory {
 		return null;
 	}
 
-	private String determineIp(ProjectRequest request) {
+	private String determineIp(WebProjectRequest request) {
 		String candidate = (String) request.getParameters().get("cf-connecting-ip");
 		return (StringUtils.hasText(candidate)) ? candidate
 				: (String) request.getParameters().get("x-forwarded-for");
 	}
 
-	private String determineCountry(ProjectRequest request) {
+	private String determineCountry(WebProjectRequest request) {
 		String candidate = (String) request.getParameters().get("cf-ipcountry");
 		if (StringUtils.hasText(candidate) && !"xx".equalsIgnoreCase(candidate)) {
 			return candidate;

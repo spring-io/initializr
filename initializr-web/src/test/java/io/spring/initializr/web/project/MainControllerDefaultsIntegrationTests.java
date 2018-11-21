@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.project;
 
-import io.spring.initializr.test.generator.PomAssert;
+import io.spring.initializr.generator.spring.test.build.PomAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +39,8 @@ class MainControllerDefaultsIntegrationTests
 				String.class);
 		PomAssert pomAssert = new PomAssert(content);
 		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
-				.hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar").hasName("FooBar")
-				.hasDescription("FooBar Project");
+				.hasVersion("1.2.4-SNAPSHOT").doesNotHaveNode("/project/packaging")
+				.hasName("FooBar").hasDescription("FooBar Project");
 	}
 
 	@Test

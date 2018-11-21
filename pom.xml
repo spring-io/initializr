@@ -84,6 +84,52 @@
 				<type>test-jar</type>
 			</dependency>
 			<dependency>
+				<groupId>io.spring.initializr.experimental</groupId>
+				<artifactId>initializr-generator</artifactId>
+				<version>0.1.0.BUILD-SNAPSHOT</version>
+				<exclusions>
+					<exclusion>
+						<groupId>io.spring.initializr</groupId>
+						<artifactId>initializr-generator</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr.experimental</groupId>
+				<artifactId>initializr-generator</artifactId>
+				<version>0.1.0.BUILD-SNAPSHOT</version>
+				<type>test-jar</type>
+				<exclusions>
+					<exclusion>
+						<groupId>io.spring.initializr</groupId>
+						<artifactId>initializr-generator</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr.experimental</groupId>
+				<artifactId>initializr-generator-spring</artifactId>
+				<version>0.1.0.BUILD-SNAPSHOT</version>
+				<exclusions>
+					<exclusion>
+						<groupId>io.spring.initializr</groupId>
+						<artifactId>initializr-generator</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr.experimental</groupId>
+				<artifactId>initializr-generator-spring</artifactId>
+				<version>0.1.0.BUILD-SNAPSHOT</version>
+				<type>test-jar</type>
+				<exclusions>
+					<exclusion>
+						<groupId>io.spring.initializr</groupId>
+						<artifactId>initializr-generator</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
 				<version>${junit-jupiter.version}</version>

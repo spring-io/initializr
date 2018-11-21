@@ -23,10 +23,10 @@ import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
 
-import io.spring.initializr.generator.InvalidProjectRequestException;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.TypeCapability;
+import io.spring.initializr.web.InvalidProjectRequestException;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
-import io.spring.initializr.generator.ProjectRequestEvent;
+import io.spring.initializr.web.project.ProjectRequestEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
