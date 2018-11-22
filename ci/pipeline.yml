@@ -89,9 +89,17 @@ jobs:
   - get: initializr-ci-image
   - put: repo-status-build
     params: { state: "pending", commit: "git-repo" }
-  - task: build-project
-    image: initializr-ci-image
-    file: git-repo/ci/tasks/build-project.yml
+  - do:
+    - task: build-project
+      image: initializr-ci-image
+      file: git-repo/ci/tasks/build-project.yml
+    - put: artifactory-repo
+      params: &artifactory-params
+        repo: libs-snapshot-local
+        folder: distribution-repository
+        build_uri: "https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
+        build_number: "${BUILD_PIPELINE_NAME}-${BUILD_JOB_NAME}-${BUILD_NAME}"
+        disable_checksum_uploads: true
     on_failure:
       do:
       - put: repo-status-build
@@ -110,13 +118,6 @@ jobs:
       silent: true
       icon_emoji: ":concourse:"
       username: concourse-ci
-  - put: artifactory-repo
-    params: &artifactory-params
-      repo: libs-snapshot-local
-      folder: distribution-repository
-      build_uri: "https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
-      build_number: "${BUILD_PIPELINE_NAME}-${BUILD_JOB_NAME}-${BUILD_NAME}"
-      disable_checksum_uploads: true
 - name: build-pull-requests
   serial: true
   public: true
