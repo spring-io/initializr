@@ -39,8 +39,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ProjectRequestResolverTests {
 
-	private static final VersionProperty VERSION_PROPERTY = new VersionProperty(
-			"java.version");
+	private static final VersionProperty VERSION_PROPERTY = VersionProperty
+			.of("java.version");
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", "web", "security", "data-jpa").build();

@@ -105,10 +105,10 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void versionOverride() {
 		ProjectRequest request = createProjectRequest("web");
+		request.getBuildProperties().getVersions().put(
+				VersionProperty.of("spring-foo.version", false), () -> "0.1.0.RELEASE");
 		request.getBuildProperties().getVersions()
-				.put(new VersionProperty("spring-foo.version"), () -> "0.1.0.RELEASE");
-		request.getBuildProperties().getVersions()
-				.put(new VersionProperty("spring-bar.version"), () -> "0.2.0.RELEASE");
+				.put(VersionProperty.of("spring-bar.version"), () -> "0.2.0.RELEASE");
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
 				"project/" + this.build + "/version-override-" + this.assertFileName));

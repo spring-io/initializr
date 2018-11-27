@@ -109,7 +109,7 @@ public class BillOfMaterials {
 	}
 
 	public void setVersionProperty(String versionPropertyName) {
-		setVersionProperty(new VersionProperty(versionPropertyName));
+		setVersionProperty(VersionProperty.of(versionPropertyName));
 	}
 
 	/**

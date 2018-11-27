@@ -516,7 +516,7 @@ public class ProjectGenerator {
 
 	private String computeVersionProperty(ProjectRequest request,
 			VersionProperty property) {
-		if (isGradleBuild(request)) {
+		if (isGradleBuild(request) && property.isInternal()) {
 			return property.toCamelCaseFormat();
 		}
 		return property.toStandardFormat();

@@ -818,7 +818,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesMaven() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getMaven().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
+		request.getBuildProperties().getVersions().put(VersionProperty.of("foo.version"),
 				() -> "1.2.3");
 		request.getBuildProperties().getGradle().put("ignore.property", () -> "yes");
 
@@ -830,12 +830,16 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void buildPropertiesGradle() {
 		ProjectRequest request = createProjectRequest("web");
 		request.getBuildProperties().getGradle().put("name", () -> "test");
-		request.getBuildProperties().getVersions().put(new VersionProperty("foo.version"),
-				() -> "1.2.3");
+		request.getBuildProperties().getVersions()
+				.put(VersionProperty.of("foo.version", false), () -> "1.2.3");
+		request.getBuildProperties().getVersions()
+				.put(VersionProperty.of("internal.version"), () -> "4.5.6");
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");
 
-		generateGradleBuild(request).contains("name = 'test'").contains("ext {")
-				.contains("fooVersion = '1.2.3'").doesNotContain("ignore.property");
+		generateGradleBuild(request).contains("name = 'test'")
+				.contains("ext['foo.version'] = '1.2.3'")
+				.contains("ext['internalVersion'] = '4.5.6'")
+				.doesNotContain("ignore.property");
 	}
 
 	@Test

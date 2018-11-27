@@ -246,7 +246,7 @@ public class InitializrMetadata {
 			String versionProperty) {
 		BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot",
 				"spring-boot-dependencies", bootVersion);
-		bom.setVersionProperty(new VersionProperty(versionProperty));
+		bom.setVersionProperty(VersionProperty.of(versionProperty));
 		bom.setOrder(100);
 		return bom;
 	}

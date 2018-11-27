@@ -78,15 +78,10 @@ configurations {
 	providedRuntime
 }
 {{/providedDependencies}}
-
-{{^buildPropertiesVersions.empty}}
-ext {
-	{{#buildPropertiesVersions}}
-	{{key}} = '{{value}}'
+{{#buildPropertiesVersions}}
+ext['{{key}}'] = '{{value}}'
 {{/buildPropertiesVersions}}
-}
 
-{{/buildPropertiesVersions.empty}}
 dependencies {
 	{{#compileDependencies}}
 	{{gradleCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
