@@ -74,8 +74,6 @@ public class ProjectGenerator {
 
 	private static final Version VERSION_1_4_2_M1 = Version.parse("1.4.2.M1");
 
-	private static final Version VERSION_1_5_0_M1 = Version.parse("1.5.0.M1");
-
 	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
 	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
@@ -483,17 +481,6 @@ public class ProjectGenerator {
 			model.put("hasBoms", true);
 		}
 
-		if (isGradleBuild(request)) {
-			model.put("gradleCompileConfig",
-					bootTwoZeroAvailable ? "implementation" : "compile");
-			model.put("gradleRuntimeConfig",
-					bootTwoZeroAvailable ? "runtimeOnly" : "runtime");
-			model.put("gradleTestCompileConfig",
-					bootTwoZeroAvailable ? "testImplementation" : "testCompile");
-			model.put("gradleTestRuntimeConfig",
-					bootTwoZeroAvailable ? "testRuntimeOnly" : "testRuntime");
-		}
-
 		return model;
 	}
 
@@ -611,10 +598,6 @@ public class ProjectGenerator {
 				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
 	}
 
-	private static boolean isGradle3Available(Version bootVersion) {
-		return VERSION_1_5_0_M1.compareTo(bootVersion) <= 0;
-	}
-
 	private static boolean isGradle4Available(Version bootVersion) {
 		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
 	}
@@ -632,8 +615,7 @@ public class ProjectGenerator {
 	}
 
 	private void writeGradleWrapper(File dir, Version bootVersion) {
-		String gradlePrefix = (isGradle4Available(bootVersion) ? "gradle4"
-				: (isGradle3Available(bootVersion) ? "gradle3" : "gradle"));
+		String gradlePrefix = (isGradle4Available(bootVersion)) ? "gradle4" : "gradle3";
 		writeTextResource(dir, "gradlew.bat", gradlePrefix + "/gradlew.bat");
 		writeTextResource(dir, "gradlew", gradlePrefix + "/gradlew");
 

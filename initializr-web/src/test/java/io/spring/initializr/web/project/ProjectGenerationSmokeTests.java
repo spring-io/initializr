@@ -95,9 +95,10 @@ public class ProjectGenerationSmokeTests
 		page.type("gradle-project");
 		page.submit();
 		assertSimpleProject().isGradleProject().gradleBuildAssert()
-				.contains("compile('org.springframework.boot:spring-boot-starter')")
 				.contains(
-						"testCompile('org.springframework.boot:spring-boot-starter-test')");
+						"implementation('org.springframework.boot:spring-boot-starter')")
+				.contains(
+						"testImplementation('org.springframework.boot:spring-boot-starter-test')");
 	}
 
 	@Test

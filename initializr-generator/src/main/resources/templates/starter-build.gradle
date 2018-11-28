@@ -84,17 +84,17 @@ ext['{{key}}'] = '{{value}}'
 
 dependencies {
 	{{#compileDependencies}}
-	{{gradleCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	implementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileDependencies}}
 	{{#groovy}}
-	{{gradleCompileConfig}}('org.codehaus.groovy:groovy')
+	implementation('org.codehaus.groovy:groovy')
 	{{/groovy}}
 	{{#kotlin}}
-	{{gradleCompileConfig}}("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
-	{{gradleCompileConfig}}("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	implementation("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	implementation("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
 	{{/kotlin}}
 	{{#runtimeDependencies}}
-	{{gradleRuntimeConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	runtimeOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/runtimeDependencies}}
 	{{#compileOnlyDependencies}}
 	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
@@ -105,9 +105,9 @@ dependencies {
 	{{#providedDependencies}}
 	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/providedDependencies}}
-	{{gradleTestCompileConfig}}('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	{{#testDependencies}}
-	{{gradleTestCompileConfig}}('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	testImplementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/testDependencies}}
 }
 {{#hasBoms}}

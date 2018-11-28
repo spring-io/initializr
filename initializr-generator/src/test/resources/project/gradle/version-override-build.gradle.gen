@@ -28,6 +28,6 @@ ext['springBarVersion'] = '0.2.0.RELEASE'
 ext['spring-foo.version'] = '0.1.0.RELEASE'
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
