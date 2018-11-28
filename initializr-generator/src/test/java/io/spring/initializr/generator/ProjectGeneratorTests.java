@@ -28,10 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,9 +95,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void mavenPomWithBootSnapshot() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.0.1.BUILD-SNAPSHOT");
+		request.setBootVersion("2.1.1.BUILD-SNAPSHOT");
 		generateMavenPom(request).hasSnapshotRepository()
-				.hasSpringBootParent("1.0.1.BUILD-SNAPSHOT")
+				.hasSpringBootParent("2.1.1.BUILD-SNAPSHOT")
 				.hasSpringBootStarterDependency("web");
 	}
 
@@ -285,91 +282,32 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot11UseEnableAutoConfigurationJava() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.1.9.RELEASE");
-		request.setName("MyDemo");
-		request.setPackageName("foo");
-		generateProject(request)
-				.sourceCodeAssert("src/main/java/foo/MyDemoApplication.java")
-				.hasImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.doesNotHaveImports(SpringBootApplication.class.getName())
-				.contains("@EnableAutoConfiguration", "@Configuration", "@ComponentScan")
-				.doesNotContain("@SpringBootApplication");
-	}
-
-	@Test
 	public void springBootUseSpringBootApplicationJava() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.2.0.RC1");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
 		generateProject(request)
 				.sourceCodeAssert("src/main/java/foo/MyDemoApplication.java")
 				.hasImports(SpringBootApplication.class.getName())
-				.doesNotHaveImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.contains("@SpringBootApplication").doesNotContain(
-						"@EnableAutoConfiguration", "@Configuration", "@ComponentScan");
-	}
-
-	@Test
-	public void springBoot11UseEnableAutoConfigurationGroovy() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage("groovy");
-		request.setBootVersion("1.1.9.RELEASE");
-		request.setName("MyDemo");
-		request.setPackageName("foo");
-		generateProject(request)
-				.sourceCodeAssert("src/main/groovy/foo/MyDemoApplication.groovy")
-				.hasImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.doesNotHaveImports(SpringBootApplication.class.getName())
-				.contains("@EnableAutoConfiguration", "@Configuration", "@ComponentScan")
-				.doesNotContain("@SpringBootApplication");
+				.contains("@SpringBootApplication");
 	}
 
 	@Test
 	public void springBootUseSpringBootApplicationGroovy() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setLanguage("groovy");
-		request.setBootVersion("1.2.0.RC1");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
 		generateProject(request)
 				.sourceCodeAssert("src/main/groovy/foo/MyDemoApplication.groovy")
 				.hasImports(SpringBootApplication.class.getName())
-				.doesNotHaveImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.contains("@SpringBootApplication").doesNotContain(
-						"@EnableAutoConfiguration", "@Configuration", "@ComponentScan");
-	}
-
-	@Test
-	public void springBoot11UseEnableAutoConfigurationKotlin() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage("kotlin");
-		request.setBootVersion("1.1.9.RELEASE");
-		request.setName("MyDemo");
-		request.setPackageName("foo");
-
-		applyMetadata(initializeTestMetadataBuilder().addDependencyGroup("core", "web")
-				.setKotlinEnv("1.0.0").build());
-		generateProject(request)
-				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")
-				.hasImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.doesNotHaveImports(SpringBootApplication.class.getName())
-				.contains("@EnableAutoConfiguration", "@Configuration", "@ComponentScan")
-				.doesNotContain("@SpringBootApplication");
+				.contains("@SpringBootApplication");
 	}
 
 	@Test
 	public void springBootUseSpringBootApplicationKotlin() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setLanguage("kotlin");
-		request.setBootVersion("1.2.0.RC1");
 		request.setName("MyDemo");
 		request.setPackageName("foo");
 
@@ -378,10 +316,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		generateProject(request)
 				.sourceCodeAssert("src/main/kotlin/foo/MyDemoApplication.kt")
 				.hasImports(SpringBootApplication.class.getName())
-				.doesNotHaveImports(EnableAutoConfiguration.class.getName(),
-						ComponentScan.class.getName(), Configuration.class.getName())
-				.contains("@SpringBootApplication").doesNotContain(
-						"@EnableAutoConfiguration", "@Configuration", "@ComponentScan");
+				.contains("@SpringBootApplication");
 	}
 
 	@Test
@@ -393,26 +328,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void springBoot20M3UseGradle3() {
+	public void springBoot20UsesGradle4() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-project");
-		request.setBootVersion("2.0.0.M3");
-		generateProject(request).isGradleProject("3.5.1");
-	}
-
-	@Test
-	public void springBoot20M4UsesGradle4() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setType("gradle-project");
-		request.setBootVersion("2.0.0.M4");
-		generateProject(request).isGradleProject("4.10.2");
-	}
-
-	@Test
-	public void springBoot20SnapshotsUseGradle4() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setType("gradle-project");
-		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+		request.setBootVersion("2.0.0.RELEASE");
 		generateProject(request).isGradleProject("4.10.2");
 	}
 
@@ -511,7 +430,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void gradleBuildWithBootSnapshot() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.0.1.BUILD-SNAPSHOT");
+		request.setBootVersion("2.1.1.BUILD-SNAPSHOT");
 		generateGradleBuild(request).hasSnapshotRepository();
 	}
 
@@ -582,50 +501,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void gradleBuildBeforeWithSpringBoot13() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("core", "web", "jpa").setGradleEnv("0.5.9.RELEASE")
-				.build();
-		applyMetadata(metadata);
+	public void gradleBuildWithSpringBoot15() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.2.3.RELEASE");
-		generateGradleBuild(request).contains("springBootVersion = '1.2.3.RELEASE'")
-				.contains(
-						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
-				.contains("apply plugin: 'spring-boot'")
-				.contains("apply plugin: 'io.spring.dependency-management'")
-				.contains(
-						"implementation('org.springframework.boot:spring-boot-starter-web')")
-				.contains(
-						"testImplementation('org.springframework.boot:spring-boot-starter-test')");
-	}
-
-	@Test
-	public void gradleBuildAsFromSpringBoot13() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("core", "web", "jpa").setGradleEnv("0.5.9.RELEASE")
-				.build();
-		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.3.0.BUILD-SNAPSHOT");
+		request.setBootVersion("1.5.20.BUILD-SNAPSHOT");
 		generateGradleBuild(request)
-				.contains("springBootVersion = '1.3.0.BUILD-SNAPSHOT'")
-				.contains("apply plugin: 'spring-boot'")
-				.contains(
-						"implementation('org.springframework.boot:spring-boot-starter-web')")
-				.contains(
-						"testImplementation('org.springframework.boot:spring-boot-starter-test')")
-				.doesNotContain(
-						"classpath('io.spring.gradle:dependency-management-plugin:0.5.9.RELEASE')")
-				.doesNotContain("apply plugin: 'io.spring.dependency-management'");
-	}
-
-	@Test
-	public void gradleBuildAsFromSpringBoot142() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.4.2.BUILD-SNAPSHOT");
-		generateGradleBuild(request)
-				.contains("springBootVersion = '1.4.2.BUILD-SNAPSHOT'")
+				.contains("springBootVersion = '1.5.20.BUILD-SNAPSHOT'")
 				.contains("apply plugin: 'org.springframework.boot'")
 				.contains(
 						"implementation('org.springframework.boot:spring-boot-starter-web')")
@@ -635,11 +515,10 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void gradleBuildAsFromSpringBoot20() {
+	public void gradleBuildWithSpringBoot20() {
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
-		generateGradleBuild(request)
-				.contains("springBootVersion = '2.0.0.BUILD-SNAPSHOT'")
+		request.setBootVersion("2.0.0.RELEASE");
+		generateGradleBuild(request).contains("springBootVersion = '2.0.0.RELEASE'")
 				.contains("apply plugin: 'org.springframework.boot'")
 				.doesNotContain("apply plugin: 'spring-boot'")
 				.contains("apply plugin: 'io.spring.dependency-management'")

@@ -13,9 +13,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		{{^bootOneThreeAvailable}}
-		classpath('io.spring.gradle:dependency-management-plugin:{{dependencyManagementPluginVersion}}')
-		{{/bootOneThreeAvailable}}
 		{{#kotlin}}
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
@@ -39,10 +36,7 @@ apply plugin: 'eclipse-wtp'
 {{^war}}
 apply plugin: 'eclipse'
 {{/war}}
-apply plugin: '{{springBootPluginName}}'
-{{^bootOneThreeAvailable}}
-apply plugin: 'io.spring.dependency-management'
-{{/bootOneThreeAvailable}}
+apply plugin: 'org.springframework.boot'
 {{#bootTwoZeroAvailable}}
 apply plugin: 'io.spring.dependency-management'
 {{/bootTwoZeroAvailable}}

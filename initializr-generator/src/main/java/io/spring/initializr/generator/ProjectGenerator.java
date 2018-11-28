@@ -64,21 +64,7 @@ public class ProjectGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(ProjectGenerator.class);
 
-	private static final Version VERSION_1_2_0_RC1 = Version.parse("1.2.0.RC1");
-
-	private static final Version VERSION_1_3_0_M1 = Version.parse("1.3.0.M1");
-
-	private static final Version VERSION_1_4_0_M2 = Version.parse("1.4.0.M2");
-
-	private static final Version VERSION_1_4_0_M3 = Version.parse("1.4.0.M3");
-
-	private static final Version VERSION_1_4_2_M1 = Version.parse("1.4.2.M1");
-
-	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
-
-	private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
-
-	private static final Version VERSION_2_0_0_M6 = Version.parse("2.0.0.M6");
+	private static final Version VERSION_2_0_0 = Version.parse("2.0.0.RELEASE");
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -365,8 +351,8 @@ public class ProjectGenerator {
 			model.put("war", true);
 		}
 
-		// Kotlin supported as of M6
-		final boolean kotlinSupport = VERSION_2_0_0_M6.compareTo(bootVersion) <= 0;
+		// Kotlin supported as of 2.0
+		final boolean kotlinSupport = VERSION_2_0_0.compareTo(bootVersion) <= 0;
 		model.put("kotlinSupport", kotlinSupport);
 
 		if (isMavenBuild(request)) {
@@ -443,25 +429,15 @@ public class ProjectGenerator {
 		model.put("isRelease", request.getBootVersion().contains("RELEASE"));
 		setupApplicationModel(request, model);
 
-		// Gradle plugin has changed as from 1.3.0
-		model.put("bootOneThreeAvailable", VERSION_1_3_0_M1.compareTo(bootVersion) <= 0);
-
-		final boolean bootTwoZeroAvailable = VERSION_2_0_0_M1.compareTo(bootVersion) <= 0;
+		final boolean bootTwoZeroAvailable = VERSION_2_0_0.compareTo(bootVersion) <= 0;
 		model.put("bootTwoZeroAvailable", bootTwoZeroAvailable);
-
-		// Gradle plugin has changed again as from 1.4.2
-		model.put("springBootPluginName", (VERSION_1_4_2_M1.compareTo(bootVersion) <= 0)
-				? "org.springframework.boot" : "spring-boot");
-
-		// New testing stuff
-		model.put("newTestInfrastructure", isNewTestInfrastructureAvailable(request));
 
 		// Servlet Initializer
 		model.put("servletInitializrImport", new Imports(request.getLanguage())
 				.add(getServletInitializrClass(request)).toString());
 
 		// Kotlin-specific dep
-		model.put("kotlinStdlibArtifactId", getKotlinStdlibArtifactId(request));
+		model.put("kotlinStdlibArtifactId", "kotlin-stdlib-jdk8");
 
 		// Java versions
 		model.put("java8OrLater", isJava8OrLater(request));
@@ -513,19 +489,8 @@ public class ProjectGenerator {
 			Map<String, Object> model) {
 		Imports imports = new Imports(request.getLanguage());
 		Annotations annotations = new Annotations();
-		boolean useSpringBootApplication = VERSION_1_2_0_RC1
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
-		if (useSpringBootApplication) {
-			imports.add("org.springframework.boot.autoconfigure.SpringBootApplication");
-			annotations.add("@SpringBootApplication");
-		}
-		else {
-			imports.add("org.springframework.boot.autoconfigure.EnableAutoConfiguration")
-					.add("org.springframework.context.annotation.ComponentScan")
-					.add("org.springframework.context.annotation.Configuration");
-			annotations.add("@EnableAutoConfiguration").add("@ComponentScan")
-					.add("@Configuration");
-		}
+		imports.add("org.springframework.boot.autoconfigure.SpringBootApplication");
+		annotations.add("@SpringBootApplication");
 		model.put("applicationImports", imports.toString());
 		model.put("applicationAnnotations", annotations.toString());
 
@@ -534,19 +499,8 @@ public class ProjectGenerator {
 	protected void setupTestModel(ProjectRequest request, Map<String, Object> model) {
 		Imports imports = new Imports(request.getLanguage());
 		Annotations testAnnotations = new Annotations();
-		boolean newTestInfrastructure = isNewTestInfrastructureAvailable(request);
-		if (newTestInfrastructure) {
-			imports.add("org.springframework.boot.test.context.SpringBootTest")
-					.add("org.springframework.test.context.junit4.SpringRunner");
-		}
-		else {
-			imports.add("org.springframework.boot.test.SpringApplicationConfiguration")
-					.add("org.springframework.test.context.junit4.SpringJUnit4ClassRunner");
-		}
-		if (request.hasWebFacet() && !newTestInfrastructure) {
-			imports.add("org.springframework.test.context.web.WebAppConfiguration");
-			testAnnotations.add("@WebAppConfiguration");
-		}
+		imports.add("org.springframework.boot.test.context.SpringBootTest")
+				.add("org.springframework.test.context.junit4.SpringRunner");
 		model.put("testImports", imports.withFinalCarriageReturn().toString());
 		model.put("testAnnotations",
 				testAnnotations.withFinalCarriageReturn().toString());
@@ -554,26 +508,10 @@ public class ProjectGenerator {
 
 	protected String getServletInitializrClass(ProjectRequest request) {
 		Version bootVersion = Version.safeParse(request.getBootVersion());
-		if (VERSION_1_4_0_M3.compareTo(bootVersion) > 0) {
-			return "org.springframework.boot.context.web.SpringBootServletInitializer";
-		}
-		else if (VERSION_2_0_0_M1.compareTo(bootVersion) > 0) {
+		if (VERSION_2_0_0.compareTo(bootVersion) > 0) {
 			return "org.springframework.boot.web.support.SpringBootServletInitializer";
 		}
-		else {
-			return "org.springframework.boot.web.servlet.support.SpringBootServletInitializer";
-		}
-	}
-
-	protected String getKotlinStdlibArtifactId(ProjectRequest request) {
-		String javaVersion = request.getJavaVersion();
-		if ("1.6".equals(javaVersion)) {
-			return "kotlin-stdlib";
-		}
-		else if ("1.7".equals(javaVersion)) {
-			return "kotlin-stdlib-jdk7";
-		}
-		return "kotlin-stdlib-jdk8";
+		return "org.springframework.boot.web.servlet.support.SpringBootServletInitializer";
 	}
 
 	private static boolean isJava8OrLater(ProjectRequest request) {
@@ -593,13 +531,8 @@ public class ProjectGenerator {
 		return "war".equals(request.getPackaging());
 	}
 
-	private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
-		return VERSION_1_4_0_M2
-				.compareTo(Version.safeParse(request.getBootVersion())) <= 0;
-	}
-
 	private static boolean isGradle4Available(Version bootVersion) {
-		return VERSION_2_0_0_M3.compareTo(bootVersion) < 0;
+		return VERSION_2_0_0.compareTo(bootVersion) <= 0;
 	}
 
 	private byte[] doGenerateMavenPom(Map<String, Object> model) {
