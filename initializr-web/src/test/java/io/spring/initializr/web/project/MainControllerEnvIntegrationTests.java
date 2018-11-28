@@ -42,7 +42,7 @@ public class MainControllerEnvIntegrationTests
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
 				String.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
+		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin.zip";
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
 

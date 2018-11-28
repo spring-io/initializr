@@ -104,10 +104,10 @@ public class ProjectGenerationSmokeTests
 	@Test
 	public void createSimpleProjectWithDifferentBootVersion() throws Exception {
 		HomePage page = toHome();
-		page.bootVersion("1.0.2.RELEASE");
+		page.bootVersion("1.5.17.RELEASE");
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert()
-				.hasSpringBootParent("1.0.2.RELEASE").hasDependenciesCount(2)
+				.hasSpringBootParent("1.5.17.RELEASE").hasDependenciesCount(2)
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
 
 	}
@@ -140,10 +140,10 @@ public class ProjectGenerationSmokeTests
 		HomePage page = toHome();
 		selectDependency(page, "Data JPA");
 		selectDependency(page, "org.acme:bur");
-		page.bootVersion("1.0.2.RELEASE"); // Bur isn't available anymore
+		page.bootVersion("1.5.17.RELEASE"); // Bur isn't available anymore
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert()
-				.hasSpringBootParent("1.0.2.RELEASE").hasDependenciesCount(2)
+				.hasSpringBootParent("1.5.17.RELEASE").hasDependenciesCount(2)
 				.hasSpringBootStarterDependency("data-jpa").hasSpringBootStarterTest();
 	}
 
@@ -282,13 +282,13 @@ public class ProjectGenerationSmokeTests
 
 	@Test
 	public void dependencyHiddenAccordingToRange() throws Exception {
-		HomePage page = toHome(); // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
+		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
-		page.bootVersion("1.0.2.RELEASE");
+		page.bootVersion("1.5.17.RELEASE");
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isFalse();
 		assertThat(page.dependency("org.acme:biz").isEnabled()).isFalse();
-		page.bootVersion("1.1.4.RELEASE");
+		page.bootVersion("2.1.4.RELEASE");
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
 		assertThat(page.dependency("org.acme:biz").isEnabled()).isFalse();
 		page.bootVersion("Latest SNAPSHOT");
@@ -298,13 +298,13 @@ public class ProjectGenerationSmokeTests
 
 	@Test
 	public void dependencyUncheckedWhenHidden() throws Exception {
-		HomePage page = toHome(); // bur: [1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)
+		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		page.dependency("org.acme:bur").click();
 		assertThat(page.dependency("org.acme:bur").isSelected()).isTrue();
-		page.bootVersion("1.0.2.RELEASE");
+		page.bootVersion("1.5.17.RELEASE");
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isFalse();
-		page.bootVersion("1.1.4.RELEASE");
+		page.bootVersion("2.1.4.RELEASE");
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
 		assertThat(page.dependency("org.acme:bur").isSelected()).isFalse();
 	}

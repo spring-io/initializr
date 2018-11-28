@@ -67,7 +67,7 @@ public class MainControllerIntegrationTests
 	@Test
 	public void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
-		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=1.2.1.RELEASE")
+		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE")
 				.isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false)
 				.pomAssert().hasDependenciesCount(2).hasDependency(biz);
 	}
@@ -111,7 +111,7 @@ public class MainControllerIntegrationTests
 
 	@Test
 	public void kotlinRange() {
-		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=1.2.1.RELEASE")
+		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE")
 				.isKotlinProject().isMavenProject().pomAssert().hasDependenciesCount(4)
 				.hasProperty("kotlin.version", "1.1");
 	}
@@ -147,7 +147,7 @@ public class MainControllerIntegrationTests
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context),
 				ResponseEntity.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin."
+		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin."
 				+ extension;
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
@@ -399,7 +399,7 @@ public class MainControllerIntegrationTests
 	public void homeHasBootVersion() {
 		String body = htmlHome();
 		assertThat(body).contains("name=\"bootVersion\"");
-		assertThat(body).contains("1.2.0.BUILD-SNAPSHOT\"");
+		assertThat(body).contains("2.2.0.BUILD-SNAPSHOT\"");
 	}
 
 	@Test

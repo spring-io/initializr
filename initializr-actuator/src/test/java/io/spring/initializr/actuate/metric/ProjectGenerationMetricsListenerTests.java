@@ -198,10 +198,10 @@ public class ProjectGenerationMetricsListenerTests {
 	@Test
 	public void explicitBootVersion() {
 		ProjectRequest request = initialize();
-		request.setBootVersion("1.0.2.RELEASE");
+		request.setBootVersion("1.5.17.RELEASE");
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
-		this.metricsAssert.hasValue(1, "initializr.boot_version.1_0_2_RELEASE");
+		this.metricsAssert.hasValue(1, "initializr.boot_version.1_5_17_RELEASE");
 	}
 
 	@Test
@@ -221,7 +221,7 @@ public class ProjectGenerationMetricsListenerTests {
 		request.setPackaging("jar");
 		request.setJavaVersion("1.6");
 		request.setLanguage("groovy");
-		request.setBootVersion("1.0.2.RELEASE");
+		request.setBootVersion("1.5.17.RELEASE");
 		request.getParameters().put("user-agent", "SpringBootCli/1.3.0.RELEASE");
 
 		request.resolve(this.metadata);
@@ -229,7 +229,7 @@ public class ProjectGenerationMetricsListenerTests {
 		this.metricsAssert.hasValue(1, "initializr.requests", "initializr.dependency.web",
 				"initializr.dependency.security", "initializr.type.gradle-project",
 				"initializr.packaging.jar", "initializr.java_version.1_6",
-				"initializr.language.groovy", "initializr.boot_version.1_0_2_RELEASE",
+				"initializr.language.groovy", "initializr.boot_version.1_5_17_RELEASE",
 				"initializr.client_id.spring").metricsCount(9);
 	}
 

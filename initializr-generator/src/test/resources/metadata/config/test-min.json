@@ -47,13 +47,13 @@
     "description": null,
     "content": [
       {
-        "name": "1.1.4",
-        "id": "1.1.4.RELEASE",
+        "name": "2.1.4",
+        "id": "2.1.4.RELEASE",
         "default": true
       },
       {
-        "name": "1.0.2",
-        "id": "1.0.2.RELEASE",
+        "name": "1.5.17",
+        "id": "1.5.17.RELEASE",
         "default": false
       }
     ]

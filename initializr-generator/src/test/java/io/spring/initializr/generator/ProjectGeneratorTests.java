@@ -486,9 +486,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", true).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.0.2.RELEASE");
+		request.setBootVersion("1.5.17.RELEASE");
 		generateMavenPom(request).hasParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT")
-				.hasProperty("spring-boot.version", "1.0.2.RELEASE")
+				.hasProperty("spring-boot.version", "1.5.17.RELEASE")
 				.hasBom("org.springframework.boot", "spring-boot-dependencies",
 						"${spring-boot.version}")
 				.hasBomsCount(1);
@@ -501,11 +501,11 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", true).build();
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("1.0.2.RELEASE");
+		request.setBootVersion("1.5.17.RELEASE");
 		generateGradleBuild(request)
-				.doesNotContain("ext['spring-boot.version'] = '1.0.2.RELEASE'")
+				.doesNotContain("ext['spring-boot.version'] = '1.5.17.RELEASE'")
 				.doesNotContain(
-						"mavenBom \"org.springframework.boot:spring-boot-dependencies:1.0.2.RELEASE\"");
+						"mavenBom \"org.springframework.boot:spring-boot-dependencies:1.5.17.RELEASE\"");
 	}
 
 	@Test
@@ -683,22 +683,22 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		foo.setBom("the-bom");
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("1.3.0.M1", "1.2.0"));
+				.add(BillOfMaterials.Mapping.create("[2.2.0.RELEASE,2.3.0.M1)", "1.0.0"));
+		bom.getMappings().add(BillOfMaterials.Mapping.create("2.3.0.M1", "1.2.0"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", foo).addBom("the-bom", bom).build();
 		applyMetadata(metadata);
 
 		// First version
 		ProjectRequest request = createProjectRequest("foo");
-		request.setBootVersion("1.2.5.RELEASE");
-		generateMavenPom(request).hasDependency(foo).hasSpringBootParent("1.2.5.RELEASE")
+		request.setBootVersion("2.2.5.RELEASE");
+		generateMavenPom(request).hasDependency(foo).hasSpringBootParent("2.2.5.RELEASE")
 				.hasBom("org.acme", "foo-bom", "1.0.0");
 
 		// Second version
 		ProjectRequest request2 = createProjectRequest("foo");
-		request2.setBootVersion("1.3.0.M1");
-		generateMavenPom(request2).hasDependency(foo).hasSpringBootParent("1.3.0.M1")
+		request2.setBootVersion("2.3.0.M1");
+		generateMavenPom(request2).hasDependency(foo).hasSpringBootParent("2.3.0.M1")
 				.hasBom("org.acme", "foo-bom", "1.2.0");
 	}
 
@@ -709,8 +709,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getRepositories().add("foo-repo");
 		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("1.3.0.M1", "1.2.0",
+				.add(BillOfMaterials.Mapping.create("[2.2.0.RELEASE,2.3.0.M1)", "1.0.0"));
+		bom.getMappings().add(BillOfMaterials.Mapping.create("2.3.0.M1", "1.2.0",
 				"foo-repo", "bar-repo"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", foo).addBom("the-bom", bom)
@@ -721,8 +721,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
 		// Second version
 		ProjectRequest request = createProjectRequest("foo");
-		request.setBootVersion("1.3.0.RELEASE");
-		generateMavenPom(request).hasDependency(foo).hasSpringBootParent("1.3.0.RELEASE")
+		request.setBootVersion("2.3.0.RELEASE");
+		generateMavenPom(request).hasDependency(foo).hasSpringBootParent("2.3.0.RELEASE")
 				.hasBom("org.acme", "foo-bom", "1.2.0")
 				.hasRepository("foo-repo", "repo", "http://example.com/foo", true)
 				.hasRepository("bar-repo", "repo", "http://example.com/bar", false)
@@ -843,16 +843,16 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void versionRangeWithPostProcessor() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
-		foo.getMappings().add(Dependency.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", null,
+		foo.getMappings().add(Dependency.Mapping.create("[2.2.0.RELEASE,2.3.0.M1)", null,
 				null, "1.0.0"));
-		foo.getMappings().add(Dependency.Mapping.create("1.3.0.M1", null, null, "1.2.0"));
+		foo.getMappings().add(Dependency.Mapping.create("2.3.0.M1", null, null, "1.2.0"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", foo).build();
 		applyMetadata(metadata);
 
 		// First without processor, get the correct version
 		ProjectRequest request = createProjectRequest("foo");
-		request.setBootVersion("1.2.5.RELEASE");
+		request.setBootVersion("2.2.5.RELEASE");
 		generateMavenPom(request)
 				.hasDependency(Dependency.withId("foo", "org.acme", "foo", "1.0.0"));
 
@@ -862,7 +862,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 					@Override
 					public void postProcessBeforeResolution(ProjectRequest r,
 							InitializrMetadata m) {
-						r.setBootVersion("1.3.0.M2");
+						r.setBootVersion("2.3.0.M2");
 					}
 				})));
 		generateMavenPom(request)

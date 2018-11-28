@@ -36,9 +36,9 @@ public class ProjectGenerationPostProcessorTests
 
 	@Test
 	public void postProcessorsInvoked() {
-		downloadZip("/starter.zip?bootVersion=1.2.4.RELEASE&javaVersion=1.6")
+		downloadZip("/starter.zip?bootVersion=2.0.4.RELEASE&javaVersion=1.8")
 				.isJavaProject().isMavenProject().pomAssert()
-				.hasSpringBootParent("1.2.3.RELEASE").hasProperty("java.version", "1.7");
+				.hasSpringBootParent("2.2.3.RELEASE").hasProperty("java.version", "1.7");
 	}
 
 	@Configuration
@@ -64,7 +64,7 @@ public class ProjectGenerationPostProcessorTests
 				public void postProcessBeforeResolution(ProjectRequest request,
 						InitializrMetadata metadata) {
 					request.setJavaVersion("1.2");
-					request.setBootVersion("1.2.3.RELEASE");
+					request.setBootVersion("2.2.3.RELEASE");
 				}
 			};
 		}

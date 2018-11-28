@@ -42,17 +42,17 @@ public class MainControllerDependenciesTests
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.1.4", response.getBody());
+		validateDependenciesOutput("2.1.4", response.getBody());
 	}
 
 	@Test
 	public void filteredDependencies() throws JSONException {
 		ResponseEntity<String> response = execute(
-				"/dependencies?bootVersion=1.2.1.RELEASE", String.class, null,
+				"/dependencies?bootVersion=2.2.1.RELEASE", String.class, null,
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.2.1", response.getBody());
+		validateDependenciesOutput("2.2.1", response.getBody());
 	}
 
 	protected void validateDependenciesOutput(String version, String actual)

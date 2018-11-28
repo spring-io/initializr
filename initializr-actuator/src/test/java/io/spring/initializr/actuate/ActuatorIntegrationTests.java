@@ -45,7 +45,7 @@ public class ActuatorIntegrationTests
 		String body = getRestTemplate().getForObject(createUrl("/actuator/info"),
 				String.class);
 		assertThat(body).contains("\"spring-boot\"");
-		assertThat(body).contains("\"version\":\"1.1.4.RELEASE\"");
+		assertThat(body).contains("\"version\":\"2.1.4.RELEASE\"");
 	}
 
 	@Test

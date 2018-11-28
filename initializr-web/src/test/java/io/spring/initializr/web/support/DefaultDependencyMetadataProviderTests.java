@@ -37,14 +37,14 @@ public class DefaultDependencyMetadataProviderTests {
 	@Test
 	public void filterDependencies() {
 		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setVersionRange("1.1.4.RELEASE");
+		first.setVersionRange("2.1.4.RELEASE");
 		Dependency second = Dependency.withId("second", "org.foo", "second");
 		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setVersionRange("1.1.8.RELEASE");
+		third.setVersionRange("2.1.8.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second, third).build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata,
-				Version.parse("1.1.5.RELEASE"));
+				Version.parse("2.1.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
 		assertThat(dependencyMetadata.getRepositories()).isEmpty();
 		assertThat(dependencyMetadata.getBoms()).isEmpty();

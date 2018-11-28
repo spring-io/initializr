@@ -1,6 +1,6 @@
 info:
   spring-boot:
-    version: 1.1.4.RELEASE
+    version: 2.1.4.RELEASE
 
 initializr:
   env:
@@ -11,10 +11,10 @@ initializr:
         versionProperty: my-api.version
         additionalBoms: ['my-api-dependencies-bom']
         mappings:
-          - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+          - versionRange: "[2.0.0.RELEASE,2.1.6.RELEASE)"
             version: 1.0.0.RELEASE
             repositories: my-api-repo-1
-          - versionRange: "1.2.1.RELEASE"
+          - versionRange: "2.2.1.RELEASE"
             version: 2.0.0.RELEASE
             repositories: my-api-repo-2
       my-api-dependencies-bom:
@@ -25,9 +25,9 @@ initializr:
     kotlin:
       defaultVersion: 1.2
       mappings:
-        - versionRange: "[1.0.0.RELEASE,1.2.0.RELEASE)"
+        - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
           version: 1.0
-        - versionRange: "[1.2.0.RELEASE,1.5.0.RELEASE)"
+        - versionRange: "[2.0.0.M1,2.1.0.M1)"
           version: 1.1
     repositories:
       my-api-repo-1:
@@ -85,12 +85,12 @@ initializr:
           artifactId: biz
           scope: runtime
           version: 1.3.5
-          versionRange: 1.2.0.BUILD-SNAPSHOT
+          versionRange: 2.2.0.BUILD-SNAPSHOT
         - name: Bur
           id: org.acme:bur
           version: 2.1.0
           scope: test
-          versionRange: "[1.1.4.RELEASE,1.2.0.BUILD-SNAPSHOT)"
+          versionRange: "[2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)"
         - name: My API
           id : my-api
           groupId: org.acme
@@ -156,12 +156,12 @@ initializr:
       default: false
   bootVersions:
     - name : Latest SNAPSHOT
-      id: 1.2.0.BUILD-SNAPSHOT
+      id: 2.2.0.BUILD-SNAPSHOT
       default: false
-    - name: 1.1.4
-      id: 1.1.4.RELEASE
+    - name: 2.1.4
+      id: 2.1.4.RELEASE
       default: true
-    - name: 1.0.2
-      id: 1.0.2.RELEASE
+    - name: 1.5.17
+      id: 1.5.17.RELEASE
       default: false
 
