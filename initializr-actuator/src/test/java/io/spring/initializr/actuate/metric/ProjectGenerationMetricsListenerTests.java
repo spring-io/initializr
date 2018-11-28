@@ -192,7 +192,7 @@ public class ProjectGenerationMetricsListenerTests {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
-		this.metricsAssert.hasValue(1, "initializr.boot_version.1_2_3_RELEASE");
+		this.metricsAssert.hasValue(1, "initializr.boot_version.2_1_1_RELEASE");
 	}
 
 	@Test

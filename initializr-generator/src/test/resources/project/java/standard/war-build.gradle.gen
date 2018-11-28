@@ -10,10 +10,11 @@ buildscript {
 	}
 }
 
-apply plugin: 'groovy'
-apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -23,9 +24,12 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	providedRuntime
+}
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter')
-	implementation('org.codehaus.groovy:groovy')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

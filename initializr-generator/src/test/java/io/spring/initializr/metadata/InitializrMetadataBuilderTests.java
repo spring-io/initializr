@@ -114,7 +114,7 @@ public class InitializrMetadataBuilderTests {
 		assertThat(myBom).isNotNull();
 		assertThat(myBom.getGroupId()).isEqualTo("org.acme");
 		assertThat(myBom.getArtifactId()).isEqualTo("my-bom");
-		assertThat(myBom.getVersion()).isEqualTo("1.2.3.RELEASE");
+		assertThat(myBom.getVersion()).isEqualTo("2.1.1.RELEASE");
 
 		BillOfMaterials anotherBom = boms.get("another-bom");
 		assertThat(anotherBom).isNotNull();

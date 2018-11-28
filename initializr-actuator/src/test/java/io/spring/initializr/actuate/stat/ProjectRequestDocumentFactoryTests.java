@@ -43,7 +43,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 		assertThat(document.getGroupId()).isEqualTo("com.example");
 		assertThat(document.getArtifactId()).isEqualTo("demo");
 		assertThat(document.getPackageName()).isEqualTo("com.example.demo");
-		assertThat(document.getBootVersion()).isEqualTo("1.2.3.RELEASE");
+		assertThat(document.getBootVersion()).isEqualTo("2.1.1.RELEASE");
 		assertThat(document.getJavaVersion()).isEqualTo("1.8");
 		assertThat(document.getLanguage()).isEqualTo("java");
 		assertThat(document.getPackaging()).isEqualTo("jar");

@@ -52,7 +52,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardJar() {
+	public void currentGenerationJar() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
 		generateProject(request).isGenericProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
@@ -60,7 +60,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardWar() {
+	public void currentGenerationWar() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setLanguage(this.language);
 		request.setPackaging("war");
@@ -69,7 +69,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardMainClass() {
+	public void currentGenerationMainClass() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
 
@@ -81,7 +81,19 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardTestClass() {
+	public void previousGenerationMainClass() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage(this.language);
+		request.setBootVersion("1.5.18.RELEASE");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert("src/main/" + this.language
+				+ "/com/example/demo/DemoApplication." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language + "/previous/"
+						+ "/DemoApplication." + this.expectedExtension));
+	}
+
+	@Test
+	public void currentGenerationTestClass() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
 
@@ -93,7 +105,7 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardTestClassWeb() {
+	public void currentGenerationTestClassWeb() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setLanguage(this.language);
 
@@ -105,79 +117,28 @@ public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests
 	}
 
 	@Test
-	public void standardServletInitializer() {
-		testServletInitializr(null, "standard");
-	}
-
-	@Test
-	public void springBoot14M2ServletInitializer() {
-		testServletInitializr("1.4.0.M2", "standard");
-	}
-
-	@Test
-	public void springBoot14ServletInitializer() {
-		testServletInitializr("1.4.0.M3", "spring-boot-1.4");
-	}
-
-	@Test
-	public void springBoot2ServletInitializer() {
-		testServletInitializr("2.0.0.M3", "spring-boot-2.0");
-	}
-
-	private void testServletInitializr(String bootVersion, String expectedOutput) {
+	public void currentGenerationServletInitializer() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
 		request.setPackaging("war");
-		if (bootVersion != null) {
-			request.setBootVersion(bootVersion);
-		}
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert("src/main/" + this.language
 				+ "/com/example/demo/ServletInitializer." + this.extension)
-				.equalsTo(new ClassPathResource(
-						"project/" + this.language + "/" + expectedOutput
-								+ "/ServletInitializer." + this.expectedExtension));
+				.equalsTo(new ClassPathResource("project/" + this.language + "/standard/"
+						+ "ServletInitializer." + this.expectedExtension));
 	}
 
 	@Test
-	public void springBoot14M1TestClass() {
+	public void previousGenerationServletInitializer() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(this.language);
-		request.setBootVersion("1.4.0.M1");
-
+		request.setBootVersion("1.5.18.RELEASE");
+		request.setPackaging("war");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTests." + this.expectedExtension));
-	}
-
-	@Test
-	public void springBoot14TestClass() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
-		request.setBootVersion("1.4.0.M2");
-
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/spring-boot-1.4/DemoApplicationTests."
-						+ this.expectedExtension));
-	}
-
-	@Test
-	public void springBoot14TestClassWeb() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(this.language);
-		request.setBootVersion("1.4.0.M2");
-
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/spring-boot-1.4/DemoApplicationTests."
-						+ this.expectedExtension));
+		project.sourceCodeAssert("src/main/" + this.language
+				+ "/com/example/demo/ServletInitializer." + this.extension)
+				.equalsTo(new ClassPathResource("project/" + this.language + "/previous/"
+						+ "ServletInitializer." + this.expectedExtension));
 	}
 
 }

@@ -56,21 +56,21 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardJarJava() {
-		testStandardJar("java");
+	public void currentGenerationJarJava() {
+		testCurrentGenerationJar("java");
 	}
 
 	@Test
-	public void standardJarGroovy() {
-		testStandardJar("groovy");
+	public void currentGenerationJarGroovy() {
+		testCurrentGenerationJar("groovy");
 	}
 
 	@Test
-	public void standardJarKotlin() {
-		testStandardJar("kotlin");
+	public void currentGenerationJarKotlin() {
+		testCurrentGenerationJar("kotlin");
 	}
 
-	private void testStandardJar(String language) {
+	private void testCurrentGenerationJar(String language) {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
@@ -79,27 +79,61 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void standardWarJava() {
-		testStandardWar("java");
+	public void currentGenerationWarJava() {
+		testCurrentGenerationWar("java");
 	}
 
 	@Test
-	public void standardWarGroovy() {
-		testStandardWar("groovy");
+	public void currentGenerationWarGroovy() {
+		testCurrentGenerationWar("groovy");
 	}
 
 	@Test
-	public void standardWarKotlin() {
-		testStandardWar("kotlin");
+	public void currentGenerationWarKotlin() {
+		testCurrentGenerationWar("kotlin");
 	}
 
-	private void testStandardWar(String language) {
+	private void testCurrentGenerationWar(String language) {
 		ProjectRequest request = createProjectRequest("web");
 		request.setPackaging("war");
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/war/" + this.assertFileName));
+				"project/" + language + "/standard/war-" + this.assertFileName));
+	}
+
+	@Test
+	public void previousGenerationJarJava() {
+		testPreviousGenerationJar("java");
+	}
+
+	@Test
+	public void previousGenerationJarGroovy() {
+		testPreviousGenerationJar("groovy");
+	}
+
+	@Test
+	public void previousGenerationJarKotlin() {
+		testPreviousGenerationJar("kotlin");
+	}
+
+	private void testPreviousGenerationJar(String language) {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage(language);
+		request.setBootVersion("1.5.18.RELEASE");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/previous/" + this.assertFileName));
+	}
+
+	@Test
+	public void kotlinJava11() {
+		ProjectRequest request = createProjectRequest();
+		request.setLanguage("kotlin");
+		request.setJavaVersion("11");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/kotlin-java11-" + this.assertFileName));
 	}
 
 	@Test
@@ -183,63 +217,6 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		ProjectAssert project = generateProject(request);
 		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
 				"project/" + this.build + "/bom-ordering-" + this.assertFileName));
-	}
-
-	@Test
-	public void kotlinJava6() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage("kotlin");
-		request.setJavaVersion("1.6");
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/kotlin-java6-" + this.assertFileName));
-	}
-
-	@Test
-	public void kotlinJava7() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage("kotlin");
-		request.setJavaVersion("1.7");
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/kotlin-java7-" + this.assertFileName));
-	}
-
-	@Test
-	public void kotlinSpringBoot2Legacy() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage("kotlin");
-		request.setBootVersion("2.0.0.M5");
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
-				.equalsTo(new ClassPathResource(
-						"project/kotlin/spring-boot-2.0/DemoApplicationLegacy.kt.gen"));
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
-				+ this.build + "/kotlin-springboot2-legacy-" + this.assertFileName));
-	}
-
-	@Test
-	public void kotlinSpringBoot2() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage("kotlin");
-		request.setBootVersion("2.0.0.M6");
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/kotlin/com/example/demo/DemoApplication.kt")
-				.equalsTo(new ClassPathResource(
-						"project/kotlin/spring-boot-2.0/DemoApplication.kt.gen"));
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/kotlin-springboot2-" + this.assertFileName));
-	}
-
-	@Test
-	public void kotlinJava9() {
-		ProjectRequest request = createProjectRequest();
-		request.setLanguage("kotlin");
-		request.setBootVersion("2.0.0.M6");
-		request.setJavaVersion("9");
-		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/kotlin-java9-" + this.assertFileName));
 	}
 
 	@Override
