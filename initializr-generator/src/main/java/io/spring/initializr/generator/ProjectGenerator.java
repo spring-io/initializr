@@ -64,6 +64,8 @@ public class ProjectGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(ProjectGenerator.class);
 
+	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
+
 	private static final Version VERSION_2_0_0 = Version.parse("2.0.0.RELEASE");
 
 	@Autowired
@@ -341,6 +343,11 @@ public class ProjectGenerator {
 
 		// request resolved so we can log what has been requested
 		Version bootVersion = Version.safeParse(request.getBootVersion());
+		if (bootVersion.compareTo(VERSION_1_5_0) < 0) {
+			throw new InvalidProjectRequestException("Invalid Spring Boot version "
+					+ bootVersion + " must be 1.5.0 or higher");
+		}
+
 		List<Dependency> dependencies = request.getResolvedDependencies();
 		List<String> dependencyIds = dependencies.stream().map(Dependency::getId)
 				.collect(Collectors.toList());

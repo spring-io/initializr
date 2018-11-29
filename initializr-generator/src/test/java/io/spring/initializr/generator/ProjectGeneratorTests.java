@@ -856,6 +856,16 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
+	public void invalidSpringBootVersion() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setType("maven-project");
+		request.setBootVersion("1.2.3.M4");
+		this.thrown.expect(InvalidProjectRequestException.class);
+		this.thrown.expectMessage("1.2.3.M4");
+		this.projectGenerator.generateMavenPom(request);
+	}
+
+	@Test
 	public void kotlinWithMavenUseJpaFacetHasJpaKotlinPlugin() {
 		applyJpaMetadata(true);
 		ProjectRequest request = createProjectRequest("data-jpa");
