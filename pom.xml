@@ -41,7 +41,7 @@
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spring.boot.version>2.1.0.RELEASE</spring.boot.version>
+		<spring.boot.version>2.1.1.RELEASE</spring.boot.version>
 		<spring-cloud-contract.version>2.0.0.RELEASE</spring-cloud-contract.version>
 		<spring-javaformat.version>0.0.6</spring-javaformat.version>
 	</properties>
