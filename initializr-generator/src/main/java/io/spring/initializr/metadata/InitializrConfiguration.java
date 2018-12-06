@@ -495,6 +495,10 @@ public class InitializrConfiguration {
 		 */
 		public static class Maven {
 
+			private static final String DEFAULT_PARENT_GROUP_ID = "org.springframework.boot";
+
+			private static final String DEFAULT_PARENT_ARTIFACT_ID = "spring-boot-starter-parent";
+
 			/**
 			 * Custom parent pom to use for generated projects.
 			 */
@@ -519,8 +523,20 @@ public class InitializrConfiguration {
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
 				return (StringUtils.hasText(this.parent.groupId) ? this.parent
-						: new ParentPom("org.springframework.boot",
-								"spring-boot-starter-parent", bootVersion));
+						: new ParentPom(DEFAULT_PARENT_GROUP_ID,
+								DEFAULT_PARENT_ARTIFACT_ID, bootVersion));
+			}
+
+			/**
+			 * Check if the specified {@link ParentPom} is the default spring boot starter
+			 * parent.
+			 * @param parentPom the parent pom to check
+			 * @return {@code true} if the {@code parentPom} is the spring boot starter
+			 * parent
+			 */
+			public boolean isSpringBootStarterParent(ParentPom parentPom) {
+				return DEFAULT_PARENT_GROUP_ID.equals(parentPom.getGroupId())
+						&& DEFAULT_PARENT_ARTIFACT_ID.equals(parentPom.getArtifactId());
 			}
 
 			/**

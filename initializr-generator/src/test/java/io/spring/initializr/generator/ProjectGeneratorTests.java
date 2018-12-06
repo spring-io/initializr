@@ -384,7 +384,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	public void defaultMavenPomHasSpringBootParent() {
 		ProjectRequest request = createProjectRequest("web");
-		generateMavenPom(request).hasSpringBootParent(request.getBootVersion());
+		generateMavenPom(request).hasSpringBootParent(request.getBootVersion())
+				.hasNoProperty("project.build.sourceEncoding")
+				.hasNoProperty("project.reporting.outputEncoding");
 	}
 
 	@Test
@@ -395,7 +397,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		applyMetadata(metadata);
 		ProjectRequest request = createProjectRequest("web");
 		generateMavenPom(request).hasParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT")
-				.hasBomsCount(0);
+				.hasBomsCount(0).hasProperty("project.build.sourceEncoding", "UTF-8")
+				.hasProperty("project.reporting.outputEncoding", "UTF-8");
 	}
 
 	@Test
@@ -410,7 +413,8 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.hasProperty("spring-boot.version", "1.5.17.RELEASE")
 				.hasBom("org.springframework.boot", "spring-boot-dependencies",
 						"${spring-boot.version}")
-				.hasBomsCount(1);
+				.hasBomsCount(1).hasProperty("project.build.sourceEncoding", "UTF-8")
+				.hasProperty("project.reporting.outputEncoding", "UTF-8");
 	}
 
 	@Test

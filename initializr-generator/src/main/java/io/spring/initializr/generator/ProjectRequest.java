@@ -239,10 +239,6 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 		}
 		else {
-			this.buildProperties.getMaven().put("project.build.sourceEncoding",
-					() -> "UTF-8");
-			this.buildProperties.getMaven().put("project.reporting.outputEncoding",
-					() -> "UTF-8");
 			this.buildProperties.getVersions().put(VersionProperty.of("java.version"),
 					this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {

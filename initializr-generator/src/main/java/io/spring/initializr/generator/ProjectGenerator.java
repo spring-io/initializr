@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import io.spring.initializr.InitializrException;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -364,14 +365,19 @@ public class ProjectGenerator {
 
 		if (isMavenBuild(request)) {
 			model.put("mavenBuild", true);
-			ParentPom parentPom = metadata.getConfiguration().getEnv().getMaven()
-					.resolveParentPom(request.getBootVersion());
+			Maven maven = metadata.getConfiguration().getEnv().getMaven();
+			ParentPom parentPom = maven.resolveParentPom(request.getBootVersion());
 			if (parentPom.isIncludeSpringBootBom()
 					&& !request.getBoms().containsKey("spring-boot")) {
 				request.getBoms().put("spring-boot", metadata.createSpringBootBom(
 						request.getBootVersion(), "spring-boot.version"));
 			}
-
+			if (!maven.isSpringBootStarterParent(parentPom)) {
+				request.getBuildProperties().getMaven()
+						.put("project.build.sourceEncoding", () -> "UTF-8");
+				request.getBuildProperties().getMaven()
+						.put("project.reporting.outputEncoding", () -> "UTF-8");
+			}
 			model.put("mavenParentGroupId", parentPom.getGroupId());
 			model.put("mavenParentArtifactId", parentPom.getArtifactId());
 			model.put("mavenParentVersion", parentPom.getVersion());
