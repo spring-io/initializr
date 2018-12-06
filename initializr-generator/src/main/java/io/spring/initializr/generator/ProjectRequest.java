@@ -30,7 +30,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionProperty;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
@@ -239,11 +238,9 @@ public class ProjectRequest extends BasicProjectRequest {
 			}
 		}
 		else {
-			this.buildProperties.getVersions().put(VersionProperty.of("java.version"),
-					this::getJavaVersion);
+			this.buildProperties.getMaven().put("java.version", this::getJavaVersion);
 			if ("kotlin".equals(getLanguage())) {
-				this.buildProperties.getVersions()
-						.put(VersionProperty.of("kotlin.version"), kotlinVersion);
+				this.buildProperties.getMaven().put("kotlin.version", kotlinVersion);
 			}
 		}
 	}

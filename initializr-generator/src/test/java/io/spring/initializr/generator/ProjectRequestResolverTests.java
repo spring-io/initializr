@@ -24,7 +24,6 @@ import java.util.Map;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import io.spring.initializr.util.VersionProperty;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,9 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 public class ProjectRequestResolverTests {
-
-	private static final VersionProperty VERSION_PROPERTY = VersionProperty
-			.of("java.version");
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", "web", "security", "data-jpa").build();
@@ -60,7 +56,7 @@ public class ProjectRequestResolverTests {
 		ProjectRequest request = resolve(createMavenProjectRequest(),
 				this.postProcessors);
 		assertThat(request.getJavaVersion()).isEqualTo("1.2");
-		assertThat(request.getBuildProperties().getVersions().get(VERSION_PROPERTY).get())
+		assertThat(request.getBuildProperties().getMaven().get("java.version").get())
 				.isEqualTo("1.2");
 	}
 

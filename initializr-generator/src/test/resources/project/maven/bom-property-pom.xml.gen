@@ -16,8 +16,8 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<foo.version>1.3.3</foo.version>
 		<java.version>1.8</java.version>
+		<foo.version>1.3.3</foo.version>
 	</properties>
 
 	<dependencies>
