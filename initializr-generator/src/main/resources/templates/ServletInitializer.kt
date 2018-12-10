@@ -5,7 +5,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder
 
 class ServletInitializer : SpringBootServletInitializer() {
 
-	override fun configure(application: SpringApplicationBuilder) : SpringApplicationBuilder {
+	override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {
 		return application.sources({{applicationName}}::class.java)
 	}
 

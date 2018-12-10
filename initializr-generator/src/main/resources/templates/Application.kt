@@ -13,10 +13,10 @@ class {{applicationName}}
 
 fun main(args: Array<String>) {
 {{^kotlinSupport}}
-    SpringApplication.run({{applicationName}}::class.java, *args)
+	SpringApplication.run({{applicationName}}::class.java, *args)
 {{/kotlinSupport}}
 {{#kotlinSupport}}
-    runApplication<{{applicationName}}>(*args)
+	runApplication<{{applicationName}}>(*args)
 {{/kotlinSupport}}
 }
 
