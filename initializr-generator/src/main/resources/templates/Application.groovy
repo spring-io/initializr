@@ -9,4 +9,6 @@ class {{applicationName}} {
 	static void main(String[] args) {
 		SpringApplication.run {{applicationName}}, args
 	}
+
 }
+
