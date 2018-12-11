@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.18.RELEASE</version>
+		<version>2.1.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -21,8 +21,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<groupId>org.acme</groupId>
+			<artifactId>bar</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.acme</groupId>
+			<artifactId>foo</artifactId>
 		</dependency>
 
 		<dependency>
@@ -40,5 +44,24 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>foo-repository</id>
+			<name>foo-repo</name>
+			<url>https://example.com/foo</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>bar-repository</id>
+			<name>bar-repo</name>
+			<url>https://example.com/bar</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 </project>

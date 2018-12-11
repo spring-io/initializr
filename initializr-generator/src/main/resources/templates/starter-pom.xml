@@ -43,17 +43,17 @@
 			<artifactId>groovy</artifactId>
 		</dependency>
 		{{/groovy}}
-		{{#kotlin}}                                                     
+		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>
+			<artifactId>kotlin-reflect</artifactId>
 			{{^kotlinSupport}}
 			<version>${kotlin.version}</version>
 			{{/kotlinSupport}}
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
+			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>
 			{{^kotlinSupport}}
 			<version>${kotlin.version}</version>
 			{{/kotlinSupport}}
@@ -181,8 +181,8 @@
 			{{/groovy}}
 			{{#kotlin}}
 			<plugin>
-				<artifactId>kotlin-maven-plugin</artifactId>
 				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
 				{{^kotlinSupport}}
 				<version>${kotlin.version}</version>
 				{{/kotlinSupport}}
@@ -274,6 +274,5 @@
 		</pluginRepository>
 	</pluginRepositories>
 {{/isRelease}}
-
 
 </project>

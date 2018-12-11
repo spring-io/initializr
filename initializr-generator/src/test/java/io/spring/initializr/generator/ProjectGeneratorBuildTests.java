@@ -219,6 +219,39 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 				"project/" + this.build + "/bom-ordering-" + this.assertFileName));
 	}
 
+	@Test
+	public void repositories() {
+		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
+		foo.setRepository("foo-repository");
+		Dependency bar = Dependency.withId("bar", "org.acme", "bar");
+		bar.setRepository("bar-repository");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", foo, bar)
+				.addRepository("foo-repository", "foo-repo", "https://example.com/foo",
+						false)
+				.addRepository("bar-repository", "bar-repo", "https://example.com/bar",
+						true)
+				.build();
+		applyMetadata(metadata);
+		ProjectRequest request = createProjectRequest("foo", "bar");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
+				"project/" + this.build + "/repositories-" + this.assertFileName));
+	}
+
+	@Test
+	public void repositoriesMilestone() {
+		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", foo).build();
+		applyMetadata(metadata);
+		ProjectRequest request = createProjectRequest("foo");
+		request.setBootVersion("2.2.0.M1");
+		ProjectAssert project = generateProject(request);
+		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
+				+ this.build + "/repositories-milestone-" + this.assertFileName));
+	}
+
 	@Override
 	public ProjectRequest createProjectRequest(String... styles) {
 		ProjectRequest request = super.createProjectRequest(styles);
