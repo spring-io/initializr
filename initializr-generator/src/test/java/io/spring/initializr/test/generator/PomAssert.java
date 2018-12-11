@@ -139,8 +139,14 @@ public class PomAssert {
 
 	public PomAssert hasPackaging(String packaging) {
 		try {
-			assertThat(this.eng.evaluate(createRootNodeXPath("packaging"), this.doc))
-					.isEqualTo(packaging);
+			String path = createRootNodeXPath("packaging");
+			if ("jar".equals(packaging)) {
+				assertThat(this.eng.getMatchingNodes(path, this.doc).getLength())
+						.isEqualTo(0);
+			}
+			else {
+				assertThat(this.eng.evaluate(path, this.doc)).isEqualTo(packaging);
+			}
 		}
 		catch (XpathException ex) {
 			throw new IllegalStateException("Cannot find path", ex);

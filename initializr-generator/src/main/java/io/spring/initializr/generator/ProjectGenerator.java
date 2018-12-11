@@ -382,6 +382,7 @@ public class ProjectGenerator {
 			model.put("mavenParentArtifactId", parentPom.getArtifactId());
 			model.put("mavenParentVersion", parentPom.getVersion());
 			model.put("includeSpringBootBom", parentPom.isIncludeSpringBootBom());
+			model.put("defaultPackaging", "jar".equals(request.getPackaging()));
 		}
 
 		model.put("repositoryValues", request.getRepositories().entrySet());

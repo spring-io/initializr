@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>{{groupId}}</groupId>
 	<artifactId>{{artifactId}}</artifactId>
-	<version>{{version}}</version>
-	<packaging>{{packaging}}</packaging>
+	<version>{{version}}</version>{{^defaultPackaging}}
+	<packaging>{{packaging}}</packaging>{{/defaultPackaging}}
 	<name>{{name}}</name>
 	<description>{{description}}</description>
 
