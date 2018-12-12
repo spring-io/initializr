@@ -49,9 +49,6 @@
 			<id>foo-repository</id>
 			<name>foo-repo</name>
 			<url>https://example.com/foo</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</repository>
 		<repository>
 			<id>bar-repository</id>

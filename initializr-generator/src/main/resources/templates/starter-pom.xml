@@ -246,15 +246,16 @@
 			<id>{{key}}</id>
 			<name>{{value.name}}</name>
 			<url>{{value.url}}</url>
+			{{#value.snapshotsEnabled}}
 			<snapshots>
-				<enabled>{{value.snapshotsEnabled}}</enabled>
+				<enabled>true</enabled>
 			</snapshots>
+			{{/value.snapshotsEnabled}}
 		</repository>
 		{{/repositoryValues}}
 	</repositories>
 {{/hasRepositories}}
 {{^isRelease}}
-
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-snapshots</id>
@@ -268,9 +269,6 @@
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 {{/isRelease}}
