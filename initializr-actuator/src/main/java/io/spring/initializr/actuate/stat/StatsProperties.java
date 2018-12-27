@@ -39,7 +39,7 @@ public class StatsProperties {
 	}
 
 	/**
-	 * Elasicsearch configuration.
+	 * Elasticsearch configuration.
 	 */
 	public static final class Elastic {
 
