@@ -1,0 +1,24 @@
+{
+  "generationTimestamp": 0,
+  "type": "gradle-project",
+  "buildSystem": "gradle",
+  "groupId": "com.example.acme",
+  "artifactId": "test",
+  "javaVersion": "1.8",
+  "language": "java",
+  "packaging": "jar",
+  "packageName": "com.example.acme.test",
+  "version": {
+    "id": "2.1.0.RELEASE",
+    "major": "2",
+    "minor": "2.1"
+  },
+  "dependencies": {
+    "id": "data-jpa web",
+    "values": [
+      "web",
+      "data-jpa"
+    ],
+    "count": 2
+  }
+}

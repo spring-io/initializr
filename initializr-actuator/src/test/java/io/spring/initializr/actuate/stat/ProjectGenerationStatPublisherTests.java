@@ -16,27 +16,40 @@
 
 package io.spring.initializr.actuate.stat;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.Customization;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.RequestMatcher;
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -127,13 +140,125 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	@Test
 	public void publishDocument() {
 		ProjectRequest request = createProjectRequest();
-		request.setGroupId("com.example.foo");
-		request.setArtifactId("my-project");
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("project");
+		request.setType("maven-project");
+		request.setBootVersion("2.1.1.RELEASE");
+		request.setDependencies(Arrays.asList("web", "data-jpa"));
+		request.setLanguage("java");
+		request.getParameters().put("user-agent", "curl/1.2.4");
+		request.getParameters().put("cf-connecting-ip", "10.0.0.42");
+		request.getParameters().put("cf-ipcountry", "BE");
 
 		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
 				.andExpect(method(HttpMethod.POST))
-				.andExpect(jsonPath("$.groupId").value("com.example.foo"))
-				.andExpect(jsonPath("$.artifactId").value("my-project"))
+				.andExpect(json("stat/request-simple.json"))
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocumentWithNoClientInformation() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("test");
+		request.setType("gradle-project");
+		request.setBootVersion("2.1.0.RELEASE");
+		request.setDependencies(Arrays.asList("web", "data-jpa"));
+		request.setLanguage("java");
+
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(json("stat/request-no-client.json"))
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocumentWithInvalidType() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("test");
+		request.setType("not-a-type");
+		request.setBootVersion("2.1.0.RELEASE");
+		request.setDependencies(Arrays.asList("web", "data-jpa"));
+		request.setLanguage("java");
+
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(json("stat/request-invalid-type.json"))
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocumentWithInvalidLanguage() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("test");
+		request.setType("gradle-project");
+		request.setBootVersion("2.1.0.RELEASE");
+		request.setDependencies(Arrays.asList("web", "data-jpa"));
+		request.setLanguage("c");
+
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(json("stat/request-invalid-language.json"))
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocumentWithInvalidJavaVersion() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("test");
+		request.setType("gradle-project");
+		request.setBootVersion("2.1.0.RELEASE");
+		request.setDependencies(Arrays.asList("web", "data-jpa"));
+		request.setLanguage("java");
+		request.setJavaVersion("1.2");
+
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(json("stat/request-invalid-java-version.json"))
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocumentWithInvalidDependencies() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.acme");
+		request.setArtifactId("test");
+		request.setType("gradle-project");
+		request.setBootVersion("2.1.0.RELEASE");
+		request.setDependencies(Arrays.asList("invalid-2", "web", "invalid-1"));
+		request.setLanguage("java");
+
+		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(json("stat/request-invalid-dependencies.json"))
 				.andRespond(withStatus(HttpStatus.CREATED)
 						.body(mockResponse(UUID.randomUUID().toString(), true))
 						.contentType(MediaType.APPLICATION_JSON));
@@ -194,6 +319,41 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 		Elastic elastic = properties.getElastic();
 		elastic.setUri("http://example.com/elastic");
 		return properties;
+	}
+
+	private static RequestMatcher json(String location) {
+		return (request) -> {
+			MockClientHttpRequest mockRequest = (MockClientHttpRequest) request;
+			assertJsonContent(readJson(location), mockRequest.getBodyAsString());
+		};
+	}
+
+	private static String readJson(String location) {
+		try {
+			try (InputStream in = new ClassPathResource(location).getInputStream()) {
+				return StreamUtils.copyToString(in, StandardCharsets.UTF_8);
+			}
+		}
+		catch (IOException ex) {
+			throw new IllegalStateException("Fail to read json from " + location, ex);
+		}
+	}
+
+	private static void assertJsonContent(String expected, String actual) {
+		try {
+			JSONAssert.assertEquals(expected, actual, new CustomComparator(
+					JSONCompareMode.STRICT,
+					Customization.customization("generationTimestamp", (o1, o2) -> {
+						Instant timestamp = Instant.ofEpochMilli((long) o1);
+						return timestamp
+								.isAfter(Instant.now().minus(2, ChronoUnit.SECONDS))
+								&& timestamp.isBefore(Instant.now());
+					})));
+		}
+		catch (JSONException ex) {
+			throw new AssertionError(
+					"Failed to parse expected or actual JSON request content", ex);
+		}
 	}
 
 }

@@ -18,15 +18,19 @@ package io.spring.initializr.actuate.stat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import io.spring.initializr.actuate.stat.ProjectRequestDocument.ClientInformation;
+import io.spring.initializr.actuate.stat.ProjectRequestDocument.DependencyInformation;
+import io.spring.initializr.actuate.stat.ProjectRequestDocument.ErrorStateInformation;
+import io.spring.initializr.actuate.stat.ProjectRequestDocument.VersionInformation;
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.generator.ProjectRequestEvent;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
+import io.spring.initializr.util.Version;
 
 import org.springframework.util.StringUtils;
 
@@ -36,9 +40,6 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  */
 public class ProjectRequestDocumentFactory {
-
-	private static final Pattern IP_PATTERN = Pattern
-			.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
 	private final InitializrMetadataProvider metadataProvider;
 
@@ -52,93 +53,88 @@ public class ProjectRequestDocumentFactory {
 
 		ProjectRequestDocument document = new ProjectRequestDocument();
 		document.setGenerationTimestamp(event.getTimestamp());
-
-		handleCloudFlareHeaders(request, document);
-		String candidate = (String) request.getParameters().get("x-forwarded-for");
-		if (!StringUtils.hasText(document.getRequestIp()) && candidate != null) {
-			document.setRequestIp(candidate);
-			document.setRequestIpv4(extractIpv4(candidate));
-		}
-
-		Agent agent = extractAgentInformation(request);
-		if (agent != null) {
-			document.setClientId(agent.getId().getId());
-			document.setClientVersion(agent.getVersion());
-		}
-
 		document.setGroupId(request.getGroupId());
 		document.setArtifactId(request.getArtifactId());
 		document.setPackageName(request.getPackageName());
-		document.setBootVersion(request.getBootVersion());
+		document.setVersion(determineVersionInformation(request));
+		document.setClient(determineClientInformation(request));
 
 		document.setJavaVersion(request.getJavaVersion());
 		if (StringUtils.hasText(request.getJavaVersion())
 				&& metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
-			document.setInvalid(true);
-			document.setInvalidJavaVersion(true);
+			document.triggerError().setJavaVersion(true);
 		}
 
 		document.setLanguage(request.getLanguage());
 		if (StringUtils.hasText(request.getLanguage())
 				&& metadata.getLanguages().get(request.getLanguage()) == null) {
-			document.setInvalid(true);
-			document.setInvalidLanguage(true);
+			document.triggerError().setLanguage(true);
 		}
 
 		document.setPackaging(request.getPackaging());
 		if (StringUtils.hasText(request.getPackaging())
 				&& metadata.getPackagings().get(request.getPackaging()) == null) {
-			document.setInvalid(true);
-			document.setInvalidPackaging(true);
+			document.triggerError().setPackaging(true);
 		}
 
 		document.setType(request.getType());
+		document.setBuildSystem(determineBuildSystem(request));
 		if (StringUtils.hasText(request.getType())
 				&& metadata.getTypes().get(request.getType()) == null) {
-			document.setInvalid(true);
-			document.setInvalidType(true);
+			document.triggerError().setType(true);
 		}
 
 		// Let's not rely on the resolved dependencies here
 		List<String> dependencies = new ArrayList<>();
 		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
-		dependencies.forEach((id) -> {
-			if (metadata.getDependencies().get(id) != null) {
-				document.getDependencies().add(id);
-			}
-			else {
-				document.setInvalid(true);
-				document.getInvalidDependencies().add(id);
-			}
-		});
+		List<String> validDependencies = dependencies.stream()
+				.filter((id) -> metadata.getDependencies().get(id) != null)
+				.collect(Collectors.toList());
+		document.setDependencies(new DependencyInformation(validDependencies));
+		List<String> invalidDependencies = dependencies.stream()
+				.filter((id) -> (!validDependencies.contains(id)))
+				.collect(Collectors.toList());
+		if (!invalidDependencies.isEmpty()) {
+			document.triggerError().triggerInvalidDependencies(invalidDependencies);
+		}
 
 		// Let's make sure that the document is flagged as invalid no matter what
 		if (event instanceof ProjectFailedEvent) {
+			ErrorStateInformation errorState = document.triggerError();
 			ProjectFailedEvent failed = (ProjectFailedEvent) event;
-			document.setInvalid(true);
 			if (failed.getCause() != null) {
-				document.setErrorMessage(failed.getCause().getMessage());
+				errorState.setMessage(failed.getCause().getMessage());
 			}
 		}
-
 		return document;
 	}
 
-	private static void handleCloudFlareHeaders(ProjectRequest request,
-			ProjectRequestDocument document) {
-		String candidate = (String) request.getParameters().get("cf-connecting-ip");
-		if (StringUtils.hasText(candidate)) {
-			document.setRequestIp(candidate);
-			document.setRequestIpv4(extractIpv4(candidate));
-		}
-		String country = (String) request.getParameters().get("cf-ipcountry");
-		if (StringUtils.hasText(country) && !"xx".equalsIgnoreCase(country)) {
-			document.setRequestCountry(country);
-		}
+	private String determineBuildSystem(ProjectRequest request) {
+		String type = request.getType();
+		String[] elements = type.split("-");
+		return (elements.length == 2) ? elements[0] : null;
 	}
 
-	private static Agent extractAgentInformation(ProjectRequest request) {
+	private VersionInformation determineVersionInformation(ProjectRequest request) {
+		Version version = Version.safeParse(request.getBootVersion());
+		if (version != null && version.getMajor() != null) {
+			return new VersionInformation(version);
+		}
+		return null;
+	}
+
+	private ClientInformation determineClientInformation(ProjectRequest request) {
+		Agent agent = determineAgent(request);
+		String ip = determineIp(request);
+		String country = determineCountry(request);
+		if (agent != null || ip != null || country != null) {
+			return new ClientInformation(agent, ip, country);
+		}
+		return null;
+	}
+
+	private Agent determineAgent(ProjectRequest request) {
 		String userAgent = (String) request.getParameters().get("user-agent");
 		if (StringUtils.hasText(userAgent)) {
 			return Agent.fromUserAgent(userAgent);
@@ -146,12 +142,16 @@ public class ProjectRequestDocumentFactory {
 		return null;
 	}
 
-	private static String extractIpv4(String candidate) {
-		if (StringUtils.hasText(candidate)) {
-			Matcher matcher = IP_PATTERN.matcher(candidate);
-			if (matcher.find()) {
-				return matcher.group();
-			}
+	private String determineIp(ProjectRequest request) {
+		String candidate = (String) request.getParameters().get("cf-connecting-ip");
+		return (StringUtils.hasText(candidate)) ? candidate
+				: (String) request.getParameters().get("x-forwarded-for");
+	}
+
+	private String determineCountry(ProjectRequest request) {
+		String candidate = (String) request.getParameters().get("cf-ipcountry");
+		if (StringUtils.hasText(candidate) && !"xx".equalsIgnoreCase(candidate)) {
+			return candidate;
 		}
 		return null;
 	}
