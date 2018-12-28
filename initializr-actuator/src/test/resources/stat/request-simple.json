@@ -1,0 +1,30 @@
+{
+  "generationTimestamp": 0,
+  "type": "maven-project",
+  "buildSystem": "maven",
+  "groupId": "com.example.acme",
+  "artifactId": "project",
+  "javaVersion": "1.8",
+  "language": "java",
+  "packaging": "jar",
+  "packageName": "com.example.acme.project",
+  "version": {
+    "id": "2.1.1.RELEASE",
+    "major": "2",
+    "minor": "2.1"
+  },
+  "client": {
+    "id": "curl",
+    "version": "1.2.4",
+    "ip": "10.0.0.42",
+    "country": "BE"
+  },
+  "dependencies": {
+    "id": "data-jpa web",
+    "values": [
+      "web",
+      "data-jpa"
+    ],
+    "count": 2
+  }
+}

@@ -73,7 +73,7 @@ class MainControllerStatsIntegrationTests
 		JsonNode json = parseJson(content.json);
 		assertThat(json.get("groupId").textValue()).isEqualTo("com.foo");
 		assertThat(json.get("artifactId").textValue()).isEqualTo("bar");
-		JsonNode list = json.get("dependencies");
+		JsonNode list = json.get("dependencies").get("values");
 		assertThat(list).hasSize(1);
 		assertThat(list.get(0).textValue()).isEqualTo("web");
 	}
@@ -113,7 +113,7 @@ class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("requestIp").textValue()).as("Wrong requestIp")
+		assertThat(json.get("client").get("ip").textValue()).as("Wrong requestIp")
 				.isEqualTo("10.0.0.123");
 	}
 
@@ -160,10 +160,12 @@ class MainControllerStatsIntegrationTests
 		JsonNode json = parseJson(content.json);
 		assertThat(json.get("groupId").textValue()).isEqualTo("com.example");
 		assertThat(json.get("artifactId").textValue()).isEqualTo("demo");
-		assertThat(json.get("invalid").booleanValue()).isEqualTo(true);
-		assertThat(json.get("invalidType").booleanValue()).isEqualTo(true);
-		assertThat(json.get("errorMessage")).isNotNull();
-		assertThat(json.get("errorMessage").textValue()).contains("invalid-type");
+		assertThat(json.has("errorState")).isTrue();
+		JsonNode errorState = json.get("errorState");
+		assertThat(errorState.get("invalid").booleanValue()).isEqualTo(true);
+		assertThat(errorState.get("type").booleanValue()).isEqualTo(true);
+		assertThat(errorState.get("message")).isNotNull();
+		assertThat(errorState.get("message").textValue()).contains("invalid-type");
 	}
 
 	@Test

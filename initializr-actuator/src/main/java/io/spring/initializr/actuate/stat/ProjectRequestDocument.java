@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,15 @@
 package io.spring.initializr.actuate.stat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
+
+import io.spring.initializr.util.Agent;
+import io.spring.initializr.util.Version;
+
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Define the statistics of a project generation.
@@ -28,23 +36,13 @@ public class ProjectRequestDocument {
 
 	private long generationTimestamp;
 
-	private String requestIp;
+	private String type;
 
-	private String requestIpv4;
-
-	private String requestCountry;
-
-	private String clientId;
-
-	private String clientVersion;
+	private String buildSystem;
 
 	private String groupId;
 
 	private String artifactId;
-
-	private String packageName;
-
-	private String bootVersion;
 
 	private String javaVersion;
 
@@ -52,23 +50,15 @@ public class ProjectRequestDocument {
 
 	private String packaging;
 
-	private String type;
+	private String packageName;
 
-	private final List<String> dependencies = new ArrayList<>();
+	private VersionInformation version;
 
-	private String errorMessage;
+	private ClientInformation client;
 
-	private boolean invalid;
+	private DependencyInformation dependencies;
 
-	private boolean invalidJavaVersion;
-
-	private boolean invalidLanguage;
-
-	private boolean invalidPackaging;
-
-	private boolean invalidType;
-
-	private final List<String> invalidDependencies = new ArrayList<>();
+	private ErrorStateInformation errorState;
 
 	public long getGenerationTimestamp() {
 		return this.generationTimestamp;
@@ -78,44 +68,20 @@ public class ProjectRequestDocument {
 		this.generationTimestamp = generationTimestamp;
 	}
 
-	public String getRequestIp() {
-		return this.requestIp;
+	public String getType() {
+		return this.type;
 	}
 
-	public void setRequestIp(String requestIp) {
-		this.requestIp = requestIp;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getRequestIpv4() {
-		return this.requestIpv4;
+	public String getBuildSystem() {
+		return this.buildSystem;
 	}
 
-	public void setRequestIpv4(String requestIpv4) {
-		this.requestIpv4 = requestIpv4;
-	}
-
-	public String getRequestCountry() {
-		return this.requestCountry;
-	}
-
-	public void setRequestCountry(String requestCountry) {
-		this.requestCountry = requestCountry;
-	}
-
-	public String getClientId() {
-		return this.clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	public String getClientVersion() {
-		return this.clientVersion;
-	}
-
-	public void setClientVersion(String clientVersion) {
-		this.clientVersion = clientVersion;
+	public void setBuildSystem(String buildSystem) {
+		this.buildSystem = buildSystem;
 	}
 
 	public String getGroupId() {
@@ -132,22 +98,6 @@ public class ProjectRequestDocument {
 
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;
-	}
-
-	public String getPackageName() {
-		return this.packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	public String getBootVersion() {
-		return this.bootVersion;
-	}
-
-	public void setBootVersion(String bootVersion) {
-		this.bootVersion = bootVersion;
 	}
 
 	public String getJavaVersion() {
@@ -174,104 +124,305 @@ public class ProjectRequestDocument {
 		this.packaging = packaging;
 	}
 
-	public String getType() {
-		return this.type;
+	public String getPackageName() {
+		return this.packageName;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
-	public String getErrorMessage() {
-		return this.errorMessage;
+	public VersionInformation getVersion() {
+		return this.version;
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setVersion(VersionInformation version) {
+		this.version = version;
 	}
 
-	public boolean isInvalid() {
-		return this.invalid;
+	public ClientInformation getClient() {
+		return this.client;
 	}
 
-	public void setInvalid(boolean invalid) {
-		this.invalid = invalid;
+	public void setClient(ClientInformation client) {
+		this.client = client;
 	}
 
-	public boolean isInvalidJavaVersion() {
-		return this.invalidJavaVersion;
-	}
-
-	public void setInvalidJavaVersion(boolean invalidJavaVersion) {
-		this.invalidJavaVersion = invalidJavaVersion;
-	}
-
-	public boolean isInvalidLanguage() {
-		return this.invalidLanguage;
-	}
-
-	public void setInvalidLanguage(boolean invalidLanguage) {
-		this.invalidLanguage = invalidLanguage;
-	}
-
-	public boolean isInvalidPackaging() {
-		return this.invalidPackaging;
-	}
-
-	public void setInvalidPackaging(boolean invalidPackaging) {
-		this.invalidPackaging = invalidPackaging;
-	}
-
-	public boolean isInvalidType() {
-		return this.invalidType;
-	}
-
-	public void setInvalidType(boolean invalidType) {
-		this.invalidType = invalidType;
-	}
-
-	public List<String> getDependencies() {
+	public DependencyInformation getDependencies() {
 		return this.dependencies;
 	}
 
-	public List<String> getInvalidDependencies() {
-		return this.invalidDependencies;
+	public void setDependencies(DependencyInformation dependencies) {
+		this.dependencies = dependencies;
+	}
+
+	public ErrorStateInformation getErrorState() {
+		return this.errorState;
+	}
+
+	public ErrorStateInformation triggerError() {
+		if (this.errorState == null) {
+			this.errorState = new ErrorStateInformation();
+		}
+		return this.errorState;
 	}
 
 	@Override
 	public String toString() {
-		return "ProjectRequestDocument [generationTimestamp=" + this.generationTimestamp
-				+ ", "
-				+ ((this.requestIp != null) ? "requestIp=" + this.requestIp + ", " : "")
-				+ ((this.requestIpv4 != null) ? "requestIpv4=" + this.requestIpv4 + ", "
-						: "")
-				+ ((this.requestCountry != null)
-						? "requestCountry=" + this.requestCountry + ", " : "")
-				+ ((this.clientId != null) ? "clientId=" + this.clientId + ", " : "")
-				+ ((this.clientVersion != null)
-						? "clientVersion=" + this.clientVersion + ", " : "")
-				+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
-				+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", "
-						: "")
-				+ ((this.packageName != null) ? "packageName=" + this.packageName + ", "
-						: "")
-				+ ((this.bootVersion != null) ? "bootVersion=" + this.bootVersion + ", "
-						: "")
-				+ ((this.javaVersion != null) ? "javaVersion=" + this.javaVersion + ", "
-						: "")
-				+ ((this.language != null) ? "language=" + this.language + ", " : "")
-				+ ((this.packaging != null) ? "packaging=" + this.packaging + ", " : "")
-				+ ((this.type != null) ? "type=" + this.type + ", " : "")
-				+ ((this.dependencies != null)
-						? "dependencies=" + this.dependencies + ", " : "")
-				+ ((this.errorMessage != null)
-						? "errorMessage=" + this.errorMessage + ", " : "")
-				+ "invalid=" + this.invalid + ", invalidJavaVersion="
-				+ this.invalidJavaVersion + ", invalidLanguage=" + this.invalidLanguage
-				+ ", invalidPackaging=" + this.invalidPackaging + ", invalidType="
-				+ this.invalidType + ", " + ((this.invalidDependencies != null)
-						? "invalidDependencies=" + this.invalidDependencies : "")
-				+ "]";
+		return new StringJoiner(", ", ProjectRequestDocument.class.getSimpleName() + "[",
+				"]").add("generationTimestamp=" + this.generationTimestamp)
+						.add("type='" + this.type + "'")
+						.add("buildSystem='" + this.buildSystem + "'")
+						.add("groupId='" + this.groupId + "'")
+						.add("artifactId='" + this.artifactId + "'")
+						.add("javaVersion='" + this.javaVersion + "'")
+						.add("language='" + this.language + "'")
+						.add("packaging='" + this.packaging + "'")
+						.add("packageName='" + this.packageName + "'")
+						.add("version=" + this.version).add("client=" + this.client)
+						.add("dependencies=" + this.dependencies)
+						.add("errorState=" + this.errorState).toString();
+	}
+
+	/**
+	 * Spring Boot version information.
+	 */
+	public static class VersionInformation {
+
+		private final String id;
+
+		private final String major;
+
+		private final String minor;
+
+		public VersionInformation(Version version) {
+			this.id = version.toString();
+			this.major = String.format("%s", version.getMajor());
+			this.minor = (version.getMinor() != null)
+					? String.format("%s.%s", version.getMajor(), version.getMinor())
+					: null;
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getMajor() {
+			return this.major;
+		}
+
+		public String getMinor() {
+			return this.minor;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
+					.add("major='" + this.major + "'").add("minor='" + this.minor + "'")
+					.toString();
+		}
+
+	}
+
+	/**
+	 * Dependencies information.
+	 */
+	public static class DependencyInformation {
+
+		private final String id;
+
+		private final List<String> values;
+
+		private final int count;
+
+		public DependencyInformation(List<String> values) {
+			this.id = computeDependenciesId(new ArrayList<>(values));
+			this.values = values;
+			this.count = values.size();
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public List<String> getValues() {
+			return this.values;
+		}
+
+		public int getCount() {
+			return this.count;
+		}
+
+		private static String computeDependenciesId(List<String> dependencies) {
+			if (ObjectUtils.isEmpty(dependencies)) {
+				return "_none";
+			}
+			Collections.sort(dependencies);
+			return StringUtils.collectionToDelimitedString(dependencies, " ");
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
+					.add("values=" + this.values).add("count=" + this.count).toString();
+		}
+
+	}
+
+	/**
+	 * Client information.
+	 */
+	public static class ClientInformation {
+
+		private final String id;
+
+		private final String version;
+
+		private final String ip;
+
+		private final String country;
+
+		public ClientInformation(Agent agent, String ip, String country) {
+			this.id = (agent != null) ? agent.getId().getId() : null;
+			this.version = (agent != null) ? agent.getVersion() : null;
+			this.ip = ip;
+			this.country = country;
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getVersion() {
+			return this.version;
+		}
+
+		public String getIp() {
+			return this.ip;
+		}
+
+		public String getCountry() {
+			return this.country;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
+					.add("version='" + this.version + "'").add("ip='" + this.ip + "'")
+					.add("country='" + this.country + "'").toString();
+		}
+
+	}
+
+	/**
+	 * Additional information about what part of the request is invalid.
+	 */
+	public static class ErrorStateInformation {
+
+		private boolean invalid = true;
+
+		private Boolean javaVersion;
+
+		private Boolean language;
+
+		private Boolean packaging;
+
+		private Boolean type;
+
+		private InvalidDependencyInformation dependencies;
+
+		private String message;
+
+		public boolean isInvalid() {
+			return this.invalid;
+		}
+
+		public Boolean getJavaVersion() {
+			return this.javaVersion;
+		}
+
+		public void setJavaVersion(Boolean javaVersion) {
+			this.javaVersion = javaVersion;
+		}
+
+		public Boolean getLanguage() {
+			return this.language;
+		}
+
+		public void setLanguage(Boolean language) {
+			this.language = language;
+		}
+
+		public Boolean getPackaging() {
+			return this.packaging;
+		}
+
+		public void setPackaging(Boolean packaging) {
+			this.packaging = packaging;
+		}
+
+		public Boolean getType() {
+			return this.type;
+		}
+
+		public void setType(Boolean type) {
+			this.type = type;
+		}
+
+		public InvalidDependencyInformation getDependencies() {
+			return this.dependencies;
+		}
+
+		public void triggerInvalidDependencies(List<String> dependencies) {
+			this.dependencies = new InvalidDependencyInformation(dependencies);
+		}
+
+		public String getMessage() {
+			return this.message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "{", "}").add("invalid=" + this.invalid)
+					.add("javaVersion=" + this.javaVersion)
+					.add("language=" + this.language).add("packaging=" + this.packaging)
+					.add("type=" + this.type).add("dependencies=" + this.dependencies)
+					.add("message='" + this.message + "'").toString();
+		}
+
+	}
+
+	/**
+	 * Invalid dependencies information.
+	 */
+	public static class InvalidDependencyInformation {
+
+		private boolean invalid = true;
+
+		private final List<String> values;
+
+		public InvalidDependencyInformation(List<String> values) {
+			this.values = values;
+		}
+
+		public boolean isInvalid() {
+			return this.invalid;
+		}
+
+		public List<String> getValues() {
+			return this.values;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ", "{", "}").add(String.join(", ", this.values))
+					.toString();
+		}
+
 	}
 
 }
