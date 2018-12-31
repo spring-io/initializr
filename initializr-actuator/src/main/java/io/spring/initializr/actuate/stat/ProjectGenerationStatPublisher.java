@@ -61,7 +61,7 @@ public class ProjectGenerationStatPublisher {
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
 		if (StringUtils.hasText(elastic.getUsername())) {
 			this.restTemplate = restTemplateBuilder
-					.basicAuthorization(elastic.getUsername(), elastic.getPassword())
+					.basicAuthentication(elastic.getUsername(), elastic.getPassword())
 					.build();
 		}
 		else {
