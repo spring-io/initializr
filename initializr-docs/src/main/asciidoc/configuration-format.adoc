@@ -164,14 +164,14 @@ UI. This also drives how the meta-data for your instance are generated and tooli
 support is meant to react to that.
 
 For instance, if you want your groupId to default to `org.acme` and the
-`javaVersions` to only be `1.8` and `10` you would write the following config:
+`javaVersions` to only be `1.8` and `11` you would write the following config:
 
 ```yml
 initializr:
   groupId:
     value: org.acme
   javaVersions:
-    - id: 10
+    - id: 11
       default: false
     - id: 1.8
       default: true
