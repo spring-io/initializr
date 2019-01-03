@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,18 @@ import org.springframework.http.MediaType;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.RequestMatcher;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
+ * Tests for {@link ProjectGenerationStatPublisher}.
+ *
  * @author Stephane Nicoll
  */
 public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
@@ -51,7 +56,10 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 
 	@Before
 	public void setUp() {
-		StatsProperties properties = createProperties();
+		configureService(createProperties());
+	}
+
+	private void configureService(StatsProperties properties) {
 		ProjectRequestDocumentFactory documentFactory = new ProjectRequestDocumentFactory(
 				createProvider(getMetadata()));
 		this.retryTemplate = new RetryTemplate();
@@ -62,7 +70,62 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishSimpleDocument() {
+	public void publishDocumentWithUserNameAndPassword() {
+		StatsProperties properties = new StatsProperties();
+		properties.getElastic().setUri("http://example.com/elastic");
+		properties.getElastic().setUsername("foo");
+		properties.getElastic().setPassword("bar");
+		configureService(properties);
+		testAuthorization("http://example.com/elastic/initializr/request",
+				header("Authorization", "Basic Zm9vOmJhcg=="));
+	}
+
+	@Test
+	public void publishDocumentWithUserInfo() {
+		StatsProperties properties = new StatsProperties();
+		properties.getElastic().setUri("https://elastic:secret@es.example.com");
+		configureService(properties);
+		testAuthorization("https://es.example.com/initializr/request",
+				header("Authorization", "Basic ZWxhc3RpYzpzZWNyZXQ="));
+	}
+
+	@Test
+	public void publishDocumentWithUserInfoOverridesUserNamePassword() {
+		StatsProperties properties = new StatsProperties();
+		properties.getElastic().setUri("https://elastic:secret@es.example.com");
+		properties.getElastic().setUsername("another");
+		properties.getElastic().setPassword("ignored-secret");
+		configureService(properties);
+		testAuthorization("https://es.example.com/initializr/request",
+				header("Authorization", "Basic ZWxhc3RpYzpzZWNyZXQ="));
+	}
+
+	@Test
+	public void publishDocumentWithNoAuthentication() {
+		StatsProperties properties = new StatsProperties();
+		properties.getElastic().setUri("https://example.com/test/");
+		configureService(properties);
+		testAuthorization("https://example.com/test/initializr/request",
+				(request) -> assertThat(request.getHeaders().containsKey("Authorization"))
+						.isFalse());
+	}
+
+	private void testAuthorization(String expectedUri,
+			RequestMatcher authorizationMatcher) {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("com.example.foo");
+		request.setArtifactId("my-project");
+		this.mockServer.expect(requestTo(expectedUri)).andExpect(method(HttpMethod.POST))
+				.andExpect(authorizationMatcher)
+				.andRespond(withStatus(HttpStatus.CREATED)
+						.body(mockResponse(UUID.randomUUID().toString(), true))
+						.contentType(MediaType.APPLICATION_JSON));
+		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+		this.mockServer.verify();
+	}
+
+	@Test
+	public void publishDocument() {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("com.example.foo");
 		request.setArtifactId("my-project");
@@ -130,8 +193,6 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 		StatsProperties properties = new StatsProperties();
 		Elastic elastic = properties.getElastic();
 		elastic.setUri("http://example.com/elastic");
-		elastic.setUsername("foo");
-		elastic.setPassword("bar");
 		return properties;
 	}
 

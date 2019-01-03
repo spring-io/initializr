@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 
 package io.spring.initializr.actuate.stat;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.generator.ProjectRequestEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +35,7 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Publish stats for each project generated to an Elastic index.
@@ -44,11 +49,11 @@ public class ProjectGenerationStatPublisher {
 
 	private final ProjectRequestDocumentFactory documentFactory;
 
-	private final StatsProperties statsProperties;
-
 	private final ObjectMapper objectMapper;
 
 	private final RestTemplate restTemplate;
+
+	private URI requestUrl;
 
 	private final RetryTemplate retryTemplate;
 
@@ -56,17 +61,13 @@ public class ProjectGenerationStatPublisher {
 			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder,
 			RetryTemplate retryTemplate) {
 		this.documentFactory = documentFactory;
-		this.statsProperties = statsProperties;
 		this.objectMapper = createObjectMapper();
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
-		if (StringUtils.hasText(elastic.getUsername())) {
-			this.restTemplate = restTemplateBuilder
-					.basicAuthentication(elastic.getUsername(), elastic.getPassword())
-					.build();
-		}
-		else {
-			this.restTemplate = restTemplateBuilder.build();
-		}
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder
+				.fromUri(determineEntityUrl(elastic));
+		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic,
+				uriBuilder).build();
+		this.requestUrl = uriBuilder.userInfo(null).build().toUri();
 		this.retryTemplate = retryTemplate;
 	}
 
@@ -81,8 +82,7 @@ public class ProjectGenerationStatPublisher {
 			}
 			json = toJson(document);
 
-			RequestEntity<String> request = RequestEntity
-					.post(this.statsProperties.getElastic().getEntityUrl())
+			RequestEntity<String> request = RequestEntity.post(this.requestUrl)
 					.contentType(MediaType.APPLICATION_JSON).body(json);
 
 			this.retryTemplate.execute((context) -> {
@@ -112,8 +112,40 @@ public class ProjectGenerationStatPublisher {
 		return mapper;
 	}
 
+	// For testing purposes only
 	protected RestTemplate getRestTemplate() {
 		return this.restTemplate;
+	}
+
+	protected void updateRequestUrl(URI requestUrl) {
+		this.requestUrl = requestUrl;
+	}
+
+	private static RestTemplateBuilder configureAuthorization(
+			RestTemplateBuilder restTemplateBuilder, Elastic elastic,
+			UriComponentsBuilder uriComponentsBuilder) {
+		String userInfo = uriComponentsBuilder.build().getUserInfo();
+		if (StringUtils.hasText(userInfo)) {
+			String[] credentials = userInfo.split(":");
+			return restTemplateBuilder.basicAuthentication(credentials[0],
+					credentials[1]);
+		}
+		else if (StringUtils.hasText(elastic.getUsername())) {
+			return restTemplateBuilder.basicAuthentication(elastic.getUsername(),
+					elastic.getPassword());
+		}
+		return restTemplateBuilder;
+	}
+
+	private static URI determineEntityUrl(Elastic elastic) {
+		String entityUrl = elastic.getUri() + "/" + elastic.getIndexName() + "/"
+				+ elastic.getEntityName();
+		try {
+			return new URI(entityUrl);
+		}
+		catch (URISyntaxException ex) {
+			throw new IllegalStateException("Cannot create entity URL: " + entityUrl, ex);
+		}
 	}
 
 }

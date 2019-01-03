@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,21 @@ public class CloudfoundryEnvironmentPostProcessorTests {
 	private final SpringApplication application = new SpringApplication();
 
 	@Test
-	public void parseCredentials() {
+	public void parseUriWithCredentials() {
 		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
-				"http://user:pass@example.com/bar/biz?param=one");
+				"https://user:pass@example.com/bar/biz?param=one");
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
-				.isEqualTo("http://example.com/bar/biz?param=one");
+				.isEqualTo("https://user:pass@example.com/bar/biz?param=one");
 		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
-				.isEqualTo("user");
+				.isNull();
 		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
-				.isEqualTo("pass");
+				.isNull();
 	}
 
 	@Test
-	public void parseNoCredentials() {
+	public void parseUri() {
 		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
 				"http://example.com/bar/biz?param=one");
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);

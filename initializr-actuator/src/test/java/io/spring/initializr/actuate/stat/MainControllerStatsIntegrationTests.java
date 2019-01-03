@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ public class MainControllerStatsIntegrationTests
 	private StatsMockController statsMockController;
 
 	@Autowired
-	private StatsProperties statsProperties;
+	private ProjectGenerationStatPublisher projectGenerationStatPublisher;
 
 	@Before
 	public void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
-		this.statsProperties.getElastic()
-				.setUri("http://localhost:" + this.port + "/elastic");
+		this.projectGenerationStatPublisher.updateRequestUrl(
+				URI.create("http://localhost:" + this.port + "/elastic/test/my-entity"));
 	}
 
 	@Test
@@ -168,8 +168,8 @@ public class MainControllerStatsIntegrationTests
 
 	@Test
 	public void errorPublishingStatsDoesNotBubbleUp() {
-		this.statsProperties.getElastic()
-				.setUri("http://localhost:" + this.port + "/elastic-error");
+		this.projectGenerationStatPublisher.updateRequestUrl(
+				URI.create("http://localhost:" + this.port + "/elastic-error"));
 		downloadArchive("/starter.zip");
 		assertThat(this.statsMockController.stats).as("No stat should be available")
 				.isEmpty();
