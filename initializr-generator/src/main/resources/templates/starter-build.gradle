@@ -46,7 +46,7 @@ apply plugin: 'war'
 
 group = '{{groupId}}'
 version = '{{version}}'
-sourceCompatibility = {{javaVersion}}{{#kotlin}}
+sourceCompatibility = '{{javaVersion}}'{{#kotlin}}
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
