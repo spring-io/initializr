@@ -420,6 +420,9 @@ public class ProjectGenerator {
 		model.put("buildPropertiesVersions", versions.entrySet());
 		request.getBuildProperties().getVersions().forEach(
 				(k, v) -> versions.put(computeVersionProperty(request, k), v.get()));
+		if (!versions.isEmpty()) {
+			model.put("hasBuildPropertiesVersions", true);
+		}
 		Map<String, String> gradle = new LinkedHashMap<>();
 		model.put("buildPropertiesGradle", gradle.entrySet());
 		request.getBuildProperties().getGradle()

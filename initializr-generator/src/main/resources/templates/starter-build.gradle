@@ -72,9 +72,13 @@ configurations {
 	providedRuntime
 }
 {{/providedDependencies}}
+{{#hasBuildPropertiesVersions}}
+ext {
 {{#buildPropertiesVersions}}
-ext['{{key}}'] = '{{value}}'
+	set('{{key}}', '{{value}}')
 {{/buildPropertiesVersions}}
+}
+{{/hasBuildPropertiesVersions}}
 
 dependencies {
 	{{#compileDependencies}}

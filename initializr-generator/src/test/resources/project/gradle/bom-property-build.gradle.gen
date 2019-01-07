@@ -23,7 +23,9 @@ repositories {
 	mavenCentral()
 }
 
-ext['fooVersion'] = '1.3.3'
+ext {
+	set('fooVersion', '1.3.3')
+}
 
 dependencies {
 	implementation('org.acme:foo')

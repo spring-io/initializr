@@ -23,8 +23,10 @@ repositories {
 	mavenCentral()
 }
 
-ext['springBarVersion'] = '0.2.0.RELEASE'
-ext['spring-foo.version'] = '0.1.0.RELEASE'
+ext {
+	set('springBarVersion', '0.2.0.RELEASE')
+	set('spring-foo.version', '0.1.0.RELEASE')
+}
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
