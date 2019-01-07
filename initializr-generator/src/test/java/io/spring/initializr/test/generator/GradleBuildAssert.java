@@ -63,6 +63,18 @@ public class GradleBuildAssert {
 		return contains("maven { url \"" + url + "\" }");
 	}
 
+	public GradleBuildAssert hasBuildProperties(String... pairs) {
+		StringBuilder builder = new StringBuilder("ext {\n");
+		for (String pair : pairs) {
+			int index = pair.indexOf('=');
+			String name = (index > 0) ? pair.substring(0, index) : pair;
+			String value = (index > 0) ? pair.substring(index + 1) : "";
+			builder.append("\tset('" + name + "', '" + value + "')\n");
+		}
+		builder.append("}");
+		return contains(builder.toString());
+	}
+
 	public GradleBuildAssert contains(String expression) {
 		assertThat(this.content).contains(expression);
 		return this;
