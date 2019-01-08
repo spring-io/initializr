@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -718,7 +718,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		request.getBuildProperties().getMaven().put("ignore.property", () -> "yes");
 
 		generateGradleBuild(request).contains("name = 'test'")
-				.hasBuildProperties("foo.version=1.2.3", "internalVersion=4.5.6")
+				.hasProperties("foo.version", "1.2.3", "internalVersion", "4.5.6")
 				.doesNotContain("ignore.property");
 	}
 
