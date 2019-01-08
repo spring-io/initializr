@@ -29,6 +29,6 @@ repositories {
 
 
 dependencies {
-	implementation('org.acme:foo')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	implementation 'org.acme:foo'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

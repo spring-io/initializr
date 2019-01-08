@@ -45,9 +45,9 @@ configurations {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+	implementation "org.jetbrains.kotlin:kotlin-reflect"
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

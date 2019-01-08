@@ -29,8 +29,8 @@ configurations {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('org.codehaus.groovy:groovy')
-	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.codehaus.groovy:groovy'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -82,30 +82,30 @@ ext {
 
 dependencies {
 	{{#compileDependencies}}
-	implementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	implementation '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/compileDependencies}}
 	{{#groovy}}
-	implementation('org.codehaus.groovy:groovy')
+	implementation 'org.codehaus.groovy:groovy'
 	{{/groovy}}
 	{{#kotlin}}
-	implementation("org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
-	implementation("org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}")
+	implementation "org.jetbrains.kotlin:{{kotlinStdlibArtifactId}}{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}"
+	implementation "org.jetbrains.kotlin:kotlin-reflect{{^kotlinSupport}}:${kotlinVersion}{{/kotlinSupport}}"
 	{{/kotlin}}
 	{{#runtimeDependencies}}
-	runtimeOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	runtimeOnly '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/runtimeDependencies}}
 	{{#compileOnlyDependencies}}
-	compileOnly('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	compileOnly '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/compileOnlyDependencies}}
 	{{#annotationProcessorDependencies}}
-	annotationProcessor('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	annotationProcessor '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/annotationProcessorDependencies}}
 	{{#providedDependencies}}
-	providedRuntime('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	providedRuntime '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/providedDependencies}}
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	{{#testDependencies}}
-	testImplementation('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
+	testImplementation '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
 	{{/testDependencies}}
 }
 {{#hasBoms}}
