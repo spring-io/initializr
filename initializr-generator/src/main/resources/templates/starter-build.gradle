@@ -7,8 +7,8 @@ buildscript {
 	repositories {
 		mavenCentral()
 		{{^isRelease}}
-		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }
+		maven { url 'https://repo.spring.io/snapshot' }
+		maven { url 'https://repo.spring.io/milestone' }
 		{{/isRelease}}
 	}
 	dependencies {
@@ -49,21 +49,21 @@ version = '{{version}}'
 sourceCompatibility = '{{javaVersion}}'{{#kotlin}}
 compileKotlin {
 	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
-		jvmTarget = "1.8"{{/java8OrLater}}
+		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
+		jvmTarget = '1.8'{{/java8OrLater}}
 	}
 }
 compileTestKotlin {
 	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]{{#java8OrLater}}
-		jvmTarget = "1.8"{{/java8OrLater}}
+		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
+		jvmTarget = '1.8'{{/java8OrLater}}
 	}
 }{{/kotlin}}
 
 repositories {
 	mavenCentral()
 	{{#repositoryValues}}
-	maven { url "{{value.url}}" }
+	maven { url '{{value.url}}' }
 	{{/repositoryValues}}
 }
 

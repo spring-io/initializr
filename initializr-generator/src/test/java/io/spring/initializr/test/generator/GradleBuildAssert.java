@@ -60,7 +60,7 @@ public class GradleBuildAssert {
 	}
 
 	public GradleBuildAssert hasRepository(String url) {
-		return contains("maven { url \"" + url + "\" }");
+		return contains("maven { url '" + url + "' }");
 	}
 
 	/**
