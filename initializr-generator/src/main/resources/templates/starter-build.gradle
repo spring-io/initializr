@@ -46,19 +46,7 @@ apply plugin: 'war'
 
 group = '{{groupId}}'
 version = '{{version}}'
-sourceCompatibility = '{{javaVersion}}'{{#kotlin}}
-compileKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
-		jvmTarget = '1.8'{{/java8OrLater}}
-	}
-}
-compileTestKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
-		jvmTarget = '1.8'{{/java8OrLater}}
-	}
-}{{/kotlin}}
+sourceCompatibility = '{{javaVersion}}'
 
 repositories {
 	mavenCentral()
@@ -119,3 +107,19 @@ dependencyManagement {
 	}
 }
 {{/hasBoms}}
+{{#kotlin}}
+
+compileKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
+		jvmTarget = '1.8'{{/java8OrLater}}
+	}
+}
+
+compileTestKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']{{#java8OrLater}}
+		jvmTarget = '1.8'{{/java8OrLater}}
+	}
+}
+{{/kotlin}}
