@@ -30,12 +30,6 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
 {{/facets.jpa}}
 {{/kotlin}}
-{{#war}}
-apply plugin: 'eclipse-wtp'
-{{/war}}
-{{^war}}
-apply plugin: 'eclipse'
-{{/war}}
 apply plugin: 'org.springframework.boot'
 {{#bootTwoZeroAvailable}}
 apply plugin: 'io.spring.dependency-management'
