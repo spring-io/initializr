@@ -508,9 +508,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void gradleBuildWithSpringBoot15() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("1.5.20.BUILD-SNAPSHOT");
-		generateGradleBuild(request)
-				.contains("springBootVersion = '1.5.20.BUILD-SNAPSHOT'")
-				.contains("apply plugin: 'org.springframework.boot'")
+		generateGradleBuild(request).contains("apply plugin: 'org.springframework.boot'")
 				.contains(
 						"implementation 'org.springframework.boot:spring-boot-starter-web'")
 				.contains(
