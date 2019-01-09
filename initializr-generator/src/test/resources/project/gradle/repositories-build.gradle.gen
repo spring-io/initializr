@@ -25,7 +25,6 @@ repositories {
 	maven { url 'https://example.com/bar' }
 }
 
-
 dependencies {
 	implementation 'org.acme:bar'
 	implementation 'org.acme:foo'

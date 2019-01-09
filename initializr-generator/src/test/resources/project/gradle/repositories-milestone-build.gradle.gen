@@ -27,7 +27,6 @@ repositories {
 	maven { url 'https://repo.spring.io/milestone' }
 }
 
-
 dependencies {
 	implementation 'org.acme:foo'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

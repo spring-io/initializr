@@ -71,6 +71,7 @@ repositories {
 configurations {
 	providedRuntime
 }
+
 {{/providedDependencies}}
 {{#hasBuildPropertiesVersions}}
 ext {
@@ -78,8 +79,8 @@ ext {
 	set('{{key}}', '{{value}}')
 {{/buildPropertiesVersions}}
 }
-{{/hasBuildPropertiesVersions}}
 
+{{/hasBuildPropertiesVersions}}
 dependencies {
 	{{#compileDependencies}}
 	implementation '{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}'
