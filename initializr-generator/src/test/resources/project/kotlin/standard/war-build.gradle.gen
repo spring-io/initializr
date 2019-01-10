@@ -27,10 +27,6 @@ repositories {
 	mavenCentral()
 }
 
-configurations {
-	providedRuntime
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

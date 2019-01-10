@@ -49,12 +49,14 @@ repositories {
 	{{/repositoryValues}}
 }
 
+{{^war}}
 {{#providedDependencies}}
 configurations {
 	providedRuntime
 }
 
 {{/providedDependencies}}
+{{/war}}
 {{#hasBuildPropertiesVersions}}
 ext {
 {{#buildPropertiesVersions}}

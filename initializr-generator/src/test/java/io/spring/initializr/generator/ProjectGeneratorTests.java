@@ -219,7 +219,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 						"implementation 'org.springframework.boot:spring-boot-starter-web'")
 				.contains(
 						"testImplementation 'org.springframework.boot:spring-boot-starter-test'")
-				.contains("configurations {") // declare providedRuntime config
+				.doesNotContain("configurations {") // no need to declare providedRuntime
 				.contains("providedRuntime").contains(
 						"providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'");
 	}
@@ -235,7 +235,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 						"implementation 'org.springframework.boot:spring-boot-starter-web'")
 				.contains(
 						"testImplementation 'org.springframework.boot:spring-boot-starter-test'")
-				.contains("configurations {") // declare providedRuntime config
+				.doesNotContain("configurations {") // no need to declare providedRuntime
 				.contains("providedRuntime").contains(
 						"providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'");
 	}
@@ -497,7 +497,7 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				"implementation 'org.springframework.boot:spring-boot-starter-web'")
 				.contains(
 						"implementation 'org.springframework.boot:spring-boot-starter-data-jpa'")
-				// declare providedRuntime config
+				// declare providedRuntime config for jar-based projects
 				.contains("runtimeOnly 'org.h2:h2'").contains("configurations {")
 				.contains("providedRuntime")
 				.contains("providedRuntime 'javax.servlet:servlet-api'")

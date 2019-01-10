@@ -23,10 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-configurations {
-	providedRuntime
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
