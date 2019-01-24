@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link Link}.
@@ -34,22 +34,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LinkTests {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void resolveInvalidLinkNoRel() {
 		Link link = new Link();
 		link.setHref("https://example.com");
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		link.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(link::resolve);
 	}
 
 	@Test
 	public void resolveInvalidLinkNoHref() {
 		Link link = Link.create("reference", null, "foo doc");
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		link.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(link::resolve);
 	}
 
 	@Test
@@ -94,10 +91,9 @@ public class LinkTests {
 	public void expandLinkMissingVariable() {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
-
-		this.thrown.expect(IllegalArgumentException.class);
-		this.thrown.expectMessage("missing value for 'b'");
-		link.expand(Collections.singletonMap("a", "test"));
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> link.expand(Collections.singletonMap("a", "test")))
+				.withMessageContaining("missing value for 'b'");
 	}
 
 }

@@ -21,19 +21,15 @@ import java.util.Arrays;
 import io.spring.initializr.metadata.BillOfMaterials.Mapping;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * @author Stephane Nicoll
  */
 public class BillOfMaterialsTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void resolveSimpleBom() {
@@ -126,10 +122,9 @@ public class BillOfMaterialsTests {
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
 		bom.validate();
-
-		this.thrown.expect(IllegalStateException.class);
-		this.thrown.expectMessage("1.4.1.RELEASE");
-		bom.resolve(Version.parse("1.4.1.RELEASE"));
+		assertThatIllegalStateException()
+				.isThrownBy(() -> bom.resolve(Version.parse("1.4.1.RELEASE")))
+				.withMessageContaining("1.4.1.RELEASE");
 	}
 
 	@Test

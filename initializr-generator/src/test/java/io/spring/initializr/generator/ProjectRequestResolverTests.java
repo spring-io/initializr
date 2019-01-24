@@ -24,8 +24,8 @@ import java.util.Map;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -45,7 +45,7 @@ public class ProjectRequestResolverTests {
 
 	final GenericProjectRequestPostProcessor processor = new GenericProjectRequestPostProcessor();
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		this.postProcessors.add(this.processor);
 	}

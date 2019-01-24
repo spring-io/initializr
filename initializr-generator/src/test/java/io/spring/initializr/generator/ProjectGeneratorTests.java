@@ -24,14 +24,13 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.VersionProperty;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -41,9 +40,6 @@ import static org.assertj.core.api.Assertions.fail;
  * @author Andy Wilkinson
  */
 public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Override
 	protected InitializrMetadataTestBuilder initializeTestMetadataBuilder() {
@@ -786,18 +782,18 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	public void invalidProjectTypeMavenPom() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("gradle-build");
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("gradle-build");
-		this.projectGenerator.generateMavenPom(request);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> this.projectGenerator.generateMavenPom(request))
+				.withMessageContaining("gradle-build");
 	}
 
 	@Test
 	public void invalidProjectTypeGradleBuild() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("maven-build");
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("maven-build");
-		this.projectGenerator.generateGradleBuild(request);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> this.projectGenerator.generateGradleBuild(request))
+				.withMessageContaining("maven-build");
 	}
 
 	@Test
@@ -860,9 +856,9 @@ public class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 		ProjectRequest request = createProjectRequest("web");
 		request.setType("maven-project");
 		request.setBootVersion("1.2.3.M4");
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("1.2.3.M4");
-		this.projectGenerator.generateMavenPom(request);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> this.projectGenerator.generateMavenPom(request))
+				.withMessageContaining("1.2.3.M4");
 	}
 
 	@Test

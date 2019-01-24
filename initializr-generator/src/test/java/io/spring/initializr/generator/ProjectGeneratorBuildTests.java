@@ -16,15 +16,17 @@
 
 package io.spring.initializr.generator;
 
+import java.util.stream.Stream;
+
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.VersionProperty;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -33,123 +35,123 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Stephane Nicoll
  */
-@RunWith(Parameterized.class)
 public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 
-	@Parameterized.Parameters(name = "{0}")
-	public static Object[] parameters() {
-		Object[] maven = new Object[] { "maven", "pom.xml" };
-		Object[] gradle = new Object[] { "gradle", "build.gradle" };
-		return new Object[] { maven, gradle };
+	public static Stream<Arguments> parameters() {
+		return Stream.of(Arguments.arguments("maven", "pom.xml"),
+				Arguments.arguments("gradle", "build.gradle"));
 	}
 
-	private final String build;
-
-	private final String fileName;
-
-	private final String assertFileName;
-
-	public ProjectGeneratorBuildTests(String build, String fileName) {
-		this.build = build;
-		this.fileName = fileName;
-		this.assertFileName = fileName + ".gen";
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationJarJava(String build, String fileName) {
+		testCurrentGenerationJar("java", build, fileName);
 	}
 
-	@Test
-	public void currentGenerationJarJava() {
-		testCurrentGenerationJar("java");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationJarGroovy(String build, String fileName) {
+		testCurrentGenerationJar("groovy", build, fileName);
 	}
 
-	@Test
-	public void currentGenerationJarGroovy() {
-		testCurrentGenerationJar("groovy");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationJarKotlin(String build, String fileName) {
+		testCurrentGenerationJar("kotlin", build, fileName);
 	}
 
-	@Test
-	public void currentGenerationJarKotlin() {
-		testCurrentGenerationJar("kotlin");
-	}
-
-	private void testCurrentGenerationJar(String language) {
-		ProjectRequest request = createProjectRequest();
+	private void testCurrentGenerationJar(String language, String build,
+			String fileName) {
+		ProjectRequest request = createProjectRequestForType(build);
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/standard/" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/standard/" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void currentGenerationWarJava() {
-		testCurrentGenerationWar("java");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationWarJava(String build, String fileName) {
+		testCurrentGenerationWar("java", build, fileName);
 	}
 
-	@Test
-	public void currentGenerationWarGroovy() {
-		testCurrentGenerationWar("groovy");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationWarGroovy(String build, String fileName) {
+		testCurrentGenerationWar("groovy", build, fileName);
 	}
 
-	@Test
-	public void currentGenerationWarKotlin() {
-		testCurrentGenerationWar("kotlin");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationWarKotlin(String build, String fileName) {
+		testCurrentGenerationWar("kotlin", build, fileName);
 	}
 
-	private void testCurrentGenerationWar(String language) {
-		ProjectRequest request = createProjectRequest("web");
+	private void testCurrentGenerationWar(String language, String build,
+			String fileName) {
+		ProjectRequest request = createProjectRequestForType(build, "web");
 		request.setPackaging("war");
 		request.setLanguage(language);
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/standard/war-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/standard/war-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void previousGenerationJarJava() {
-		testPreviousGenerationJar("java");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void previousGenerationJarJava(String build, String fileName) {
+		testPreviousGenerationJar("java", build, fileName);
 	}
 
-	@Test
-	public void previousGenerationJarGroovy() {
-		testPreviousGenerationJar("groovy");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void previousGenerationJarGroovy(String build, String fileName) {
+		testPreviousGenerationJar("groovy", build, fileName);
 	}
 
-	@Test
-	public void previousGenerationJarKotlin() {
-		testPreviousGenerationJar("kotlin");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void previousGenerationJarKotlin(String build, String fileName) {
+		testPreviousGenerationJar("kotlin", build, fileName);
 	}
 
-	private void testPreviousGenerationJar(String language) {
-		ProjectRequest request = createProjectRequest();
+	private void testPreviousGenerationJar(String language, String build,
+			String fileName) {
+		ProjectRequest request = createProjectRequestForType(build);
 		request.setLanguage(language);
 		request.setBootVersion("1.5.18.RELEASE");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/previous/" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + language + "/previous/" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void kotlinJava11() {
-		ProjectRequest request = createProjectRequest();
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void kotlinJava11(String build, String fileName) {
+		ProjectRequest request = createProjectRequestForType(build);
 		request.setLanguage("kotlin");
 		request.setJavaVersion("11");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/kotlin-java11-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/kotlin-java11-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void versionOverride() {
-		ProjectRequest request = createProjectRequest("web");
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void versionOverride(String build, String fileName) {
+		ProjectRequest request = createProjectRequestForType(build, "web");
 		request.getBuildProperties().getVersions().put(
 				VersionProperty.of("spring-foo.version", false), () -> "0.1.0.RELEASE");
 		request.getBuildProperties().getVersions()
 				.put(VersionProperty.of("spring-bar.version"), () -> "0.2.0.RELEASE");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/version-override-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/version-override-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void bomWithVersionProperty() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void bomWithVersionProperty(String build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("the-bom");
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom", "1.3.3");
@@ -157,28 +159,31 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", foo).addBom("the-bom", bom).build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("foo");
+		ProjectRequest request = createProjectRequestForType(build, "foo");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/bom-property-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/bom-property-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void compileOnlyDependency() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void compileOnlyDependency(String build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setScope(Dependency.SCOPE_COMPILE_ONLY);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("core", "web", "data-jpa")
 				.addDependencyGroup("foo", foo).build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("foo", "web", "data-jpa");
+		ProjectRequest request = createProjectRequestForType(build, "foo", "web",
+				"data-jpa");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
-				+ this.build + "/compile-only-dependency-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource("project/"
+				+ build + "/compile-only-dependency-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void annotationProcessorDependency() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void annotationProcessorDependency(String build, String fileName) {
 		Dependency annotationProcessor = Dependency.withId("configuration-processor",
 				"org.springframework.boot", "spring-boot-configuration-processor");
 		annotationProcessor.setScope(Dependency.SCOPE_ANNOTATION_PROCESSOR);
@@ -187,16 +192,18 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 				.addDependencyGroup("configuration-processor", annotationProcessor)
 				.build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("configuration-processor", "web",
-				"data-jpa");
+		ProjectRequest request = createProjectRequestForType(build,
+				"configuration-processor", "web", "data-jpa");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName)
-				.equalsTo(new ClassPathResource("project/" + this.build
-						+ "/annotation-processor-dependency-" + this.assertFileName));
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource(
+						"project/" + build + "/annotation-processor-dependency-"
+								+ getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void bomWithOrdering() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void bomWithOrdering(String build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("foo-bom");
 		BillOfMaterials barBom = BillOfMaterials.create("org.acme", "bar-bom", "1.0");
@@ -213,14 +220,15 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 				.addDependencyGroup("foo", foo).addBom("foo-bom", fooBom)
 				.addBom("bar-bom", barBom).addBom("biz-bom", bizBom).build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("foo");
+		ProjectRequest request = createProjectRequestForType(build, "foo");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/bom-ordering-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/bom-ordering-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void repositories() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void repositories(String build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setRepository("foo-repository");
 		Dependency bar = Dependency.withId("bar", "org.acme", "bar");
@@ -233,30 +241,34 @@ public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 						true)
 				.build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("foo", "bar");
+		ProjectRequest request = createProjectRequestForType(build, "foo", "bar");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource(
-				"project/" + this.build + "/repositories-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/repositories-" + getAssertFileName(fileName)));
 	}
 
-	@Test
-	public void repositoriesMilestone() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void repositoriesMilestone(String build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", foo).build();
 		applyMetadata(metadata);
-		ProjectRequest request = createProjectRequest("foo");
+		ProjectRequest request = createProjectRequestForType(build, "foo");
 		request.setBootVersion("2.2.0.M1");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert(this.fileName).equalsTo(new ClassPathResource("project/"
-				+ this.build + "/repositories-milestone-" + this.assertFileName));
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource("project/"
+				+ build + "/repositories-milestone-" + getAssertFileName(fileName)));
 	}
 
-	@Override
-	public ProjectRequest createProjectRequest(String... styles) {
+	public ProjectRequest createProjectRequestForType(String build, String... styles) {
 		ProjectRequest request = super.createProjectRequest(styles);
-		request.setType(this.build + "-project");
+		request.setType(build + "-project");
 		return request;
+	}
+
+	private String getAssertFileName(String fileName) {
+		return fileName + ".gen";
 	}
 
 }

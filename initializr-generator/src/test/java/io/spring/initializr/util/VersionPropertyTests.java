@@ -16,11 +16,10 @@
 
 package io.spring.initializr.util;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link VersionProperty}.
@@ -28,9 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 public class VersionPropertyTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void testStandardProperty() {
@@ -58,16 +54,15 @@ public class VersionPropertyTests {
 
 	@Test
 	public void testInvalidPropertyUpperCase() {
-		this.thrown.expect(IllegalArgumentException.class);
-		this.thrown.expectMessage("upper case");
-		VersionProperty.of("Spring-boot.version");
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> VersionProperty.of("Spring-boot.version"));
 	}
 
 	@Test
 	public void testInvalidPropertyIllegalCharacter() {
-		this.thrown.expect(IllegalArgumentException.class);
-		this.thrown.expectMessage("Unsupported character");
-		VersionProperty.of("spring-boot_version");
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> VersionProperty.of("spring-boot_version"))
+				.withMessageContaining("Unsupported character");
 	}
 
 }

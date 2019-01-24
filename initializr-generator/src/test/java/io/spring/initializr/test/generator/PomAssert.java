@@ -30,7 +30,7 @@ import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
 import org.custommonkey.xmlunit.exceptions.XpathException;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -274,7 +274,7 @@ public class PomAssert {
 
 	public PomAssert hasNoRepository() {
 		try {
-			Assert.assertEquals(0, this.eng
+			Assertions.assertEquals(0, this.eng
 					.getMatchingNodes(createRootNodeXPath("repositories"), this.doc)
 					.getLength());
 		}

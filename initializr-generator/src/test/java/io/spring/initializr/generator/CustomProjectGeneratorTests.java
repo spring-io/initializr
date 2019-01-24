@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Map;
 
 import io.spring.initializr.test.generator.ProjectAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 

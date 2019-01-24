@@ -16,10 +16,12 @@
 
 package io.spring.initializr.generator;
 
+import java.util.stream.Stream;
+
 import io.spring.initializr.test.generator.ProjectAssert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -28,117 +30,117 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Stephane Nicoll
  */
-@RunWith(Parameterized.class)
 public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 
-	@Parameterized.Parameters(name = "{0}")
-	public static Object[] parameters() {
-		Object[] java = new Object[] { "java", "java" };
-		Object[] groovy = new Object[] { "groovy", "groovy" };
-		Object[] kotlin = new Object[] { "kotlin", "kt" };
-		return new Object[] { java, groovy, kotlin };
+	public static Stream<Arguments> parameters() {
+		return Stream.of(Arguments.arguments("java", "java"),
+				Arguments.arguments("groovy", "groovy"),
+				Arguments.arguments("kotlin", "kt"));
 	}
 
-	private final String language;
-
-	private final String extension;
-
-	private final String expectedExtension;
-
-	public ProjectGeneratorLanguageTests(String language, String extension) {
-		this.language = language;
-		this.extension = extension;
-		this.expectedExtension = extension + ".gen";
-	}
-
-	@Test
-	public void currentGenerationJar() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationJar(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 		generateProject(request).isGenericProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
-				ProjectAssert.DEFAULT_APPLICATION_NAME, this.language, this.extension);
+				ProjectAssert.DEFAULT_APPLICATION_NAME, language, extension);
 	}
 
-	@Test
-	public void currentGenerationWar() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationWar(String language, String extension) {
 		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 		request.setPackaging("war");
 		generateProject(request).isGenericWarProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
-				ProjectAssert.DEFAULT_APPLICATION_NAME, this.language, this.extension);
+				ProjectAssert.DEFAULT_APPLICATION_NAME, language, extension);
 	}
 
-	@Test
-	public void currentGenerationMainClass() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationMainClass(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/DemoApplication." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplication." + this.expectedExtension));
+		project.sourceCodeAssert(
+				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/standard/DemoApplication."
+								+ getExpectedExtension(extension)));
 	}
 
-	@Test
-	public void previousGenerationMainClass() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void previousGenerationMainClass(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 		request.setBootVersion("1.5.18.RELEASE");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/DemoApplication." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language + "/previous/"
-						+ "/DemoApplication." + this.expectedExtension));
+		project.sourceCodeAssert(
+				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
+				.equalsTo(new ClassPathResource("project/" + language + "/previous/"
+						+ "/DemoApplication." + getExpectedExtension(extension)));
 	}
 
-	@Test
-	public void currentGenerationTestClass() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationTestClass(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTests." + this.expectedExtension));
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/standard/DemoApplicationTests."
+								+ getExpectedExtension(extension)));
 	}
 
-	@Test
-	public void currentGenerationTestClassWeb() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationTestClassWeb(String language, String extension) {
 		ProjectRequest request = createProjectRequest("web");
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/test/" + this.language
-				+ "/com/example/demo/DemoApplicationTests." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language
-						+ "/standard/DemoApplicationTestsWeb." + this.expectedExtension));
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/demo/DemoApplicationTests." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/standard/DemoApplicationTestsWeb."
+								+ getExpectedExtension(extension)));
 	}
 
-	@Test
-	public void currentGenerationServletInitializer() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void currentGenerationServletInitializer(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 		request.setPackaging("war");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/ServletInitializer." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language + "/standard/"
-						+ "ServletInitializer." + this.expectedExtension));
+		project.sourceCodeAssert("src/main/" + language
+				+ "/com/example/demo/ServletInitializer." + extension)
+				.equalsTo(new ClassPathResource("project/" + language + "/standard/"
+						+ "ServletInitializer." + getExpectedExtension(extension)));
 	}
 
-	@Test
-	public void previousGenerationServletInitializer() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void previousGenerationServletInitializer(String language, String extension) {
 		ProjectRequest request = createProjectRequest();
-		request.setLanguage(this.language);
+		request.setLanguage(language);
 		request.setBootVersion("1.5.18.RELEASE");
 		request.setPackaging("war");
 		ProjectAssert project = generateProject(request);
-		project.sourceCodeAssert("src/main/" + this.language
-				+ "/com/example/demo/ServletInitializer." + this.extension)
-				.equalsTo(new ClassPathResource("project/" + this.language + "/previous/"
-						+ "ServletInitializer." + this.expectedExtension));
+		project.sourceCodeAssert("src/main/" + language
+				+ "/com/example/demo/ServletInitializer." + extension)
+				.equalsTo(new ClassPathResource("project/" + language + "/previous/"
+						+ "ServletInitializer." + getExpectedExtension(extension)));
+	}
+
+	private String getExpectedExtension(String extension) {
+		return extension + ".gen";
 	}
 
 }

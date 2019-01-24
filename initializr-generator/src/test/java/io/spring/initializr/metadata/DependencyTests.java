@@ -20,11 +20,11 @@ import java.util.Arrays;
 
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionParser;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link Dependency}.
@@ -32,9 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 public class DependencyTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void createRootSpringBootStarter() {
@@ -95,59 +92,53 @@ public class DependencyTests {
 
 	@Test
 	public void invalidDependency() {
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		new Dependency().resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(() -> new Dependency().resolve());
 	}
 
 	@Test
 	public void invalidDependencyScope() {
 		Dependency dependency = Dependency.withId("web");
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(() -> dependency.setScope("whatever"));
 
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		dependency.setScope("whatever");
 	}
 
 	@Test
 	public void invalidSpringBootRange() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.setVersionRange("A.B.C");
-
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		this.thrown.expectMessage("A.B.C");
-		dependency.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(dependency::resolve).withMessageContaining("A.B.C");
 	}
 
 	@Test
 	public void invalidIdFormatTooManyColons() {
 		Dependency dependency = Dependency.withId("org.foo:bar:1.0:test:external");
-
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		dependency.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(dependency::resolve);
 	}
 
 	@Test
 	public void invalidLink() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.getLinks().add(Link.create(null, "https://example.com"));
-
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		dependency.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(dependency::resolve);
 	}
 
 	@Test
 	public void generateIdWithNoGroupId() {
 		Dependency dependency = new Dependency();
 		dependency.setArtifactId("bar");
-		this.thrown.expect(IllegalArgumentException.class);
-		dependency.generateId();
+		assertThatIllegalArgumentException().isThrownBy(dependency::generateId);
 	}
 
 	@Test
 	public void generateIdWithNoArtifactId() {
 		Dependency dependency = new Dependency();
 		dependency.setGroupId("foo");
-		this.thrown.expect(IllegalArgumentException.class);
-		dependency.generateId();
+		assertThatIllegalArgumentException().isThrownBy(dependency::generateId);
 	}
 
 	@Test
@@ -163,9 +154,8 @@ public class DependencyTests {
 		Dependency dependency = Dependency.withId("web");
 		dependency.getMappings()
 				.add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE"));
-		this.thrown.expect(InvalidInitializrMetadataException.class);
-		this.thrown.expectMessage("foo-bar");
-		dependency.resolve();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(dependency::resolve).withMessageContaining("foo-bar");
 	}
 
 	@Test

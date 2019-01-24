@@ -24,19 +24,15 @@ import io.spring.initializr.metadata.Dependency.Mapping;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Stephane Nicoll
  */
 public class ProjectRequestTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.build();
@@ -115,11 +111,9 @@ public class ProjectRequestTests {
 				.addDependencyGroup("code", "org.foo:bar").build();
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().addAll(Arrays.asList("org.foo:bar", "foo-bar"));
-
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("foo-bar");
-		request.resolve(this.metadata);
-		assertThat(request.getResolvedDependencies()).hasSize(1);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> request.resolve(this.metadata))
+				.withMessageContaining("foo-bar");
 	}
 
 	@Test
@@ -128,11 +122,9 @@ public class ProjectRequestTests {
 				.addDependencyGroup("code", "org.foo:bar").build();
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:acme"); // does not exist
-
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("org.foo:acme");
-		request.resolve(this.metadata);
-		assertThat(request.getResolvedDependencies()).hasSize(1);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> request.resolve(this.metadata))
+				.withMessageContaining("org.foo:acme");
 	}
 
 	@Test
@@ -156,11 +148,10 @@ public class ProjectRequestTests {
 		ProjectRequest request = initProjectRequest();
 		request.getStyle().add("org.foo:bar");
 		request.setBootVersion("0.9.9.RELEASE");
-
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("org.foo:bar");
-		this.thrown.expectMessage("0.9.9.RELEASE");
-		request.resolve(metadata);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> request.resolve(metadata))
+				.withMessageContaining("org.foo:bar")
+				.withMessageContaining("0.9.9.RELEASE");
 	}
 
 	@Test
@@ -210,10 +201,9 @@ public class ProjectRequestTests {
 	public void resolveUnknownType() {
 		ProjectRequest request = initProjectRequest();
 		request.setType("foo-project");
-
-		this.thrown.expect(InvalidProjectRequestException.class);
-		this.thrown.expectMessage("foo-project");
-		request.resolve(this.metadata);
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> request.resolve(this.metadata))
+				.withMessageContaining("foo-project");
 	}
 
 	@Test

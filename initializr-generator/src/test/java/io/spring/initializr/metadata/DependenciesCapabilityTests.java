@@ -16,11 +16,10 @@
 
 package io.spring.initializr.metadata;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link DependenciesCapability}.
@@ -28,9 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 public class DependenciesCapabilityTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void indexedDependencies() {
@@ -51,10 +47,8 @@ public class DependenciesCapabilityTests {
 		Dependency dependency2 = Dependency.withId("conflict");
 		DependenciesCapability capability = createDependenciesCapability("foo",
 				dependency, dependency2);
-
-		this.thrown.expect(IllegalArgumentException.class);
-		this.thrown.expectMessage("conflict");
-		capability.validate();
+		assertThatIllegalArgumentException().isThrownBy(capability::validate)
+				.withMessageContaining("conflict");
 	}
 
 	@Test
@@ -65,7 +59,6 @@ public class DependenciesCapabilityTests {
 		DependenciesCapability capability = createDependenciesCapability("foo",
 				dependency);
 		capability.validate();
-
 		assertThat(capability.get("first")).isSameAs(dependency);
 		assertThat(capability.get("alias1")).isSameAs(dependency);
 		assertThat(capability.get("alias2")).isSameAs(dependency);
@@ -81,10 +74,8 @@ public class DependenciesCapabilityTests {
 		DependenciesCapability capability = new DependenciesCapability();
 		capability.getContent().add(createDependencyGroup("foo", dependency));
 		capability.getContent().add(createDependencyGroup("bar", dependency2));
-
-		this.thrown.expect(IllegalArgumentException.class);
-		this.thrown.expectMessage("alias2");
-		capability.validate();
+		assertThatIllegalArgumentException().isThrownBy(capability::validate)
+				.withMessageContaining("alias2");
 	}
 
 	@Test

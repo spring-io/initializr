@@ -20,11 +20,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests for {@link VersionParser}.
@@ -32,9 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 public class VersionParserTests {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
 
 	private VersionParser parser = new VersionParser(Collections.emptyList());
 
@@ -58,8 +54,8 @@ public class VersionParserTests {
 
 	@Test
 	public void parseInvalidVersion() {
-		this.thrown.expect(InvalidVersionException.class);
-		this.parser.parse("foo");
+		assertThatExceptionOfType(InvalidVersionException.class)
+				.isThrownBy(() -> this.parser.parse("foo"));
 	}
 
 	@Test
@@ -128,8 +124,8 @@ public class VersionParserTests {
 
 	@Test
 	public void invalidRange() {
-		this.thrown.expect(InvalidVersionException.class);
-		this.parser.parseRange("foo-bar");
+		assertThatExceptionOfType(InvalidVersionException.class)
+				.isThrownBy(() -> this.parser.parseRange("foo-bar"));
 	}
 
 }

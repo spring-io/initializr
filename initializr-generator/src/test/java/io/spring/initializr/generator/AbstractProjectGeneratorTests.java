@@ -17,7 +17,7 @@
 package io.spring.initializr.generator;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,9 +28,9 @@ import io.spring.initializr.test.generator.GradleBuildAssert;
 import io.spring.initializr.test.generator.PomAssert;
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentMatcher;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,10 +43,8 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Stephane Nicoll
  */
+@ExtendWith(TempDirectory.class)
 public abstract class AbstractProjectGeneratorTests {
-
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
 
 	protected final ProjectGenerator projectGenerator;
 
@@ -61,8 +59,8 @@ public abstract class AbstractProjectGeneratorTests {
 		this.projectGenerator = projectGenerator;
 	}
 
-	@Before
-	public void setup() throws IOException {
+	@BeforeEach
+	public void setup(@TempDirectory.TempDir Path folder) {
 		Dependency web = Dependency.withId("web");
 		web.getFacets().add("web");
 		InitializrMetadata metadata = initializeTestMetadataBuilder()
@@ -73,7 +71,7 @@ public abstract class AbstractProjectGeneratorTests {
 		this.projectGenerator.setEventPublisher(this.eventPublisher);
 		this.projectGenerator
 				.setRequestResolver(new ProjectRequestResolver(new ArrayList<>()));
-		this.projectGenerator.setTmpdir(this.folder.newFolder().getAbsolutePath());
+		this.projectGenerator.setTmpdir(folder.toString());
 	}
 
 	protected InitializrMetadataTestBuilder initializeTestMetadataBuilder() {

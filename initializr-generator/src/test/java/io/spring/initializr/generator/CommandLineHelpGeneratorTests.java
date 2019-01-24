@@ -23,8 +23,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.util.TemplateRenderer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ public class CommandLineHelpGeneratorTests {
 
 	private CommandLineHelpGenerator generator;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		this.generator = new CommandLineHelpGenerator(new TemplateRenderer());
 	}
