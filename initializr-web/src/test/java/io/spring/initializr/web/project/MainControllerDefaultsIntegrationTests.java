@@ -18,7 +18,7 @@ package io.spring.initializr.web.project;
 
 import io.spring.initializr.test.generator.PomAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.test.context.ActiveProfiles;
 

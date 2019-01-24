@@ -26,8 +26,8 @@ import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stephane Nicoll
@@ -41,7 +41,7 @@ public class ProjectGenerationMetricsListenerTests {
 
 	private MetricsAssert metricsAssert;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
 		this.listener = new ProjectGenerationMetricsListener(meterRegistry);

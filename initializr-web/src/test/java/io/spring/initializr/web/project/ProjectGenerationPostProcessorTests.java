@@ -21,7 +21,7 @@ import io.spring.initializr.generator.ProjectRequestPostProcessor;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.project.ProjectGenerationPostProcessorTests.ProjectRequestPostProcessorConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

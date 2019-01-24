@@ -20,7 +20,7 @@ import java.net.URI;
 
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

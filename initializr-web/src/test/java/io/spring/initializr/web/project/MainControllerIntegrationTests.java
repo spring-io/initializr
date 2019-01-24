@@ -25,8 +25,8 @@ import io.spring.initializr.web.AbstractInitializrIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import org.springframework.http.HttpHeaders;
@@ -160,7 +160,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	@Ignore("Need a comparator that does not care about the number of elements in an array")
+	@Disabled("Need a comparator that does not care about the number of elements in an array")
 	public void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, "*/*");
 		validateMetadata(response,

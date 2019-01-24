@@ -25,7 +25,7 @@ import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.util.Version;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

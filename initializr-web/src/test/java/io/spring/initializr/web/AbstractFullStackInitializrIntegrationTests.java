@@ -17,18 +17,15 @@
 package io.spring.initializr.web;
 
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
-import org.junit.runner.RunWith;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author Stephane Nicoll
  * @author Dave Syer
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AbstractFullStackInitializrIntegrationTests
 		extends AbstractInitializrIntegrationTests {

@@ -22,7 +22,7 @@ import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.actuate.info.Info;
 

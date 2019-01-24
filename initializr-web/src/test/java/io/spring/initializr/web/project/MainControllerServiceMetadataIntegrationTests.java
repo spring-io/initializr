@@ -22,7 +22,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 

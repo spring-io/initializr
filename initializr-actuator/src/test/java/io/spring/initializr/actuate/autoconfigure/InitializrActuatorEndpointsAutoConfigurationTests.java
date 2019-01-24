@@ -19,7 +19,7 @@ package io.spring.initializr.actuate.autoconfigure;
 import io.spring.initializr.actuate.info.BomRangesInfoContributor;
 import io.spring.initializr.actuate.info.DependencyRangesInfoContributor;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;

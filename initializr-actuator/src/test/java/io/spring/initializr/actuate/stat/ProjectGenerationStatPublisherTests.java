@@ -22,8 +22,8 @@ import java.util.UUID;
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -54,7 +54,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 
 	private MockRestServiceServer mockServer;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		configureService(createProperties());
 	}

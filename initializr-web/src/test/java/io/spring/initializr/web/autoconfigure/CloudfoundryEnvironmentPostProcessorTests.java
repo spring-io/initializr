@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.autoconfigure;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.mock.env.MockEnvironment;

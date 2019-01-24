@@ -19,13 +19,16 @@ package io.spring.initializr.web.project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -44,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Dave Syer
  * @author Stephane Nicoll
  */
+@ExtendWith(TempDirectory.class)
 @ActiveProfiles("test-default")
 public class ProjectGenerationSmokeTests
 		extends AbstractFullStackInitializrIntegrationTests {
@@ -54,11 +58,11 @@ public class ProjectGenerationSmokeTests
 
 	private Action enterAction;
 
-	@Before
-	public void setup() throws IOException {
-		Assume.assumeTrue("Smoke tests disabled (set System property 'smoke.test')",
-				Boolean.getBoolean("smoke.test"));
-		this.downloadDir = this.folder.newFolder();
+	@BeforeEach
+	public void setup(@TempDirectory.TempDir Path folder) throws IOException {
+		Assumptions.assumeTrue(Boolean.getBoolean("smoke.test"),
+				"Smoke tests disabled (set System property 'smoke.test')");
+		this.downloadDir = folder.toFile();
 		FirefoxProfile fxProfile = new FirefoxProfile();
 		fxProfile.setPreference("browser.download.folderList", 2);
 		fxProfile.setPreference("browser.download.manager.showWhenStarting", false);
@@ -74,7 +78,7 @@ public class ProjectGenerationSmokeTests
 		this.enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 
-	@After
+	@AfterEach
 	public void destroy() {
 		if (this.driver != null) {
 			this.driver.close();

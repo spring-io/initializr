@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,10 +41,9 @@ import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Untar;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
@@ -58,7 +58,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -67,7 +66,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(TempDirectory.class)
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
@@ -76,17 +75,17 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
+	public File folder;
 
 	@Autowired
 	private RestTemplateBuilder restTemplateBuilder;
 
 	private RestTemplate restTemplate;
 
-	@Before
-	public void before() {
+	@BeforeEach
+	public void before(@TempDirectory.TempDir Path folder) {
 		this.restTemplate = this.restTemplateBuilder.build();
+		this.folder = folder.toFile();
 	}
 
 	protected abstract String createUrl(String context);
@@ -215,7 +214,7 @@ public abstract class AbstractInitializrIntegrationTests {
 		try {
 			File archiveFile = writeArchive(content);
 
-			File project = this.folder.newFolder();
+			File project = new File(this.folder, "project");
 			switch (archiveType) {
 			case ZIP:
 				unzip(archiveFile, project);
@@ -251,7 +250,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected File writeArchive(byte[] body) throws IOException {
-		File archiveFile = this.folder.newFile();
+		File archiveFile = new File(this.folder, "archive");
 		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
 			stream.write(body);
 		}

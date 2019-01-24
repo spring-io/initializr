@@ -18,7 +18,7 @@ package io.spring.initializr.actuate.autoconfigure;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.spring.initializr.actuate.metric.ProjectGenerationMetricsListener;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration;

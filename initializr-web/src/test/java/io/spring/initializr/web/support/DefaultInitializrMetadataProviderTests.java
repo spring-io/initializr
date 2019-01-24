@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +49,7 @@ public class DefaultInitializrMetadataProviderTests {
 
 	private MockRestServiceServer mockServer;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.restTemplate = new RestTemplate();
 		this.mockServer = MockRestServiceServer.createServer(this.restTemplate);

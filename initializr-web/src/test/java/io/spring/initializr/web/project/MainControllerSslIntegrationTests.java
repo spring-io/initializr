@@ -20,7 +20,7 @@ import java.net.URI;
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import org.springframework.http.HttpStatus;

@@ -21,7 +21,7 @@ import java.util.Arrays;
 import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectGeneratedEvent;
 import io.spring.initializr.generator.ProjectRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

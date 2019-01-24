@@ -19,7 +19,7 @@ package io.spring.initializr.web.project;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 

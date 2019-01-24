@@ -19,7 +19,7 @@ package io.spring.initializr.actuate.autoconfigure;
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;

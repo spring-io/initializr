@@ -23,8 +23,8 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -56,7 +56,7 @@ public class MainControllerStatsIntegrationTests
 	@Autowired
 	private ProjectGenerationStatPublisher projectGenerationStatPublisher;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
