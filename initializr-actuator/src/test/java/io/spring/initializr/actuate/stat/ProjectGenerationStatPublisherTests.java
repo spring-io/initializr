@@ -46,7 +46,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  *
  * @author Stephane Nicoll
  */
-public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
+class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 
 	private RetryTemplate retryTemplate;
 
@@ -70,7 +70,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishDocumentWithUserNameAndPassword() {
+	void publishDocumentWithUserNameAndPassword() {
 		StatsProperties properties = new StatsProperties();
 		properties.getElastic().setUri("http://example.com/elastic");
 		properties.getElastic().setUsername("foo");
@@ -81,7 +81,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishDocumentWithUserInfo() {
+	void publishDocumentWithUserInfo() {
 		StatsProperties properties = new StatsProperties();
 		properties.getElastic().setUri("https://elastic:secret@es.example.com");
 		configureService(properties);
@@ -90,7 +90,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishDocumentWithUserInfoOverridesUserNamePassword() {
+	void publishDocumentWithUserInfoOverridesUserNamePassword() {
 		StatsProperties properties = new StatsProperties();
 		properties.getElastic().setUri("https://elastic:secret@es.example.com");
 		properties.getElastic().setUsername("another");
@@ -101,7 +101,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishDocumentWithNoAuthentication() {
+	void publishDocumentWithNoAuthentication() {
 		StatsProperties properties = new StatsProperties();
 		properties.getElastic().setUri("https://example.com/test/");
 		configureService(properties);
@@ -125,7 +125,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void publishDocument() {
+	void publishDocument() {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("com.example.foo");
 		request.setArtifactId("my-project");
@@ -143,7 +143,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void recoverFromError() {
+	void recoverFromError() {
 		ProjectRequest request = createProjectRequest();
 
 		this.mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
@@ -165,7 +165,7 @@ public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatT
 	}
 
 	@Test
-	public void fatalErrorOnlyLogs() {
+	void fatalErrorOnlyLogs() {
 		ProjectRequest request = createProjectRequest();
 		this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2,
 				Collections.singletonMap(Exception.class, true)));

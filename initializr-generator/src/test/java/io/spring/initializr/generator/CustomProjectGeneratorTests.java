@@ -36,14 +36,14 @@ import static org.mockito.Mockito.times;
  * @author Torsten Walter
  * @author Stephane Nicoll
  */
-public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
+class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 
-	public CustomProjectGeneratorTests() {
+	CustomProjectGeneratorTests() {
 		super(new MyProjectGenerator());
 	}
 
 	@Test
-	public void generateCustomResource() {
+	void generateCustomResource() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("maven-project");
 		request.setGroupId("com.example.custom");
@@ -53,7 +53,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void generateCustomResourceDisabled() {
+	void generateCustomResourceDisabled() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("gradle-build");
 		request.setGroupId("com.example.custom");
@@ -62,7 +62,7 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	}
 
 	@Test
-	public void projectGenerationEventFiredAfterCustomization() {
+	void projectGenerationEventFiredAfterCustomization() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("maven-project");
 		request.setGroupId("com.example.custom");

@@ -31,18 +31,17 @@ import org.springframework.test.context.ActiveProfiles;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class UiControllerIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	public void dependenciesNoVersion() throws JSONException {
+	void dependenciesNoVersion() throws JSONException {
 		ResponseEntity<String> response = execute("/ui/dependencies", String.class, null);
 		validateContentType(response, MediaType.APPLICATION_JSON);
 		validateDependenciesOutput("all", response.getBody());
 	}
 
 	@Test
-	public void dependenciesSpecificVersion() throws JSONException {
+	void dependenciesSpecificVersion() throws JSONException {
 		ResponseEntity<String> response = execute(
 				"/ui/dependencies?version=1.1.2.RELEASE", String.class, null);
 		validateContentType(response, MediaType.APPLICATION_JSON);

@@ -31,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Stephane Nicoll
  */
-public class DependencyTests {
+class DependencyTests {
 
 	@Test
-	public void createRootSpringBootStarter() {
+	void createRootSpringBootStarter() {
 		Dependency d = new Dependency();
 		d.asSpringBootStarter("");
 		assertThat(d.getGroupId()).isEqualTo("org.springframework.boot");
@@ -42,7 +42,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void setCoordinatesFromId() {
+	void setCoordinatesFromId() {
 		Dependency dependency = Dependency.withId("org.foo:bar:1.2.3");
 		dependency.resolve();
 		assertThat(dependency.getGroupId()).isEqualTo("org.foo");
@@ -52,7 +52,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void setCoordinatesFromIdNoVersion() {
+	void setCoordinatesFromIdNoVersion() {
 		Dependency dependency = Dependency.withId("org.foo:bar");
 		dependency.resolve();
 		assertThat(dependency.getGroupId()).isEqualTo("org.foo");
@@ -62,7 +62,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void setIdFromCoordinates() {
+	void setIdFromCoordinates() {
 		Dependency dependency = new Dependency();
 		dependency.setGroupId("org.foo");
 		dependency.setArtifactId("bar");
@@ -72,7 +72,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void setIdFromCoordinatesNoVersion() {
+	void setIdFromCoordinatesNoVersion() {
 		Dependency dependency = new Dependency();
 		dependency.setGroupId("org.foo");
 		dependency.setArtifactId("bar");
@@ -81,7 +81,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void setIdFromSimpleName() {
+	void setIdFromSimpleName() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.resolve();
 		assertThat(dependency.getGroupId()).isEqualTo("org.springframework.boot");
@@ -91,13 +91,13 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void invalidDependency() {
+	void invalidDependency() {
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
 				.isThrownBy(() -> new Dependency().resolve());
 	}
 
 	@Test
-	public void invalidDependencyScope() {
+	void invalidDependencyScope() {
 		Dependency dependency = Dependency.withId("web");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
 				.isThrownBy(() -> dependency.setScope("whatever"));
@@ -105,7 +105,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void invalidSpringBootRange() {
+	void invalidSpringBootRange() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.setVersionRange("A.B.C");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
@@ -113,14 +113,14 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void invalidIdFormatTooManyColons() {
+	void invalidIdFormatTooManyColons() {
 		Dependency dependency = Dependency.withId("org.foo:bar:1.0:test:external");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
 				.isThrownBy(dependency::resolve);
 	}
 
 	@Test
-	public void invalidLink() {
+	void invalidLink() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.getLinks().add(Link.create(null, "https://example.com"));
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
@@ -128,21 +128,21 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void generateIdWithNoGroupId() {
+	void generateIdWithNoGroupId() {
 		Dependency dependency = new Dependency();
 		dependency.setArtifactId("bar");
 		assertThatIllegalArgumentException().isThrownBy(dependency::generateId);
 	}
 
 	@Test
-	public void generateIdWithNoArtifactId() {
+	void generateIdWithNoArtifactId() {
 		Dependency dependency = new Dependency();
 		dependency.setGroupId("foo");
 		assertThatIllegalArgumentException().isThrownBy(dependency::generateId);
 	}
 
 	@Test
-	public void resolveNoMapping() {
+	void resolveNoMapping() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.resolve();
 		assertThat(dependency.resolve(Version.parse("1.2.0.RELEASE")))
@@ -150,7 +150,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveInvalidMapping() {
+	void resolveInvalidMapping() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.getMappings()
 				.add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE"));
@@ -159,7 +159,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveVersionRequirement() {
+	void resolveVersionRequirement() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
@@ -170,7 +170,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveMatchingVersionMapping() {
+	void resolveMatchingVersionMapping() {
 		Dependency dependency = Dependency.withId("web", null, null, "0.3.0.RELEASE");
 		dependency.setDescription("A web dependency");
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
@@ -191,7 +191,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveMatchArtifactMapping() {
+	void resolveMatchArtifactMapping() {
 		Dependency dependency = Dependency.withId("web", null, null, "0.3.0.RELEASE");
 		dependency.setDescription("A web dependency");
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
@@ -212,7 +212,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveMatchingVersionWithVariablePatch() {
+	void resolveMatchingVersionWithVariablePatch() {
 		Dependency dependency = Dependency.withId("web", null, null, "0.3.0.RELEASE");
 		dependency.setDescription("A web dependency");
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
@@ -248,7 +248,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveMatchingWithCustomGroupId() {
+	void resolveMatchingWithCustomGroupId() {
 		Dependency dependency = Dependency.withId("foo", "com.acme", "foo",
 				"0.3.0.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
@@ -263,7 +263,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveVersionWithX() {
+	void resolveVersionWithX() {
 		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1",
 				"0.3.0.RELEASE");
 		dependency1.setVersionRange("1.2.x.RELEASE");
@@ -272,7 +272,7 @@ public class DependencyTests {
 	}
 
 	@Test
-	public void resolveVersionRangeWithX() {
+	void resolveVersionRangeWithX() {
 		Dependency dependency = Dependency.withId("foo1", "com.acme", "foo1",
 				"0.3.0.RELEASE");
 		dependency.setVersionRange("[1.1.0.RELEASE, 1.2.x.RELEASE)");

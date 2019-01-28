@@ -52,20 +52,20 @@ import static org.mockito.Mockito.mock;
  * @author Stephane Nicoll
  * @author Madhura Bhave
  */
-public class InitializrAutoConfigurationTests {
+class InitializrAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
 					JacksonAutoConfiguration.class, InitializrAutoConfiguration.class));
 
 	@Test
-	public void autoConfigRegistersProjectGenerator() {
+	void autoConfigRegistersProjectGenerator() {
 		this.contextRunner.run(
 				(context) -> assertThat(context).hasSingleBean(ProjectGenerator.class));
 	}
 
 	@Test
-	public void autoConfigWhenProjectGeneratorBeanPresentDoesNotRegisterProjectGenerator() {
+	void autoConfigWhenProjectGeneratorBeanPresentDoesNotRegisterProjectGenerator() {
 		this.contextRunner
 				.withUserConfiguration(CustomProjectGeneratorConfiguration.class)
 				.run((context) -> {
@@ -75,13 +75,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersTemplateRenderer() {
+	void autoConfigRegistersTemplateRenderer() {
 		this.contextRunner.run(
 				(context) -> assertThat(context).hasSingleBean(TemplateRenderer.class));
 	}
 
 	@Test
-	public void autoConfigWhenTemplateRendererBeanPresentDoesNotRegisterTemplateRenderer() {
+	void autoConfigWhenTemplateRendererBeanPresentDoesNotRegisterTemplateRenderer() {
 		this.contextRunner
 				.withUserConfiguration(CustomTemplateRendererConfiguration.class)
 				.run((context) -> {
@@ -91,13 +91,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersProjectRequestResolver() {
+	void autoConfigRegistersProjectRequestResolver() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(ProjectRequestResolver.class));
 	}
 
 	@Test
-	public void autoConfigWhenProjectRequestResolverBeanPresentDoesNotRegisterProjectRequestResolver() {
+	void autoConfigWhenProjectRequestResolverBeanPresentDoesNotRegisterProjectRequestResolver() {
 		this.contextRunner
 				.withUserConfiguration(CustomProjectRequestResolverConfiguration.class)
 				.run((context) -> {
@@ -107,13 +107,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersProjectResourceLocator() {
+	void autoConfigRegistersProjectResourceLocator() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(ProjectResourceLocator.class));
 	}
 
 	@Test
-	public void autoConfigWhenProjectResourceLocatorBeanPresentDoesNotRegisterProjectResourceLocator() {
+	void autoConfigWhenProjectResourceLocatorBeanPresentDoesNotRegisterProjectResourceLocator() {
 		this.contextRunner
 				.withUserConfiguration(CustomProjectResourceLocatorConfiguration.class)
 				.run((context) -> {
@@ -123,13 +123,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersInitializrMetadataProvider() {
+	void autoConfigRegistersInitializrMetadataProvider() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(InitializrMetadataProvider.class));
 	}
 
 	@Test
-	public void autoConfigWhenInitializrMetadataProviderBeanPresentDoesNotRegisterInitializrMetadataProvider() {
+	void autoConfigWhenInitializrMetadataProviderBeanPresentDoesNotRegisterInitializrMetadataProvider() {
 		this.contextRunner
 				.withUserConfiguration(
 						CustomInitializrMetadataProviderConfiguration.class)
@@ -140,13 +140,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersDependencyMetadataProvider() {
+	void autoConfigRegistersDependencyMetadataProvider() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(DependencyMetadataProvider.class));
 	}
 
 	@Test
-	public void autoConfigWhenDependencyMetadataProviderBeanPresentDoesNotRegisterDependencyMetadataProvider() {
+	void autoConfigWhenDependencyMetadataProviderBeanPresentDoesNotRegisterDependencyMetadataProvider() {
 		this.contextRunner
 				.withUserConfiguration(
 						CustomDependencyMetadataProviderConfiguration.class)
@@ -157,7 +157,7 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void customRestTemplateBuilderIsUsed() {
+	void customRestTemplateBuilderIsUsed() {
 		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
 				.run((context) -> {
 					assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
@@ -170,7 +170,7 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void webConfiguration() {
+	void webConfiguration() {
 		WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner()
 				.withConfiguration(
 						AutoConfigurations.of(RestTemplateAutoConfiguration.class,
@@ -186,7 +186,7 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void webConfigurationConditionalOnWebApplication() {
+	void webConfigurationConditionalOnWebApplication() {
 		this.contextRunner.run((context) -> {
 			assertThat(context).doesNotHaveBean(InitializrWebConfig.class);
 			assertThat(context).doesNotHaveBean(MainController.class);
@@ -195,13 +195,13 @@ public class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	public void cacheConfiguration() {
+	void cacheConfiguration() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(JCacheManagerCustomizer.class));
 	}
 
 	@Test
-	public void cacheConfigurationConditionalOnClass() {
+	void cacheConfigurationConditionalOnClass() {
 		this.contextRunner
 				.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
 				.run((context) -> assertThat(context)

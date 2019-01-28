@@ -28,13 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTests {
+class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTests {
 
 	private final ProjectRequestDocumentFactory factory = new ProjectRequestDocumentFactory(
 			createProvider(getMetadata()));
 
 	@Test
-	public void createDocumentForSimpleProject() {
+	void createDocumentForSimpleProject() {
 		ProjectRequest request = createProjectRequest();
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
@@ -53,7 +53,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithRequestIp() {
+	void createDocumentWithRequestIp() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("x-forwarded-for", "10.0.0.123");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -64,7 +64,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithRequestIpv6() {
+	void createDocumentWithRequestIpv6() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("x-forwarded-for", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -75,7 +75,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithCloudFlareHeaders() {
+	void createDocumentWithCloudFlareHeaders() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "10.0.0.123");
 		request.getParameters().put("cf-ipcountry", "BE");
@@ -87,7 +87,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithCloudFlareIpv6() {
+	void createDocumentWithCloudFlareIpv6() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -98,7 +98,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithCloudFlareHeadersAndOtherHeaders() {
+	void createDocumentWithCloudFlareHeadersAndOtherHeaders() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "10.0.0.123");
 		request.getParameters().put("x-forwarded-for", "192.168.1.101");
@@ -110,7 +110,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithCloudFlareCountrySetToXX() {
+	void createDocumentWithCloudFlareCountrySetToXX() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("cf-connecting-ip", "Xx"); // case insensitive
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -119,7 +119,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithUserAgent() {
+	void createDocumentWithUserAgent() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("user-agent", "HTTPie/0.8.0");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -129,7 +129,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithUserAgentNoVersion() {
+	void createDocumentWithUserAgentNoVersion() {
 		ProjectRequest request = createProjectRequest();
 		request.getParameters().put("user-agent", "IntelliJ IDEA");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -139,7 +139,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentInvalidJavaVersion() {
+	void createDocumentInvalidJavaVersion() {
 		ProjectRequest request = createProjectRequest();
 		request.setJavaVersion("1.2");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -150,7 +150,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentInvalidLanguage() {
+	void createDocumentInvalidLanguage() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage("c++");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -161,7 +161,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentInvalidPackaging() {
+	void createDocumentInvalidPackaging() {
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("ear");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -172,7 +172,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentInvalidType() {
+	void createDocumentInvalidType() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("ant-project");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -183,7 +183,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentInvalidDependency() {
+	void createDocumentInvalidDependency() {
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Arrays.asList("web", "invalid", "data-jpa", "invalid-2"));
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
@@ -198,7 +198,7 @@ public class ProjectRequestDocumentFactoryTests extends AbstractInitializrStatTe
 	}
 
 	@Test
-	public void createDocumentWithProjectFailedEvent() {
+	void createDocumentWithProjectFailedEvent() {
 		ProjectRequest request = createProjectRequest();
 		ProjectFailedEvent event = new ProjectFailedEvent(request,
 				new IllegalStateException("my test message"));

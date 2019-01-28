@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Madhura Bhave
  */
-public class InitializrMetricsAutoConfigurationTests {
+class InitializrMetricsAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(MetricsAutoConfiguration.class,
@@ -41,13 +41,13 @@ public class InitializrMetricsAutoConfigurationTests {
 					InitializrMetricsAutoConfiguration.class));
 
 	@Test
-	public void autoConfigRegistersProjectGenerationMetricsListenerBean() {
+	void autoConfigRegistersProjectGenerationMetricsListenerBean() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(ProjectGenerationMetricsListener.class));
 	}
 
 	@Test
-	public void autoConfigConditionalOnMeterRegistryClass() {
+	void autoConfigConditionalOnMeterRegistryClass() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader(MeterRegistry.class))
 				.run((context) -> assertThat(context)
 						.doesNotHaveBean(ProjectGenerationMetricsListener.class));

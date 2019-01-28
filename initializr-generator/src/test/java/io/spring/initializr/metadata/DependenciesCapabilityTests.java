@@ -26,10 +26,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Stephane Nicoll
  */
-public class DependenciesCapabilityTests {
+class DependenciesCapabilityTests {
 
 	@Test
-	public void indexedDependencies() {
+	void indexedDependencies() {
 		Dependency dependency = Dependency.withId("first");
 		Dependency dependency2 = Dependency.withId("second");
 		DependenciesCapability capability = createDependenciesCapability("foo",
@@ -42,7 +42,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void addTwoDependenciesWithSameId() {
+	void addTwoDependenciesWithSameId() {
 		Dependency dependency = Dependency.withId("conflict");
 		Dependency dependency2 = Dependency.withId("conflict");
 		DependenciesCapability capability = createDependenciesCapability("foo",
@@ -52,7 +52,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void addDependencyWithAliases() {
+	void addDependencyWithAliases() {
 		Dependency dependency = Dependency.withId("first");
 		dependency.getAliases().add("alias1");
 		dependency.getAliases().add("alias2");
@@ -65,7 +65,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void aliasClashWithAnotherDependency() {
+	void aliasClashWithAnotherDependency() {
 		Dependency dependency = Dependency.withId("first");
 		dependency.getAliases().add("alias1");
 		dependency.getAliases().add("alias2");
@@ -79,7 +79,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void mergeAddEntry() {
+	void mergeAddEntry() {
 		DependenciesCapability capability = createDependenciesCapability("foo",
 				Dependency.withId("first"), Dependency.withId("second"));
 
@@ -96,7 +96,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void addDefaultVersionRange() {
+	void addDefaultVersionRange() {
 		Dependency first = Dependency.withId("first");
 		Dependency second = Dependency.withId("second");
 		second.setVersionRange("1.2.3.RELEASE");
@@ -112,7 +112,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void addDefaultBom() {
+	void addDefaultBom() {
 		Dependency first = Dependency.withId("first");
 		Dependency second = Dependency.withId("second");
 		second.setBom("da-bom");
@@ -128,7 +128,7 @@ public class DependenciesCapabilityTests {
 	}
 
 	@Test
-	public void addDefaultRepository() {
+	void addDefaultRepository() {
 		Dependency first = Dependency.withId("first");
 		Dependency second = Dependency.withId("second");
 		second.setRepository("da-repo");

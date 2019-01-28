@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class CloudfoundryEnvironmentPostProcessorTests {
+class CloudfoundryEnvironmentPostProcessorTests {
 
 	private final CloudfoundryEnvironmentPostProcessor postProcessor = new CloudfoundryEnvironmentPostProcessor();
 
@@ -35,7 +35,7 @@ public class CloudfoundryEnvironmentPostProcessorTests {
 	private final SpringApplication application = new SpringApplication();
 
 	@Test
-	public void parseUriWithCredentials() {
+	void parseUriWithCredentials() {
 		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
 				"https://user:pass@example.com/bar/biz?param=one");
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
@@ -49,7 +49,7 @@ public class CloudfoundryEnvironmentPostProcessorTests {
 	}
 
 	@Test
-	public void parseUri() {
+	void parseUri() {
 		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
 				"http://example.com/bar/biz?param=one");
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
@@ -63,7 +63,7 @@ public class CloudfoundryEnvironmentPostProcessorTests {
 	}
 
 	@Test
-	public void parseNoVcapUri() {
+	void parseNoVcapUri() {
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri")).isNull();

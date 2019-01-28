@@ -28,13 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-defaults" })
-public class MainControllerDefaultsIntegrationTests
+class MainControllerDefaultsIntegrationTests
 		extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization
 
 	@Test
-	public void generateDefaultPom() {
+	void generateDefaultPom() {
 		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"),
 				String.class);
 		PomAssert pomAssert = new PomAssert(content);
@@ -44,7 +44,7 @@ public class MainControllerDefaultsIntegrationTests
 	}
 
 	@Test
-	public void defaultsAppliedToHome() {
+	void defaultsAppliedToHome() {
 		String body = htmlHome();
 		assertThat(body).as("custom groupId not found").contains("org.foo");
 		assertThat(body).as("custom artifactId not found").contains("foo-bar");

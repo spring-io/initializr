@@ -34,11 +34,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
-public class MainControllerEnvIntegrationTests
+class MainControllerEnvIntegrationTests
 		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	public void downloadCliWithCustomRepository() throws Exception {
+	void downloadCliWithCustomRepository() throws Exception {
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
 				String.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
@@ -47,7 +47,7 @@ public class MainControllerEnvIntegrationTests
 	}
 
 	@Test
-	public void generateProjectWithInvalidName() {
+	void generateProjectWithInvalidName() {
 		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
 				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
 				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
@@ -56,7 +56,7 @@ public class MainControllerEnvIntegrationTests
 	}
 
 	@Test
-	public void googleAnalytics() {
+	void googleAnalytics() {
 		String body = htmlHome();
 		assertThat(body).contains("https://www.googletagmanager.com/gtm.js");
 	}

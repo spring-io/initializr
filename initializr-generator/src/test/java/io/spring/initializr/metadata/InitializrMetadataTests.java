@@ -31,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * @author Stephane Nicoll
  */
-public class InitializrMetadataTests {
+class InitializrMetadataTests {
 
 	@Test
-	public void invalidBom() {
+	void invalidBom() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setBom("foo-bom");
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
@@ -46,7 +46,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidRepository() {
+	void invalidRepository() {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
 		foo.setRepository("foo-repo");
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
@@ -59,7 +59,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomNoVersion() {
+	void invalidBomNoVersion() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
@@ -70,7 +70,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomUnknownRepository() {
+	void invalidBomUnknownRepository() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom",
 				"1.0.0.RELEASE");
 		bom.getRepositories().add("foo-repo");
@@ -84,7 +84,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomUnknownAdditionalBom() {
+	void invalidBomUnknownAdditionalBom() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom",
 				"1.0.0.RELEASE");
 		bom.getAdditionalBoms().addAll(Arrays.asList("bar-bom", "biz-bom"));
@@ -100,7 +100,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomVersionRangeMapping() {
+	void invalidBomVersionRangeMapping() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
 		bom.getMappings().add(Mapping.create("FOO_BAR", "1.2.0"));
@@ -113,7 +113,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomVersionRangeMappingUnknownRepo() {
+	void invalidBomVersionRangeMappingUnknownRepo() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
 		Mapping mapping = Mapping.create("1.3.0.M2", "1.2.0");
@@ -129,7 +129,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidBomVersionRangeMappingUnknownAdditionalBom() {
+	void invalidBomVersionRangeMappingUnknownAdditionalBom() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
 		Mapping mapping = Mapping.create("1.3.0.M2", "1.2.0");
@@ -145,7 +145,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void updateSpringBootVersions() {
+	void updateSpringBootVersions() {
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
 		bom.getMappings()
@@ -184,7 +184,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void invalidParentMissingVersion() {
+	void invalidParentMissingVersion() {
 		InitializrMetadataTestBuilder builder = InitializrMetadataTestBuilder
 				.withDefaults().setMavenParent("org.foo", "foo-parent", null, false);
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
@@ -193,7 +193,7 @@ public class InitializrMetadataTests {
 	}
 
 	@Test
-	public void stripInvalidCharsFromPackage() {
+	void stripInvalidCharsFromPackage() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.build();
 		metadata.getGroupId().setContent("org.acme");

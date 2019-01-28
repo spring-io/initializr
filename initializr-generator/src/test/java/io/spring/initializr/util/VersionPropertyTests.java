@@ -26,40 +26,40 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Stephane Nicoll
  */
-public class VersionPropertyTests {
+class VersionPropertyTests {
 
 	@Test
-	public void testStandardProperty() {
+	void testStandardProperty() {
 		assertThat(VersionProperty.of("spring-boot.version").toStandardFormat())
 				.isEqualTo("spring-boot.version");
 	}
 
 	@Test
-	public void testCamelCaseProperty() {
+	void testCamelCaseProperty() {
 		assertThat(VersionProperty.of("spring-boot.version").toCamelCaseFormat())
 				.isEqualTo("springBootVersion");
 	}
 
 	@Test
-	public void testStandardPropertyWithNoSeparator() {
+	void testStandardPropertyWithNoSeparator() {
 		assertThat(VersionProperty.of("springbootversion").toStandardFormat())
 				.isEqualTo("springbootversion");
 	}
 
 	@Test
-	public void testCamelCasePropertyWithNoSeparator() {
+	void testCamelCasePropertyWithNoSeparator() {
 		assertThat(VersionProperty.of("springbootversion").toCamelCaseFormat())
 				.isEqualTo("springbootversion");
 	}
 
 	@Test
-	public void testInvalidPropertyUpperCase() {
+	void testInvalidPropertyUpperCase() {
 		assertThatIllegalArgumentException()
 				.isThrownBy(() -> VersionProperty.of("Spring-boot.version"));
 	}
 
 	@Test
-	public void testInvalidPropertyIllegalCharacter() {
+	void testInvalidPropertyIllegalCharacter() {
 		assertThatIllegalArgumentException()
 				.isThrownBy(() -> VersionProperty.of("spring-boot_version"))
 				.withMessageContaining("Unsupported character");

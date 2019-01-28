@@ -41,7 +41,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 /**
  * @author Stephane Nicoll
  */
-public class DefaultInitializrMetadataProviderTests {
+class DefaultInitializrMetadataProviderTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -56,7 +56,7 @@ public class DefaultInitializrMetadataProviderTests {
 	}
 
 	@Test
-	public void bootVersionsAreReplaced() {
+	void bootVersionsAreReplaced() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addBootVersion("0.0.9.RELEASE", true)
 				.addBootVersion("0.0.8.RELEASE", false).build();
@@ -79,7 +79,7 @@ public class DefaultInitializrMetadataProviderTests {
 	}
 
 	@Test
-	public void defaultBootVersionIsAlwaysSet() {
+	void defaultBootVersionIsAlwaysSet() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addBootVersion("0.0.9.RELEASE", true)
 				.addBootVersion("0.0.8.RELEASE", false).build();

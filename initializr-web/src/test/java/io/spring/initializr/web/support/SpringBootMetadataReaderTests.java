@@ -40,7 +40,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  * @author Stephane Nicoll
  * @author Dave Syer
  */
-public class SpringBootMetadataReaderTests {
+class SpringBootMetadataReaderTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataBuilder.create()
 			.build();
@@ -53,7 +53,7 @@ public class SpringBootMetadataReaderTests {
 			.bindTo(this.restTemplate).build();
 
 	@Test
-	public void readAvailableVersions() throws IOException {
+	void readAvailableVersions() throws IOException {
 		this.server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
 				.andRespond(withSuccess(
 						new ClassPathResource("metadata/sagan/spring-boot.json"),

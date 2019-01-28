@@ -45,7 +45,7 @@ import static org.mockito.Mockito.mock;
  * @author Stephane Nicoll
  * @author Madhura Bhave
  */
-public class InitializrStatsAutoConfigurationTests {
+class InitializrStatsAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class,
@@ -54,7 +54,7 @@ public class InitializrStatsAutoConfigurationTests {
 					InitializrStatsAutoConfiguration.class));
 
 	@Test
-	public void autoConfigRegistersProjectGenerationStatPublisher() {
+	void autoConfigRegistersProjectGenerationStatPublisher() {
 		this.contextRunner
 				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
 				.run((context) -> assertThat(context)
@@ -62,14 +62,14 @@ public class InitializrStatsAutoConfigurationTests {
 	}
 
 	@Test
-	public void autoConfigRegistersRetryTemplate() {
+	void autoConfigRegistersRetryTemplate() {
 		this.contextRunner
 				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
 				.run((context) -> assertThat(context).hasSingleBean(RetryTemplate.class));
 	}
 
 	@Test
-	public void statsRetryTemplateConditionalOnMissingBean() {
+	void statsRetryTemplateConditionalOnMissingBean() {
 		this.contextRunner
 				.withUserConfiguration(CustomStatsRetryTemplateConfiguration.class)
 				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
@@ -83,7 +83,7 @@ public class InitializrStatsAutoConfigurationTests {
 	}
 
 	@Test
-	public void customRestTemplateBuilderIsUsed() {
+	void customRestTemplateBuilderIsUsed() {
 		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
 				.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
 				.run((context) -> {

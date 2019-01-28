@@ -35,10 +35,10 @@ import static org.assertj.core.api.Assertions.entry;
  *
  * @author Stephane Nicoll
  */
-public class DependencyRangesInfoContributorTests {
+class DependencyRangesInfoContributorTests {
 
 	@Test
-	public void noDependencyWithVersion() {
+	void noDependencyWithVersion() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.build();
 		Info info = getInfo(metadata);
@@ -46,7 +46,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyWithNoMapping() {
+	void dependencyWithNoMapping() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
 				"1.2.3.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -56,7 +56,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyWithRangeOnArtifact() {
+	void dependencyWithRangeOnArtifact() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
 				"1.2.3.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
@@ -68,7 +68,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyWithRangeAndBom() {
+	void dependencyWithRangeAndBom() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
 				"1.2.3.RELEASE");
@@ -82,7 +82,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyNoMappingSimpleRange() {
+	void dependencyNoMappingSimpleRange() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo",
 				"1.2.3.RELEASE");
 		dependency.setVersionRange("[1.1.0.RELEASE, 1.5.0.RELEASE)");
@@ -101,7 +101,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyWithMappingAndOpenRange() {
+	void dependencyWithMappingAndOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
@@ -118,7 +118,7 @@ public class DependencyRangesInfoContributorTests {
 	}
 
 	@Test
-	public void dependencyWithMappingAndNoOpenRange() {
+	void dependencyWithMappingAndNoOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
 		dependency.getMappings().add(Dependency.Mapping
 				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));

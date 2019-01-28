@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-public class StatsPropertiesTests {
+class StatsPropertiesTests {
 
 	private final StatsProperties properties = new StatsProperties();
 
 	@Test
-	public void cleanTrailingSlash() {
+	void cleanTrailingSlash() {
 		this.properties.getElastic().setUri("http://example.com/");
 		assertThat(this.properties.getElastic().getUri()).isEqualTo("http://example.com");
 	}

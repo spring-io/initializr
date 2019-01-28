@@ -23,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class TypeTests {
+class TypeTests {
 
 	@Test
-	public void parseAction() {
+	void parseAction() {
 		Type type = new Type();
 		type.setId("foo");
 		type.setAction("my-action.zip");

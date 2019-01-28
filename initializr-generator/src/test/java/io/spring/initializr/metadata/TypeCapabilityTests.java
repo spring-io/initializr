@@ -23,16 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class TypeCapabilityTests {
+class TypeCapabilityTests {
 
 	@Test
-	public void defaultEmpty() {
+	void defaultEmpty() {
 		TypeCapability capability = new TypeCapability();
 		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
-	public void defaultNoDefault() {
+	void defaultNoDefault() {
 		TypeCapability capability = new TypeCapability();
 		Type first = new Type();
 		first.setId("foo");
@@ -46,7 +46,7 @@ public class TypeCapabilityTests {
 	}
 
 	@Test
-	public void defaultType() {
+	void defaultType() {
 		TypeCapability capability = new TypeCapability();
 		Type first = new Type();
 		first.setId("foo");
@@ -60,7 +60,7 @@ public class TypeCapabilityTests {
 	}
 
 	@Test
-	public void mergeAddEntry() {
+	void mergeAddEntry() {
 		TypeCapability capability = new TypeCapability();
 		Type first = new Type();
 		first.setId("foo");

@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Madhura Bhave
  */
-public class InitializrActuatorEndpointsAutoConfigurationTests {
+class InitializrActuatorEndpointsAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class,
@@ -42,13 +42,13 @@ public class InitializrActuatorEndpointsAutoConfigurationTests {
 					InitializrActuatorEndpointsAutoConfiguration.class));
 
 	@Test
-	public void autoConfigRegistersBomRangesInfoContributor() {
+	void autoConfigRegistersBomRangesInfoContributor() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(BomRangesInfoContributor.class));
 	}
 
 	@Test
-	public void autoConfigRegistersDependencyRangesInfoContributor() {
+	void autoConfigRegistersDependencyRangesInfoContributor() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(DependencyRangesInfoContributor.class));
 	}

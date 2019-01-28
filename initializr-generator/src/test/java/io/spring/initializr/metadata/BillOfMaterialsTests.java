@@ -29,10 +29,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 /**
  * @author Stephane Nicoll
  */
-public class BillOfMaterialsTests {
+class BillOfMaterialsTests {
 
 	@Test
-	public void resolveSimpleBom() {
+	void resolveSimpleBom() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.validate();
 		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
@@ -40,7 +40,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void resolveSimpleRange() {
+	void resolveSimpleRange() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.setVersionProperty("bom.version");
 		bom.getRepositories().add("repo-main");
@@ -60,7 +60,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void resolveSimpleRangeWithGroupIdArtifactId() {
+	void resolveSimpleRangeWithGroupIdArtifactId() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.setVersionProperty("bom.version");
 		bom.getRepositories().add("repo-main");
@@ -83,7 +83,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void resolveRangeOverride() {
+	void resolveRangeOverride() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.getRepositories().add("repo-main");
 		bom.getAdditionalBoms().add("bom-main");
@@ -103,7 +103,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void resolveRangeOverrideAndMapping() {
+	void resolveRangeOverrideAndMapping() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.setVersionProperty("example.version");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
@@ -117,7 +117,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void noRangeAvailable() {
+	void noRangeAvailable() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
@@ -128,7 +128,7 @@ public class BillOfMaterialsTests {
 	}
 
 	@Test
-	public void resolveRangeWithVariablePatch() {
+	void resolveRangeWithVariablePatch() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.getMappings().add(Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));
 		bom.getMappings().add(BillOfMaterials.Mapping

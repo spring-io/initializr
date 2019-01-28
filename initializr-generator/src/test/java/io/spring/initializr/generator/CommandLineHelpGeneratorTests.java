@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class CommandLineHelpGeneratorTests {
+class CommandLineHelpGeneratorTests {
 
 	private CommandLineHelpGenerator generator;
 
@@ -41,7 +41,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateGenericCapabilities() {
+	void generateGenericCapabilities() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -57,7 +57,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateCapabilitiesWithTypeDescription() {
+	void generateCapabilitiesWithTypeDescription() {
 		Type type = new Type();
 		type.setId("foo");
 		type.setName("foo-name");
@@ -72,7 +72,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateCapabilitiesWithAlias() {
+	void generateCapabilitiesWithAlias() {
 		Dependency dependency = createDependency("dep", "some description");
 		dependency.setAliases(Arrays.asList("legacy", "another"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -85,7 +85,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateCurlCapabilities() {
+	void generateCurlCapabilities() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -101,7 +101,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateHttpCapabilities() {
+	void generateHttpCapabilities() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -118,7 +118,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateSpringBootCliCapabilities() {
+	void generateSpringBootCliCapabilities() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -139,7 +139,7 @@ public class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	public void generateCapabilitiesWithVersionRange() {
+	void generateCapabilitiesWithVersionRange() {
 		Dependency first = Dependency.withId("first");
 		first.setDescription("first desc");
 		first.setVersionRange("1.2.0.RELEASE");

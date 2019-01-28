@@ -25,52 +25,52 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-public class AgentTests {
+class AgentTests {
 
 	@Test
-	public void checkCurl() {
+	void checkCurl() {
 		Agent agent = Agent.fromUserAgent("curl/1.2.4");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.CURL);
 		assertThat(agent.getVersion()).isEqualTo("1.2.4");
 	}
 
 	@Test
-	public void checkHttpie() {
+	void checkHttpie() {
 		Agent agent = Agent.fromUserAgent("HTTPie/0.8.0");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.HTTPIE);
 		assertThat(agent.getVersion()).isEqualTo("0.8.0");
 	}
 
 	@Test
-	public void checkJBossForge() {
+	void checkJBossForge() {
 		Agent agent = Agent.fromUserAgent("SpringBootForgeCli/1.0.0.Alpha4");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.JBOSS_FORGE);
 		assertThat(agent.getVersion()).isEqualTo("1.0.0.Alpha4");
 	}
 
 	@Test
-	public void checkSpringBootCli() {
+	void checkSpringBootCli() {
 		Agent agent = Agent.fromUserAgent("SpringBootCli/1.3.1.RELEASE");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.SPRING_BOOT_CLI);
 		assertThat(agent.getVersion()).isEqualTo("1.3.1.RELEASE");
 	}
 
 	@Test
-	public void checkSts() {
+	void checkSts() {
 		Agent agent = Agent.fromUserAgent("STS 3.7.0.201506251244-RELEASE");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.STS);
 		assertThat(agent.getVersion()).isEqualTo("3.7.0.201506251244-RELEASE");
 	}
 
 	@Test
-	public void checkIntelliJIDEA() {
+	void checkIntelliJIDEA() {
 		Agent agent = Agent.fromUserAgent("IntelliJ IDEA");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.INTELLIJ_IDEA);
 		assertThat(agent.getVersion()).isNull();
 	}
 
 	@Test
-	public void checkIntelliJIDEAWithVersion() {
+	void checkIntelliJIDEAWithVersion() {
 		Agent agent = Agent
 				.fromUserAgent("IntelliJ IDEA/144.2 (Community edition; en-us)");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.INTELLIJ_IDEA);
@@ -78,28 +78,28 @@ public class AgentTests {
 	}
 
 	@Test
-	public void checkNetBeans() {
+	void checkNetBeans() {
 		Agent agent = Agent.fromUserAgent("nb-springboot-plugin/0.1");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.NETBEANS);
 		assertThat(agent.getVersion()).isEqualTo("0.1");
 	}
 
 	@Test
-	public void checkVsCode() {
+	void checkVsCode() {
 		Agent agent = Agent.fromUserAgent("vscode/0.2.0");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.VSCODE);
 		assertThat(agent.getVersion()).isEqualTo("0.2.0");
 	}
 
 	@Test
-	public void checkJenkinsX() {
+	void checkJenkinsX() {
 		Agent agent = Agent.fromUserAgent("jx/1.1.71");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.JENKINSX);
 		assertThat(agent.getVersion()).isEqualTo("1.1.71");
 	}
 
 	@Test
-	public void checkGenericBrowser() {
+	void checkGenericBrowser() {
 		Agent agent = Agent.fromUserAgent(
 				"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.BROWSER);
@@ -107,7 +107,7 @@ public class AgentTests {
 	}
 
 	@Test
-	public void checkRobot() {
+	void checkRobot() {
 		Agent agent = Agent.fromUserAgent("Googlebot-Mobile");
 		assertThat(agent).isNull();
 	}

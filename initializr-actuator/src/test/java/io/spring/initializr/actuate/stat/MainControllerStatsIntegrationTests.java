@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.fail;
  */
 @Import(StatsMockController.class)
 @ActiveProfiles({ "test-default", "test-custom-stats" })
-public class MainControllerStatsIntegrationTests
+class MainControllerStatsIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
@@ -65,7 +65,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void simpleProject() {
+	void simpleProject() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
@@ -79,7 +79,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void authorizationHeaderIsSet() {
+	void authorizationHeaderIsSet() {
 		downloadArchive("/starter.zip");
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
@@ -94,7 +94,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void requestIpNotSetByDefault() {
+	void requestIpNotSetByDefault() {
 		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
@@ -105,7 +105,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void requestIpIsSetWhenHeaderIsPresent() throws Exception {
+	void requestIpIsSetWhenHeaderIsPresent() throws Exception {
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("X-FORWARDED-FOR", "10.0.0.123").build();
 		getRestTemplate().exchange(request, String.class);
@@ -118,7 +118,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void requestIpv4IsNotSetWhenHeaderHasGarbage() throws Exception {
+	void requestIpv4IsNotSetWhenHeaderHasGarbage() throws Exception {
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("x-forwarded-for", "foo-bar").build();
 		getRestTemplate().exchange(request, String.class);
@@ -132,7 +132,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
+	void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
 				.header("cf-ipcountry", "XX").build();
 		getRestTemplate().exchange(request, String.class);
@@ -146,7 +146,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void invalidProjectSillHasStats() {
+	void invalidProjectSillHasStats() {
 		try {
 			downloadArchive("/starter.zip?type=invalid-type");
 			fail("Should have failed to generate project with invalid type");
@@ -167,7 +167,7 @@ public class MainControllerStatsIntegrationTests
 	}
 
 	@Test
-	public void errorPublishingStatsDoesNotBubbleUp() {
+	void errorPublishingStatsDoesNotBubbleUp() {
 		this.projectGenerationStatPublisher.updateRequestUrl(
 				URI.create("http://localhost:" + this.port + "/elastic-error"));
 		downloadArchive("/starter.zip");

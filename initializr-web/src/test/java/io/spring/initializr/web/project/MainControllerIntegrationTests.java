@@ -43,11 +43,11 @@ import static org.assertj.core.api.Assertions.fail;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class MainControllerIntegrationTests
+class MainControllerIntegrationTests
 		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	public void simpleZipProject() {
+	void simpleZipProject() {
 		downloadZip("/starter.zip?style=web&style=jpa").isJavaProject()
 				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
@@ -57,7 +57,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void simpleTgzProject() {
+	void simpleTgzProject() {
 		downloadTgz("/starter.tgz?style=org.acme:foo").isJavaProject()
 				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
@@ -65,7 +65,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void dependencyInRange() {
+	void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
 		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE")
 				.isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false)
@@ -73,7 +73,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void dependencyNotInRange() {
+	void dependencyNotInRange() {
 		try {
 			execute("/starter.tgz?style=org.acme:bur", byte[].class, null,
 					(String[]) null);
@@ -84,7 +84,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void noDependencyProject() {
+	void noDependencyProject() {
 		downloadZip("/starter.zip").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				// the root dep is added if none is specified
@@ -92,7 +92,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void dependenciesIsAnAliasOfStyle() {
+	void dependenciesIsAnAliasOfStyle() {
 		downloadZip("/starter.zip?dependencies=web&dependencies=jpa").isJavaProject()
 				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert()
 				.hasDependenciesCount(3).hasSpringBootStarterDependency("web")
@@ -101,7 +101,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void dependenciesIsAnAliasOfStyleCommaSeparated() {
+	void dependenciesIsAnAliasOfStyleCommaSeparated() {
 		downloadZip("/starter.zip?dependencies=web,jpa").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web")
@@ -110,35 +110,35 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void kotlinRange() {
+	void kotlinRange() {
 		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE")
 				.isKotlinProject().isMavenProject().pomAssert().hasDependenciesCount(4)
 				.hasProperty("kotlin.version", "1.1");
 	}
 
 	@Test
-	public void gradleWarProject() {
+	void gradleWarProject() {
 		downloadZip("/starter.zip?style=web&style=security&packaging=war&type=gradle.zip")
 				.isJavaWarProject().isGradleProject();
 	}
 
 	@Test
-	public void downloadCli() throws Exception {
+	void downloadCli() throws Exception {
 		assertSpringCliRedirect("/spring", "zip");
 	}
 
 	@Test
-	public void downloadCliAsZip() throws Exception {
+	void downloadCliAsZip() throws Exception {
 		assertSpringCliRedirect("/spring.zip", "zip");
 	}
 
 	@Test
-	public void downloadCliAsTarGz() throws Exception {
+	void downloadCliAsTarGz() throws Exception {
 		assertSpringCliRedirect("/spring.tar.gz", "tar.gz");
 	}
 
 	@Test
-	public void downloadCliAsTgz() throws Exception {
+	void downloadCliAsTgz() throws Exception {
 		assertSpringCliRedirect("/spring.tgz", "tar.gz");
 	}
 
@@ -153,7 +153,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithNoAcceptHeader() {
+	void metadataWithNoAcceptHeader() {
 		// rest template sets application/json by default
 		ResponseEntity<String> response = invokeHome(null, "*/*");
 		validateCurrentMetadata(response);
@@ -169,7 +169,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithV2AcceptHeader() {
+	void metadataWithV2AcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null,
 				"application/vnd.initializr.v2+json");
 		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0",
@@ -177,7 +177,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithCurrentAcceptHeader() {
+	void metadataWithCurrentAcceptHeader() {
 		getRequests().setFields("_links.maven-project", "dependencies.values[0]",
 				"type.values[0]", "javaVersion.values[0]", "packaging.values[0]",
 				"bootVersion.values[0]", "language.values[0]");
@@ -190,7 +190,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithSeveralAcceptHeader() {
+	void metadataWithSeveralAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null,
 				"application/vnd.initializr.v2.1+json",
 				"application/vnd.initializr.v2+json");
@@ -200,7 +200,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithHalAcceptHeader() {
+	void metadataWithHalAcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, "application/hal+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, MainController.HAL_JSON_CONTENT_TYPE);
@@ -208,7 +208,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void metadataWithUnknownAcceptHeader() {
+	void metadataWithUnknownAcceptHeader() {
 		try {
 			invokeHome(null, "application/vnd.initializr.v5.4+json");
 		}
@@ -218,20 +218,20 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void curlReceivesTextByDefault() {
+	void curlReceivesTextByDefault() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		validateCurlHelpContent(response);
 	}
 
 	@Test
-	public void curlCanStillDownloadZipArchive() {
+	void curlCanStillDownloadZipArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class,
 				"curl/1.2.4", "*/*");
 		zipProjectAssert(response.getBody()).isMavenProject().isJavaProject();
 	}
 
 	@Test
-	public void curlCanStillDownloadTgzArchive() {
+	void curlCanStillDownloadTgzArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class,
 				"curl/1.2.4", "*/*");
 		tgzProjectAssert(response.getBody()).isMavenProject().isJavaProject();
@@ -247,19 +247,19 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void curlWithAcceptHeaderTextPlain() {
+	void curlWithAcceptHeaderTextPlain() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "text/plain");
 		validateCurlHelpContent(response);
 	}
 
 	@Test
-	public void unknownAgentReceivesJsonByDefault() {
+	void unknownAgentReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("foo/1.0", "*/*");
 		validateCurrentMetadata(response);
 	}
 
 	@Test
-	public void httpieReceivesTextByDefault() {
+	void httpieReceivesTextByDefault() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "*/*");
 		validateHttpIeHelpContent(response);
 	}
@@ -274,19 +274,19 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void httpieWithAcceptHeaderTextPlain() {
+	void httpieWithAcceptHeaderTextPlain() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "text/plain");
 		validateHttpIeHelpContent(response);
 	}
 
 	@Test
-	public void unknownCliWithTextPlain() {
+	void unknownCliWithTextPlain() {
 		ResponseEntity<String> response = invokeHome(null, "text/plain");
 		validateGenericHelpContent(response);
 	}
 
 	@Test
-	public void springBootCliReceivesJsonByDefault() {
+	void springBootCliReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
 		validateContentType(response,
 				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
@@ -294,7 +294,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void springBootCliWithAcceptHeaderText() {
+	void springBootCliWithAcceptHeaderText() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "text/plain");
 		validateSpringBootHelpContent(response);
 	}
@@ -306,7 +306,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void doNotForceSslByDefault() {
+	void doNotForceSslByDefault() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
 		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
@@ -342,7 +342,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void missingDependencyProperException() {
+	void missingDependencyProperException() {
 		try {
 			downloadArchive("/starter.zip?style=foo:bar");
 			fail("Should have failed");
@@ -355,7 +355,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void invalidDependencyProperException() {
+	void invalidDependencyProperException() {
 		try {
 			downloadArchive("/starter.zip?style=foo");
 			fail("Should have failed");
@@ -368,13 +368,13 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void homeIsJson() {
+	void homeIsJson() {
 		String body = invokeHome(null, (String[]) null).getBody();
 		assertThat(body).contains("\"dependencies\"");
 	}
 
 	@Test
-	public void webIsAddedPom() {
+	void webIsAddedPom() {
 		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"),
 				String.class);
 		assertThat(body).contains("spring-boot-starter-web");
@@ -382,7 +382,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void webIsAddedGradle() {
+	void webIsAddedGradle() {
 		String body = getRestTemplate()
 				.getForObject(createUrl("/build.gradle?packaging=war"), String.class);
 		assertThat(body).contains("spring-boot-starter-web");
@@ -390,27 +390,27 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void homeHasWebStyle() {
+	void homeHasWebStyle() {
 		String body = htmlHome();
 		assertThat(body).contains("name=\"style\" value=\"web\"");
 	}
 
 	@Test
-	public void homeHasBootVersion() {
+	void homeHasBootVersion() {
 		String body = htmlHome();
 		assertThat(body).contains("name=\"bootVersion\"");
 		assertThat(body).contains("2.2.0.BUILD-SNAPSHOT\"");
 	}
 
 	@Test
-	public void homeHasOnlyProjectFormatTypes() {
+	void homeHasOnlyProjectFormatTypes() {
 		String body = htmlHome();
 		assertThat(body).contains("Maven Project");
 		assertThat(body).doesNotContain("Maven POM");
 	}
 
 	@Test
-	public void downloadStarter() {
+	void downloadStarter() {
 		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
 				byte[].class);
 		assertThat(body).isNotNull();
@@ -418,7 +418,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void installer() {
+	void installer() {
 		ResponseEntity<String> response = getRestTemplate()
 				.getForEntity(createUrl("install.sh"), String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -426,7 +426,7 @@ public class MainControllerIntegrationTests
 	}
 
 	@Test
-	public void googleAnalyticsDisabledByDefault() {
+	void googleAnalyticsDisabledByDefault() {
 		String body = htmlHome();
 		assertThat(body).doesNotContain("GoogleAnalyticsObject");
 	}

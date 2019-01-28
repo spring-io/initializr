@@ -32,13 +32,13 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * @author Stephane Nicoll
  */
-public class ProjectRequestTests {
+class ProjectRequestTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.build();
 
 	@Test
-	public void initializeGroupIdAndArtifactId() {
+	void initializeGroupIdAndArtifactId() {
 		this.metadata = InitializrMetadataBuilder.create().build();
 		this.metadata.getGroupId().setContent("org.acme");
 		this.metadata.getArtifactId().setContent("my-project");
@@ -48,7 +48,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void initializeSetsMetadataDefaults() {
+	void initializeSetsMetadataDefaults() {
 		ProjectRequest request = initProjectRequest();
 		assertThat(request.getName()).isEqualTo(this.metadata.getName().getContent());
 		assertThat(request.getType())
@@ -68,7 +68,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolve() {
+	void resolve() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "web", "security", "spring-data").build();
 		ProjectRequest request = initProjectRequest();
@@ -81,7 +81,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveWithDependencies() {
+	void resolveWithDependencies() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "web", "security", "spring-data").build();
 		ProjectRequest request = initProjectRequest();
@@ -94,7 +94,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveFullMetadata() {
+	void resolveFullMetadata() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", createDependency("org.foo", "acme", "1.2.0"))
 				.build();
@@ -106,7 +106,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveUnknownSimpleId() {
+	void resolveUnknownSimpleId() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "org.foo:bar").build();
 		ProjectRequest request = initProjectRequest();
@@ -117,7 +117,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveUnknownDependency() {
+	void resolveUnknownDependency() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("code", "org.foo:bar").build();
 		ProjectRequest request = initProjectRequest();
@@ -128,7 +128,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveDependencyInRange() {
+	void resolveDependencyInRange() {
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
 		dependency.setVersionRange("[1.0.1.RELEASE, 1.2.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -140,7 +140,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveDependencyNotInRange() {
+	void resolveDependencyNotInRange() {
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
 		dependency.setVersionRange("[1.0.1.RELEASE, 1.2.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -155,7 +155,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveDependencyVersion() {
+	void resolveDependencyVersion() {
 		Dependency dependency = createDependency("org.foo", "bar", "1.2.0.RELEASE");
 		dependency.getMappings().add(Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)",
 				null, null, "0.1.0.RELEASE"));
@@ -180,7 +180,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveBuild() {
+	void resolveBuild() {
 		ProjectRequest request = initProjectRequest();
 		request.setType("gradle-project");
 		request.resolve(this.metadata);
@@ -188,7 +188,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveBuildNoTag() {
+	void resolveBuildNoTag() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addType("foo", false, "/foo.zip", null, null).build();
 		ProjectRequest request = initProjectRequest();
@@ -198,7 +198,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveUnknownType() {
+	void resolveUnknownType() {
 		ProjectRequest request = initProjectRequest();
 		request.setType("foo-project");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
@@ -207,7 +207,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveApplicationNameWithNoName() {
+	void resolveApplicationNameWithNoName() {
 		ProjectRequest request = initProjectRequest();
 		request.setName(null);
 		request.resolve(this.metadata);
@@ -216,7 +216,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveApplicationName() {
+	void resolveApplicationName() {
 		ProjectRequest request = initProjectRequest();
 		request.setName("Foo2");
 		request.resolve(this.metadata);
@@ -224,7 +224,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveApplicationNameWithApplicationNameSet() {
+	void resolveApplicationNameWithApplicationNameSet() {
 		ProjectRequest request = initProjectRequest();
 		request.setName("Foo2");
 		request.setApplicationName("MyApplicationName");
@@ -234,7 +234,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void packageNameInferredByGroupIdAndArtifactId() {
+	void packageNameInferredByGroupIdAndArtifactId() {
 		ProjectRequest request = initProjectRequest();
 		request.setGroupId("org.acme");
 		request.setArtifactId("foo");
@@ -243,7 +243,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void packageNameInferredByGroupIdAndCompositeArtifactId() {
+	void packageNameInferredByGroupIdAndCompositeArtifactId() {
 		ProjectRequest request = initProjectRequest();
 		request.setGroupId("org.acme");
 		request.setArtifactId("foo-bar");
@@ -252,7 +252,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void packageNameUseFallbackIfGroupIdNotSet() {
+	void packageNameUseFallbackIfGroupIdNotSet() {
 		ProjectRequest request = initProjectRequest();
 		request.setGroupId(null);
 		request.setArtifactId("foo");
@@ -261,7 +261,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void packageNameUseFallbackIfArtifactIdNotSet() {
+	void packageNameUseFallbackIfArtifactIdNotSet() {
 		ProjectRequest request = initProjectRequest();
 		request.setGroupId("org.acme");
 		request.setArtifactId(null);
@@ -270,7 +270,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void cleanPackageNameLeadingNumbers() {
+	void cleanPackageNameLeadingNumbers() {
 		ProjectRequest request = new ProjectRequest();
 		request.setPackageName("org.foo.42bar");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -281,7 +281,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void cleanPackageNameWithNoName() {
+	void cleanPackageNameWithNoName() {
 		ProjectRequest request = initProjectRequest();
 		request.resolve(this.metadata);
 		assertThat(request.getPackageName())
@@ -289,7 +289,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void cleanPackageName() {
+	void cleanPackageName() {
 		ProjectRequest request = initProjectRequest();
 		request.setPackageName("com:foo  bar");
 		request.resolve(this.metadata);
@@ -297,7 +297,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveAdditionalBoms() {
+	void resolveAdditionalBoms() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
@@ -317,7 +317,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveAdditionalBomsDuplicates() {
+	void resolveAdditionalBomsDuplicates() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		Dependency anotherDependency = Dependency.withId("bar");
@@ -339,7 +339,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveAdditionalRepositories() {
+	void resolveAdditionalRepositories() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");
@@ -363,7 +363,7 @@ public class ProjectRequestTests {
 	}
 
 	@Test
-	public void resolveAdditionalRepositoriesDuplicates() {
+	void resolveAdditionalRepositoriesDuplicates() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
 		dependency.setRepository("foo-repo");

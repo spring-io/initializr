@@ -32,10 +32,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Stephane Nicoll
  */
-public class LinkTests {
+class LinkTests {
 
 	@Test
-	public void resolveInvalidLinkNoRel() {
+	void resolveInvalidLinkNoRel() {
 		Link link = new Link();
 		link.setHref("https://example.com");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
@@ -43,14 +43,14 @@ public class LinkTests {
 	}
 
 	@Test
-	public void resolveInvalidLinkNoHref() {
+	void resolveInvalidLinkNoHref() {
 		Link link = Link.create("reference", null, "foo doc");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
 				.isThrownBy(link::resolve);
 	}
 
 	@Test
-	public void resolveLinkNoVariables() {
+	void resolveLinkNoVariables() {
 		Link link = Link.create("reference", "https://example.com/2");
 		link.resolve();
 		assertThat(link.isTemplated()).isFalse();
@@ -58,7 +58,7 @@ public class LinkTests {
 	}
 
 	@Test
-	public void resolveLinkWithVariables() {
+	void resolveLinkWithVariables() {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
 		assertThat(link.isTemplated()).isTrue();
@@ -66,7 +66,7 @@ public class LinkTests {
 	}
 
 	@Test
-	public void expandLink() throws Exception {
+	void expandLink() throws Exception {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
 		Map<String, String> map = new LinkedHashMap<>();
@@ -77,7 +77,7 @@ public class LinkTests {
 	}
 
 	@Test
-	public void expandLinkWithSameAttributeAtTwoPlaces() throws Exception {
+	void expandLinkWithSameAttributeAtTwoPlaces() throws Exception {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{a}");
 		link.resolve();
 		Map<String, String> map = new LinkedHashMap<>();
@@ -88,7 +88,7 @@ public class LinkTests {
 	}
 
 	@Test
-	public void expandLinkMissingVariable() {
+	void expandLinkMissingVariable() {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
 		assertThatIllegalArgumentException()

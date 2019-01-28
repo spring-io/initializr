@@ -32,12 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class DependencyMetadataJsonMapperTests {
+class DependencyMetadataJsonMapperTests {
 
 	private final DependencyMetadataJsonMapper mapper = new DependencyMetadataV21JsonMapper();
 
 	@Test
-	public void mapDependency() throws Exception {
+	void mapDependency() throws Exception {
 		Dependency d = Dependency.withId("foo", "org.foo", "foo");
 		d.setRepository("my-repo");
 		d.setBom("my-bom");

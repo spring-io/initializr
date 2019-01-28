@@ -49,8 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ExtendWith(TempDirectory.class)
 @ActiveProfiles("test-default")
-public class ProjectGenerationSmokeTests
-		extends AbstractFullStackInitializrIntegrationTests {
+class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegrationTests {
 
 	private File downloadDir;
 
@@ -86,7 +85,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createSimpleProject() throws Exception {
+	void createSimpleProject() throws Exception {
 		HomePage page = toHome();
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert().hasDependenciesCount(2)
@@ -94,7 +93,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createSimpleProjectWithGradle() throws Exception {
+	void createSimpleProjectWithGradle() throws Exception {
 		HomePage page = toHome();
 		page.type("gradle-project");
 		page.submit();
@@ -105,7 +104,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createSimpleProjectWithDifferentBootVersion() throws Exception {
+	void createSimpleProjectWithDifferentBootVersion() throws Exception {
 		HomePage page = toHome();
 		page.bootVersion("1.5.17.RELEASE");
 		page.submit();
@@ -116,7 +115,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createSimpleProjectWithDependencies() throws Exception {
+	void createSimpleProjectWithDependencies() throws Exception {
 		HomePage page = toHome();
 		selectDependency(page, "Data JPA");
 		selectDependency(page, "Security");
@@ -127,7 +126,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void selectDependencyTwiceRemovesIt() throws Exception {
+	void selectDependencyTwiceRemovesIt() throws Exception {
 		HomePage page = toHome();
 		selectDependency(page, "Data JPA");
 		selectDependency(page, "Security");
@@ -138,8 +137,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void selectDependencyAndChangeToIncompatibleVersionRemovesIt()
-			throws Exception {
+	void selectDependencyAndChangeToIncompatibleVersionRemovesIt() throws Exception {
 		HomePage page = toHome();
 		selectDependency(page, "Data JPA");
 		selectDependency(page, "org.acme:bur");
@@ -151,7 +149,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customArtifactIdUpdateNameAutomatically() throws Exception {
+	void customArtifactIdUpdateNameAutomatically() throws Exception {
 		HomePage page = toHome();
 		page.groupId("org.foo");
 		page.submit();
@@ -160,7 +158,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customGroupIdIdUpdatePackageAutomatically() throws Exception {
+	void customGroupIdIdUpdatePackageAutomatically() throws Exception {
 		HomePage page = toHome();
 		page.artifactId("my-project");
 		page.submit();
@@ -169,7 +167,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customArtifactIdWithInvalidPackageNameIsHandled() throws Exception {
+	void customArtifactIdWithInvalidPackageNameIsHandled() throws Exception {
 		HomePage page = toHome();
 		page.artifactId("42my-project");
 		page.submit();
@@ -178,7 +176,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createGroovyProject() throws Exception {
+	void createGroovyProject() throws Exception {
 		HomePage page = toHome();
 		page.language("groovy");
 		page.submit();
@@ -190,7 +188,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createKotlinProject() throws Exception {
+	void createKotlinProject() throws Exception {
 		HomePage page = toHome();
 		page.language("kotlin");
 		page.submit();
@@ -203,7 +201,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createWarProject() throws Exception {
+	void createWarProject() throws Exception {
 		HomePage page = toHome();
 		page.advanced();
 		page.packaging("war");
@@ -216,7 +214,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createJavaProjectWithCustomDefaults() throws Exception {
+	void createJavaProjectWithCustomDefaults() throws Exception {
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
@@ -238,7 +236,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createKotlinProjectWithCustomDefaults() throws Exception {
+	void createKotlinProjectWithCustomDefaults() throws Exception {
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
@@ -261,7 +259,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void createGroovyProjectWithCustomDefaults() throws Exception {
+	void createGroovyProjectWithCustomDefaults() throws Exception {
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
@@ -284,7 +282,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void dependencyHiddenAccordingToRange() throws Exception {
+	void dependencyHiddenAccordingToRange() throws Exception {
 		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
@@ -300,7 +298,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void dependencyUncheckedWhenHidden() throws Exception {
+	void dependencyUncheckedWhenHidden() throws Exception {
 		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
 		page.advanced();
 		page.dependency("org.acme:bur").click();
@@ -313,7 +311,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customizationShowsUpInDefaultView() throws Exception {
+	void customizationShowsUpInDefaultView() throws Exception {
 		HomePage page = toHome("/#!language=groovy&packageName=com.example.acme");
 		assertThat(page.value("language")).isEqualTo("groovy");
 		assertThat(page.value("packageName")).isEqualTo("com.example.acme");
@@ -328,7 +326,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customizationsShowsUpWhenViewIsSwitched() throws Exception {
+	void customizationsShowsUpWhenViewIsSwitched() throws Exception {
 		HomePage page = toHome("/#!packaging=war&javaVersion=1.7");
 		assertThat(page.value("packaging")).isEqualTo("war");
 		assertThat(page.value("javaVersion")).isEqualTo("1.7");
@@ -341,7 +339,7 @@ public class ProjectGenerationSmokeTests
 	}
 
 	@Test
-	public void customizationsOnGroupIdAndArtifactId() throws Exception {
+	void customizationsOnGroupIdAndArtifactId() throws Exception {
 		HomePage page = toHome("/#!groupId=com.example.acme&artifactId=my-project");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("my-project.zip"));

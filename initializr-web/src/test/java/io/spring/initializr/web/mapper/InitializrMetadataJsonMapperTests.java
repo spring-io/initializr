@@ -31,14 +31,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class InitializrMetadataJsonMapperTests {
+class InitializrMetadataJsonMapperTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataV21JsonMapper();
 
 	@Test
-	public void withNoAppUrl() throws IOException {
+	void withNoAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
@@ -50,7 +50,7 @@ public class InitializrMetadataJsonMapperTests {
 	}
 
 	@Test
-	public void withAppUrl() throws IOException {
+	void withAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test")
 				.addDependencyGroup("foo", "one", "two").build();
@@ -62,7 +62,7 @@ public class InitializrMetadataJsonMapperTests {
 	}
 
 	@Test
-	public void linksRendered() {
+	void linksRendered() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo");
 		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));

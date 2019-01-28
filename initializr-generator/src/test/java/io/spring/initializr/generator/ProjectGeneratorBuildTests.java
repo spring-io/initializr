@@ -35,7 +35,7 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Stephane Nicoll
  */
-public class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
+class ProjectGeneratorBuildTests extends AbstractProjectGeneratorTests {
 
 	public static Stream<Arguments> parameters() {
 		return Stream.of(Arguments.arguments("maven", "pom.xml"),

@@ -40,14 +40,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class MainControllerServiceMetadataIntegrationTests
+class MainControllerServiceMetadataIntegrationTests
 		extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider;
 
 	@Test
-	public void initializeRemoteConfig() throws Exception {
+	void initializeRemoteConfig() throws Exception {
 		InitializrMetadata localMetadata = this.metadataProvider.get();
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
 				.withInitializrMetadata(new UrlResource(createUrl("/metadata/config")))
@@ -68,7 +68,7 @@ public class MainControllerServiceMetadataIntegrationTests
 	}
 
 	@Test
-	public void textPlainNotAccepted() {
+	void textPlainNotAccepted() {
 		try {
 			execute("/metadata/config", String.class, null, "text/plain");
 		}
@@ -78,7 +78,7 @@ public class MainControllerServiceMetadataIntegrationTests
 	}
 
 	@Test
-	public void validateJson() throws JSONException {
+	void validateJson() throws JSONException {
 		ResponseEntity<String> response = execute("/metadata/config", String.class, null,
 				"application/json");
 		validateContentType(response, MediaType.APPLICATION_JSON);
@@ -88,7 +88,7 @@ public class MainControllerServiceMetadataIntegrationTests
 	}
 
 	@Test
-	public void metadataClientRedirect() {
+	void metadataClientRedirect() {
 		ResponseEntity<String> response = execute("/metadata/client", String.class, null,
 				"application/json");
 		validateCurrentMetadata(response);

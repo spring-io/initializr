@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class VersionTests {
+class VersionTests {
 
 	private final VersionParser parser = new VersionParser(Collections.emptyList());
 
 	@Test
-	public void equalNoQualifier() {
+	void equalNoQualifier() {
 		Version first = parse("1.2.0");
 		Version second = parse("1.2.0");
 		assertThat(first).isEqualByComparingTo(second);
@@ -38,7 +38,7 @@ public class VersionTests {
 	}
 
 	@Test
-	public void equalQualifierNoVersion() {
+	void equalQualifierNoVersion() {
 		Version first = parse("1.2.0.RELEASE");
 		Version second = parse("1.2.0.RELEASE");
 		assertThat(first).isEqualByComparingTo(second);
@@ -46,7 +46,7 @@ public class VersionTests {
 	}
 
 	@Test
-	public void equalQualifierVersion() {
+	void equalQualifierVersion() {
 		Version first = parse("1.2.0.RC1");
 		Version second = parse("1.2.0.RC1");
 		assertThat(first).isEqualByComparingTo(second);
@@ -54,72 +54,72 @@ public class VersionTests {
 	}
 
 	@Test
-	public void compareMajorOnly() {
+	void compareMajorOnly() {
 		assertThat(parse("2.2.0")).isGreaterThan(parse("1.8.0"));
 	}
 
 	@Test
-	public void compareMinorOnly() {
+	void compareMinorOnly() {
 		assertThat(parse("2.2.0")).isGreaterThan(parse("2.1.9"));
 	}
 
 	@Test
-	public void comparePatchOnly() {
+	void comparePatchOnly() {
 		assertThat(parse("2.2.4")).isGreaterThan(parse("2.2.3"));
 	}
 
 	@Test
-	public void compareHigherVersion() {
+	void compareHigherVersion() {
 		assertThat(parse("1.2.0.RELEASE")).isGreaterThan(parse("1.1.9.RELEASE"));
 	}
 
 	@Test
-	public void compareHigherQualifier() {
+	void compareHigherQualifier() {
 		assertThat(parse("1.2.0.RC1")).isGreaterThan(parse("1.2.0.M1"));
 	}
 
 	@Test
-	public void compareHigherQualifierVersion() {
+	void compareHigherQualifierVersion() {
 		assertThat(parse("1.2.0.RC2")).isGreaterThan(parse("1.2.0.RC1"));
 	}
 
 	@Test
-	public void compareLowerVersion() {
+	void compareLowerVersion() {
 		assertThat(parse("1.0.5.RELEASE")).isLessThan(parse("1.1.9.RELEASE"));
 	}
 
 	@Test
-	public void compareLowerQualifier() {
+	void compareLowerQualifier() {
 		assertThat(parse("1.2.0.RC1")).isLessThan(parse("1.2.0.RELEASE"));
 	}
 
 	@Test
-	public void compareLessQualifierVersion() {
+	void compareLessQualifierVersion() {
 		assertThat(parse("1.2.0.RC2")).isLessThan(parse("1.2.0.RC3"));
 	}
 
 	@Test
-	public void compareWithNull() {
+	void compareWithNull() {
 		assertThat(parse("1.2.0.RC2")).isGreaterThan(null);
 	}
 
 	@Test
-	public void compareUnknownQualifier() {
+	void compareUnknownQualifier() {
 		assertThat(parse("1.2.0.Beta")).isLessThan(parse("1.2.0.CR"));
 	}
 
 	@Test
-	public void compareUnknownQualifierVersion() {
+	void compareUnknownQualifierVersion() {
 		assertThat(parse("1.2.0.Beta1")).isLessThan(parse("1.2.0.Beta2"));
 	}
 
 	@Test
-	public void snapshotGreaterThanRC() {
+	void snapshotGreaterThanRC() {
 		assertThat(parse("1.2.0.BUILD-SNAPSHOT")).isGreaterThan(parse("1.2.0.RC1"));
 	}
 
 	@Test
-	public void snapshotLowerThanRelease() {
+	void snapshotLowerThanRelease() {
 		assertThat(parse("1.2.0.BUILD-SNAPSHOT")).isLessThan(parse("1.2.0.RELEASE"));
 	}
 

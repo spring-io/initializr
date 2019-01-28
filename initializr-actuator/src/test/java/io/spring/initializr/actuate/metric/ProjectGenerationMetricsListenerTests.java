@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Stephane Nicoll
  */
-public class ProjectGenerationMetricsListenerTests {
+class ProjectGenerationMetricsListenerTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("core", "web", "security", "spring-data").build();
@@ -49,7 +49,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void projectGenerationCount() {
+	void projectGenerationCount() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -57,7 +57,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void projectGenerationCountWithFailure() {
+	void projectGenerationCountWithFailure() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectFailedEvent(request);
@@ -66,7 +66,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void dependencies() {
+	void dependencies() {
 		ProjectRequest request = initialize();
 		request.getStyle().addAll(Arrays.asList("security", "spring-data"));
 		request.resolve(this.metadata);
@@ -76,7 +76,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void noDependencies() {
+	void noDependencies() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -84,7 +84,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void resolvedWebDependency() {
+	void resolvedWebDependency() {
 		ProjectRequest request = initialize();
 		request.getStyle().add("spring-data");
 		request.setPackaging("war");
@@ -95,7 +95,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void aliasedDependencyUseStandardId() {
+	void aliasedDependencyUseStandardId() {
 		Dependency dependency = new Dependency();
 		dependency.setId("foo");
 		dependency.getAliases().add("foo-old");
@@ -111,7 +111,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultType() {
+	void defaultType() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -119,7 +119,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitType() {
+	void explicitType() {
 		ProjectRequest request = initialize();
 		request.setType("gradle-build");
 		request.resolve(this.metadata);
@@ -128,7 +128,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultPackaging() {
+	void defaultPackaging() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -136,7 +136,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitPackaging() {
+	void explicitPackaging() {
 		ProjectRequest request = initialize();
 		request.setPackaging("war");
 		request.resolve(this.metadata);
@@ -145,7 +145,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultJavaVersion() {
+	void defaultJavaVersion() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -153,7 +153,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitJavaVersion() {
+	void explicitJavaVersion() {
 		ProjectRequest request = initialize();
 		request.setJavaVersion("1.7");
 		request.resolve(this.metadata);
@@ -162,7 +162,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultLanguage() {
+	void defaultLanguage() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -170,7 +170,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitGroovyLanguage() {
+	void explicitGroovyLanguage() {
 		ProjectRequest request = initialize();
 		request.setLanguage("groovy");
 		request.resolve(this.metadata);
@@ -179,7 +179,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitKotlinLanguage() {
+	void explicitKotlinLanguage() {
 		ProjectRequest request = initialize();
 		request.setLanguage("kotlin");
 		request.resolve(this.metadata);
@@ -188,7 +188,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void defaultBootVersion() {
+	void defaultBootVersion() {
 		ProjectRequest request = initialize();
 		request.resolve(this.metadata);
 		fireProjectGeneratedEvent(request);
@@ -196,7 +196,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void explicitBootVersion() {
+	void explicitBootVersion() {
 		ProjectRequest request = initialize();
 		request.setBootVersion("1.5.17.RELEASE");
 		request.resolve(this.metadata);
@@ -205,7 +205,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void userAgentAvailable() {
+	void userAgentAvailable() {
 		ProjectRequest request = initialize();
 		request.getParameters().put("user-agent", "HTTPie/0.9.2");
 		request.resolve(this.metadata);
@@ -214,7 +214,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void collectAllMetrics() {
+	void collectAllMetrics() {
 		ProjectRequest request = initialize();
 		request.getStyle().addAll(Arrays.asList("web", "security"));
 		request.setType("gradle-project");
@@ -234,7 +234,7 @@ public class ProjectGenerationMetricsListenerTests {
 	}
 
 	@Test
-	public void incrementMetrics() {
+	void incrementMetrics() {
 		ProjectRequest request = initialize();
 		request.getStyle().addAll(Arrays.asList("security", "spring-data"));
 		request.resolve(this.metadata);

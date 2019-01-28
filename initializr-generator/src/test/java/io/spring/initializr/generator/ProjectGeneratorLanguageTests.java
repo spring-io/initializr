@@ -30,7 +30,7 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Stephane Nicoll
  */
-public class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
+class ProjectGeneratorLanguageTests extends AbstractProjectGeneratorTests {
 
 	public static Stream<Arguments> parameters() {
 		return Stream.of(Arguments.arguments("java", "java"),

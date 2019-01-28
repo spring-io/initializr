@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-public class ProjectRequestResolverTests {
+class ProjectRequestResolverTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", "web", "security", "data-jpa").build();
@@ -51,7 +51,7 @@ public class ProjectRequestResolverTests {
 	}
 
 	@Test
-	public void beforeResolution() {
+	void beforeResolution() {
 		this.processor.before.put("javaVersion", "1.2");
 		ProjectRequest request = resolve(createMavenProjectRequest(),
 				this.postProcessors);
@@ -61,7 +61,7 @@ public class ProjectRequestResolverTests {
 	}
 
 	@Test
-	public void afterResolution() {
+	void afterResolution() {
 		this.postProcessors.add(new ProjectRequestPostProcessor() {
 			@Override
 			public void postProcessAfterResolution(ProjectRequest request,

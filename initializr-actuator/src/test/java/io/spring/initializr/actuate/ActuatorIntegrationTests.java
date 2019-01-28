@@ -37,11 +37,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ActiveProfiles("test-default")
 @SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info,metrics")
-public class ActuatorIntegrationTests
-		extends AbstractFullStackInitializrIntegrationTests {
+class ActuatorIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
-	public void infoHasExternalProperties() {
+	void infoHasExternalProperties() {
 		String body = getRestTemplate().getForObject(createUrl("/actuator/info"),
 				String.class);
 		assertThat(body).contains("\"spring-boot\"");
@@ -49,7 +48,7 @@ public class ActuatorIntegrationTests
 	}
 
 	@Test
-	public void metricsAreRegistered() {
+	void metricsAreRegistered() {
 		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
 		JsonNode result = metricsEndpoint();
 		JsonNode names = result.get("names");

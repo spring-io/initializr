@@ -23,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class TextCapabilityTests {
+class TextCapabilityTests {
 
 	@Test
-	public void mergeValue() {
+	void mergeValue() {
 		TextCapability capability = new TextCapability("foo");
 		capability.setContent("1234");
 		TextCapability another = new TextCapability("foo");
@@ -38,7 +38,7 @@ public class TextCapabilityTests {
 	}
 
 	@Test
-	public void mergeTitle() {
+	void mergeTitle() {
 		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
 		capability.merge(new TextCapability("foo", "AnotherFoo", ""));
 		assertThat(capability.getId()).isEqualTo("foo");
@@ -48,7 +48,7 @@ public class TextCapabilityTests {
 	}
 
 	@Test
-	public void mergeDescription() {
+	void mergeDescription() {
 		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
 		capability.merge(new TextCapability("foo", "", "another desc"));
 		assertThat(capability.getId()).isEqualTo("foo");

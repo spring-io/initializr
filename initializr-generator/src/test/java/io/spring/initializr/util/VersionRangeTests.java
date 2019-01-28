@@ -27,99 +27,99 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class VersionRangeTests {
+class VersionRangeTests {
 
 	@Test
-	public void simpleStartingRange() {
+	void simpleStartingRange() {
 		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString())
 				.isEqualTo(">=1.3.0.RELEASE");
 	}
 
 	@Test
-	public void matchSimpleRange() {
+	void matchSimpleRange() {
 		assertThat("1.2.0.RC3").is(match("[1.2.0.RC1,1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchSimpleRangeBefore() {
+	void matchSimpleRangeBefore() {
 		assertThat("1.1.9.RC3").isNot(match("[1.2.0.RC1,1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchSimpleRangeAfter() {
+	void matchSimpleRangeAfter() {
 		assertThat("1.2.0.RC6").isNot(match("[1.2.0.RC1,1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchInclusiveLowerRange() {
+	void matchInclusiveLowerRange() {
 		assertThat("1.2.0.RC1").is(match("[1.2.0.RC1,1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchInclusiveHigherRange() {
+	void matchInclusiveHigherRange() {
 		assertThat("1.2.0.RC5").is(match("[1.2.0.RC1,1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchExclusiveLowerRange() {
+	void matchExclusiveLowerRange() {
 		assertThat("1.2.0.RC1").isNot(match("(1.2.0.RC1,1.2.0.RC5)"));
 	}
 
 	@Test
-	public void matchExclusiveHigherRange() {
+	void matchExclusiveHigherRange() {
 		assertThat("1.2.0.RC5").isNot(match("[1.2.0.RC1,1.2.0.RC5)"));
 	}
 
 	@Test
-	public void matchUnboundedRangeEqual() {
+	void matchUnboundedRangeEqual() {
 		assertThat("1.2.0.RELEASE").is(match("1.2.0.RELEASE"));
 	}
 
 	@Test
-	public void matchUnboundedRangeAfter() {
+	void matchUnboundedRangeAfter() {
 		assertThat("2.2.0.RELEASE").is(match("1.2.0.RELEASE"));
 	}
 
 	@Test
-	public void matchUnboundedRangeBefore() {
+	void matchUnboundedRangeBefore() {
 		assertThat("1.1.9.RELEASE").isNot(match("1.2.0.RELEASE"));
 	}
 
 	@Test
-	public void rangeWithSpaces() {
+	void rangeWithSpaces() {
 		assertThat("1.2.0.RC3").is(match("[   1.2.0.RC1 ,  1.2.0.RC5]"));
 	}
 
 	@Test
-	public void matchLatestVersion() {
+	void matchLatestVersion() {
 		assertThat("1.2.8.RELEASE").is(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
 				new VersionParser(Collections
 						.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
-	public void matchOverLatestVersion() {
+	void matchOverLatestVersion() {
 		assertThat("1.2.10.RELEASE").isNot(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
 				new VersionParser(Collections
 						.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
-	public void matchAsOfCurrentVersion() {
+	void matchAsOfCurrentVersion() {
 		assertThat("1.3.5.RELEASE").is(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
 				new VersionParser(Arrays.asList(Version.parse("1.3.4.RELEASE"),
 						Version.parse("1.3.6.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
-	public void matchOverAsOfCurrentVersion() {
+	void matchOverAsOfCurrentVersion() {
 		assertThat("1.3.5.RELEASE").isNot(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
 				new VersionParser(Arrays.asList(Version.parse("1.3.7.RELEASE"),
 						Version.parse("1.3.6.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
-	public void toVersionRangeWithSimpleVersion() {
+	void toVersionRangeWithSimpleVersion() {
 		VersionRange range = new VersionParser(
 				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 						.parseRange("1.3.5.RELEASE");
@@ -127,7 +127,7 @@ public class VersionRangeTests {
 	}
 
 	@Test
-	public void toVersionRangeWithVersionsIncluded() {
+	void toVersionRangeWithVersionsIncluded() {
 		VersionRange range = new VersionParser(
 				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 						.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE]");
@@ -135,7 +135,7 @@ public class VersionRangeTests {
 	}
 
 	@Test
-	public void toVersionRangeWithLowerVersionExcluded() {
+	void toVersionRangeWithLowerVersionExcluded() {
 		VersionRange range = new VersionParser(
 				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 						.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE]");
@@ -143,7 +143,7 @@ public class VersionRangeTests {
 	}
 
 	@Test
-	public void toVersionRangeWithHigherVersionExcluded() {
+	void toVersionRangeWithHigherVersionExcluded() {
 		VersionRange range = new VersionParser(
 				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 						.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE)");
@@ -151,7 +151,7 @@ public class VersionRangeTests {
 	}
 
 	@Test
-	public void toVersionRangeWithVersionsExcluded() {
+	void toVersionRangeWithVersionsExcluded() {
 		VersionRange range = new VersionParser(
 				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 						.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE)");

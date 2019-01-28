@@ -23,16 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-public class SingleSelectCapabilityTests {
+class SingleSelectCapabilityTests {
 
 	@Test
-	public void defaultEmpty() {
+	void defaultEmpty() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
-	public void defaultNoDefault() {
+	void defaultNoDefault() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
 		capability.getContent().add(DefaultMetadataElement.create("bar", false));
@@ -40,7 +40,7 @@ public class SingleSelectCapabilityTests {
 	}
 
 	@Test
-	public void defaultType() {
+	void defaultType() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		capability.getContent().add(DefaultMetadataElement.create("foo", false));
 		DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
@@ -49,7 +49,7 @@ public class SingleSelectCapabilityTests {
 	}
 
 	@Test
-	public void mergeAddEntry() {
+	void mergeAddEntry() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		DefaultMetadataElement foo = DefaultMetadataElement.create("foo", false);
 		capability.getContent().add(foo);

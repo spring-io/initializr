@@ -36,11 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-ssl" })
-public class MainControllerSslIntegrationTests
+class MainControllerSslIntegrationTests
 		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
-	public void mainPageRedirectsToHttps() {
+	void mainPageRedirectsToHttps() {
 		ResponseEntity<Void> request = execute("/", Void.class, null,
 				MediaType.TEXT_HTML_VALUE);
 		assertThat(request.getStatusCode()).isEqualTo(HttpStatus.FOUND);
@@ -50,7 +50,7 @@ public class MainControllerSslIntegrationTests
 	}
 
 	@Test
-	public void forceSsl() {
+	void forceSsl() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
 		assertThat(body).as("Must force https").contains("https://start.spring.io/");
@@ -58,7 +58,7 @@ public class MainControllerSslIntegrationTests
 	}
 
 	@Test
-	public void forceSslInMetadata() {
+	void forceSslInMetadata() {
 		ResponseEntity<String> response = invokeHome(null,
 				"application/vnd.initializr.v2.1+json");
 		validateMetadata(response, InitializrMetadataVersion.V2_1.getMediaType(),
@@ -66,7 +66,7 @@ public class MainControllerSslIntegrationTests
 	}
 
 	@Test
-	public void forceSslInMetadataV2() {
+	void forceSslInMetadataV2() {
 		ResponseEntity<String> response = invokeHome(null,
 				"application/vnd.initializr.v2+json");
 		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(),
