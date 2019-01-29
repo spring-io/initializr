@@ -24,8 +24,7 @@ NOTE: Check the https://github.com/spring-io/initializr/milestones[milestones pa
 overview of the changes.
 
 == Installation and Getting Started
-The {docs}/htmlsingle/[reference documentation] is published in
-{docs}/htmlsingle/[HTML] and {docs}/epub/initializr-reference.epub[EPUB] formats.
+The reference documentation is available in {docs}/html/[HTML format].
 
 
 == Modules
