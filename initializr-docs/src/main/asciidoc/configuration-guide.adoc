@@ -347,27 +347,27 @@ declared at the top level (under `env`) and given an id via the key in the confi
 
 [source,yaml,indent=0]
 ----
-initializr:
-  env:
-    repositories:
-      my-api-repo-1:
-        name: repo1
-        url: http://example.com/repo1
+	initializr:
+	  env:
+		repositories:
+		  my-api-repo-1:
+			name: repo1
+			url: http://example.com/repo1
 ----
 
 Once defined, the repository can then be referred back to in a dependency
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Other
-      content:
-        - name: Foo
-          groupId: org.acme
-          artifactId: foo
-          version: 1.3.5
-          repository: my-api-repo-1
+	initializr:
+	  dependencies:
+		- name: Other
+		  content:
+			- name: Foo
+			  groupId: org.acme
+			  artifactId: foo
+			  version: 1.3.5
+			  repository: my-api-repo-1
 ----
 
 It is usually preferable to have a BOM for every dependency, and attach the repository to
@@ -394,14 +394,14 @@ configuration key. Example:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  env:
-    boms:
-      my-api-bom:
-        groupId: org.acme
-        artifactId: my-api-dependencies
-        version: 1.0.0.RELEASE
-        repositories: my-api-repo-1
+	initializr:
+	  env:
+		boms:
+		  my-api-bom:
+			groupId: org.acme
+			artifactId: my-api-dependencies
+			version: 1.0.0.RELEASE
+			repositories: my-api-repo-1
 ----
 
 If a BOM requires a special, non-default repository, then it can be referred to here,
@@ -411,15 +411,15 @@ BOMs by referring to the id:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Other
-      content:
-        - name: My API
-          id : my-api
-          groupId: org.acme
-          artifactId: my-api
-          bom: my-api-bom
+	initializr:
+	  dependencies:
+		- name: Other
+		  content:
+			- name: My API
+			  id : my-api
+			  groupId: org.acme
+			  artifactId: my-api
+			  bom: my-api-bom
 ----
 
 
@@ -437,27 +437,27 @@ Here's an example of a BOM with mappings:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  env:
-    boms:
-      cloud-bom:
-        groupId: com.example.foo
-        artifactId: acme-foo-dependencies
-        mappings:
-          - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
-            groupId: com.example.bar
-            artifactId: acme-foo-bom
-            version: Arcturus.SR6
-          - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
-            version: Botein.SR7
-          - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
-            version: Castor.SR6
-          - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
-            version: Diadem.RC1
-            repositories: spring-milestones
-          - versionRange: "1.5.x.BUILD-SNAPSHOT"
-            version: Diadem.BUILD-SNAPSHOT
-            repositories: spring-snapshots,spring-milestones
+	initializr:
+	  env:
+		boms:
+		  cloud-bom:
+			groupId: com.example.foo
+			artifactId: acme-foo-dependencies
+			mappings:
+			  - versionRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
+				groupId: com.example.bar
+				artifactId: acme-foo-bom
+				version: Arcturus.SR6
+			  - versionRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
+				version: Botein.SR7
+			  - versionRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
+				version: Castor.SR6
+			  - versionRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+				version: Diadem.RC1
+				repositories: spring-milestones
+			  - versionRange: "1.5.x.BUILD-SNAPSHOT"
+				version: Diadem.BUILD-SNAPSHOT
+				repositories: spring-snapshots,spring-milestones
 ----
 
 The primary use case here is to map Spring Boot versions to the preferred or supported
@@ -481,14 +481,14 @@ an alias can be defined for ths dependency;
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Other
-      content:
-        - name: Web Services
-          id: web-services
-          aliases:
-            - ws
+	initializr:
+	  dependencies:
+		- name: Other
+		  content:
+			- name: Web Services
+			  id: web-services
+			  aliases:
+				- ws
 ----
 
 The same project can now be generated with `dependencies=ws` or
@@ -626,18 +626,18 @@ versions of Spring Boot, not of your dependency. For example:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Stuff
-      content:
-        - name: Foo
-          id: foo
-          ...
-          versionRange: 1.2.0.M1
-        - name: Bar
-          id: bar
-          ...
-          versionRange: "[1.5.0.RC1,2.0.0.M1)"
+	initializr:
+	  dependencies:
+		- name: Stuff
+		  content:
+			- name: Foo
+			  id: foo
+			  ...
+			  versionRange: 1.2.0.M1
+			- name: Bar
+			  id: bar
+			  ...
+			  versionRange: "[1.5.0.RC1,2.0.0.M1)"
 ----
 
 In this example `Foo` is available for Spring Boot 1.2.0 (or any milestone of 1.2.0) or
@@ -650,20 +650,20 @@ the values defined at the top level. For example:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Stuff
-      content:
-        - name: Foo
-          id: foo
-          groupId: org.acme.foo
-          artifactId: foo-spring-boot-starter
-          versionRange: 1.3.0.RELEASE
-          bom: cloud-task-bom
-          mappings:
-            - versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
-              artifactId: foo-starter
-            - versionRange: "1.4.0.RELEASE"
+	initializr:
+	  dependencies:
+		- name: Stuff
+		  content:
+			- name: Foo
+			  id: foo
+			  groupId: org.acme.foo
+			  artifactId: foo-spring-boot-starter
+			  versionRange: 1.3.0.RELEASE
+			  bom: cloud-task-bom
+			  mappings:
+				- versionRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
+				  artifactId: foo-starter
+				- versionRange: "1.4.0.RELEASE"
 ----
 
 In this example, The artifact of `foo` was changed to `foo-spring-boot-starter` as of the
@@ -674,20 +674,20 @@ A mapping can also be applied to a BOM declaration. For example:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  env:
-    boms:
-      my-api-bom:
-        groupId: org.acme
-        artifactId: my-api-bom
-        additionalBoms: ['my-api-dependencies-bom']
-        mappings:
-          - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
-            version: 1.0.0.RELEASE
-            repositories: my-api-repo-1
-          - versionRange: "1.2.1.RELEASE"
-            version: 2.0.0.RELEASE
-            repositories: my-api-repo-2
+	initializr:
+	  env:
+		boms:
+		  my-api-bom:
+			groupId: org.acme
+			artifactId: my-api-bom
+			additionalBoms: ['my-api-dependencies-bom']
+			mappings:
+			  - versionRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+				version: 1.0.0.RELEASE
+				repositories: my-api-repo-1
+			  - versionRange: "1.2.1.RELEASE"
+				version: 2.0.0.RELEASE
+				repositories: my-api-repo-2
 ----
 
 In this example Spring Boot versions up to 1.1.6 select version 1.0.0 of the BOM, and set
@@ -713,15 +713,15 @@ existing Spring Boot starter) you can flag it as a "non starter":
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Stuff
-      content:
-        - name: Lib
-          id: lib
-          groupId: com.acme
-          artifactId: lib
-          starter:false
+	initializr:
+	  dependencies:
+		- name: Stuff
+		  content:
+			- name: Lib
+			  id: lib
+			  groupId: com.acme
+			  artifactId: lib
+			  starter:false
 ----
 
 When a project is generated that only has dependencies with this flag set, then the base
@@ -738,13 +738,13 @@ common settings in a group are the `groupId`, `versionRange` and `bom`:
 
 [source,yaml,indent=0]
 ----
-initializr:
-  dependencies:
-    - name: Stuff
-      bom: stuff-bom
-      versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
-      content:
-...
+	initializr:
+	  dependencies:
+		- name: Stuff
+		  bom: stuff-bom
+		  versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
+		  content:
+	...
 ----
 
 These dependencies, by default, will be available only for Spring Boot versions 1.3 up to

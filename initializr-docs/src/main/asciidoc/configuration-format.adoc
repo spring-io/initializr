@@ -101,15 +101,16 @@ list of the available configuration options.
 
 Here is the most basic dependency entry you could have
 
-```yml
-initializr:
-  dependencies:
-    - name: Core
-      content:
-        - id: security
-          name: Security
-          description: Secure your application via spring-security
-```
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+	    - name: Core
+	      content:
+	        - id: security
+	          name: Security
+	          description: Secure your application via spring-security
+----
 
 TIP: The `security` dependency is held within a group called "Core".
 
@@ -122,20 +123,21 @@ Let's now add a custom dependency that is not managed by Spring Boot and that on
 work from Spring Boot `1.2.0.RELEASE` and onwards but should not be used in the 1.3
 lines and further for some reason.
 
-```yml
-initializr:
-  dependencies:
-    - name: Core
-      content:
-        - id: my-lib-id
-          name: My lib
-          description: Secure your application via spring-security
-          groupId: com.example.foo
-          artifactId: foo-core
-          bom: foo-bom
-          repository: foo-repo
-          versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
-```
+[source,yaml,indent=0]
+----
+	initializr:
+	  dependencies:
+	    - name: Core
+	      content:
+	        - id: my-lib-id
+	          name: My lib
+	          description: Secure your application via spring-security
+	          groupId: com.example.foo
+	          artifactId: foo-core
+	          bom: foo-bom
+	          repository: foo-repo
+	          versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
+----
 
 If one selects this entry, the `com.example.foo:foo-core}` dependency will be added
 and the Bill of Materials and repository for `foo` will be added automatically to
@@ -166,13 +168,14 @@ support is meant to react to that.
 For instance, if you want your groupId to default to `org.acme` and the
 `javaVersions` to only be `1.8` and `11` you would write the following config:
 
-```yml
-initializr:
-  groupId:
-    value: org.acme
-  javaVersions:
-    - id: 11
-      default: false
-    - id: 1.8
-      default: true
-```
+[source,yaml,indent=0]
+----
+	initializr:
+	  groupId:
+	    value: org.acme
+	  javaVersions:
+	    - id: 11
+	      default: false
+	    - id: 1.8
+	      default: true
+----
