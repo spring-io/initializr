@@ -188,7 +188,8 @@ in the same directory and simply execute this command to start the service:
 $ spring run my-instance.groovy
 ----
 
-You may also want to <<run-app,run the default instance locally>>.
+You may also want to https://github.com/spring-io/start.spring.io#run-app[run the default
+instance locally].
 
 
 [[build]]
