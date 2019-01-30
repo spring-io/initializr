@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.spring.initializr</groupId>
 	<artifactId>initializr</artifactId>
-	<version>0.7.0.BUILD-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>Spring Initializr</name>
 	<description>A web-based quickstart generator for Spring projects</description>
@@ -36,11 +36,11 @@
 	</developers>
 
 	<properties>
+		<revision>0.7.0.BUILD-SNAPSHOT</revision>
 		<disable.checks>false</disable.checks>
 		<java.version>1.8</java.version>
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<spring.boot.version>2.1.2.RELEASE</spring.boot.version>
 		<spring-cloud-contract.version>2.0.0.RELEASE</spring-cloud-contract.version>
 		<spring-javaformat.version>0.0.6</spring-javaformat.version>
@@ -58,28 +58,28 @@
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-actuator</artifactId>
-				<version>0.7.0.BUILD-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-generator</artifactId>
-				<version>0.7.0.BUILD-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-generator</artifactId>
-				<version>0.7.0.BUILD-SNAPSHOT</version>
+				<version>${revision}</version>
 				<type>test-jar</type>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-web</artifactId>
-				<version>0.7.0.BUILD-SNAPSHOT</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-web</artifactId>
-				<version>0.7.0.BUILD-SNAPSHOT</version>
+				<version>${revision}</version>
 				<type>test-jar</type>
 			</dependency>
 			<dependency>

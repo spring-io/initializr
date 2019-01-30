@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr</artifactId>
-		<version>0.7.0.BUILD-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>initializr-web</artifactId>
 	<name>Spring Initializr :: Web</name>
