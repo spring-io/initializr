@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 
 package io.spring.initializr.metadata;
 
-import io.spring.initializr.InitializrException;
-
 /**
  * Thrown when the configuration defines invalid metadata.
  *
  * @author Stephane Nicoll
  */
 @SuppressWarnings("serial")
-public class InvalidInitializrMetadataException extends InitializrException {
+public class InvalidInitializrMetadataException extends RuntimeException {
 
 	public InvalidInitializrMetadataException(String message, Throwable cause) {
 		super(message, cause);
