@@ -30,7 +30,7 @@ import io.spring.initializr.test.generator.ProjectAssert;
 import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.support.io.TempDirectory;
 import org.mockito.ArgumentMatcher;
 
 import org.springframework.context.ApplicationEventPublisher;
