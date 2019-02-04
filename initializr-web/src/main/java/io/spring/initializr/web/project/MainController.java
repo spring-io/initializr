@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.samskivert.mustache.Mustache;
 import io.spring.initializr.generator.BasicProjectRequest;
-import io.spring.initializr.generator.CommandLineHelpGenerator;
 import io.spring.initializr.generator.ProjectGenerator;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.metadata.DependencyMetadata;
@@ -45,6 +44,7 @@ import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
+import io.spring.initializr.web.support.CommandLineHelpGenerator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Tar;
 import org.apache.tools.ant.taskdefs.Zip;
