@@ -81,13 +81,13 @@ public abstract class AbstractProjectGeneratorTests {
 	protected PomAssert generateMavenPom(ProjectRequest request) {
 		request.setType("maven-build");
 		String content = new String(this.projectGenerator.generateMavenPom(request));
-		return new PomAssert(content).validateProjectRequest(request);
+		return new PomAssert(content);
 	}
 
 	protected GradleBuildAssert generateGradleBuild(ProjectRequest request) {
 		request.setType("gradle-build");
 		String content = new String(this.projectGenerator.generateGradleBuild(request));
-		return new GradleBuildAssert(content).validateProjectRequest(request);
+		return new GradleBuildAssert(content);
 	}
 
 	protected ProjectAssert generateProject(ProjectRequest request) {

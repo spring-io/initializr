@@ -16,8 +16,6 @@
 
 package io.spring.initializr.test.generator;
 
-import io.spring.initializr.generator.ProjectRequest;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -33,22 +31,14 @@ public class GradleBuildAssert {
 		this.content = content;
 	}
 
-	/**
-	 * Validate that this generated gradle build validates against its request.
-	 * @param request the source request
-	 * @return a gradle assert
-	 */
-	public GradleBuildAssert validateProjectRequest(ProjectRequest request) {
-		return hasVersion(request.getVersion()).hasBootVersion(request.getBootVersion())
-				.hasJavaVersion(request.getJavaVersion());
-	}
-
 	public GradleBuildAssert hasVersion(String version) {
 		return contains("version = '" + version + "'");
 	}
 
-	public GradleBuildAssert hasBootVersion(String bootVersion) {
-		return contains("springBootVersion = '" + bootVersion + "'");
+	public GradleBuildAssert hasSpringBootBuildScriptPlugin(String bootVersion) {
+		return contains("ext {").contains("springBootVersion = '" + bootVersion + "'")
+				.contains(
+						"classpath(\"org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}\")");
 	}
 
 	public GradleBuildAssert hasJavaVersion(String javaVersion) {

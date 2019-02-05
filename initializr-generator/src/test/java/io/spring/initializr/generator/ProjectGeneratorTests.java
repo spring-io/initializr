@@ -49,14 +49,22 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	@Test
 	void defaultMavenPom() {
 		ProjectRequest request = createProjectRequest("web");
-		generateMavenPom(request).hasNoRepository().hasSpringBootStarterDependency("web");
+		generateMavenPom(request).hasGroupId(request.getGroupId())
+				.hasArtifactId(request.getArtifactId()).hasVersion(request.getVersion())
+				.hasPackaging(request.getPackaging()).hasName(request.getName())
+				.hasDescription(request.getDescription())
+				.hasJavaVersion(request.getJavaVersion())
+				.hasSpringBootParent(request.getBootVersion()).hasNoRepository()
+				.hasSpringBootStarterDependency("web");
 		verifyProjectSuccessfulEventFor(request);
 	}
 
 	@Test
 	void defaultGradleBuild() {
 		ProjectRequest request = createProjectRequest("web");
-		generateGradleBuild(request).doesNotContain("import");
+		generateGradleBuild(request).hasVersion(request.getVersion())
+				.hasSpringBootBuildScriptPlugin(request.getBootVersion())
+				.hasJavaVersion(request.getJavaVersion()).doesNotContain("import");
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -78,6 +86,37 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 				.contains(
 						"testImplementation 'org.springframework.boot:spring-boot-starter-test'");
 		gradleProject.gradleSettingsAssert().hasProjectName("demo");
+		verifyProjectSuccessfulEventFor(request);
+	}
+
+	@Test
+	void mavenBuildWithCustomCoordinates() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setGroupId("com.example.test");
+		request.setArtifactId("test-project");
+		request.setVersion("1.0.0.TEST-SNAPSHOT");
+		request.setPackaging("war");
+		request.setName("Test Project");
+		request.setDescription("Test Project Description");
+		generateMavenPom(request).hasGroupId("com.example.test")
+				.hasArtifactId("test-project").hasVersion("1.0.0.TEST-SNAPSHOT")
+				.hasPackaging("war").hasName("Test Project")
+				.hasDescription("Test Project Description");
+	}
+
+	@Test
+	void gradleBuildWithProjectVersion() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setVersion("1.0.0.TEST-SNAPSHOT");
+		generateGradleBuild(request).hasVersion("1.0.0.TEST-SNAPSHOT");
+		verifyProjectSuccessfulEventFor(request);
+	}
+
+	@Test
+	void gradleBuildWithJavaVersion() {
+		ProjectRequest request = createProjectRequest("web");
+		request.setJavaVersion("11");
+		generateGradleBuild(request).hasJavaVersion("11");
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -504,7 +543,9 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	void gradleBuildWithSpringBoot15() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("1.5.20.BUILD-SNAPSHOT");
-		generateGradleBuild(request).contains("apply plugin: 'org.springframework.boot'")
+		generateGradleBuild(request)
+				.hasSpringBootBuildScriptPlugin("1.5.20.BUILD-SNAPSHOT")
+				.contains("apply plugin: 'org.springframework.boot'")
 				.contains(
 						"implementation 'org.springframework.boot:spring-boot-starter-web'")
 				.contains(
@@ -516,7 +557,8 @@ class ProjectGeneratorTests extends AbstractProjectGeneratorTests {
 	void gradleBuildWithSpringBoot20() {
 		ProjectRequest request = createProjectRequest("web");
 		request.setBootVersion("2.0.0.RELEASE");
-		generateGradleBuild(request).contains("apply plugin: 'org.springframework.boot'")
+		generateGradleBuild(request).hasSpringBootBuildScriptPlugin("2.0.0.RELEASE")
+				.contains("apply plugin: 'org.springframework.boot'")
 				.doesNotContain("apply plugin: 'spring-boot'")
 				.contains("apply plugin: 'io.spring.dependency-management'")
 				.contains(
