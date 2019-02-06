@@ -33,8 +33,8 @@ Spring Initializr has the following modules:
 * `initializr-generator`: standalone project generation library that can be reused
 in many environments (including embedded in your own project)
 * `initializr-web`: REST endpoints and web interface
-* `initializr-actuator`: optional module to provide statistics and metrics on project
-generation
+* `initializr-actuator`: optional module to provide additional information and statistics
+on project generation
 * `initializr-docs`: documentation
 
 == Supported interfaces

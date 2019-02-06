@@ -18,8 +18,8 @@ Spring Initializr is split across three main modules:
 * `initializr-generator`: standalone project generation library that can be reused in
 many environments (including embedded in your own project)
 * `initializr-web`: API endpoints and web interface
-* `initializr-actuator`: optional module to provide statistics and metrics on project
-generation
+* `initializr-actuator`: optional module to provide additional information and statistics
+on project generation
 
 Because it contains several auto-configurations, creating your own instance is quite easy,
 actually you could get started using Spring Initializr itself to generate a starting point!
