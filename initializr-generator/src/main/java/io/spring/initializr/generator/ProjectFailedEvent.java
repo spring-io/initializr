@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator;
 
+import io.spring.initializr.metadata.InitializrMetadata;
+
 /**
  * Event published when an error occurred trying to generate a project.
  *
@@ -25,8 +27,9 @@ public class ProjectFailedEvent extends ProjectRequestEvent {
 
 	private final Exception cause;
 
-	public ProjectFailedEvent(ProjectRequest projectRequest, Exception cause) {
-		super(projectRequest);
+	public ProjectFailedEvent(ProjectRequest projectRequest, InitializrMetadata metadata,
+			Exception cause) {
+		super(projectRequest, metadata);
 		this.cause = cause;
 	}
 

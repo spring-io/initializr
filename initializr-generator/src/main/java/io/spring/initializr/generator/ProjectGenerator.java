@@ -133,18 +133,19 @@ public class ProjectGenerator {
 	 * @return the Maven POM
 	 */
 	public byte[] generateMavenPom(ProjectRequest request) {
+		InitializrMetadata metadata = this.metadataProvider.get();
 		try {
-			Map<String, Object> model = resolveModel(request);
+			Map<String, Object> model = resolveModel(request, metadata);
 			if (!isMavenBuild(request)) {
 				throw new InvalidProjectRequestException("Could not generate Maven pom, "
 						+ "invalid project type " + request.getType());
 			}
 			byte[] content = doGenerateMavenPom(model);
-			publishProjectGeneratedEvent(request);
+			publishProjectGeneratedEvent(request, metadata);
 			return content;
 		}
 		catch (InitializrException ex) {
-			publishProjectFailedEvent(request, ex);
+			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}
 	}
@@ -155,19 +156,20 @@ public class ProjectGenerator {
 	 * @return the gradle build
 	 */
 	public byte[] generateGradleBuild(ProjectRequest request) {
+		InitializrMetadata metadata = this.metadataProvider.get();
 		try {
-			Map<String, Object> model = resolveModel(request);
+			Map<String, Object> model = resolveModel(request, metadata);
 			if (!isGradleBuild(request)) {
 				throw new InvalidProjectRequestException(
 						"Could not generate Gradle build, " + "invalid project type "
 								+ request.getType());
 			}
 			byte[] content = doGenerateGradleBuild(model);
-			publishProjectGeneratedEvent(request);
+			publishProjectGeneratedEvent(request, metadata);
 			return content;
 		}
 		catch (InitializrException ex) {
-			publishProjectFailedEvent(request, ex);
+			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}
 	}
@@ -179,14 +181,15 @@ public class ProjectGenerator {
 	 * @return the generated project structure
 	 */
 	public File generateProjectStructure(ProjectRequest request) {
+		InitializrMetadata metadata = this.metadataProvider.get();
 		try {
-			Map<String, Object> model = resolveModel(request);
+			Map<String, Object> model = resolveModel(request, metadata);
 			File rootDir = generateProjectStructure(request, model);
-			publishProjectGeneratedEvent(request);
+			publishProjectGeneratedEvent(request, metadata);
 			return rootDir;
 		}
 		catch (InitializrException ex) {
-			publishProjectFailedEvent(request, ex);
+			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}
 	}
@@ -302,13 +305,15 @@ public class ProjectGenerator {
 		}
 	}
 
-	private void publishProjectGeneratedEvent(ProjectRequest request) {
-		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request);
+	private void publishProjectGeneratedEvent(ProjectRequest request,
+			InitializrMetadata metadata) {
+		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, metadata);
 		this.eventPublisher.publishEvent(event);
 	}
 
-	private void publishProjectFailedEvent(ProjectRequest request, Exception cause) {
-		ProjectFailedEvent event = new ProjectFailedEvent(request, cause);
+	private void publishProjectFailedEvent(ProjectRequest request,
+			InitializrMetadata metadata, Exception cause) {
+		ProjectFailedEvent event = new ProjectFailedEvent(request, metadata, cause);
 		this.eventPublisher.publishEvent(event);
 	}
 
@@ -333,12 +338,13 @@ public class ProjectGenerator {
 	 * Resolve the specified {@link ProjectRequest} and return the model to use to
 	 * generate the project.
 	 * @param originalRequest the request to handle
+	 * @param metadata the initializr metadata
 	 * @return a model for that request
 	 */
-	protected Map<String, Object> resolveModel(ProjectRequest originalRequest) {
+	protected Map<String, Object> resolveModel(ProjectRequest originalRequest,
+			InitializrMetadata metadata) {
 		Assert.notNull(originalRequest.getBootVersion(), "boot version must not be null");
 		Map<String, Object> model = new LinkedHashMap<>();
-		InitializrMetadata metadata = this.metadataProvider.get();
 
 		ProjectRequest request = this.requestResolver.resolve(originalRequest, metadata);
 

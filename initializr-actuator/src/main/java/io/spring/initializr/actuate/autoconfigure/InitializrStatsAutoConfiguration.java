@@ -57,11 +57,9 @@ class InitializrStatsAutoConfiguration {
 	@Bean
 	@ConditionalOnBean(InitializrMetadataProvider.class)
 	public ProjectGenerationStatPublisher projectRequestStatHandler(
-			InitializrMetadataProvider provider,
 			RestTemplateBuilder restTemplateBuilder) {
-		return new ProjectGenerationStatPublisher(
-				new ProjectRequestDocumentFactory(provider), this.statsProperties,
-				restTemplateBuilder, statsRetryTemplate());
+		return new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(),
+				this.statsProperties, restTemplateBuilder, statsRetryTemplate());
 	}
 
 	@Bean

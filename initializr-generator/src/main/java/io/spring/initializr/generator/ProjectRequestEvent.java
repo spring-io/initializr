@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator;
 
+import io.spring.initializr.metadata.InitializrMetadata;
+
 /**
  * Event published when a {@link ProjectRequest} has been processed.
  *
@@ -27,10 +29,14 @@ public abstract class ProjectRequestEvent {
 
 	private final ProjectRequest projectRequest;
 
+	private final InitializrMetadata metadata;
+
 	private final long timestamp;
 
-	protected ProjectRequestEvent(ProjectRequest projectRequest) {
+	protected ProjectRequestEvent(ProjectRequest projectRequest,
+			InitializrMetadata metadata) {
 		this.projectRequest = projectRequest;
+		this.metadata = metadata;
 		this.timestamp = System.currentTimeMillis();
 	}
 
@@ -48,6 +54,14 @@ public abstract class ProjectRequestEvent {
 	 */
 	public long getTimestamp() {
 		return this.timestamp;
+	}
+
+	/**
+	 * Return the metadata that was used to generate the project.
+	 * @return the metadata
+	 */
+	public InitializrMetadata getMetadata() {
+		return this.metadata;
 	}
 
 }

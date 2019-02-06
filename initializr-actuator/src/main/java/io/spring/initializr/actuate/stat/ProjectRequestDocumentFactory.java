@@ -28,7 +28,6 @@ import io.spring.initializr.generator.ProjectFailedEvent;
 import io.spring.initializr.generator.ProjectRequest;
 import io.spring.initializr.generator.ProjectRequestEvent;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
 import io.spring.initializr.util.Version;
 
@@ -41,14 +40,8 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequestDocumentFactory {
 
-	private final InitializrMetadataProvider metadataProvider;
-
-	public ProjectRequestDocumentFactory(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
-
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
-		InitializrMetadata metadata = this.metadataProvider.get();
+		InitializrMetadata metadata = event.getMetadata();
 		ProjectRequest request = event.getProjectRequest();
 
 		ProjectRequestDocument document = new ProjectRequestDocument();
