@@ -80,6 +80,12 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-metadata</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>

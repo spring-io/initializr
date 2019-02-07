@@ -1,0 +1,3 @@
+initializr:
+  env:
+    forceSsl: true

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,21 @@
 package io.spring.initializr.metadata;
 
 /**
- * Provide the {@link InitializrMetadata} to use.
+ * A simple {@link InitializrMetadataProvider} implementation.
  *
  * @author Stephane Nicoll
  */
-public interface InitializrMetadataProvider {
+public class SimpleInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	/**
-	 * Return the metadata to use. Rather than keeping a handle to a particular instance,
-	 * implementations may decide to refresh or recompute the metadata if necessary.
-	 * @return the initializr metadata
-	 */
-	InitializrMetadata get();
+	private final InitializrMetadata metadata;
+
+	public SimpleInitializrMetadataProvider(InitializrMetadata metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public InitializrMetadata get() {
+		return this.metadata;
+	}
 
 }

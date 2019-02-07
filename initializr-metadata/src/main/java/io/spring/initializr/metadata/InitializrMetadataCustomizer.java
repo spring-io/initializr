@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,17 @@
 package io.spring.initializr.metadata;
 
 /**
- * An item that can describe itself.
+ * Strategy interface used to customize the {@link InitializrMetadata}.
  *
  * @author Dave Syer
  */
-public interface Describable {
+public interface InitializrMetadataCustomizer {
 
 	/**
-	 * Returns the item description.
-	 * @return the description
+	 * Customize the {@link InitializrMetadata}, updating or moving around capabilities
+	 * before they are validated.
+	 * @param metadata the initalizr metadata
 	 */
-	String getDescription();
+	void customize(InitializrMetadata metadata);
 
 }

@@ -1,0 +1,9 @@
+initializr:
+  env:
+    artifactRepository: https://repo.spring.io/lib-release
+    google-analytics-tracking-code: UA-1234567-89
+    fallbackApplicationName: FooBarApplication
+    invalidApplicationNames:
+      - InvalidApplication
+    kotlin:
+      default-version: 1.0.0-beta-2423

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,48 +17,41 @@
 package io.spring.initializr.metadata;
 
 /**
- * A basic metadata element.
+ * Defines the supported service capability type.
  *
  * @author Stephane Nicoll
  */
-public class MetadataElement {
+public enum ServiceCapabilityType {
 
 	/**
-	 * A visual representation of this element.
+	 * A special type that defines the action to use.
 	 */
-	private String name;
+	ACTION("action"),
 
 	/**
-	 * The unique id of this element for a given capability.
+	 * A simple text value with no option.
 	 */
-	private String id;
+	TEXT("text"),
 
-	public MetadataElement() {
-	}
+	/**
+	 * A simple value to be chosen amongst the specified options.
+	 */
+	SINGLE_SELECT("single-select"),
 
-	public MetadataElement(MetadataElement other) {
-		this(other.id, other.name);
-	}
+	/**
+	 * A hierarchical set of values (values in values) with the ability to select multiple
+	 * values.
+	 */
+	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
 
-	public MetadataElement(String id, String name) {
-		this.id = id;
+	private final String name;
+
+	ServiceCapabilityType(String name) {
 		this.name = name;
 	}
 
 	public String getName() {
-		return (this.name != null) ? this.name : this.id;
-	}
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		return this.name;
 	}
 
 }

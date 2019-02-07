@@ -1,0 +1,167 @@
+info:
+  spring-boot:
+    version: 2.1.4.RELEASE
+
+initializr:
+  env:
+    boms:
+      my-api-bom:
+        groupId: org.acme
+        artifactId: my-api-bom
+        versionProperty: my-api.version
+        additionalBoms: ['my-api-dependencies-bom']
+        mappings:
+          - versionRange: "[2.0.0.RELEASE,2.1.6.RELEASE)"
+            version: 1.0.0.RELEASE
+            repositories: my-api-repo-1
+          - versionRange: "2.2.1.RELEASE"
+            version: 2.0.0.RELEASE
+            repositories: my-api-repo-2
+      my-api-dependencies-bom:
+        groupId: org.acme
+        artifactId: my-api-dependencies-bom
+        version: 1.0.0.RELEASE
+        repositories: my-api-repo-3
+    kotlin:
+      defaultVersion: 1.2
+      mappings:
+        - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
+          version: 1.0
+        - versionRange: "[2.0.0.M1,2.1.0.M1)"
+          version: 1.1
+    repositories:
+      my-api-repo-1:
+        name: repo1
+        url: http://example.com/repo1
+      my-api-repo-2:
+        name: repo2
+        url: http://example.com/repo2
+      my-api-repo-3:
+        name: repo3
+        url: http://example.com/repo3
+  dependencies:
+    - name: Core
+      content:
+        - name: Web
+          id: web
+          description: Web dependency description
+          facets:
+            - web
+          links:
+            - rel: guide
+              href: https://example.com/guide
+              description: Building a RESTful Web Service
+            - rel: reference
+              href: https://example.com/doc
+        - name: Security
+          id: security
+        - name: Data JPA
+          id: data-jpa
+          aliases:
+            - jpa
+    - name: Other
+      content:
+        - name: Foo
+          groupId: org.acme
+          artifactId: foo
+          version: 1.3.5
+          weight: 42
+          keywords:
+            - thefoo
+            - dafoo
+          links:
+            - rel: guide
+              href: https://example.com/guide1
+            - rel: reference
+              href: https://example.com/{bootVersion}/doc
+            - rel: guide
+              href: https://example.com/guide2
+              description: Some guide for foo
+        - name: Bar
+          id: org.acme:bar
+          version: 2.1.0
+        - name: Biz
+          groupId: org.acme
+          artifactId: biz
+          scope: runtime
+          version: 1.3.5
+          versionRange: 2.2.0.BUILD-SNAPSHOT
+        - name: Bur
+          id: org.acme:bur
+          version: 2.1.0
+          scope: test
+          versionRange: "[2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)"
+        - name: My API
+          id : my-api
+          groupId: org.acme
+          artifactId: my-api
+          scope: provided
+          bom: my-api-bom
+  types:
+    - name: Maven POM
+      id: maven-build
+      sts-id: pom.xml
+      tags:
+        build: maven
+        format: build
+      default: false
+      action: /pom.xml
+    - name: Maven Project
+      id: maven-project
+      sts-id: starter.zip
+      tags:
+        build: maven
+        format: project
+      default: true
+      action: /starter.zip
+    - name: Gradle Config
+      id: gradle-build
+      sts-id: build.gradle
+      tags:
+        build: gradle
+        format: build
+      default: false
+      action: /build.gradle
+    - name: Gradle Project
+      id: gradle-project
+      sts-id: gradle.zip
+      tags:
+        build: gradle
+        format: project
+      default: false
+      action: /starter.zip
+  packagings:
+    - name: Jar
+      id: jar
+      default: true
+    - name: War
+      id: war
+      default: false
+  javaVersions:
+    - id: 1.6
+      default: false
+    - id: 1.7
+      default: false
+    - id: 1.8
+      default: true
+  languages:
+    - name: Groovy
+      id: groovy
+      default: false
+    - name: Java
+      id: java
+      default: true
+    - name: Kotlin
+      id: kotlin
+      default: false
+  bootVersions:
+    - name : Latest SNAPSHOT
+      id: 2.2.0.BUILD-SNAPSHOT
+      default: false
+    - name: 2.1.4
+      id: 2.1.4.RELEASE
+      default: true
+    - name: 1.5.17
+      id: 1.5.17.RELEASE
+      default: false
+
