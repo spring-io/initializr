@@ -1,0 +1,2 @@
+io.spring.initializr.generator.language.LanguageFactory=\
+io.spring.initializr.generator.language.java.JavaLanguageFactory
