@@ -16,8 +16,8 @@
 
 package io.spring.initializr.metadata;
 
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
-import io.spring.initializr.util.Version;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

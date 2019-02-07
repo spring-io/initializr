@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.util;
+package io.spring.initializr.generator.version;
 
 import org.springframework.util.Assert;
 

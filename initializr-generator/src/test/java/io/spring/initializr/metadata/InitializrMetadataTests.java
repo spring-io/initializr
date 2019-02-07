@@ -21,10 +21,10 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials.Mapping;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.util.Version;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

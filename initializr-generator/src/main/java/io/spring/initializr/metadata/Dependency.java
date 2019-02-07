@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import java.util.StringTokenizer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.spring.initializr.util.InvalidVersionException;
-import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionParser;
-import io.spring.initializr.util.VersionRange;
+import io.spring.initializr.generator.version.InvalidVersionException;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.util.StringUtils;
 

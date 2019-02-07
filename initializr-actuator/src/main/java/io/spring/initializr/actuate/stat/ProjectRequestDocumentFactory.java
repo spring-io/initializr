@@ -24,9 +24,9 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocument.ClientInformatio
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.DependencyInformation;
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.ErrorStateInformation;
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.VersionInformation;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.util.Agent;
-import io.spring.initializr.util.Version;
 import io.spring.initializr.web.project.ProjectFailedEvent;
 import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.ProjectRequestEvent;

@@ -19,11 +19,11 @@ package io.spring.initializr.web.mapper;
 import java.net.URL;
 import java.util.Collections;
 
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
-import io.spring.initializr.util.Version;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 

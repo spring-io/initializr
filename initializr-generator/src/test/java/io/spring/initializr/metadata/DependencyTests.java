@@ -18,8 +18,8 @@ package io.spring.initializr.metadata;
 
 import java.util.Arrays;
 
-import io.spring.initializr.util.Version;
-import io.spring.initializr.util.VersionParser;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

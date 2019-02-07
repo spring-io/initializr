@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.metadata;
-
-import io.spring.initializr.generator.version.Version;
+package io.spring.initializr.generator.version;
 
 /**
- * Provide the {@link DependencyMetadata} for a given spring boot version.
+ * Thrown if a input represents an invalid version.
  *
  * @author Stephane Nicoll
  */
-public interface DependencyMetadataProvider {
+@SuppressWarnings("serial")
+public class InvalidVersionException extends RuntimeException {
 
-	/**
-	 * Return the dependency metadata to use for the specified {@code bootVersion}.
-	 * @param metadata the intializr metadata
-	 * @param bootVersion the Spring Boot version
-	 * @return the dependency metadata
-	 */
-	DependencyMetadata get(InitializrMetadata metadata, Version bootVersion);
+	public InvalidVersionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public InvalidVersionException(String message) {
+		super(message);
+	}
 
 }
