@@ -41,7 +41,7 @@
 		<java.version>1.8</java.version>
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit-jupiter.version>5.4.0-RC1</junit-jupiter.version>
+		<junit-jupiter.version>5.4.0-RC2</junit-jupiter.version>
 		<spring.boot.version>2.1.2.RELEASE</spring.boot.version>
 		<spring-cloud-contract.version>2.0.0.RELEASE</spring-cloud-contract.version>
 		<spring-javaformat.version>0.0.6</spring-javaformat.version>

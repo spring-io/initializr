@@ -42,8 +42,7 @@ import org.apache.tools.ant.taskdefs.Untar;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
@@ -66,7 +65,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Stephane Nicoll
  */
-@ExtendWith(TempDirectory.class)
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
@@ -83,7 +81,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	private RestTemplate restTemplate;
 
 	@BeforeEach
-	public void before(@TempDirectory.TempDir Path folder) {
+	public void before(@TempDir Path folder) {
 		this.restTemplate = this.restTemplateBuilder.build();
 		this.folder = folder.toFile();
 	}

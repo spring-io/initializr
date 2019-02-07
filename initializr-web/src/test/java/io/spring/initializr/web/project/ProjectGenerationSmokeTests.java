@@ -27,8 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -47,7 +46,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Dave Syer
  * @author Stephane Nicoll
  */
-@ExtendWith(TempDirectory.class)
 @ActiveProfiles("test-default")
 class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegrationTests {
 
@@ -58,7 +56,7 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	private Action enterAction;
 
 	@BeforeEach
-	public void setup(@TempDirectory.TempDir Path folder) throws IOException {
+	public void setup(@TempDir Path folder) throws IOException {
 		Assumptions.assumeTrue(Boolean.getBoolean("smoke.test"),
 				"Smoke tests disabled (set System property 'smoke.test')");
 		this.downloadDir = folder.toFile();
