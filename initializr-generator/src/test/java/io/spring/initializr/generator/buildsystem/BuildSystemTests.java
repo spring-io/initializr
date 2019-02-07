@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem;
 import java.nio.file.Path;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,14 @@ class BuildSystemTests {
 		assertThat(gradle).isInstanceOf(GradleBuildSystem.class);
 		assertThat(gradle.id()).isEqualTo("gradle");
 		assertThat(gradle.toString()).isEqualTo("gradle");
+	}
+
+	@Test
+	void mavenBuildSystem() {
+		BuildSystem maven = BuildSystem.forId("maven");
+		assertThat(maven).isInstanceOf(MavenBuildSystem.class);
+		assertThat(maven.id()).isEqualTo("maven");
+		assertThat(maven.toString()).isEqualTo("maven");
 	}
 
 	@Test
