@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.language;
 
 import io.spring.initializr.generator.language.java.JavaLanguage;
+import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +37,15 @@ class LanguageTests {
 		assertThat(java.id()).isEqualTo("java");
 		assertThat(java.toString()).isEqualTo("java");
 		assertThat(java.jvmVersion()).isEqualTo("11");
+	}
+
+	@Test
+	void kotlinLanguage() {
+		Language kotlin = Language.forId("kotlin", null);
+		assertThat(kotlin).isInstanceOf(KotlinLanguage.class);
+		assertThat(kotlin.id()).isEqualTo("kotlin");
+		assertThat(kotlin.toString()).isEqualTo("kotlin");
+		assertThat(kotlin.jvmVersion()).isEqualTo("1.8");
 	}
 
 	@Test
