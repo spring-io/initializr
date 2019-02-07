@@ -1,3 +1,6 @@
+io.spring.initializr.generator.buildsystem.BuildSystemFactory=\
+io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystemFactory
+
 io.spring.initializr.generator.language.LanguageFactory=\
 io.spring.initializr.generator.language.groovy.GroovyLanguageFactory,\
 io.spring.initializr.generator.language.java.JavaLanguageFactory,\

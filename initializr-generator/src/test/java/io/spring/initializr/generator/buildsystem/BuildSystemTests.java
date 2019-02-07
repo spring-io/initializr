@@ -16,8 +16,15 @@
 
 package io.spring.initializr.generator.buildsystem;
 
-import org.junit.jupiter.api.Test;
+import java.nio.file.Path;
 
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.language.java.JavaLanguage;
+import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
@@ -26,6 +33,28 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Stephane Nicoll
  */
 class BuildSystemTests {
+
+	@Test
+	void gradleBuildSystem() {
+		BuildSystem gradle = BuildSystem.forId("gradle");
+		assertThat(gradle).isInstanceOf(GradleBuildSystem.class);
+		assertThat(gradle.id()).isEqualTo("gradle");
+		assertThat(gradle.toString()).isEqualTo("gradle");
+	}
+
+	@Test
+	void defaultMainDirectory(@TempDir Path directory) {
+		Path mainDirectory = BuildSystem.forId("gradle").getMainDirectory(directory,
+				new JavaLanguage());
+		assertThat(mainDirectory).isEqualTo(directory.resolve("src/main/java"));
+	}
+
+	@Test
+	void defaultTestDirectory(@TempDir Path directory) {
+		Path mainDirectory = BuildSystem.forId("gradle").getTestDirectory(directory,
+				new KotlinLanguage());
+		assertThat(mainDirectory).isEqualTo(directory.resolve("src/test/kotlin"));
+	}
 
 	@Test
 	void unknownBuildSystem() {
