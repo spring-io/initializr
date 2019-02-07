@@ -1,0 +1,27 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.1.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.acme:foo'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.acme:bar-bom:1.0'
+		mavenBom 'org.acme:biz-bom:1.0'
+		mavenBom 'org.acme:foo-bom:1.0'
+	}
+}

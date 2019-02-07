@@ -1,0 +1,22 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.1.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://example.com/foo' }
+	maven { url 'https://example.com/bar' }
+}
+
+dependencies {
+	implementation 'org.acme:bar'
+	implementation 'org.acme:foo'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

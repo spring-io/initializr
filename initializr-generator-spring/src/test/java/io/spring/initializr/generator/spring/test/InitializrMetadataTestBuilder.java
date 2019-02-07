@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.test.metadata;
+package io.spring.initializr.generator.spring.test;
 
 import java.net.MalformedURLException;
 import java.net.URL;

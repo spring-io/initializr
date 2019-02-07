@@ -15,10 +15,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.spring.initializr.experimental</groupId>
-			<artifactId>initializr-generator-spring</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot</artifactId>
 		</dependency>
@@ -42,12 +38,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<dependency>
-			<groupId>io.spring.initializr.experimental</groupId>
-			<artifactId>initializr-generator</artifactId>
-			<scope>test</scope>
-			<type>test-jar</type>
-		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>

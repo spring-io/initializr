@@ -18,11 +18,11 @@ package io.spring.initializr.actuate.info;
 
 import java.util.Map;
 
+import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.actuate.info.Info;

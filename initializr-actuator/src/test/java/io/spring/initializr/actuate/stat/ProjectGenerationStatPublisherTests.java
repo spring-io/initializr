@@ -26,8 +26,8 @@ import java.util.Collections;
 import java.util.UUID;
 
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
+import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
 import io.spring.initializr.web.project.ProjectGeneratedEvent;
 import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.WebProjectRequest;
