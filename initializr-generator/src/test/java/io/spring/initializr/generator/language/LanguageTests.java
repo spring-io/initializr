@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.language;
 
+import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,15 @@ class LanguageTests {
 		assertThat(kotlin.id()).isEqualTo("kotlin");
 		assertThat(kotlin.toString()).isEqualTo("kotlin");
 		assertThat(kotlin.jvmVersion()).isEqualTo("1.8");
+	}
+
+	@Test
+	void groovyLanguage() {
+		Language groovy = Language.forId("groovy", "1.8");
+		assertThat(groovy).isInstanceOf(GroovyLanguage.class);
+		assertThat(groovy.id()).isEqualTo("groovy");
+		assertThat(groovy.toString()).isEqualTo("groovy");
+		assertThat(groovy.jvmVersion()).isEqualTo("1.8");
 	}
 
 	@Test

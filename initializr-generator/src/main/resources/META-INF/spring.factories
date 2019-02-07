@@ -1,3 +1,4 @@
 io.spring.initializr.generator.language.LanguageFactory=\
+io.spring.initializr.generator.language.groovy.GroovyLanguageFactory,\
 io.spring.initializr.generator.language.java.JavaLanguageFactory,\
 io.spring.initializr.generator.language.kotlin.KotlinLanguageFactory
