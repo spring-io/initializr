@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import com.samskivert.mustache.Mustache;
+import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
@@ -35,7 +36,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.util.Agent;
 import io.spring.initializr.util.Agent.AgentId;
-import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
@@ -121,7 +121,8 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
-			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
+			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent)
+			throws IOException {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
 

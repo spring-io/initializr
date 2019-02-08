@@ -17,16 +17,17 @@
 package io.spring.initializr.web.support;
 
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.metadata.Type;
-import io.spring.initializr.util.TemplateRenderer;
 
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -56,12 +57,13 @@ public class CommandLineHelpGenerator {
 	 * @param metadata the initializr metadata
 	 * @param serviceUrl the service URL
 	 * @return the generic capabilities text document
+	 * @throws IOException if rendering the capabilities failed
 	 */
 	public String generateGenericCapabilities(InitializrMetadata metadata,
-			String serviceUrl) {
+			String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return this.template.process("cli-capabilities.txt", model);
+		return this.template.render("cli/cli-capabilities", model);
 	}
 
 	/**
@@ -69,13 +71,14 @@ public class CommandLineHelpGenerator {
 	 * @param metadata the initializr metadata
 	 * @param serviceUrl the service URL
 	 * @return the generic capabilities text document
+	 * @throws IOException if rendering the capabilities failed
 	 */
-	public String generateCurlCapabilities(InitializrMetadata metadata,
-			String serviceUrl) {
+	public String generateCurlCapabilities(InitializrMetadata metadata, String serviceUrl)
+			throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", this.template.process("curl-examples.txt", model));
+		model.put("examples", this.template.render("cli/curl-examples", model));
 		model.put("hasExamples", true);
-		return this.template.process("cli-capabilities.txt", model);
+		return this.template.render("cli/cli-capabilities", model);
 	}
 
 	/**
@@ -83,13 +86,14 @@ public class CommandLineHelpGenerator {
 	 * @param metadata the initializr metadata
 	 * @param serviceUrl the service URL
 	 * @return the generic capabilities text document
+	 * @throws IOException if rendering the capabilities failed
 	 */
 	public String generateHttpieCapabilities(InitializrMetadata metadata,
-			String serviceUrl) {
+			String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
-		model.put("examples", this.template.process("httpie-examples.txt", model));
+		model.put("examples", this.template.render("cli/httpie-examples", model));
 		model.put("hasExamples", true);
-		return this.template.process("cli-capabilities.txt", model);
+		return this.template.render("cli/cli-capabilities", model);
 	}
 
 	/**
@@ -98,12 +102,13 @@ public class CommandLineHelpGenerator {
 	 * @param metadata the initializr metadata
 	 * @param serviceUrl the service URL
 	 * @return the generic capabilities text document
+	 * @throws IOException if rendering the capabilities failed
 	 */
 	public String generateSpringBootCliCapabilities(InitializrMetadata metadata,
-			String serviceUrl) {
+			String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeSpringBootCliModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
-		return this.template.process("boot-cli-capabilities.txt", model);
+		return this.template.render("cli/boot-cli-capabilities", model);
 	}
 
 	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata,

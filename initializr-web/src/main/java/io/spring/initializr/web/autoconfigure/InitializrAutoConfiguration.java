@@ -25,13 +25,14 @@ import javax.cache.expiry.Duration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
+import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.web.ProjectResourceLocator;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
@@ -40,6 +41,7 @@ import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.ui.UiController;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -50,6 +52,9 @@ import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfigu
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.support.NoOpCache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -84,12 +89,22 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public TemplateRenderer templateRenderer(Environment environment) {
-		Binder binder = Binder.get(environment);
-		boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);
-		TemplateRenderer templateRenderer = new TemplateRenderer();
-		templateRenderer.setCache(cache);
-		return templateRenderer;
+	public TemplateRenderer templateRenderer(Environment environment,
+			ObjectProvider<CacheManager> cacheManager) {
+		return new MustacheTemplateRenderer("classpath:/templates",
+				determineCache(environment, cacheManager.getIfAvailable()));
+	}
+
+	private Cache determineCache(Environment environment, CacheManager cacheManager) {
+		if (cacheManager != null) {
+			Binder binder = Binder.get(environment);
+			boolean cache = binder.bind("spring.mustache.cache", Boolean.class)
+					.orElse(true);
+			if (cache) {
+				return cacheManager.getCache("initializr.templates");
+			}
+		}
+		return new NoOpCache("templates");
 	}
 
 	@Bean

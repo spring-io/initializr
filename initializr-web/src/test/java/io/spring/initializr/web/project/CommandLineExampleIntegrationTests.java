@@ -26,8 +26,8 @@ import org.springframework.test.context.ActiveProfiles;
 /**
  * Validate that the "raw" HTTP commands that are described in the command-line help
  * works. If anything needs to be updated here, please double check the
- * "curl-examples.txt" as it may need an update as well. This is also a good indicator of
- * a non backward compatible change.
+ * "cli/curl-examples.mustache" as it may need an update as well. This is also a good
+ * indicator of a non backward compatible change.
  *
  * @author Stephane Nicoll
  */

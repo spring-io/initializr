@@ -16,19 +16,22 @@
 
 package io.spring.initializr.web.support;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
-import io.spring.initializr.util.TemplateRenderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Tests for {@link CommandLineHelpGenerator}.
+ *
  * @author Stephane Nicoll
  */
 class CommandLineHelpGeneratorTests {
@@ -37,11 +40,12 @@ class CommandLineHelpGeneratorTests {
 
 	@BeforeEach
 	public void init() {
-		this.generator = new CommandLineHelpGenerator(new TemplateRenderer());
+		this.generator = new CommandLineHelpGenerator(
+				new MustacheTemplateRenderer("classpath:/templates"));
 	}
 
 	@Test
-	void generateGenericCapabilities() {
+	void generateGenericCapabilities() throws IOException {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -57,7 +61,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateCapabilitiesWithTypeDescription() {
+	void generateCapabilitiesWithTypeDescription() throws IOException {
 		Type type = new Type();
 		type.setId("foo");
 		type.setName("foo-name");
@@ -72,7 +76,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateCapabilitiesWithAlias() {
+	void generateCapabilitiesWithAlias() throws IOException {
 		Dependency dependency = createDependency("dep", "some description");
 		dependency.setAliases(Arrays.asList("legacy", "another"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
@@ -85,7 +89,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateCurlCapabilities() {
+	void generateCurlCapabilities() throws IOException {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -101,7 +105,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateHttpCapabilities() {
+	void generateHttpCapabilities() throws IOException {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -118,7 +122,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateSpringBootCliCapabilities() {
+	void generateSpringBootCliCapabilities() throws IOException {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", createDependency("id-b", "depB"),
 						createDependency("id-a", "depA", "and some description"))
@@ -139,7 +143,7 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateCapabilitiesWithVersionRange() {
+	void generateCapabilitiesWithVersionRange() throws IOException {
 		Dependency first = Dependency.withId("first");
 		first.setDescription("first desc");
 		first.setVersionRange("1.2.0.RELEASE");

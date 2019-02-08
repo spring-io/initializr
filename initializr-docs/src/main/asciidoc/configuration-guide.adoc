@@ -808,4 +808,7 @@ expiration settings accordingly.
 |`initializr.project-resources`
 |Cache resources that are used to generate projects.
 
+|`initializr.templates`
+|Cache templates that are used to generate projects.
+
 |===
