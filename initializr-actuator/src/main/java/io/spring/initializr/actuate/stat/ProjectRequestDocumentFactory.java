@@ -26,11 +26,11 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocument.ErrorStateInform
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.VersionInformation;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.util.Agent;
 import io.spring.initializr.web.project.ProjectFailedEvent;
 import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.ProjectRequestEvent;
 import io.spring.initializr.web.project.WebProjectRequest;
+import io.spring.initializr.web.support.Agent;
 
 import org.springframework.util.StringUtils;
 

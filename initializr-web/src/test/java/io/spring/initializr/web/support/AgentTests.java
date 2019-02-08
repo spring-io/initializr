@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.util;
+package io.spring.initializr.web.support;
 
 import org.junit.jupiter.api.Test;
 

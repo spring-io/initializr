@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import io.spring.initializr.generator.version.Version;
-import io.spring.initializr.util.Agent;
+import io.spring.initializr.web.support.Agent;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
