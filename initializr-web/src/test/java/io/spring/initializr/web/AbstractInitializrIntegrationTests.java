@@ -29,13 +29,9 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.spring.test.ProjectAssert;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.metadata.InitializrProperties;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
-import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
+import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Untar;
@@ -294,17 +290,10 @@ public abstract class AbstractInitializrIntegrationTests {
 	@EnableAutoConfiguration
 	public static class Config {
 
+		// Disable metadata fetching from spring.io
 		@Bean
-		public InitializrMetadataProvider initializrMetadataProvider(
-				InitializrProperties properties) {
-			return new DefaultInitializrMetadataProvider(InitializrMetadataBuilder
-					.fromInitializrProperties(properties).build(), new ObjectMapper(),
-					new RestTemplate()) {
-				@Override
-				protected void updateInitializrMetadata(InitializrMetadata metadata) {
-					// Disable metadata fetching from spring.io
-				}
-			};
+		public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy() {
+			return (metadata) -> metadata;
 		}
 
 	}

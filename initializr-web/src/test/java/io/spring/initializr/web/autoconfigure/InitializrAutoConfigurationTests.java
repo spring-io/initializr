@@ -22,6 +22,8 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
+import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
+import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.ui.UiController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -74,6 +76,24 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Test
+	void autoConfigRegistersInitializrMetadataUpdateStrategy() {
+		this.contextRunner.run((context) -> assertThat(context)
+				.hasSingleBean(InitializrMetadataUpdateStrategy.class));
+	}
+
+	@Test
+	void autoConfigWhenInitializrMetadataUpdateStrategyPresentDoesNotRegisterInitializrMetadataUpdateStrategy() {
+		this.contextRunner
+				.withUserConfiguration(
+						CustomInitializrMetadataUpdateStrategyConfiguration.class)
+				.run((context) -> {
+					assertThat(context)
+							.hasSingleBean(InitializrMetadataUpdateStrategy.class);
+					assertThat(context).hasBean("testInitializrMetadataUpdateStrategy");
+				});
+	}
+
+	@Test
 	void autoConfigRegistersInitializrMetadataProvider() {
 		this.contextRunner.run((context) -> assertThat(context)
 				.hasSingleBean(InitializrMetadataProvider.class));
@@ -111,10 +131,12 @@ class InitializrAutoConfigurationTests {
 	void customRestTemplateBuilderIsUsed() {
 		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
 				.run((context) -> {
-					assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
+					assertThat(context)
+							.hasSingleBean(DefaultInitializrMetadataUpdateStrategy.class);
 					RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-							context.getBean(InitializrMetadataProvider.class))
-									.getPropertyValue("restTemplate");
+							context.getBean(
+									DefaultInitializrMetadataUpdateStrategy.class))
+											.getPropertyValue("restTemplate");
 					assertThat(restTemplate.getErrorHandler())
 							.isSameAs(CustomRestTemplateConfiguration.errorHandler);
 				});
@@ -180,6 +202,16 @@ class InitializrAutoConfigurationTests {
 		@Bean
 		public TemplateRenderer testTemplateRenderer() {
 			return Mockito.mock(TemplateRenderer.class);
+		}
+
+	}
+
+	@Configuration
+	static class CustomInitializrMetadataUpdateStrategyConfiguration {
+
+		@Bean
+		public InitializrMetadataUpdateStrategy testInitializrMetadataUpdateStrategy() {
+			return Mockito.mock(InitializrMetadataUpdateStrategy.class);
 		}
 
 	}

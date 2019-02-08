@@ -124,18 +124,15 @@ details, {spring-boot-reference}/#boot-features-restclient-customization[check t
 documentation].
 
 If you don't want the version to be upgraded automatically, you need to override the
-`InitializrMetadataProvider` bean to provide your own metadata for the service. For
-instance, you could swap to an implementation that always returns the contents of static
-`application.yml`:
+`InitializrMetadataUpdateStrategy` bean to provide your own strategy when the metadata has
+to be refreshed. For instance, you could swap to an implementation that always returns the
+contents of static `application.yml`:
 
 [source,java,indent=0]
 ----
 	@Bean
-	public InitializrMetadataProvider initializrMetadataProvider(
-			InitializrProperties properties) {
-		InitializrMetadata metadata = InitializrMetadataBuilder
-				.fromInitializrProperties(properties).build();
-		return new SimpleInitializrMetadataProvider(metadata);
+	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy() {
+		return (metadata) -> metadata;
 	}
 ----
 

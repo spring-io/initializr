@@ -16,74 +16,35 @@
 
 package io.spring.initializr.web.support;
 
-import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 /**
- * A default {@link InitializrMetadataProvider} that is able to refresh the metadata with
- * the status of the main spring.io site.
+ * A default {@link InitializrMetadataProvider} that caches the {@link InitializrMetadata
+ * metadata} and invokes a {@link InitializrMetadataUpdateStrategy} whenever the cache
+ * expires.
  *
  * @author Stephane Nicoll
  */
 public class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	private static final Log logger = LogFactory
-			.getLog(DefaultInitializrMetadataProvider.class);
+	private InitializrMetadata metadata;
 
-	private final InitializrMetadata metadata;
-
-	private final ObjectMapper objectMapper;
-
-	private final RestTemplate restTemplate;
+	private final InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy;
 
 	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
-			ObjectMapper objectMapper, RestTemplate restTemplate) {
+			InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
 		this.metadata = metadata;
-		this.objectMapper = objectMapper;
-		this.restTemplate = restTemplate;
+		this.initializrMetadataUpdateStrategy = initializrMetadataUpdateStrategy;
 	}
 
 	@Override
 	@Cacheable(value = "initializr.metadata", key = "'metadata'")
 	public InitializrMetadata get() {
-		updateInitializrMetadata(this.metadata);
+		this.metadata = this.initializrMetadataUpdateStrategy.update(this.metadata);
 		return this.metadata;
-	}
-
-	protected void updateInitializrMetadata(InitializrMetadata metadata) {
-		List<DefaultMetadataElement> bootVersions = fetchBootVersions();
-		if (bootVersions != null && !bootVersions.isEmpty()) {
-			if (bootVersions.stream().noneMatch(DefaultMetadataElement::isDefault)) {
-				// No default specified
-				bootVersions.get(0).setDefault(true);
-			}
-			metadata.updateSpringBootVersions(bootVersions);
-		}
-	}
-
-	protected List<DefaultMetadataElement> fetchBootVersions() {
-		String url = this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
-		if (StringUtils.hasText(url)) {
-			try {
-				logger.info("Fetching boot metadata from " + url);
-				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
-						url).getBootVersions();
-			}
-			catch (Exception ex) {
-				logger.warn("Failed to fetch spring boot metadata", ex);
-			}
-		}
-		return null;
 	}
 
 }

@@ -33,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author Stephane Nicoll
  */
-public class SpringBootMetadataReader {
+class SpringBootMetadataReader {
 
 	private final JsonNode content;
 
@@ -44,7 +44,7 @@ public class SpringBootMetadataReader {
 	 * @param url the metadata URL
 	 * @throws IOException on load error
 	 */
-	public SpringBootMetadataReader(ObjectMapper objectMapper, RestTemplate restTemplate,
+	SpringBootMetadataReader(ObjectMapper objectMapper, RestTemplate restTemplate,
 			String url) throws IOException {
 		this.content = objectMapper
 				.readTree(restTemplate.getForObject(url, String.class));

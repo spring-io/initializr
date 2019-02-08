@@ -38,6 +38,8 @@ import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
+import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
+import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.ui.UiController;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -107,14 +109,22 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean
+	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy(
+			RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
+		return new DefaultInitializrMetadataUpdateStrategy(restTemplateBuilder.build(),
+				objectMapper);
+	}
+
+	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
 	public InitializrMetadataProvider initializrMetadataProvider(
-			InitializrProperties properties, ObjectMapper objectMapper,
-			RestTemplateBuilder restTemplateBuilder) {
+			InitializrProperties properties,
+			InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
 		InitializrMetadata metadata = InitializrMetadataBuilder
 				.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata, objectMapper,
-				restTemplateBuilder.build());
+		return new DefaultInitializrMetadataProvider(metadata,
+				initializrMetadataUpdateStrategy);
 	}
 
 	@Bean
