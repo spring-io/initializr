@@ -33,7 +33,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.web.ProjectResourceLocator;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
@@ -105,12 +104,6 @@ public class InitializrAutoConfiguration {
 			}
 		}
 		return new NoOpCache("templates");
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public ProjectResourceLocator projectResourceLocator() {
-		return new ProjectResourceLocator();
 	}
 
 	@Bean

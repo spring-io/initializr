@@ -19,7 +19,6 @@ package io.spring.initializr.web.autoconfigure;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.web.ProjectResourceLocator;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
@@ -71,22 +70,6 @@ class InitializrAutoConfigurationTests {
 				.run((context) -> {
 					assertThat(context).hasSingleBean(TemplateRenderer.class);
 					assertThat(context).hasBean("testTemplateRenderer");
-				});
-	}
-
-	@Test
-	void autoConfigRegistersProjectResourceLocator() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(ProjectResourceLocator.class));
-	}
-
-	@Test
-	void autoConfigWhenProjectResourceLocatorBeanPresentDoesNotRegisterProjectResourceLocator() {
-		this.contextRunner
-				.withUserConfiguration(CustomProjectResourceLocatorConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(ProjectResourceLocator.class);
-					assertThat(context).hasBean("testProjectResourceLocator");
 				});
 	}
 
@@ -197,16 +180,6 @@ class InitializrAutoConfigurationTests {
 		@Bean
 		public TemplateRenderer testTemplateRenderer() {
 			return Mockito.mock(TemplateRenderer.class);
-		}
-
-	}
-
-	@Configuration
-	static class CustomProjectResourceLocatorConfiguration {
-
-		@Bean
-		public ProjectResourceLocator testProjectResourceLocator() {
-			return Mockito.mock(ProjectResourceLocator.class);
 		}
 
 	}
