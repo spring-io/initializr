@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web;
+package io.spring.initializr.web.project;
 
-import io.spring.initializr.InitializrException;
+import io.spring.initializr.generator.project.ProjectGenerationException;
 
 /**
  * Thrown when a {@link ProjectRequest} is invalid.
@@ -24,11 +24,7 @@ import io.spring.initializr.InitializrException;
  * @author Stephane Nicoll
  */
 @SuppressWarnings("serial")
-public class InvalidProjectRequestException extends InitializrException {
-
-	public InvalidProjectRequestException(String message, Throwable cause) {
-		super(message, cause);
-	}
+public class InvalidProjectRequestException extends ProjectGenerationException {
 
 	public InvalidProjectRequestException(String message) {
 		super(message);

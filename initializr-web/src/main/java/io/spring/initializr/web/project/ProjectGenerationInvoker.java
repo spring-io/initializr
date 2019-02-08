@@ -25,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.spring.initializr.InitializrException;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
@@ -92,7 +91,7 @@ public class ProjectGenerationInvoker {
 			addTempFile(name, file);
 			return file;
 		}
-		catch (ProjectGenerationException | InitializrException ex) {
+		catch (ProjectGenerationException ex) {
 			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}
@@ -124,7 +123,7 @@ public class ProjectGenerationInvoker {
 							projectGenerationContext, metadata));
 			return projectGenerator.generate(projectDescription, generateBuild(request));
 		}
-		catch (ProjectGenerationException | InitializrException ex) {
+		catch (ProjectGenerationException ex) {
 			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}

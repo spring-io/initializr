@@ -31,7 +31,6 @@ import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
-import io.spring.initializr.web.InvalidProjectRequestException;
 
 import org.springframework.util.StringUtils;
 
