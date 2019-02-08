@@ -42,13 +42,13 @@ import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.Agent;
 import io.spring.initializr.web.support.Agent.AgentId;
 import io.spring.initializr.web.support.CommandLineHelpGenerator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Tar;
 import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.types.TarFileSet;
 import org.apache.tools.ant.types.ZipFileSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -76,7 +76,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Controller
 public class MainController extends AbstractInitializrController {
 
-	private static final Logger log = LoggerFactory.getLogger(MainController.class);
+	private static final Log logger = LogFactory.getLog(MainController.class);
 
 	/**
 	 * HAL JSON content type.
@@ -337,7 +337,7 @@ public class MainController extends AbstractInitializrController {
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
 			String contentType) throws IOException {
 		byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(download));
-		log.info("Uploading: {} ({} bytes)", download, bytes.length);
+		logger.info(String.format("Uploading: %s (%s bytes)", download, bytes.length));
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType,
 				fileName);
 		this.projectGenerationInvoker.cleanTempFiles(dir);

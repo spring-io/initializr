@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.StringUtils;
@@ -37,8 +37,8 @@ import org.springframework.web.client.RestTemplate;
  */
 public class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(DefaultInitializrMetadataProvider.class);
+	private static final Log logger = LogFactory
+			.getLog(DefaultInitializrMetadataProvider.class);
 
 	private final InitializrMetadata metadata;
 
@@ -75,12 +75,12 @@ public class DefaultInitializrMetadataProvider implements InitializrMetadataProv
 		String url = this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
 		if (StringUtils.hasText(url)) {
 			try {
-				log.info("Fetching boot metadata from {}", url);
+				logger.info("Fetching boot metadata from " + url);
 				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
 						url).getBootVersions();
 			}
 			catch (Exception ex) {
-				log.warn("Failed to fetch spring boot metadata", ex);
+				logger.warn("Failed to fetch spring boot metadata", ex);
 			}
 		}
 		return null;

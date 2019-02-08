@@ -24,8 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.web.project.ProjectRequestEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
@@ -44,8 +44,8 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public class ProjectGenerationStatPublisher {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(ProjectGenerationStatPublisher.class);
+	private static final Log logger = LogFactory
+			.getLog(ProjectGenerationStatPublisher.class);
 
 	private final ProjectRequestDocumentFactory documentFactory;
 
@@ -77,8 +77,8 @@ public class ProjectGenerationStatPublisher {
 		String json = null;
 		try {
 			ProjectRequestDocument document = this.documentFactory.createDocument(event);
-			if (log.isDebugEnabled()) {
-				log.debug("Publishing " + document);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Publishing " + document);
 			}
 			json = toJson(document);
 
@@ -91,7 +91,7 @@ public class ProjectGenerationStatPublisher {
 			});
 		}
 		catch (Exception ex) {
-			log.warn(String.format(
+			logger.warn(String.format(
 					"Failed to publish stat to index, document follows %n%n%s%n", json),
 					ex);
 		}

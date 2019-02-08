@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
@@ -188,8 +188,8 @@ public final class InitializrMetadataBuilder {
 	private static class ResourceInitializrMetadataCustomizer
 			implements InitializrMetadataCustomizer {
 
-		private static final Logger log = LoggerFactory.getLogger(
-				InitializrMetadataBuilder.ResourceInitializrMetadataCustomizer.class);
+		private static final Log logger = LogFactory
+				.getLog(ResourceInitializrMetadataCustomizer.class);
 
 		private static final Charset UTF_8 = Charset.forName("UTF-8");
 
@@ -201,7 +201,7 @@ public final class InitializrMetadataBuilder {
 
 		@Override
 		public void customize(InitializrMetadata metadata) {
-			log.info("Loading initializr metadata from " + this.resource);
+			logger.info("Loading initializr metadata from " + this.resource);
 			try {
 				String content = StreamUtils.copyToString(this.resource.getInputStream(),
 						UTF_8);
