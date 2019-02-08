@@ -20,11 +20,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.samskivert</groupId>
-			<artifactId>jmustache</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-generator</artifactId>
 			<scope>test</scope>

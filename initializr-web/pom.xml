@@ -109,11 +109,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>xmlunit</groupId>
-			<artifactId>xmlunit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.skyscreamer</groupId>
 			<artifactId>jsonassert</artifactId>
 			<scope>test</scope>
