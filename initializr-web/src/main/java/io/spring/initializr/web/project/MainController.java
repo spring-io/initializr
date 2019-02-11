@@ -265,7 +265,6 @@ public class MainController extends AbstractInitializrController {
 				.invokeProjectStructureGeneration(request);
 		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".zip");
 		String wrapperScript = getWrapperScript(request);
-		new File(dir, wrapperScript).setExecutable(true);
 		Zip zip = new Zip();
 		zip.setProject(new Project());
 		zip.setDefaultexcludes(false);
@@ -294,7 +293,6 @@ public class MainController extends AbstractInitializrController {
 		File download = this.projectGenerationInvoker.createDistributionFile(dir,
 				".tar.gz");
 		String wrapperScript = getWrapperScript(request);
-		new File(dir, wrapperScript).setExecutable(true);
 		Tar zip = new Tar();
 		zip.setProject(new Project());
 		zip.setDefaultexcludes(false);
