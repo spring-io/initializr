@@ -9,6 +9,74 @@ advanced tips to make sure the available options are consistent with the chosen 
 Boot generation.
 --
 
+[[project-generation]]
+== Project generation concepts
+Spring Initializr offers an API for project generation that can be reused in many
+contexts. So far, we've mentioned how we've used it on start.spring.io but the low-level
+concepts are quite independent from that as you'll discover in the section.
+
+Project generation requires a `ProjectDescription` that gathers several properties from
+the project:
+
+* A platform `Version` used by the project. This helps fine-tuning available dependencies
+according to the chosen generation.
+* The `BuildSystem` and `Packaging`
+* The JVM `Language`
+* The requested dependencies, indexed by ID
+* Basic coordinates such as `groupId`, `artifactId`, `name`, `description`
+* The name of the `application`
+* The root package name
+* The base directory for the project
+
+Convenient implementations for those concepts are available:
+
+* A `Build` abstraction model with dedicated models for Apache Maven and Gradle. A writer
+abstraction to generate `pom.xml`, `build.gradle` and `settings.gradle` files is also
+available
+* Out-of-the-box support for `jar` and `war` packaging
+* Source code model and writers for Java, Kotlin and Apache Groovy
+
+Based on a project description, project generation occurs in a dedicated
+`ProjectGenerationContext` where the following happens:
+
+* Components that should be invoked for the described project are identified
+* Customizers populates and customizes models for various assets of the project (build
+file, source code, etc)
+* Contributors use the models to generate assets in a directory structure
+
+Available components are declared in a `@ProjectGenerationConfiguration`-annotated
+configuration class that is registered in `META-INF/spring.factories`:
+
+[indent=0]
+----
+io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
+com.example.acme.build.BuildProjectGenerationConfiguration,\
+com.example.acme.code.SourceCodeProjectGenerationConfiguration
+----
+
+
+=== Project generation conditions
+Spring Initializr offers several conditions that components defined in the
+`ProjectGenerationContext` can declare to only run when necessary. This avoids exposing
+beans that have to check if they have to do something and makes the declaration more
+idiomatic.
+
+Consider the following example:
+
+[source,java,indent=0]
+----
+	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	@ConditionalOnPackaging(WarPackaging.ID)
+	public BuildCustomizer<GradleBuild> warPluginContributor() {
+		return (build) -> build.addPlugin("war");
+	}
+----
+
+This register a bean only if the project to generate uses Gradle and `war` packaging.
+Check the `io.spring.initializr.generator.condition` package for more details. Custom
+conditions can easily be created by inheriting from `ProjectGenerationCondition`.
+
 
 
 [[create-instance]]
