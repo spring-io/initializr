@@ -44,6 +44,10 @@ public class ProjectRequestToDescriptionConverter {
 	public ProjectDescription convert(ProjectRequest request,
 			InitializrMetadata metadata) {
 		validate(request, metadata);
+		String springBootVersion = getSpringBootVersion(request, metadata);
+		List<Dependency> resolvedDependencies = getResolvedDependencies(request,
+				springBootVersion, metadata);
+		validateDependencyRange(springBootVersion, resolvedDependencies);
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
 		description.setArtifactId(request.getArtifactId());
@@ -56,9 +60,8 @@ public class ProjectRequestToDescriptionConverter {
 		description.setName(request.getName());
 		description.setPackageName(getPackageName(request, metadata));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
-		String springBootVersion = getSpringBootVersion(request, metadata);
 		description.setPlatformVersion(Version.parse(springBootVersion));
-		getResolvedDependencies(request, springBootVersion, metadata)
+		resolvedDependencies
 				.forEach((dependency) -> description.addDependency(dependency.getId(),
 						MetadataBuildItemMapper.toDependency(dependency)));
 		return description;
@@ -125,6 +128,17 @@ public class ProjectRequestToDescriptionConverter {
 			if (dependency == null) {
 				throw new InvalidProjectRequestException(
 						"Unknown dependency '" + dep + "' check project metadata");
+			}
+		});
+	}
+
+	private void validateDependencyRange(String springBootVersion,
+			List<Dependency> resolvedDependencies) {
+		resolvedDependencies.forEach((dep) -> {
+			if (!dep.match(Version.parse(springBootVersion))) {
+				throw new InvalidProjectRequestException(
+						"Dependency '" + dep.getId() + "' is not compatible "
+								+ "with Spring Boot " + springBootVersion);
 			}
 		});
 	}

@@ -22,6 +22,8 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionRange;
+import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import org.junit.jupiter.api.Test;
@@ -100,6 +102,20 @@ public class ProjectRequestToDescriptionConverterTests {
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, this.metadata))
 				.withMessage("Unknown dependency 'invalid' check project metadata");
+	}
+
+	@Test
+	void convertWhenDependencyOutOfRangeShouldThrowException() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setRange(new VersionRange(Version.parse("2.2.0.M1")));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("foo", dependency).build();
+		ProjectRequest request = getProjectRequest();
+		request.setDependencies(Collections.singletonList("foo"));
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> this.converter.convert(request, metadata))
+				.withMessage("Dependency 'foo' is not compatible "
+						+ "with Spring Boot 2.1.1.RELEASE");
 	}
 
 	@Test
