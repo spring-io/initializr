@@ -29,9 +29,6 @@ public class Type extends DefaultMetadataElement implements Describable {
 
 	private String description;
 
-	@Deprecated
-	private String stsId;
-
 	private String action;
 
 	private final Map<String, String> tags = new LinkedHashMap<>();
@@ -51,14 +48,6 @@ public class Type extends DefaultMetadataElement implements Describable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getStsId() {
-		return this.stsId;
-	}
-
-	public void setStsId(String stsId) {
-		this.stsId = stsId;
 	}
 
 	public String getAction() {

@@ -100,7 +100,6 @@ initializr:
   types:
     - name: Maven POM
       id: maven-build
-      sts-id: pom.xml
       tags:
         build: maven
         format: build
@@ -108,7 +107,6 @@ initializr:
       action: /pom.xml
     - name: Maven Project
       id: maven-project
-      sts-id: starter.zip
       tags:
         build: maven
         format: project
@@ -116,7 +114,6 @@ initializr:
       action: /starter.zip
     - name: Gradle Config
       id: gradle-build
-      sts-id: build.gradle
       tags:
         build: gradle
         format: build
@@ -124,7 +121,6 @@ initializr:
       action: /build.gradle
     - name: Gradle Project
       id: gradle-project
-      sts-id: gradle.zip
       tags:
         build: gradle
         format: project

@@ -118,8 +118,9 @@ class MainControllerIntegrationTests
 
 	@Test
 	void gradleWarProject() {
-		downloadZip("/starter.zip?style=web&style=security&packaging=war&type=gradle.zip")
-				.isJavaWarProject().isGradleProject();
+		downloadZip(
+				"/starter.zip?style=web&style=security&packaging=war&type=gradle-project")
+						.isJavaWarProject().isGradleProject();
 	}
 
 	@Test

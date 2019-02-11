@@ -45,9 +45,8 @@ public class TypeCapability extends ServiceCapability<List<Type>>
 	 * @return the Type or {@code null}
 	 */
 	public Type get(String id) {
-		return this.content.stream()
-				.filter((it) -> id.equals(it.getId()) || id.equals(it.getStsId()))
-				.findFirst().orElse(null);
+		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst()
+				.orElse(null);
 	}
 
 	/**

@@ -31,7 +31,6 @@
         "name": "Maven POM",
         "id": "maven-build",
         "description": null,
-        "stsId": "pom.xml",
         "action": "/pom.xml",
         "tags": {
           "build": "maven",

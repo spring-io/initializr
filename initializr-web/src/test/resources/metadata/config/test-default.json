@@ -349,7 +349,6 @@
         "description": null,
         "id": "maven-build",
         "name": "Maven POM",
-        "stsId": "pom.xml",
         "tags": {
           "build": "maven",
           "format": "build"
@@ -361,7 +360,6 @@
         "description": null,
         "id": "maven-project",
         "name": "Maven Project",
-        "stsId": "starter.zip",
         "tags": {
           "build": "maven",
           "format": "project"
@@ -373,7 +371,6 @@
         "description": null,
         "id": "gradle-build",
         "name": "Gradle Config",
-        "stsId": "build.gradle",
         "tags": {
           "build": "gradle",
           "format": "build"
@@ -385,7 +382,6 @@
         "description": null,
         "id": "gradle-project",
         "name": "Gradle Project",
-        "stsId": "gradle.zip",
         "tags": {
           "build": "gradle",
           "format": "project"
