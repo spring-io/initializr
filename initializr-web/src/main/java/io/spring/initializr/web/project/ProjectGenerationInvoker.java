@@ -70,12 +70,12 @@ public class ProjectGenerationInvoker {
 
 	/**
 	 * Invokes the project generation API that generates the entire project structure for
-	 * the specified {@link WebProjectRequest}. Returns a directory containing the
-	 * project.
+	 * the specified {@link WebProjectRequest}.
 	 * @param request the project request
-	 * @return the generated project structure
+	 * @return the {@link ProjectGenerationResult}
 	 */
-	public File invokeProjectStructureGeneration(ProjectRequest request) {
+	public ProjectGenerationResult invokeProjectStructureGeneration(
+			ProjectRequest request) {
 		InitializrMetadata metadata = this.parentApplicationContext
 				.getBean(InitializrMetadataProvider.class).get();
 		try {
@@ -84,12 +84,12 @@ public class ProjectGenerationInvoker {
 			ProjectGenerator projectGenerator = new ProjectGenerator(
 					(projectGenerationContext) -> customizeProjectGenerationContext(
 							projectGenerationContext, metadata));
-			Path path = projectGenerator.generate(projectDescription,
+			ProjectGenerationResult result = projectGenerator.generate(projectDescription,
 					generateProject(request));
-			File file = path.toFile();
+			File file = result.getRootDirectory().toFile();
 			String name = file.getName();
 			addTempFile(name, file);
-			return file;
+			return result;
 		}
 		catch (ProjectGenerationException ex) {
 			publishProjectFailedEvent(request, metadata, ex);
@@ -97,11 +97,13 @@ public class ProjectGenerationInvoker {
 		}
 	}
 
-	private ProjectAssetGenerator<Path> generateProject(ProjectRequest request) {
+	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(
+			ProjectRequest request) {
 		return (context) -> {
 			Path projectDir = new DefaultProjectAssetGenerator().generate(context);
 			publishProjectGeneratedEvent(request, context);
-			return projectDir;
+			return new ProjectGenerationResult(
+					context.getBean(ResolvedProjectDescription.class), projectDir);
 		};
 	}
 

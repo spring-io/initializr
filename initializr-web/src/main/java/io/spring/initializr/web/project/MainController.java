@@ -28,7 +28,10 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import com.samskivert.mustache.Mustache;
+import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
@@ -261,10 +264,11 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping("/starter.zip")
 	@ResponseBody
 	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
-		File dir = this.projectGenerationInvoker
+		ProjectGenerationResult result = this.projectGenerationInvoker
 				.invokeProjectStructureGeneration(request);
+		File dir = result.getRootDirectory().toFile();
 		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".zip");
-		String wrapperScript = getWrapperScript(request);
+		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		Zip zip = new Zip();
 		zip.setProject(new Project());
 		zip.setDefaultexcludes(false);
@@ -288,11 +292,12 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
 	public ResponseEntity<byte[]> springTgz(ProjectRequest request) throws IOException {
-		File dir = this.projectGenerationInvoker
+		ProjectGenerationResult result = this.projectGenerationInvoker
 				.invokeProjectStructureGeneration(request);
+		File dir = result.getRootDirectory().toFile();
 		File download = this.projectGenerationInvoker.createDistributionFile(dir,
 				".tar.gz");
-		String wrapperScript = getWrapperScript(request);
+		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		Tar zip = new Tar();
 		zip.setProject(new Project());
 		zip.setDefaultexcludes(false);
@@ -325,11 +330,12 @@ public class MainController extends AbstractInitializrController {
 		}
 	}
 
-	private static String getWrapperScript(ProjectRequest request) {
-		String script = (request.getType() != null
-				&& request.getType().startsWith("gradle")) ? "gradlew" : "mvnw";
-		return (request.getBaseDir() != null) ? request.getBaseDir() + "/" + script
-				: script;
+	private static String getWrapperScript(ResolvedProjectDescription description) {
+		BuildSystem buildSystem = description.getBuildSystem();
+		String script = buildSystem.id().equals(GradleBuildSystem.ID) ? "gradlew"
+				: "mvnw";
+		return (description.getBaseDirectory() != null)
+				? description.getBaseDirectory() + "/" + script : script;
 	}
 
 	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,

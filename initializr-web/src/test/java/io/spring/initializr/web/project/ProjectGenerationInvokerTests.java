@@ -88,7 +88,9 @@ public class ProjectGenerationInvokerTests {
 		WebProjectRequest request = new WebProjectRequest();
 		request.setType("maven-project");
 		request.initialize(metadata);
-		File file = this.invoker.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.invoker
+				.invokeProjectStructureGeneration(request);
+		File file = result.getRootDirectory().toFile();
 		new ProjectAssert(file).isJavaProject();
 		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils
 				.getField(this.invoker, "temporaryFiles");
@@ -169,7 +171,9 @@ public class ProjectGenerationInvokerTests {
 		WebProjectRequest request = new WebProjectRequest();
 		request.initialize(metadata);
 		request.setType("gradle-project");
-		File file = this.invoker.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.invoker
+				.invokeProjectStructureGeneration(request);
+		File file = result.getRootDirectory().toFile();
 		this.invoker.cleanTempFiles(file);
 		assertThat(file.listFiles()).isNull();
 	}
