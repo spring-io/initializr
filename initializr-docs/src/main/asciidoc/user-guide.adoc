@@ -107,20 +107,20 @@ Boot version that is currently selected.
 You may find it is not the case with a message that looks like the following:
 
 ```
-requires Spring Boot >=1.0.0.RELEASE and <1.5.0.RC1
+requires Spring Boot >=1.5.0.RELEASE and <2.0.0.RELEASE
 ```
 
 Concretely, this defines a "version range" that states the dependency is deprecated and is
-no longer available as of Spring Boot 1.5. You may want to check the release notes of the
+no longer available as of Spring Boot 2.0. You may want to check the release notes of the
 related project to understand what your migration path can be. Alternatively, the message
 could be:
 
 ```
-requires Spring Boot >=2.0.0.RELEASE
+requires Spring Boot >=2.1.0.RELEASE
 ```
 
 That version range means the dependency is not available with the current Spring Boot
-generation. Obviously, if you select Spring Boot 2.0 (or later if available), you'll be
+generation. Obviously, if you select Spring Boot 2.1 (or later if available), you'll be
 able to select that dependency.
 
 
@@ -189,12 +189,12 @@ understand how you can generate a project. These are obviously tailored to the c
 you are using.
 
 Let's assume that you want to generate a "my-project.zip" project based on Spring Boot
-`1.5.2.RELEASE`, using the `web` and `devtools` dependencies (remember, those two ids are
+`2.1.2.RELEASE`, using the `web` and `devtools` dependencies (remember, those two ids are
 displayed in the capabilities of the service):
 
 ```
 $ curl https://start.spring.io/starter.zip -d dependencies=web,devtools \
-           -d bootVersion=1.5.2.RELEASE -o my-project.zip
+           -d bootVersion=2.1.2.RELEASE -o my-project.zip
 ```
 
 If you extract `my-project.zip`, you'll notice a few differences compared to what happens
@@ -227,6 +227,7 @@ The following IDEs have dedicated support:
 * Eclipse/STS
 * IntelliJ IDEA (Ultimate Edition)
 * NetBeans (using the http://plugins.netbeans.org/plugin/67888/nb-springboot[NB SpringBoot plugin])
+* Microsoft VSCode
 
 Refer to the documentation of your favorite IDE for more details.
 
