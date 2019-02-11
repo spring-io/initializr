@@ -81,10 +81,14 @@ conditions can easily be created by inheriting from `ProjectGenerationCondition`
 
 [[create-instance]]
 == Creating your own instance
-Spring Initializr is split across three main modules:
+Spring Initializr is split across several modules:
 
 * `initializr-generator`: standalone project generation library that can be reused in
 many environments (including embedded in your own project)
+* `initializr-generator-spring`: contributors to generate a Spring-based project. This
+module is necessary if you want to generate the same project structure as the one
+available on start.spring.io. Alternatively, you can roll-out your own opinions.
+* `initializr-metadata`: Configuration model.
 * `initializr-web`: API endpoints and web interface
 * `initializr-actuator`: optional module to provide additional information and statistics
 on project generation
@@ -134,13 +138,13 @@ Most of the drop-down lists are configured via a simple list-based structure whe
 entry has an `id`, a `name` and whether that entry is the default or not. If no `name` is
 provided, the `id` is used instead.
 
-Let's configure the languages and the Java versions we want to support:
+Let's configure the languages and the JVM generations we want to support:
 
 [source,yaml,indent=0]
 ----
 	initializr:
 	  javaVersions:
-		- id: 9
+		- id: 11
 		  default: false
 		- id: 1.8
 		  default: true
@@ -156,8 +160,8 @@ Let's configure the languages and the Java versions we want to support:
 If you click on the "Switch to the full version" link, the two drop down lists now offer
 the options and default values defined above.
 
-Spring Initializr supports `java`, `groovy` and `kotlin` and additional languages can be
-added in your own customization.
+NOTE: The language identifiers defined there must have a corresponding `Language`
+implementation. `java`, `kotlin` and `groovy` can be used out-of-the-box.
 
 The available packagings are also configurable that way:
 
@@ -173,8 +177,7 @@ The available packagings are also configurable that way:
 		  default: false
 ----
 
-These two packaging types are the only one explicitly supported at the moment.
-
+NOTE: Additional packages can be configured by implementing the `Packaging` abstraction.
 
 
 [[create-instance-boot-versions]]
@@ -227,7 +230,7 @@ By default, Spring Initializr exposes the following resources (all accessed via 
 Each type also defines one or more *tags* that provides additional metadata entries to
 qualify the entry. The following standard tags exist:
 
-* `build`: the name of the build system to use (e.g. `maven`, `gradle`)
+* `build`: the name of the `BuildSystem` to use (e.g. `maven`, `gradle`)
 * `format`: the format of the project (e.g. `project` for a full project, `build` for just
 a build file).
 
