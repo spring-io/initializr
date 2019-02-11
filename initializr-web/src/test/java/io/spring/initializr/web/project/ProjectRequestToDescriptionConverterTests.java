@@ -18,10 +18,12 @@ package io.spring.initializr.web.project;
 
 import java.util.Collections;
 
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.Type;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * Tests for {@link ProjectRequestToDescriptionConverter}.
  *
  * @author Madhura Bhave
+ * @author Stephane Nicoll
  */
 public class ProjectRequestToDescriptionConverterTests {
 
@@ -46,6 +49,20 @@ public class ProjectRequestToDescriptionConverterTests {
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, this.metadata))
 				.withMessage("Unknown type 'foo-build' check project metadata");
+	}
+
+	@Test
+	public void convertWhenTypeDoesNotDefineBuildTagShouldThrowException() {
+		Type type = new Type();
+		type.setId("example-project");
+		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults()
+				.addType(type).build();
+		ProjectRequest request = getProjectRequest();
+		request.setType("example-project");
+		assertThatExceptionOfType(InvalidProjectRequestException.class)
+				.isThrownBy(() -> this.converter.convert(request, testMetadata))
+				.withMessage(
+						"Invalid type 'example-project' (missing build tag) check project metadata");
 	}
 
 	@Test
@@ -119,11 +136,16 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldSetBuildSystemFromRequestType() {
+	void convertShouldSetBuildSystemFromRequestTypeAndBuildTag() {
+		Type type = new Type();
+		type.setId("example-type");
+		type.getTags().put("build", "gradle");
+		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults()
+				.addType(type).build();
 		ProjectRequest request = getProjectRequest();
-		request.setType("gradle-build");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getBuildSystem().id()).isEqualTo("gradle");
+		request.setType("example-type");
+		ProjectDescription description = this.converter.convert(request, testMetadata);
+		assertThat(description.getBuildSystem()).isInstanceOf(GradleBuildSystem.class);
 	}
 
 	@Test

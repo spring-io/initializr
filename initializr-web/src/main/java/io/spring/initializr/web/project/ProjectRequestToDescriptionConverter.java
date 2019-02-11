@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -50,7 +48,7 @@ public class ProjectRequestToDescriptionConverter {
 		description.setApplicationName(getApplicationName(request, metadata));
 		description.setArtifactId(request.getArtifactId());
 		description.setBaseDirectory(request.getBaseDir());
-		description.setBuildSystem(getBuildSystem(request));
+		description.setBuildSystem(getBuildSystem(request, metadata));
 		description.setDescription(request.getDescription());
 		description.setGroupId(request.getGroupId());
 		description.setLanguage(
@@ -88,6 +86,10 @@ public class ProjectRequestToDescriptionConverter {
 			if (typeFromMetadata == null) {
 				throw new InvalidProjectRequestException(
 						"Unknown type '" + type + "' check project metadata");
+			}
+			if (!typeFromMetadata.getTags().containsKey("build")) {
+				throw new InvalidProjectRequestException("Invalid type '" + type
+						+ "' (missing build tag) check project metadata");
 			}
 		}
 	}
@@ -127,9 +129,10 @@ public class ProjectRequestToDescriptionConverter {
 		});
 	}
 
-	private BuildSystem getBuildSystem(ProjectRequest request) {
-		return (request.getType().startsWith("gradle")) ? new GradleBuildSystem()
-				: new MavenBuildSystem();
+	private BuildSystem getBuildSystem(ProjectRequest request,
+			InitializrMetadata metadata) {
+		Type typeFromMetadata = metadata.getTypes().get(request.getType());
+		return BuildSystem.forId(typeFromMetadata.getTags().get("build"));
 	}
 
 	private String getPackageName(ProjectRequest request, InitializrMetadata metadata) {

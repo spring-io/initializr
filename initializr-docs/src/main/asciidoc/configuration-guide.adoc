@@ -227,15 +227,14 @@ By default, Spring Initializr exposes the following resources (all accessed via 
 * `/starter.zip` generate a complete project structure archived in a zip
 * `/starter.tgz` generate a complete project structure archived in a tgz
 
-Each type also defines one or more *tags* that provides additional metadata entries to
-qualify the entry. The following standard tags exist:
+The build system must be defined with a `build` tag providing the name of the
+`BuildSystem` to use (e.g. `maven`, `gradle`).
 
-* `build`: the name of the `BuildSystem` to use (e.g. `maven`, `gradle`)
-* `format`: the format of the project (e.g. `project` for a full project, `build` for just
-a build file).
-
-By default, the HTML UI filters all the available types to only display the ones that have
-a `format` tag with value `project`.
+Additional tags can be provided to further qualify the entry. Besides the mandatory `build`
+tag, a `format` tag is also available to define the format of the project (e.g. `project`
+for a full project, `build` for just a build file). By default, the HTML UI filters all
+the available types to only display the ones that have a `format` tag with value
+`project`.
 
 You can of course implement additional endpoints that generate whatever project structure
 you need but, for now, we'll simply configure our instance to generate a Gradle or a Maven
