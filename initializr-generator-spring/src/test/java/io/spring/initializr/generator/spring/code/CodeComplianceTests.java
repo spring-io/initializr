@@ -146,6 +146,49 @@ class CodeComplianceTests extends AbstractComplianceTests {
 						+ "ServletInitializer." + getExpectedExtension(extension)));
 	}
 
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void currentGenerationCustomCoordinates(Language language, String extension) {
+		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
+				(description) -> {
+					description.setGroupId("com.example.acme");
+					description.setArtifactId("my-project");
+					description.setPackageName("com.example.acme.myproject");
+					description.setApplicationName("MyProjectApplication");
+				});
+		project.isGenericProject("com.example.acme.myproject", "MyProjectApplication",
+				language.id(), extension);
+		project.sourceCodeAssert("src/main/" + language
+				+ "/com/example/acme/myproject/MyProjectApplication." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/standard/MyProjectApplication."
+								+ getExpectedExtension(extension)));
+		project.sourceCodeAssert("src/test/" + language
+				+ "/com/example/acme/myproject/MyProjectApplicationTests." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/standard/MyProjectApplicationTests."
+								+ getExpectedExtension(extension)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void previousGenerationCustomCoordinates(Language language, String extension) {
+		ProjectAssert project = generateProject(language, maven, "1.5.18.RELEASE",
+				(description) -> {
+					description.setGroupId("com.example.acme");
+					description.setArtifactId("my-project");
+					description.setPackageName("com.example.acme.myproject");
+					description.setApplicationName("MyProjectApplication");
+				});
+		project.isGenericProject("com.example.acme.myproject", "MyProjectApplication",
+				language.id(), extension);
+		project.sourceCodeAssert("src/main/" + language
+				+ "/com/example/acme/myproject/MyProjectApplication." + extension)
+				.equalsTo(new ClassPathResource(
+						"project/" + language + "/previous/MyProjectApplication."
+								+ getExpectedExtension(extension)));
+	}
+
 	private String getExpectedExtension(String extension) {
 		return extension + ".gen";
 	}
