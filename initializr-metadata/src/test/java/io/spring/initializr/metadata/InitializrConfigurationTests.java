@@ -164,6 +164,18 @@ class InitializrConfigurationTests {
 	}
 
 	@Test
+	void generatePackageNameDot() {
+		assertThat(this.properties.cleanPackageName(".", "com.example"))
+				.isEqualTo("com.example");
+	}
+
+	@Test
+	void generatePackageNameWhitespaces() {
+		assertThat(this.properties.cleanPackageName("    ", "com.example"))
+				.isEqualTo("com.example");
+	}
+
+	@Test
 	void generatePackageNameInvalidStartCharacter() {
 		assertThat(this.properties.cleanPackageName("0com.foo", "com.example"))
 				.isEqualTo("com.foo");

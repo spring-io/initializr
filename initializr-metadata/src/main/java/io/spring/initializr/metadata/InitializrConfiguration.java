@@ -108,6 +108,9 @@ public class InitializrConfiguration {
 			return defaultPackageName;
 		}
 		String candidate = cleanPackageName(packageName);
+		if (!StringUtils.hasText(candidate)) {
+			return defaultPackageName;
+		}
 		if (hasInvalidChar(candidate.replace(".", ""))
 				|| this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
