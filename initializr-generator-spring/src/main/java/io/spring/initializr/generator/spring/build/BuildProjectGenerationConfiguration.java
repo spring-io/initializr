@@ -92,8 +92,8 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(
-			ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
-		return new SimpleBuildCustomizer(projectDescription, metadata);
+			ResolvedProjectDescription projectDescription) {
+		return new SimpleBuildCustomizer(projectDescription);
 	}
 
 	@Bean

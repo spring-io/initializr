@@ -118,6 +118,7 @@ public abstract class AbstractComplianceTests {
 		description.setLanguage(language);
 		description.setBuildSystem(buildSystem);
 		description.setPlatformVersion(Version.parse(version));
+		description.setVersion("0.0.1-SNAPSHOT");
 		description.setName("demo");
 		description.setDescription("Demo project for Spring Boot");
 	}

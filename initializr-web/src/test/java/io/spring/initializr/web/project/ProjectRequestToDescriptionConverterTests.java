@@ -144,6 +144,22 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
+	void convertShouldSetVersionFromRequest() {
+		ProjectRequest request = createProjectRequest();
+		request.setVersion("1.0.2-SNAPSHOT");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getVersion()).isEqualTo("1.0.2-SNAPSHOT");
+	}
+
+	@Test
+	void convertShouldUseDefaultFromMetadataOnEmptyVersion() {
+		ProjectRequest request = createProjectRequest();
+		request.setVersion("  ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getVersion()).isEqualTo("0.0.1-SNAPSHOT");
+	}
+
+	@Test
 	void convertShouldSetBaseDirectoryFromRequest() {
 		ProjectRequest request = createProjectRequest();
 		request.setBaseDir("my-path");

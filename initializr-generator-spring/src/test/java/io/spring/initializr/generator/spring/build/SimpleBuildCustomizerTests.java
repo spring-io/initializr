@@ -22,9 +22,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
-import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,46 +37,39 @@ class SimpleBuildCustomizerTests {
 
 	@Test
 	void customizeProjectCoordinates() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
 		ProjectDescription description = initializeDescription();
 		description.setGroupId("com.example.acme");
 		description.setArtifactId("my-test-project");
-		MavenBuild build = customizeBuild(metadata, description);
+		MavenBuild build = customizeBuild(description);
 		assertThat(build.getGroup()).isEqualTo("com.example.acme");
 		assertThat(build.getArtifact()).isEqualTo("my-test-project");
 	}
 
 	@Test
-	void customizeShouldSetVersionFromMetadata() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
-		metadata.getVersion().setContent("1.5.6.RELEASE");
-		MavenBuild build = customizeBuild(metadata);
+	void customizeVersion() {
+		ProjectDescription description = initializeDescription();
+		description.setVersion("1.5.6.RELEASE");
+		MavenBuild build = customizeBuild(description);
 		assertThat(build.getVersion()).isEqualTo("1.5.6.RELEASE");
 	}
 
 	@Test
 	void customizeWithNoDependency() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
 		ProjectDescription description = initializeDescription();
-		MavenBuild build = customizeBuild(metadata, description);
+		MavenBuild build = customizeBuild(description);
 		assertThat(build.dependencies().ids()).isEmpty();
 		assertThat(build.dependencies().items()).isEmpty();
 	}
 
 	@Test
 	void customizeDependencies() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
 		ProjectDescription description = initializeDescription();
 		Dependency one = new Dependency("com.example", "one", DependencyScope.COMPILE);
 		Dependency two = new Dependency("com.example.acme", "two",
 				DependencyScope.COMPILE);
 		description.addDependency("two", two);
 		description.addDependency("one", one);
-		MavenBuild build = customizeBuild(metadata, description);
+		MavenBuild build = customizeBuild(description);
 		assertThat(build.dependencies().ids()).containsExactly("two", "one");
 		assertThat(build.dependencies().items()).containsExactly(two, one);
 	}
@@ -90,18 +81,12 @@ class SimpleBuildCustomizerTests {
 		return description;
 	}
 
-	private MavenBuild customizeBuild(InitializrMetadata metadata) {
-		ProjectDescription description = initializeDescription();
-		return customizeBuild(metadata, description);
-	}
-
-	private MavenBuild customizeBuild(InitializrMetadata metadata,
-			ProjectDescription description) {
+	private MavenBuild customizeBuild(ProjectDescription description) {
 		MavenBuild build = new MavenBuild();
 		ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(
 				description);
 		SimpleBuildCustomizer customizer = new SimpleBuildCustomizer(
-				resolvedProjectDescription, metadata);
+				resolvedProjectDescription);
 		customizer.customize(build);
 		return build;
 	}

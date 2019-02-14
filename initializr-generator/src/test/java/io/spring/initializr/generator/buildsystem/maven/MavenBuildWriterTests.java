@@ -40,11 +40,12 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
+		build.setVersion("1.0.1-SNAPSHOT");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/modelVersion").isEqualTo("4.0.0");
 			assertThat(pom).textAtPath("/project/groupId").isEqualTo("com.example.demo");
 			assertThat(pom).textAtPath("/project/artifactId").isEqualTo("demo");
-			assertThat(pom).textAtPath("/project/version").isEqualTo("0.0.1-SNAPSHOT");
+			assertThat(pom).textAtPath("/project/version").isEqualTo("1.0.1-SNAPSHOT");
 		});
 	}
 

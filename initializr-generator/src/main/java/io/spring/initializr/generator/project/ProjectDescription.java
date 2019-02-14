@@ -47,6 +47,8 @@ public class ProjectDescription {
 
 	private String artifactId;
 
+	private String version;
+
 	private String name;
 
 	private String description;
@@ -119,6 +121,14 @@ public class ProjectDescription {
 
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getName() {

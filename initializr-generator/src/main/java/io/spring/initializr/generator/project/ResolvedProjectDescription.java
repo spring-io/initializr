@@ -49,6 +49,8 @@ public final class ResolvedProjectDescription {
 
 	private final String artifactId;
 
+	private final String version;
+
 	private final String name;
 
 	private final String description;
@@ -66,6 +68,7 @@ public final class ResolvedProjectDescription {
 		this.language = description.getLanguage();
 		this.groupId = description.getGroupId();
 		this.artifactId = description.getArtifactId();
+		this.version = description.getVersion();
 		this.name = description.getName();
 		this.description = description.getDescription();
 		this.applicationName = description.getApplicationName();
@@ -113,6 +116,10 @@ public final class ResolvedProjectDescription {
 
 	public String getArtifactId() {
 		return this.artifactId;
+	}
+
+	public String getVersion() {
+		return this.version;
 	}
 
 	public String getName() {

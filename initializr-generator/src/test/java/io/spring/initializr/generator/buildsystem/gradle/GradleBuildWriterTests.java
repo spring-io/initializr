@@ -40,9 +40,9 @@ class GradleBuildWriterTests {
 	void gradleBuildWithCoordinates() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.setGroup("com.example");
-		build.setVersion("0.0.1-SNAPSHOT");
+		build.setVersion("1.0.1-SNAPSHOT");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).contains("group = 'com.example'", "version = '0.0.1-SNAPSHOT'");
+		assertThat(lines).contains("group = 'com.example'", "version = '1.0.1-SNAPSHOT'");
 	}
 
 	@Test

@@ -102,6 +102,9 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 			if (projectDescription.getArtifactId() == null) {
 				projectDescription.setArtifactId("demo");
 			}
+			if (projectDescription.getVersion() == null) {
+				projectDescription.setVersion("0.0.1-SNAPSHOT");
+			}
 			if (projectDescription.getApplicationName() == null) {
 				projectDescription.setApplicationName("DemoApplication");
 			}
