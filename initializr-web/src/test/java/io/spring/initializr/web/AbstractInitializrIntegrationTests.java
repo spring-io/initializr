@@ -166,17 +166,17 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected ProjectAssert downloadZip(String context) {
-		byte[] body = downloadArchive(context);
+		byte[] body = downloadArchive(context).getBody();
 		return zipProjectAssert(body);
 	}
 
 	protected ProjectAssert downloadTgz(String context) {
-		byte[] body = downloadArchive(context);
+		byte[] body = downloadArchive(context).getBody();
 		return tgzProjectAssert(body);
 	}
 
-	protected byte[] downloadArchive(String context) {
-		return this.restTemplate.getForObject(createUrl(context), byte[].class);
+	protected ResponseEntity<byte[]> downloadArchive(String context) {
+		return this.restTemplate.getForEntity(createUrl(context), byte[].class);
 	}
 
 	protected ResponseEntity<String> invokeHome(String userAgentHeader,

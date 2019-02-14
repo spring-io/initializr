@@ -48,8 +48,12 @@ class MainControllerIntegrationTests
 
 	@Test
 	void simpleZipProject() {
-		downloadZip("/starter.zip?style=web&style=jpa").isJavaProject()
-				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
+		ResponseEntity<byte[]> entity = downloadArchive(
+				"/starter.zip?style=web&style=jpa");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"),
+				"demo.zip");
+		zipProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore")
+				.hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web")
 				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
@@ -58,10 +62,22 @@ class MainControllerIntegrationTests
 
 	@Test
 	void simpleTgzProject() {
-		downloadTgz("/starter.tgz?style=org.acme:foo").isJavaProject()
-				.hasFile(".gitignore").hasExecutableFile("mvnw").isMavenProject()
+		ResponseEntity<byte[]> entity = downloadArchive(
+				"/starter.tgz?style=org.acme:foo");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"),
+				"demo.tar.gz");
+		tgzProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore")
+				.hasExecutableFile("mvnw").isMavenProject()
 				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				.hasDependency("org.acme", "foo", "1.3.5");
+	}
+
+	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity,
+			MediaType contentType, String fileName) {
+		assertThat(entity.getHeaders().getContentType()).isEqualTo(contentType);
+		assertThat(entity.getHeaders().getContentDisposition()).isNotNull();
+		assertThat(entity.getHeaders().getContentDisposition().getFilename())
+				.isEqualTo(fileName);
 	}
 
 	@Test

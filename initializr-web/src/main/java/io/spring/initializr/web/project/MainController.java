@@ -61,6 +61,7 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -320,8 +321,11 @@ public class MainController extends AbstractInitializrController {
 				"application/x-compress");
 	}
 
-	private static String generateFileName(ProjectRequest request, String extension) {
-		String tmp = request.getArtifactId().replaceAll(" ", "_");
+	private String generateFileName(ProjectRequest request, String extension) {
+		String candidate = (StringUtils.hasText(request.getArtifactId())
+				? request.getArtifactId()
+				: this.metadataProvider.get().getArtifactId().getContent());
+		String tmp = candidate.replaceAll(" ", "_");
 		try {
 			return URLEncoder.encode(tmp, "UTF-8") + "." + extension;
 		}
