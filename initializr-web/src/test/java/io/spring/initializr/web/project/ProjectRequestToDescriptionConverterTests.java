@@ -205,6 +205,63 @@ public class ProjectRequestToDescriptionConverterTests {
 		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");
 	}
 
+	@Test
+	void convertShouldUsedDefaultFromMetadataOnEmptyGroup() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("  ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getGroupId()).isEqualTo("com.example");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataOnEmptyArtifact() {
+		ProjectRequest request = createProjectRequest();
+		request.setArtifactId("");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo("demo");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataOnEmptyName() {
+		ProjectRequest request = createProjectRequest();
+		request.setName("    ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getName()).isEqualTo("demo");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataOnEmptyDescription() {
+		ProjectRequest request = createProjectRequest();
+		request.setDescription("    ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getDescription())
+				.isEqualTo("Demo project for Spring Boot");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataOnEmptyPackageName() {
+		ProjectRequest request = createProjectRequest();
+		request.setPackageName(" ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataWhenGeneratingPackageNameWithEmptyGroup() {
+		ProjectRequest request = createProjectRequest();
+		request.setGroupId("  ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	void convertShouldUsedDefaultFromMetadataWhenGeneratingPackageNameWithEmptyArtifact() {
+		ProjectRequest request = createProjectRequest();
+		request.setArtifactId("  ");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
+	}
+
 	private ProjectRequest createProjectRequest() {
 		WebProjectRequest request = new WebProjectRequest();
 		request.initialize(this.metadata);

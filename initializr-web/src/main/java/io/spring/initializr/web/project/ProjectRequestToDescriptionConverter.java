@@ -17,6 +17,7 @@
 package io.spring.initializr.web.project;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -50,14 +51,18 @@ public class ProjectRequestToDescriptionConverter {
 		validateDependencyRange(springBootVersion, resolvedDependencies);
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
-		description.setArtifactId(request.getArtifactId());
+		description.setArtifactId(determineValue(request.getArtifactId(),
+				() -> metadata.getArtifactId().getContent()));
 		description.setBaseDirectory(request.getBaseDir());
 		description.setBuildSystem(getBuildSystem(request, metadata));
-		description.setDescription(request.getDescription());
-		description.setGroupId(request.getGroupId());
+		description.setDescription(determineValue(request.getDescription(),
+				() -> metadata.getDescription().getContent()));
+		description.setGroupId(determineValue(request.getGroupId(),
+				() -> metadata.getGroupId().getContent()));
 		description.setLanguage(
 				Language.forId(request.getLanguage(), request.getJavaVersion()));
-		description.setName(request.getName());
+		description.setName(
+				determineValue(request.getName(), () -> metadata.getName().getContent()));
 		description.setPackageName(getPackageName(request, metadata));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(Version.parse(springBootVersion));
@@ -65,6 +70,10 @@ public class ProjectRequestToDescriptionConverter {
 				.forEach((dependency) -> description.addDependency(dependency.getId(),
 						MetadataBuildItemMapper.toDependency(dependency)));
 		return description;
+	}
+
+	private String determineValue(String candidate, Supplier<String> fallback) {
+		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
