@@ -222,7 +222,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataOnEmptyGroup() {
+	void convertShouldUseDefaultFromMetadataOnEmptyGroup() {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("  ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -230,7 +230,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataOnEmptyArtifact() {
+	void convertShouldUseDefaultFromMetadataOnEmptyArtifact() {
 		ProjectRequest request = createProjectRequest();
 		request.setArtifactId("");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -238,7 +238,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataOnEmptyName() {
+	void convertShouldUseDefaultFromMetadataOnEmptyName() {
 		ProjectRequest request = createProjectRequest();
 		request.setName("    ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -246,7 +246,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataOnEmptyDescription() {
+	void convertShouldUseDefaultFromMetadataOnEmptyDescription() {
 		ProjectRequest request = createProjectRequest();
 		request.setDescription("    ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -255,7 +255,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataOnEmptyPackageName() {
+	void convertShouldUseDefaultFromMetadataOnEmptyPackageName() {
 		ProjectRequest request = createProjectRequest();
 		request.setPackageName(" ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -263,7 +263,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataWhenGeneratingPackageNameWithEmptyGroup() {
+	void convertShouldUseDefaultFromMetadataWhenGeneratingPackageNameWithEmptyGroup() {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("  ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
@@ -271,7 +271,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUsedDefaultFromMetadataWhenGeneratingPackageNameWithEmptyArtifact() {
+	void convertShouldUseDefaultFromMetadataWhenGeneratingPackageNameWithEmptyArtifact() {
 		ProjectRequest request = createProjectRequest();
 		request.setArtifactId("  ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
