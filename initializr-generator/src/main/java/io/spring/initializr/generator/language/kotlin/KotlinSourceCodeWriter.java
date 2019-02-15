@@ -86,18 +86,17 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 						.getFunctionDeclarations();
 				if (!functionDeclarations.isEmpty()) {
 					writer.println(" {");
-					writer.println();
 					writer.indented(() -> {
 						for (KotlinFunctionDeclaration functionDeclaration : functionDeclarations) {
 							writeFunction(writer, functionDeclaration);
 						}
 					});
+					writer.println();
 					writer.println("}");
 				}
 				else {
 					writer.println("");
 				}
-				writer.println("");
 			}
 			List<KotlinFunctionDeclaration> topLevelFunctions = compilationUnit
 					.getTopLevelFunctions();
@@ -112,6 +111,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeFunction(IndentingWriter writer,
 			KotlinFunctionDeclaration functionDeclaration) {
+		writer.println();
 		writeAnnotations(writer, functionDeclaration);
 		writeMethodModifiers(writer, functionDeclaration);
 		writer.print("fun ");
@@ -144,7 +144,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 		});
 		writer.println("}");
-		writer.println();
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {

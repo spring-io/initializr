@@ -113,7 +113,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 					});
 				}
 				writer.println("}");
-				writer.println("");
 			}
 		}
 	}

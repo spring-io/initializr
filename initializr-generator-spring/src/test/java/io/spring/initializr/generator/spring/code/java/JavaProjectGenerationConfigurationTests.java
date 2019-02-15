@@ -16,9 +16,12 @@
 
 package io.spring.initializr.generator.spring.code.java;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -32,6 +35,8 @@ import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,7 +77,7 @@ class JavaProjectGenerationConfigurationTests {
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths)
 				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
-		List<String> lines = Files.readAllLines(projectStructure
+		List<String> lines = readAllLines(projectStructure
 				.resolve("src/test/java/com/example/demo/DemoApplicationTests.java"));
 		assertThat(lines).containsExactly("package com.example.demo;", "",
 				"import org.junit.Test;", "import org.junit.runner.RunWith;",
@@ -80,7 +85,7 @@ class JavaProjectGenerationConfigurationTests {
 				"import org.springframework.test.context.junit4.SpringRunner;", "",
 				"@RunWith(SpringRunner.class)", "@SpringBootTest",
 				"public class DemoApplicationTests {", "", "    @Test",
-				"    public void contextLoads() {", "    }", "", "}", "");
+				"    public void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test
@@ -93,7 +98,7 @@ class JavaProjectGenerationConfigurationTests {
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths)
 				.contains("src/main/java/com/example/demo/ServletInitializer.java");
-		List<String> lines = Files.readAllLines(projectStructure
+		List<String> lines = readAllLines(projectStructure
 				.resolve("src/main/java/com/example/demo/ServletInitializer.java"));
 		assertThat(lines).containsExactly("package com.example.demo;", "",
 				"import org.springframework.boot.builder.SpringApplicationBuilder;",
@@ -103,7 +108,7 @@ class JavaProjectGenerationConfigurationTests {
 				"", "    @Override",
 				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
 				"        return application.sources(MyDemoApplication.class);", "    }",
-				"", "}", "");
+				"", "}");
 	}
 
 	@Test
@@ -126,6 +131,14 @@ class JavaProjectGenerationConfigurationTests {
 		assertThat(relativePaths).contains(
 				"src/main/java/com/example/demo/MyApplication.java",
 				"src/test/java/com/example/demo/MyApplicationTests.java");
+	}
+
+	private static List<String> readAllLines(Path file) throws IOException {
+		String content = StreamUtils.copyToString(
+				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
+		String[] lines = content.split("\\r?\\n");
+		assertThat(content).endsWith(System.lineSeparator());
+		return Arrays.asList(lines);
 	}
 
 }

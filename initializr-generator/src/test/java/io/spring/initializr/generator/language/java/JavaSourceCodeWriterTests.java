@@ -16,11 +16,15 @@
 
 package io.spring.initializr.generator.language.java;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
@@ -28,6 +32,8 @@ import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,7 +55,7 @@ class JavaSourceCodeWriterTests {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		sourceCode.createCompilationUnit("com.example", "Test");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "");
+		assertThat(lines).containsExactly("package com.example;");
 	}
 
 	@Test
@@ -60,7 +66,7 @@ class JavaSourceCodeWriterTests {
 		compilationUnit.createTypeDeclaration("Test");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
-				"public class Test {", "", "}", "");
+				"public class Test {", "", "}");
 	}
 
 	@Test
@@ -73,7 +79,7 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import com.example.build.TestParent;", "",
-				"public class Test extends TestParent {", "", "}", "");
+				"public class Test extends TestParent {", "", "}");
 	}
 
 	@Test
@@ -90,7 +96,7 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"public class Test {", "", "    public String trim(String value) {",
-				"        return value.trim();", "    }", "", "}", "");
+				"        return value.trim();", "    }", "", "}");
 	}
 
 	@Test
@@ -113,7 +119,7 @@ class JavaSourceCodeWriterTests {
 				"import org.springframework.boot.autoconfigure.SpringBootApplication;",
 				"", "@SpringBootApplication", "public class Test {", "",
 				"    public static void main(String[] args) {",
-				"        SpringApplication.run(Test.class, args);", "    }", "", "}", "");
+				"        SpringApplication.run(Test.class, args);", "    }", "", "}");
 	}
 
 	@Test
@@ -123,7 +129,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("counter", Integer.class, "42")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(counter = 42)", "public class Test {", "", "}", "");
+				"@TestApplication(counter = 42)", "public class Test {", "", "}");
 	}
 
 	@Test
@@ -133,7 +139,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("name", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(name = \"test\")", "public class Test {", "", "}", "");
+				"@TestApplication(name = \"test\")", "public class Test {", "", "}");
 	}
 
 	@Test
@@ -143,7 +149,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("value", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(\"test\")", "public class Test {", "", "}", "");
+				"@TestApplication(\"test\")", "public class Test {", "", "}");
 	}
 
 	@Test
@@ -156,7 +162,7 @@ class JavaSourceCodeWriterTests {
 				"import java.time.temporal.ChronoUnit;",
 				"import org.springframework.test.TestApplication;", "",
 				"@TestApplication(unit = ChronoUnit.SECONDS)", "public class Test {", "",
-				"}", "");
+				"}");
 	}
 
 	@Test
@@ -169,7 +175,7 @@ class JavaSourceCodeWriterTests {
 				"import com.example.One;", "import com.example.Two;",
 				"import org.springframework.test.TestApplication;", "",
 				"@TestApplication(target = { One.class, Two.class })",
-				"public class Test {", "", "}", "");
+				"public class Test {", "", "}");
 	}
 
 	@Test
@@ -183,7 +189,7 @@ class JavaSourceCodeWriterTests {
 				"import com.example.One;", "import java.time.temporal.ChronoUnit;",
 				"import org.springframework.test.TestApplication;", "",
 				"@TestApplication(target = One.class, unit = ChronoUnit.NANOS)",
-				"public class Test {", "", "}", "");
+				"public class Test {", "", "}");
 	}
 
 	private List<String> writeClassAnnotation(Annotation annotation) throws IOException {
@@ -208,21 +214,28 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import com.example.test.TestAnnotation;", "", "public class Test {", "",
-				"    @TestAnnotation", "    public void something() {", "    }", "", "}",
-				"");
+				"    @TestAnnotation", "    public void something() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location)
 			throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		assertThat(source).isRegularFile();
-		return Files.readAllLines(source);
+		return readAllLines(source);
 	}
 
 	private Path writeSourceCode(JavaSourceCode sourceCode) throws IOException {
 		Path projectDirectory = Files.createTempDirectory(this.directory, "project-");
 		this.writer.writeTo(projectDirectory, sourceCode);
 		return projectDirectory;
+	}
+
+	private static List<String> readAllLines(Path file) throws IOException {
+		String content = StreamUtils.copyToString(
+				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
+		assertThat(content).endsWith(System.lineSeparator());
+		String[] lines = content.split("\\r?\\n");
+		return Arrays.asList(lines);
 	}
 
 }

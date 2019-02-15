@@ -16,10 +16,14 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
@@ -27,6 +31,8 @@ import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +54,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		sourceCode.createCompilationUnit("com.example", "Test");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "");
+		assertThat(lines).containsExactly("package com.example");
 	}
 
 	@Test
@@ -58,7 +64,7 @@ class KotlinSourceCodeWriterTests {
 				.createCompilationUnit("com.example", "Test");
 		compilationUnit.createTypeDeclaration("Test");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "class Test", "");
+		assertThat(lines).containsExactly("package com.example", "", "class Test");
 	}
 
 	@Test
@@ -70,8 +76,7 @@ class KotlinSourceCodeWriterTests {
 		test.extend("com.example.build.TestParent");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
-				"import com.example.build.TestParent", "", "class Test : TestParent()",
-				"");
+				"import com.example.build.TestParent", "", "class Test : TestParent()");
 	}
 
 	@Test
@@ -88,7 +93,7 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    fun reverse(echo: String): String {",
-				"        return echo.reversed()", "    }", "", "}", "");
+				"        return echo.reversed()", "    }", "", "}");
 	}
 
 	@Test
@@ -105,7 +110,7 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    open override fun toString(): String {",
-				"        return super.toString()", "    }", "", "}", "");
+				"        return super.toString()", "    }", "", "}");
 	}
 
 	@Test
@@ -125,8 +130,8 @@ class KotlinSourceCodeWriterTests {
 				"import org.springframework.boot.autoconfigure.SpringBootApplication",
 				"import org.springframework.boot.runApplication", "",
 				"@SpringBootApplication", "class Test", "",
-				"fun main(args: Array<String>) {", "    runApplication<Test>(*args)", "}",
-				"");
+				"fun main(args: Array<String>) {", "    runApplication<Test>(*args)",
+				"}");
 	}
 
 	@Test
@@ -136,7 +141,7 @@ class KotlinSourceCodeWriterTests {
 						(builder) -> builder.attribute("counter", Integer.class, "42")));
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.test.TestApplication", "",
-				"@TestApplication(counter = 42)", "class Test", "");
+				"@TestApplication(counter = 42)", "class Test");
 	}
 
 	@Test
@@ -146,7 +151,7 @@ class KotlinSourceCodeWriterTests {
 						(builder) -> builder.attribute("name", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.test.TestApplication", "",
-				"@TestApplication(name = \"test\")", "class Test", "");
+				"@TestApplication(name = \"test\")", "class Test");
 	}
 
 	@Test
@@ -156,7 +161,7 @@ class KotlinSourceCodeWriterTests {
 						(builder) -> builder.attribute("value", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.test.TestApplication", "",
-				"@TestApplication(\"test\")", "class Test", "");
+				"@TestApplication(\"test\")", "class Test");
 	}
 
 	@Test
@@ -168,7 +173,7 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example", "",
 				"import java.time.temporal.ChronoUnit",
 				"import org.springframework.test.TestApplication", "",
-				"@TestApplication(unit = ChronoUnit.SECONDS)", "class Test", "");
+				"@TestApplication(unit = ChronoUnit.SECONDS)", "class Test");
 	}
 
 	@Test
@@ -180,7 +185,7 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example", "",
 				"import com.example.One", "import com.example.Two",
 				"import org.springframework.test.TestApplication", "",
-				"@TestApplication(target = [One::class, Two::class])", "class Test", "");
+				"@TestApplication(target = [One::class, Two::class])", "class Test");
 	}
 
 	@Test
@@ -194,7 +199,7 @@ class KotlinSourceCodeWriterTests {
 				"import com.example.One", "import java.time.temporal.ChronoUnit",
 				"import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One::class, unit = ChronoUnit.NANOS)",
-				"class Test", "");
+				"class Test");
 	}
 
 	private List<String> writeClassAnnotation(Annotation annotation) throws IOException {
@@ -219,20 +224,28 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import com.example.test.TestAnnotation", "", "class Test {", "",
-				"    @TestAnnotation", "    fun something() {", "    }", "", "}", "");
+				"    @TestAnnotation", "    fun something() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location)
 			throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		assertThat(source).isRegularFile();
-		return Files.readAllLines(source);
+		return readAllLines(source);
 	}
 
 	private Path writeSourceCode(KotlinSourceCode sourceCode) throws IOException {
 		Path projectDirectory = Files.createTempDirectory(this.directory, "project-");
 		this.writer.writeTo(projectDirectory, sourceCode);
 		return projectDirectory;
+	}
+
+	private static List<String> readAllLines(Path file) throws IOException {
+		String content = StreamUtils.copyToString(
+				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
+		assertThat(content).endsWith(System.lineSeparator());
+		String[] lines = content.split("\\r?\\n");
+		return Arrays.asList(lines);
 	}
 
 }

@@ -114,7 +114,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 					});
 				}
 				writer.println("}");
-				writer.println("");
 			}
 		}
 	}
