@@ -61,7 +61,8 @@ class GitProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
 		assertThat(generateGitIgnore(description)).contains("### STS ###",
-				"### IntelliJ IDEA ###", "### NetBeans ###");
+				"### IntelliJ IDEA ###", "### NetBeans ###",
+				"### Visual Studio Code ###");
 	}
 
 	@Test

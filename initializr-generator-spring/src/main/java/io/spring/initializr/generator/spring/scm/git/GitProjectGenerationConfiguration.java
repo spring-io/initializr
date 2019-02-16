@@ -72,6 +72,9 @@ public class GitProjectGenerationConfiguration {
 		gitIgnore.getIntellijIdea().add(".idea", "*.iws", "*.iml", "*.ipr");
 		gitIgnore.getNetBeans().add("/nbproject/private/", "/nbbuild/", "/dist/",
 				"/nbdist/", "/.nb-gradle/");
+		gitIgnore.getVisualStudioCode().add("vscode/*", "!.vscode/settings.json",
+				"!.vscode/tasks.json", "!.vscode/launch.json",
+				"!.vscode/extensions.json");
 		return gitIgnore;
 	}
 
