@@ -89,8 +89,8 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean
-	public TemplateRenderer templateRenderer(Environment environment,
+	@ConditionalOnMissingBean(TemplateRenderer.class)
+	public MustacheTemplateRenderer templateRenderer(Environment environment,
 			ObjectProvider<CacheManager> cacheManager) {
 		return new MustacheTemplateRenderer("classpath:/templates",
 				determineCache(environment, cacheManager.getIfAvailable()));

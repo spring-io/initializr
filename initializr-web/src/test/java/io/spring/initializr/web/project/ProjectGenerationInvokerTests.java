@@ -24,6 +24,7 @@ import java.util.Map;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
+import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.spring.test.ProjectAssert;
@@ -204,6 +205,11 @@ public class ProjectGenerationInvokerTests {
 		@Bean
 		public IndentingWriterFactory factory() {
 			return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"));
+		}
+
+		@Bean
+		public MustacheTemplateRenderer templateRenderer() {
+			return new MustacheTemplateRenderer("classpath:/templates");
 		}
 
 		@Bean

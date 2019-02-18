@@ -17,13 +17,14 @@
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
+import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -49,8 +50,12 @@ public class ProjectGeneratorTester
 	}
 
 	private static Map<Class<?>, Supplier<?>> defaultBeans() {
-		return Collections.singletonMap(IndentingWriterFactory.class,
+		Map<Class<?>, Supplier<?>> beans = new HashMap<>();
+		beans.put(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
+		beans.put(MustacheTemplateRenderer.class,
+				() -> new MustacheTemplateRenderer("classpath:/templates"));
+		return beans;
 	}
 
 	@Override
