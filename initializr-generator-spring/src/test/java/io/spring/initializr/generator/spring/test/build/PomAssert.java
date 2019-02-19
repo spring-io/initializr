@@ -165,13 +165,25 @@ public class PomAssert {
 
 	/**
 	 * Assert {@code pom.xml} defines the specified starter.
-	 * @param starterId the id of the starter (i.e. {@code web} for
+	 * @param starterId the id of the starter (e.g. {@code web} for
 	 * {@code spring-boot-starter-web}.
 	 * @return this
 	 */
 	public PomAssert hasSpringBootStarterDependency(String starterId) {
 		return hasDependency("org.springframework.boot",
 				"spring-boot-starter-" + starterId);
+	}
+
+	/**
+	 * Assert {@code pom.xml} defines the specified starter in the specified scope.
+	 * @param starterId the id of the starter (e.g. {@code web} for
+	 * {@code spring-boot-starter-web}.
+	 * @param scope the scope of the starter
+	 * @return this
+	 */
+	public PomAssert hasSpringBootStarterDependency(String starterId, String scope) {
+		return hasDependency("org.springframework.boot",
+				"spring-boot-starter-" + starterId, null, scope);
 	}
 
 	/**
@@ -187,7 +199,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasSpringBootStarterTest() {
-		return hasSpringBootStarterDependency("test");
+		return hasSpringBootStarterDependency("test", "test");
 	}
 
 	/**
@@ -213,6 +225,19 @@ public class PomAssert {
 	}
 
 	/**
+	 * Assert {@code pom.xml} defines the specified dependency with the specified scope.
+	 * @param groupId the groupId of the dependency
+	 * @param artifactId the artifactId of the dependency
+	 * @param version the version of the dependency
+	 * @param scope the scope of the dependency
+	 * @return this
+	 */
+	public PomAssert hasDependency(String groupId, String artifactId, String version,
+			String scope) {
+		return hasDependency(Dependency.create(groupId, artifactId, version, scope));
+	}
+
+	/**
 	 * Assert {@code pom.xml} defines the specified dependency.
 	 * @param dependency the dependency
 	 * @return this
@@ -224,16 +249,15 @@ public class PomAssert {
 					if (dependency.getGroupId().equals(actual.getGroupId()) && dependency
 							.getArtifactId().equals(actual.getArtifactId())) {
 						if (dependency.getVersion() != null) {
-							assertThat(dependency.getVersion())
+							assertThat(actual.getVersion())
 									.isEqualTo(dependency.getVersion());
 						}
 						if (dependency.getScope() != null) {
-							assertThat(dependency.getScope())
+							assertThat(actual.getScope())
 									.isEqualTo(dependency.getScope());
 						}
 						if (dependency.getType() != null) {
-							assertThat(dependency.getType())
-									.isEqualTo(dependency.getType());
+							assertThat(actual.getType()).isEqualTo(dependency.getType());
 						}
 						return true;
 					}
