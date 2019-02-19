@@ -267,6 +267,23 @@ public class PomAssert {
 	}
 
 	/**
+	 * Assert that {@code pom.xml} does not define a dependency with the specified
+	 * {@code groupId} and {@code artifactId}.
+	 * @param groupId the dependency's groupId
+	 * @param artifactId the dependency's artifactId
+	 * @return this
+	 */
+	public PomAssert doesNotHaveDependency(String groupId, String artifactId) {
+		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency")
+				.noneMatch((candidate) -> {
+					Dependency actual = toDependency(candidate);
+					return groupId.equals(actual.getGroupId())
+							&& artifactId.equals(actual.getArtifactId());
+				});
+		return this;
+	}
+
+	/**
 	 * Assert {@code pom.xml} defines the specified number of boms.
 	 * @param count the number of boms
 	 * @return this
