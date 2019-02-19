@@ -25,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
@@ -201,7 +200,6 @@ public class ProjectGenerationInvoker {
 
 	private void publishProjectGeneratedEvent(ProjectRequest request,
 			ProjectGenerationContext context) {
-		Build build = context.getBeanProvider(Build.class).getIfAvailable();
 		InitializrMetadata metadata = context.getBean(InitializrMetadata.class);
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, metadata);
 		this.eventPublisher.publishEvent(event);

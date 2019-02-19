@@ -196,7 +196,6 @@ class InitializrMetadataBuilderTests {
 		InitializrMetadata metadata = InitializrMetadataBuilder
 				.fromInitializrProperties(config)
 				.withInitializrProperties(forceSslConfig, true).build();
-		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
 		assertThat(actualEnv.isForceSsl()).isEqualTo(true);
 	}

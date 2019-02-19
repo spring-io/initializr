@@ -34,6 +34,7 @@ import io.spring.initializr.generator.project.ProjectGenerationException;
 /**
  * Base tester for project generation.
  *
+ * @param <SELF> concrete type of the tester
  * @author Stephane Nicoll
  */
 public abstract class AbstractProjectGenerationTester<SELF extends AbstractProjectGenerationTester<SELF>> {

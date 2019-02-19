@@ -98,8 +98,10 @@ class SourceCodeProjectGenerationConfigurationTests {
 		this.projectTester.generate(description, (context) -> {
 			ServletInitializerContributor bean = context
 					.getBean(ServletInitializerContributor.class);
-			SourceCode sourceCode = mock(SourceCode.class);
-			CompilationUnit compilationUnit = mock(CompilationUnit.class);
+			SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode = mock(
+					SourceCode.class);
+			CompilationUnit<TypeDeclaration> compilationUnit = mock(
+					CompilationUnit.class);
 			given(sourceCode.createCompilationUnit(any(), any()))
 					.willReturn(compilationUnit);
 			TypeDeclaration typeDeclaration = mock(TypeDeclaration.class);
