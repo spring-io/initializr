@@ -16,30 +16,28 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
-import io.spring.initializr.metadata.InitializrMetadata;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
- * Default {@link HelpDocument} contributors.
+ * A {@link GitIgnoreCustomizer} that adds {@code HELP.md} to the ignore list when
+ * applicable.
  *
  * @author Stephane Nicoll
  */
-@Configuration
-public class HelpDocumentProjectGenerationDefaultContributorsConfiguration {
+class HelpDocumentGitIgnoreCustomizer implements GitIgnoreCustomizer {
 
-	@Bean
-	public RequestedDependenciesHelpDocumentCustomizer dependenciesHelpDocumentCustomizer(
-			ResolvedProjectDescription description, InitializrMetadata metadata) {
-		return new RequestedDependenciesHelpDocumentCustomizer(description, metadata);
+	private final HelpDocument document;
+
+	HelpDocumentGitIgnoreCustomizer(HelpDocument document) {
+		this.document = document;
 	}
 
-	@Bean
-	public GitIgnoreCustomizer helpDocumentGitIgnoreCustomizer(HelpDocument document) {
-		return new HelpDocumentGitIgnoreCustomizer(document);
+	@Override
+	public void customize(GitIgnore gitIgnore) {
+		if (!this.document.isEmpty()) {
+			gitIgnore.getGeneral().add("HELP.md");
+		}
 	}
 
 }

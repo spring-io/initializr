@@ -33,12 +33,17 @@ import org.springframework.context.annotation.Import;
 public class HelpDocumentProjectGenerationConfiguration {
 
 	@Bean
-	public HelpDocumentProjectContributor helpDocumentProjectContributor(
-			MustacheTemplateRenderer templateRenderer,
+	public HelpDocument helpDocument(MustacheTemplateRenderer templateRenderer,
 			ObjectProvider<HelpDocumentCustomizer> helpDocumentCustomizers) {
 		HelpDocument helpDocument = new HelpDocument(templateRenderer);
 		helpDocumentCustomizers.orderedStream()
 				.forEach((customizer) -> customizer.customize(helpDocument));
+		return helpDocument;
+	}
+
+	@Bean
+	public HelpDocumentProjectContributor helpDocumentProjectContributor(
+			HelpDocument helpDocument) {
 		return new HelpDocumentProjectContributor(helpDocument);
 	}
 

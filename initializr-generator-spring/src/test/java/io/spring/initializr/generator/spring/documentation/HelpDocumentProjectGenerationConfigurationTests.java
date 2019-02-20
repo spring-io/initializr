@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.metadata.Dependency;
@@ -72,6 +73,15 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		assertThat(
 				this.projectTester.generate(description).getRelativePathsOfProjectFiles())
 						.containsOnly("HELP.md");
+	}
+
+	@Test
+	void helpDocumentIsAddedToGitIgnore() {
+		ProjectDescription description = new ProjectDescription();
+		GitIgnoreCustomizer gitIgnoreCustomizer = this.projectTester.generate(description,
+				(context) -> context.getBean(GitIgnoreCustomizer.class));
+		assertThat(gitIgnoreCustomizer)
+				.isInstanceOf(HelpDocumentGitIgnoreCustomizer.class);
 	}
 
 }
