@@ -151,7 +151,7 @@ The metadata also lists the default values for simple _text_ parameter (i.e. the
 default `name` for the project).
 
 NOTE: More details about the structure of the metadata are
-{docs}/htmlsingle/#metadata-format[available in the documentation].
+{docs}/html/#metadata-format[available in the documentation].
 
 == Running your own instance
 
@@ -161,7 +161,7 @@ deploy the service.
 
 You first need to create or update your configuration to define the necessary
 attributes that your instance will use. Again, check the documentation for a
-{docs}/htmlsingle/#configuration-format[description of the configuration] and
+{docs}/html/#create-instance[description of the configuration] and
 {service}[review our own config] for a sample.
 
 You can integrate the library in a traditional Java-based project or by writing the
