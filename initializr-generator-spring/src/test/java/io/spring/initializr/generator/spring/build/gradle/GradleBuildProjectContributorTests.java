@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class GradleBuildProjectContributorTests {
 	void gradleBuildIsContributedInProjectStructure(@TempDir Path projectDir)
 			throws IOException {
 		GradleBuild build = new GradleBuild();
-		new GradleBuildProjectContributor(build,
+		new GradleBuildProjectContributor(new GradleBuildWriter(), build,
 				IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
 		Path buildGradle = projectDir.resolve("build.gradle");
 		assertThat(buildGradle).isRegularFile();
@@ -80,8 +81,8 @@ class GradleBuildProjectContributorTests {
 	private List<String> generateBuild(GradleBuild build,
 			IndentingWriterFactory indentingWriterFactory) throws IOException {
 		StringWriter writer = new StringWriter();
-		new GradleBuildProjectContributor(build, indentingWriterFactory)
-				.writeBuild(writer);
+		new GradleBuildProjectContributor(new GradleBuildWriter(), build,
+				indentingWriterFactory).writeBuild(writer);
 		return Arrays.asList(writer.toString().split("\\r?\\n"));
 	}
 

@@ -20,8 +20,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.gradle.Gradle3BuildWriter;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -104,8 +106,9 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	public GradleBuildProjectContributor gradleBuildProjectContributor(
-			GradleBuild build) {
-		return new GradleBuildProjectContributor(build, this.indentingWriterFactory);
+			GradleBuildWriter buildWriter, GradleBuild build) {
+		return new GradleBuildProjectContributor(buildWriter, build,
+				this.indentingWriterFactory);
 	}
 
 	/**
@@ -114,6 +117,11 @@ public class GradleProjectGenerationConfiguration {
 	@Configuration
 	@ConditionalOnGradleVersion("3")
 	static class Gradle3ProjectGenerationConfiguration {
+
+		@Bean
+		public Gradle3BuildWriter gradleBuildWriter() {
+			return new Gradle3BuildWriter();
+		}
 
 		@Bean
 		public GradleWrapperContributor gradle3WrapperContributor() {
@@ -145,6 +153,11 @@ public class GradleProjectGenerationConfiguration {
 	@Configuration
 	@ConditionalOnGradleVersion("4")
 	static class Gradle4ProjectGenerationConfiguration {
+
+		@Bean
+		public GradleBuildWriter gradleBuildWriter() {
+			return new GradleBuildWriter();
+		}
 
 		@Bean
 		public GradleWrapperContributor gradle4WrapperContributor() {

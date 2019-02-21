@@ -35,17 +35,17 @@ import io.spring.initializr.generator.spring.build.BuildWriter;
  */
 public class GradleBuildProjectContributor implements BuildWriter, ProjectContributor {
 
+	private final GradleBuildWriter buildWriter;
+
 	private final GradleBuild build;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	private final GradleBuildWriter buildWriter;
-
-	GradleBuildProjectContributor(GradleBuild build,
+	GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build,
 			IndentingWriterFactory indentingWriterFactory) {
+		this.buildWriter = buildWriter;
 		this.build = build;
 		this.indentingWriterFactory = indentingWriterFactory;
-		this.buildWriter = new GradleBuildWriter();
 	}
 
 	@Override

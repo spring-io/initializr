@@ -218,6 +218,28 @@ public class GradleBuildWriter {
 				+ ((type != null) ? "@" + type : "") + quoteStyle;
 	}
 
+	protected String configurationForScope(DependencyScope type) {
+		switch (type) {
+		case ANNOTATION_PROCESSOR:
+			return "annotationProcessor";
+		case COMPILE:
+			return "implementation";
+		case COMPILE_ONLY:
+			return "compileOnly";
+		case PROVIDED_RUNTIME:
+			return "providedRuntime";
+		case RUNTIME:
+			return "runtimeOnly";
+		case TEST_COMPILE:
+			return "testImplementation";
+		case TEST_RUNTIME:
+			return "testRuntimeOnly";
+		default:
+			throw new IllegalStateException(
+					"Unrecognized dependency type '" + type + "'");
+		}
+	}
+
 	private void writeBoms(IndentingWriter writer, GradleBuild build) {
 		if (build.boms().isEmpty()) {
 			return;
@@ -340,28 +362,6 @@ public class GradleBuildWriter {
 		List<DependencyScope> candidates = Arrays.asList(types);
 		return dependencies.items().filter((dep) -> candidates.contains(dep.getScope()))
 				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
-	}
-
-	private String configurationForScope(DependencyScope type) {
-		switch (type) {
-		case ANNOTATION_PROCESSOR:
-			return "annotationProcessor";
-		case COMPILE:
-			return "implementation";
-		case COMPILE_ONLY:
-			return "compileOnly";
-		case PROVIDED_RUNTIME:
-			return "providedRuntime";
-		case RUNTIME:
-			return "runtimeOnly";
-		case TEST_COMPILE:
-			return "testImplementation";
-		case TEST_RUNTIME:
-			return "testRuntimeOnly";
-		default:
-			throw new IllegalStateException(
-					"Unrecognized dependency type '" + type + "'");
-		}
 	}
 
 }
