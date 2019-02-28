@@ -39,6 +39,13 @@ public class GradleConfigurationBuildCustomizer implements BuildCustomizer<Gradl
 		if (providedRuntimeUsed && !war) {
 			build.addConfiguration("providedRuntime");
 		}
+		boolean annotationProcessorUsed = build.dependencies().items()
+				.anyMatch((dependency) -> dependency
+						.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
+		if (annotationProcessorUsed) {
+			build.customizeConfiguration("compileOnly",
+					(configuration) -> configuration.extendsFrom("annotationProcessor"));
+		}
 	}
 
 	@Override

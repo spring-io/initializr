@@ -65,6 +65,30 @@ class GradleConfigurationBuildCustomizerTests {
 		assertThat(build.getConfigurationCustomizations()).isEmpty();
 	}
 
+	@Test
+	void compileOnlyConfigurationIsAddedWithAnnotationProcessorDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
+		build.dependencies().add("ap", "com.example", "model-generator",
+				DependencyScope.ANNOTATION_PROCESSOR);
+		customize(build);
+		assertThat(build.getConfigurationCustomizations())
+				.containsOnlyKeys("compileOnly");
+		ConfigurationCustomization compileOnly = build.getConfigurationCustomizations()
+				.get("compileOnly");
+		assertThat(compileOnly.getExtendsFrom()).containsOnly("annotationProcessor");
+	}
+
+	@Test
+	void compileOnlyConfigurationIsNotAddedWithNonMatchingDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
+		build.dependencies().add("another", "com.example", "another",
+				DependencyScope.RUNTIME);
+		customize(build);
+		assertThat(build.getConfigurationCustomizations()).isEmpty();
+	}
+
 	private void customize(GradleBuild build) {
 		new GradleConfigurationBuildCustomizer().customize(build);
 	}
