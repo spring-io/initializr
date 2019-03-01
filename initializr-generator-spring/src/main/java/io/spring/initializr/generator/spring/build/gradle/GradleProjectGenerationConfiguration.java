@@ -155,13 +155,36 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle4ProjectGenerationConfiguration {
 
 		@Bean
-		public GradleBuildWriter gradleBuildWriter() {
-			return new GradleBuildWriter();
+		public GradleWrapperContributor gradle4WrapperContributor() {
+			return new GradleWrapperContributor("4");
 		}
+
+	}
+
+	/**
+	 * Configuration specific to projects using Gradle 5.
+	 */
+	@Configuration
+	@ConditionalOnGradleVersion("5")
+	static class Gradle5ProjectGenerationConfiguration {
 
 		@Bean
 		public GradleWrapperContributor gradle4WrapperContributor() {
-			return new GradleWrapperContributor("4");
+			return new GradleWrapperContributor("5");
+		}
+
+	}
+
+	/**
+	 * Configuration specific to projects using Gradle 4 or 5.
+	 */
+	@Configuration
+	@ConditionalOnGradleVersion({ "4", "5" })
+	static class Gradle4Or5ProjectGenerationConfiguration {
+
+		@Bean
+		public GradleBuildWriter gradleBuildWriter() {
+			return new GradleBuildWriter();
 		}
 
 		@Bean

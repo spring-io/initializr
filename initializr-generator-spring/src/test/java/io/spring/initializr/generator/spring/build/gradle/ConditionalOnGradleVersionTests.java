@@ -47,11 +47,19 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
-	void outcomeWithSpringBoot2() {
+	void outcomeWithSpringBoot20() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
 		String bean = outcomeFor(projectDescription);
 		assertThat(bean).isEqualTo("testGradle4");
+	}
+
+	@Test
+	void outcomeWithSpringBoot21() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
+		String bean = outcomeFor(projectDescription);
+		assertThat(bean).isEqualTo("testGradle5");
 	}
 
 	@Test
@@ -83,12 +91,21 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
-	void outcomeWithSpringBoot2AndMultipleGenerations() {
+	void outcomeWithSpringBoot20AndMultipleGenerations() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
 		Map<String, String> candidates = candidatesFor(projectDescription,
 				Gradle3Or4TestConfiguration.class);
 		assertThat(candidates).containsOnlyKeys("gradle4", "gradle3AndLater");
+	}
+
+	@Test
+	void outcomeWithSpringBoot21AndMultipleNonMatchingGenerations() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
+		Map<String, String> candidates = candidatesFor(projectDescription,
+				Gradle3Or4TestConfiguration.class);
+		assertThat(candidates).containsOnlyKeys("gradle5");
 	}
 
 	private String outcomeFor(ProjectDescription projectDescription) {
@@ -119,6 +136,12 @@ public class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("4")
 		public String gradle4() {
 			return "testGradle4";
+		}
+
+		@Bean
+		@ConditionalOnGradleVersion("5")
+		public String gradle5() {
+			return "testGradle5";
 		}
 
 	}

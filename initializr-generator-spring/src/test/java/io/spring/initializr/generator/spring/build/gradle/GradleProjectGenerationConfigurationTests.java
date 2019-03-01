@@ -41,6 +41,9 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.springframework.util.StreamUtils;
 
@@ -67,39 +70,35 @@ class GradleProjectGenerationConfigurationTests {
 						.setBuildSystem(new GradleBuildSystem()));
 	}
 
-	@Test
-	void buildWriterIsContributed() {
+	static Stream<Arguments> supportedPlatformVersions() {
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE"),
+				Arguments.arguments("2.0.6.RELEASE"),
+				Arguments.arguments("2.1.3.RELEASE"));
+	}
+
+	@ParameterizedTest(name = "Spring Boot {0}")
+	@MethodSource("supportedPlatformVersions")
+	void buildWriterIsContributed(String platformVersion) {
 		ProjectDescription description = new ProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		BuildWriter buildWriter = this.projectTester.generate(description,
 				(context) -> context.getBean(BuildWriter.class));
 		assertThat(buildWriter).isInstanceOf(GradleBuildProjectContributor.class);
 	}
 
-	@Test
-	void gradle3WrapperIsContributedWhenGeneratingGradleProjectWithBoot15()
-			throws IOException {
-		ProjectDescription description = new ProjectDescription();
-		description.setPlatformVersion(Version.parse("1.5.17.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("gradlew", "gradlew.bat",
-				"gradle/wrapper/gradle-wrapper.properties",
-				"gradle/wrapper/gradle-wrapper.jar");
-		try (Stream<String> lines = Files.lines(
-				projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
-			assertThat(lines.filter((line) -> line.contains("gradle-3.5.1-bin.zip")))
-					.hasSize(1);
-		}
+	static Stream<Arguments> gradleWrapperParameters() {
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"),
+				Arguments.arguments("2.0.6.RELEASE", "4.10.2"),
+				Arguments.arguments("2.1.3.RELEASE", "5.2.1"));
 	}
 
-	@Test
-	void gradle4WrapperIsContributedWhenGeneratingGradleProjectWithBoot20()
-			throws IOException {
+	@ParameterizedTest(name = "Spring Boot {0}")
+	@MethodSource("gradleWrapperParameters")
+	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion,
+			String expectedGradleVersion) throws IOException {
 		ProjectDescription description = new ProjectDescription();
-		description.setPlatformVersion(Version.parse("2.0.6.RELEASE"));
+		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
@@ -108,8 +107,9 @@ class GradleProjectGenerationConfigurationTests {
 				"gradle/wrapper/gradle-wrapper.jar");
 		try (Stream<String> lines = Files.lines(
 				projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
-			assertThat(lines.filter((line) -> line.contains("gradle-4.10.2-bin.zip")))
-					.hasSize(1);
+			assertThat(lines.filter((line) -> line
+					.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
+							.hasSize(1);
 		}
 	}
 
