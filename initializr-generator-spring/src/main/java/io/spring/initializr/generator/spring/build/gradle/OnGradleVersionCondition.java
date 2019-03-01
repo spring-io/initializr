@@ -30,33 +30,43 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * {@link ConditionalOnGradleVersion}.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
-	private static final VersionRange GRADLE_3_BOOT_VERSION_RANGE = VersionParser.DEFAULT
+	private static final VersionRange GRADLE_3_VERSION_RANGE = VersionParser.DEFAULT
 			.parseRange("[1.5.0.M1,2.0.0.M1)");
 
-	private static final VersionRange GRADLE_4_BOOT_VERSION_RANGE = VersionParser.DEFAULT
+	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT
 			.parseRange("2.0.0.M1");
 
 	@Override
 	protected boolean matches(ResolvedProjectDescription projectDescription,
 			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		Version springBootVersion = projectDescription.getPlatformVersion();
-		String gradleVersion;
-		if (GRADLE_3_BOOT_VERSION_RANGE.match(springBootVersion)) {
-			gradleVersion = "3";
-		}
-		else if (GRADLE_4_BOOT_VERSION_RANGE.match(springBootVersion)) {
-			gradleVersion = "4";
-		}
-		else {
+		String gradleVersion = determineGradleGeneration(
+				projectDescription.getPlatformVersion());
+		if (gradleVersion == null) {
 			return false;
 		}
 		String value = (String) metadata
 				.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName())
 				.get("value");
 		return gradleVersion.equals(value);
+	}
+
+	private String determineGradleGeneration(Version platformVersion) {
+		if (platformVersion == null) {
+			return null;
+		}
+		else if (GRADLE_3_VERSION_RANGE.match(platformVersion)) {
+			return "3";
+		}
+		else if (GRADLE_4_VERSION_RANGE.match(platformVersion)) {
+			return "4";
+		}
+		else {
+			return null;
+		}
 	}
 
 }
