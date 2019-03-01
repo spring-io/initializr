@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
+import java.util.Arrays;
+
 import io.spring.initializr.generator.condition.ProjectGenerationCondition;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.version.Version;
@@ -43,15 +45,15 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	@Override
 	protected boolean matches(ResolvedProjectDescription projectDescription,
 			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		String gradleVersion = determineGradleGeneration(
+		String gradleGeneration = determineGradleGeneration(
 				projectDescription.getPlatformVersion());
-		if (gradleVersion == null) {
+		if (gradleGeneration == null) {
 			return false;
 		}
-		String value = (String) metadata
+		String[] values = (String[]) metadata
 				.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName())
 				.get("value");
-		return gradleVersion.equals(value);
+		return Arrays.asList(values).contains(gradleGeneration);
 	}
 
 	private String determineGradleGeneration(Version platformVersion) {

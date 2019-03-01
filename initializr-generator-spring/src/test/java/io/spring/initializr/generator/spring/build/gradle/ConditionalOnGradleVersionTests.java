@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
+import java.util.Map;
+
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
@@ -71,6 +73,24 @@ public class ConditionalOnGradleVersionTests {
 		});
 	}
 
+	@Test
+	void outcomeWithSpringBoot15AndMultipleGenerations() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
+		Map<String, String> candidates = candidatesFor(projectDescription,
+				Gradle3Or4TestConfiguration.class);
+		assertThat(candidates).containsOnlyKeys("gradle3", "gradle3AndLater");
+	}
+
+	@Test
+	void outcomeWithSpringBoot2AndMultipleGenerations() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
+		Map<String, String> candidates = candidatesFor(projectDescription,
+				Gradle3Or4TestConfiguration.class);
+		assertThat(candidates).containsOnlyKeys("gradle4", "gradle3AndLater");
+	}
+
 	private String outcomeFor(ProjectDescription projectDescription) {
 		return this.projectTester.generate(projectDescription,
 				(projectGenerationContext) -> {
@@ -78,6 +98,12 @@ public class ConditionalOnGradleVersionTests {
 							.hasSize(1);
 					return projectGenerationContext.getBean(String.class);
 				});
+	}
+
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
+			Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(
+				projectDescription, (context) -> context.getBeansOfType(String.class));
 	}
 
 	@Configuration
@@ -93,6 +119,17 @@ public class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("4")
 		public String gradle4() {
 			return "testGradle4";
+		}
+
+	}
+
+	@Configuration
+	static class Gradle3Or4TestConfiguration {
+
+		@Bean
+		@ConditionalOnGradleVersion({ "3", "4" })
+		public String gradle3AndLater() {
+			return "testGradle3AndLater";
 		}
 
 	}

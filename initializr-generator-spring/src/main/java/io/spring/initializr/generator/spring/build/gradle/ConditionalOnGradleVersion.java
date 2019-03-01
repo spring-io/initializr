@@ -36,6 +36,11 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OnGradleVersionCondition.class)
 public @interface ConditionalOnGradleVersion {
 
-	String value();
+	/**
+	 * The Gradle generations that should be checked. The condition matches when at least
+	 * one gradle generation matches.
+	 * @return the gradle generation to check
+	 */
+	String[] value();
 
 }
