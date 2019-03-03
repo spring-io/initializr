@@ -16,7 +16,8 @@
 
 package io.spring.initializr.generator.condition;
 
-import io.spring.initializr.generator.buildsystem.BuildSystem;
+import java.util.Arrays;
+
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 
 import org.springframework.context.annotation.ConditionContext;
@@ -27,17 +28,18 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * {@link ConditionalOnBuildSystem}.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 class OnBuildSystemCondition extends ProjectGenerationCondition {
 
 	@Override
 	protected boolean matches(ResolvedProjectDescription projectDescription,
 			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		String buildSystemId = (String) metadata
+		String[] buildSystemIds = (String[]) metadata
 				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName())
 				.getFirst("value");
-		BuildSystem buildSystem = BuildSystem.forId(buildSystemId);
-		return projectDescription.getBuildSystem().id().equals(buildSystem.id());
+		return Arrays.asList(buildSystemIds)
+				.contains(projectDescription.getBuildSystem().id());
 	}
 
 }

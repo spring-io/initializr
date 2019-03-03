@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Conditional;
  * {@link BuildSystem}.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
@@ -38,6 +39,11 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OnBuildSystemCondition.class)
 public @interface ConditionalOnBuildSystem {
 
-	String value();
+	/**
+	 * The build system IDs that should be checked. The condition matches when at least
+	 * one build system matches.
+	 * @return the build system IDs to check
+	 */
+	String[] value();
 
 }

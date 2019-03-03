@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
@@ -31,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link ConditionalOnBuildSystem}.
  *
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
 class ConditionalOnBuildSystemTests {
 
@@ -53,6 +55,14 @@ class ConditionalOnBuildSystemTests {
 		assertThat(bean).isEqualTo("testGradle");
 	}
 
+	@Test
+	void outcomeWithGradleKtsBuildSystem() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setBuildSystem(new GradleKtsBuildSystem());
+		String bean = outcomeFor(projectDescription);
+		assertThat(bean).isEqualTo("testGradle");
+	}
+
 	private String outcomeFor(ProjectDescription projectDescription) {
 		return this.projectTester.generate(projectDescription,
 				(projectGenerationContext) -> {
@@ -66,7 +76,7 @@ class ConditionalOnBuildSystemTests {
 	static class BuildSystemTestConfiguration {
 
 		@Bean
-		@ConditionalOnBuildSystem("gradle")
+		@ConditionalOnBuildSystem({ GradleBuildSystem.ID, GradleKtsBuildSystem.ID })
 		public String gradle() {
 			return "testGradle";
 		}
