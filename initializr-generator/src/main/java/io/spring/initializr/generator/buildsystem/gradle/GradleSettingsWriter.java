@@ -62,7 +62,7 @@ public class GradleSettingsWriter {
 		writer.indented(() -> {
 			writer.println("eachPlugin {");
 			writer.indented(() -> {
-				writer.println("if(requested.id.id == 'org.springframework.boot') {");
+				writer.println("if (requested.id.id == 'org.springframework.boot') {");
 				writer.indented(() -> writer.println(
 						"useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")"));
 				writer.println("}");
