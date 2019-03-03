@@ -1,0 +1,20 @@
+plugins {
+	id("org.springframework.boot") version "2.2.0.M1"
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
+	java
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+	mavenCentral()
+	maven { url = uri("https://repo.spring.io/snapshot") }
+	maven { url = uri("https://repo.spring.io/milestone") }
+}
+
+dependencies {
+	implementation("org.acme:foo")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}

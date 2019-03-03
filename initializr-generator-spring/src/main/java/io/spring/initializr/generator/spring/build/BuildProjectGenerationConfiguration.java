@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
@@ -39,6 +40,7 @@ import org.springframework.context.annotation.Bean;
  * Project generation configuration for projects using any build system.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 @ProjectGenerationConfiguration
 public class BuildProjectGenerationConfiguration {
@@ -70,7 +72,7 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnLanguage(KotlinLanguage.ID)
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	@ConditionalOnBuildSystem({ GradleBuildSystem.ID, GradleKtsBuildSystem.ID })
 	public KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(
 			InitializrMetadata metadata, KotlinProjectSettings settings) {
 		return new KotlinJpaGradleBuildCustomizer(metadata, settings);

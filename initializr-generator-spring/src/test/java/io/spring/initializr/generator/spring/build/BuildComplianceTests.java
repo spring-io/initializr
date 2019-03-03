@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.groovy.GroovyLanguage;
@@ -45,6 +46,7 @@ import org.springframework.core.io.ClassPathResource;
  * Build compliance tests.
  *
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
 class BuildComplianceTests extends AbstractComplianceTests {
 
@@ -54,11 +56,17 @@ class BuildComplianceTests extends AbstractComplianceTests {
 
 	private static final Language kotlin = new KotlinLanguage();
 
-	static Stream<Arguments> parameters() {
+	static Stream<Arguments> previousGenerationParameters() {
 		return Stream.of(
 				Arguments.arguments(BuildSystem.forId(MavenBuildSystem.ID), "pom.xml"),
 				Arguments.arguments(BuildSystem.forId(GradleBuildSystem.ID),
 						"build.gradle"));
+	}
+
+	static Stream<Arguments> parameters() {
+		return Stream.concat(previousGenerationParameters(),
+				Stream.of(Arguments.arguments(BuildSystem.forId(GradleKtsBuildSystem.ID),
+						"build.gradle.kts")));
 	}
 
 	@ParameterizedTest
@@ -117,19 +125,19 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	}
 
 	@ParameterizedTest
-	@MethodSource("parameters")
+	@MethodSource("previousGenerationParameters")
 	void previousGenerationJarJava(BuildSystem build, String fileName) {
 		testPreviousGenerationJar(java, build, fileName);
 	}
 
 	@ParameterizedTest
-	@MethodSource("parameters")
+	@MethodSource("previousGenerationParameters")
 	void previousGenerationJarGroovy(BuildSystem build, String fileName) {
 		testPreviousGenerationJar(groovy, build, fileName);
 	}
 
 	@ParameterizedTest
-	@MethodSource("parameters")
+	@MethodSource("previousGenerationParameters")
 	void previousGenerationJarKotlin(BuildSystem build, String fileName) {
 		testPreviousGenerationJar(kotlin, build, fileName);
 	}

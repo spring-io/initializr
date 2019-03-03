@@ -16,41 +16,33 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import java.util.stream.Collectors;
-
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
 /**
- * {@link BuildCustomizer} for Kotlin projects build with Gradle.
+ * {@link BuildCustomizer} template for Kotlin projects build with Gradle. A subclass
+ * exists for each DSL.
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
  */
-class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
+abstract class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	private final KotlinProjectSettings settings;
+	protected final KotlinProjectSettings settings;
 
 	KotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 		this.settings = kotlinProjectSettings;
 	}
 
 	@Override
-	public void customize(GradleBuild build) {
+	public final void customize(GradleBuild build) {
 		build.addPlugin("org.jetbrains.kotlin.jvm", this.settings.getVersion());
 		build.addPlugin("org.jetbrains.kotlin.plugin.spring", this.settings.getVersion());
 		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
 				this::customizeKotlinOptions);
 	}
 
-	private void customizeKotlinOptions(TaskCustomization compile) {
-		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = this.settings.getCompilerArgs().stream()
-					.map((arg) -> "'" + arg + "'").collect(Collectors.joining(", "));
-			kotlinOptions.set("freeCompilerArgs", "[" + compilerArgs + "]");
-			kotlinOptions.set("jvmTarget", "'" + this.settings.getJvmTarget() + "'");
-		});
-	}
+	protected abstract void customizeKotlinOptions(TaskCustomization compile);
 
 }

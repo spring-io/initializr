@@ -20,6 +20,7 @@ import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -44,6 +45,7 @@ import org.springframework.context.annotation.Configuration;
  * Default Groovy language contributors.
  *
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
 @Configuration
 class GroovyProjectGenerationDefaultContributorsConfiguration {
@@ -121,7 +123,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	 * Configuration for Groovy projects built with Gradle.
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	@ConditionalOnBuildSystem({ GradleBuildSystem.ID, GradleKtsBuildSystem.ID })
 	static class GroovyGradleProjectConfiguration {
 
 		@Bean

@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
+import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleBuildWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.test.io.TextTestUtils;
@@ -32,19 +32,21 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link GradleBuildProjectContributor}.
+ * Tests for {@link GroovyDslGradleBuildProjectContributor}.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
-class GradleBuildProjectContributorTests {
+class GroovyDslGradleBuildProjectContributorTests {
 
 	@Test
 	void gradleBuildIsContributedInProjectStructure(@TempDir Path projectDir)
 			throws IOException {
 		GradleBuild build = new GradleBuild();
-		new GradleBuildProjectContributor(new GradleBuildWriter(), build,
-				IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
+		new GroovyDslGradleBuildProjectContributor(new GroovyDslGradleBuildWriter(),
+				build, IndentingWriterFactory.withDefaultSettings())
+						.contribute(projectDir);
 		Path buildGradle = projectDir.resolve("build.gradle");
 		assertThat(buildGradle).isRegularFile();
 	}
@@ -81,8 +83,8 @@ class GradleBuildProjectContributorTests {
 	private List<String> generateBuild(GradleBuild build,
 			IndentingWriterFactory indentingWriterFactory) throws IOException {
 		StringWriter writer = new StringWriter();
-		new GradleBuildProjectContributor(new GradleBuildWriter(), build,
-				indentingWriterFactory).writeBuild(writer);
+		new GroovyDslGradleBuildProjectContributor(new GroovyDslGradleBuildWriter(),
+				build, indentingWriterFactory).writeBuild(writer);
 		return TextTestUtils.readAllLines(writer.toString());
 	}
 

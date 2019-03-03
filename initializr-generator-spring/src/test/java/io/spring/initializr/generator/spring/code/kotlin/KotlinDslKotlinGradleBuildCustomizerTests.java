@@ -23,17 +23,17 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link KotlinGradleBuildCustomizer}.
+ * Tests for {@link KotlinDslKotlinGradleBuildCustomizer}.
  *
- * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-class KotlinGradleBuildCustomizerTests {
+class KotlinDslKotlinGradleBuildCustomizerTests {
 
 	@Test
 	void kotlinPluginsAreConfigured() {
 		GradleBuild build = new GradleBuild();
-		new KotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
-				.customize(build);
+		new KotlinDslKotlinGradleBuildCustomizer(
+				new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.getPlugins()).hasSize(2);
 		assertThat(build.getPlugins().get(0).getId())
 				.isEqualTo("org.jetbrains.kotlin.jvm");
@@ -46,10 +46,8 @@ class KotlinGradleBuildCustomizerTests {
 	@Test
 	void kotlinCompilationTasksAreCustomized() {
 		GradleBuild build = new GradleBuild();
-		new KotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
-				.customize(build);
-		assertThat(build.getImportedTypes())
-				.contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		new KotlinDslKotlinGradleBuildCustomizer(
+				new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.getTasksWithTypeCustomizations()).hasSize(1);
 		assertThat(build.getTasksWithTypeCustomizations()).containsKeys("KotlinCompile");
 		assertKotlinOptions(build.getTasksWithTypeCustomizations().get("KotlinCompile"));
@@ -64,8 +62,8 @@ class KotlinGradleBuildCustomizerTests {
 		assertThat(kotlinOptions.getNested()).hasSize(0);
 		assertThat(kotlinOptions.getAssignments()).hasSize(2);
 		assertThat(kotlinOptions.getAssignments())
-				.containsEntry("freeCompilerArgs", "['-Xjsr305=strict']")
-				.containsEntry("jvmTarget", "'1.8'");
+				.containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
+				.containsEntry("jvmTarget", "\"1.8\"");
 	}
 
 }

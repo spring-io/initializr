@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      https://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,20 +18,20 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link GradleSettingsWriter}.
+ * Tests for {@link KotlinDslGradleSettingsWriter}.
  *
- * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-class GradleSettingsWriterTests {
+class KotlinDslGradleSettingsWriterTests {
 
 	@Test
 	void gradleBuildWithMavenCentralPluginRepository() throws IOException {
@@ -49,10 +49,10 @@ class GradleSettingsWriterTests {
 				"https://repo.spring.io/milestone");
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        maven { url 'https://repo.spring.io/milestone' }",
+				"        maven { url = uri(\"https://repo.spring.io/milestone\") }",
 				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
 				"        eachPlugin {",
-				"            if (requested.id.id == 'org.springframework.boot') {",
+				"            if (requested.id.id == \"org.springframework.boot\") {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");
 	}
@@ -64,10 +64,10 @@ class GradleSettingsWriterTests {
 				"https://repo.spring.io/snapshot", true);
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        maven { url 'https://repo.spring.io/snapshot' }",
+				"        maven { url = uri(\"https://repo.spring.io/snapshot\") }",
 				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
 				"        eachPlugin {",
-				"            if (requested.id.id == 'org.springframework.boot') {",
+				"            if (requested.id.id == \"org.springframework.boot\") {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");
 	}
@@ -77,14 +77,14 @@ class GradleSettingsWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.setArtifact("my-application");
 		List<String> lines = generateSettings(build);
-		assertThat(lines).containsSequence("rootProject.name = 'my-application'");
+		assertThat(lines).containsSequence("rootProject.name = \"my-application\"");
 	}
 
 	private List<String> generateSettings(GradleBuild build) throws IOException {
-		GradleSettingsWriter writer = new GradleSettingsWriter();
+		GradleSettingsWriter writer = new KotlinDslGradleSettingsWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
-		return TextTestUtils.readAllLines(out.toString());
+		return Arrays.asList(out.toString().split("\\r?\\n"));
 	}
 
 }

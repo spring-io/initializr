@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -47,6 +48,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
 @Configuration
 class KotlinProjectGenerationDefaultContributorsConfiguration {
@@ -155,7 +157,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	/**
-	 * Configuration for Kotlin projects built with Gradle.
+	 * Configuration for Kotlin projects built with Gradle (Groovy DSL).
 	 *
 	 * @author Andy Wilkinson
 	 */
@@ -166,7 +168,24 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		@Bean
 		public KotlinGradleBuildCustomizer kotlinBuildCustomizer(
 				KotlinProjectSettings kotlinProjectSettings) {
-			return new KotlinGradleBuildCustomizer(kotlinProjectSettings);
+			return new GroovyDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
+		}
+
+	}
+
+	/**
+	 * Configuration for Kotlin projects built with Gradle (Kotlin DSL).
+	 *
+	 * @author Jean-Baptiste Nizet
+	 */
+	@Configuration
+	@ConditionalOnBuildSystem(GradleKtsBuildSystem.ID)
+	static class KotlinGradleKtsProjectConfiguration {
+
+		@Bean
+		public KotlinDslKotlinGradleBuildCustomizer kotlinBuildCustomizer(
+				KotlinProjectSettings kotlinProjectSettings) {
+			return new KotlinDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
 		}
 
 	}

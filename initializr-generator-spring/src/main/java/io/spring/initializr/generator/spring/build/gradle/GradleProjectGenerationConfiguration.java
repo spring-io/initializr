@@ -23,7 +23,9 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.Gradle3BuildWriter;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleBuildWriter;
+import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleBuildWriter;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -35,6 +37,7 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -45,9 +48,10 @@ import org.springframework.context.annotation.Configuration;
  * Gradle as its build system.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 @ProjectGenerationConfiguration
-@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+@ConditionalOnBuildSystem({ GradleBuildSystem.ID, GradleKtsBuildSystem.ID })
 public class GradleProjectGenerationConfiguration {
 
 	private final IndentingWriterFactory indentingWriterFactory;
@@ -100,14 +104,24 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public BuildCustomizer<GradleBuild> applyDependencyManagementPluginContributor() {
 		return (build) -> build.applyPlugin("io.spring.dependency-management");
 	}
 
 	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public GradleBuildProjectContributor gradleBuildProjectContributor(
-			GradleBuildWriter buildWriter, GradleBuild build) {
-		return new GradleBuildProjectContributor(buildWriter, build,
+			GroovyDslGradleBuildWriter buildWriter, GradleBuild build) {
+		return new GroovyDslGradleBuildProjectContributor(buildWriter, build,
+				this.indentingWriterFactory);
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(GradleKtsBuildSystem.ID)
+	public KotlinDslGradleBuildProjectContributor gradleKtsBuildProjectContributor(
+			KotlinDslGradleBuildWriter buildWriter, GradleBuild build) {
+		return new KotlinDslGradleBuildProjectContributor(buildWriter, build,
 				this.indentingWriterFactory);
 	}
 
@@ -116,6 +130,7 @@ public class GradleProjectGenerationConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnGradleVersion("3")
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	static class Gradle3ProjectGenerationConfiguration {
 
 		@Bean
@@ -152,6 +167,7 @@ public class GradleProjectGenerationConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnGradleVersion("4")
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	static class Gradle4ProjectGenerationConfiguration {
 
 		@Bean
@@ -176,21 +192,23 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	/**
-	 * Configuration specific to projects using Gradle 4 or 5.
+	 * Configuration specific to projects using Gradle (Groovy DSL) 4 or 5.
 	 */
 	@Configuration
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	@ConditionalOnGradleVersion({ "4", "5" })
 	static class Gradle4Or5ProjectGenerationConfiguration {
 
 		@Bean
-		public GradleBuildWriter gradleBuildWriter() {
-			return new GradleBuildWriter();
+		public GroovyDslGradleBuildWriter gradleBuildWriter() {
+			return new GroovyDslGradleBuildWriter();
 		}
 
 		@Bean
 		public SettingsGradleProjectContributor settingsGradleProjectContributor(
 				GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
-			return new SettingsGradleProjectContributor(build, indentingWriterFactory);
+			return new GroovyDslSettingsGradleProjectContributor(build,
+					indentingWriterFactory);
 		}
 
 		@Bean
@@ -203,6 +221,40 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
 			return new GradleAnnotationProcessorScopeBuildCustomizer();
+		}
+
+	}
+
+	/**
+	 * Configuration specific to projects using Gradle (Kotlin DSL).
+	 */
+	@Configuration
+	@ConditionalOnBuildSystem(GradleKtsBuildSystem.ID)
+	static class GradleKtsProjectGenerationConfiguration {
+
+		@Bean
+		public KotlinDslGradleBuildWriter gradleKtsBuildWriter() {
+			return new KotlinDslGradleBuildWriter();
+		}
+
+		@Bean
+		public KotlinDslSettingsGradleProjectContributor settingsGradleKtsProjectContributor(
+				GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
+			return new KotlinDslSettingsGradleProjectContributor(build,
+					indentingWriterFactory);
+		}
+
+		@Bean
+		public BuildCustomizer<GradleBuild> springBootPluginContributor(
+				ResolvedProjectDescription projectDescription,
+				InitializrMetadata metadata) {
+			return (build) -> {
+				build.addPlugin("org.springframework.boot",
+						projectDescription.getPlatformVersion().toString());
+				build.addPlugin("io.spring.dependency-management",
+						metadata.getConfiguration().getEnv().getGradle()
+								.getDependencyManagementPluginVersion());
+			};
 		}
 
 	}

@@ -22,15 +22,19 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 
 /**
- * A {@link GradleBuild} writer for {@code settings.gradle}.
+ * A {@link GradleBuild} writer template for {@code settings.gradle} and
+ * {@code settings.gradle.kts}. A subclass of this class exists for the Groovy DSL and for
+ * the Kotlin DSL.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-public class GradleSettingsWriter {
+public abstract class GradleSettingsWriter {
 
-	public void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+	public final void writeTo(IndentingWriter writer, GradleBuild build)
+			throws IOException {
 		writePluginManagement(writer, build);
-		writer.println("rootProject.name = '" + build.getArtifact() + "'");
+		writer.println("rootProject.name = " + wrapWithQuotes(build.getArtifact()));
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
@@ -62,7 +66,8 @@ public class GradleSettingsWriter {
 		writer.indented(() -> {
 			writer.println("eachPlugin {");
 			writer.indented(() -> {
-				writer.println("if (requested.id.id == 'org.springframework.boot') {");
+				writer.println("if (requested.id.id == "
+						+ wrapWithQuotes("org.springframework.boot") + ") {");
 				writer.indented(() -> writer.println(
 						"useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")"));
 				writer.println("}");
@@ -76,7 +81,11 @@ public class GradleSettingsWriter {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
 			return "mavenCentral()";
 		}
-		return "maven { url '" + repository.getUrl() + "' }";
+		return "maven { " + urlAssignment(repository.getUrl()) + " }";
 	}
+
+	protected abstract String wrapWithQuotes(String value);
+
+	protected abstract String urlAssignment(String url);
 
 }

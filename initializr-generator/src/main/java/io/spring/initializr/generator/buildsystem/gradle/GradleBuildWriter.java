@@ -43,23 +43,26 @@ import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
 /**
- * A {@link GradleBuild} writer for {@code build.gradle}.
+ * A {@link GradleBuild} writer template for build.gradle and build.gradle.kts. A subclass
+ * of this class exists for the Groovy DSL and for the Kotlin DSL.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
  */
-public class GradleBuildWriter {
+public abstract class GradleBuildWriter {
 
-	public void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+	public final void writeTo(IndentingWriter writer, GradleBuild build)
+			throws IOException {
 		writeImports(writer, build);
-		boolean buildScriptWritten = writeBuildscript(writer, build);
-		writePlugins(writer, build, buildScriptWritten);
+		writeBuildscript(writer, build);
+		writePlugins(writer, build);
 		writeProperty(writer, "group", build.getGroup());
 		writeProperty(writer, "version", build.getVersion());
-		writeProperty(writer, "sourceCompatibility", build.getSourceCompatibility());
+		writeJavaSourceCompatibility(writer, build);
+		writer.println();
 		writeConfigurations(writer, build);
-		writeRepositories(writer, build, writer::println);
+		writeRepositories(writer, build);
 		writeProperties(writer, build);
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
@@ -75,61 +78,12 @@ public class GradleBuildWriter {
 		}
 	}
 
-	private boolean writeBuildscript(IndentingWriter writer, GradleBuild build) {
-		List<String> dependencies = build.getBuildscript().getDependencies();
-		Map<String, String> ext = build.getBuildscript().getExt();
-		if (dependencies.isEmpty() && ext.isEmpty()) {
-			return false;
-		}
-		writer.println("buildscript {");
-		writer.indented(() -> {
-			writeBuildscriptExt(writer, build);
-			writeBuildscriptRepositories(writer, build);
-			writeBuildscriptDependencies(writer, build);
-		});
-		writer.println("}");
-		return true;
-	}
+	protected abstract void writeBuildscript(IndentingWriter writer, GradleBuild build);
 
-	private void writeBuildscriptExt(IndentingWriter writer, GradleBuild build) {
-		writeNestedMap(writer, "ext", build.getBuildscript().getExt(),
-				(key, value) -> key + " = " + value);
-	}
+	protected abstract void writePlugins(IndentingWriter writer, GradleBuild build);
 
-	private void writeBuildscriptRepositories(IndentingWriter writer, GradleBuild build) {
-		writeRepositories(writer, build);
-	}
-
-	private void writeBuildscriptDependencies(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "dependencies",
-				build.getBuildscript().getDependencies(),
-				(dependency) -> "classpath '" + dependency + "'");
-	}
-
-	private void writePlugins(IndentingWriter writer, GradleBuild build,
-			boolean buildScriptWritten) {
-		writeNestedCollection(writer, "plugins", build.getPlugins(), this::pluginAsString,
-				determineBeforeWriting(buildScriptWritten, writer));
-		writeCollection(writer, build.getAppliedPlugins(),
-				(plugin) -> "apply plugin: '" + plugin + "'", writer::println);
-		writer.println();
-	}
-
-	private Runnable determineBeforeWriting(boolean buildScriptWritten,
-			IndentingWriter writer) {
-		if (buildScriptWritten) {
-			return writer::println;
-		}
-		return null;
-	}
-
-	private String pluginAsString(GradlePlugin plugin) {
-		String string = "id '" + plugin.getId() + "'";
-		if (plugin.getVersion() != null) {
-			string += " version '" + plugin.getVersion() + "'";
-		}
-		return string;
-	}
+	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer,
+			GradleBuild build);
 
 	private void writeConfigurations(IndentingWriter writer, GradleBuild build) {
 		Map<String, ConfigurationCustomization> configurationCustomizations = build
@@ -137,43 +91,24 @@ public class GradleBuildWriter {
 		if (configurationCustomizations.isEmpty()) {
 			return;
 		}
-		writer.println();
 		writer.println("configurations {");
 		writer.indented(() -> configurationCustomizations.forEach((name,
 				customization) -> writeConfiguration(writer, name, customization)));
 		writer.println("}");
+		writer.println("");
 	}
 
-	private void writeConfiguration(IndentingWriter writer, String configurationName,
-			ConfigurationCustomization configurationCustomization) {
-		if (configurationCustomization.getExtendsFrom().isEmpty()) {
-			writer.println(configurationName);
-		}
-		else {
-			writer.println(configurationName + " {");
-			writer.indented(() -> writer.println(String.format("extendsFrom %s",
-					String.join(", ", configurationCustomization.getExtendsFrom()))));
-			writer.println("}");
-		}
-	}
+	protected abstract void writeConfiguration(IndentingWriter writer,
+			String configurationName,
+			ConfigurationCustomization configurationCustomization);
 
-	private void writeRepositories(IndentingWriter writer, GradleBuild build) {
-		writeRepositories(writer, build, null);
-	}
-
-	private void writeRepositories(IndentingWriter writer, GradleBuild build,
-			Runnable beforeWriting) {
+	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "repositories",
 				build.repositories().items().collect(Collectors.toList()),
-				this::repositoryAsString, beforeWriting);
+				this::repositoryAsString);
 	}
 
-	private String repositoryAsString(MavenRepository repository) {
-		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
-			return "mavenCentral()";
-		}
-		return "maven { url '" + repository.getUrl() + "' }";
-	}
+	protected abstract String repositoryAsString(MavenRepository repository);
 
 	private void writeProperties(IndentingWriter writer, GradleBuild build) {
 		if (build.getExt().isEmpty() && build.getVersionProperties().isEmpty()) {
@@ -182,17 +117,15 @@ public class GradleBuildWriter {
 		Map<String, String> allProperties = new LinkedHashMap<>(build.getExt());
 		build.getVersionProperties().entrySet().forEach((entry) -> allProperties
 				.put(getVersionPropertyKey(entry), "'" + entry.getValue() + "'"));
-		writeNestedCollection(writer, "ext", allProperties.entrySet(),
-				(e) -> getFormattedProperty(e.getKey(), e.getValue()), writer::println);
+		writeExtraProperties(writer, allProperties);
 	}
+
+	protected abstract void writeExtraProperties(IndentingWriter writer,
+			Map<String, String> allProperties);
 
 	private String getVersionPropertyKey(Entry<VersionProperty, String> entry) {
 		return entry.getKey().isInternal() ? entry.getKey().toCamelCaseFormat()
 				: entry.getKey().toStandardFormat();
-	}
-
-	private String getFormattedProperty(String key, String value) {
-		return String.format("set('%s', %s)", key, value);
 	}
 
 	private void writeDependencies(IndentingWriter writer, GradleBuild build) {
@@ -216,15 +149,7 @@ public class GradleBuildWriter {
 				this::dependencyAsString, writer::println);
 	}
 
-	private String dependencyAsString(Dependency dependency) {
-		String quoteStyle = determineQuoteStyle(dependency.getVersion());
-		String version = determineVersion(dependency.getVersion());
-		String type = dependency.getType();
-		return configurationForScope(dependency.getScope()) + " " + quoteStyle
-				+ dependency.getGroupId() + ":" + dependency.getArtifactId()
-				+ ((version != null) ? ":" + version : "")
-				+ ((type != null) ? "@" + type : "") + quoteStyle;
-	}
+	protected abstract String dependencyAsString(Dependency dependency);
 
 	protected String configurationForScope(DependencyScope type) {
 		switch (type) {
@@ -263,23 +188,18 @@ public class GradleBuildWriter {
 	}
 
 	private String bomAsString(BillOfMaterials bom) {
-		String quoteStyle = determineQuoteStyle(bom.getVersion());
 		String version = determineVersion(bom.getVersion());
-		return "mavenBom " + quoteStyle + bom.getGroupId() + ":" + bom.getArtifactId()
-				+ ":" + version + quoteStyle;
+		return bomAsString(bom, version);
 	}
 
-	private String determineQuoteStyle(VersionReference versionReference) {
-		return (versionReference != null && versionReference.isProperty()) ? "\"" : "'";
-	}
+	protected abstract String bomAsString(BillOfMaterials bom, String version);
 
-	private String determineVersion(VersionReference versionReference) {
+	protected final String determineVersion(VersionReference versionReference) {
 		if (versionReference != null) {
 			if (versionReference.isProperty()) {
 				VersionProperty property = versionReference.getProperty();
-				return "${"
-						+ (property.isInternal() ? property.toCamelCaseFormat()
-								: "property('" + property.toStandardFormat() + "')")
+				return "${" + (property.isInternal() ? property.toCamelCaseFormat()
+						: externalVersionPropertyAsString(property.toStandardFormat()))
 						+ "}";
 			}
 			return versionReference.getValue();
@@ -287,33 +207,17 @@ public class GradleBuildWriter {
 		return null;
 	}
 
-	private void writeTasksWithTypeCustomizations(IndentingWriter writer,
-			GradleBuild build) {
-		Map<String, GradleBuild.TaskCustomization> tasksWithTypeCustomizations = build
-				.getTasksWithTypeCustomizations();
-		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
-			writer.println();
-			writer.println("tasks.withType(" + typeName + ") {");
-			writer.indented(() -> writeTaskCustomization(writer, customization));
-			writer.println("}");
-		});
-	}
+	protected abstract String externalVersionPropertyAsString(String standardFormat);
 
-	private void writeTaskCustomizations(IndentingWriter writer, GradleBuild build) {
-		Map<String, TaskCustomization> taskCustomizations = build.getTaskCustomizations();
-		taskCustomizations.forEach((name, customization) -> {
-			writer.println();
-			writer.println(name + " {");
-			writer.indented(() -> writeTaskCustomization(writer, customization));
-			writer.println("}");
-		});
-	}
+	protected abstract void writeTasksWithTypeCustomizations(IndentingWriter writer,
+			GradleBuild build);
 
-	private void writeTaskCustomization(IndentingWriter writer,
+	protected abstract void writeTaskCustomizations(IndentingWriter writer,
+			GradleBuild build);
+
+	protected final void writeTaskCustomization(IndentingWriter writer,
 			TaskCustomization customization) {
-		writeCollection(writer, customization.getInvocations(),
-				(invocation) -> invocation.getTarget() + " "
-						+ String.join(", ", invocation.getArguments()));
+		writeCollection(writer, customization.getInvocations(), this::invocationAsString);
 		writeMap(writer, customization.getAssignments(),
 				(key, value) -> key + " = " + value);
 		customization.getNested().forEach((property, nestedCustomization) -> {
@@ -323,12 +227,14 @@ public class GradleBuildWriter {
 		});
 	}
 
-	private <T> void writeNestedCollection(IndentingWriter writer, String name,
+	protected abstract String invocationAsString(TaskCustomization.Invocation invocation);
+
+	protected final <T> void writeNestedCollection(IndentingWriter writer, String name,
 			Collection<T> collection, Function<T, String> itemToStringConverter) {
 		this.writeNestedCollection(writer, name, collection, itemToStringConverter, null);
 	}
 
-	private <T> void writeNestedCollection(IndentingWriter writer, String name,
+	protected final <T> void writeNestedCollection(IndentingWriter writer, String name,
 			Collection<T> collection, Function<T, String> converter,
 			Runnable beforeWriting) {
 		if (!collection.isEmpty()) {
@@ -347,8 +253,9 @@ public class GradleBuildWriter {
 		writeCollection(writer, collection, converter, null);
 	}
 
-	private <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
-			Function<T, String> itemToStringConverter, Runnable beforeWriting) {
+	protected final <T> void writeCollection(IndentingWriter writer,
+			Collection<T> collection, Function<T, String> itemToStringConverter,
+			Runnable beforeWriting) {
 		if (!collection.isEmpty()) {
 			if (beforeWriting != null) {
 				beforeWriting.run();
@@ -357,25 +264,13 @@ public class GradleBuildWriter {
 		}
 	}
 
-	private <T, U> void writeNestedMap(IndentingWriter writer, String name, Map<T, U> map,
-			BiFunction<T, U, String> converter) {
-		if (!map.isEmpty()) {
-			writer.println(name + " {");
-			writer.indented(() -> writeMap(writer, map, converter));
-			writer.println("}");
-		}
-	}
-
-	private <T, U> void writeMap(IndentingWriter writer, Map<T, U> map,
+	protected final <T, U> void writeMap(IndentingWriter writer, Map<T, U> map,
 			BiFunction<T, U, String> converter) {
 		map.forEach((key, value) -> writer.println(converter.apply(key, value)));
 	}
 
-	private void writeProperty(IndentingWriter writer, String name, String value) {
-		if (value != null) {
-			writer.println(String.format("%s = '%s'", name, value));
-		}
-	}
+	protected abstract void writeProperty(IndentingWriter writer, String name,
+			String value);
 
 	private static Collection<Dependency> filterDependencies(
 			DependencyContainer dependencies, DependencyScope... types) {
