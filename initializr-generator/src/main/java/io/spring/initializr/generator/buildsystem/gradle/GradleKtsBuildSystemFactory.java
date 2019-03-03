@@ -17,28 +17,21 @@
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
 
 /**
- * Gradle {@link BuildSystem} using the Groovy DSL (i.e. settings.gradle and
- * build.gradle).
+ * {@link BuildSystemFactory Factory} for {@link GradleKtsBuildSystem}.
  *
- * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-public final class GradleBuildSystem implements BuildSystem {
-
-	/**
-	 * Gradle {@link BuildSystem} identifier.
-	 */
-	public static final String ID = "gradle";
+class GradleKtsBuildSystemFactory implements BuildSystemFactory {
 
 	@Override
-	public String id() {
-		return ID;
-	}
-
-	@Override
-	public String toString() {
-		return id();
+	public BuildSystem createBuildSystem(String id) {
+		if (GradleKtsBuildSystem.ID.equals(id)) {
+			return new GradleKtsBuildSystem();
+		}
+		return null;
 	}
 
 }
