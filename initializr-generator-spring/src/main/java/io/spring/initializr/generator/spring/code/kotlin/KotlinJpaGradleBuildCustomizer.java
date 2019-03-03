@@ -45,7 +45,6 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.addPlugin("org.jetbrains.kotlin.plugin.jpa",
 					this.settings.getVersion());
-			build.applyPlugin("kotlin-jpa");
 		}
 	}
 
