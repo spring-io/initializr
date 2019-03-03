@@ -1,0 +1,21 @@
+plugins {
+	id("org.springframework.boot") version "2.1.1.RELEASE"
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
+	java
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+	mavenCentral()
+}
+
+extra["springBarVersion"] = "0.2.0.RELEASE"
+extra["spring-foo.version"] = "0.1.0.RELEASE"
+
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}

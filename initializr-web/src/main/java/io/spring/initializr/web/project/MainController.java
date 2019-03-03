@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.samskivert.mustache.Mustache;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.version.Version;
@@ -336,8 +336,7 @@ public class MainController extends AbstractInitializrController {
 
 	private static String getWrapperScript(ResolvedProjectDescription description) {
 		BuildSystem buildSystem = description.getBuildSystem();
-		String script = buildSystem.id().equals(GradleBuildSystem.ID) ? "gradlew"
-				: "mvnw";
+		String script = buildSystem.id().equals(MavenBuildSystem.ID) ? "mvnw" : "gradlew";
 		return (description.getBaseDirectory() != null)
 				? description.getBaseDirectory() + "/" + script : script;
 	}

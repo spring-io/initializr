@@ -19,11 +19,11 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 
 /**
- * A {@link GradleBuildWriter} suitable for Gradle 3.
+ * A {@link GroovyDslGradleBuildWriter} suitable for Gradle 3.
  *
  * @author Stephane Nicoll
  */
-public class Gradle3BuildWriter extends GradleBuildWriter {
+public class Gradle3BuildWriter extends GroovyDslGradleBuildWriter {
 
 	protected String configurationForScope(DependencyScope type) {
 		switch (type) {

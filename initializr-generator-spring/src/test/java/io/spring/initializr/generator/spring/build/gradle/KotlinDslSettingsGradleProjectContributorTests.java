@@ -30,11 +30,11 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link SettingsGradleProjectContributor}.
+ * Tests for {@link KotlinDslSettingsGradleProjectContributor}.
  *
- * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-class SettingsGradleProjectContributorTests {
+class KotlinDslSettingsGradleProjectContributorTests {
 
 	@TempDir
 	Path directory;
@@ -76,9 +76,9 @@ class SettingsGradleProjectContributorTests {
 	private List<String> generateSettings(GradleBuild build,
 			IndentingWriterFactory indentingWriterFactory) throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new SettingsGradleProjectContributor(build, indentingWriterFactory)
+		new KotlinDslSettingsGradleProjectContributor(build, indentingWriterFactory)
 				.contribute(projectDir);
-		Path settingsGradle = projectDir.resolve("settings.gradle");
+		Path settingsGradle = projectDir.resolve("settings.gradle.kts");
 		assertThat(settingsGradle).isRegularFile();
 		return Files.readAllLines(settingsGradle);
 	}

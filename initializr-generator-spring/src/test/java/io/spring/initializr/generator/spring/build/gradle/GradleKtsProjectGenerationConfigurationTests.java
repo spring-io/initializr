@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -50,12 +50,11 @@ import org.springframework.util.StreamUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link GradleProjectGenerationConfiguration} with Groovy DSL build system.
+ * Tests for {@link GradleProjectGenerationConfiguration} with Kotlin DSL build system.
  *
- * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
  */
-class GradleProjectGenerationConfigurationTests {
+class GradleKtsProjectGenerationConfigurationTests {
 
 	private ProjectAssetTester projectTester;
 
@@ -68,13 +67,12 @@ class GradleProjectGenerationConfigurationTests {
 				.withBean(InitializrMetadata.class,
 						() -> InitializrMetadataTestBuilder.withDefaults().build())
 				.withDescriptionCustomizer((description) -> description
-						.setBuildSystem(new GradleBuildSystem()));
+						.setBuildSystem(new GradleKtsBuildSystem()));
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
-		return Stream.of(Arguments.arguments("1.5.17.RELEASE"),
-				Arguments.arguments("2.0.6.RELEASE"),
-				Arguments.arguments("2.1.3.RELEASE"));
+		// previous versions use gradle < 5, where Kotlin DSL is not supported
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -85,20 +83,17 @@ class GradleProjectGenerationConfigurationTests {
 		description.setLanguage(new JavaLanguage());
 		BuildWriter buildWriter = this.projectTester.generate(description,
 				(context) -> context.getBean(BuildWriter.class));
-		assertThat(buildWriter).isInstanceOf(GradleBuildProjectContributor.class);
 		assertThat(buildWriter)
-				.isNotInstanceOf(KotlinDslGradleBuildProjectContributor.class);
+				.isInstanceOf(KotlinDslGradleBuildProjectContributor.class);
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"),
-				Arguments.arguments("2.0.6.RELEASE", "4.10.2"),
-				Arguments.arguments("2.1.3.RELEASE", "5.2.1"));
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.2.1"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("gradleWrapperParameters")
-	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion,
+	void gradleWrapperIsContributedWhenGeneratingGradleKtsProject(String platformVersion,
 			String expectedGradleVersion) throws IOException {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
@@ -117,7 +112,8 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void buildDotGradleIsContributedWhenGeneratingGradleProject() throws IOException {
+	void buildDotGradleDotKtsIsContributedWhenGeneratingGradleKtsProject()
+			throws IOException {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
@@ -125,19 +121,19 @@ class GradleProjectGenerationConfigurationTests {
 				new Dependency("com.example", "acme", DependencyScope.COMPILE));
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle");
-		Path path = projectStructure.resolve("build.gradle");
+		assertThat(relativePaths).contains("build.gradle.kts");
+		Path path = projectStructure.resolve("build.gradle.kts");
 		String[] lines = readAllLines(path);
 		assertThat(lines).containsExactly("plugins {",
-				"    id 'org.springframework.boot' version '2.1.0.RELEASE'",
-				"    id 'java'", "}", "",
-				"apply plugin: 'io.spring.dependency-management'", "",
-				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'",
-				"sourceCompatibility = '11'", "", "repositories {", "    mavenCentral()",
-				"}", "", "dependencies {",
-				"    implementation 'org.springframework.boot:spring-boot-starter'",
-				"    implementation 'com.example:acme'",
-				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'",
+				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"",
+				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"",
+				"    java", "}", "", "group = \"com.example\"",
+				"version = \"0.0.1-SNAPSHOT\"",
+				"java.sourceCompatibility = JavaVersion.VERSION_11", "", "repositories {",
+				"    mavenCentral()", "}", "", "dependencies {",
+				"    implementation(\"org.springframework.boot:spring-boot-starter\")",
+				"    implementation(\"com.example:acme\")",
+				"    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")",
 				"}");
 	}
 
@@ -149,10 +145,10 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle");
+		assertThat(relativePaths).contains("build.gradle.kts");
 		try (Stream<String> lines = Files
-				.lines(projectStructure.resolve("build.gradle"))) {
-			assertThat(lines.filter((line) -> line.contains("    id 'war'"))).hasSize(1);
+				.lines(projectStructure.resolve("build.gradle.kts"))) {
+			assertThat(lines.filter((line) -> line.contains("    war"))).hasSize(1);
 		}
 	}
 

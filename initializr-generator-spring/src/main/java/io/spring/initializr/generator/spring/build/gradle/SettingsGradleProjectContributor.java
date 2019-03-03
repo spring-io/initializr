@@ -27,11 +27,13 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * {@link ProjectContributor} for the project's {@code settings.gradle} file.
+ * {@link ProjectContributor} for the project's {@code settings.gradle}
+ * {@code settings.gradle.kts} or file. A subclass exists for each of the DSLs.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
-class SettingsGradleProjectContributor implements ProjectContributor {
+abstract class SettingsGradleProjectContributor implements ProjectContributor {
 
 	private final GradleBuild build;
 
@@ -39,16 +41,21 @@ class SettingsGradleProjectContributor implements ProjectContributor {
 
 	private final GradleSettingsWriter settingsWriter;
 
-	SettingsGradleProjectContributor(GradleBuild build,
-			IndentingWriterFactory indentingWriterFactory) {
+	private final String settingsFileName;
+
+	protected SettingsGradleProjectContributor(GradleBuild build,
+			IndentingWriterFactory indentingWriterFactory,
+			GradleSettingsWriter settingsWriter, String settingsFileName) {
 		this.build = build;
 		this.indentingWriterFactory = indentingWriterFactory;
-		this.settingsWriter = new GradleSettingsWriter();
+		this.settingsWriter = settingsWriter;
+		this.settingsFileName = settingsFileName;
 	}
 
 	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Path settingsGradle = Files.createFile(projectRoot.resolve("settings.gradle"));
+	public final void contribute(Path projectRoot) throws IOException {
+		Path settingsGradle = Files
+				.createFile(projectRoot.resolve(this.settingsFileName));
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter(
 				"gradle", Files.newBufferedWriter(settingsGradle))) {
 			this.settingsWriter.writeTo(writer, this.build);

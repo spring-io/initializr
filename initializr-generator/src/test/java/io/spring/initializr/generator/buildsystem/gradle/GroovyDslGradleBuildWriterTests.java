@@ -30,12 +30,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link GradleBuildWriter}
+ * Tests for {@link GroovyDslGradleBuildWriter}
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
  */
-class GradleBuildWriterTests {
+class GroovyDslGradleBuildWriterTests {
 
 	@Test
 	void gradleBuildWithImports() throws IOException {
@@ -426,7 +426,7 @@ class GradleBuildWriterTests {
 	}
 
 	private List<String> generateBuild(GradleBuild build) throws IOException {
-		GradleBuildWriter writer = new GradleBuildWriter();
+		GradleBuildWriter writer = new GroovyDslGradleBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
 		return Arrays.asList(out.toString().split("\\r?\\n"));
