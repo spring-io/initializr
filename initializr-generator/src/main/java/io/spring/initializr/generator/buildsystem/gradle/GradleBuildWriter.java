@@ -47,10 +47,12 @@ import io.spring.initializr.generator.version.VersionReference;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Jean-Baptiste Nizet
  */
 public class GradleBuildWriter {
 
 	public void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+		writeImports(writer, build);
 		boolean buildScriptWritten = writeBuildscript(writer, build);
 		writePlugins(writer, build, buildScriptWritten);
 		writeProperty(writer, "group", build.getGroup());
@@ -61,7 +63,16 @@ public class GradleBuildWriter {
 		writeProperties(writer, build);
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
+		writeTasksWithTypeCustomizations(writer, build);
 		writeTaskCustomizations(writer, build);
+	}
+
+	private void writeImports(IndentingWriter writer, GradleBuild build) {
+		build.getImportedTypes().stream().sorted().forEachOrdered(
+				(importedType) -> writer.println("import " + importedType));
+		if (!build.getImportedTypes().isEmpty()) {
+			writer.println();
+		}
 	}
 
 	private boolean writeBuildscript(IndentingWriter writer, GradleBuild build) {
@@ -277,6 +288,19 @@ public class GradleBuildWriter {
 			return versionReference.getValue();
 		}
 		return null;
+	}
+
+	private void writeTasksWithTypeCustomizations(IndentingWriter writer,
+			GradleBuild build) {
+		Map<String, GradleBuild.TaskCustomization> tasksWithTypeCustomizations = build
+				.getTasksWithTypeCustomizations();
+
+		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
+			writer.println();
+			writer.println("tasks.withType(" + typeName + ") {");
+			writer.indented(() -> writeTaskCustomization(writer, customization));
+			writer.println("}");
+		});
 	}
 
 	private void writeTaskCustomizations(IndentingWriter writer, GradleBuild build) {

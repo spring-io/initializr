@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
  * Gradle build configuration for a project.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 public class GradleBuild extends Build {
 
@@ -48,6 +50,10 @@ public class GradleBuild extends Build {
 	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
 
 	private final Map<String, TaskCustomization> taskCustomizations = new LinkedHashMap<>();
+
+	private final Set<String> importedTypes = new HashSet<>();
+
+	private final Map<String, TaskCustomization> tasksWithTypeCustomizations = new LinkedHashMap<>();
 
 	private final Buildscript buildscript = new Buildscript();
 
@@ -119,6 +125,24 @@ public class GradleBuild extends Build {
 
 	public Map<String, ConfigurationCustomization> getConfigurationCustomizations() {
 		return Collections.unmodifiableMap(this.configurationCustomizations);
+	}
+
+	public void addImportedType(String type) {
+		this.importedTypes.add(type);
+	}
+
+	public Set<String> getImportedTypes() {
+		return Collections.unmodifiableSet(this.importedTypes);
+	}
+
+	public void customizeTasksWithType(String typeName,
+			Consumer<TaskCustomization> customizer) {
+		customizer.accept(this.tasksWithTypeCustomizations.computeIfAbsent(typeName,
+				(name) -> new TaskCustomization()));
+	}
+
+	public Map<String, TaskCustomization> getTasksWithTypeCustomizations() {
+		return Collections.unmodifiableMap(this.tasksWithTypeCustomizations);
 	}
 
 	public void customizeTask(String taskName, Consumer<TaskCustomization> customizer) {

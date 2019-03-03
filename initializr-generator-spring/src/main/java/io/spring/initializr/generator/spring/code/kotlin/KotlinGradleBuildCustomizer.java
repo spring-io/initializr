@@ -26,6 +26,7 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  * {@link BuildCustomizer} for Kotlin projects build with Gradle.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
@@ -39,8 +40,8 @@ class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 	public void customize(GradleBuild build) {
 		build.addPlugin("org.jetbrains.kotlin.jvm", this.settings.getVersion());
 		build.addPlugin("org.jetbrains.kotlin.plugin.spring", this.settings.getVersion());
-		build.customizeTask("compileKotlin", this::customizeKotlinOptions);
-		build.customizeTask("compileTestKotlin", this::customizeKotlinOptions);
+		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		build.customizeTasksWithType("KotlinCompile", this::customizeKotlinOptions);
 	}
 
 	private void customizeKotlinOptions(TaskCustomization compile) {
