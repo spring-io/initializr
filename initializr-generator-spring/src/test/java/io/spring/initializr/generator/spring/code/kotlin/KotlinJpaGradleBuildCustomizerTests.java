@@ -39,7 +39,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.getAppliedPlugins()).contains("kotlin-jpa");
+		assertThat(build.getAppliedPlugins()).isEmpty();
 		assertThat(build.getPlugins()).hasSize(1);
 		assertThat(build.getPlugins().get(0).getId())
 				.isEqualTo("org.jetbrains.kotlin.plugin.jpa");
@@ -50,8 +50,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 	void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
 		Dependency dependency = Dependency.withId("foo");
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.getAppliedPlugins()).hasSize(0);
-		assertThat(build.getPlugins()).hasSize(0);
+		assertThat(build.getAppliedPlugins()).isEmpty();
+		assertThat(build.getPlugins()).isEmpty();
 	}
 
 	private GradleBuild getCustomizedBuild(Dependency dependency) {
