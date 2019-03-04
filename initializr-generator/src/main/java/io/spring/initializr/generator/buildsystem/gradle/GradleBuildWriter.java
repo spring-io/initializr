@@ -144,7 +144,7 @@ public class GradleBuildWriter {
 		else {
 			writer.println(configurationName + " {");
 			writer.indented(() -> writer.println(String.format("extendsFrom %s",
-					String.join(",", configurationCustomization.getExtendsFrom()))));
+					String.join(", ", configurationCustomization.getExtendsFrom()))));
 			writer.println("}");
 		}
 	}

@@ -257,7 +257,7 @@ class GradleBuildWriterTests {
 				(configuration) -> configuration.extendsFrom("testCompile"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("configurations {", "    developmentOnly {",
-				"        extendsFrom compile,testCompile", "    }", "}");
+				"        extendsFrom compile, testCompile", "    }", "}");
 	}
 
 	@Test

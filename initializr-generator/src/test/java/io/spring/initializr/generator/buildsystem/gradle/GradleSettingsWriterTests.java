@@ -52,7 +52,7 @@ class GradleSettingsWriterTests {
 				"        maven { url 'https://repo.spring.io/milestone' }",
 				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
 				"        eachPlugin {",
-				"            if(requested.id.id == 'org.springframework.boot') {",
+				"            if (requested.id.id == 'org.springframework.boot') {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");
 	}
@@ -67,7 +67,7 @@ class GradleSettingsWriterTests {
 				"        maven { url 'https://repo.spring.io/snapshot' }",
 				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
 				"        eachPlugin {",
-				"            if(requested.id.id == 'org.springframework.boot') {",
+				"            if (requested.id.id == 'org.springframework.boot') {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");
 	}
