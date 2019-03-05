@@ -407,12 +407,6 @@ class MainControllerIntegrationTests
 	}
 
 	@Test
-	void homeHasWebStyle() {
-		String body = htmlHome();
-		assertThat(body).contains("name=\"style\" value=\"web\"");
-	}
-
-	@Test
 	void homeHasBootVersion() {
 		String body = htmlHome();
 		assertThat(body).contains("name=\"bootVersion\"");

@@ -29,13 +29,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StreamUtils;
@@ -45,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Dave Syer
  * @author Stephane Nicoll
+ * @author Brian Clozel
  */
 @ActiveProfiles("test-default")
 class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegrationTests {
@@ -52,8 +50,6 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	private File downloadDir;
 
 	private WebDriver driver;
-
-	private Action enterAction;
 
 	@BeforeEach
 	public void setup(@TempDir Path folder) throws IOException {
@@ -70,9 +66,6 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
 		this.driver = new FirefoxDriver(options);
 		((JavascriptExecutor) this.driver).executeScript("window.focus();");
-
-		Actions actions = new Actions(this.driver);
-		this.enterAction = actions.sendKeys(Keys.ENTER).build();
 	}
 
 	@AfterEach
@@ -115,8 +108,10 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	@Test
 	void createSimpleProjectWithDependencies() throws Exception {
 		HomePage page = toHome();
-		selectDependency(page, "Data JPA");
-		selectDependency(page, "Security");
+		page.typeInSearchField("Data JPA").andHitEnter();
+		page.hasSelectedDependency("data-jpa");
+		page.typeInSearchField("Security").andHitEnter();
+		page.hasSelectedDependency("security");
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert().hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("data-jpa")
@@ -124,21 +119,12 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	}
 
 	@Test
-	void selectDependencyTwiceRemovesIt() throws Exception {
-		HomePage page = toHome();
-		selectDependency(page, "Data JPA");
-		selectDependency(page, "Security");
-		selectDependency(page, "Security"); // remove
-		page.submit();
-		assertSimpleProject().isMavenProject().pomAssert().hasDependenciesCount(2)
-				.hasSpringBootStarterDependency("data-jpa").hasSpringBootStarterTest();
-	}
-
-	@Test
 	void selectDependencyAndChangeToIncompatibleVersionRemovesIt() throws Exception {
 		HomePage page = toHome();
-		selectDependency(page, "Data JPA");
-		selectDependency(page, "org.acme:bur");
+		page.typeInSearchField("Data JPA").andHitEnter();
+		page.hasSelectedDependency("data-jpa");
+		page.typeInSearchField("org.acme:bur").andHitEnter();
+		page.hasSelectedDependency("org.acme:bur");
 		page.bootVersion("1.5.17.RELEASE"); // Bur isn't available anymore
 		page.submit();
 		assertSimpleProject().isMavenProject().pomAssert()
@@ -201,14 +187,15 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	@Test
 	void createWarProject() throws Exception {
 		HomePage page = toHome();
-		page.advanced();
+		page.clickOnMoreOptions();
 		page.packaging("war");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("demo.zip"));
 		projectAssert.hasBaseDir("demo").isMavenProject().isJavaWarProject().pomAssert()
 				.hasPackaging("war").hasDependenciesCount(3)
 				.hasSpringBootStarterDependency("web") // Added with war packaging
-				.hasSpringBootStarterDependency("tomcat").hasSpringBootStarterTest();
+				.hasSpringBootStarterDependency("tomcat", "provided")
+				.hasSpringBootStarterTest();
 	}
 
 	@Test
@@ -216,12 +203,14 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		HomePage page = toHome();
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
-		page.advanced();
+		page.clickOnMoreOptions();
 		page.name("My project");
 		page.description("A description for my project");
 		page.packageName("com.example.foo");
-		page.dependency("web").click();
-		page.dependency("data-jpa").click();
+		page.typeInSearchField("web").andHitEnter();
+		page.hasSelectedDependency("web");
+		page.typeInSearchField("data jpa").andHitEnter();
+		page.hasSelectedDependency("data-jpa");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
@@ -239,12 +228,14 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
 		page.language("kotlin");
-		page.advanced();
+		page.clickOnMoreOptions();
 		page.name("My project");
 		page.description("A description for my Kotlin project");
 		page.packageName("com.example.foo");
-		page.dependency("web").click();
-		page.dependency("data-jpa").click();
+		page.typeInSearchField("web").andHitEnter();
+		page.hasSelectedDependency("web");
+		page.typeInSearchField("data jpa").andHitEnter();
+		page.hasSelectedDependency("data-jpa");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
@@ -262,12 +253,14 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		page.groupId("com.acme");
 		page.artifactId("foo-bar");
 		page.language("groovy");
-		page.advanced();
+		page.clickOnMoreOptions();
 		page.name("My project");
 		page.description("A description for my Groovy project");
 		page.packageName("com.example.foo");
-		page.dependency("web").click();
-		page.dependency("data-jpa").click();
+		page.typeInSearchField("web").andHitEnter();
+		page.hasSelectedDependency("web");
+		page.typeInSearchField("data jpa").andHitEnter();
+		page.hasSelectedDependency("data-jpa");
 		page.submit();
 		ProjectAssert projectAssert = zipProjectAssert(from("foo-bar.zip"));
 		projectAssert.hasBaseDir("foo-bar").isMavenProject()
@@ -282,30 +275,27 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	@Test
 	void dependencyHiddenAccordingToRange() throws Exception {
 		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
-		page.advanced();
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
-		page.bootVersion("1.5.17.RELEASE");
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isFalse();
-		assertThat(page.dependency("org.acme:biz").isEnabled()).isFalse();
-		page.bootVersion("2.1.4.RELEASE");
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
-		assertThat(page.dependency("org.acme:biz").isEnabled()).isFalse();
-		page.bootVersion("Latest SNAPSHOT");
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isFalse();
-		assertThat(page.dependency("org.acme:biz").isEnabled()).isTrue();
-	}
+		page.typeInSearchField("acme");
+		assertThat(page.getSearchResults()).contains("org.acme:bur");
+		page.clearSearchField();
 
-	@Test
-	void dependencyUncheckedWhenHidden() throws Exception {
-		HomePage page = toHome(); // bur: [2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)
-		page.advanced();
-		page.dependency("org.acme:bur").click();
-		assertThat(page.dependency("org.acme:bur").isSelected()).isTrue();
 		page.bootVersion("1.5.17.RELEASE");
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isFalse();
+		page.typeInSearchField("acme");
+		assertThat(page.getInvalidSearchResults()).contains("org.acme:bur",
+				"org.acme:biz");
+		page.clearSearchField();
+
 		page.bootVersion("2.1.4.RELEASE");
-		assertThat(page.dependency("org.acme:bur").isEnabled()).isTrue();
-		assertThat(page.dependency("org.acme:bur").isSelected()).isFalse();
+		page.typeInSearchField("acme");
+		assertThat(page.getSearchResults()).contains("org.acme:bur");
+		assertThat(page.getInvalidSearchResults()).contains("org.acme:biz");
+		page.clearSearchField();
+
+		page.bootVersion("2.2.0.BUILD-SNAPSHOT");
+		page.typeInSearchField("acme");
+		assertThat(page.getSearchResults()).contains("org.acme:biz");
+		assertThat(page.getInvalidSearchResults()).contains("org.acme:bur");
+		page.clearSearchField();
 	}
 
 	@Test
@@ -328,10 +318,10 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 		HomePage page = toHome("/#!packaging=war&javaVersion=1.7");
 		assertThat(page.value("packaging")).isEqualTo("war");
 		assertThat(page.value("javaVersion")).isEqualTo("1.7");
-		page.advanced();
+		page.clickOnMoreOptions();
 		assertThat(page.value("packaging")).isEqualTo("war");
 		assertThat(page.value("javaVersion")).isEqualTo("1.7");
-		page.simple();
+		page.clickOnFewerOptions();
 		assertThat(page.value("packaging")).isEqualTo("war");
 		assertThat(page.value("javaVersion")).isEqualTo("1.7");
 	}
@@ -361,11 +351,6 @@ class ProjectGenerationSmokeTests extends AbstractFullStackInitializrIntegration
 	private ProjectAssert assertSimpleProject() throws Exception {
 		return zipProjectAssert(from("demo.zip")).hasBaseDir("demo").isJavaProject()
 				.hasStaticAndTemplatesResources(false);
-	}
-
-	private void selectDependency(HomePage page, String text) {
-		page.autocomplete(text);
-		this.enterAction.perform();
 	}
 
 	private byte[] from(String fileName) throws Exception {

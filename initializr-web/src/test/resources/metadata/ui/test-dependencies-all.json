@@ -4,18 +4,21 @@
       "id": "web",
       "name": "Web",
       "description": "Web dependency description",
-      "group": "Core"
+      "group": "Core",
+      "weight": 0
     },
     {
       "id": "security",
       "name": "Security",
-      "group": "Core"
+      "group": "Core",
+      "weight": 0
     },
     {
       "id": "data-jpa",
       "name": "Data JPA",
       "group": "Core",
-      "keywords": "jpa"
+      "keywords": "jpa",
+      "weight": 0
     },
     {
       "id": "org.acme:foo",
@@ -27,22 +30,28 @@
     {
       "id": "org.acme:bar",
       "name": "Bar",
-      "group": "Other"
+      "group": "Other",
+      "weight": 0
     },
     {
       "id": "org.acme:biz",
       "name": "Biz",
-      "group": "Other"
+      "group": "Other",
+      "versionRange": "2.2.0.BUILD-SNAPSHOT",
+      "weight": 0
     },
     {
       "id": "org.acme:bur",
       "name": "Bur",
-      "group": "Other"
+      "group": "Other",
+      "versionRange": "[2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)",
+      "weight": 0
     },
     {
       "id": "my-api",
       "name": "My API",
-      "group": "Other"
+      "group": "Other",
+      "weight": 0
     }
   ]
 }

@@ -23,7 +23,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyGroup;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -34,7 +33,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -52,22 +50,12 @@ public class UiController {
 	}
 
 	@GetMapping(path = "/ui/dependencies", produces = "application/json")
-	public ResponseEntity<String> dependencies(
-			@RequestParam(required = false) String version) {
+	public ResponseEntity<String> dependencies() {
 		List<DependencyGroup> dependencyGroups = this.metadataProvider.get()
 				.getDependencies().getContent();
 		List<DependencyItem> content = new ArrayList<>();
-		Version requestedVersion = (StringUtils.isEmpty(version) ? null
-				: Version.parse(version));
 		dependencyGroups.forEach((group) -> group.getContent().forEach((dependency) -> {
-			if (requestedVersion != null && dependency.getVersionRange() != null) {
-				if (dependency.match(requestedVersion)) {
-					content.add(new DependencyItem(group.getName(), dependency));
-				}
-			}
-			else {
-				content.add(new DependencyItem(group.getName(), dependency));
-			}
+			content.add(new DependencyItem(group.getName(), dependency));
 		}));
 		String json = writeDependencies(content);
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
@@ -88,11 +76,12 @@ public class UiController {
 		node.put("id", dependency.getId());
 		node.put("name", dependency.getName());
 		node.put("group", item.group);
+		node.put("weight", dependency.getWeight());
 		if (dependency.getDescription() != null) {
 			node.put("description", dependency.getDescription());
 		}
-		if (dependency.getWeight() > 0) {
-			node.put("weight", dependency.getWeight());
+		if (dependency.getVersionRange() != null) {
+			node.put("versionRange", dependency.getVersionRange());
 		}
 		if (!CollectionUtils.isEmpty(dependency.getKeywords())
 				|| !CollectionUtils.isEmpty(dependency.getAliases())) {

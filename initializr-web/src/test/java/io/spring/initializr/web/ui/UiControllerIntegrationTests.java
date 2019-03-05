@@ -40,14 +40,6 @@ class UiControllerIntegrationTests extends AbstractInitializrControllerIntegrati
 		validateDependenciesOutput("all", response.getBody());
 	}
 
-	@Test
-	void dependenciesSpecificVersion() throws JSONException {
-		ResponseEntity<String> response = execute(
-				"/ui/dependencies?version=1.1.2.RELEASE", String.class, null);
-		validateContentType(response, MediaType.APPLICATION_JSON);
-		validateDependenciesOutput("1.1.2", response.getBody());
-	}
-
 	protected void validateDependenciesOutput(String version, String actual)
 			throws JSONException {
 		JSONObject expected = readJsonFrom(
