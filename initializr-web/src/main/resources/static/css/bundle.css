@@ -583,7 +583,8 @@ a.btn-ico {
   position: absolute;
   top: 10px;
   right: 20px;
-  color: #ccc; }
+  color: #ccc;
+  width: 220px; }
   .quick-links a {
     margin: 0 8px;
     padding-left: 24px;
@@ -705,7 +706,8 @@ body.fixed .row-action {
     border-top: 1px solid #e4e4e4;
     border-bottom: 1px solid #e4e4e4;
     background: #f7f7f7;
-    padding: 0.5rem 0; }
+    padding: 0.5rem 0;
+    width: auto; }
   body .row-action, body.fixed .row-action {
     position: relative;
     flex: none;
