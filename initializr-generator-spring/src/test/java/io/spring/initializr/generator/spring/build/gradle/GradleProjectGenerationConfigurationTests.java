@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -151,6 +152,25 @@ class GradleProjectGenerationConfigurationTests {
 				.lines(projectStructure.resolve("build.gradle"))) {
 			assertThat(lines.filter((line) -> line.contains("    id 'war'"))).hasSize(1);
 		}
+	}
+
+	static Stream<Arguments> annotationProcessorScopeBuildParameters() {
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE", false),
+				Arguments.arguments("2.0.6.RELEASE", true),
+				Arguments.arguments("2.1.3.RELEASE", true));
+	}
+
+	@ParameterizedTest(name = "Spring Boot {0}")
+	@MethodSource("annotationProcessorScopeBuildParameters")
+	void gradleAnnotationProcessorScopeCustomizerIsContributedIfNecessary(
+			String platformVersion, boolean contributorExpected) {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse(platformVersion));
+		description.setLanguage(new JavaLanguage());
+		Map<String, GradleAnnotationProcessorScopeBuildCustomizer> generate = this.projectTester
+				.generate(description, (context) -> context.getBeansOfType(
+						GradleAnnotationProcessorScopeBuildCustomizer.class));
+		assertThat(generate).hasSize((contributorExpected) ? 1 : 0);
 	}
 
 	private static String[] readAllLines(Path file) throws IOException {

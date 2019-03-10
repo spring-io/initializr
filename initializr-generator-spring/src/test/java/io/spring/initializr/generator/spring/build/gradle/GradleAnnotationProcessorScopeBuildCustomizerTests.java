@@ -24,39 +24,28 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link GradleConfigurationBuildCustomizer}.
+ * Tests for {@link GradleAnnotationProcessorScopeBuildCustomizer}.
  *
  * @author Stephane Nicoll
  */
-class GradleConfigurationBuildCustomizerTests {
+class GradleAnnotationProcessorScopeBuildCustomizerTests {
 
 	@Test
-	void providedRuntimeConfigurationIsAddedWithNonWarProject() {
+	void compileOnlyConfigurationIsAddedWithAnnotationProcessorDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api",
-				DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("ap", "com.example", "model-generator",
+				DependencyScope.ANNOTATION_PROCESSOR);
 		customize(build);
 		assertThat(build.getConfigurationCustomizations())
-				.containsOnlyKeys("providedRuntime");
-		ConfigurationCustomization providedRuntime = build
-				.getConfigurationCustomizations().get("providedRuntime");
-		assertThat(providedRuntime.getExtendsFrom()).isEmpty();
+				.containsOnlyKeys("compileOnly");
+		ConfigurationCustomization compileOnly = build.getConfigurationCustomizations()
+				.get("compileOnly");
+		assertThat(compileOnly.getExtendsFrom()).containsOnly("annotationProcessor");
 	}
 
 	@Test
-	void providedRuntimeConfigurationIsNotAddedWithWarProject() {
-		GradleBuild build = new GradleBuild();
-		build.addPlugin("war");
-		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api",
-				DependencyScope.PROVIDED_RUNTIME);
-		customize(build);
-		assertThat(build.getConfigurationCustomizations()).isEmpty();
-	}
-
-	@Test
-	void providedRuntimeConfigurationIsNotAddedWithNonMatchingDependency() {
+	void compileOnlyConfigurationIsNotAddedWithNonMatchingDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("another", "com.example", "another",
@@ -66,7 +55,7 @@ class GradleConfigurationBuildCustomizerTests {
 	}
 
 	private void customize(GradleBuild build) {
-		new GradleConfigurationBuildCustomizer().customize(build);
+		new GradleAnnotationProcessorScopeBuildCustomizer().customize(build);
 	}
 
 }

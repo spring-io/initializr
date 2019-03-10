@@ -200,6 +200,11 @@ public class GradleProjectGenerationConfiguration {
 					projectDescription.getPlatformVersion().toString());
 		}
 
+		@Bean
+		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
+			return new GradleAnnotationProcessorScopeBuildCustomizer();
+		}
+
 	}
 
 }
