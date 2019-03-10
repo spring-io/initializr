@@ -16,19 +16,17 @@
 
 package io.spring.initializr.generator.spring.test.build;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.AbstractStringAssert;
 
 /**
  * Very simple assertions for the gradle build.
  *
  * @author Stephane Nicoll
  */
-public class GradleBuildAssert {
-
-	private final String content;
+public class GradleBuildAssert extends AbstractStringAssert<GradleBuildAssert> {
 
 	public GradleBuildAssert(String content) {
-		this.content = content;
+		super(content, GradleBuildAssert.class);
 	}
 
 	/**
@@ -108,26 +106,6 @@ public class GradleBuildAssert {
 		}
 		builder.append("}");
 		return contains(builder.toString());
-	}
-
-	/**
-	 * Assert {@code build.gradle} contains the specified expression.
-	 * @param expression an expected expression
-	 * @return this
-	 */
-	public GradleBuildAssert contains(String expression) {
-		assertThat(this.content).contains(expression);
-		return this;
-	}
-
-	/**
-	 * Assert {@code build.gradle} does not contain the specified expression.
-	 * @param expression an unexpected expression
-	 * @return this
-	 */
-	public GradleBuildAssert doesNotContain(String expression) {
-		assertThat(this.content).doesNotContain(expression);
-		return this;
 	}
 
 }
