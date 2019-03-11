@@ -63,7 +63,7 @@ class HelpDocumentTests {
 		assertThat(out).contains("# Getting Started", "", "### Reference Documentation",
 				"For further reference, please consider the following sections:", "",
 				"* [Doc](https://example.com/doc)", "", "### Guides",
-				"The following guides illustrates how to use certain features concretely:",
+				"The following guides illustrate how to use some features concretely:",
 				"", "* [Guide 1](https://example.com/guide-1)",
 				"* [Guide 2](https://example.com/guide-2)", "");
 	}

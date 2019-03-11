@@ -62,7 +62,7 @@ class HelpDocumentProjectContributorTests {
 				.addGuideLink("https://test2.example.com", "test2");
 		List<String> lines = generateDocument(document);
 		assertThat(lines).containsExactly("# Getting Started", "", "### Guides",
-				"The following guides illustrates how to use certain features concretely:",
+				"The following guides illustrate how to use some features concretely:",
 				"", "* [test](https://test.example.com)",
 				"* [test2](https://test2.example.com)", "");
 	}
@@ -108,7 +108,7 @@ class HelpDocumentProjectContributorTests {
 						.println(String.format("# My test section%n%n    * Test")));
 		List<String> lines = generateDocument(document);
 		assertThat(lines).containsExactly("# Getting Started", "", "### Guides",
-				"The following guides illustrates how to use certain features concretely:",
+				"The following guides illustrate how to use some features concretely:",
 				"", "* [test](https://test.example.com)", "", "# My test section", "",
 				"    * Test");
 	}
