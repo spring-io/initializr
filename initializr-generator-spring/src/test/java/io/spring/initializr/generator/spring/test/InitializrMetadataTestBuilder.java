@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
  * Easily create a {@link InitializrMetadata} instance for testing purposes.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 public class InitializrMetadataTestBuilder {
 
@@ -64,6 +65,14 @@ public class InitializrMetadataTestBuilder {
 				group.getContent().add(dependency);
 			}
 			it.getDependencies().getContent().add(group);
+		});
+		return this;
+	}
+
+	public InitializrMetadataTestBuilder addDependencyGroup(
+			DependencyGroup dependencyGroup) {
+		this.builder.withCustomizer((it) -> {
+			it.getDependencies().getContent().add(dependencyGroup);
 		});
 		return this;
 	}
@@ -96,10 +105,10 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue,
-			String action, String build, String format) {
+			String action, String build, String format, String name) {
 		Type type = new Type();
 		type.setId(id);
-		type.setName(id);
+		type.setName(name);
 		type.setDefault(defaultValue);
 		type.setAction(action);
 		if (StringUtils.hasText(build)) {
@@ -111,6 +120,11 @@ public class InitializrMetadataTestBuilder {
 		return addType(type);
 	}
 
+	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue,
+			String action, String build, String format) {
+		return addType(id, defaultValue, action, build, format, id);
+	}
+
 	public InitializrMetadataTestBuilder addType(Type type) {
 		this.builder.withCustomizer((it) -> it.getTypes().getContent().add(type));
 		return this;
@@ -120,15 +134,20 @@ public class InitializrMetadataTestBuilder {
 		return addPackaging("jar", true).addPackaging("war", false);
 	}
 
-	public InitializrMetadataTestBuilder addPackaging(String id, boolean defaultValue) {
+	public InitializrMetadataTestBuilder addPackaging(String id, boolean defaultValue,
+			String name) {
 		this.builder.withCustomizer((it) -> {
 			DefaultMetadataElement packaging = new DefaultMetadataElement();
 			packaging.setId(id);
-			packaging.setName(id);
+			packaging.setName(name);
 			packaging.setDefault(defaultValue);
 			it.getPackagings().getContent().add(packaging);
 		});
 		return this;
+	}
+
+	public InitializrMetadataTestBuilder addPackaging(String id, boolean defaultValue) {
+		return addPackaging(id, defaultValue, id);
 	}
 
 	public InitializrMetadataTestBuilder addDefaultJavaVersions() {
@@ -153,15 +172,20 @@ public class InitializrMetadataTestBuilder {
 				.addLanguage("kotlin", false);
 	}
 
-	public InitializrMetadataTestBuilder addLanguage(String id, boolean defaultValue) {
+	public InitializrMetadataTestBuilder addLanguage(String id, boolean defaultValue,
+			String name) {
 		this.builder.withCustomizer((it) -> {
 			DefaultMetadataElement element = new DefaultMetadataElement();
 			element.setId(id);
-			element.setName(id);
+			element.setName(name);
 			element.setDefault(defaultValue);
 			it.getLanguages().getContent().add(element);
 		});
 		return this;
+	}
+
+	public InitializrMetadataTestBuilder addLanguage(String id, boolean defaultValue) {
+		return addLanguage(id, defaultValue, id);
 	}
 
 	public InitializrMetadataTestBuilder addDefaultBootVersions() {
@@ -171,15 +195,20 @@ public class InitializrMetadataTestBuilder {
 				.addBootVersion("2.2.0.BUILD-SNAPSHOT", false);
 	}
 
-	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {
+	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue,
+			String name) {
 		this.builder.withCustomizer((it) -> {
 			DefaultMetadataElement element = new DefaultMetadataElement();
 			element.setId(id);
-			element.setName(id);
+			element.setName(name);
 			element.setDefault(defaultValue);
 			it.getBootVersions().getContent().add(element);
 		});
 		return this;
+	}
+
+	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {
+		return addBootVersion(id, defaultValue, id);
 	}
 
 	public InitializrMetadataTestBuilder addBom(String id, String groupId,

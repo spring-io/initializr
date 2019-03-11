@@ -38,9 +38,7 @@ import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
-import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
-import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
-import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
+import io.spring.initializr.web.mapper.InitializrMetadataJsonMapperProvider;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.Agent;
 import io.spring.initializr.web.support.Agent.AgentId;
@@ -94,14 +92,18 @@ public class MainController extends AbstractInitializrController {
 
 	private final ProjectGenerationInvoker projectGenerationInvoker;
 
+	private final InitializrMetadataJsonMapperProvider jsonMapperProvider;
+
 	public MainController(InitializrMetadataProvider metadataProvider,
 			TemplateRenderer templateRenderer, ResourceUrlProvider resourceUrlProvider,
 			DependencyMetadataProvider dependencyMetadataProvider,
-			ProjectGenerationInvoker projectGenerationInvoker) {
+			ProjectGenerationInvoker projectGenerationInvoker,
+			InitializrMetadataJsonMapperProvider jsonMapperProvider) {
 		super(metadataProvider, resourceUrlProvider);
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
 		this.projectGenerationInvoker = projectGenerationInvoker;
+		this.jsonMapperProvider = jsonMapperProvider;
 	}
 
 	@ModelAttribute
@@ -181,20 +183,10 @@ public class MainController extends AbstractInitializrController {
 	private ResponseEntity<String> serviceCapabilitiesFor(
 			InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl();
-		String content = getJsonMapper(version).write(this.metadataProvider.get(),
-				appUrl);
+		String content = this.jsonMapperProvider.get(version)
+				.write(this.metadataProvider.get(), appUrl);
 		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content))
 				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
-	}
-
-	private static InitializrMetadataJsonMapper getJsonMapper(
-			InitializrMetadataVersion version) {
-		switch (version) {
-		case V2:
-			return new InitializrMetadataV2JsonMapper();
-		default:
-			return new InitializrMetadataV21JsonMapper();
-		}
 	}
 
 	@RequestMapping(path = "/dependencies", produces = {

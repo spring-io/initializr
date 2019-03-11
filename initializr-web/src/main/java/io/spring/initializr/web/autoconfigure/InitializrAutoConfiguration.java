@@ -33,6 +33,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
+import io.spring.initializr.web.mapper.DefaultInitializrMetadataJsonMapperProvider;
+import io.spring.initializr.web.mapper.InitializrMetadataJsonMapperProvider;
 import io.spring.initializr.web.project.MainController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
@@ -69,6 +71,7 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  * the necessary controller to serve the applications from the root context.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
@@ -128,6 +131,12 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(InitializrMetadataJsonMapperProvider.class)
+	public InitializrMetadataJsonMapperProvider initializrMetadataJsonMapperProvider() {
+		return new DefaultInitializrMetadataJsonMapperProvider();
+	}
+
+	@Bean
 	@ConditionalOnMissingBean
 	public DependencyMetadataProvider dependencyMetadataProvider() {
 		return new DefaultDependencyMetadataProvider();
@@ -152,10 +161,11 @@ public class InitializrAutoConfiguration {
 				TemplateRenderer templateRenderer,
 				ResourceUrlProvider resourceUrlProvider,
 				DependencyMetadataProvider dependencyMetadataProvider,
-				ProjectGenerationInvoker projectGenerationInvoker) {
+				ProjectGenerationInvoker projectGenerationInvoker,
+				InitializrMetadataJsonMapperProvider jsonMapperProvider) {
 			return new MainController(metadataProvider, templateRenderer,
 					resourceUrlProvider, dependencyMetadataProvider,
-					projectGenerationInvoker);
+					projectGenerationInvoker, jsonMapperProvider);
 		}
 
 		@Bean
