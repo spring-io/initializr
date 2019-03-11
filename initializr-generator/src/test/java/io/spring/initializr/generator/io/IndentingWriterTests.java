@@ -18,6 +18,8 @@ package io.spring.initializr.generator.io;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +42,7 @@ class IndentingWriterTests {
 		this.indentingWriter.println("a");
 		this.indentingWriter.println("b");
 		this.indentingWriter.println("c");
-		assertThat(this.stringWriter.toString()).isEqualTo("a\nb\nc\n");
+		assertThat(readLines()).containsSequence("a", "b", "c");
 	}
 
 	@Test
@@ -48,7 +50,7 @@ class IndentingWriterTests {
 		this.indentingWriter.println("a");
 		this.indentingWriter.indented(() -> this.indentingWriter.println("b"));
 		this.indentingWriter.println("c");
-		assertThat(this.stringWriter.toString()).isEqualTo("a\n    b\nc\n");
+		assertThat(readLines()).containsSequence("a", "    b", "c");
 	}
 
 	@Test
@@ -59,7 +61,7 @@ class IndentingWriterTests {
 			this.indentingWriter.println();
 		});
 		this.indentingWriter.println("c");
-		assertThat(this.stringWriter.toString()).isEqualTo("a\n    b\n\nc\n");
+		assertThat(readLines()).containsSequence("a", "    b", "", "c");
 	}
 
 	@Test
@@ -71,7 +73,7 @@ class IndentingWriterTests {
 			this.indentingWriter.println("b");
 		});
 		this.indentingWriter.println("c");
-		assertThat(this.stringWriter.toString()).isEqualTo("a\n    bbb\nc\n");
+		assertThat(readLines()).containsSequence("a", "    bbb", "c");
 	}
 
 	@Test
@@ -87,7 +89,11 @@ class IndentingWriterTests {
 				});
 			});
 		}
-		assertThat(this.stringWriter.toString()).isEqualTo("a\n\tb\n\t\tce\n");
+		assertThat(readLines()).containsSequence("a", "\tb", "\t\tce");
+	}
+
+	private List<String> readLines() {
+		return Arrays.asList(this.stringWriter.toString().split("\\r?\\n"));
 	}
 
 }
