@@ -25,9 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.samskivert.mustache.Mustache;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
@@ -68,7 +65,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as
@@ -215,22 +211,6 @@ public class MainController extends AbstractInitializrController {
 		return ResponseEntity.ok().contentType(version.getMediaType())
 				.eTag(createUniqueId(content))
 				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
-	}
-
-	@ModelAttribute("linkTo")
-	public Mustache.Lambda linkTo() {
-		return (frag, out) -> out.write(this.getLinkTo().apply(frag.execute()));
-	}
-
-	@RequestMapping(path = "/", produces = "text/html")
-	public String home(HttpServletRequest request, Map<String, Object> model) {
-		if (isForceSsl() && !request.isSecure()) {
-			String securedUrl = ServletUriComponentsBuilder.fromCurrentRequest()
-					.scheme("https").build().toUriString();
-			return "redirect:" + securedUrl;
-		}
-		renderHome(model);
-		return "home";
 	}
 
 	@RequestMapping(path = { "/spring", "/spring.zip" })

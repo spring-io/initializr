@@ -40,7 +40,6 @@ import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
-import io.spring.initializr.web.ui.UiController;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -171,13 +170,6 @@ public class InitializrAutoConfiguration {
 		@Bean
 		public ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter() {
 			return new ProjectRequestToDescriptionConverter();
-		}
-
-		@Bean
-		@ConditionalOnMissingBean
-		public UiController initializrUiController(
-				InitializrMetadataProvider metadataProvider) {
-			return new UiController(metadataProvider);
 		}
 
 		@Bean

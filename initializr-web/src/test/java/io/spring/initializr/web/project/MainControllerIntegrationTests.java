@@ -407,20 +407,6 @@ class MainControllerIntegrationTests
 	}
 
 	@Test
-	void homeHasBootVersion() {
-		String body = htmlHome();
-		assertThat(body).contains("name=\"bootVersion\"");
-		assertThat(body).contains("2.2.0.BUILD-SNAPSHOT\"");
-	}
-
-	@Test
-	void homeHasOnlyProjectFormatTypes() {
-		String body = htmlHome();
-		assertThat(body).contains("Maven Project");
-		assertThat(body).doesNotContain("Maven POM");
-	}
-
-	@Test
 	void downloadStarter() {
 		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
 				byte[].class);
@@ -434,12 +420,6 @@ class MainControllerIntegrationTests
 				.getForEntity(createUrl("install.sh"), String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isNotNull();
-	}
-
-	@Test
-	void googleAnalyticsDisabledByDefault() {
-		String body = htmlHome();
-		assertThat(body).doesNotContain("GoogleAnalyticsObject");
 	}
 
 	private String getMetadataJson() {
