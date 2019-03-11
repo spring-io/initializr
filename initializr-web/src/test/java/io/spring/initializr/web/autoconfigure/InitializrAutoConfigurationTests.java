@@ -24,7 +24,6 @@ import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
-import io.spring.initializr.web.ui.UiController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -156,7 +155,6 @@ class InitializrAutoConfigurationTests {
 			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
 			assertThat(context).hasSingleBean(ProjectRequestToDescriptionConverter.class);
 			assertThat(context).hasSingleBean(MainController.class);
-			assertThat(context).hasSingleBean(UiController.class);
 		});
 	}
 
@@ -165,7 +163,6 @@ class InitializrAutoConfigurationTests {
 		this.contextRunner.run((context) -> {
 			assertThat(context).doesNotHaveBean(InitializrWebConfig.class);
 			assertThat(context).doesNotHaveBean(MainController.class);
-			assertThat(context).doesNotHaveBean(UiController.class);
 		});
 	}
 

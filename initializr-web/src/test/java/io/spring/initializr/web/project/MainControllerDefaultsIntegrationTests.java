@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * @author Stephane Nicoll
  */
@@ -41,16 +39,6 @@ class MainControllerDefaultsIntegrationTests
 		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
 				.hasVersion("1.2.4-SNAPSHOT").doesNotHaveNode("/project/packaging")
 				.hasName("FooBar").hasDescription("FooBar Project");
-	}
-
-	@Test
-	void defaultsAppliedToHome() {
-		String body = htmlHome();
-		assertThat(body).as("custom groupId not found").contains("org.foo");
-		assertThat(body).as("custom artifactId not found").contains("foo-bar");
-		assertThat(body).as("custom name not found").contains("FooBar");
-		assertThat(body).as("custom description not found").contains("FooBar Project");
-		assertThat(body).as("custom package not found").contains("org.foo.demo");
 	}
 
 }

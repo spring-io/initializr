@@ -84,13 +84,6 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected abstract String createUrl(String context);
 
-	protected String htmlHome() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-		return this.restTemplate.exchange(createUrl("/"), HttpMethod.GET,
-				new HttpEntity<Void>(headers), String.class).getBody();
-	}
-
 	/**
 	 * Validate the "Content-Type" header of the specified response.
 	 * @param response the response

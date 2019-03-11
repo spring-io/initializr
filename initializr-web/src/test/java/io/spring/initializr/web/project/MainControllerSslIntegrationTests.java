@@ -16,15 +16,11 @@
 
 package io.spring.initializr.web.project;
 
-import java.net.URI;
-
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -38,16 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles({ "test-default", "test-ssl" })
 class MainControllerSslIntegrationTests
 		extends AbstractInitializrControllerIntegrationTests {
-
-	@Test
-	void mainPageRedirectsToHttps() {
-		ResponseEntity<Void> request = execute("/", Void.class, null,
-				MediaType.TEXT_HTML_VALUE);
-		assertThat(request.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		// mock tests with start.spring.io host
-		assertThat(request.getHeaders().getLocation())
-				.isEqualTo(URI.create("https://start.spring.io/"));
-	}
 
 	@Test
 	void forceSsl() {
