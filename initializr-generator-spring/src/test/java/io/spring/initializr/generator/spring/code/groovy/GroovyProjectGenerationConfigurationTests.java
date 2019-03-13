@@ -16,12 +16,7 @@
 
 package io.spring.initializr.generator.spring.code.groovy;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -35,8 +30,6 @@ import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,14 +63,14 @@ class GroovyProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testClassIsContributed() throws IOException {
+	void testClassIsContributed() {
 		ProjectStructure projectStructure = this.projectTester
 				.generate(new ProjectDescription());
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths)
 				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = readAllLines(projectStructure
-				.resolve("src/test/groovy/com/example/demo/DemoApplicationTests.groovy"));
+		List<String> lines = projectStructure.readAllLines(
+				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
 		assertThat(lines).containsExactly("package com.example.demo", "",
 				"import org.junit.Test", "import org.junit.runner.RunWith",
 				"import org.springframework.boot.test.context.SpringBootTest",
@@ -88,8 +81,7 @@ class GroovyProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void servletInitializerIsContributedWhenGeneratingProjectThatUsesWarPackaging()
-			throws IOException {
+	void servletInitializerIsContributedWhenGeneratingProjectThatUsesWarPackaging() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("Demo2Application");
@@ -97,8 +89,8 @@ class GroovyProjectGenerationConfigurationTests {
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths)
 				.contains("src/main/groovy/com/example/demo/ServletInitializer.groovy");
-		List<String> lines = readAllLines(projectStructure
-				.resolve("src/main/groovy/com/example/demo/ServletInitializer.groovy"));
+		List<String> lines = projectStructure.readAllLines(
+				"src/main/groovy/com/example/demo/ServletInitializer.groovy");
 		assertThat(lines).containsExactly("package com.example.demo", "",
 				"import org.springframework.boot.builder.SpringApplicationBuilder",
 				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
@@ -106,14 +98,6 @@ class GroovyProjectGenerationConfigurationTests {
 				"    @Override",
 				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
 				"        application.sources(Demo2Application)", "    }", "", "}");
-	}
-
-	private static List<String> readAllLines(Path file) throws IOException {
-		String content = StreamUtils.copyToString(
-				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
-		String[] lines = content.split("\\r?\\n");
-		assertThat(content).endsWith(System.lineSeparator());
-		return Arrays.asList(lines);
 	}
 
 }

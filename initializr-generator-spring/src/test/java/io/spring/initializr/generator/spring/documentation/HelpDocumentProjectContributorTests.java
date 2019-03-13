@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -64,7 +65,7 @@ class HelpDocumentProjectContributorTests {
 		assertThat(lines).containsExactly("# Getting Started", "", "### Guides",
 				"The following guides illustrate how to use some features concretely:",
 				"", "* [test](https://test.example.com)",
-				"* [test2](https://test2.example.com)", "");
+				"* [test2](https://test2.example.com)");
 	}
 
 	@Test
@@ -77,7 +78,7 @@ class HelpDocumentProjectContributorTests {
 				"### Reference Documentation",
 				"For further reference, please consider the following sections:", "",
 				"* [doc](https://test.example.com)",
-				"* [doc2](https://test2.example.com)", "");
+				"* [doc2](https://test2.example.com)");
 	}
 
 	@Test
@@ -88,7 +89,7 @@ class HelpDocumentProjectContributorTests {
 		List<String> lines = generateDocument(document);
 		assertThat(lines).containsExactly("# Getting Started", "", "### Additional Links",
 				"These additional references should also help you:", "",
-				"* [Something](https://test.example.com)", "");
+				"* [Something](https://test.example.com)");
 	}
 
 	@Test
@@ -116,9 +117,7 @@ class HelpDocumentProjectContributorTests {
 	private List<String> generateDocument(HelpDocument document) throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new HelpDocumentProjectContributor(document).contribute(projectDir);
-		Path helpDocument = projectDir.resolve("HELP.md");
-		assertThat(helpDocument).isRegularFile();
-		return Files.readAllLines(helpDocument);
+		return new ProjectStructure(projectDir).readAllLines("HELP.md");
 	}
 
 }

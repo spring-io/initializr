@@ -25,6 +25,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.spring.initializr.generator.test.io.PathTestUtils;
+
 /**
  * Test helper to assert content of a generated project structure.
  *
@@ -51,13 +53,25 @@ public class ProjectStructure {
 	}
 
 	/**
-	 * Resolve a {@link Path} relative to the project directory
+	 * Resolve a {@link Path} relative to the project directory.
 	 * @param other the path string to resolve against the root of the project structure
 	 * @return the resulting path
 	 * @see Path#resolve(String)
 	 */
 	public Path resolve(String other) {
 		return this.projectDirectory.resolve(other);
+	}
+
+	/**
+	 * Resolve a {@link Path} relative to the project directory and return all lines.
+	 * Check that the resolved {@link Path} is a regular text file that ends with a
+	 * newline.
+	 * @param other the path string to resolve against the root of the project structure
+	 * @return all lines from the resolve file
+	 * @see PathTestUtils#readAllLines(Path)
+	 */
+	public List<String> readAllLines(String other) {
+		return PathTestUtils.readAllLines(resolve(other));
 	}
 
 	/**

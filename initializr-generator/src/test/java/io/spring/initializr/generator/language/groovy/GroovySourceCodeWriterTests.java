@@ -16,24 +16,19 @@
 
 package io.spring.initializr.generator.language.groovy;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.test.io.PathTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -218,22 +213,13 @@ class GroovySourceCodeWriterTests {
 	private List<String> writeSingleType(GroovySourceCode sourceCode, String location)
 			throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
-		assertThat(source).isRegularFile();
-		return readAllLines(source);
+		return PathTestUtils.readAllLines(source);
 	}
 
 	private Path writeSourceCode(GroovySourceCode sourceCode) throws IOException {
 		Path projectDirectory = Files.createTempDirectory(this.directory, "project-");
 		this.writer.writeTo(projectDirectory, sourceCode);
 		return projectDirectory;
-	}
-
-	private static List<String> readAllLines(Path file) throws IOException {
-		String content = StreamUtils.copyToString(
-				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
-		String[] lines = content.split("\\r?\\n");
-		assertThat(content).endsWith(System.lineSeparator());
-		return Arrays.asList(lines);
 	}
 
 }

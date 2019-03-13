@@ -24,6 +24,7 @@ import java.util.List;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -78,9 +79,7 @@ class SettingsGradleProjectContributorTests {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new SettingsGradleProjectContributor(build, indentingWriterFactory)
 				.contribute(projectDir);
-		Path settingsGradle = projectDir.resolve("settings.gradle");
-		assertThat(settingsGradle).isRegularFile();
-		return Files.readAllLines(settingsGradle);
+		return new ProjectStructure(projectDir).readAllLines("settings.gradle");
 	}
 
 }
