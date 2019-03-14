@@ -37,7 +37,7 @@ public class MavenPlugin {
 
 	private final String version;
 
-	private final List<Execution> executions = new ArrayList<>();
+	private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
 
 	private final List<Dependency> dependencies = new ArrayList<>();
 
@@ -73,13 +73,13 @@ public class MavenPlugin {
 	}
 
 	public void execution(String id, Consumer<ExecutionBuilder> customizer) {
-		ExecutionBuilder builder = new ExecutionBuilder(id);
-		customizer.accept(builder);
-		this.executions.add(builder.build());
+		customizer.accept(
+				this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
 	}
 
 	public List<Execution> getExecutions() {
-		return this.executions;
+		return this.executions.values().stream().map(ExecutionBuilder::build)
+				.collect(Collectors.toList());
 	}
 
 	public void dependency(String groupId, String artifactId, String version) {

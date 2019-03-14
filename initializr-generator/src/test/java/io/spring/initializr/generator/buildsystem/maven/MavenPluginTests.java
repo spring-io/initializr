@@ -109,4 +109,41 @@ class MavenPluginTests {
 				.withMessageContaining("test").withMessageContaining("value");
 	}
 
+	@Test
+	void executionPhasesCanBeOverridden() {
+		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
+		plugin.execution("test", (test) -> test.phase("compile"));
+		plugin.execution("test", (test) -> test.phase("process-resources"));
+		assertThat(plugin.getExecutions()).hasSize(1);
+		assertThat(plugin.getExecutions().get(0).getPhase())
+				.isEqualTo("process-resources");
+	}
+
+	@Test
+	void executionGoalsCanBeAmended() {
+		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
+		plugin.execution("test", (test) -> test.goal("first"));
+		plugin.execution("test", (test) -> test.goal("second"));
+		assertThat(plugin.getExecutions()).hasSize(1);
+		assertThat(plugin.getExecutions().get(0).getGoals()).containsExactly("first",
+				"second");
+	}
+
+	@Test
+	void executionConfigurationCanBeOverridden() {
+		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
+		plugin.execution("test",
+				(test) -> test.configuration((testConfiguration) -> testConfiguration
+						.parameter("enabled", "true").parameter("another", "test")));
+		plugin.execution("test", (test) -> test.configuration(
+				(testConfiguration) -> testConfiguration.parameter("enabled", "false")));
+		assertThat(plugin.getExecutions()).hasSize(1);
+		List<Setting> settings = plugin.getExecutions().get(0).getConfiguration()
+				.getSettings();
+		assertThat(settings.stream().map(Setting::getName)).containsExactly("enabled",
+				"another");
+		assertThat(settings.stream().map(Setting::getValue)).containsExactly("false",
+				"test");
+	}
+
 }
