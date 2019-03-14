@@ -45,10 +45,10 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		MavenPlugin kotlinMavenPlugin = build.plugin("org.jetbrains.kotlin",
 				"kotlin-maven-plugin");
 		kotlinMavenPlugin.configuration((configuration) -> {
-			configuration.parameter("args", (args) -> this.settings.getCompilerArgs()
-					.forEach((arg) -> args.parameter("arg", arg)));
-			configuration.parameter("compilerPlugins",
-					(compilerPlugins) -> compilerPlugins.parameter("plugin", "spring"));
+			configuration.configure("args", (args) -> this.settings.getCompilerArgs()
+					.forEach((arg) -> args.add("arg", arg)));
+			configuration.configure("compilerPlugins",
+					(compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
 		});
 		kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen",
 				"${kotlin.version}");

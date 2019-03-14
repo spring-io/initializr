@@ -146,35 +146,41 @@ public class MavenPlugin {
 	 */
 	public static class ConfigurationCustomization {
 
-		private final Map<String, Object> settings = new LinkedHashMap<>();
+		private final List<Setting> settings = new ArrayList<>();
 
 		/**
-		 * Set the specified parameter with a single value.
+		 * Add the specified parameter with a single value.
 		 * @param name the name of the parameter
 		 * @param value the single value of the parameter
 		 * @return this for method chaining
 		 */
-		public ConfigurationCustomization parameter(String name, String value) {
-			this.settings.put(name, value);
+		public ConfigurationCustomization add(String name, String value) {
+			this.settings.add(new Setting(name, value));
 			return this;
 		}
 
 		/**
 		 * Configure the parameter with the specified {@code name}.
-		 * @param parameter the name of the parameter
+		 * @param name the name of the parameter
 		 * @param consumer a consumer to further configure the parameter
 		 * @return this for method chaining
 		 * @throws IllegalArgumentException if a parameter with the same name is
 		 * registered with a single value
 		 */
-		public ConfigurationCustomization parameter(String parameter,
+		public ConfigurationCustomization configure(String name,
 				Consumer<ConfigurationCustomization> consumer) {
-			Object value = this.settings.computeIfAbsent(parameter,
-					(id) -> new ConfigurationCustomization());
+			Object value = this.settings.stream()
+					.filter((candidate) -> candidate.getName().equals(name)).findFirst()
+					.orElseGet(() -> {
+						Setting nestedSetting = new Setting(name,
+								new ConfigurationCustomization());
+						this.settings.add(nestedSetting);
+						return nestedSetting;
+					}).getValue();
 			if (!(value instanceof ConfigurationCustomization)) {
 				throw new IllegalArgumentException(String.format(
 						"Could not customize parameter '%s', a single value %s is already registered",
-						parameter, value));
+						name, value));
 			}
 			ConfigurationCustomization nestedConfiguration = (ConfigurationCustomization) value;
 			consumer.accept(nestedConfiguration);
@@ -182,16 +188,16 @@ public class MavenPlugin {
 		}
 
 		Configuration build() {
-			return new Configuration(this.settings.entrySet().stream()
-					.map((entry) -> resolve(entry.getKey(), entry.getValue()))
+			return new Configuration(this.settings.stream()
+					.map((entry) -> resolve(entry.getName(), entry.getValue()))
 					.collect(Collectors.toList()));
 		}
 
 		private Setting resolve(String key, Object value) {
 			if (value instanceof ConfigurationCustomization) {
 				List<Setting> values = ((ConfigurationCustomization) value).settings
-						.entrySet().stream()
-						.map((entry) -> resolve(entry.getKey(), entry.getValue()))
+						.stream()
+						.map((entry) -> resolve(entry.getName(), entry.getValue()))
 						.collect(Collectors.toList());
 				return new Setting(key, values);
 			}

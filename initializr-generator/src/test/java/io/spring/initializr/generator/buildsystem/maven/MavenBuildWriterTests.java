@@ -336,10 +336,9 @@ class MavenBuildWriterTests {
 		build.setArtifact("demo");
 		MavenPlugin kotlin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
 		kotlin.configuration((configuration) -> {
-			configuration.parameter("args",
-					(args) -> args.parameter("arg", "-Xjsr305=strict"));
-			configuration.parameter("compilerPlugins",
-					(compilerPlugins) -> compilerPlugins.parameter("plugin", "spring"));
+			configuration.configure("args", (args) -> args.add("arg", "-Xjsr305=strict"));
+			configuration.configure("compilerPlugins",
+					(compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
 		});
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
@@ -364,8 +363,8 @@ class MavenBuildWriterTests {
 			execution.goal("process-asciidoc");
 			execution.phase("generateProject-resources");
 			execution.configuration((configuration) -> {
-				configuration.parameter("doctype", "book");
-				configuration.parameter("backend", "html");
+				configuration.add("doctype", "book");
+				configuration.add("backend", "html");
 			});
 		});
 		generatePom(build, (pom) -> {

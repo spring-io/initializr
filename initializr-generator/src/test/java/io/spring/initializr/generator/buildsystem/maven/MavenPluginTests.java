@@ -32,11 +32,11 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 class MavenPluginTests {
 
 	@Test
-	void configurationCanBeCustomized() {
+	void configurationParameterCanBeCustomized() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((customizer) -> customizer.parameter("enabled", "false")
-				.parameter("skip", "true"));
-		plugin.configuration((customizer) -> customizer.parameter("another", "test"));
+		plugin.configuration((configuration) -> configuration.add("enabled", "false")
+				.add("skip", "true"));
+		plugin.configuration((configuration) -> configuration.add("another", "test"));
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName))
 				.containsExactly("enabled", "skip", "another");
 		assertThat(
@@ -45,45 +45,44 @@ class MavenPluginTests {
 	}
 
 	@Test
-	void configurationCanBeOverridden() {
+	void configurationParameterCanBeAdded() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((customizer) -> customizer.parameter("enabled", "true"));
-		plugin.configuration((customizer) -> customizer.parameter("enabled", "false"));
+		plugin.configuration((configuration) -> configuration.add("enabled", "true"));
+		plugin.configuration((configuration) -> configuration.add("skip", "false"));
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName))
-				.containsExactly("enabled");
+				.containsExactly("enabled", "skip");
 		assertThat(
 				plugin.getConfiguration().getSettings().stream().map(Setting::getValue))
-						.containsExactly("false");
+						.containsExactly("true", "false");
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	void configurationWithNestedValuesCanBeCustomized() {
+	void configurationParameterWithNestedValuesCanBeCustomized() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((customizer) -> customizer.parameter("items",
-				(items) -> items.parameter("one", "true")));
-		plugin.configuration((customizer) -> customizer.parameter("items",
-				(items) -> items.parameter("two", "false")));
+		plugin.configuration((configuration) -> configuration.configure("items",
+				(items) -> items.add("item", "one")));
+		plugin.configuration((configuration) -> configuration.configure("items",
+				(items) -> items.add("item", "two")));
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> values = (List<Setting>) setting.getValue();
-		assertThat(values.stream().map(Setting::getName)).containsExactly("one", "two");
-		assertThat(values.stream().map(Setting::getValue)).containsExactly("true",
-				"false");
+		assertThat(values.stream().map(Setting::getName)).containsExactly("item", "item");
+		assertThat(values.stream().map(Setting::getValue)).containsExactly("one", "two");
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	void configurationWithSeveralLevelOfNestedValuesCanBeCustomized() {
+	void configurationParameterWithSeveralLevelOfNestedValuesCanBeCustomized() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((customizer) -> customizer.parameter("items",
-				(items) -> items.parameter("subItems",
-						(subItems) -> subItems.parameter("one", "true"))));
-		plugin.configuration((customizer) -> customizer.parameter("items",
-				(items) -> items.parameter("subItems", (subItems) -> subItems
-						.parameter("one", "false").parameter("two", "true"))));
+		plugin.configuration((configuration) -> configuration.configure("items",
+				(items) -> items.configure("item",
+						(subItems) -> subItems.add("subItem", "one"))));
+		plugin.configuration((configuration) -> configuration.configure("items",
+				(items) -> items.configure("item", (subItems) -> subItems
+						.add("subItem", "two").add("subItem", "three"))));
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
@@ -91,21 +90,22 @@ class MavenPluginTests {
 		List<Setting> items = (List<Setting>) setting.getValue();
 		assertThat(items).hasSize(1);
 		Setting item = items.get(0);
-		assertThat(item.getName()).isEqualTo("subItems");
+		assertThat(item.getName()).isEqualTo("item");
 		assertThat(item.getValue()).isInstanceOf(List.class);
 		List<Setting> subItems = (List<Setting>) item.getValue();
-		assertThat(subItems.stream().map(Setting::getName)).containsExactly("one", "two");
-		assertThat(subItems.stream().map(Setting::getValue)).containsExactly("false",
-				"true");
+		assertThat(subItems.stream().map(Setting::getName)).containsExactly("subItem",
+				"subItem", "subItem");
+		assertThat(subItems.stream().map(Setting::getValue)).containsExactly("one", "two",
+				"three");
 	}
 
 	@Test
-	void configurationCannotBeSwitchedToNestedValue() {
+	void configurationParameterWithSingleValueCannotBeSwitchedToNestedValue() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((customizer) -> customizer.parameter("test", "value"));
+		plugin.configuration((configuration) -> configuration.add("test", "value"));
 		assertThatIllegalArgumentException()
 				.isThrownBy(() -> plugin.configuration((customizer) -> customizer
-						.parameter("test", (test) -> test.parameter("one", "true"))))
+						.configure("test", (test) -> test.add("one", "true"))))
 				.withMessageContaining("test").withMessageContaining("value");
 	}
 
@@ -132,17 +132,16 @@ class MavenPluginTests {
 	@Test
 	void executionConfigurationCanBeOverridden() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.execution("test",
-				(test) -> test.configuration((testConfiguration) -> testConfiguration
-						.parameter("enabled", "true").parameter("another", "test")));
 		plugin.execution("test", (test) -> test.configuration(
-				(testConfiguration) -> testConfiguration.parameter("enabled", "false")));
+				(testConfiguration) -> testConfiguration.add("enabled", "true")));
+		plugin.execution("test", (test) -> test.configuration(
+				(testConfiguration) -> testConfiguration.add("another", "test")));
 		assertThat(plugin.getExecutions()).hasSize(1);
 		List<Setting> settings = plugin.getExecutions().get(0).getConfiguration()
 				.getSettings();
 		assertThat(settings.stream().map(Setting::getName)).containsExactly("enabled",
 				"another");
-		assertThat(settings.stream().map(Setting::getValue)).containsExactly("false",
+		assertThat(settings.stream().map(Setting::getValue)).containsExactly("true",
 				"test");
 	}
 
