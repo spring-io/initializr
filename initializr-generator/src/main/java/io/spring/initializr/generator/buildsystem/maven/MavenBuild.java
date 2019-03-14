@@ -18,6 +18,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,7 +45,7 @@ public class MavenBuild extends Build {
 
 	private final Map<String, String> properties = new TreeMap<>();
 
-	private final List<MavenPlugin> plugins = new ArrayList<>();
+	private final Map<String, MavenPlugin> plugins = new LinkedHashMap<>();
 
 	private String packaging;
 
@@ -106,19 +107,24 @@ public class MavenBuild extends Build {
 	}
 
 	public MavenPlugin plugin(String groupId, String artifactId) {
-		MavenPlugin plugin = new MavenPlugin(groupId, artifactId);
-		this.plugins.add(plugin);
-		return plugin;
+		return this.plugins.computeIfAbsent(pluginKey(groupId, artifactId),
+				(id) -> new MavenPlugin(groupId, artifactId));
 	}
 
 	public MavenPlugin plugin(String groupId, String artifactId, String version) {
-		MavenPlugin plugin = new MavenPlugin(groupId, artifactId, version);
-		this.plugins.add(plugin);
-		return plugin;
+		MavenPlugin mavenPlugin = this.plugins.computeIfAbsent(
+				pluginKey(groupId, artifactId),
+				(id) -> new MavenPlugin(groupId, artifactId));
+		mavenPlugin.setVersion(version);
+		return mavenPlugin;
+	}
+
+	private String pluginKey(String groupId, String artifactId) {
+		return String.format("%s:%s", groupId, artifactId);
 	}
 
 	public List<MavenPlugin> getPlugins() {
-		return Collections.unmodifiableList(this.plugins);
+		return Collections.unmodifiableList(new ArrayList<>(this.plugins.values()));
 	}
 
 	public void setPackaging(String packaging) {

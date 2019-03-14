@@ -35,7 +35,7 @@ public class MavenPlugin {
 
 	private final String artifactId;
 
-	private final String version;
+	private String version;
 
 	private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
 
@@ -63,6 +63,10 @@ public class MavenPlugin {
 
 	public String getVersion() {
 		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public void configuration(Consumer<ConfigurationCustomization> consumer) {
