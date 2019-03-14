@@ -41,9 +41,9 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			MavenPlugin kotlinNoArgPlugin = build.plugin("org.jetbrains.kotlin",
 					"kotlin-maven-noarg", "${kotlin.version}");
-			kotlinNoArgPlugin
-					.configuration((configuration) -> configuration.add("compilerPlugins",
-							(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
+			kotlinNoArgPlugin.configuration((configuration) -> configuration.parameter(
+					"compilerPlugins",
+					(compilerPlugins) -> compilerPlugins.parameter("plugin", "jpa")));
 		}
 	}
 

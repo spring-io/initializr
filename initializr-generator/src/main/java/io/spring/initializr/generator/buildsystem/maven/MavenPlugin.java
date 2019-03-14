@@ -18,8 +18,11 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * A plugin in a {@link MavenBuild}.
@@ -139,23 +142,58 @@ public class MavenPlugin {
 	 */
 	public static class ConfigurationCustomization {
 
-		private final List<Setting> settings = new ArrayList<>();
+		private final Map<String, Object> settings = new LinkedHashMap<>();
 
-		public ConfigurationCustomization add(String key, String value) {
-			this.settings.add(new Setting(key, value));
+		/**
+		 * Set the specified parameter with a single value.
+		 * @param name the name of the parameter
+		 * @param value the single value of the parameter
+		 * @return this for method chaining
+		 */
+		public ConfigurationCustomization parameter(String name, String value) {
+			this.settings.put(name, value);
 			return this;
 		}
 
-		public ConfigurationCustomization add(String key,
+		/**
+		 * Configure the parameter with the specified {@code name}.
+		 * @param parameter the name of the parameter
+		 * @param consumer a consumer to further configure the parameter
+		 * @return this for method chaining
+		 * @throws IllegalArgumentException if a parameter with the same name is
+		 * registered with a single value
+		 */
+		public ConfigurationCustomization parameter(String parameter,
 				Consumer<ConfigurationCustomization> consumer) {
-			ConfigurationCustomization nestedConfiguration = new ConfigurationCustomization();
+			Object value = this.settings.computeIfAbsent(parameter,
+					(id) -> new ConfigurationCustomization());
+			if (!(value instanceof ConfigurationCustomization)) {
+				throw new IllegalArgumentException(String.format(
+						"Could not customize parameter '%s', a single value %s is already registered",
+						parameter, value));
+			}
+			ConfigurationCustomization nestedConfiguration = (ConfigurationCustomization) value;
 			consumer.accept(nestedConfiguration);
-			this.settings.add(new Setting(key, nestedConfiguration.settings));
 			return this;
 		}
 
 		Configuration build() {
-			return new Configuration(this.settings);
+			return new Configuration(this.settings.entrySet().stream()
+					.map((entry) -> resolve(entry.getKey(), entry.getValue()))
+					.collect(Collectors.toList()));
+		}
+
+		private Setting resolve(String key, Object value) {
+			if (value instanceof ConfigurationCustomization) {
+				List<Setting> values = ((ConfigurationCustomization) value).settings
+						.entrySet().stream()
+						.map((entry) -> resolve(entry.getKey(), entry.getValue()))
+						.collect(Collectors.toList());
+				return new Setting(key, values);
+			}
+			else {
+				return new Setting(key, value);
+			}
 		}
 
 	}
