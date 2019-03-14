@@ -29,9 +29,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link KotlinJpaGradleBuildCustomizer}.
+ * Tests for {@link KotlinJpaMavenBuildCustomizer}.
  *
  * @author Madhura Bhave
+ * @author Sebastien Deleuze
  */
 class KotlinJpaMavenBuildCustomizerTests {
 
@@ -43,12 +44,15 @@ class KotlinJpaMavenBuildCustomizerTests {
 		assertThat(build.getPlugins()).hasSize(1);
 		MavenPlugin plugin = build.getPlugins().get(0);
 		assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-noarg");
-		assertThat(plugin.getVersion()).isEqualTo("${kotlin.version}");
+		assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 		MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
 		assertThat(settings.getValue()).asList().element(0)
 				.hasFieldOrPropertyWithValue("name", "plugin")
 				.hasFieldOrPropertyWithValue("value", "jpa");
+		MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
+		assertThat(pluginDependency.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+		assertThat(pluginDependency.getArtifactId()).isEqualTo("kotlin-maven-noarg");
+		assertThat(pluginDependency.getVersion()).isEqualTo("${kotlin.version}");
 	}
 
 	@Test
