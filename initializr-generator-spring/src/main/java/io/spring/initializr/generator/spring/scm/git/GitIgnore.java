@@ -39,17 +39,20 @@ public class GitIgnore {
 
 	private final GitIgnoreSection netBeans = new GitIgnoreSection("NetBeans");
 
+	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
+
 	public void write(PrintWriter writer) throws IOException {
 		this.general.write(writer);
 		this.sts.write(writer);
 		this.intellijIdea.write(writer);
 		this.netBeans.write(writer);
+		this.vscode.write(writer);
 	}
 
 	public boolean isEmpty() {
 		return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty()
 				&& this.intellijIdea.getItems().isEmpty()
-				&& this.netBeans.getItems().isEmpty();
+				&& this.netBeans.getItems().isEmpty() && this.vscode.getItems().isEmpty();
 	}
 
 	public GitIgnoreSection getGeneral() {
@@ -66,6 +69,10 @@ public class GitIgnore {
 
 	public GitIgnoreSection getNetBeans() {
 		return this.netBeans;
+	}
+
+	public GitIgnoreSection getVscode() {
+		return this.vscode;
 	}
 
 	/**
