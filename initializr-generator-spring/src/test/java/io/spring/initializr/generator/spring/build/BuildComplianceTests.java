@@ -178,11 +178,10 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		bom.setVersionProperty("foo.version");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("foo", foo).addBom("the-bom", bom).build();
-		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("foo",
-							MetadataBuildItemMapper.toDependency(foo));
-				}, metadata);
+		ProjectAssert project = generateProject(
+				java, build, "2.1.1.RELEASE", (description) -> description
+						.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)),
+				metadata);
 		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
 				"project/" + build + "/bom-property-" + getAssertFileName(fileName)));
 	}

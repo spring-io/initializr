@@ -128,11 +128,8 @@ public class GradleBuildWriter {
 		}
 		writer.println();
 		writer.println("configurations {");
-		writer.indented(() -> {
-			configurationCustomizations.forEach((name, customization) -> {
-				writeConfiguration(writer, name, customization);
-			});
-		});
+		writer.indented(() -> configurationCustomizations.forEach((name,
+				customization) -> writeConfiguration(writer, name, customization)));
 		writer.println("}");
 	}
 

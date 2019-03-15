@@ -62,9 +62,7 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationWar(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
-				(description) -> {
-					description.setPackaging(Packaging.forId("war"));
-				});
+				(description) -> description.setPackaging(Packaging.forId("war")));
 		project.isGenericProject(ProjectAssert.DEFAULT_PACKAGE_NAME,
 				ProjectAssert.DEFAULT_APPLICATION_NAME, language.id(), extension);
 	}
@@ -84,9 +82,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void previousGenerationMainClass(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
-				(description) -> {
-					description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-				});
+				(description) -> description
+						.setPlatformVersion(Version.parse("1.5.18.RELEASE")));
 		project.sourceCodeAssert(
 				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
 				.equalsTo(new ClassPathResource("project/" + language + "/previous/"
@@ -108,10 +105,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationTestClassWeb(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("web",
-							MetadataBuildItemMapper.toDependency(WEB));
-				});
+				(description) -> description.addDependency("web",
+						MetadataBuildItemMapper.toDependency(WEB)));
 		project.sourceCodeAssert("src/test/" + language
 				+ "/com/example/demo/DemoApplicationTests." + extension)
 				.equalsTo(new ClassPathResource(
@@ -123,9 +118,7 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationServletInitializer(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
-				(description) -> {
-					description.setPackaging(Packaging.forId("war"));
-				});
+				(description) -> description.setPackaging(Packaging.forId("war")));
 		project.sourceCodeAssert("src/main/" + language
 				+ "/com/example/demo/ServletInitializer." + extension)
 				.equalsTo(new ClassPathResource("project/" + language + "/standard/"

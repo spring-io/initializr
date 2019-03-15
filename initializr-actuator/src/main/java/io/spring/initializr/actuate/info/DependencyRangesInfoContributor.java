@@ -73,9 +73,7 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 					}
 				}
 				Map<String, Object> depInfo = new LinkedHashMap<>();
-				dep.forEach((k, r) -> {
-					depInfo.put(k, "Spring Boot " + r);
-				});
+				dep.forEach((k, r) -> depInfo.put(k, "Spring Boot " + r));
 				details.put(dependency.getId(), depInfo);
 			}
 		}
