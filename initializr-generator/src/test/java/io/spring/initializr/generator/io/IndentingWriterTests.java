@@ -18,9 +18,9 @@ package io.spring.initializr.generator.io;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,7 +93,7 @@ class IndentingWriterTests {
 	}
 
 	private List<String> readLines() {
-		return Arrays.asList(this.stringWriter.toString().split("\\r?\\n"));
+		return TextTestUtils.readAllLines(this.stringWriter.toString());
 	}
 
 }

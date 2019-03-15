@@ -26,7 +26,7 @@ import java.util.List;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.test.io.PathTestUtils;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -215,7 +215,7 @@ class JavaSourceCodeWriterTests {
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location)
 			throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
-		return PathTestUtils.readAllLines(source);
+		return TextTestUtils.readAllLines(source);
 	}
 
 	private Path writeSourceCode(JavaSourceCode sourceCode) throws IOException {

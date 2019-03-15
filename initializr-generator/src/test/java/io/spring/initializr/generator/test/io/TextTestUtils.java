@@ -30,13 +30,18 @@ import org.springframework.util.FileCopyUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * {@link Path}-related test utilities.
+ * Text content related test utilities.
  *
  * @author Stephane Nicoll
  */
-public final class PathTestUtils {
+public final class TextTestUtils {
 
-	private PathTestUtils() {
+	private TextTestUtils() {
+	}
+
+	public static List<String> readAllLines(String source) {
+		String[] lines = source.split("\\r?\\n");
+		return Arrays.asList(lines);
 	}
 
 	/**
@@ -53,9 +58,8 @@ public final class PathTestUtils {
 			StringWriter writer = new StringWriter();
 			FileCopyUtils.copy(reader, writer);
 			String content = writer.toString();
-			String[] lines = content.split("\\r?\\n");
 			assertThat(content).endsWith(System.lineSeparator());
-			return Arrays.asList(lines);
+			return readAllLines(content);
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException(ex);

@@ -18,11 +18,11 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
@@ -124,7 +124,7 @@ class Gradle3BuildWriterTests {
 		Gradle3BuildWriter writer = new Gradle3BuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
-		return Arrays.asList(out.toString().split("\\r?\\n"));
+		return TextTestUtils.readAllLines(out.toString());
 	}
 
 }

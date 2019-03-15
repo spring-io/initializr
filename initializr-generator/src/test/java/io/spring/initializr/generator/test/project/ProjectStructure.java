@@ -25,7 +25,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.spring.initializr.generator.test.io.PathTestUtils;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 
 /**
  * Test helper to assert content of a generated project structure.
@@ -68,10 +68,10 @@ public class ProjectStructure {
 	 * newline.
 	 * @param other the path string to resolve against the root of the project structure
 	 * @return all lines from the resolve file
-	 * @see PathTestUtils#readAllLines(Path)
+	 * @see TextTestUtils#readAllLines(Path)
 	 */
 	public List<String> readAllLines(String other) {
-		return PathTestUtils.readAllLines(resolve(other));
+		return TextTestUtils.readAllLines(resolve(other));
 	}
 
 	/**

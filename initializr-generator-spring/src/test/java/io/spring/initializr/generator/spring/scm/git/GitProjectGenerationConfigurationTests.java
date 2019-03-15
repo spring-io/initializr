@@ -19,12 +19,12 @@ package io.spring.initializr.generator.spring.scm.git;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
@@ -90,7 +90,7 @@ class GitProjectGenerationConfigurationTests {
 			GitIgnore gitIgnore = context.getBean(GitIgnore.class);
 			StringWriter out = new StringWriter();
 			gitIgnore.write(new PrintWriter(out));
-			return Arrays.asList(out.toString().split("\\r?\\n"));
+			return TextTestUtils.readAllLines(out.toString());
 		});
 	}
 

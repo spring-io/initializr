@@ -19,12 +19,12 @@ package io.spring.initializr.generator.spring.build.maven;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -88,7 +88,7 @@ class MavenBuildProjectContributorTests {
 		StringWriter writer = new StringWriter();
 		new MavenBuildProjectContributor(mavenBuild, indentingWriterFactory)
 				.writeBuild(writer);
-		return Arrays.asList(writer.toString().split("\\r?\\n"));
+		return TextTestUtils.readAllLines(writer.toString());
 	}
 
 }

@@ -18,10 +18,10 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,7 +84,7 @@ class GradleSettingsWriterTests {
 		GradleSettingsWriter writer = new GradleSettingsWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
-		return Arrays.asList(out.toString().split("\\r?\\n"));
+		return TextTestUtils.readAllLines(out.toString());
 	}
 
 }
