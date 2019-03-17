@@ -26,7 +26,6 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.spring.build.MetadataBuildItemResolver;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
@@ -34,6 +33,7 @@ import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 

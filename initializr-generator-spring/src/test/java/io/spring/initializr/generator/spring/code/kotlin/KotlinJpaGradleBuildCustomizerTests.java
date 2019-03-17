@@ -19,10 +19,10 @@ package io.spring.initializr.generator.spring.code.kotlin;
 import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.spring.build.MetadataBuildItemResolver;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

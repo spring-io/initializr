@@ -28,6 +28,7 @@ import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
+import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.core.Ordered;
 

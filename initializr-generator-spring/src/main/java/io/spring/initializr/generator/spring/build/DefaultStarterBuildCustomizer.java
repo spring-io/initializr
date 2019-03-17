@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.core.Ordered;
 
