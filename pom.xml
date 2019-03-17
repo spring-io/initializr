@@ -193,8 +193,9 @@
 						<phase>validate</phase>
 						<configuration>
 							<skip>${disable.checks}</skip>
-							<configLocation>io/spring/javaformat/checkstyle/checkstyle.xml</configLocation>
+							<configLocation>src/checkstyle/checkstyle.xml</configLocation>
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
+							<propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
 						</configuration>
 						<goals>
 							<goal>check</goal>

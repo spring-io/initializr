@@ -9,6 +9,10 @@
 	<artifactId>initializr-generator-spring</artifactId>
 	<name>Spring Initializr :: Generator (Spring projects)</name>
 
+	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
