@@ -17,7 +17,7 @@
 package io.spring.initializr.generator.buildsystem;
 
 /**
- * Resolve an item of the {@link Build} against an identifer.
+ * Resolve an item of the {@link Build} against an identifier.
  *
  * @author Stephane Nicoll
  */
