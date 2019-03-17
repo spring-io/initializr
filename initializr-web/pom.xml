@@ -20,10 +20,6 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator-spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-metadata</artifactId>
 		</dependency>
 
@@ -63,6 +59,11 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-generator-spring</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

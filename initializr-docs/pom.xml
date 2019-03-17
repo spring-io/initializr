@@ -23,6 +23,11 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-generator-spring</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<optional>true</optional>
 		</dependency>
