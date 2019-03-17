@@ -73,7 +73,8 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	private MavenBuild createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(new MetadataBuildItemResolver(metadata));
+		return new MavenBuild(
+				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 	private void customizeBuild(Build build, InitializrMetadata metadata) {

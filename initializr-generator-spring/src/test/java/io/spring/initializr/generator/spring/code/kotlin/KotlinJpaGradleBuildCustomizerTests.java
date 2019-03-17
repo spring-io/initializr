@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -60,7 +61,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(
 				metadata, settings);
-		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata));
+		GradleBuild build = new GradleBuild(
+				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;

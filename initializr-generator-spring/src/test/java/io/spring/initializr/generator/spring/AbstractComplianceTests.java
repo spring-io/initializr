@@ -26,6 +26,7 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
@@ -107,8 +108,9 @@ public abstract class AbstractComplianceTests {
 	private void setupProjectGenerationContext(InitializrMetadata metadata,
 			ProjectGenerationContext context) {
 		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class,
-				() -> new MetadataBuildItemResolver(metadata));
+		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(
+				metadata,
+				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
 		context.registerBean(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
 	}

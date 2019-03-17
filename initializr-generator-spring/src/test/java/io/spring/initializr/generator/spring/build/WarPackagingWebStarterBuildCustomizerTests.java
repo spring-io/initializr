@@ -21,6 +21,7 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -68,14 +69,15 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		dependency.setFacets(Collections.singletonList("web"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
-		Build build = new MavenBuild(new MetadataBuildItemResolver(metadata));
+		Build build = createBuild(metadata);
 		build.dependencies().add("test");
 		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("test", "tomcat");
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(new MetadataBuildItemResolver(metadata));
+		return new MavenBuild(
+				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 }

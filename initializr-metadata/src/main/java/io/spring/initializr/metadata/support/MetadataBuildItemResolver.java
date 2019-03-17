@@ -20,11 +20,12 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
  * A {@link BuildItemResolver} that uses the {@link InitializrMetadata} to resolve build
- * items.
+ * items against a given platform {@link Version}.
  *
  * @author Stephane Nicoll
  */
@@ -32,20 +33,39 @@ public final class MetadataBuildItemResolver implements BuildItemResolver {
 
 	private final InitializrMetadata metadata;
 
-	public MetadataBuildItemResolver(InitializrMetadata metadata) {
+	private final Version platformVersion;
+
+	/**
+	 * Creates an instance for the specified {@link InitializrMetadata} and {@link Version
+	 * platform version}.
+	 * @param metadata the metadata to use
+	 * @param platformVersion the platform version to consider
+	 */
+	public MetadataBuildItemResolver(InitializrMetadata metadata,
+			Version platformVersion) {
 		this.metadata = metadata;
+		this.platformVersion = platformVersion;
 	}
 
 	@Override
 	public Dependency resolveDependency(String id) {
-		return MetadataBuildItemMapper
-				.toDependency(this.metadata.getDependencies().get(id));
+		io.spring.initializr.metadata.Dependency dependency = this.metadata
+				.getDependencies().get(id);
+		if (dependency != null) {
+			return MetadataBuildItemMapper
+					.toDependency(dependency.resolve(this.platformVersion));
+		}
+		return null;
 	}
 
 	@Override
 	public BillOfMaterials resolveBom(String id) {
-		return MetadataBuildItemMapper
-				.toBom(this.metadata.getConfiguration().getEnv().getBoms().get(id));
+		io.spring.initializr.metadata.BillOfMaterials bom = this.metadata
+				.getConfiguration().getEnv().getBoms().get(id);
+		if (bom != null) {
+			return MetadataBuildItemMapper.toBom(bom.resolve(this.platformVersion));
+		}
+		return null;
 	}
 
 	@Override

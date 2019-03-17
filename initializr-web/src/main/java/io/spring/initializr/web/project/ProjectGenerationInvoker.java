@@ -194,8 +194,9 @@ public class ProjectGenerationInvoker {
 			AnnotationConfigApplicationContext context, InitializrMetadata metadata) {
 		context.setParent(this.parentApplicationContext);
 		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class,
-				() -> new MetadataBuildItemResolver(metadata));
+		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(
+				metadata,
+				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
 	}
 
 	private void publishProjectGeneratedEvent(ProjectRequest request,

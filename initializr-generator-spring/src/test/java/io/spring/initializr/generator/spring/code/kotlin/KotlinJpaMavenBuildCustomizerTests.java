@@ -21,6 +21,7 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -68,7 +69,8 @@ class KotlinJpaMavenBuildCustomizerTests {
 				.addDependencyGroup("test", dependency).build();
 		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(
 				metadata);
-		MavenBuild build = new MavenBuild(new MetadataBuildItemResolver(metadata));
+		MavenBuild build = new MavenBuild(
+				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;

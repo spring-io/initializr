@@ -43,9 +43,10 @@ public final class MetadataBuildItemMapper {
 		if (dependency == null) {
 			return null;
 		}
+		VersionReference versionReference = (dependency.getVersion() != null)
+				? VersionReference.ofValue(dependency.getVersion()) : null;
 		return new io.spring.initializr.generator.buildsystem.Dependency(
-				dependency.getGroupId(), dependency.getArtifactId(),
-				VersionReference.ofValue(dependency.getVersion()),
+				dependency.getGroupId(), dependency.getArtifactId(), versionReference,
 				toDependencyScope(dependency.getScope()), dependency.getType());
 	}
 
