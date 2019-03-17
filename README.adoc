@@ -30,8 +30,10 @@ The reference documentation is available in {docs}/html/[HTML format].
 == Modules
 Spring Initializr has the following modules:
 
-* `initializr-generator`: standalone project generation library that can be reused
-in many environments (including embedded in your own project)
+* `initializr-generator`: core project generation library
+* `initializr-metadata`: metadata infrastructure for various aspects of the project
+* `initializr-generator-spring`: optional module defining the conventions for a Spring
+Boot project. Can be replaced by your own conventions if necessary.
 * `initializr-web`: REST endpoints and web interface
 * `initializr-actuator`: optional module to provide additional information and statistics
 on project generation

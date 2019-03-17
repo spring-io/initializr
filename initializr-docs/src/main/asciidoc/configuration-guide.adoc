@@ -83,15 +83,14 @@ conditions can easily be created by inheriting from `ProjectGenerationCondition`
 == Creating your own instance
 Spring Initializr is split across several modules:
 
-* `initializr-generator`: standalone project generation library that can be reused in
-many environments (including embedded in your own project)
-* `initializr-generator-spring`: contributors to generate a Spring-based project. This
-module is necessary if you want to generate the same project structure as the one
-available on start.spring.io. Alternatively, you can roll-out your own opinions.
-* `initializr-metadata`: Configuration model.
-* `initializr-web`: API endpoints and web interface
+* `initializr-generator`: core project generation library
+* `initializr-metadata`: metadata infrastructure for various aspects of the project
+* `initializr-generator-spring`: optional module defining the conventions for a Spring
+Boot project. Can be replaced by your own conventions if necessary.
+* `initializr-web`: REST endpoints and web interface
 * `initializr-actuator`: optional module to provide additional information and statistics
 on project generation
+* `initializr-docs`: documentation
 
 Because it contains several auto-configurations, creating your own instance is quite easy,
 actually you could get started using Spring Initializr itself to generate a starting point!
@@ -105,6 +104,11 @@ Create a new project with the `web` dependency and add the following dependency:
 		<artifactId>initializr-web</artifactId>
 		<version>{spring-initializr-version}</version>
 	</dependency>
+	<dependency>
+		<groupId>io.spring.initializr</groupId>
+		<artifactId>initializr-generator-spring</artifactId>
+		<version>{spring-initializr-version}</version>
+	</dependency>
 ----
 
 Or if you are using Gradle:
@@ -112,6 +116,7 @@ Or if you are using Gradle:
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
 implementation("io.spring.initializr:initializr-web:{spring-initializr-version}")
+implementation("io.spring.initializr:initializr-generator-spring:{spring-initializr-version}")
 ----
 
 NOTE: Spring Initializr releases are not available on Maven Central so you will need to
