@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.build;
+package io.spring.initializr.generator.buildsystem;
 
 import java.io.IOException;
 import java.io.Writer;
-
-import io.spring.initializr.generator.buildsystem.Build;
-import io.spring.initializr.generator.buildsystem.BuildSystem;
 
 /**
  * Strategy that can be implemented by a {@link BuildSystem} that can generate a proper
