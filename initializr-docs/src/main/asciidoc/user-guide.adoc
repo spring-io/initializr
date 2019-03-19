@@ -14,9 +14,9 @@ get a better insight at what you can do with it.
 == Getting Started
 Let's create a first project and discover the various options that you can use to tune it.
 Go to https://start.spring.io, change the `Group` field from "com.example" to "org.acme"
-and put the focus in the `Dependencies` field on the right hand side. If you type "web",
-you will see a list of matching choices with that simple criteria. Use the mouse or the
-arrow keys and `Enter` to select the "Web" starter.
+and put the focus in the `Dependencies` field below. If you type "web", you will see a
+list of matching choices with that simple criteria. Use the mouse or the arrow keys and
+`Enter` to select the "Web" starter.
 
 Your browser should now be in this state:
 
@@ -59,7 +59,7 @@ directories have been created to hold your static resources and ui templates.
 
 Also, a Maven wrapper is automatically included so that you don't have to install Maven to
 run this project (you can build it with `./mvnw install`). If you prefer, you can select
-Gradle instead in the first drop down list at the top of the screen. This will generate a
+Gradle instead in the first option at the top of the screen. This will generate a
 Gradle-based project instead that also contains a wrapper if you don't have Gradle
 installed (build it with `./gradlew build`).
 
@@ -67,8 +67,8 @@ installed (build it with `./gradlew build`).
 
 [[getting-started-advanced-options]]
 === Advanced options
-Next to the `Generate Project` you'll find a "Switch to the full version" link. If you
-click on that, you'll see all the available options. Let's browse through them quickly:
+Next to the `Artifact` you'll find a "More options" link. If you click on that, you'll see
+all the available options. Let's browse through them quickly:
 
 * *Group*: project coordinates (id of the project's group, as referred by the `groupId`
 attribute in Apache Maven). Also infers the root package name to use.
@@ -83,12 +83,6 @@ attribute is used
 * *Packaging*: project packaging (as referred by the concept of the same name in Apache
 Maven). start.spring.io can generate jar or war projects
 * *Java Version*: the Java version to use
-* *Language*: the programming language to use
-
-If you keep on scrolling, you'll discover all the dependencies that you can find using the
-search box on the right. You'll probably notice that some dependencies are greyed out in
-the UI, meaning that they aren't available because they require a specific Spring Boot
-version. We'll tackle that in the next section.
 
 
 
@@ -100,11 +94,9 @@ release. Or you may want to chose a milestone or snapshot of the next major
 version. Either way, you'll notice that certain dependencies become available and others
 aren't anymore when you change the version.
 
-If you are searching for a dependency that you know to be available and you get no result,
-it's worth looking in the advanced section if that dependency is available in the Spring
-Boot version that is currently selected.
-
-You may find it is not the case with a message that looks like the following:
+If you are searching for a dependency that you know to be available and you get a red
+panel, it will indicate that you cannot use it with the currently selected Spring Boot
+version;
 
 ```
 requires Spring Boot >=1.5.0.RELEASE and <2.0.0.RELEASE
