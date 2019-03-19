@@ -64,7 +64,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as
@@ -91,10 +90,10 @@ public class MainController extends AbstractInitializrController {
 	private final ProjectGenerationInvoker projectGenerationInvoker;
 
 	public MainController(InitializrMetadataProvider metadataProvider,
-			TemplateRenderer templateRenderer, ResourceUrlProvider resourceUrlProvider,
+			TemplateRenderer templateRenderer,
 			DependencyMetadataProvider dependencyMetadataProvider,
 			ProjectGenerationInvoker projectGenerationInvoker) {
-		super(metadataProvider, resourceUrlProvider);
+		super(metadataProvider);
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
 		this.projectGenerationInvoker = projectGenerationInvoker;

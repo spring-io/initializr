@@ -24,7 +24,6 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -38,8 +37,7 @@ public abstract class AbstractInitializrController {
 
 	private Boolean forceSsl;
 
-	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
-			ResourceUrlProvider resourceUrlProvider) {
+	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider) {
 		this.metadataProvider = metadataProvider;
 	}
 

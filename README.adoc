@@ -208,14 +208,6 @@ Just invoke the build at the root of the project
     $ ./mvnw clean install
 ----
 
-If you want to run the smoke tests using Geb, you need to enable the
-`smokeTests` profile. Firefox should also be installed on your machine:
-
-[indent=0]
-----
-    $ ./mvnw verify -PsmokeTests
-----
-
 To generate the docs as well, you should enable the `full` profile:
 
 [indent=0]

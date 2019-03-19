@@ -60,7 +60,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -149,12 +148,10 @@ public class InitializrAutoConfiguration {
 		public MainController initializrMainController(
 				InitializrMetadataProvider metadataProvider,
 				TemplateRenderer templateRenderer,
-				ResourceUrlProvider resourceUrlProvider,
 				DependencyMetadataProvider dependencyMetadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
 			return new MainController(metadataProvider, templateRenderer,
-					resourceUrlProvider, dependencyMetadataProvider,
-					projectGenerationInvoker);
+					dependencyMetadataProvider, projectGenerationInvoker);
 		}
 
 		@Bean
