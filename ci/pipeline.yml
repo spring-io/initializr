@@ -103,6 +103,9 @@ jobs:
         build_uri: "https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
         build_number: "${BUILD_PIPELINE_NAME}-${BUILD_JOB_NAME}-${BUILD_NAME}"
         disable_checksum_uploads: true
+        exclude:
+        - "**/*.effective-pom"
+        - "**/initializr-service-sample/**"
     on_failure:
       do:
       - put: repo-status-build

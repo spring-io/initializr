@@ -1,0 +1,50 @@
+= Service sample
+
+:docs: http://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html
+
+This sample demonstrates how you can create your own service easily as described in the
+{docs}/#create-instance[reference documentation].
+
+== Running the service
+You can start the service from the command line:
+
+[indent=0]
+----
+    $ ./mvnw spring-boot:run
+----
+
+Or, better yet, run the `ServiceApplication` main method from your favourite IDE.
+
+== Generating a project
+If you go to `localhost:8080` with your browser, you'll get a json document that describes
+the capabilities of the service. There are several ways you can generate a project.
+
+If you have `HTTPie` installed, try the following:
+
+[indent=0]
+----
+    $ http :8080
+----
+
+If you prefer to use `cURL`, try this instead:
+
+[indent=0]
+----
+    $ curl localhost:8080
+----
+
+If you have the `spring` CLI installed, you can also use it as follows:
+
+[indent=0]
+----
+    $ spring init --target http://localhost:8080 --list
+----
+
+Finally, you can configure your IDE to point to another service instance.
+
+== Configuration
+The configuration in `application.yml` is very simple with a single `web` dependency that
+brings `spring-boot-starter-web`. You can experiment by adding more dependencies or other
+elements that drive how projects are generated.
+
+

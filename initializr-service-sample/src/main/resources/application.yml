@@ -1,0 +1,49 @@
+initializr:
+  dependencies:
+    - name: Web
+      content:
+        - name: Web
+          id: web
+          description: Servlet web application with Spring MVC and Tomcat
+  types:
+    - name: Maven Project
+      id: maven-project
+      description: Generate a Maven based project archive
+      tags:
+        build: maven
+        format: project
+      default: true
+      action: /starter.zip
+    - name: Gradle Project
+      id: gradle-project
+      description: Generate a Gradle based project archive
+      tags:
+        build: gradle
+        format: project
+      default: false
+      action: /starter.zip
+  packagings:
+    - name: Jar
+      id: jar
+      default: true
+    - name: War
+      id: war
+      default: false
+  javaVersions:
+    - id: 11
+      default: false
+    - id: 1.8
+      name: 8
+      default: true
+  languages:
+    - name: Java
+      id: java
+      default: true
+    - name: Kotlin
+      id: kotlin
+      default: false
+    - name: Groovy
+      id: groovy
+      default: false
+  group-id:
+    value: org.acme

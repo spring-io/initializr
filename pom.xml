@@ -53,6 +53,7 @@
 		<module>initializr-generator</module>
 		<module>initializr-generator-spring</module>
 		<module>initializr-metadata</module>
+		<module>initializr-service-sample</module>
 		<module>initializr-web</module>
 	</modules>
 
@@ -194,6 +195,7 @@
 						<configuration>
 							<skip>${disable.checks}</skip>
 							<configLocation>src/checkstyle/checkstyle.xml</configLocation>
+							<suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
 						</configuration>
