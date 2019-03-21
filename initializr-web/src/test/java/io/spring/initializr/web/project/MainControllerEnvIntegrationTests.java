@@ -55,10 +55,4 @@ class MainControllerEnvIntegrationTests
 				.hasSpringBootStarterTest();
 	}
 
-	@Test
-	void googleAnalytics() {
-		String body = htmlHome();
-		assertThat(body).contains("https://www.googletagmanager.com/gtm.js");
-	}
-
 }

@@ -40,7 +40,6 @@ import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
-import io.spring.initializr.web.ui.UiController;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -61,7 +60,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -150,12 +148,10 @@ public class InitializrAutoConfiguration {
 		public MainController initializrMainController(
 				InitializrMetadataProvider metadataProvider,
 				TemplateRenderer templateRenderer,
-				ResourceUrlProvider resourceUrlProvider,
 				DependencyMetadataProvider dependencyMetadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
 			return new MainController(metadataProvider, templateRenderer,
-					resourceUrlProvider, dependencyMetadataProvider,
-					projectGenerationInvoker);
+					dependencyMetadataProvider, projectGenerationInvoker);
 		}
 
 		@Bean
@@ -171,13 +167,6 @@ public class InitializrAutoConfiguration {
 		@Bean
 		public ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter() {
 			return new ProjectRequestToDescriptionConverter();
-		}
-
-		@Bean
-		@ConditionalOnMissingBean
-		public UiController initializrUiController(
-				InitializrMetadataProvider metadataProvider) {
-			return new UiController(metadataProvider);
 		}
 
 		@Bean

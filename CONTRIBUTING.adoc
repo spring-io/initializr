@@ -63,14 +63,3 @@ The project can be built from the root directory using the standard Maven comman
 ----
 	$ ./mvnw clean install
 ----
-
-The project also has Selenium tests that instrument the client side. In order to run them
-you need first to install Firefox and the latest
-https://github.com/mozilla/geckodriver[geckodriver].
-
-Once those are installed you can run the smoke tests by enabling an extra profile:
-
-[indent=0]
-----
-    $ ./mvnw verify -PsmokeTests
-----
