@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GroovyMavenBuildCustomizer}.
  *
  * @author Stephane Nicoll
+ * @author Abdelghani Roussi
  */
 class GroovyMavenBuildCustomizerTests {
 
@@ -39,14 +40,14 @@ class GroovyMavenBuildCustomizerTests {
 		MavenPlugin groovyPlugin = build.getPlugins().get(0);
 		assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
 		assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
-		assertThat(groovyPlugin.getVersion()).isEqualTo("1.5");
+		assertThat(groovyPlugin.getVersion()).isEqualTo("1.6.3");
 		Configuration configuration = groovyPlugin.getConfiguration();
 		assertThat(configuration).isNull();
 		assertThat(groovyPlugin.getExecutions()).hasSize(1);
 		Execution execution = groovyPlugin.getExecutions().get(0);
 		assertThat(execution.getId()).isNull();
 		assertThat(execution.getGoals()).containsExactly("addSources", "addTestSources",
-				"generateStubs", "compile", "testGenerateStubs", "testCompile",
+				"generateStubs", "compile", "generateTestStubs", "compileTests",
 				"removeStubs", "removeTestStubs");
 		assertThat(execution.getPhase()).isNull();
 		assertThat(execution.getConfiguration()).isNull();

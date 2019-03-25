@@ -24,17 +24,18 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  * {@link BuildCustomizer} for Kotlin projects build with Maven.
  *
  * @author Stephane Nicoll
+ * @author Abdelghani Roussi
  */
 class GroovyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
 	@Override
 	public void customize(MavenBuild build) {
 		MavenPlugin groovyMavenPlugin = build.plugin("org.codehaus.gmavenplus",
-				"gmavenplus-plugin", "1.5");
+				"gmavenplus-plugin", "1.6.3");
 		groovyMavenPlugin.execution(null,
 				(execution) -> execution.goal("addSources").goal("addTestSources")
-						.goal("generateStubs").goal("compile").goal("testGenerateStubs")
-						.goal("testCompile").goal("removeStubs").goal("removeTestStubs"));
+						.goal("generateStubs").goal("compile").goal("generateTestStubs")
+						.goal("compileTests").goal("removeStubs").goal("removeTestStubs"));
 
 	}
 
