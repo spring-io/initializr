@@ -35,8 +35,8 @@ class GroovyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		groovyMavenPlugin.execution(null,
 				(execution) -> execution.goal("addSources").goal("addTestSources")
 						.goal("generateStubs").goal("compile").goal("generateTestStubs")
-						.goal("compileTests").goal("removeStubs").goal("removeTestStubs"));
-
+						.goal("compileTests").goal("removeStubs")
+						.goal("removeTestStubs"));
 	}
 
 }
