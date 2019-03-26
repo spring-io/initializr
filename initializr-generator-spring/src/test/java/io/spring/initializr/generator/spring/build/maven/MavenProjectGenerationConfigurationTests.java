@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build.maven;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,9 +78,9 @@ class MavenProjectGenerationConfigurationTests {
 		List<String> relativePaths = this.projectTester.generate(description)
 				.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains("mvnw", "mvnw.cmd",
-				".mvn/wrapper/MavenWrapperDownloader.java",
-				".mvn/wrapper/maven-wrapper.properties",
-				".mvn/wrapper/maven-wrapper.jar");
+				Paths.get(".mvn", "wrapper", "MavenWrapperDownloader.java").toString(),
+				Paths.get(".mvn", "wrapper", "maven-wrapper.properties").toString(),
+				Paths.get(".mvn", "wrapper", "maven-wrapper.jar").toString());
 	}
 
 	@Test

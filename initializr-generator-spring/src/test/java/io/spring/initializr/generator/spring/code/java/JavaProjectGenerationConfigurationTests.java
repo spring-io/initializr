@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.java;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -59,8 +60,8 @@ class JavaProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		List<String> relativePaths = this.projectTester.generate(description)
 				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/main/java/com/example/demo/DemoApplication.java");
+		assertThat(relativePaths).contains(Paths.get("src", "main", "java", "com",
+				"example", "demo", "DemoApplication.java").toString());
 	}
 
 	@Test
@@ -68,10 +69,11 @@ class JavaProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertThat(relativePaths).contains(Paths.get("src", "test", "java", "com",
+				"example", "demo", "DemoApplicationTests.java").toString());
 		List<String> lines = projectStructure
-				.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
+				.readAllLines(Paths.get("src", "test", "java", "com", "example", "demo",
+						"DemoApplicationTests.java").toString());
 		assertThat(lines).containsExactly("package com.example.demo;", "",
 				"import org.junit.Test;", "import org.junit.runner.RunWith;",
 				"import org.springframework.boot.test.context.SpringBootTest;",
@@ -88,8 +90,8 @@ class JavaProjectGenerationConfigurationTests {
 		description.setApplicationName("MyDemoApplication");
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/main/java/com/example/demo/ServletInitializer.java");
+		assertThat(relativePaths).contains(Paths.get("src", "main", "java", "com",
+				"example", "demo", "ServletInitializer.java").toString());
 		List<String> lines = projectStructure
 				.readAllLines("src/main/java/com/example/demo/ServletInitializer.java");
 		assertThat(lines).containsExactly("package com.example.demo;", "",
@@ -110,8 +112,10 @@ class JavaProjectGenerationConfigurationTests {
 		List<String> relativePaths = this.projectTester.generate(description)
 				.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains(
-				"src/main/java/com/example/foo/DemoApplication.java",
-				"src/test/java/com/example/foo/DemoApplicationTests.java");
+				Paths.get("src", "main", "java", "com", "example", "foo",
+						"DemoApplication.java").toString(),
+				Paths.get("src", "test", "java", "com", "example", "foo",
+						"DemoApplicationTests.java").toString());
 	}
 
 	@Test
@@ -121,8 +125,10 @@ class JavaProjectGenerationConfigurationTests {
 		List<String> relativePaths = this.projectTester.generate(description)
 				.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains(
-				"src/main/java/com/example/demo/MyApplication.java",
-				"src/test/java/com/example/demo/MyApplicationTests.java");
+				Paths.get("src", "main", "java", "com", "example", "demo",
+						"MyApplication.java").toString(),
+				Paths.get("src", "test", "java", "com", "example", "demo",
+						"MyApplicationTests.java").toString());
 	}
 
 }

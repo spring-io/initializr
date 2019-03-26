@@ -18,6 +18,7 @@ package io.spring.initializr.generator.project;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -96,14 +97,16 @@ class ProjectGeneratorTests {
 									.createFile(projectDirectory.resolve("test.text")));
 					context.registerBean("contributor2", ProjectContributor.class,
 							() -> (projectDirectory) -> {
-								Path subDir = projectDirectory.resolve("src/main/test");
+								Path subDir = projectDirectory
+										.resolve(Paths.get("src", "main", "test"));
 								Files.createDirectories(subDir);
 								Files.createFile(subDir.resolve("Test.src"));
 							});
 				});
 		List<String> relativePaths = tester.generate(new ProjectDescription())
 				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).containsOnly("test.text", "src/main/test/Test.src");
+		assertThat(relativePaths).containsOnly("test.text",
+				Paths.get("src", "main", "test", "Test.src").toString());
 	}
 
 	private static class TestProjectDescriptionCustomizer

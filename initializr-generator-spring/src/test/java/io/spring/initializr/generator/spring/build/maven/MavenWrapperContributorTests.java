@@ -52,7 +52,8 @@ class MavenWrapperContributorTests {
 
 	private Consumer<Path> isNotExecutable() {
 		return (path) -> {
-			if (Files.isExecutable(path)) {
+			if (!System.getProperty("os.name").contains("Windows")
+					&& Files.isExecutable(path)) {
 				throw Failures.instance().failure(String
 						.format("%nExpecting:%n  <%s>%nto not be executable.", path));
 			}

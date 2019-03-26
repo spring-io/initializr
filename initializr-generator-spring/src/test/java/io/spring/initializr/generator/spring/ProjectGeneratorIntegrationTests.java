@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -61,14 +62,23 @@ class ProjectGeneratorIntegrationTests {
 		description.setBaseDirectory("test/demo-app");
 		List<String> relativePaths = this.projectTester.generate(description)
 				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).containsOnly("test/demo-app/.gitignore",
-				"test/demo-app/pom.xml", "test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
-				"test/demo-app/.mvn/wrapper/MavenWrapperDownloader.java",
-				"test/demo-app/.mvn/wrapper/maven-wrapper.properties",
-				"test/demo-app/.mvn/wrapper/maven-wrapper.jar",
-				"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
-				"test/demo-app/src/main/resources/application.properties",
-				"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertThat(relativePaths).containsOnly(
+				Paths.get("test", "demo-app", ".gitignore").toString(),
+				Paths.get("test", "demo-app", "pom.xml").toString(),
+				Paths.get("test", "demo-app", "mvnw").toString(),
+				Paths.get("test", "demo-app", "mvnw.cmd").toString(),
+				Paths.get("test", "demo-app", ".mvn", "wrapper",
+						"MavenWrapperDownloader.java").toString(),
+				Paths.get("test", "demo-app", ".mvn", "wrapper",
+						"maven-wrapper.properties").toString(),
+				Paths.get("test", "demo-app", ".mvn", "wrapper", "maven-wrapper.jar")
+						.toString(),
+				Paths.get("test", "demo-app", "src", "main", "java", "com", "example",
+						"demo", "DemoApplication.java").toString(),
+				Paths.get("test", "demo-app", "src", "main", "resources",
+						"application.properties").toString(),
+				Paths.get("test", "demo-app", "src", "test", "java", "com", "example",
+						"demo", "DemoApplicationTests.java").toString());
 	}
 
 	private ProjectDescription initProjectDescription() {

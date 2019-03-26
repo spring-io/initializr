@@ -17,9 +17,11 @@
 package io.spring.initializr.generator.spring.test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import io.spring.initializr.generator.spring.test.build.GradleBuildAssert;
@@ -29,7 +31,6 @@ import io.spring.initializr.generator.spring.test.code.SourceCodeAssert;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,6 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Various project based assertions.
  *
  * @author Stephane Nicoll
+ * @author Sundar raj Kothandan
  */
 public class ProjectAssert {
 
@@ -89,8 +91,9 @@ public class ProjectAssert {
 	 */
 	public PomAssert pomAssert() {
 		try {
-			return new PomAssert(StreamUtils.copyToString(
-					new FileInputStream(file("pom.xml")), Charset.forName("UTF-8")));
+			return new PomAssert(new String(
+					Files.readAllBytes(this.dir.toPath().resolve(Paths.get("pom.xml"))),
+					Charset.forName("UTF-8")));
 		}
 		catch (IOException ex) {
 			throw new IllegalArgumentException("Cannot resolve pom.xml", ex);
@@ -103,8 +106,10 @@ public class ProjectAssert {
 	 */
 	public GradleBuildAssert gradleBuildAssert() {
 		try {
-			return new GradleBuildAssert(StreamUtils.copyToString(
-					new FileInputStream(file("build.gradle")), Charset.forName("UTF-8")));
+			return new GradleBuildAssert(new String(
+					Files.readAllBytes(
+							this.dir.toPath().resolve(Paths.get("build.gradle"))),
+					Charset.forName("UTF-8")));
 		}
 		catch (IOException ex) {
 			throw new IllegalArgumentException("Cannot resolve build.gradle", ex);
@@ -117,9 +122,10 @@ public class ProjectAssert {
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
 		try {
-			return new GradleSettingsAssert(
-					StreamUtils.copyToString(new FileInputStream(file("settings.gradle")),
-							Charset.forName("UTF-8")));
+			return new GradleSettingsAssert(new String(
+					Files.readAllBytes(
+							this.dir.toPath().resolve(Paths.get("settings.gradle"))),
+					Charset.forName("UTF-8")));
 		}
 		catch (IOException ex) {
 			throw new IllegalArgumentException("Cannot resolve settings.gradle", ex);
@@ -132,10 +138,21 @@ public class ProjectAssert {
 	 * @return a source assert
 	 */
 	public SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
-		hasFile(sourceCodePath);
+		return sourceCodeAssert(Paths.get(sourceCodePath));
+	}
+
+	/**
+	 * Return a {@link SourceCodeAssert} for the specified source code.
+	 * @param sourceCodePath the source code path
+	 * @return a source assert
+	 */
+	public SourceCodeAssert sourceCodeAssert(Path sourceCodePath) {
+		hasFile(sourceCodePath.toString());
 		try {
-			return new SourceCodeAssert(sourceCodePath, StreamUtils.copyToString(
-					new FileInputStream(file(sourceCodePath)), Charset.forName("UTF-8")));
+			return new SourceCodeAssert(sourceCodePath.toString(),
+					new String(
+							Files.readAllBytes(this.dir.toPath().resolve(sourceCodePath)),
+							Charset.forName("UTF-8")));
 		}
 		catch (IOException ex) {
 			throw new IllegalArgumentException("Cannot resolve path: " + sourceCodePath,

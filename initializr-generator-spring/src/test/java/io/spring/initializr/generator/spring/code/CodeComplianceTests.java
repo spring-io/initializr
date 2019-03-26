@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.code;
 
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -71,8 +72,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationMainClass(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE");
-		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.id(), "com", "example",
+				"demo", "DemoApplication." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/standard/DemoApplication."
 								+ getExpectedExtension(extension)));
@@ -84,8 +85,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
 				(description) -> description
 						.setPlatformVersion(Version.parse("1.5.18.RELEASE")));
-		project.sourceCodeAssert(
-				"src/main/" + language + "/com/example/demo/DemoApplication." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.id(), "com", "example",
+				"demo", "DemoApplication." + extension))
 				.equalsTo(new ClassPathResource("project/" + language + "/previous/"
 						+ "/DemoApplication." + getExpectedExtension(extension)));
 	}
@@ -94,8 +95,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationTestClass(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE");
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert(Paths.get("src", "test", language.id(), "com", "example",
+				"demo", "DemoApplicationTests." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/standard/DemoApplicationTests."
 								+ getExpectedExtension(extension)));
@@ -107,8 +108,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
 				(description) -> description.addDependency("web",
 						MetadataBuildItemMapper.toDependency(WEB)));
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/demo/DemoApplicationTests." + extension)
+		project.sourceCodeAssert(Paths.get("src", "test", language.id(), "com", "example",
+				"demo", "DemoApplicationTests." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/standard/DemoApplicationTestsWeb."
 								+ getExpectedExtension(extension)));
@@ -119,8 +120,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	void currentGenerationServletInitializer(Language language, String extension) {
 		ProjectAssert project = generateProject(language, maven, "2.1.1.RELEASE",
 				(description) -> description.setPackaging(Packaging.forId("war")));
-		project.sourceCodeAssert("src/main/" + language
-				+ "/com/example/demo/ServletInitializer." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.toString(), "com",
+				"example", "demo", "ServletInitializer." + extension))
 				.equalsTo(new ClassPathResource("project/" + language + "/standard/"
 						+ "ServletInitializer." + getExpectedExtension(extension)));
 	}
@@ -133,8 +134,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 					description.setPackaging(Packaging.forId("war"));
 					description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
 				});
-		project.sourceCodeAssert("src/main/" + language
-				+ "/com/example/demo/ServletInitializer." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.toString(), "com",
+				"example", "demo", "ServletInitializer." + extension))
 				.equalsTo(new ClassPathResource("project/" + language + "/previous/"
 						+ "ServletInitializer." + getExpectedExtension(extension)));
 	}
@@ -151,13 +152,13 @@ class CodeComplianceTests extends AbstractComplianceTests {
 				});
 		project.isGenericProject("com.example.acme.myproject", "MyProjectApplication",
 				language.id(), extension);
-		project.sourceCodeAssert("src/main/" + language
-				+ "/com/example/acme/myproject/MyProjectApplication." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.id(), "com", "example",
+				"acme", "myproject", "MyProjectApplication." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/standard/MyProjectApplication."
 								+ getExpectedExtension(extension)));
-		project.sourceCodeAssert("src/test/" + language
-				+ "/com/example/acme/myproject/MyProjectApplicationTests." + extension)
+		project.sourceCodeAssert(Paths.get("src", "test", language.toString(), "com",
+				"example", "acme", "myproject", "MyProjectApplicationTests." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/standard/MyProjectApplicationTests."
 								+ getExpectedExtension(extension)));
@@ -175,8 +176,8 @@ class CodeComplianceTests extends AbstractComplianceTests {
 				});
 		project.isGenericProject("com.example.acme.myproject", "MyProjectApplication",
 				language.id(), extension);
-		project.sourceCodeAssert("src/main/" + language
-				+ "/com/example/acme/myproject/MyProjectApplication." + extension)
+		project.sourceCodeAssert(Paths.get("src", "main", language.id(), "com", "example",
+				"acme", "myproject", "MyProjectApplication." + extension))
 				.equalsTo(new ClassPathResource(
 						"project/" + language + "/previous/MyProjectApplication."
 								+ getExpectedExtension(extension)));

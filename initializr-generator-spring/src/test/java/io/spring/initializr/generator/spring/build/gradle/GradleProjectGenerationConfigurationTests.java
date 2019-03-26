@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build.gradle;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -99,10 +100,10 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains("gradlew", "gradlew.bat",
-				"gradle/wrapper/gradle-wrapper.properties",
-				"gradle/wrapper/gradle-wrapper.jar");
-		try (Stream<String> lines = Files.lines(
-				projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
+				Paths.get("gradle", "wrapper", "gradle-wrapper.properties").toString(),
+				Paths.get("gradle", "wrapper", "gradle-wrapper.jar").toString());
+		try (Stream<String> lines = Files.lines(projectStructure.resolve(Paths
+				.get("gradle", "wrapper", "gradle-wrapper.properties").toString()))) {
 			assertThat(lines.filter((line) -> line
 					.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
 							.hasSize(1);

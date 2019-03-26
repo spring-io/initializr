@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.groovy;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -58,8 +59,8 @@ class GroovyProjectGenerationConfigurationTests {
 	void mainClassIsContributed() {
 		List<String> relativePaths = this.projectTester.generate(new ProjectDescription())
 				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/main/groovy/com/example/demo/DemoApplication.groovy");
+		assertThat(relativePaths).contains(Paths.get("src", "main", "groovy", "com",
+				"example", "demo", "DemoApplication.groovy").toString());
 	}
 
 	@Test
@@ -67,10 +68,11 @@ class GroovyProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester
 				.generate(new ProjectDescription());
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = projectStructure.readAllLines(
-				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
+		assertThat(relativePaths).contains(Paths.get("src", "test", "groovy", "com",
+				"example", "demo", "DemoApplicationTests.groovy").toString());
+		List<String> lines = projectStructure
+				.readAllLines(Paths.get("src", "test", "groovy", "com", "example", "demo",
+						"DemoApplicationTests.groovy").toString());
 		assertThat(lines).containsExactly("package com.example.demo", "",
 				"import org.junit.Test", "import org.junit.runner.RunWith",
 				"import org.springframework.boot.test.context.SpringBootTest",
@@ -87,10 +89,11 @@ class GroovyProjectGenerationConfigurationTests {
 		description.setApplicationName("Demo2Application");
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
-				.contains("src/main/groovy/com/example/demo/ServletInitializer.groovy");
-		List<String> lines = projectStructure.readAllLines(
-				"src/main/groovy/com/example/demo/ServletInitializer.groovy");
+		assertThat(relativePaths).contains(Paths.get("src", "main", "groovy", "com",
+				"example", "demo", "ServletInitializer.groovy").toString());
+		List<String> lines = projectStructure
+				.readAllLines(Paths.get("src", "main", "groovy", "com", "example", "demo",
+						"ServletInitializer.groovy").toString());
 		assertThat(lines).containsExactly("package com.example.demo", "",
 				"import org.springframework.boot.builder.SpringApplicationBuilder",
 				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer",

@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build.gradle;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -52,15 +53,19 @@ class GradleWrapperContributorTests {
 		Path projectDir = contribute(gradleVersion);
 		assertThat(projectDir.resolve("gradlew")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("gradlew.bat")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.jar"))
-				.isRegularFile().satisfies(isNotExecutable());
-		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.properties"))
-				.isRegularFile().satisfies(isNotExecutable());
+
+		assertThat(projectDir
+				.resolve(Paths.get("gradle", "wrapper", "gradle-wrapper.jar").toString()))
+						.isRegularFile().satisfies(isNotExecutable());
+		assertThat(projectDir.resolve(
+				Paths.get("gradle", "wrapper", "gradle-wrapper.properties").toString()))
+						.isRegularFile().satisfies(isNotExecutable());
 	}
 
 	private Consumer<Path> isNotExecutable() {
 		return (path) -> {
-			if (Files.isExecutable(path)) {
+			if (!System.getProperty("os.name").contains("Windows")
+					&& Files.isExecutable(path)) {
 				throw Failures.instance().failure(String
 						.format("%nExpecting:%n  <%s>%nto not be executable.", path));
 			}
