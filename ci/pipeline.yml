@@ -72,6 +72,9 @@ resources:
     repository: initializr
     access_token: ((github-release-notes-access-token))
     pre_release: false
+- name: 24h
+  type: time
+  source: {interval: 24h}
 jobs:
 - name: build-initializr-ci-image
   plan:
@@ -118,6 +121,16 @@ jobs:
       silent: true
       icon_emoji: ":concourse:"
       username: concourse-ci
+- name: windows-build
+  serial: true
+  public: true
+  plan:
+  - get: 24h
+    trigger: true
+  - get: git-repo
+  - task: build-project
+    tags: [WIN64]
+    file: git-repo/ci/tasks/build-project-windows.yml
 - name: build-pull-requests
   serial: true
   public: true
@@ -195,6 +208,9 @@ groups:
 - name: "Build"
   jobs:
   - build
+- name: "Windows Build"
+  jobs:
+  - windows-build
 - name: "Build Pull Requests"
   jobs:
   - "build-pull-requests"
