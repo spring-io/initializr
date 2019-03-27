@@ -70,8 +70,7 @@ class SettingsGradleProjectContributorTests {
 		build.repositories().add("maven-central");
 		List<String> lines = generateSettings(
 				groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {", "        gradlePluginPortal()",
-				"    }", "}");
+		assertThat(lines).doesNotContain("pluginManagement");
 	}
 
 	@Test
@@ -101,8 +100,7 @@ class SettingsGradleProjectContributorTests {
 		build.repositories().add("maven-central");
 		List<String> lines = generateSettings(
 				kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {", "        gradlePluginPortal()",
-				"    }", "}");
+		assertThat(lines).doesNotContain("pluginManagement");
 	}
 
 	private List<String> generateSettings(SettingsGradleProjectContributor contributor) throws IOException {
