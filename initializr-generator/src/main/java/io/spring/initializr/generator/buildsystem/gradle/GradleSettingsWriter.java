@@ -34,6 +34,9 @@ public class GradleSettingsWriter {
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
+		if (build.pluginRepositories().isEmpty()) {
+			return;
+		}
 		writer.println("pluginManagement {");
 		writer.indented(() -> {
 			writeRepositories(writer, build);

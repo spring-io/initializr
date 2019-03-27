@@ -43,6 +43,13 @@ class GradleSettingsWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithoutPluginRepository() throws IOException {
+		GradleBuild build = new GradleBuild();
+		List<String> lines = generateSettings(build);
+		assertThat(lines).doesNotContain("pluginManagement");
+	}
+
+	@Test
 	void gradleBuildWithPluginRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("spring-milestones", "Spring Milestones",

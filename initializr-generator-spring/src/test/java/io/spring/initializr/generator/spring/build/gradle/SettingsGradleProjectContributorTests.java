@@ -66,8 +66,7 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
 		List<String> lines = generateSettings(build);
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        gradlePluginPortal()", "    }", "}");
+		assertThat(lines).doesNotContain("pluginManagement");
 	}
 
 	private List<String> generateSettings(GradleBuild build) throws IOException {
