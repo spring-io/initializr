@@ -42,6 +42,7 @@ import io.spring.initializr.generator.language.SourceCodeWriter;
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode> {
 
@@ -53,7 +54,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	@Override
 	public void writeTo(Path directory, KotlinSourceCode sourceCode) throws IOException {
-		if (!Files.exists(directory)) {
+		if (!directory.toFile().exists()) {
 			Files.createDirectories(directory);
 		}
 		for (KotlinCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
@@ -82,19 +83,32 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				if (type.getExtends() != null) {
 					writer.print(" : " + getUnqualifiedName(type.getExtends()) + "()");
 				}
+				List<KotlinPropertyDeclaration> propertyDeclarations = type.getPropertyDeclarations();
 				List<KotlinFunctionDeclaration> functionDeclarations = type.getFunctionDeclarations();
-				if (!functionDeclarations.isEmpty()) {
+				boolean hasDeclarations = !propertyDeclarations.isEmpty() || !functionDeclarations.isEmpty();
+				if (hasDeclarations) {
 					writer.println(" {");
+				}
+				if (!propertyDeclarations.isEmpty()) {
+					writer.indented(() -> {
+						for (KotlinPropertyDeclaration propertyDeclaration : propertyDeclarations) {
+							writeProperty(writer, propertyDeclaration);
+						}
+					});
+				}
+				if (!functionDeclarations.isEmpty()) {
 					writer.indented(() -> {
 						for (KotlinFunctionDeclaration functionDeclaration : functionDeclarations) {
 							writeFunction(writer, functionDeclaration);
 						}
 					});
 					writer.println();
-					writer.println("}");
 				}
 				else {
 					writer.println("");
+				}
+				if (hasDeclarations) {
+					writer.println("}");
 				}
 			}
 			List<KotlinFunctionDeclaration> topLevelFunctions = compilationUnit.getTopLevelFunctions();
@@ -104,6 +118,50 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				}
 			}
 
+		}
+	}
+
+	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {
+		writer.println();
+		if (propertyDeclaration.isVal()) {
+			writer.print("val ");
+		}
+		else {
+			writer.print("var ");
+		}
+		writer.print(propertyDeclaration.getName());
+		if (propertyDeclaration.getReturnType() != null) {
+			writer.print(": " + getUnqualifiedName(propertyDeclaration.getReturnType()));
+		}
+		if (propertyDeclaration.getValueExpression() != null) {
+			writer.print(" = ");
+			writeExpression(writer, propertyDeclaration.getValueExpression().getExpression());
+		}
+		if (propertyDeclaration.hasGetter()) {
+			writer.println();
+			writer.indented(() -> writeAccessor(writer, "get", propertyDeclaration.getGetter()));
+		}
+		if (propertyDeclaration.hasSetter()) {
+			writer.println();
+			writer.indented(() -> writeAccessor(writer, "set", propertyDeclaration.getSetter()));
+		}
+		writer.println();
+	}
+
+	private void writeAccessor(IndentingWriter writer, String accessorName,
+			KotlinPropertyDeclaration.Accessor accessor) {
+		if (!accessor.getAnnotations().isEmpty()) {
+			for (Annotation annotation : accessor.getAnnotations()) {
+				writeAnnotation(writer, annotation, false);
+			}
+		}
+		if (accessor.isPrivate()) {
+			writer.print("private ");
+		}
+		writer.print(accessorName);
+		if (!accessor.isEmptyBody()) {
+			writer.print("() = ");
+			writeExpression(writer, accessor.getBody().getExpression());
 		}
 	}
 
@@ -127,64 +185,17 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		List<KotlinStatement> statements = functionDeclaration.getStatements();
 		writer.indented(() -> {
 			for (KotlinStatement statement : statements) {
-				if (statement instanceof KotlinExpressionStatement) {
-					writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
-				}
-				else if (statement instanceof KotlinReturnStatement) {
+				if (statement instanceof KotlinReturnStatement) {
 					writer.print("return ");
 					writeExpression(writer, ((KotlinReturnStatement) statement).getExpression());
+				}
+				else if (statement instanceof KotlinExpressionStatement) {
+					writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
 				}
 				writer.println("");
 			}
 		});
 		writer.println("}");
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation);
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
-		writer.println();
-	}
-
-	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format("%s::class", getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? "[" + result + "]" : result;
 	}
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
@@ -197,15 +208,25 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeExpression(IndentingWriter writer, KotlinExpression expression) {
-		if (expression instanceof KotlinFunctionInvocation) {
-			writeFunctionInvocation(writer, (KotlinFunctionInvocation) expression);
+		if (expression instanceof KotlinMethodInvocation) {
+			writeMethodInvocation(writer, (KotlinMethodInvocation) expression);
 		}
 		else if (expression instanceof KotlinReifiedFunctionInvocation) {
 			writeReifiedFunctionInvocation(writer, (KotlinReifiedFunctionInvocation) expression);
 		}
+		else if (expression instanceof KotlinFunctionInvocation) {
+			writeFunctionInvocation(writer, (KotlinFunctionInvocation) expression);
+		}
+		else if (expression != null) {
+			writer.print(expression.toString());
+		}
 	}
 
 	private void writeFunctionInvocation(IndentingWriter writer, KotlinFunctionInvocation functionInvocation) {
+		writer.print(functionInvocation.getName() + "(" + String.join(", ", functionInvocation.getArguments()) + ")");
+	}
+
+	private void writeMethodInvocation(IndentingWriter writer, KotlinMethodInvocation functionInvocation) {
 		writer.print(getUnqualifiedName(functionInvocation.getTarget()) + "." + functionInvocation.getName() + "("
 				+ String.join(", ", functionInvocation.getArguments()) + ")");
 	}
@@ -233,6 +254,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				imports.add(typeDeclaration.getExtends());
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			typeDeclaration.getPropertyDeclarations()
+					.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
 			typeDeclaration.getFunctionDeclarations()
 					.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		}
@@ -240,6 +263,14 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
+	}
+
+	private Set<String> determinePropertyImports(KotlinPropertyDeclaration propertyDeclaration) {
+		Set<String> imports = new LinkedHashSet<>();
+		if (requiresImport(propertyDeclaration.getReturnType())) {
+			imports.add(propertyDeclaration.getReturnType());
+		}
+		return imports;
 	}
 
 	private Set<String> determineFunctionImports(KotlinFunctionDeclaration functionDeclaration) {
@@ -251,14 +282,86 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		imports.addAll(getRequiredImports(functionDeclaration.getParameters(),
 				(parameter) -> Collections.singleton(parameter.getType())));
 		imports.addAll(getRequiredImports(
-				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
-						.map(KotlinFunctionInvocation.class::cast),
+				getKotlinExpressions(functionDeclaration).filter(KotlinMethodInvocation.class::isInstance)
+						.map(KotlinMethodInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getTarget())));
 		imports.addAll(getRequiredImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
 						.map(KotlinReifiedFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getName())));
 		return imports;
+	}
+
+	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
+		return functionDeclaration.getStatements().stream().filter(KotlinExpressionStatement.class::isInstance)
+				.map(KotlinExpressionStatement.class::cast).map(KotlinExpressionStatement::getExpression);
+	}
+
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		writeAnnotations(writer, annotatable, true);
+	}
+
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, boolean newLine) {
+		for (Annotation annotation : annotatable.getAnnotations()) {
+			writeAnnotation(writer, annotation, newLine);
+		}
+	}
+
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
+		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		List<Annotation.Attribute> attributes = annotation.getAttributes();
+		if (!attributes.isEmpty()) {
+			writer.print("(");
+			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
+				writer.print(formatAnnotationAttribute(attributes.get(0)));
+			}
+			else {
+				writer.print(attributes.stream()
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+						.collect(Collectors.joining(", ")));
+			}
+			writer.print(")");
+		}
+		if (newLine) {
+			writer.println();
+		}
+		else {
+			writer.print(" ");
+		}
+	}
+
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
+		writeAnnotation(writer, annotation, true);
+	}
+
+	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
+		List<String> values = attribute.getValues();
+		if (attribute.getType().equals(Class.class)) {
+			return formatValues(values, (value) -> String.format(annotationFormatString(), getUnqualifiedName(value)));
+		}
+		if (Enum.class.isAssignableFrom(attribute.getType())) {
+			return formatValues(values, (value) -> {
+				String enumValue = value.substring(value.lastIndexOf(".") + 1);
+				String enumClass = value.substring(0, value.lastIndexOf("."));
+				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
+			});
+		}
+		if (attribute.getType().equals(String.class)) {
+			return formatValues(values, (value) -> String.format("\"%s\"", value));
+		}
+		return formatValues(values, (value) -> String.format("%s", value));
+	}
+
+	private String formatValues(List<String> values, Function<String, String> formatter) {
+		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
+		return (values.size() > 1) ? formatAnnotationArray(result) : result;
+	}
+
+	private String getUnqualifiedName(String name) {
+		if (!name.contains(".")) {
+			return name;
+		}
+		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
 	private Collection<String> determineImports(Annotation annotation) {
@@ -276,11 +379,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return imports;
 	}
 
-	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
-		return functionDeclaration.getStatements().stream().filter(KotlinExpressionStatement.class::isInstance)
-				.map(KotlinExpressionStatement.class::cast).map(KotlinExpressionStatement::getExpression);
-	}
-
 	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
 		return getRequiredImports(candidates.stream(), mapping);
 	}
@@ -290,19 +388,20 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				.collect(Collectors.toList());
 	}
 
-	private String getUnqualifiedName(String name) {
-		if (!name.contains(".")) {
-			return name;
-		}
-		return name.substring(name.lastIndexOf(".") + 1);
-	}
-
 	private boolean requiresImport(String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !"java.lang".equals(packageName);
+		return !("java.lang".equals(packageName) || "kotlin".equals(packageName));
+	}
+
+	private String annotationFormatString() {
+		return "%s::class";
+	}
+
+	private String formatAnnotationArray(String values) {
+		return "[" + values + "]";
 	}
 
 }

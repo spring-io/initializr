@@ -25,12 +25,15 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  * A {@link TypeDeclaration declaration } of a type written in Java.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
 public class JavaTypeDeclaration extends TypeDeclaration {
 
 	private int modifiers;
 
 	private final List<JavaMethodDeclaration> methodDeclarations = new ArrayList<>();
+
+	private final List<JavaFieldDeclaration> fieldDeclarations = new ArrayList<>();
 
 	JavaTypeDeclaration(String name) {
 		super(name);
@@ -50,6 +53,14 @@ public class JavaTypeDeclaration extends TypeDeclaration {
 
 	public List<JavaMethodDeclaration> getMethodDeclarations() {
 		return this.methodDeclarations;
+	}
+
+	public void addFieldDeclaration(JavaFieldDeclaration fieldDeclaration) {
+		this.fieldDeclarations.add(fieldDeclaration);
+	}
+
+	public List<JavaFieldDeclaration> getFieldDeclarations() {
+		return this.fieldDeclarations;
 	}
 
 }

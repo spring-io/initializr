@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.kotlin;
 
 /**
- * A Groovy expression.
+ * A primitive for the Kotlin language.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public interface KotlinPrimitive extends KotlinExpression {
 
 }

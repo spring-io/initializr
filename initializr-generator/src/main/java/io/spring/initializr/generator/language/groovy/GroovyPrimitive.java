@@ -17,11 +17,10 @@
 package io.spring.initializr.generator.language.groovy;
 
 /**
- * A Groovy expression.
+ * A primitive in the Groovy language.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public interface GroovyPrimitive extends GroovyExpression {
 
 }

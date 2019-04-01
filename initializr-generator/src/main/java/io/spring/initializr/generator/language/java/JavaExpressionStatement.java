@@ -20,8 +20,9 @@ package io.spring.initializr.generator.language.java;
  * A statement that contains a single expression.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
-public class JavaExpressionStatement extends JavaStatement {
+public class JavaExpressionStatement implements JavaStatement {
 
 	private final JavaExpression expression;
 

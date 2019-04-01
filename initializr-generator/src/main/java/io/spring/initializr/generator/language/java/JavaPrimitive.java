@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.java;
 
 /**
- * A Groovy expression.
+ * A primitive for the Java language.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public interface JavaPrimitive extends JavaExpression {
 
 }

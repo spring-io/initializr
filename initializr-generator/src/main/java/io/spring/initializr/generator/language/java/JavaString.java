@@ -14,14 +14,37 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.java;
 
 /**
- * A Groovy expression.
+ * A String type in the Java language.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public final class JavaString implements JavaExpression {
+
+	/**
+	 * The class name of this type.
+	 */
+	public static final String CLASS_NAME = "java.lang.String";
+
+	private final String value;
+
+	private JavaString(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public String toString() {
+		return "\"" + this.value + "\"";
+	}
+
+	public static JavaString stringValue(String value) {
+		return new JavaString(value);
+	}
 
 }

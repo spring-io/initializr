@@ -20,17 +20,12 @@ package io.spring.initializr.generator.language.groovy;
  * A return statement.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
-public class GroovyReturnStatement extends GroovyStatement {
-
-	private final GroovyExpression expression;
+public class GroovyReturnStatement extends GroovyExpressionStatement {
 
 	public GroovyReturnStatement(GroovyExpression expression) {
-		this.expression = expression;
-	}
-
-	public GroovyExpression getExpression() {
-		return this.expression;
+		super(expression);
 	}
 
 }
