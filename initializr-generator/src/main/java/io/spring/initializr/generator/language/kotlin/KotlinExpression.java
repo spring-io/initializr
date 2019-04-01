@@ -21,6 +21,6 @@ package io.spring.initializr.generator.language.kotlin;
  *
  * @author Stephane Nicoll
  */
-public class KotlinExpression {
+public interface KotlinExpression {
 
 }

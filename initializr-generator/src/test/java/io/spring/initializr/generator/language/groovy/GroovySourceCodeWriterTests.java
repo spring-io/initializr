@@ -26,6 +26,7 @@ import java.util.List;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.language.java.JavaPrimitives;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -112,6 +113,61 @@ class GroovySourceCodeWriterTests {
 				"import org.springframework.boot.autoconfigure.SpringBootApplication", "", "@SpringBootApplication",
 				"class Test {", "", "    static void main(String[] args) {",
 				"        SpringApplication.run(Test, args)", "    }", "", "}");
+	}
+
+	@Test
+	void field() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").returning(GroovyString.CLASS_NAME));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    String testString", "",
+				"}");
+	}
+
+	@Test
+	void fieldsWithValues() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testInteger").value(GroovyPrimitives.integerValue(42))
+				.returning(GroovyPrimitives.GroovyInteger.BOXED_CLASS_NAME));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE)
+				.value(GroovyPrimitives.doubleValue(1986d)).returning(JavaPrimitives.JavaDouble.TYPE));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testLong").value(GroovyPrimitives.longValue(1986L))
+				.returning(GroovyPrimitives.GroovyLong.TYPE));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testNullBoolean")
+				.value(GroovyPrimitives.booleanValue(null)).returning(GroovyPrimitives.GroovyBoolean.BOXED_CLASS_NAME));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    Integer testInteger = 42",
+				"", "    private double testDouble = 1986.0", "", "    long testLong = 1986L", "",
+				"    Boolean testNullBoolean = null", "", "}");
+	}
+
+	@Test
+	void privateField() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
+				.returning(GroovyString.CLASS_NAME));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    private String testString", "", "}");
+	}
+
+	@Test
+	void fieldAnnotation() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString")
+				.withAnnotation(Annotation.name("org.springframework.beans.factory.annotation.Autowired"))
+				.returning(GroovyString.CLASS_NAME));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @Autowired",
+				"    String testString", "", "}");
 	}
 
 	@Test

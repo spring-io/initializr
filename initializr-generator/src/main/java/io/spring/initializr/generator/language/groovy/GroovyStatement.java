@@ -20,7 +20,8 @@ package io.spring.initializr.generator.language.groovy;
  * A statement in Groovy.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
-public class GroovyStatement {
+public interface GroovyStatement {
 
 }

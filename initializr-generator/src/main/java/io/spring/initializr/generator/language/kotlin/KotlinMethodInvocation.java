@@ -14,14 +14,40 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.kotlin;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * A Groovy expression.
+ * A method invocation in Kotlin.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public class KotlinMethodInvocation implements KotlinExpression {
+
+	private final String target;
+
+	private final String name;
+
+	private final List<String> arguments;
+
+	public KotlinMethodInvocation(String target, String name, String... arguments) {
+		this.target = target;
+		this.name = name;
+		this.arguments = Arrays.asList(arguments);
+	}
+
+	public String getTarget() {
+		return this.target;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public List<String> getArguments() {
+		return this.arguments;
+	}
 
 }

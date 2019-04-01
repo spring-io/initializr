@@ -33,6 +33,8 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 
 	private final List<KotlinFunctionDeclaration> functionDeclarations = new ArrayList<>();
 
+	private final List<KotlinPropertyDeclaration> propertyDeclarations = new ArrayList<>();
+
 	KotlinTypeDeclaration(String name) {
 		super(name);
 	}
@@ -51,6 +53,14 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 
 	public List<KotlinFunctionDeclaration> getFunctionDeclarations() {
 		return this.functionDeclarations;
+	}
+
+	public void addPropertyDeclaration(KotlinPropertyDeclaration propertyDeclaration) {
+		this.propertyDeclarations.add(propertyDeclaration);
+	}
+
+	public List<KotlinPropertyDeclaration> getPropertyDeclarations() {
+		return this.propertyDeclarations;
 	}
 
 }

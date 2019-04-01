@@ -20,7 +20,8 @@ package io.spring.initializr.generator.language.java;
  * A statement in Java.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
-public class JavaStatement {
+public interface JavaStatement {
 
 }

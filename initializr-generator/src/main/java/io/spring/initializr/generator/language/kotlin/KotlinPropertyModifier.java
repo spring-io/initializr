@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.kotlin;
 
 /**
- * A Groovy expression.
+ * Modifiers that can modify a Kotlin property.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public enum KotlinPropertyModifier {
+
+	/**
+	 * Represents a private property.
+	 */
+	PRIVATE,
+
+	/**
+	 * Represents a lateinit property.
+	 */
+	LATE_INIT
 
 }

@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link JavaSourceCodeWriter}.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
 class JavaSourceCodeWriterTests {
 
@@ -88,11 +89,68 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addMethodDeclaration(JavaMethodDeclaration.method("trim").returning("java.lang.String")
-				.modifiers(Modifier.PUBLIC).parameters(new Parameter("java.lang.String", "value"))
+				.modifiers(Modifier.PUBLIC).parameters(new Parameter(JavaString.CLASS_NAME, "value"))
 				.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
 				"    public String trim(String value) {", "        return value.trim();", "    }", "", "}");
+	}
+
+	@Test
+	void field() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE).returning(JavaString.CLASS_NAME));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "public class Test {", "",
+				"    private String testString;", "", "}");
+	}
+
+	@Test
+	void fieldAnnotation() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
+				.returning(JavaString.CLASS_NAME);
+		field.annotate(Annotation.name("org.springframework.beans.factory.annotation.Autowired"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "",
+				"import org.springframework.beans.factory.annotation.Autowired;", "", "public class Test {", "",
+				"    @Autowired", "    private String testString;", "", "}");
+	}
+
+	@Test
+	void fields() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
+				.value(JavaString.stringValue("Test String")).returning(JavaString.CLASS_NAME));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testChar").modifiers(Modifier.PRIVATE | Modifier.TRANSIENT)
+				.value(JavaPrimitives.charValue("\\u03a9")).returning(JavaPrimitives.JavaChar.TYPE));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testInt").modifiers(Modifier.PRIVATE | Modifier.FINAL)
+				.value(JavaPrimitives.integerValue(1337)).returning(JavaPrimitives.JavaInteger.TYPE));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE)
+				.value(JavaPrimitives.doubleValue(3.14)).returning(JavaPrimitives.JavaDouble.BOXED_CLASS_NAME));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testLong").modifiers(Modifier.PRIVATE)
+				.value(JavaPrimitives.longValue(1986L)).returning(JavaPrimitives.JavaLong.BOXED_CLASS_NAME));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testFloat").value(JavaPrimitives.floatValue(99.999f))
+				.returning(JavaPrimitives.JavaFloat.TYPE));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testBool").packagePrivate()
+				.value(JavaPrimitives.booleanValue(true)).returning(JavaPrimitives.JavaBoolean.TYPE));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "public class Test {", "",
+				"    private String testString = \"Test String\";", "",
+				"    private transient char testChar = '\\u03a9';", "", "    private final int testInt = 1337;", "",
+				"    private Double testDouble = 3.14;", "", "    private Long testLong = 1986L;", "",
+				"    public float testFloat = 99.999f;", "", "    boolean testBool = true;", "", "}");
 	}
 
 	@Test

@@ -14,14 +14,37 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.language.groovy;
+package io.spring.initializr.generator.language.kotlin;
 
 /**
- * A Groovy expression.
+ * Represents a Kotlin String type.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public final class KotlinString implements KotlinExpression {
+
+	/**
+	 * The class name of this type.
+	 */
+	public static final String CLASS_NAME = "kotlin.String";
+
+	private final String value;
+
+	private KotlinString(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public String toString() {
+		return "\"" + this.value + "\"";
+	}
+
+	public static KotlinString stringValue(String value) {
+		return new KotlinString(value);
+	}
 
 }

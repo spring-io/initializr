@@ -20,7 +20,8 @@ package io.spring.initializr.generator.language.java;
  * A Java expression.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
-public class JavaExpression {
+public interface JavaExpression {
 
 }

@@ -17,11 +17,34 @@
 package io.spring.initializr.generator.language.groovy;
 
 /**
- * A Groovy expression.
+ * A String type in the Groovy language.
  *
- * @author Stephane Nicoll
  * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public final class GroovyString implements GroovyExpression {
+
+	/**
+	 * The class name of this type.
+	 */
+	public static final String CLASS_NAME = "java.lang.String";
+
+	private final String value;
+
+	private GroovyString(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public String toString() {
+		return "\"" + value + "\"";
+	}
+
+	public static GroovyString stringValue(String value) {
+		return new GroovyString(value);
+	}
 
 }

@@ -21,7 +21,7 @@ package io.spring.initializr.generator.language.kotlin;
  *
  * @author Stephane Nicoll
  */
-public class KotlinExpressionStatement extends KotlinStatement {
+public class KotlinExpressionStatement implements KotlinStatement {
 
 	private final KotlinExpression expression;
 
