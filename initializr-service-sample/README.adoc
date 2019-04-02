@@ -10,7 +10,7 @@ You can start the service from the command line:
 
 [indent=0]
 ----
-    $ ./mvnw spring-boot:run
+    $ ../mvnw spring-boot:run
 ----
 
 Or, better yet, run the `ServiceApplication` main method from your favourite IDE.
