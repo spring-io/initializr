@@ -45,7 +45,8 @@ import org.springframework.retry.support.RetryTemplate;
 @Configuration
 @EnableConfigurationProperties(StatsProperties.class)
 @ConditionalOnProperty("initializr.stats.elastic.uri")
-@AutoConfigureAfter(value = RestTemplateAutoConfiguration.class, name = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
+@AutoConfigureAfter(value = RestTemplateAutoConfiguration.class,
+		name = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;

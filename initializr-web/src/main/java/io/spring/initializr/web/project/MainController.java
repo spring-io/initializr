@@ -120,7 +120,8 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
-			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent)
+			@RequestHeader(value = HttpHeaders.USER_AGENT,
+					required = false) String userAgent)
 			throws IOException {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
@@ -157,8 +158,8 @@ public class MainController extends AbstractInitializrController {
 				HAL_JSON_CONTENT_TYPE);
 	}
 
-	@RequestMapping(path = "/", produces = { "application/vnd.initializr.v2.1+json",
-			"application/json" })
+	@RequestMapping(path = "/",
+			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
@@ -192,8 +193,8 @@ public class MainController extends AbstractInitializrController {
 		}
 	}
 
-	@RequestMapping(path = "/dependencies", produces = {
-			"application/vnd.initializr.v2.1+json", "application/json" })
+	@RequestMapping(path = "/dependencies",
+			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(
 			@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);

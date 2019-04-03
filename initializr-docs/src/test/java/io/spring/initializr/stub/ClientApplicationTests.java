@@ -41,7 +41,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:${project.version}", stubsMode = StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:${project.version}",
+		stubsMode = StubsMode.LOCAL)
 // tag::test[]
 public class ClientApplicationTests {
 

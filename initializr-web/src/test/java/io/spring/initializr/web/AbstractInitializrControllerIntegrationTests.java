@@ -35,9 +35,11 @@ import org.springframework.test.context.TestExecutionListeners.MergeMode;
  * @author Stephane Nicoll
  */
 @ContextConfiguration(classes = RestTemplateConfig.class)
-@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS, listeners = MockMvcClientHttpRequestFactoryTestExecutionListener.class)
+@TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS,
+		listeners = MockMvcClientHttpRequestFactoryTestExecutionListener.class)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80, uriHost = "start.spring.io")
+@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80,
+		uriHost = "start.spring.io")
 public abstract class AbstractInitializrControllerIntegrationTests
 		extends AbstractInitializrIntegrationTests {
 

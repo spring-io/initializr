@@ -32,7 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-@SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.endpoints.web.exposure.include=info")
+@SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT,
+		properties = "management.endpoints.web.exposure.include=info")
 class ActuatorIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
