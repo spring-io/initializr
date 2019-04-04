@@ -13,7 +13,7 @@ Stéphane Nicoll; Dave Syer
 :hide-uri-scheme:
 :docinfo: shared,private
 
-:test-examples: ../../test/java/io/spring/initializr
+:test-examples: {sources-root}/test/java/io/spring/initializr
 :initializr-repo: snapshot
 :github-tag: master
 :github-repo: spring-io/initializr
