@@ -66,4 +66,15 @@ class MustacheTemplateRendererTests {
 				.withMessageContaining("does-not-exist");
 	}
 
+	@Test
+	void htmlEscapingIsDisabled() throws IOException {
+		MustacheTemplateRenderer render = new MustacheTemplateRenderer(
+				"classpath:/templates/mustache", this.templatesCache);
+		assertThat(this.templatesCache.get("classpath:/templates/mustache/test"))
+				.isNull();
+		assertThat(
+				render.render("test", Collections.singletonMap("key", "it's a `<div>`")))
+						.isEqualTo("it's a `<div>`");
+	}
+
 }

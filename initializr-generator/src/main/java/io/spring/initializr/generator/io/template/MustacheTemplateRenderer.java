@@ -49,7 +49,8 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 	public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
 		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix
 				: resourcePrefix + "/");
-		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix));
+		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix))
+				.escapeHTML(false);
 		this.keyGenerator = (name) -> String.format("%s%s", prefix, name);
 		this.templateCache = templateCache;
 	}
