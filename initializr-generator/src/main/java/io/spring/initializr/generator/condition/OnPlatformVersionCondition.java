@@ -16,9 +16,11 @@
 
 package io.spring.initializr.generator.condition;
 
+import java.util.Arrays;
+
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
-import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -28,19 +30,25 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * {@link ConditionalOnPlatformVersion}.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 class OnPlatformVersionCondition extends ProjectGenerationCondition {
 
 	@Override
 	protected boolean matches(ResolvedProjectDescription projectDescription,
 			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		if (projectDescription.getPlatformVersion() == null) {
+		Version platformVersion = projectDescription.getPlatformVersion();
+		if (platformVersion == null) {
 			return false;
 		}
-		VersionRange range = VersionParser.DEFAULT.parseRange((String) metadata
-				.getAnnotationAttributes(ConditionalOnPlatformVersion.class.getName())
-				.get("value"));
-		return range.match(projectDescription.getPlatformVersion());
+		return Arrays
+				.stream((String[]) metadata
+						.getAnnotationAttributes(
+								ConditionalOnPlatformVersion.class.getName())
+						.get("value"))
+				.anyMatch((range) -> VersionParser.DEFAULT.parseRange(range)
+						.match(platformVersion));
+
 	}
 
 }

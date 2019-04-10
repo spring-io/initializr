@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Conditional;
  * platform.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
@@ -37,9 +38,10 @@ import org.springframework.context.annotation.Conditional;
 public @interface ConditionalOnPlatformVersion {
 
 	/**
-	 * The version range to match.
-	 * @return the version range
+	 * The version ranges to check. The condition matches when at least one range matches
+	 * the platform version.
+	 * @return the version ranges to check
 	 */
-	String value();
+	String[] value();
 
 }

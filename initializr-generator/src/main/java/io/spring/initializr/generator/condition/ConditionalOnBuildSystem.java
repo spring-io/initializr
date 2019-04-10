@@ -38,6 +38,11 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OnBuildSystemCondition.class)
 public @interface ConditionalOnBuildSystem {
 
-	String value();
+	/**
+	 * The {@link BuildSystem} that should be checked. The condition matches when at least
+	 * one build system matches.
+	 * @return the build systems to check
+	 */
+	String[] value();
 
 }

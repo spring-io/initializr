@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.condition;
 
+import java.util.Map;
+
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
@@ -40,52 +42,71 @@ class ConditionalOnPlatformVersionTests {
 	void outcomeWithMatchingRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.2.0.RELEASE"));
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("one");
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+						.containsOnlyKeys("first");
 	}
 
 	@Test
 	void outcomeWithMatchingOpenRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.1.RELEASE"));
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("two");
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+						.containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithMatchingStartOfOpenRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.M1"));
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("two");
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+						.containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithNoMatch() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("0.1.0"));
-		this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+						.isEmpty();
 	}
 
 	@Test
 	void outcomeWithNoAvailablePlatformVersion() {
 		ProjectDescription projectDescription = new ProjectDescription();
-		this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+						.isEmpty();
 	}
 
-	private String outcomeFor(ProjectDescription projectDescription) {
-		return this.projectTester.generate(projectDescription,
-				(projectGenerationContext) -> {
-					assertThat(projectGenerationContext.getBeansOfType(String.class))
-							.hasSize(1);
-					return projectGenerationContext.getBean(String.class);
-				});
+	@Test
+	void outcomeWithSeveralRangesAndMatchingVersion() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+						OneOrTwoPlatformVersionTestConfiguration.class))
+								.containsOnlyKeys("second", "firstOrSecond");
+	}
+
+	@Test
+	void outcomeWithSeveralRangesAndNonMatchingVersion() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("2.0.0.M2"));
+		assertThat(
+				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+						OneOrTwoPlatformVersionTestConfiguration.class))
+								.containsOnlyKeys("second");
+	}
+
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
+			Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(
+				projectDescription, (projectGenerationContext) -> projectGenerationContext
+						.getBeansOfType(String.class));
 	}
 
 	@Configuration
@@ -101,6 +122,17 @@ class ConditionalOnPlatformVersionTests {
 		@ConditionalOnPlatformVersion("2.0.0.M1")
 		public String second() {
 			return "two";
+		}
+
+	}
+
+	@Configuration
+	static class OneOrTwoPlatformVersionTestConfiguration {
+
+		@Bean
+		@ConditionalOnPlatformVersion({ "[1.0.0.RELEASE, 2.0.0.M1)", "2.0.0.RELEASE" })
+		public String firstOrSecond() {
+			return "oneOrTwo";
 		}
 
 	}

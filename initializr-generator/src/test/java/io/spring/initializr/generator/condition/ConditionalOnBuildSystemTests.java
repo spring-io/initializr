@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.condition;
 
+import java.util.Map;
+
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -34,32 +36,38 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ConditionalOnBuildSystemTests {
 
-	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(BuildSystemTestConfiguration.class);
+	private final ProjectAssetTester projectTester = new ProjectAssetTester();
 
 	@Test
 	void outcomeWithMavenBuildSystem() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBuildSystem(new MavenBuildSystem());
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("testMaven");
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
+				.containsOnlyKeys("maven");
 	}
 
 	@Test
 	void outcomeWithGradleBuildSystem() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBuildSystem(new GradleBuildSystem());
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("testGradle");
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
+				.containsOnlyKeys("gradle");
 	}
 
-	private String outcomeFor(ProjectDescription projectDescription) {
-		return this.projectTester.generate(projectDescription,
-				(projectGenerationContext) -> {
-					assertThat(projectGenerationContext.getBeansOfType(String.class))
-							.hasSize(1);
-					return projectGenerationContext.getBean(String.class);
-				});
+	@Test
+	void outcomeWithSeveralBuildSystemsAndMatchingId() {
+		ProjectDescription projectDescription = new ProjectDescription();
+		projectDescription.setBuildSystem(new MavenBuildSystem());
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class,
+				MavenOrGradleBuildSystemTestConfiguration.class))
+						.containsOnlyKeys("maven", "mavenOrGradle");
+	}
+
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
+			Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(
+				projectDescription, (projectGenerationContext) -> projectGenerationContext
+						.getBeansOfType(String.class));
 	}
 
 	@Configuration
@@ -75,6 +83,23 @@ class ConditionalOnBuildSystemTests {
 		@ConditionalOnBuildSystem("maven")
 		public String maven() {
 			return "testMaven";
+		}
+
+		@Bean
+		@ConditionalOnBuildSystem("not-a-build-system")
+		public String notABuildSystem() {
+			return "testNone";
+		}
+
+	}
+
+	@Configuration
+	static class MavenOrGradleBuildSystemTestConfiguration {
+
+		@Bean
+		@ConditionalOnBuildSystem({ "gradle", "maven" })
+		public String mavenOrGradle() {
+			return "testMavenOrGradle";
 		}
 
 	}
