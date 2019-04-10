@@ -39,7 +39,7 @@ public @interface ConditionalOnGradleVersion {
 	/**
 	 * The Gradle generations that should be checked. The condition matches when at least
 	 * one gradle generation matches.
-	 * @return the gradle generation to check
+	 * @return the gradle generations to check
 	 */
 	String[] value();
 
