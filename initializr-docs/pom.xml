@@ -38,6 +38,17 @@
 		</dependency>
 
 		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<scope>test</scope>
@@ -193,6 +204,37 @@
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<phase>prepare-package</phase>
+								<configuration>
+									<doctitle>Spring Initializr ${project.version} API</doctitle>
+									<includeDependencySources>true</includeDependencySources>
+									<dependencySourceIncludes>
+										<dependencySourceInclude>${project.groupId}:*</dependencySourceInclude>
+									</dependencySourceIncludes>
+									<subpackages>io.spring.initializr</subpackages>
+									<detectOfflineLinks>false</detectOfflineLinks>
+									<attach>false</attach>
+									<quiet>true</quiet>
+									<stylesheetfile>${basedir}/src/main/javadoc/spring-javadoc.css</stylesheetfile>
+									<links>
+										<link>https://docs.oracle.com/javase/8/docs/api</link>
+										<link>https://docs.oracle.com/javaee/7/api</link>
+										<link>https://docs.spring.io/spring-boot/docs/${spring-boot.version}/api</link>
+										<link>https://www.javadoc.io/doc/javax.cache/cache-api/1.0.0</link>
+									</links>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<dependencies>
 							<dependency>
@@ -227,6 +269,9 @@
 								<configuration>
 									<target>
 										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
+											<zipfileset
+													src="${project.build.directory}/${project.artifactId}-${revision}-javadoc.jar"
+													prefix="api" />
 											<fileset dir="${project.build.directory}/generated-docs" />
 										</zip>
 									</target>
