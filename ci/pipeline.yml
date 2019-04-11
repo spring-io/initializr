@@ -82,7 +82,8 @@ jobs:
     trigger: true
   - put: initializr-ci-image
     params:
-      build: ci-images-git-repo/ci/images/initializr-ci-image
+      build: ci-images-git-repo/ci/images
+      dockerfile: ci-images-git-repo/ci/images/initializr-ci-image/Dockerfile
 - name: build
   serial: true
   public: true
