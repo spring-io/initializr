@@ -161,7 +161,7 @@
 							<attributes>
 								<spring-initializr-version>${project.version}</spring-initializr-version>
 								<spring-initializr-docs-version>${project.version}</spring-initializr-docs-version>
-								<spring-boot-docs-version>${spring.boot.version}</spring-boot-docs-version>
+								<spring-boot-docs-version>${spring-boot.version}</spring-boot-docs-version>
 								<snippets>${snippets.location}</snippets>
 								<github-tag>${github-tag}</github-tag>
 								<sources-root>${project.basedir}/src/</sources-root>
