@@ -33,8 +33,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GradleBuildWriter}
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 class GradleBuildWriterTests {
+
+	@Test
+	void gradleBuildWithImports() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.addImportedType(
+				"org.springframework.boot.gradle.tasks.buildinfo.BuildInfo");
+		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		// same import added twice on purpose
+		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+
+		List<String> lines = generateBuild(build);
+		assertThat(lines.subList(0, 3)).containsExactly(
+				"import org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				"import org.springframework.boot.gradle.tasks.buildinfo.BuildInfo", "");
+	}
 
 	@Test
 	void gradleBuildWithCoordinates() throws IOException {
@@ -137,6 +153,22 @@ class GradleBuildWriterTests {
 				"https://repo.spring.io/milestone");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).doesNotContain("repositories {");
+	}
+
+	@Test
+	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments()
+			throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.customizeTasksWithType("KotlinCompile", (task) -> {
+			task.nested("kotlinOptions", (kotlinOptions) -> {
+				kotlinOptions.set("freeCompilerArgs", "['-Xjsr305=strict']");
+				kotlinOptions.set("jvmTarget", "'1.8'");
+			});
+		});
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("tasks.withType(KotlinCompile) {",
+				"    kotlinOptions {", "        freeCompilerArgs = ['-Xjsr305=strict']",
+				"        jvmTarget = '1.8'", "    }", "}");
 	}
 
 	@Test
