@@ -40,8 +40,8 @@ class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 	public void customize(GradleBuild build) {
 		build.addPlugin("org.jetbrains.kotlin.jvm", this.settings.getVersion());
 		build.addPlugin("org.jetbrains.kotlin.plugin.spring", this.settings.getVersion());
-		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
-		build.customizeTasksWithType("KotlinCompile", this::customizeKotlinOptions);
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				this::customizeKotlinOptions);
 	}
 
 	private void customizeKotlinOptions(TaskCustomization compile) {

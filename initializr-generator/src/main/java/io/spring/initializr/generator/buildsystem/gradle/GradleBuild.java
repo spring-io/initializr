@@ -31,6 +31,9 @@ import java.util.function.Consumer;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
+
 /**
  * Gradle build configuration for a project.
  *
@@ -127,17 +130,24 @@ public class GradleBuild extends Build {
 		return Collections.unmodifiableMap(this.configurationCustomizations);
 	}
 
-	public void addImportedType(String type) {
-		this.importedTypes.add(type);
-	}
-
 	public Set<String> getImportedTypes() {
 		return Collections.unmodifiableSet(this.importedTypes);
 	}
 
+	/**
+	 * Customize tasks matching a given type.
+	 * @param typeName the name of type. Can use the short form for well-known types such
+	 * as {@code JavaCompile}, use a fully qualified name if an import is required
+	 * @param customizer a callback to customize tasks matching that type
+	 */
 	public void customizeTasksWithType(String typeName,
 			Consumer<TaskCustomization> customizer) {
-		customizer.accept(this.tasksWithTypeCustomizations.computeIfAbsent(typeName,
+		String packageName = ClassUtils.getPackageName(typeName);
+		if (!StringUtils.isEmpty(packageName)) {
+			this.importedTypes.add(typeName);
+		}
+		String shortName = ClassUtils.getShortName(typeName);
+		customizer.accept(this.tasksWithTypeCustomizations.computeIfAbsent(shortName,
 				(name) -> new TaskCustomization()));
 	}
 

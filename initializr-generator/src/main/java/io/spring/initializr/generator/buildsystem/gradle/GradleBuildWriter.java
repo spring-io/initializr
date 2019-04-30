@@ -291,7 +291,6 @@ public class GradleBuildWriter {
 			GradleBuild build) {
 		Map<String, GradleBuild.TaskCustomization> tasksWithTypeCustomizations = build
 				.getTasksWithTypeCustomizations();
-
 		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
 			writer.println();
 			writer.println("tasks.withType(" + typeName + ") {");
