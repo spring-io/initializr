@@ -170,7 +170,7 @@ public class GradleBuildWriter {
 		}
 		Map<String, String> allProperties = new LinkedHashMap<>(build.getExt());
 		build.getVersionProperties().entrySet().forEach((entry) -> allProperties
-				.put(getVersionPropertyKey(entry), entry.getValue()));
+				.put(getVersionPropertyKey(entry), "'" + entry.getValue() + "'"));
 		writeNestedCollection(writer, "ext", allProperties.entrySet(),
 				(e) -> getFormattedProperty(e.getKey(), e.getValue()), writer::println);
 	}
@@ -181,7 +181,7 @@ public class GradleBuildWriter {
 	}
 
 	private String getFormattedProperty(String key, String value) {
-		return String.format("set('%s', '%s')", key, value);
+		return String.format("set('%s', %s)", key, value);
 	}
 
 	private void writeDependencies(IndentingWriter writer, GradleBuild build) {

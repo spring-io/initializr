@@ -183,9 +183,9 @@ class GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.ext("java.version", "1.8").ext("alpha", "a");
+		build.ext("java.version", "'1.8'").ext("alpha", "file('build/example')");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("    set('alpha', 'a')",
+		assertThat(lines).containsSequence("    set('alpha', file('build/example'))",
 				"    set('java.version', '1.8')");
 	}
 
@@ -233,7 +233,7 @@ class GradleBuildWriterTests {
 		build.setArtifact("demo");
 		build.addInternalVersionProperty("test-version", "1.0");
 		build.addExternalVersionProperty("alpha-version", "0.1");
-		build.ext("myProperty", "42");
+		build.ext("myProperty", "'42'");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("    set('myProperty', '42')",
 				"    set('alpha-version', '0.1')", "    set('testVersion', '1.0')");
