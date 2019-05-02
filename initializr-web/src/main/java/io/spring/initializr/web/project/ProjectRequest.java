@@ -59,6 +59,10 @@ public class ProjectRequest {
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
 
+	private Boolean addJenkinsFile;
+
+	private Boolean addSampleUI;
+
 	public List<String> getStyle() {
 		return this.style;
 	}
@@ -183,6 +187,22 @@ public class ProjectRequest {
 
 	public void setBaseDir(String baseDir) {
 		this.baseDir = baseDir;
+	}
+
+	public Boolean getAddJenkinsFile() {
+		return this.addJenkinsFile;
+	}
+
+	public void setAddJenkinsFile(Boolean addJenkinsFile) {
+		this.addJenkinsFile = addJenkinsFile;
+	}
+
+	public Boolean getAddSampleUI() {
+		return this.addSampleUI;
+	}
+
+	public void setAddSampleUI(Boolean addSampleUI) {
+		this.addSampleUI = addSampleUI;
 	}
 
 }

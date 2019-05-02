@@ -71,6 +71,8 @@ public class ProjectRequestToDescriptionConverter {
 		resolvedDependencies
 				.forEach((dependency) -> description.addDependency(dependency.getId(),
 						MetadataBuildItemMapper.toDependency(dependency)));
+		description.setAddJenkinsFile(request.getAddJenkinsFile());
+		description.setAddSampleUI(request.getAddSampleUI());
 		return description;
 	}
 

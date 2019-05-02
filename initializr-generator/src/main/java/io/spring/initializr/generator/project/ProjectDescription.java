@@ -59,6 +59,10 @@ public class ProjectDescription {
 
 	private String baseDirectory;
 
+	private Boolean addJenkinsFile; // svc customisation to add default jenkinsfile
+
+	private Boolean addSampleUI; // svc customisation to add default angularjs client code
+
 	/**
 	 * Resolve the state of this instance to a {@link ResolvedProjectDescription}.
 	 * @return an immutable description.
@@ -169,6 +173,22 @@ public class ProjectDescription {
 
 	public void setBaseDirectory(String baseDirectory) {
 		this.baseDirectory = baseDirectory;
+	}
+
+	public Boolean getAddJenkinsFile() {
+		return this.addJenkinsFile;
+	}
+
+	public void setAddJenkinsFile(Boolean addJenkinsFile) {
+		this.addJenkinsFile = addJenkinsFile;
+	}
+
+	public Boolean getAddSampleUI() {
+		return this.addSampleUI;
+	}
+
+	public void setAddSampleUI(Boolean addSampleUI) {
+		this.addSampleUI = addSampleUI;
 	}
 
 }

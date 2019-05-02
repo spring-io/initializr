@@ -61,6 +61,10 @@ public final class ResolvedProjectDescription {
 
 	private final String baseDirectory;
 
+	private final Boolean addJenkinsFile;
+
+	private final Boolean addSampleUI;
+
 	public ResolvedProjectDescription(ProjectDescription description) {
 		this.platformVersion = description.getPlatformVersion();
 		this.buildSystem = description.getBuildSystem();
@@ -77,6 +81,8 @@ public final class ResolvedProjectDescription {
 		Map<String, Dependency> requestedDependencies = new LinkedHashMap<>(
 				description.getRequestedDependencies());
 		this.requestedDependencies = Collections.unmodifiableMap(requestedDependencies);
+		this.addJenkinsFile = description.getAddJenkinsFile();
+		this.addSampleUI = description.getAddSampleUI();
 	}
 
 	private String getPackageName(ProjectDescription description) {
@@ -140,6 +146,14 @@ public final class ResolvedProjectDescription {
 
 	public String getBaseDirectory() {
 		return this.baseDirectory;
+	}
+
+	public Boolean getAddJenkinsFile() {
+		return this.addJenkinsFile;
+	}
+
+	public Boolean getAddSampleUI() {
+		return this.addSampleUI;
 	}
 
 }

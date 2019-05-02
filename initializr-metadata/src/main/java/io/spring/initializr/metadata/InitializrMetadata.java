@@ -68,6 +68,12 @@ public class InitializrMetadata {
 	private final TextCapability packageName = new PackageCapability(this.groupId,
 			this.artifactId);
 
+	private final TextCapability addJenkinsFile = new TextCapability("addJenkinsFile",
+			"Add jenkinsFile", "Do you want to add default jenkins file?");
+
+	private final TextCapability addSampleUI = new TextCapability("addSampleUI",
+			"Add angularJS client sample user interface", "");
+
 	public InitializrMetadata() {
 		this(new InitializrConfiguration());
 	}
@@ -275,6 +281,14 @@ public class InitializrMetadata {
 			Defaultable<? extends DefaultMetadataElement> element) {
 		DefaultMetadataElement defaultValue = element.getDefault();
 		return (defaultValue != null) ? defaultValue.getId() : null;
+	}
+
+	public TextCapability getAddJenkinsFile() {
+		return this.addJenkinsFile;
+	}
+
+	public TextCapability getAddSampleUI() {
+		return this.addSampleUI;
 	}
 
 	private static class ArtifactIdCapability extends TextCapability {

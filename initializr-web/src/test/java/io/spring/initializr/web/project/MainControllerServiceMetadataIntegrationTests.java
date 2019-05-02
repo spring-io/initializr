@@ -84,7 +84,7 @@ class MainControllerServiceMetadataIntegrationTests
 		validateContentType(response, MediaType.APPLICATION_JSON);
 		JSONObject json = new JSONObject(response.getBody());
 		JSONObject expected = readJsonFrom("metadata/config/test-default.json");
-		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
+		JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 	}
 
 	@Test
