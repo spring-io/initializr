@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,10 +31,14 @@ import java.util.function.Consumer;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
+
 /**
  * Gradle build configuration for a project.
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
  */
 public class GradleBuild extends Build {
 
@@ -48,6 +53,10 @@ public class GradleBuild extends Build {
 	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
 
 	private final Map<String, TaskCustomization> taskCustomizations = new LinkedHashMap<>();
+
+	private final Set<String> importedTypes = new HashSet<>();
+
+	private final Map<String, TaskCustomization> tasksWithTypeCustomizations = new LinkedHashMap<>();
 
 	private final Buildscript buildscript = new Buildscript();
 
@@ -119,6 +128,31 @@ public class GradleBuild extends Build {
 
 	public Map<String, ConfigurationCustomization> getConfigurationCustomizations() {
 		return Collections.unmodifiableMap(this.configurationCustomizations);
+	}
+
+	public Set<String> getImportedTypes() {
+		return Collections.unmodifiableSet(this.importedTypes);
+	}
+
+	/**
+	 * Customize tasks matching a given type.
+	 * @param typeName the name of type. Can use the short form for well-known types such
+	 * as {@code JavaCompile}, use a fully qualified name if an import is required
+	 * @param customizer a callback to customize tasks matching that type
+	 */
+	public void customizeTasksWithType(String typeName,
+			Consumer<TaskCustomization> customizer) {
+		String packageName = ClassUtils.getPackageName(typeName);
+		if (!StringUtils.isEmpty(packageName)) {
+			this.importedTypes.add(typeName);
+		}
+		String shortName = ClassUtils.getShortName(typeName);
+		customizer.accept(this.tasksWithTypeCustomizations.computeIfAbsent(shortName,
+				(name) -> new TaskCustomization()));
+	}
+
+	public Map<String, TaskCustomization> getTasksWithTypeCustomizations() {
+		return Collections.unmodifiableMap(this.tasksWithTypeCustomizations);
 	}
 
 	public void customizeTask(String taskName, Consumer<TaskCustomization> customizer) {

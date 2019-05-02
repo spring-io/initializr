@@ -33,6 +33,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GradleBuildWriter}
  *
  * @author Andy Wilkinson
+ * @author Jean-Baptiste Nizet
+ * @author Stephane Nicoll
  */
 class GradleBuildWriterTests {
 
@@ -137,6 +139,36 @@ class GradleBuildWriterTests {
 				"https://repo.spring.io/milestone");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).doesNotContain("repositories {");
+	}
+
+	@Test
+	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments()
+			throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				(task) -> task.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions
+						.set("freeCompilerArgs", "['-Xjsr305=strict']")));
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				(task) -> task.nested("kotlinOptions",
+						(kotlinOptions) -> kotlinOptions.set("jvmTarget", "'1.8'")));
+		List<String> lines = generateBuild(build);
+		assertThat(lines)
+				.containsOnlyOnce(
+						"import org.jetbrains.kotlin.gradle.tasks.KotlinCompile")
+				.containsSequence("tasks.withType(KotlinCompile) {",
+						"    kotlinOptions {",
+						"        freeCompilerArgs = ['-Xjsr305=strict']",
+						"        jvmTarget = '1.8'", "    }", "}");
+	}
+
+	@Test
+	void gradleBuildWithTaskWithTypesAndShortTypes() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.customizeTasksWithType("JavaCompile",
+				(javaCompile) -> javaCompile.set("options.fork", "true"));
+		assertThat(generateBuild(build)).doesNotContain("import JavaCompile")
+				.containsSequence("tasks.withType(JavaCompile) {",
+						"    options.fork = true", "}");
 	}
 
 	@Test

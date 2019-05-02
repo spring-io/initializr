@@ -48,11 +48,11 @@ class KotlinGradleBuildCustomizerTests {
 		GradleBuild build = new GradleBuild();
 		new KotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
 				.customize(build);
-		assertThat(build.getTaskCustomizations()).hasSize(2);
-		assertThat(build.getTaskCustomizations()).containsKeys("compileKotlin",
-				"compileTestKotlin");
-		assertKotlinOptions(build.getTaskCustomizations().get("compileKotlin"));
-		assertKotlinOptions(build.getTaskCustomizations().get("compileTestKotlin"));
+		assertThat(build.getImportedTypes())
+				.contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		assertThat(build.getTasksWithTypeCustomizations()).hasSize(1);
+		assertThat(build.getTasksWithTypeCustomizations()).containsKeys("KotlinCompile");
+		assertKotlinOptions(build.getTasksWithTypeCustomizations().get("KotlinCompile"));
 	}
 
 	private void assertKotlinOptions(TaskCustomization compileTask) {

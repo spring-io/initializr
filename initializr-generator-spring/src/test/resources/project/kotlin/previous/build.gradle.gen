@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
 	repositories {
 		mavenCentral()
@@ -29,14 +31,7 @@ dependencies {
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
-compileKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = '1.8'
-	}
-}
-
-compileTestKotlin {
+tasks.withType(KotlinCompile) {
 	kotlinOptions {
 		freeCompilerArgs = ['-Xjsr305=strict']
 		jvmTarget = '1.8'
