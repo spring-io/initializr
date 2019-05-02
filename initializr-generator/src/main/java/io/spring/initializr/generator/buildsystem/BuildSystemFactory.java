@@ -31,4 +31,16 @@ public interface BuildSystemFactory {
 	 */
 	BuildSystem createBuildSystem(String id);
 
+	/**
+	 * Creates and returns a {@link BuildSystem} for the given {@code id} and
+	 * {@code dialect}. If the factory does not recognize the given {@code id} or
+	 * {@code dialect}, {@code null} should be returned.
+	 * @param id the id of the build system
+	 * @param dialect the dialect of the build system
+	 * @return the build system or {@code null}
+	 */
+	default BuildSystem createBuildSystem(String id, String dialect) {
+		return createBuildSystem(id);
+	}
+
 }

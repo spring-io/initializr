@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.annotation.AliasFor;
 
 /**
  * Condition that matches when a generated project will use a particular
@@ -39,10 +40,24 @@ import org.springframework.context.annotation.Conditional;
 public @interface ConditionalOnBuildSystem {
 
 	/**
-	 * The {@link BuildSystem} that should be checked. The condition matches when at least
-	 * one build system matches.
-	 * @return the build systems to check
+	 * The ID of the {@link BuildSystem} that should be checked.
+	 * @return the build system to check. An alias for {@link #id()}.
 	 */
-	String[] value();
+	@AliasFor("id")
+	String value() default "";
+
+	/**
+	 * The ID of the {@link BuildSystem} that should be checked.
+	 * @return the build system to check
+	 */
+	@AliasFor("value")
+	String id() default "";
+
+	/**
+	 * The dialect of the {@link BuildSystem} that should be checked. When not specified,
+	 * any dialect will be matched.
+	 * @return the dialect to check, if any
+	 */
+	String dialect() default "";
 
 }

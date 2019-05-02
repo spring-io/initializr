@@ -29,14 +29,12 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * {@link ProjectContributor} template for the project's {@code build.gradle} or
- * {@code build.gradle.kts} file. A subclass exists for each DSL.
+ * {@link ProjectContributor} for the project's main build file.
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
  */
-public abstract class GradleBuildProjectContributor
-		implements BuildWriter, ProjectContributor {
+public class GradleBuildProjectContributor implements BuildWriter, ProjectContributor {
 
 	private final GradleBuildWriter buildWriter;
 
@@ -46,9 +44,8 @@ public abstract class GradleBuildProjectContributor
 
 	private final String buildFileName;
 
-	protected GradleBuildProjectContributor(GradleBuildWriter buildWriter,
-			GradleBuild build, IndentingWriterFactory indentingWriterFactory,
-			String buildFileName) {
+	GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build,
+			IndentingWriterFactory indentingWriterFactory, String buildFileName) {
 		this.buildWriter = buildWriter;
 		this.build = build;
 		this.indentingWriterFactory = indentingWriterFactory;
@@ -56,13 +53,13 @@ public abstract class GradleBuildProjectContributor
 	}
 
 	@Override
-	public final void contribute(Path projectRoot) throws IOException {
+	public void contribute(Path projectRoot) throws IOException {
 		Path buildGradle = Files.createFile(projectRoot.resolve(this.buildFileName));
 		writeBuild(Files.newBufferedWriter(buildGradle));
 	}
 
 	@Override
-	public final void writeBuild(Writer out) throws IOException {
+	public void writeBuild(Writer out) throws IOException {
 		try (IndentingWriter writer = this.indentingWriterFactory
 				.createIndentingWriter("gradle", out)) {
 			this.buildWriter.writeTo(writer, this.build);

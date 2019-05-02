@@ -215,9 +215,9 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.ext("java.version", "'1.8'").ext("alpha", "file('build/example')");
+		build.ext("java.version", "'1.8'").ext("alpha", "file(\"build/example\")");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("    set('alpha', file('build/example'))",
+		assertThat(lines).containsSequence("    set('alpha', file(\"build/example\"))",
 				"    set('java.version', '1.8')");
 	}
 
@@ -229,9 +229,9 @@ class GroovyDslGradleBuildWriterTests {
 		build.addExternalVersionProperty("external.property", "7.8.9");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("ext {",
-				"    set('external.property', '7.8.9')",
-				"    set('internalProperty', '4.5.6')",
-				"    set('versionProperty', '1.2.3')", "}");
+				"    set('external.property', \"7.8.9\")",
+				"    set('internalProperty', \"4.5.6\")",
+				"    set('versionProperty', \"1.2.3\")", "}");
 	}
 
 	@Test
@@ -268,7 +268,7 @@ class GroovyDslGradleBuildWriterTests {
 		build.ext("myProperty", "'42'");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("    set('myProperty', '42')",
-				"    set('alpha-version', '0.1')", "    set('testVersion', '1.0')");
+				"    set('alpha-version', \"0.1\")", "    set('testVersion', \"1.0\")");
 	}
 
 	@Test

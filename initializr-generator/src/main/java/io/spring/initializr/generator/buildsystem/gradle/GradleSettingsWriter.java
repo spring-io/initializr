@@ -22,12 +22,12 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 
 /**
- * A {@link GradleBuild} writer template for {@code settings.gradle} and
- * {@code settings.gradle.kts}. A subclass of this class exists for the Groovy DSL and for
- * the Kotlin DSL.
+ * {@link GradleBuild} settings abstraction.
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @see GroovyDslGradleSettingsWriter
+ * @see KotlinDslGradleSettingsWriter
  */
 public abstract class GradleSettingsWriter {
 

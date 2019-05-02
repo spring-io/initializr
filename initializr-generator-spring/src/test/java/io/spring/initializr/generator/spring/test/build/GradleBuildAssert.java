@@ -102,7 +102,7 @@ public class GradleBuildAssert extends AbstractStringAssert<GradleBuildAssert> {
 		}
 		for (int i = 0; i < values.length; i += 2) {
 			builder.append(
-					String.format("\tset('%s', '%s')%n", values[i], values[i + 1]));
+					String.format("\tset('%s', \"%s\")%n", values[i], values[i + 1]));
 		}
 		builder.append("}");
 		return contains(builder.toString());

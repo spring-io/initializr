@@ -55,12 +55,11 @@ class ConditionalOnBuildSystemTests {
 	}
 
 	@Test
-	void outcomeWithSeveralBuildSystemsAndMatchingId() {
+	void conditionalOnGradleWithKotlinDialectMatchesWhenGradleBuildSystemUsesKotlinDialect() {
 		ProjectDescription projectDescription = new ProjectDescription();
-		projectDescription.setBuildSystem(new MavenBuildSystem());
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class,
-				MavenOrGradleBuildSystemTestConfiguration.class))
-						.containsOnlyKeys("maven", "mavenOrGradle");
+		projectDescription.setBuildSystem(new GradleBuildSystem("kotlin"));
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
+				.containsOnlyKeys("gradle", "gradleKotlin");
 	}
 
 	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
@@ -91,15 +90,10 @@ class ConditionalOnBuildSystemTests {
 			return "testNone";
 		}
 
-	}
-
-	@Configuration
-	static class MavenOrGradleBuildSystemTestConfiguration {
-
 		@Bean
-		@ConditionalOnBuildSystem({ "gradle", "maven" })
-		public String mavenOrGradle() {
-			return "testMavenOrGradle";
+		@ConditionalOnBuildSystem(id = "gradle", dialect = "kotlin")
+		public String gradleKotlin() {
+			return "testGradleKotlinDialect";
 		}
 
 	}

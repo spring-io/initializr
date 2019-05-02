@@ -16,12 +16,13 @@
 
 package io.spring.initializr.generator.condition;
 
-import java.util.Arrays;
-
+import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link ProjectGenerationCondition Condition} implementation for
@@ -34,11 +35,18 @@ class OnBuildSystemCondition extends ProjectGenerationCondition {
 	@Override
 	protected boolean matches(ResolvedProjectDescription projectDescription,
 			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		String[] buildSystemIds = (String[]) metadata
-				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName())
-				.getFirst("value");
-		return Arrays.asList(buildSystemIds)
-				.contains(projectDescription.getBuildSystem().id());
+		MultiValueMap<String, Object> attributes = metadata
+				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
+		String buildSystemId = (String) attributes.getFirst("value");
+		String dialect = (String) attributes.getFirst("dialect");
+		BuildSystem buildSystem = projectDescription.getBuildSystem();
+		if (buildSystem.id().equals(buildSystemId)) {
+			if (StringUtils.hasText(dialect)) {
+				return dialect.equals(buildSystem.dialect());
+			}
+			return true;
+		}
+		return false;
 	}
 
 }

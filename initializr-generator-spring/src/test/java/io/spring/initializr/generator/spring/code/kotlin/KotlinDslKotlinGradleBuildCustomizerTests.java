@@ -48,6 +48,8 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 		GradleBuild build = new GradleBuild();
 		new KotlinDslKotlinGradleBuildCustomizer(
 				new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		assertThat(build.getImportedTypes())
+				.contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
 		assertThat(build.getTasksWithTypeCustomizations()).hasSize(1);
 		assertThat(build.getTasksWithTypeCustomizations()).containsKeys("KotlinCompile");
 		assertKotlinOptions(build.getTasksWithTypeCustomizations().get("KotlinCompile"));

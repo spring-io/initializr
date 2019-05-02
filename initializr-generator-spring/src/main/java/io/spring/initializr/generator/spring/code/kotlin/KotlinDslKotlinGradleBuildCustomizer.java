@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,12 +33,13 @@ class KotlinDslKotlinGradleBuildCustomizer extends KotlinGradleBuildCustomizer {
 	}
 
 	@Override
-	protected void customizeKotlinOptions(TaskCustomization compile) {
+	protected void customizeKotlinOptions(KotlinProjectSettings settings,
+			TaskCustomization compile) {
 		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = this.settings.getCompilerArgs().stream()
+			String compilerArgs = settings.getCompilerArgs().stream()
 					.map((arg) -> "\"" + arg + "\"").collect(Collectors.joining(", "));
 			kotlinOptions.set("freeCompilerArgs", "listOf(" + compilerArgs + ")");
-			kotlinOptions.set("jvmTarget", "\"" + this.settings.getJvmTarget() + "\"");
+			kotlinOptions.set("jvmTarget", "\"" + settings.getJvmTarget() + "\"");
 		});
 	}
 

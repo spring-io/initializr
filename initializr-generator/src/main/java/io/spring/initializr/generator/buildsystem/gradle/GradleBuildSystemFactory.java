@@ -28,8 +28,19 @@ class GradleBuildSystemFactory implements BuildSystemFactory {
 
 	@Override
 	public BuildSystem createBuildSystem(String id) {
+		return createBuildSystem(id, null);
+	}
+
+	@Override
+	public BuildSystem createBuildSystem(String id, String dialect) {
 		if (GradleBuildSystem.ID.equals(id)) {
-			return new GradleBuildSystem();
+			if (dialect == null) {
+				return new GradleBuildSystem();
+			}
+			if (dialect.equals(GradleBuildSystem.DIALECT_GROOVY)
+					|| dialect.equals(GradleBuildSystem.DIALECT_KOTLIN)) {
+				return new GradleBuildSystem(dialect);
+			}
 		}
 		return null;
 	}

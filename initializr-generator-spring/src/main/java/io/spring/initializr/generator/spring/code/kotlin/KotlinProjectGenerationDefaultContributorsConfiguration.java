@@ -18,7 +18,6 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -162,7 +161,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	 * @author Andy Wilkinson
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
+			dialect = GradleBuildSystem.DIALECT_GROOVY)
 	static class KotlinGradleProjectConfiguration {
 
 		@Bean
@@ -179,7 +179,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	 * @author Jean-Baptiste Nizet
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(GradleKtsBuildSystem.ID)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
+			dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	static class KotlinGradleKtsProjectConfiguration {
 
 		@Bean

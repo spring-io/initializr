@@ -21,28 +21,30 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomi
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
 /**
- * {@link BuildCustomizer} template for Kotlin projects build with Gradle. A subclass
- * exists for each DSL.
+ * {@link BuildCustomizer} abstraction for Kotlin projects build with Gradle.
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @see GroovyDslKotlinGradleBuildCustomizer
+ * @see KotlinDslKotlinGradleBuildCustomizer
  */
 abstract class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	protected final KotlinProjectSettings settings;
+	private final KotlinProjectSettings settings;
 
 	KotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 		this.settings = kotlinProjectSettings;
 	}
 
 	@Override
-	public final void customize(GradleBuild build) {
+	public void customize(GradleBuild build) {
 		build.addPlugin("org.jetbrains.kotlin.jvm", this.settings.getVersion());
 		build.addPlugin("org.jetbrains.kotlin.plugin.spring", this.settings.getVersion());
 		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-				this::customizeKotlinOptions);
+				(compile) -> customizeKotlinOptions(this.settings, compile));
 	}
 
-	protected abstract void customizeKotlinOptions(TaskCustomization compile);
+	protected abstract void customizeKotlinOptions(KotlinProjectSettings settings,
+			TaskCustomization compile);
 
 }

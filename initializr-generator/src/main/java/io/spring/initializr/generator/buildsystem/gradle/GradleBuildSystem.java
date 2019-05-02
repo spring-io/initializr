@@ -19,8 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 
 /**
- * Gradle {@link BuildSystem} using the Groovy DSL (i.e. settings.gradle and
- * build.gradle).
+ * Gradle {@link BuildSystem}.
  *
  * @author Andy Wilkinson
  */
@@ -31,9 +30,34 @@ public final class GradleBuildSystem implements BuildSystem {
 	 */
 	public static final String ID = "gradle";
 
+	/**
+	 * Gradle build using the Groovy DSL.
+	 */
+	public static final String DIALECT_GROOVY = "groovy";
+
+	/**
+	 * Gradle build using the Kotlin DSL.
+	 */
+	public static final String DIALECT_KOTLIN = "kotlin";
+
+	private final String dialect;
+
+	public GradleBuildSystem() {
+		this(DIALECT_GROOVY);
+	}
+
+	public GradleBuildSystem(String dialect) {
+		this.dialect = dialect;
+	}
+
 	@Override
 	public String id() {
 		return ID;
+	}
+
+	@Override
+	public String dialect() {
+		return this.dialect;
 	}
 
 	@Override

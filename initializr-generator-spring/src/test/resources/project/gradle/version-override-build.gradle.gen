@@ -14,8 +14,8 @@ repositories {
 }
 
 ext {
-	set('springBarVersion', '0.2.0.RELEASE')
-	set('spring-foo.version', '0.1.0.RELEASE')
+	set('springBarVersion', "0.2.0.RELEASE")
+	set('spring-foo.version', "0.1.0.RELEASE")
 }
 
 dependencies {

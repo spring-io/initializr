@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,14 +25,15 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
+import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
-import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleBuildWriter;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
-import io.spring.initializr.generator.spring.build.BuildWriter;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -45,6 +46,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,8 +68,8 @@ class GradleKtsProjectGenerationConfigurationTests {
 				.withDirectory(directory)
 				.withBean(InitializrMetadata.class,
 						() -> InitializrMetadataTestBuilder.withDefaults().build())
-				.withDescriptionCustomizer((description) -> description
-						.setBuildSystem(new GradleKtsBuildSystem()));
+				.withDescriptionCustomizer((description) -> description.setBuildSystem(
+						new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN)));
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
@@ -83,12 +85,13 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setLanguage(new JavaLanguage());
 		BuildWriter buildWriter = this.projectTester.generate(description,
 				(context) -> context.getBean(BuildWriter.class));
-		assertThat(buildWriter)
-				.isInstanceOf(KotlinDslGradleBuildProjectContributor.class);
+		assertThat(buildWriter).isInstanceOf(GradleBuildProjectContributor.class);
+		assertThat(ReflectionTestUtils.getField(buildWriter, "buildWriter"))
+				.isInstanceOf(KotlinDslGradleBuildWriter.class);
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.2.1"));
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.4.1"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")

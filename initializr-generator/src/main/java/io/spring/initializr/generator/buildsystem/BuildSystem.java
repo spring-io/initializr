@@ -36,6 +36,15 @@ public interface BuildSystem {
 	 */
 	String id();
 
+	/**
+	 * The dialect of the build system, or {@code null} if the build system does not
+	 * support multiple dialects.
+	 * @return the dialect or {@code null}
+	 */
+	default String dialect() {
+		return null;
+	}
+
 	default Path getMainDirectory(Path projectRoot, Language language) {
 		return projectRoot.resolve("src/main/" + language.id());
 	}
@@ -45,13 +54,17 @@ public interface BuildSystem {
 	}
 
 	static BuildSystem forId(String id) {
+		return forIdAndDialect(id, null);
+	}
+
+	static BuildSystem forIdAndDialect(String id, String dialect) {
 		return SpringFactoriesLoader
 				.loadFactories(BuildSystemFactory.class,
 						BuildSystem.class.getClassLoader())
-				.stream().map((factory) -> factory.createBuildSystem(id))
-				.filter(Objects::nonNull).findFirst()
-				.orElseThrow(() -> new IllegalStateException(
-						"Unrecognized build system id '" + id + "'"));
+				.stream().map((factory) -> factory.createBuildSystem(id, dialect))
+				.filter(Objects::nonNull).findFirst().orElseThrow(
+						() -> new IllegalStateException("Unrecognized build system id '"
+								+ id + "' and dialect '" + dialect + "'"));
 	}
 
 }

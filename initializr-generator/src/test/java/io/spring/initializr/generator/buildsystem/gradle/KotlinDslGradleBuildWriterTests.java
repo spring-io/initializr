@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,11 +18,11 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
@@ -36,23 +36,6 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Jean-Baptiste Nizet
  */
 class KotlinDslGradleBuildWriterTests {
-
-	@Test
-	void gradleBuildWithImports() throws IOException {
-		GradleBuild build = new GradleBuild();
-		build.addImportedType(
-				"org.springframework.boot.gradle.tasks.buildinfo.BuildInfo");
-		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
-		build.addImportedType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile"); // same
-																					// import
-																					// added
-																					// twice
-
-		List<String> lines = generateBuild(build);
-		assertThat(lines.subList(0, 3)).containsExactly(
-				"import org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-				"import org.springframework.boot.gradle.tasks.buildinfo.BuildInfo", "");
-	}
 
 	@Test
 	void gradleBuildWithCoordinates() throws IOException {
@@ -81,23 +64,18 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithBuildscriptDependency() throws IOException {
+	void gradleBuildWithBuildscriptDependency() {
 		GradleBuild build = new GradleBuild();
 		build.buildscript((buildscript) -> buildscript.dependency(
 				"org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE"));
-
-		assertThatIllegalStateException().isThrownBy(() -> {
-			generateBuild(build);
-		});
+		assertThatIllegalStateException().isThrownBy(() -> generateBuild(build));
 	}
 
 	@Test
-	void gradleBuildWithBuildscriptExtProperty() throws IOException {
+	void gradleBuildWithBuildscriptExtProperty() {
 		GradleBuild build = new GradleBuild();
 		build.buildscript((buildscript) -> buildscript.ext("kotlinVersion", "\1.2.51\""));
-		assertThatIllegalStateException().isThrownBy(() -> {
-			generateBuild(build);
-		});
+		assertThatIllegalStateException().isThrownBy(() -> generateBuild(build));
 	}
 
 	@Test
@@ -130,10 +108,9 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithApplyPlugin() throws IOException {
+	void gradleBuildWithApplyPlugin() {
 		GradleBuild build = new GradleBuild();
 		build.applyPlugin("io.spring.dependency-management");
-
 		assertThatIllegalStateException().isThrownBy(() -> generateBuild(build));
 	}
 
@@ -178,17 +155,30 @@ class KotlinDslGradleBuildWriterTests {
 	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments()
 			throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTasksWithType("KotlinCompile", (task) -> {
-			task.nested("kotlinOptions", (kotlinOptions) -> {
-				kotlinOptions.set("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")");
-				kotlinOptions.set("jvmTarget", "\"1.8\"");
-			});
-		});
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				(task) -> task.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions
+						.set("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")));
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				(task) -> task.nested("kotlinOptions",
+						(kotlinOptions) -> kotlinOptions.set("jvmTarget", "\"1.8\"")));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("tasks.withType<KotlinCompile> {",
-				"    kotlinOptions {",
-				"        freeCompilerArgs = listOf(\"-Xjsr305=strict\")",
-				"        jvmTarget = \"1.8\"", "    }", "}");
+		assertThat(lines)
+				.containsOnlyOnce(
+						"import org.jetbrains.kotlin.gradle.tasks.KotlinCompile")
+				.containsSequence("tasks.withType<KotlinCompile> {",
+						"    kotlinOptions {",
+						"        freeCompilerArgs = listOf(\"-Xjsr305=strict\")",
+						"        jvmTarget = \"1.8\"", "    }", "}");
+	}
+
+	@Test
+	void gradleBuildWithTaskWithTypesAndShortTypes() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.customizeTasksWithType("JavaCompile",
+				(javaCompile) -> javaCompile.set("options.fork", "true"));
+		assertThat(generateBuild(build)).doesNotContain("import JavaCompile")
+				.containsSequence("tasks.withType<JavaCompile> {",
+						"    options.fork = true", "}");
 	}
 
 	@Test
@@ -235,9 +225,9 @@ class KotlinDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.ext("java.version", "1.8").ext("alpha", "a");
+		build.ext("java.version", "\"1.8\"").ext("alpha", "file(\"build/example\")");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("extra[\"alpha\"] = \"a\"",
+		assertThat(lines).containsSequence("extra[\"alpha\"] = file(\"build/example\")",
 				"extra[\"java.version\"] = \"1.8\"");
 	}
 
@@ -286,7 +276,7 @@ class KotlinDslGradleBuildWriterTests {
 		build.addExternalVersionProperty("alpha-version", "0.1");
 		build.ext("myProperty", "42");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("extra[\"myProperty\"] = \"42\"",
+		assertThat(lines).containsSequence("extra[\"myProperty\"] = 42",
 				"extra[\"alpha-version\"] = \"0.1\"", "extra[\"testVersion\"] = \"1.0\"");
 	}
 
@@ -451,7 +441,7 @@ class KotlinDslGradleBuildWriterTests {
 		GradleBuildWriter writer = new KotlinDslGradleBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
-		return Arrays.asList(out.toString().split("\\r?\\n"));
+		return TextTestUtils.readAllLines(out.toString());
 	}
 
 }

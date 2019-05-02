@@ -1,6 +1,5 @@
 io.spring.initializr.generator.buildsystem.BuildSystemFactory=\
 io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystemFactory,\
-io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystemFactory,\
 io.spring.initializr.generator.buildsystem.maven.MavenBuildSystemFactory
 
 io.spring.initializr.generator.language.LanguageFactory=\

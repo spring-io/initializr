@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.gradle.GradleKtsBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.groovy.GroovyLanguage;
@@ -64,9 +63,12 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	}
 
 	static Stream<Arguments> parameters() {
-		return Stream.concat(previousGenerationParameters(),
-				Stream.of(Arguments.arguments(BuildSystem.forId(GradleKtsBuildSystem.ID),
-						"build.gradle.kts")));
+		return Stream
+				.concat(previousGenerationParameters(),
+						Stream.of(Arguments.arguments(
+								BuildSystem.forIdAndDialect(GradleBuildSystem.ID,
+										GradleBuildSystem.DIALECT_KOTLIN),
+								"build.gradle.kts")));
 	}
 
 	@ParameterizedTest

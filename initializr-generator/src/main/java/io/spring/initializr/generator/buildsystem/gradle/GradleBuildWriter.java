@@ -43,12 +43,13 @@ import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
 /**
- * A {@link GradleBuild} writer template for build.gradle and build.gradle.kts. A subclass
- * of this class exists for the Groovy DSL and for the Kotlin DSL.
+ * {@link GradleBuild} writer abstraction.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
+ * @see GroovyDslGradleBuildWriter
+ * @see KotlinDslGradleBuildWriter
  */
 public abstract class GradleBuildWriter {
 
@@ -116,7 +117,7 @@ public abstract class GradleBuildWriter {
 		}
 		Map<String, String> allProperties = new LinkedHashMap<>(build.getExt());
 		build.getVersionProperties().entrySet().forEach((entry) -> allProperties
-				.put(getVersionPropertyKey(entry), "'" + entry.getValue() + "'"));
+				.put(getVersionPropertyKey(entry), "\"" + entry.getValue() + "\""));
 		writeExtraProperties(writer, allProperties);
 	}
 

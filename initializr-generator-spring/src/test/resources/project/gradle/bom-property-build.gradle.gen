@@ -14,7 +14,7 @@ repositories {
 }
 
 ext {
-	set('fooVersion', '1.3.3')
+	set('fooVersion', "1.3.3")
 }
 
 dependencies {
