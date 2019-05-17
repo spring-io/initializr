@@ -251,7 +251,7 @@ class KotlinDslGradleBuildWriterTests {
 				DependencyScope.COMPILE);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    implementation(\"org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}\")",
+				"    implementation(\"org.jetbrains.kotlin:kotlin-stdlib-jdk8:${property(\"kotlinVersion\")}\")",
 				"}");
 	}
 
@@ -425,7 +425,7 @@ class KotlinDslGradleBuildWriterTests {
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencyManagement {", "    imports {",
 				"        mavenBom(\"com.example:my-project-dependencies:1.0.0.RELEASE\")",
-				"        mavenBom(\"com.example:root-dependencies:${rootVersion}\")",
+				"        mavenBom(\"com.example:root-dependencies:${property(\"rootVersion\")}\")",
 				"    }", "}");
 	}
 

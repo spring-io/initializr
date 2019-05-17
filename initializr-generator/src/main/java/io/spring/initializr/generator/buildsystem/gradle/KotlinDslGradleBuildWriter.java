@@ -27,6 +27,8 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.version.VersionProperty;
+import io.spring.initializr.generator.version.VersionReference;
 
 /**
  * A {@link GradleBuild} writer for {@code build.gradle.kts}.
@@ -151,14 +153,22 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected String bomAsString(BillOfMaterials bom, String version) {
+	protected String bomAsString(BillOfMaterials bom) {
 		return "mavenBom(\"" + bom.getGroupId() + ":" + bom.getArtifactId() + ":"
-				+ version + "\")";
+				+ determineVersion(bom.getVersion()) + "\")";
 	}
 
-	@Override
-	protected String externalVersionPropertyAsString(String standardFormat) {
-		return "property(\"" + standardFormat + "\")";
+	private String determineVersion(VersionReference versionReference) {
+		if (versionReference != null) {
+			if (versionReference.isProperty()) {
+				VersionProperty property = versionReference.getProperty();
+				return "${property(\"" + (property.isInternal()
+						? property.toCamelCaseFormat() : property.toStandardFormat())
+						+ "\")}";
+			}
+			return versionReference.getValue();
+		}
+		return null;
 	}
 
 	@Override

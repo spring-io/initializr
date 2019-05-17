@@ -21,6 +21,6 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.acme:foo-bom:${fooVersion}")
+		mavenBom("org.acme:foo-bom:${property("fooVersion")}")
 	}
 }

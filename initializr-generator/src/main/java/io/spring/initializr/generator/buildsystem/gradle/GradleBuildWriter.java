@@ -40,7 +40,6 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.Configurati
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
-import io.spring.initializr.generator.version.VersionReference;
 
 /**
  * {@link GradleBuild} writer abstraction.
@@ -188,27 +187,7 @@ public abstract class GradleBuildWriter {
 		writer.println("}");
 	}
 
-	private String bomAsString(BillOfMaterials bom) {
-		String version = determineVersion(bom.getVersion());
-		return bomAsString(bom, version);
-	}
-
-	protected abstract String bomAsString(BillOfMaterials bom, String version);
-
-	protected final String determineVersion(VersionReference versionReference) {
-		if (versionReference != null) {
-			if (versionReference.isProperty()) {
-				VersionProperty property = versionReference.getProperty();
-				return "${" + (property.isInternal() ? property.toCamelCaseFormat()
-						: externalVersionPropertyAsString(property.toStandardFormat()))
-						+ "}";
-			}
-			return versionReference.getValue();
-		}
-		return null;
-	}
-
-	protected abstract String externalVersionPropertyAsString(String standardFormat);
+	protected abstract String bomAsString(BillOfMaterials bom);
 
 	protected abstract void writeTasksWithTypeCustomizations(IndentingWriter writer,
 			GradleBuild build);
