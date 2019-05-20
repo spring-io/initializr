@@ -73,7 +73,7 @@ Consider the following example:
 	}
 ----
 
-This register a bean only if the project to generate uses Gradle and `war` packaging.
+This registers a bean only if the project to generate uses Gradle and `war` packaging.
 Check the `io.spring.initializr.generator.condition` package for more details. Custom
 conditions can easily be created by inheriting from `ProjectGenerationCondition`.
 
@@ -92,8 +92,8 @@ Boot project. Can be replaced by your own conventions if necessary.
 on project generation
 * `initializr-docs`: documentation
 
-Because it contains several auto-configurations, creating your own instance is quite easy,
-actually you could get started using Spring Initializr itself to generate a starting point!
+Because it contains several auto-configurations, creating your own instance is quite easy.
+You could get started using Spring Initializr itself to generate a starting point!
 
 Create a new project with the `web` dependency and add the following dependency:
 
@@ -182,7 +182,7 @@ The available packagings are also configurable that way:
 		  default: false
 ----
 
-NOTE: Additional packages can be configured by implementing the `Packaging` abstraction.
+NOTE: Additional packaging formats can be configured by implementing the `Packaging` abstraction.
 
 
 [[create-instance-boot-versions]]
@@ -571,11 +571,10 @@ The same project can now be generated with `dependencies=ws` or
 [[dependencies-facet]]
 ==== Facets
 A "facet" is a label on a dependency which is used to drive a code modification in the
-generated project. In the standard Initializr generator, there is only one facet that is
-actually used (`web`), but custom installations might choose to use it for their own
-purposes. The `web` facet is used to drive the inclusion of a dependency with id `web`
-(defaulting to `spring-boot-starter-web` if such dependency is not present) when any other
-dependency with that facet is included.
+generated project. For example, `initializr-generator-spring` checks for the presence of a
+dependency with the `web` facet if the packaging type is `war`. The absence of a dependency
+with the `web` facet drives inclusion of a dependency with id `web` (defaulting to
+`spring-boot-starter-web` if such dependency is not available).
 
 The value of the "facets" property of a dependency is a list of strings.
 
