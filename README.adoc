@@ -52,7 +52,7 @@ https://github.com/AlexFalappa/nb-springboot[this plugin])
 [TIP]
 ====
 You can "curl" an instance to get a usage page with examples (try
-`curl start.spring.io`)
+`curl https://start.spring.io`)
 ====
 
 == Generating a project

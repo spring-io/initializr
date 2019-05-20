@@ -153,8 +153,8 @@ as they evolve quite frequently.
 == Command line support
 You can also generate a project in a shell using `cURL` or `HTTPie`. To discover the
 available options of a particular instance, simply "curl it", i.e. if you have `curl`
-installed invoke `curl start.spring.io` on the command-line (or alternatively
-`http start.spring.io` if you prefer to use `HTTPie`).
+installed invoke `curl https://start.spring.io` on the command-line (or alternatively
+`http https://start.spring.io` if you prefer to use `HTTPie`).
 
 The result is a textual representation of the capabilities of the service that are split
 in three sections:
