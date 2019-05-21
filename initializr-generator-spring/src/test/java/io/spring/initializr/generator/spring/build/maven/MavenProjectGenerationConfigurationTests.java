@@ -19,7 +19,6 @@ package io.spring.initializr.generator.spring.build.maven;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildWriter;
@@ -74,10 +73,9 @@ class MavenProjectGenerationConfigurationTests {
 	void mavenWrapperIsContributedWhenGeneratingMavenProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("mvnw", "mvnw.cmd",
-				".mvn/wrapper/MavenWrapperDownloader.java",
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("mvnw",
+				"mvnw.cmd", ".mvn/wrapper/MavenWrapperDownloader.java",
 				".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
 	}
@@ -86,9 +84,8 @@ class MavenProjectGenerationConfigurationTests {
 	void mavenPomIsContributedWhenGeneratingMavenProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("pom.xml");
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
 	}
 
 	@Test
@@ -97,8 +94,7 @@ class MavenProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setPackaging(new WarPackaging());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("pom.xml");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
 		try (Stream<String> lines = Files.lines(projectStructure.resolve("pom.xml"))) {
 			assertThat(lines
 					.filter((line) -> line.contains("    <packaging>war</packaging>")))

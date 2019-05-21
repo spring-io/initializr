@@ -57,9 +57,8 @@ class JavaProjectGenerationConfigurationTests {
 	@Test
 	void mainClassIsContributed() {
 		ProjectDescription description = new ProjectDescription();
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/java/com/example/demo/DemoApplication.java");
 	}
 
@@ -67,8 +66,7 @@ class JavaProjectGenerationConfigurationTests {
 	void testClassIsContributed() {
 		ProjectDescription description = new ProjectDescription();
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
 		List<String> lines = projectStructure
 				.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
@@ -87,8 +85,7 @@ class JavaProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("MyDemoApplication");
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/java/com/example/demo/ServletInitializer.java");
 		List<String> lines = projectStructure
 				.readAllLines("src/main/java/com/example/demo/ServletInitializer.java");
@@ -107,9 +104,8 @@ class JavaProjectGenerationConfigurationTests {
 	void customPackageNameIsUsedWhenGeneratingProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPackageName("com.example.foo");
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains(
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains(
 				"src/main/java/com/example/foo/DemoApplication.java",
 				"src/test/java/com/example/foo/DemoApplicationTests.java");
 	}
@@ -118,9 +114,8 @@ class JavaProjectGenerationConfigurationTests {
 	void customApplicationNameIsUsedWhenGeneratingProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName("MyApplication");
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains(
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains(
 				"src/main/java/com/example/demo/MyApplication.java",
 				"src/test/java/com/example/demo/MyApplicationTests.java");
 	}

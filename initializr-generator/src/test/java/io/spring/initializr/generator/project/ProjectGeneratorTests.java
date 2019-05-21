@@ -18,12 +18,12 @@ package io.spring.initializr.generator.project;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -101,9 +101,9 @@ class ProjectGeneratorTests {
 								Files.createFile(subDir.resolve("Test.src"));
 							});
 				});
-		List<String> relativePaths = tester.generate(new ProjectDescription())
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).containsOnly("test.text", "src/main/test/Test.src");
+		ProjectStructure projectStructure = tester.generate(new ProjectDescription());
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.containsOnly("test.text", "src/main/test/Test.src");
 	}
 
 	private static class TestProjectDescriptionCustomizer

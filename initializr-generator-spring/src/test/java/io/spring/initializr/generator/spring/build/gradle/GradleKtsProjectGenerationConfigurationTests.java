@@ -16,10 +16,7 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -47,7 +44,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -116,18 +112,16 @@ class GradleKtsProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void buildDotGradleDotKtsIsContributedWhenGeneratingGradleKtsProject()
-			throws IOException {
+	void buildDotGradleDotKtsIsContributedWhenGeneratingGradleKtsProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
 				new Dependency("com.example", "acme", DependencyScope.COMPILE));
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle.kts");
-		Path path = projectStructure.resolve("build.gradle.kts");
-		String[] lines = readAllLines(path);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle.kts");
+		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
 		assertThat(lines).containsExactly("plugins {",
 				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"",
 				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"",
@@ -142,18 +136,16 @@ class GradleKtsProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() throws IOException {
+	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		description.setPackaging(new WarPackaging());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle.kts");
-		try (Stream<String> lines = Files
-				.lines(projectStructure.resolve("build.gradle.kts"))) {
-			assertThat(lines.filter((line) -> line.contains("    war"))).hasSize(1);
-		}
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle.kts");
+		assertThat(projectStructure.readAllLines("build.gradle.kts"))
+				.containsOnlyOnce("    war");
 	}
 
 	@Test
@@ -180,14 +172,6 @@ class GradleKtsProjectGenerationConfigurationTests {
 		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
 		assertThat(lines).doesNotContainSequence("tasks.withType<Test> {",
 				"    useJUnitPlatform()", "}");
-	}
-
-	private static String[] readAllLines(Path file) throws IOException {
-		String content = StreamUtils.copyToString(
-				new FileInputStream(new File(file.toString())), StandardCharsets.UTF_8);
-		String[] lines = content.split("\\r?\\n");
-		assertThat(content).endsWith(System.lineSeparator());
-		return lines;
 	}
 
 }

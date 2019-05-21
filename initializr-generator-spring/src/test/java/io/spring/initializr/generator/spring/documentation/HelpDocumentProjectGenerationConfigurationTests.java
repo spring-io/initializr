@@ -23,6 +23,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
@@ -70,9 +71,9 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		ProjectDescription description = new ProjectDescription();
 		description.addDependency("example", null);
-		assertThat(
-				this.projectTester.generate(description).getRelativePathsOfProjectFiles())
-						.containsOnly("HELP.md");
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.containsOnly("HELP.md");
 	}
 
 	@Test

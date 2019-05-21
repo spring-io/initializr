@@ -56,9 +56,9 @@ class GroovyProjectGenerationConfigurationTests {
 
 	@Test
 	void mainClassIsContributed() {
-		List<String> relativePaths = this.projectTester.generate(new ProjectDescription())
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		ProjectStructure projectStructure = this.projectTester
+				.generate(new ProjectDescription());
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/groovy/com/example/demo/DemoApplication.groovy");
 	}
 
@@ -66,8 +66,7 @@ class GroovyProjectGenerationConfigurationTests {
 	void testClassIsContributed() {
 		ProjectStructure projectStructure = this.projectTester
 				.generate(new ProjectDescription());
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
 		List<String> lines = projectStructure.readAllLines(
 				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
@@ -86,8 +85,7 @@ class GroovyProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("Demo2Application");
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths)
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/groovy/com/example/demo/ServletInitializer.groovy");
 		List<String> lines = projectStructure.readAllLines(
 				"src/main/groovy/com/example/demo/ServletInitializer.groovy");
