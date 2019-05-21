@@ -189,8 +189,9 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected String invocationAsString(
 			GradleBuild.TaskCustomization.Invocation invocation) {
-		return invocation.getTarget() + " "
-				+ String.join(", ", invocation.getArguments());
+		String arguments = (invocation.getArguments().isEmpty()) ? "()"
+				: " " + String.join(", ", invocation.getArguments());
+		return invocation.getTarget() + arguments;
 	}
 
 	@Override

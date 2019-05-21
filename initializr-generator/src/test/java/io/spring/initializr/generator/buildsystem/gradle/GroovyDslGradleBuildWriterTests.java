@@ -184,6 +184,14 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithTaskCustomizedWithInvocationAndNoArgument() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.customizeTask("test", (task) -> task.invoke("myMethod"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("test {", "    myMethod()", "}");
+	}
+
+	@Test
 	void gradleBuildWithTaskCustomizedWithAssignments() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.customizeTask("compileKotlin", (task) -> {
