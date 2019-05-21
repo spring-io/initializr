@@ -49,7 +49,9 @@ class GroovyProjectGenerationConfigurationTests {
 						GroovyProjectGenerationConfiguration.class)
 				.withDirectory(directory).withDescriptionCustomizer((description) -> {
 					description.setLanguage(new GroovyLanguage());
-					description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+					if (description.getPlatformVersion() == null) {
+						description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+					}
 					description.setBuildSystem(new MavenBuildSystem());
 				});
 	}
@@ -63,9 +65,10 @@ class GroovyProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testClassIsContributed() {
-		ProjectStructure projectStructure = this.projectTester
-				.generate(new ProjectDescription());
+	void testClassIsContributedWithJUnit4() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
+		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
 		List<String> lines = projectStructure.readAllLines(
@@ -76,6 +79,22 @@ class GroovyProjectGenerationConfigurationTests {
 				"import org.springframework.test.context.junit4.SpringRunner", "",
 				"@RunWith(SpringRunner)", "@SpringBootTest",
 				"class DemoApplicationTests {", "", "    @Test",
+				"    void contextLoads() {", "    }", "", "}");
+	}
+
+	@Test
+	void testClassIsContributedWithJUnit5() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
+		List<String> lines = projectStructure.readAllLines(
+				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
+		assertThat(lines).containsExactly("package com.example.demo", "",
+				"import org.junit.jupiter.api.Test",
+				"import org.springframework.boot.test.context.SpringBootTest", "",
+				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test",
 				"    void contextLoads() {", "    }", "", "}");
 	}
 

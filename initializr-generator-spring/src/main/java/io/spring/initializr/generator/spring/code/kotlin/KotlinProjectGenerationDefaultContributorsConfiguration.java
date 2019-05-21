@@ -53,11 +53,23 @@ import org.springframework.context.annotation.Configuration;
 class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
-	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> testMethodContributor() {
+	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration
 					.function("contextLoads").body();
 			function.annotate(Annotation.name("org.junit.Test"));
+			typeDeclaration.addFunctionDeclaration(function);
+		};
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M3")
+	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
+		return (typeDeclaration) -> {
+			KotlinFunctionDeclaration function = KotlinFunctionDeclaration
+					.function("contextLoads").body();
+			function.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
 	}

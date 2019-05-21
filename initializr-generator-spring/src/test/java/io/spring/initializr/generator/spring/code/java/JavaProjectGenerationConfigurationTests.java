@@ -49,7 +49,9 @@ class JavaProjectGenerationConfigurationTests {
 						JavaProjectGenerationConfiguration.class)
 				.withDirectory(directory).withDescriptionCustomizer((description) -> {
 					description.setLanguage(new JavaLanguage());
-					description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+					if (description.getPlatformVersion() == null) {
+						description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+					}
 					description.setBuildSystem(new MavenBuildSystem());
 				});
 	}
@@ -63,8 +65,9 @@ class JavaProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testClassIsContributed() {
+	void testClassIsContributedWithJUnit4() {
 		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
@@ -77,6 +80,22 @@ class JavaProjectGenerationConfigurationTests {
 				"@RunWith(SpringRunner.class)", "@SpringBootTest",
 				"public class DemoApplicationTests {", "", "    @Test",
 				"    public void contextLoads() {", "    }", "", "}");
+	}
+
+	@Test
+	void testClassIsContributedWithJUnit5() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
+		List<String> lines = projectStructure
+				.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertThat(lines).containsExactly("package com.example.demo;", "",
+				"import org.junit.jupiter.api.Test;",
+				"import org.springframework.boot.test.context.SpringBootTest;", "",
+				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test",
+				"    void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test

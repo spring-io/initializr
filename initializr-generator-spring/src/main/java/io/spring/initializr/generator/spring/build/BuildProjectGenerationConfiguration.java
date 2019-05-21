@@ -17,12 +17,14 @@
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
+import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
@@ -45,9 +47,19 @@ import org.springframework.context.annotation.Bean;
 public class BuildProjectGenerationConfiguration {
 
 	@Bean
-	public BuildCustomizer<Build> testStarterContributor() {
+	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	public BuildCustomizer<Build> junit4TestStarterContributor() {
 		return (build) -> build.dependencies().add("test", "org.springframework.boot",
 				"spring-boot-starter-test", DependencyScope.TEST_COMPILE);
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M3")
+	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+		return (build) -> build.dependencies().add("test", "org.springframework.boot",
+				"spring-boot-starter-test", null, DependencyScope.TEST_COMPILE, null,
+				new Exclusion("org.junit.vintage", "junit-vintage-engine"),
+				new Exclusion("junit", "junit"));
 	}
 
 	@Bean

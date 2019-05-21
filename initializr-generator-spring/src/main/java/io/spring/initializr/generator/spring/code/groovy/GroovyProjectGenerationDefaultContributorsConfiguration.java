@@ -23,6 +23,7 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
+import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.groovy.GroovyExpressionStatement;
@@ -61,12 +62,24 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> testMethodContributor() {
+	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			GroovyMethodDeclaration method = GroovyMethodDeclaration
 					.method("contextLoads").modifiers(Modifier.PUBLIC).returning("void")
 					.body();
 			method.annotate(Annotation.name("org.junit.Test"));
+			typeDeclaration.addMethodDeclaration(method);
+		};
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M3")
+	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
+		return (typeDeclaration) -> {
+			GroovyMethodDeclaration method = GroovyMethodDeclaration
+					.method("contextLoads").returning("void").body();
+			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
 	}

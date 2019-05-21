@@ -43,7 +43,8 @@ public class SourceCodeProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public TestApplicationTypeCustomizer<TypeDeclaration> springBootTestAnnotator() {
+	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	public TestApplicationTypeCustomizer<TypeDeclaration> junit4SpringBootTestTypeCustomizer() {
 		return (typeDeclaration) -> {
 			typeDeclaration.annotate(Annotation.name("org.junit.runner.RunWith",
 					(annotation) -> annotation.attribute("value", Class.class,
@@ -51,6 +52,13 @@ public class SourceCodeProjectGenerationConfiguration {
 			typeDeclaration.annotate(Annotation
 					.name("org.springframework.boot.test.context.SpringBootTest"));
 		};
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M3")
+	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
+		return (typeDeclaration) -> typeDeclaration.annotate(
+				Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
 	}
 
 	/**

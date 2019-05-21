@@ -58,16 +58,8 @@ class SourceCodeProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
-	void addsACustomizerThatAppliesTestAnnotationsOnTestClass() {
-		TypeDeclaration declaration = this.projectTester
-				.generate(new ProjectDescription(), (context) -> {
-					TypeDeclaration type = new TypeDeclaration("Test");
-					TestApplicationTypeCustomizer<TypeDeclaration> bean = context
-							.getBean(TestApplicationTypeCustomizer.class);
-					bean.customize(type);
-					return type;
-				});
+	void addsACustomizerThatAppliesTestAnnotationsOnTestClassWithJunit4() {
+		TypeDeclaration declaration = generateTestTypeDeclaration("2.1.0.RELEASE");
 		assertThat(declaration.getAnnotations()).hasSize(2);
 		assertThat(declaration.getAnnotations().get(0).getName())
 				.isEqualTo("org.junit.runner.RunWith");
@@ -75,6 +67,27 @@ class SourceCodeProjectGenerationConfigurationTests {
 				.containsOnly("org.springframework.test.context.junit4.SpringRunner");
 		assertThat(declaration.getAnnotations().get(1).getName())
 				.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
+	}
+
+	@Test
+	void addsACustomizerThatAppliesTestAnnotationsOnTestClassWithJunit5() {
+		TypeDeclaration declaration = generateTestTypeDeclaration("2.2.0.RELEASE");
+		assertThat(declaration.getAnnotations()).hasSize(1);
+		assertThat(declaration.getAnnotations().get(0).getName())
+				.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
+	}
+
+	@SuppressWarnings("unchecked")
+	private TypeDeclaration generateTestTypeDeclaration(String version) {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse(version));
+		return this.projectTester.generate(description, (context) -> {
+			TypeDeclaration type = new TypeDeclaration("Test");
+			TestApplicationTypeCustomizer<TypeDeclaration> bean = context
+					.getBean(TestApplicationTypeCustomizer.class);
+			bean.customize(type);
+			return type;
+		});
 	}
 
 	@Test

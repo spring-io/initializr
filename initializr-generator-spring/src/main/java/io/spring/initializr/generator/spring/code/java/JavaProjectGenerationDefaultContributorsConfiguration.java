@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.code.java;
 import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
+import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.java.JavaExpressionStatement;
@@ -58,12 +59,24 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	public TestApplicationTypeCustomizer<JavaTypeDeclaration> testMethodContributor() {
+	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	public TestApplicationTypeCustomizer<JavaTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			typeDeclaration.modifiers(Modifier.PUBLIC);
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads")
 					.modifiers(Modifier.PUBLIC).returning("void").body();
 			method.annotate(Annotation.name("org.junit.Test"));
+			typeDeclaration.addMethodDeclaration(method);
+		};
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M3")
+	public TestApplicationTypeCustomizer<JavaTypeDeclaration> junitJupiterTestMethodContributor() {
+		return (typeDeclaration) -> {
+			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads")
+					.returning("void").body();
+			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
 	}
