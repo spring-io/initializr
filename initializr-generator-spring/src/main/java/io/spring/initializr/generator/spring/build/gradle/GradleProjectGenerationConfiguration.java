@@ -224,6 +224,13 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
+		@ConditionalOnPlatformVersion("2.2.0.M3")
+		public BuildCustomizer<GradleBuild> testTaskContributor() {
+			return (build) -> build.customizeTask("test",
+					(test) -> test.invoke("useJUnitPlatform"));
+		}
+
+		@Bean
 		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
 			return new GradleAnnotationProcessorScopeBuildCustomizer();
 		}
@@ -262,6 +269,13 @@ public class GradleProjectGenerationConfiguration {
 						metadata.getConfiguration().getEnv().getGradle()
 								.getDependencyManagementPluginVersion());
 			};
+		}
+
+		@Bean
+		@ConditionalOnPlatformVersion("2.2.0.M3")
+		public BuildCustomizer<GradleBuild> testTaskContributor() {
+			return (build) -> build.customizeTasksWithType("Test",
+					(test) -> test.invoke("useJUnitPlatform"));
 		}
 
 	}

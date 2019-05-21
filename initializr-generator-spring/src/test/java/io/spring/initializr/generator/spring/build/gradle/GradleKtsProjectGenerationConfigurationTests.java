@@ -55,6 +55,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GradleProjectGenerationConfiguration} with Kotlin DSL build system.
  *
  * @author Jean-Baptiste Nizet
+ * @author Stephane Nicoll
  */
 class GradleKtsProjectGenerationConfigurationTests {
 
@@ -153,6 +154,32 @@ class GradleKtsProjectGenerationConfigurationTests {
 				.lines(projectStructure.resolve("build.gradle.kts"))) {
 			assertThat(lines.filter((line) -> line.contains("    war"))).hasSize(1);
 		}
+	}
+
+	@Test
+	void junitPlatformIsConfiguredWithCompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle.kts");
+		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
+		assertThat(lines).containsSequence("tasks.withType<Test> {",
+				"    useJUnitPlatform()", "}");
+	}
+
+	@Test
+	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle.kts");
+		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
+		assertThat(lines).doesNotContainSequence("tasks.withType<Test> {",
+				"    useJUnitPlatform()", "}");
 	}
 
 	private static String[] readAllLines(Path file) throws IOException {

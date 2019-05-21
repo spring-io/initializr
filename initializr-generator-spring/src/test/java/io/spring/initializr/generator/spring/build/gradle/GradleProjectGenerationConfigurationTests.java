@@ -154,6 +154,30 @@ class GradleProjectGenerationConfigurationTests {
 		}
 	}
 
+	@Test
+	void junitPlatformIsConfiguredWithCompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle");
+		List<String> lines = projectStructure.readAllLines("build.gradle");
+		assertThat(lines).containsSequence("test {", "    useJUnitPlatform()", "}");
+	}
+
+	@Test
+	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles())
+				.contains("build.gradle");
+		List<String> lines = projectStructure.readAllLines("build.gradle");
+		assertThat(lines).doesNotContainSequence("test {", "    useJUnitPlatform()", "}");
+	}
+
 	static Stream<Arguments> annotationProcessorScopeBuildParameters() {
 		return Stream.of(Arguments.arguments("1.5.17.RELEASE", false),
 				Arguments.arguments("2.0.6.RELEASE", true),
