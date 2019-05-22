@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.io.StringWriter;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
@@ -261,10 +262,11 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.dependencies().add("test", "com.example", "test", null,
-				DependencyScope.COMPILE, null,
-				new Exclusion("com.example.legacy", "legacy-one"),
-				new Exclusion("com.example.another", "legacy-two"));
+		build.dependencies().add("test",
+				Dependency.withCoordinates("com.example", "test")
+						.scope(DependencyScope.COMPILE)
+						.exclusions(new Exclusion("com.example.legacy", "legacy-one"),
+								new Exclusion("com.example.another", "legacy-two")));
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
 			assertThat(dependency).textAtPath("groupId").isEqualTo("com.example");
@@ -290,8 +292,9 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.dependencies().add("root", "org.springframework.boot",
-				"spring-boot-starter", null, DependencyScope.COMPILE, "tar.gz");
+		build.dependencies().add("root", Dependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter")
+				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
 			assertThat(dependency).textAtPath("type").isEqualTo("tar.gz");

@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
@@ -56,10 +57,11 @@ public class BuildProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
-		return (build) -> build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-test", null, DependencyScope.TEST_COMPILE, null,
-				new Exclusion("org.junit.vintage", "junit-vintage-engine"),
-				new Exclusion("junit", "junit"));
+		return (build) -> build.dependencies().add("test", Dependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
+				.scope(DependencyScope.TEST_COMPILE)
+				.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine"),
+						new Exclusion("junit", "junit")));
 	}
 
 	@Bean

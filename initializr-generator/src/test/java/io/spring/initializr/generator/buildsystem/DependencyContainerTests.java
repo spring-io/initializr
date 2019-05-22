@@ -48,8 +48,10 @@ class DependencyContainerTests {
 	@Test
 	void addDependencyWithVersion() {
 		DependencyContainer container = createTestContainer();
-		container.add("custom", "com.example", "acme", VersionReference.ofValue("1.0.0"),
-				DependencyScope.COMPILE);
+		container.add("custom",
+				Dependency.withCoordinates("com.example", "acme")
+						.version(VersionReference.ofValue("1.0.0"))
+						.scope(DependencyScope.COMPILE));
 		assertThat(container.ids()).containsOnly("custom");
 		assertThat(container.items()).hasSize(1);
 		assertThat(container.isEmpty()).isFalse();

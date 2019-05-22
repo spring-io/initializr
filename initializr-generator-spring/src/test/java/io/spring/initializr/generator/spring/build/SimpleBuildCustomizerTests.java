@@ -64,9 +64,10 @@ class SimpleBuildCustomizerTests {
 	@Test
 	void customizeDependencies() {
 		ProjectDescription description = initializeDescription();
-		Dependency one = new Dependency("com.example", "one", DependencyScope.COMPILE);
-		Dependency two = new Dependency("com.example.acme", "two",
-				DependencyScope.COMPILE);
+		Dependency one = Dependency.withCoordinates("com.example", "one")
+				.scope(DependencyScope.COMPILE).build();
+		Dependency two = Dependency.withCoordinates("com.example.acme", "two")
+				.scope(DependencyScope.COMPILE).build();
 		description.addDependency("two", two);
 		description.addDependency("one", one);
 		MavenBuild build = customizeBuild(description);

@@ -27,16 +27,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DependencyComparatorTests {
 
-	private static final Dependency SPRING_BOOT_A = new Dependency(
-			"org.springframework.boot", "spring-boot-a");
+	private static final Dependency SPRING_BOOT_A = Dependency
+			.withCoordinates("org.springframework.boot", "spring-boot-a").build();
 
-	private static final Dependency SPRING_BOOT_B = new Dependency(
-			"org.springframework.boot", "spring-boot-b");
+	private static final Dependency SPRING_BOOT_B = Dependency
+			.withCoordinates("org.springframework.boot", "spring-boot-b").build();
 
-	private static final Dependency LIB_ALPHA = new Dependency("com.example.alpha",
-			"test");
+	private static final Dependency LIB_ALPHA = Dependency
+			.withCoordinates("com.example.alpha", "test").build();
 
-	private static final Dependency LIB_BETA = new Dependency("com.example.beta", "test");
+	private static final Dependency LIB_BETA = Dependency
+			.withCoordinates("com.example.beta", "test").build();
 
 	private final DependencyComparator comparator = new DependencyComparator();
 
@@ -63,7 +64,8 @@ class DependencyComparatorTests {
 	@Test
 	void compareLibSameGroupId() {
 		assertThat(this.comparator.compare(LIB_BETA,
-				new Dependency("com.example.beta", "a"))).isPositive();
+				Dependency.withCoordinates("com.example.beta", "a").build()))
+						.isPositive();
 	}
 
 }

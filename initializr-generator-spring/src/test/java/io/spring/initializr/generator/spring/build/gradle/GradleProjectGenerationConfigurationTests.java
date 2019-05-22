@@ -121,7 +121,8 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
-				new Dependency("com.example", "acme", DependencyScope.COMPILE));
+				Dependency.withCoordinates("com.example", "acme")
+						.scope(DependencyScope.COMPILE).build());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains("build.gradle");

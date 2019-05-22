@@ -16,13 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.function.Function;
-
-import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
-import io.spring.initializr.generator.version.VersionReference;
 
 /**
  * A {@link BuildItemContainer} implementation for dependencies.
@@ -43,54 +38,17 @@ public class DependencyContainer extends BuildItemContainer<String, Dependency> 
 	 * @param scope the {@link DependencyScope}
 	 */
 	public void add(String id, String groupId, String artifactId, DependencyScope scope) {
-		add(id, new Dependency(groupId, artifactId, scope));
+		add(id, Dependency.withCoordinates(groupId, artifactId).scope(scope));
 	}
 
 	/**
-	 * Register a {@link Dependency} with the specified {@code id}, version and
-	 * {@link DependencyScope scope}.
+	 * Register a {@link Dependency} with the specified {@code id} and
+	 * {@link Dependency.Builder state}.
 	 * @param id the id of the dependency
-	 * @param groupId the groupId
-	 * @param artifactId the artifactId
-	 * @param version the {@link VersionReference}
-	 * @param scope the {@link DependencyScope}
+	 * @param builder the state of the dependency
 	 */
-	public void add(String id, String groupId, String artifactId,
-			VersionReference version, DependencyScope scope) {
-		add(id, new Dependency(groupId, artifactId, version, scope));
-	}
-
-	/**
-	 * Register a {@link Dependency} with the specified {@code id}, version,
-	 * {@link DependencyScope scope} and type.
-	 * @param id the id of the dependency
-	 * @param groupId the groupId
-	 * @param artifactId the artifactId
-	 * @param version the {@link VersionReference}
-	 * @param scope the {@link DependencyScope}
-	 * @param type the artifact type
-	 */
-	public void add(String id, String groupId, String artifactId,
-			VersionReference version, DependencyScope scope, String type) {
-		add(id, new Dependency(groupId, artifactId, version, scope, type));
-	}
-
-	/**
-	 * Register a {@link Dependency} with the specified {@code id}, version,
-	 * {@link DependencyScope scope}, type and exclusions.
-	 * @param id the id of the dependency
-	 * @param groupId the groupId
-	 * @param artifactId the artifactId
-	 * @param version the {@link VersionReference}
-	 * @param scope the {@link DependencyScope}
-	 * @param type the artifact type
-	 * @param exclusions the exclusion(s) to apply
-	 */
-	public void add(String id, String groupId, String artifactId,
-			VersionReference version, DependencyScope scope, String type,
-			Exclusion... exclusions) {
-		add(id, new Dependency(groupId, artifactId, version, scope, type,
-				new LinkedHashSet<>(Arrays.asList(exclusions))));
+	public void add(String id, Dependency.Builder builder) {
+		add(id, builder.build());
 	}
 
 }

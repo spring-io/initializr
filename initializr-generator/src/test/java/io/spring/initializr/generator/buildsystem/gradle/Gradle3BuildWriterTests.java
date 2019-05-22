@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.test.io.TextTestUtils;
@@ -60,8 +61,10 @@ class Gradle3BuildWriterTests {
 	@Test
 	void gradleBuildWithRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("driver", "com.example", "jdbc-driver",
-				VersionReference.ofValue("1.0.0"), DependencyScope.RUNTIME);
+		build.dependencies().add("driver",
+				Dependency.withCoordinates("com.example", "jdbc-driver")
+						.version(VersionReference.ofValue("1.0.0"))
+						.scope(DependencyScope.RUNTIME));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    runtime 'com.example:jdbc-driver:1.0.0'", "}");
@@ -113,8 +116,9 @@ class Gradle3BuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", "org.springframework.boot",
-				"spring-boot-starter", null, DependencyScope.COMPILE, "tar.gz");
+		build.dependencies().add("root", Dependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter")
+				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    compile 'org.springframework.boot:spring-boot-starter@tar.gz'", "}");

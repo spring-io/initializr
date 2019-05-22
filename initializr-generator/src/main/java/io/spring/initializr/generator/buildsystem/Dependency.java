@@ -16,7 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,32 +45,17 @@ public class Dependency {
 
 	private final Set<Exclusion> exclusions;
 
-	public Dependency(String groupId, String artifactId) {
-		this(groupId, artifactId, DependencyScope.COMPILE);
+	Dependency(Builder builder) {
+		this.groupId = builder.groupId;
+		this.artifactId = builder.artifactId;
+		this.version = builder.version;
+		this.scope = builder.scope;
+		this.type = builder.type;
+		this.exclusions = new LinkedHashSet<>(builder.exclusions);
 	}
 
-	public Dependency(String groupId, String artifactId, DependencyScope scope) {
-		this(groupId, artifactId, null, scope);
-	}
-
-	public Dependency(String groupId, String artifactId, VersionReference version,
-			DependencyScope scope) {
-		this(groupId, artifactId, version, scope, null);
-	}
-
-	public Dependency(String groupId, String artifactId, VersionReference version,
-			DependencyScope scope, String type) {
-		this(groupId, artifactId, version, scope, type, null);
-	}
-
-	public Dependency(String groupId, String artifactId, VersionReference version,
-			DependencyScope scope, String type, Set<Exclusion> exclusions) {
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
-		this.scope = scope;
-		this.type = type;
-		this.exclusions = (exclusions != null) ? exclusions : Collections.emptySet();
+	public static Builder withCoordinates(String groupId, String artifactId) {
+		return new Builder(groupId, artifactId);
 	}
 
 	/**
@@ -120,6 +106,66 @@ public class Dependency {
 	 */
 	public Set<Exclusion> getExclusions() {
 		return this.exclusions;
+	}
+
+	/**
+	 * Builder for a dependency.
+	 *
+	 * @see Dependency#withCoordinates(String, String)
+	 */
+	public static final class Builder {
+
+		private String groupId;
+
+		private String artifactId;
+
+		private VersionReference version;
+
+		private DependencyScope scope;
+
+		private String type;
+
+		private Set<Exclusion> exclusions = new LinkedHashSet<>();
+
+		private Builder(String groupId, String artifactId) {
+			this.groupId = groupId;
+			this.artifactId = artifactId;
+		}
+
+		public Builder groupId(String groupId) {
+			this.groupId = groupId;
+			return this;
+		}
+
+		public Builder artifactId(String artifactId) {
+			this.artifactId = artifactId;
+			return this;
+		}
+
+		public Builder version(VersionReference version) {
+			this.version = version;
+			return this;
+		}
+
+		public Builder scope(DependencyScope scope) {
+			this.scope = scope;
+			return this;
+		}
+
+		public Builder type(String type) {
+			this.type = type;
+			return this;
+		}
+
+		public Builder exclusions(Exclusion... exclusions) {
+			this.exclusions = new LinkedHashSet<>(Arrays.asList(exclusions));
+			return this;
+		}
+
+		public Dependency build() {
+			return new Dependency(this);
+		}
+
 	}
 
 	/**

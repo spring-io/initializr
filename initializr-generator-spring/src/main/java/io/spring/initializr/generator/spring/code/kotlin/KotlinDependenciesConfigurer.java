@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
@@ -40,10 +41,13 @@ class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 	@Override
 	public void customize(Build build) {
 		VersionReference version = determineDependencyVersion(build);
-		build.dependencies().add("kotlin-stdlib", "org.jetbrains.kotlin",
-				"kotlin-stdlib-jdk8", version, DependencyScope.COMPILE);
-		build.dependencies().add("kotlin-reflect", "org.jetbrains.kotlin",
-				"kotlin-reflect", version, DependencyScope.COMPILE);
+		build.dependencies()
+				.add("kotlin-stdlib", Dependency
+						.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+						.version(version).scope(DependencyScope.COMPILE));
+		build.dependencies().add("kotlin-reflect",
+				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
+						.version(version).scope(DependencyScope.COMPILE));
 	}
 
 	private VersionReference determineDependencyVersion(Build build) {

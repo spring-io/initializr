@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
@@ -246,9 +247,10 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithVersionedDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("kotlin-stdlib", "org.jetbrains.kotlin",
-				"kotlin-stdlib-jdk8", VersionReference.ofProperty("kotlin.version"),
-				DependencyScope.COMPILE);
+		build.dependencies().add("kotlin-stdlib",
+				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+						.version(VersionReference.ofProperty("kotlin.version"))
+						.scope(DependencyScope.COMPILE));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}\"",
@@ -258,9 +260,11 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExternalVersionedDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("acme", "com.example", "acme",
-				VersionReference.ofProperty(VersionProperty.of("acme.version", false)),
-				DependencyScope.COMPILE);
+		build.dependencies().add("acme",
+				Dependency.withCoordinates("com.example", "acme")
+						.version(VersionReference
+								.ofProperty(VersionProperty.of("acme.version", false)))
+						.scope(DependencyScope.COMPILE));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation \"com.example:acme:${property('acme.version')}\"",
@@ -339,8 +343,10 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("driver", "com.example", "jdbc-driver",
-				VersionReference.ofValue("1.0.0"), DependencyScope.RUNTIME);
+		build.dependencies().add("driver",
+				Dependency.withCoordinates("com.example", "jdbc-driver")
+						.version(VersionReference.ofValue("1.0.0"))
+						.scope(DependencyScope.RUNTIME));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    runtimeOnly 'com.example:jdbc-driver:1.0.0'", "}");
@@ -393,10 +399,11 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExclusions() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "com.example", "test", null,
-				DependencyScope.COMPILE, null,
-				new Exclusion("com.example.legacy", "legacy-one"),
-				new Exclusion("com.example.another", "legacy-two"));
+		build.dependencies().add("test",
+				Dependency.withCoordinates("com.example", "test")
+						.scope(DependencyScope.COMPILE)
+						.exclusions(new Exclusion("com.example.legacy", "legacy-one"),
+								new Exclusion("com.example.another", "legacy-two")));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation('com.example:test') {",
@@ -408,8 +415,9 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", "org.springframework.boot",
-				"spring-boot-starter", null, DependencyScope.COMPILE, "tar.gz");
+		build.dependencies().add("root", Dependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter")
+				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter@tar.gz'",
