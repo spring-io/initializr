@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.test.io.TextTestUtils;
@@ -391,6 +392,21 @@ class KotlinDslGradleBuildWriterTests {
 		assertThat(lines).containsSequence("dependencies {",
 				"    testRuntimeOnly(\"de.flapdoodle.embed:de.flapdoodle.embed.mongo\")",
 				"}");
+	}
+
+	@Test
+	void gradleBuildWithExclusions() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("test", "com.example", "test", null,
+				DependencyScope.COMPILE, null,
+				new Exclusion("com.example.legacy", "legacy-one"),
+				new Exclusion("com.example.another", "legacy-two"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    implementation(\"com.example:test\") {",
+				"        exclude(group = \"com.example.legacy\", module = \"legacy-one\")",
+				"        exclude(group = \"com.example.another\", module = \"legacy-two\")",
+				"    }", "}");
 	}
 
 	@Test

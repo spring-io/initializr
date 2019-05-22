@@ -22,6 +22,7 @@ import java.util.function.BiFunction;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
@@ -124,14 +125,30 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected String dependencyAsString(Dependency dependency) {
+	protected void writeDependency(IndentingWriter writer, Dependency dependency) {
 		String quoteStyle = determineQuoteStyle(dependency.getVersion());
 		String version = determineVersion(dependency.getVersion());
 		String type = dependency.getType();
-		return configurationForScope(dependency.getScope()) + " " + quoteStyle
-				+ dependency.getGroupId() + ":" + dependency.getArtifactId()
-				+ ((version != null) ? ":" + version : "")
-				+ ((type != null) ? "@" + type : "") + quoteStyle;
+		boolean hasExclusions = !dependency.getExclusions().isEmpty();
+		writer.print(configurationForScope(dependency.getScope()));
+		writer.print((hasExclusions) ? "(" : " ");
+		writer.print(quoteStyle + dependency.getGroupId() + ":"
+				+ dependency.getArtifactId() + ((version != null) ? ":" + version : "")
+				+ ((type != null) ? "@" + type : "") + quoteStyle);
+		if (hasExclusions) {
+			writer.println(") {");
+			writer.indented(() -> writeCollection(writer, dependency.getExclusions(),
+					this::dependencyExclusionAsString));
+			writer.println("}");
+		}
+		else {
+			writer.println();
+		}
+	}
+
+	private String dependencyExclusionAsString(Exclusion exclusion) {
+		return "exclude group: '" + exclusion.getGroupId() + "', module: '"
+				+ exclusion.getArtifactId() + "'";
 	}
 
 	private String determineQuoteStyle(VersionReference versionReference) {

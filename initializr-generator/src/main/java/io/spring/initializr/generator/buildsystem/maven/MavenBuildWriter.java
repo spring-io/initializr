@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyComparator;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
@@ -158,6 +159,17 @@ public class MavenBuildWriter {
 				writeSingleElement(writer, "optional", Boolean.toString(true));
 			}
 			writeSingleElement(writer, "type", dependency.getType());
+			if (!dependency.getExclusions().isEmpty()) {
+				writeElement(writer, "exclusions", () -> writeCollection(writer,
+						dependency.getExclusions(), this::writeDependencyExclusion));
+			}
+		});
+	}
+
+	private void writeDependencyExclusion(IndentingWriter writer, Exclusion exclusion) {
+		writeElement(writer, "exclusion", () -> {
+			writeSingleElement(writer, "groupId", exclusion.getGroupId());
+			writeSingleElement(writer, "artifactId", exclusion.getArtifactId());
 		});
 	}
 

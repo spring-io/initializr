@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.io.StringWriter;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.test.assertj.NodeAssert;
@@ -252,6 +253,35 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("version").isNullOrEmpty();
 			assertThat(dependency).textAtPath("scope").isEqualTo("test");
 			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithExclusions() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.setGroup("com.example.demo");
+		build.setArtifact("demo");
+		build.dependencies().add("test", "com.example", "test", null,
+				DependencyScope.COMPILE, null,
+				new Exclusion("com.example.legacy", "legacy-one"),
+				new Exclusion("com.example.another", "legacy-two"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("com.example");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("test");
+			assertThat(dependency).textAtPath("version").isNullOrEmpty();
+			assertThat(dependency).textAtPath("scope").isNullOrEmpty();
+			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+			NodeAssert exclusions = assertThat(dependency).nodeAtPath("exclusions");
+			NodeAssert firstExclusion = assertThat(exclusions).nodeAtPath("exclusion[1]");
+			assertThat(firstExclusion).textAtPath("groupId")
+					.isEqualTo("com.example.legacy");
+			assertThat(firstExclusion).textAtPath("artifactId").isEqualTo("legacy-one");
+			NodeAssert secondExclusion = assertThat(exclusions)
+					.nodeAtPath("exclusion[2]");
+			assertThat(secondExclusion).textAtPath("groupId")
+					.isEqualTo("com.example.another");
+			assertThat(secondExclusion).textAtPath("artifactId").isEqualTo("legacy-two");
 		});
 	}
 

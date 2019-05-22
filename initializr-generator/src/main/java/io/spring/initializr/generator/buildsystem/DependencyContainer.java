@@ -16,9 +16,12 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.function.Function;
 
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.version.VersionReference;
 
 /**
@@ -70,6 +73,24 @@ public class DependencyContainer extends BuildItemContainer<String, Dependency> 
 	public void add(String id, String groupId, String artifactId,
 			VersionReference version, DependencyScope scope, String type) {
 		add(id, new Dependency(groupId, artifactId, version, scope, type));
+	}
+
+	/**
+	 * Register a {@link Dependency} with the specified {@code id}, version,
+	 * {@link DependencyScope scope}, type and exclusions.
+	 * @param id the id of the dependency
+	 * @param groupId the groupId
+	 * @param artifactId the artifactId
+	 * @param version the {@link VersionReference}
+	 * @param scope the {@link DependencyScope}
+	 * @param type the artifact type
+	 * @param exclusions the exclusion(s) to apply
+	 */
+	public void add(String id, String groupId, String artifactId,
+			VersionReference version, DependencyScope scope, String type,
+			Exclusion... exclusions) {
+		add(id, new Dependency(groupId, artifactId, version, scope, type,
+				new LinkedHashSet<>(Arrays.asList(exclusions))));
 	}
 
 }

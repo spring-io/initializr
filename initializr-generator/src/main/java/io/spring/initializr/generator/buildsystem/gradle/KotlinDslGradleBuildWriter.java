@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
@@ -131,13 +132,27 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected String dependencyAsString(Dependency dependency) {
+	protected void writeDependency(IndentingWriter writer, Dependency dependency) {
 		String version = determineVersion(dependency.getVersion());
 		String type = dependency.getType();
-		return configurationForScope(dependency.getScope()) + "(\""
+		writer.print(configurationForScope(dependency.getScope()) + "(\""
 				+ dependency.getGroupId() + ":" + dependency.getArtifactId()
 				+ ((version != null) ? ":" + version : "")
-				+ ((type != null) ? "@" + type : "") + "\")";
+				+ ((type != null) ? "@" + type : "") + "\")");
+		if (!dependency.getExclusions().isEmpty()) {
+			writer.println(" {");
+			writer.indented(() -> writeCollection(writer, dependency.getExclusions(),
+					this::dependencyExclusionAsString));
+			writer.println("}");
+		}
+		else {
+			writer.println();
+		}
+	}
+
+	private String dependencyExclusionAsString(Exclusion exclusion) {
+		return "exclude(group = \"" + exclusion.getGroupId() + "\", module = \""
+				+ exclusion.getArtifactId() + "\")";
 	}
 
 	@Override

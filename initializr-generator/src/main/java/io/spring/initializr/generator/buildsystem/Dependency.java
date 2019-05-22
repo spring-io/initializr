@@ -16,12 +16,19 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
+
 import io.spring.initializr.generator.version.VersionReference;
+
+import org.springframework.util.Assert;
 
 /**
  * A dependency to be declared in a project's build configuration.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public class Dependency {
 
@@ -34,6 +41,8 @@ public class Dependency {
 	private final DependencyScope scope;
 
 	private final String type;
+
+	private final Set<Exclusion> exclusions;
 
 	public Dependency(String groupId, String artifactId) {
 		this(groupId, artifactId, DependencyScope.COMPILE);
@@ -50,11 +59,17 @@ public class Dependency {
 
 	public Dependency(String groupId, String artifactId, VersionReference version,
 			DependencyScope scope, String type) {
+		this(groupId, artifactId, version, scope, type, null);
+	}
+
+	public Dependency(String groupId, String artifactId, VersionReference version,
+			DependencyScope scope, String type, Set<Exclusion> exclusions) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
 		this.scope = scope;
 		this.type = type;
+		this.exclusions = (exclusions != null) ? exclusions : Collections.emptySet();
 	}
 
 	/**
@@ -97,6 +112,58 @@ public class Dependency {
 	 */
 	public String getType() {
 		return this.type;
+	}
+
+	/**
+	 * The {@link Exclusion exclusions} to apply.
+	 * @return the exclusions to apply
+	 */
+	public Set<Exclusion> getExclusions() {
+		return this.exclusions;
+	}
+
+	/**
+	 * Define the reference to a transitive dependency to exclude.
+	 */
+	public static final class Exclusion {
+
+		private final String groupId;
+
+		private final String artifactId;
+
+		public Exclusion(String groupId, String artifactId) {
+			Assert.hasText(groupId, "GroupId must not be null");
+			Assert.hasText(groupId, "ArtifactId must not be null");
+			this.groupId = groupId;
+			this.artifactId = artifactId;
+		}
+
+		public String getGroupId() {
+			return this.groupId;
+		}
+
+		public String getArtifactId() {
+			return this.artifactId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			Exclusion exclusion = (Exclusion) o;
+			return this.groupId.equals(exclusion.groupId)
+					&& this.artifactId.equals(exclusion.artifactId);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.groupId, this.artifactId);
+		}
+
 	}
 
 }

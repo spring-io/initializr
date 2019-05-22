@@ -145,11 +145,17 @@ public abstract class GradleBuildWriter {
 				.addAll(filterDependencies(dependencies, DependencyScope.TEST_COMPILE));
 		sortedDependencies
 				.addAll(filterDependencies(dependencies, DependencyScope.TEST_RUNTIME));
-		writeNestedCollection(writer, "dependencies", sortedDependencies,
-				this::dependencyAsString, writer::println);
+		if (!sortedDependencies.isEmpty()) {
+			writer.println();
+			writer.println("dependencies" + " {");
+			writer.indented(() -> sortedDependencies
+					.forEach((dependency) -> writeDependency(writer, dependency)));
+			writer.println("}");
+		}
 	}
 
-	protected abstract String dependencyAsString(Dependency dependency);
+	protected abstract void writeDependency(IndentingWriter writer,
+			Dependency dependency);
 
 	protected String configurationForScope(DependencyScope type) {
 		switch (type) {
@@ -228,8 +234,8 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
-	private <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
-			Function<T, String> converter) {
+	protected final <T> void writeCollection(IndentingWriter writer,
+			Collection<T> collection, Function<T, String> converter) {
 		writeCollection(writer, collection, converter, null);
 	}
 
