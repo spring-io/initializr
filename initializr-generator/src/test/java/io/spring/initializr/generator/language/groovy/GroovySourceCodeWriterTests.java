@@ -65,6 +65,18 @@ class GroovySourceCodeWriterTests {
 	}
 
 	@Test
+	void emptyTypeDeclarationWithModifiers() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode
+				.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC | Modifier.ABSTRACT);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "",
+				"abstract class Test {", "", "}");
+	}
+
+	@Test
 	void emptyTypeDeclarationWithSuperClass() throws IOException {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode

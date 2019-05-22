@@ -63,6 +63,18 @@ class KotlinSourceCodeWriterTests {
 	}
 
 	@Test
+	void emptyTypeDeclarationWithModifiers() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode
+				.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(KotlinModifier.PUBLIC, KotlinModifier.ABSTRACT);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "",
+				"abstract class Test");
+	}
+
+	@Test
 	void emptyTypeDeclarationWithSuperClass() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode

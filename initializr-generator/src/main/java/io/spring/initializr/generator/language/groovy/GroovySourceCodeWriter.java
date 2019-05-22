@@ -49,18 +49,23 @@ import io.spring.initializr.generator.language.SourceCodeWriter;
  */
 public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode> {
 
+	private static final Map<Predicate<Integer>, String> TYPE_MODIFIERS;
+
 	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
 
 	static {
-		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>();
-		methodModifiers.put(Modifier::isProtected, "protected");
-		methodModifiers.put(Modifier::isPrivate, "private");
-		methodModifiers.put(Modifier::isAbstract, "abstract");
-		methodModifiers.put(Modifier::isStatic, "static");
-		methodModifiers.put(Modifier::isFinal, "final");
+		Map<Predicate<Integer>, String> typeModifiers = new LinkedHashMap<>();
+		typeModifiers.put(Modifier::isProtected, "protected");
+		typeModifiers.put(Modifier::isPrivate, "private");
+		typeModifiers.put(Modifier::isAbstract, "abstract");
+		typeModifiers.put(Modifier::isStatic, "static");
+		typeModifiers.put(Modifier::isFinal, "final");
+		typeModifiers.put(Modifier::isStrict, "strictfp");
+		TYPE_MODIFIERS = typeModifiers;
+		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(
+				typeModifiers);
 		methodModifiers.put(Modifier::isSynchronized, "synchronized");
 		methodModifiers.put(Modifier::isNative, "native");
-		methodModifiers.put(Modifier::isStrict, "strictfp");
 		METHOD_MODIFIERS = methodModifiers;
 	}
 
@@ -97,6 +102,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			}
 			for (GroovyTypeDeclaration type : compilationUnit.getTypeDeclarations()) {
 				writeAnnotations(writer, type);
+				writeModifiers(writer, TYPE_MODIFIERS, type.getModifiers());
 				writer.print("class " + type.getName());
 				if (type.getExtends() != null) {
 					writer.print(" extends " + getUnqualifiedName(type.getExtends()));
@@ -167,7 +173,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	private void writeMethodDeclaration(IndentingWriter writer,
 			GroovyMethodDeclaration methodDeclaration) {
 		writeAnnotations(writer, methodDeclaration);
-		writeMethodModifiers(writer, methodDeclaration);
+		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " "
 				+ methodDeclaration.getName() + "(");
 		List<Parameter> parameters = methodDeclaration.getParameters();
@@ -196,10 +202,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		writer.println();
 	}
 
-	private void writeMethodModifiers(IndentingWriter writer,
-			GroovyMethodDeclaration methodDeclaration) {
-		String modifiers = METHOD_MODIFIERS.entrySet().stream()
-				.filter((entry) -> entry.getKey().test(methodDeclaration.getModifiers()))
+	private void writeModifiers(IndentingWriter writer,
+			Map<Predicate<Integer>, String> availableModifiers, int declaredModifiers) {
+		String modifiers = availableModifiers.entrySet().stream()
+				.filter((entry) -> entry.getKey().test(declaredModifiers))
 				.map(Entry::getValue).collect(Collectors.joining(" "));
 		if (!modifiers.isEmpty()) {
 			writer.print(modifiers);

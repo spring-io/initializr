@@ -46,18 +46,21 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	public MainApplicationTypeCustomizer<JavaTypeDeclaration> mainMethodContributor() {
-		return (typeDeclaration) -> typeDeclaration
-				.addMethodDeclaration(JavaMethodDeclaration.method("main")
-						.modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
-						.parameters(new Parameter("java.lang.String[]", "args"))
-						.body(new JavaExpressionStatement(new JavaMethodInvocation(
-								"org.springframework.boot.SpringApplication", "run",
-								typeDeclaration.getName() + ".class", "args"))));
+		return (typeDeclaration) -> {
+			typeDeclaration.modifiers(Modifier.PUBLIC);
+			typeDeclaration.addMethodDeclaration(JavaMethodDeclaration.method("main")
+					.modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
+					.parameters(new Parameter("java.lang.String[]", "args"))
+					.body(new JavaExpressionStatement(new JavaMethodInvocation(
+							"org.springframework.boot.SpringApplication", "run",
+							typeDeclaration.getName() + ".class", "args"))));
+		};
 	}
 
 	@Bean
 	public TestApplicationTypeCustomizer<JavaTypeDeclaration> testMethodContributor() {
 		return (typeDeclaration) -> {
+			typeDeclaration.modifiers(Modifier.PUBLIC);
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads")
 					.modifiers(Modifier.PUBLIC).returning("void").body();
 			method.annotate(Annotation.name("org.junit.Test"));
@@ -76,6 +79,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 		public ServletInitializerCustomizer<JavaTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
+				typeDeclaration.modifiers(Modifier.PUBLIC);
 				JavaMethodDeclaration configure = JavaMethodDeclaration
 						.method("configure").modifiers(Modifier.PROTECTED)
 						.returning(

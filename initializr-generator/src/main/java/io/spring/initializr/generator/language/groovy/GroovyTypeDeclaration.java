@@ -28,10 +28,20 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  */
 public class GroovyTypeDeclaration extends TypeDeclaration {
 
+	private int modifiers;
+
 	private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
 
 	GroovyTypeDeclaration(String name) {
 		super(name);
+	}
+
+	public void modifiers(int modifiers) {
+		this.modifiers = modifiers;
+	}
+
+	public int getModifiers() {
+		return this.modifiers;
 	}
 
 	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {

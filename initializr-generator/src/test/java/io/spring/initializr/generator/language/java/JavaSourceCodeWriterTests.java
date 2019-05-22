@@ -60,8 +60,20 @@ class JavaSourceCodeWriterTests {
 				.createCompilationUnit("com.example", "Test");
 		compilationUnit.createTypeDeclaration("Test");
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
+				"}");
+	}
+
+	@Test
+	void emptyTypeDeclarationWithModifiers() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode
+				.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PROTECTED | Modifier.ABSTRACT);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
-				"public class Test {", "", "}");
+				"protected abstract class Test {", "", "}");
 	}
 
 	@Test
@@ -74,7 +86,7 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import com.example.build.TestParent;", "",
-				"public class Test extends TestParent {", "", "}");
+				"class Test extends TestParent {", "", "}");
 	}
 
 	@Test
@@ -83,15 +95,15 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode
 				.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addMethodDeclaration(
-				JavaMethodDeclaration.method("trim").returning("java.lang.String")
-						.parameters(new Parameter("java.lang.String", "value"))
-						.body(new JavaReturnStatement(
-								new JavaMethodInvocation("value", "trim"))));
+		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
+				.returning("java.lang.String").modifiers(Modifier.PUBLIC)
+				.parameters(new Parameter("java.lang.String", "value"))
+				.body(new JavaReturnStatement(
+						new JavaMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "",
-				"public class Test {", "", "    public String trim(String value) {",
-				"        return value.trim();", "    }", "", "}");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
+				"    public String trim(String value) {", "        return value.trim();",
+				"    }", "", "}");
 	}
 
 	@Test
@@ -112,7 +124,7 @@ class JavaSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.boot.SpringApplication;",
 				"import org.springframework.boot.autoconfigure.SpringBootApplication;",
-				"", "@SpringBootApplication", "public class Test {", "",
+				"", "@SpringBootApplication", "class Test {", "",
 				"    public static void main(String[] args) {",
 				"        SpringApplication.run(Test.class, args);", "    }", "", "}");
 	}
@@ -124,7 +136,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("counter", Integer.class, "42")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(counter = 42)", "public class Test {", "", "}");
+				"@TestApplication(counter = 42)", "class Test {", "", "}");
 	}
 
 	@Test
@@ -134,7 +146,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("name", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(name = \"test\")", "public class Test {", "", "}");
+				"@TestApplication(name = \"test\")", "class Test {", "", "}");
 	}
 
 	@Test
@@ -144,7 +156,7 @@ class JavaSourceCodeWriterTests {
 						(builder) -> builder.attribute("value", String.class, "test")));
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(\"test\")", "public class Test {", "", "}");
+				"@TestApplication(\"test\")", "class Test {", "", "}");
 	}
 
 	@Test
@@ -156,8 +168,7 @@ class JavaSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import java.time.temporal.ChronoUnit;",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(unit = ChronoUnit.SECONDS)", "public class Test {", "",
-				"}");
+				"@TestApplication(unit = ChronoUnit.SECONDS)", "class Test {", "", "}");
 	}
 
 	@Test
@@ -169,8 +180,8 @@ class JavaSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import com.example.One;", "import com.example.Two;",
 				"import org.springframework.test.TestApplication;", "",
-				"@TestApplication(target = { One.class, Two.class })",
-				"public class Test {", "", "}");
+				"@TestApplication(target = { One.class, Two.class })", "class Test {", "",
+				"}");
 	}
 
 	@Test
@@ -184,7 +195,7 @@ class JavaSourceCodeWriterTests {
 				"import com.example.One;", "import java.time.temporal.ChronoUnit;",
 				"import org.springframework.test.TestApplication;", "",
 				"@TestApplication(target = One.class, unit = ChronoUnit.NANOS)",
-				"public class Test {", "", "}");
+				"class Test {", "", "}");
 	}
 
 	private List<String> writeClassAnnotation(Annotation annotation) throws IOException {
@@ -208,8 +219,8 @@ class JavaSourceCodeWriterTests {
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
-				"import com.example.test.TestAnnotation;", "", "public class Test {", "",
-				"    @TestAnnotation", "    public void something() {", "    }", "", "}");
+				"import com.example.test.TestAnnotation;", "", "class Test {", "",
+				"    @TestAnnotation", "    void something() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location)

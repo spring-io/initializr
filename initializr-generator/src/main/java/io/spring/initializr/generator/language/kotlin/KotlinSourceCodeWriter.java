@@ -78,6 +78,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 			for (KotlinTypeDeclaration type : compilationUnit.getTypeDeclarations()) {
 				writeAnnotations(writer, type);
+				writeModifiers(writer, type.getModifiers());
 				writer.print("class " + type.getName());
 				if (type.getExtends() != null) {
 					writer.print(" : " + getUnqualifiedName(type.getExtends()) + "()");
@@ -113,7 +114,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			KotlinFunctionDeclaration functionDeclaration) {
 		writer.println();
 		writeAnnotations(writer, functionDeclaration);
-		writeMethodModifiers(writer, functionDeclaration);
+		writeModifiers(writer, functionDeclaration.getModifiers());
 		writer.print("fun ");
 		writer.print(functionDeclaration.getName() + "(");
 		List<Parameter> parameters = functionDeclaration.getParameters();
@@ -195,9 +196,9 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return (values.size() > 1) ? "[" + result + "]" : result;
 	}
 
-	private void writeMethodModifiers(IndentingWriter writer,
-			KotlinFunctionDeclaration functionDeclaration) {
-		String modifiers = functionDeclaration.getModifiers().stream()
+	private void writeModifiers(IndentingWriter writer,
+			List<KotlinModifier> declaredModifiers) {
+		String modifiers = declaredModifiers.stream()
 				.filter((entry) -> !entry.equals(KotlinModifier.PUBLIC)).sorted()
 				.map((entry) -> entry.toString().toLowerCase(Locale.ENGLISH))
 				.collect(Collectors.joining(" "));

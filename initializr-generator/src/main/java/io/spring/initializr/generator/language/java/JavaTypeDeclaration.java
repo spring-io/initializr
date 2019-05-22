@@ -28,10 +28,20 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  */
 public class JavaTypeDeclaration extends TypeDeclaration {
 
+	private int modifiers;
+
 	private final List<JavaMethodDeclaration> methodDeclarations = new ArrayList<>();
 
 	JavaTypeDeclaration(String name) {
 		super(name);
+	}
+
+	public void modifiers(int modifiers) {
+		this.modifiers = modifiers;
+	}
+
+	public int getModifiers() {
+		return this.modifiers;
 	}
 
 	public void addMethodDeclaration(JavaMethodDeclaration methodDeclaration) {

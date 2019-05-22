@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.language.java;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -99,7 +98,7 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 		private String returnType = "void";
 
-		private int modifiers = Modifier.PUBLIC;
+		private int modifiers;
 
 		private Builder(String name) {
 			this.name = name;
