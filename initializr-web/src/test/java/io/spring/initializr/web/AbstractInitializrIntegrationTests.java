@@ -16,11 +16,10 @@
 
 package io.spring.initializr.web;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +68,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public File folder;
+	public Path folder;
 
 	@Autowired
 	private RestTemplateBuilder restTemplateBuilder;
@@ -79,7 +78,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	@BeforeEach
 	public void before(@TempDir Path folder) {
 		this.restTemplate = this.restTemplateBuilder.build();
-		this.folder = folder.toFile();
+		this.folder = folder;
 	}
 
 	protected abstract String createUrl(String context);
@@ -199,9 +198,8 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
 		try {
-			File archiveFile = writeArchive(content);
-
-			File project = new File(this.folder, "project");
+			Path archiveFile = writeArchive(content);
+			Path project = this.folder.resolve("project");
 			switch (archiveType) {
 			case ZIP:
 				unzip(archiveFile, project);
@@ -217,30 +215,28 @@ public abstract class AbstractInitializrIntegrationTests {
 		}
 	}
 
-	private void untar(File archiveFile, File project) {
+	private void untar(Path archiveFile, Path project) {
 		Untar expand = new Untar();
 		expand.setProject(new Project());
-		expand.setDest(project);
-		expand.setSrc(archiveFile);
+		expand.setDest(project.toFile());
+		expand.setSrc(archiveFile.toFile());
 		Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
 		method.setValue("gzip");
 		expand.setCompression(method);
 		expand.execute();
 	}
 
-	private void unzip(File archiveFile, File project) {
+	private void unzip(Path archiveFile, Path project) {
 		Expand expand = new Expand();
 		expand.setProject(new Project());
-		expand.setDest(project);
-		expand.setSrc(archiveFile);
+		expand.setDest(project.toFile());
+		expand.setSrc(archiveFile.toFile());
 		expand.execute();
 	}
 
-	protected File writeArchive(byte[] body) throws IOException {
-		File archiveFile = new File(this.folder, "archive");
-		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
-			stream.write(body);
-		}
+	protected Path writeArchive(byte[] body) throws IOException {
+		Path archiveFile = this.folder.resolve("archive");
+		Files.write(archiveFile, body);
 		return archiveFile;
 	}
 

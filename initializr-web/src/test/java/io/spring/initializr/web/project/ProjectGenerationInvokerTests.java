@@ -91,8 +91,8 @@ public class ProjectGenerationInvokerTests {
 		request.initialize(metadata);
 		ProjectGenerationResult result = this.invoker
 				.invokeProjectStructureGeneration(request);
+		new ProjectAssert(result.getRootDirectory()).isJavaProject();
 		File file = result.getRootDirectory().toFile();
-		new ProjectAssert(file).isJavaProject();
 		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils
 				.getField(this.invoker, "temporaryFiles");
 		assertThat(tempFiles.get(file.getName())).contains(file);

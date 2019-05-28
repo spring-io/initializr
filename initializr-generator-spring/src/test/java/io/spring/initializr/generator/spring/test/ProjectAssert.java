@@ -16,20 +16,19 @@
 
 package io.spring.initializr.generator.spring.test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import io.spring.initializr.generator.spring.test.build.GradleBuildAssert;
 import io.spring.initializr.generator.spring.test.build.GradleSettingsAssert;
 import io.spring.initializr.generator.spring.test.build.PomAssert;
 import io.spring.initializr.generator.spring.test.code.SourceCodeAssert;
+import io.spring.initializr.generator.test.io.TextTestUtils;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,24 +44,18 @@ public class ProjectAssert {
 
 	public static final String DEFAULT_APPLICATION_NAME = "DemoApplication";
 
-	private final File dir;
-
-	private Boolean mavenProject;
-
-	public File getDir() {
-		return this.dir;
-	}
-
-	public Boolean getMavenProject() {
-		return this.mavenProject;
-	}
+	private final ProjectStructure projectStructure;
 
 	/**
 	 * Create a new instance with the directory holding the generated project.
 	 * @param dir the directory of the project
 	 */
-	public ProjectAssert(File dir) {
-		this.dir = dir;
+	public ProjectAssert(Path dir) {
+		this.projectStructure = new ProjectStructure(dir);
+	}
+
+	public ProjectStructure getProjectStructure() {
+		return this.projectStructure;
 	}
 
 	/**
@@ -75,9 +68,9 @@ public class ProjectAssert {
 	 * @return an updated project assert on that base directory
 	 */
 	public ProjectAssert hasBaseDir(String name) {
-		File projectDir = file(name);
+		Path projectDir = this.projectStructure.resolve(name);
 		assertThat(projectDir).describedAs("No directory %s found in %s", name,
-				this.dir.getAbsolutePath()).exists();
+				this.projectStructure.getProjectDirectory()).exists();
 		assertThat(projectDir).isDirectory();
 		// Replacing the root dir so that other assertions match the root
 		return new ProjectAssert(projectDir);
@@ -88,13 +81,8 @@ public class ProjectAssert {
 	 * @return a POM assert
 	 */
 	public PomAssert pomAssert() {
-		try {
-			return new PomAssert(StreamUtils.copyToString(
-					new FileInputStream(file("pom.xml")), Charset.forName("UTF-8")));
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Cannot resolve pom.xml", ex);
-		}
+		return new PomAssert(
+				TextTestUtils.readContent(this.projectStructure.resolve("pom.xml")));
 	}
 
 	/**
@@ -102,13 +90,8 @@ public class ProjectAssert {
 	 * @return a gradle assert
 	 */
 	public GradleBuildAssert gradleBuildAssert() {
-		try {
-			return new GradleBuildAssert(StreamUtils.copyToString(
-					new FileInputStream(file("build.gradle")), Charset.forName("UTF-8")));
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Cannot resolve build.gradle", ex);
-		}
+		return new GradleBuildAssert(
+				TextTestUtils.readContent(this.projectStructure.resolve("build.gradle")));
 	}
 
 	/**
@@ -116,14 +99,8 @@ public class ProjectAssert {
 	 * @return A gradle settings assert
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
-		try {
-			return new GradleSettingsAssert(
-					StreamUtils.copyToString(new FileInputStream(file("settings.gradle")),
-							Charset.forName("UTF-8")));
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Cannot resolve settings.gradle", ex);
-		}
+		return new GradleSettingsAssert(TextTestUtils
+				.readContent(this.projectStructure.resolve("settings.gradle")));
 	}
 
 	/**
@@ -133,21 +110,14 @@ public class ProjectAssert {
 	 */
 	public SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
 		hasFile(sourceCodePath);
-		try {
-			return new SourceCodeAssert(sourceCodePath, StreamUtils.copyToString(
-					new FileInputStream(file(sourceCodePath)), Charset.forName("UTF-8")));
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Cannot resolve path: " + sourceCodePath,
-					ex);
-		}
+		return new SourceCodeAssert(sourceCodePath,
+				TextTestUtils.readContent(this.projectStructure.resolve(sourceCodePath)));
 	}
 
 	public ProjectAssert isMavenProject() {
 		hasFile("pom.xml").hasNoFile("build.gradle");
 		hasFile("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
-		this.mavenProject = true;
 		return this;
 	}
 
@@ -155,7 +125,6 @@ public class ProjectAssert {
 		hasFile("build.gradle").hasNoFile("pom.xml");
 		hasFile("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		this.mavenProject = false;
 		if (StringUtils.hasText(version)) {
 			Properties properties = properties(
 					"gradle/wrapper/gradle-wrapper.properties");
@@ -234,9 +203,8 @@ public class ProjectAssert {
 	}
 
 	public ProjectAssert hasFile(String... localPaths) {
-		for (String localPath : localPaths) {
-			assertFile(localPath, true);
-		}
+		assertThat(this.projectStructure.getRelativePathsOfProjectFiles())
+				.contains(localPaths);
 		return this;
 	}
 
@@ -248,28 +216,23 @@ public class ProjectAssert {
 	}
 
 	public ProjectAssert hasNoFile(String... localPaths) {
-		for (String localPath : localPaths) {
-			assertFile(localPath, false);
-		}
+		assertThat(this.projectStructure.getRelativePathsOfProjectFiles())
+				.doesNotContain(localPaths);
 		return this;
 	}
 
 	public ProjectAssert assertFile(String localPath, boolean exist) {
-		File candidate = file(localPath);
-		assertThat(candidate.exists())
+		Path candidate = this.projectStructure.resolve(localPath);
+		assertThat(Files.exists(candidate))
 				.describedAs("Invalid presence (%s) exist for %s", exist, localPath)
 				.isEqualTo(exist);
 		return this;
 	}
 
-	private File file(String localPath) {
-		return new File(this.dir, localPath);
-	}
-
 	private Properties properties(String localPath) {
-		File f = file(localPath);
+		Path file = this.projectStructure.resolve(localPath);
 		try {
-			return PropertiesLoaderUtils.loadProperties(new FileSystemResource(f));
+			return PropertiesLoaderUtils.loadProperties(new FileSystemResource(file));
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException("Cannot load Properties", ex);

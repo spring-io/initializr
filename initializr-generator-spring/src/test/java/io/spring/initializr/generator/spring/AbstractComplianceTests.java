@@ -102,7 +102,7 @@ public abstract class AbstractComplianceTests {
 		ProjectStructure projectStructure = projectTester
 				.generate(new ProjectDescription());
 		Path resolve = projectStructure.resolve("");
-		return new ProjectAssert(resolve.toFile());
+		return new ProjectAssert(resolve);
 	}
 
 	private void setupProjectGenerationContext(InitializrMetadata metadata,

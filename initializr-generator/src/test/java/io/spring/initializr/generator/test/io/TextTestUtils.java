@@ -51,15 +51,25 @@ public final class TextTestUtils {
 	 * @return all lines from the file
 	 */
 	public static List<String> readAllLines(Path source) {
+		String content = readContent(source);
+		assertThat(content).endsWith(System.lineSeparator());
+		return readAllLines(content);
+	}
+
+	/**
+	 * Read the content from the specified {@link Path source}. Check the given
+	 * {@code source} is a regular file.
+	 * @param source a text file
+	 * @return the content of the file
+	 */
+	public static String readContent(Path source) {
 		assertThat(source).isRegularFile();
 		try {
 			BufferedReader reader = Files.newBufferedReader(source,
 					StandardCharsets.UTF_8);
 			StringWriter writer = new StringWriter();
 			FileCopyUtils.copy(reader, writer);
-			String content = writer.toString();
-			assertThat(content).endsWith(System.lineSeparator());
-			return readAllLines(content);
+			return writer.toString();
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException(ex);
