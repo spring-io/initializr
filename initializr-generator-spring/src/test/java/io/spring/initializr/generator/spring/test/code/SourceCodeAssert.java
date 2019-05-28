@@ -42,8 +42,8 @@ public class SourceCodeAssert {
 	}
 
 	public SourceCodeAssert equalsTo(Resource expected) {
-		try (InputStream stream = expected.getInputStream()) {
-			String expectedContent = StreamUtils.copyToString(stream,
+		try (InputStream in = expected.getInputStream()) {
+			String expectedContent = StreamUtils.copyToString(in,
 					Charset.forName("UTF-8"));
 			assertThat(this.content).describedAs("Content for %s", this.name)
 					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));

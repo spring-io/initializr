@@ -243,8 +243,8 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected JSONObject readJsonFrom(String path) {
 		try {
 			ClassPathResource resource = new ClassPathResource(path);
-			try (InputStream stream = resource.getInputStream()) {
-				String json = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+			try (InputStream in = resource.getInputStream()) {
+				String json = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
 				String placeholder = "";
 				if (this instanceof AbstractInitializrControllerIntegrationTests) {
 					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;

@@ -52,11 +52,15 @@ class MavenWrapperContributorTests {
 
 	private Consumer<Path> isNotExecutable() {
 		return (path) -> {
-			if (Files.isExecutable(path)) {
+			if (supportsExecutableFlag() && Files.isExecutable(path)) {
 				throw Failures.instance().failure(String
 						.format("%nExpecting:%n  <%s>%nto not be executable.", path));
 			}
 		};
+	}
+
+	private static boolean supportsExecutableFlag() {
+		return !System.getProperty("os.name").startsWith("Windows");
 	}
 
 	Path contribute() throws IOException {

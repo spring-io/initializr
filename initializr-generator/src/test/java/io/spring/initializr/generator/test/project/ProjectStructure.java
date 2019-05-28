@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.test.project;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -75,7 +76,8 @@ public class ProjectStructure {
 	}
 
 	/**
-	 * Return the relative paths of all files.
+	 * Return the relative paths of all files. For consistency, always use {@code /} as
+	 * path separator.
 	 * @return the relative path of all files
 	 */
 	public List<String> getRelativePathsOfProjectFiles() {
@@ -84,8 +86,7 @@ public class ProjectStructure {
 			Files.walkFileTree(this.projectDirectory, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-					relativePaths.add(ProjectStructure.this.projectDirectory
-							.relativize(file).toString());
+					relativePaths.add(createRelativePath(file));
 					return FileVisitResult.CONTINUE;
 				}
 			});
@@ -94,6 +95,14 @@ public class ProjectStructure {
 			throw new IllegalStateException(ex);
 		}
 		return relativePaths;
+	}
+
+	private String createRelativePath(Path file) {
+		String relativePath = this.projectDirectory.relativize(file).toString();
+		if (FileSystems.getDefault().getSeparator().equals("\\")) {
+			return relativePath.replace('\\', '/');
+		}
+		return relativePath;
 	}
 
 }

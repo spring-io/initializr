@@ -16,6 +16,7 @@
 
 package io.spring.initializr.metadata;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,9 +203,8 @@ public final class InitializrMetadataBuilder {
 		@Override
 		public void customize(InitializrMetadata metadata) {
 			logger.info("Loading initializr metadata from " + this.resource);
-			try {
-				String content = StreamUtils.copyToString(this.resource.getInputStream(),
-						UTF_8);
+			try (InputStream in = this.resource.getInputStream()) {
+				String content = StreamUtils.copyToString(in, UTF_8);
 				ObjectMapper objectMapper = new ObjectMapper();
 				InitializrMetadata anotherMetadata = objectMapper.readValue(content,
 						InitializrMetadata.class);
