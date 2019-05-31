@@ -27,7 +27,7 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
 public class Gradle3BuildWriter extends GroovyDslGradleBuildWriter {
 
 	@Override
-	protected String configurationForScope(Dependency dependency) {
+	protected String configurationForDependency(Dependency dependency) {
 		if (dependency instanceof GradleDependency) {
 			String configuration = ((GradleDependency) dependency).getConfiguration();
 			if (configuration != null) {

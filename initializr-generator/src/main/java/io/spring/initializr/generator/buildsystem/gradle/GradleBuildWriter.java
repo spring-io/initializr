@@ -157,7 +157,7 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeDependency(IndentingWriter writer,
 			Dependency dependency);
 
-	protected String configurationForScope(Dependency dependency) {
+	protected String configurationForDependency(Dependency dependency) {
 		if (dependency instanceof GradleDependency) {
 			String configuration = ((GradleDependency) dependency).getConfiguration();
 			if (configuration != null) {

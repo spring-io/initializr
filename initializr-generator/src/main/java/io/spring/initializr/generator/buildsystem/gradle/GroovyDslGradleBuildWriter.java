@@ -130,7 +130,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		String version = determineVersion(dependency.getVersion());
 		String type = dependency.getType();
 		boolean hasExclusions = !dependency.getExclusions().isEmpty();
-		writer.print(configurationForScope(dependency));
+		writer.print(configurationForDependency(dependency));
 		writer.print((hasExclusions) ? "(" : " ");
 		writer.print(quoteStyle + dependency.getGroupId() + ":"
 				+ dependency.getArtifactId() + ((version != null) ? ":" + version : "")
