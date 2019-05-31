@@ -36,6 +36,11 @@ public class MavenDependency extends Dependency {
 		return new Builder(groupId, artifactId);
 	}
 
+	public static Builder from(Dependency dependency) {
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId())
+				.initialize(dependency);
+	}
+
 	public boolean isOptional() {
 		return this.optional;
 	}
@@ -59,7 +64,16 @@ public class MavenDependency extends Dependency {
 		}
 
 		@Override
-		public Dependency build() {
+		protected Builder initialize(Dependency dependency) {
+			super.initialize(dependency);
+			if (dependency instanceof MavenDependency) {
+				optional(((MavenDependency) dependency).isOptional());
+			}
+			return self();
+		}
+
+		@Override
+		public MavenDependency build() {
 			return new MavenDependency(this);
 		}
 

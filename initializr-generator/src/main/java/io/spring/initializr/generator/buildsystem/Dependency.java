@@ -58,6 +58,11 @@ public class Dependency {
 		return new Builder(groupId, artifactId);
 	}
 
+	public static Builder<?> from(Dependency dependency) {
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId())
+				.initialize(dependency);
+	}
+
 	/**
 	 * The group ID of the dependency.
 	 * @return the group ID
@@ -163,9 +168,21 @@ public class Dependency {
 			return self();
 		}
 
+		public B exclusions(Set<Exclusion> exclusions) {
+			this.exclusions = (exclusions != null) ? new LinkedHashSet<>(exclusions)
+					: new LinkedHashSet<>();
+			return self();
+		}
+
 		@SuppressWarnings("unchecked")
 		protected B self() {
 			return (B) this;
+		}
+
+		protected B initialize(Dependency dependency) {
+			version(dependency.getVersion()).scope(dependency.getScope())
+					.type(dependency.getType()).exclusions(dependency.getExclusions());
+			return self();
 		}
 
 		public Dependency build() {

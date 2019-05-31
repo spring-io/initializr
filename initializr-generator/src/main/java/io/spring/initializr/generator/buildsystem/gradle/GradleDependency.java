@@ -36,6 +36,11 @@ public class GradleDependency extends Dependency {
 		return new Builder(groupId, artifactId);
 	}
 
+	public static Builder from(Dependency dependency) {
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId())
+				.initialize(dependency);
+	}
+
 	public String getConfiguration() {
 		return this.configuration;
 	}
@@ -59,7 +64,16 @@ public class GradleDependency extends Dependency {
 		}
 
 		@Override
-		public Dependency build() {
+		protected Builder initialize(Dependency dependency) {
+			super.initialize(dependency);
+			if (dependency instanceof GradleDependency) {
+				configuration(((GradleDependency) dependency).getConfiguration());
+			}
+			return self();
+		}
+
+		@Override
+		public GradleDependency build() {
 			return new GradleDependency(this);
 		}
 
