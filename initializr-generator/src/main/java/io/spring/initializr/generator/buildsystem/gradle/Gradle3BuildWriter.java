@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 
 /**
@@ -25,7 +26,15 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
  */
 public class Gradle3BuildWriter extends GroovyDslGradleBuildWriter {
 
-	protected String configurationForScope(DependencyScope type) {
+	@Override
+	protected String configurationForScope(Dependency dependency) {
+		if (dependency instanceof GradleDependency) {
+			String configuration = ((GradleDependency) dependency).getConfiguration();
+			if (configuration != null) {
+				return configuration;
+			}
+		}
+		DependencyScope type = dependency.getScope();
 		switch (type) {
 		case ANNOTATION_PROCESSOR:
 			return "compileOnly";

@@ -124,6 +124,18 @@ class Gradle3BuildWriterTests {
 				"    compile 'org.springframework.boot:spring-boot-starter@tar.gz'", "}");
 	}
 
+	@Test
+	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("test", GradleDependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
+				.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'",
+				"}");
+	}
+
 	private List<String> generateBuild(GradleBuild build) throws IOException {
 		Gradle3BuildWriter writer = new Gradle3BuildWriter();
 		StringWriter out = new StringWriter();

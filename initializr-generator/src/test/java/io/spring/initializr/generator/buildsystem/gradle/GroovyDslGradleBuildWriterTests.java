@@ -413,6 +413,18 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("test", GradleDependency
+				.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
+				.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'",
+				"}");
+	}
+
+	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency

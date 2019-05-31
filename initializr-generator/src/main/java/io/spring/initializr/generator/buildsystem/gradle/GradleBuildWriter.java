@@ -157,7 +157,14 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeDependency(IndentingWriter writer,
 			Dependency dependency);
 
-	protected String configurationForScope(DependencyScope type) {
+	protected String configurationForScope(Dependency dependency) {
+		if (dependency instanceof GradleDependency) {
+			String configuration = ((GradleDependency) dependency).getConfiguration();
+			if (configuration != null) {
+				return configuration;
+			}
+		}
+		DependencyScope type = dependency.getScope();
 		switch (type) {
 		case ANNOTATION_PROCESSOR:
 			return "annotationProcessor";
