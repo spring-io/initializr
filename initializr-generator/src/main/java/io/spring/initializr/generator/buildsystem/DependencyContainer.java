@@ -47,7 +47,7 @@ public class DependencyContainer extends BuildItemContainer<String, Dependency> 
 	 * @param id the id of the dependency
 	 * @param builder the state of the dependency
 	 */
-	public void add(String id, Dependency.Builder builder) {
+	public void add(String id, Dependency.Builder<?> builder) {
 		add(id, builder.build());
 	}
 

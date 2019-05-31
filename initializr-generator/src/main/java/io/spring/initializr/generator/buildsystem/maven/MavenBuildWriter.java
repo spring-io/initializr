@@ -155,7 +155,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "version",
 					determineVersion(dependency.getVersion()));
 			writeSingleElement(writer, "scope", scopeForType(dependency.getScope()));
-			if (isOptional(dependency.getScope())) {
+			if (isOptional(dependency)) {
 				writeSingleElement(writer, "optional", Boolean.toString(true));
 			}
 			writeSingleElement(writer, "type", dependency.getType());
@@ -202,9 +202,13 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private boolean isOptional(DependencyScope type) {
-		return (type == DependencyScope.ANNOTATION_PROCESSOR
-				|| type == DependencyScope.COMPILE_ONLY);
+	private boolean isOptional(Dependency dependency) {
+		if (dependency instanceof MavenDependency
+				&& ((MavenDependency) dependency).isOptional()) {
+			return true;
+		}
+		return (dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR
+				|| dependency.getScope() == DependencyScope.COMPILE_ONLY);
 	}
 
 	private void writeDependencyManagement(IndentingWriter writer, MavenBuild build) {
