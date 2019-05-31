@@ -394,7 +394,13 @@ public class PomAssert {
 		return this;
 	}
 
-	private PomAssert hasText(String path, String value) {
+	/**
+	 * Assert {@code pom.xml} contains the specified value at the specified path.
+	 * @param path the path to the element
+	 * @param value the expected value of the element
+	 * @return this
+	 */
+	public PomAssert hasText(String path, String value) {
 		assertThat(this.pom).textAtPath(path).isEqualTo(value);
 		return this;
 	}
