@@ -113,11 +113,6 @@ public class MainController extends AbstractInitializrController {
 		return this.metadataProvider.get();
 	}
 
-	@RequestMapping("/metadata/client")
-	public String client() {
-		return "redirect:/";
-	}
-
 	@RequestMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT,
@@ -152,19 +147,20 @@ public class MainController extends AbstractInitializrController {
 		return builder.eTag(createUniqueId(content)).body(content);
 	}
 
-	@RequestMapping(path = "/", produces = "application/hal+json")
+	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1,
 				HAL_JSON_CONTENT_TYPE);
 	}
 
-	@RequestMapping(path = "/",
+	@RequestMapping(path = { "/", "/metadata/client" },
 			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
 
-	@RequestMapping(path = "/", produces = "application/vnd.initializr.v2+json")
+	@RequestMapping(path = { "/", "/metadata/client" },
+			produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
@@ -180,7 +176,8 @@ public class MainController extends AbstractInitializrController {
 		String content = getJsonMapper(version).write(this.metadataProvider.get(),
 				appUrl);
 		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content))
-				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
+				.varyBy("Accept").cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS))
+				.body(content);
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(

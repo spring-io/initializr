@@ -88,7 +88,7 @@ class MainControllerServiceMetadataIntegrationTests
 	}
 
 	@Test
-	void metadataClientRedirect() {
+	void metadataClientEndpoint() {
 		ResponseEntity<String> response = execute("/metadata/client", String.class, null,
 				"application/json");
 		validateCurrentMetadata(response);
