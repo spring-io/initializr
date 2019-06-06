@@ -24,6 +24,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -93,15 +94,10 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeConfiguration(IndentingWriter writer, String configurationName,
 			GradleBuild.ConfigurationCustomization configurationCustomization) {
-		if (configurationCustomization.getExtendsFrom().isEmpty()) {
-			writer.println(configurationName);
-		}
-		else {
-			writer.println(configurationName + " {");
-			writer.indented(() -> writer.println(String.format("extendsFrom %s",
-					String.join(", ", configurationCustomization.getExtendsFrom()))));
-			writer.println("}");
-		}
+		writer.println(configurationName + " {");
+		writer.indented(() -> writer.println(String.format("extendsFrom %s",
+				String.join(", ", configurationCustomization.getExtendsFrom()))));
+		writer.println("}");
 	}
 
 	@Override
@@ -122,6 +118,24 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	private String getFormattedExtraProperty(String key, String value) {
 		return String.format("set('%s', %s)", key, value);
+	}
+
+	@Override
+	protected void writeConfigurations(IndentingWriter writer, GradleBuild build) {
+		Map<String, ConfigurationCustomization> configurationCustomizations = build
+				.getConfigurationCustomizations();
+		List<String> configurations = build.getConfigurations();
+		if (configurations.isEmpty() && configurationCustomizations.isEmpty()) {
+			return;
+		}
+		writer.println("configurations {");
+		writer.indented(() -> {
+			configurations.forEach(writer::println);
+			configurationCustomizations.forEach((name,
+					customization) -> writeConfiguration(writer, name, customization));
+		});
+		writer.println("}");
+		writer.println("");
 	}
 
 	@Override

@@ -50,6 +50,8 @@ public class GradleBuild extends Build {
 
 	private final List<String> appliedPlugins = new ArrayList<>();
 
+	private final List<String> configurations = new ArrayList<>();
+
 	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
 
 	private final Map<String, TaskCustomization> taskCustomizations = new LinkedHashMap<>();
@@ -122,12 +124,15 @@ public class GradleBuild extends Build {
 	}
 
 	public void addConfiguration(String configurationName) {
-		customizeConfiguration(configurationName, (configuration) -> {
-		});
+		this.configurations.add(configurationName);
 	}
 
 	public Map<String, ConfigurationCustomization> getConfigurationCustomizations() {
 		return Collections.unmodifiableMap(this.configurationCustomizations);
+	}
+
+	public List<String> getConfigurations() {
+		return Collections.unmodifiableList(this.configurations);
 	}
 
 	public Set<String> getImportedTypes() {

@@ -18,7 +18,6 @@ package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,11 +36,7 @@ class GradleConfigurationBuildCustomizerTests {
 		build.dependencies().add("servlet", "javax.servlet", "servlet-api",
 				DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
-		assertThat(build.getConfigurationCustomizations())
-				.containsOnlyKeys("providedRuntime");
-		ConfigurationCustomization providedRuntime = build
-				.getConfigurationCustomizations().get("providedRuntime");
-		assertThat(providedRuntime.getExtendsFrom()).isEmpty();
+		assertThat(build.getConfigurations()).containsOnly("providedRuntime");
 	}
 
 	@Test
