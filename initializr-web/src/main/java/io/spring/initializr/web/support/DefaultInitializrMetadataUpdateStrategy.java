@@ -66,7 +66,8 @@ public class DefaultInitializrMetadataUpdateStrategy
 	/**
 	 * Fetch the available Spring Boot versions using the specified service url.
 	 * @param url the url to the spring-boot project metadata
-	 * @return the spring boot versions metadata.
+	 * @return the spring boot versions metadata or {@code null} if it could not be
+	 * retrieved
 	 */
 	protected List<DefaultMetadataElement> fetchSpringBootVersions(String url) {
 		if (StringUtils.hasText(url)) {
