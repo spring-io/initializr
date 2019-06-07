@@ -65,6 +65,13 @@ public final class ResolvedProjectDescription {
 
 	private final Boolean addSampleUI;
 
+	private final Boolean applyScaffoldingScripts; // svc customisation to apply
+													// scaffolding scripts
+
+	private final String databaseSQLFile; // svc customisation to add database file to
+											// apply
+											// scaffolding scripts
+
 	public ResolvedProjectDescription(ProjectDescription description) {
 		this.platformVersion = description.getPlatformVersion();
 		this.buildSystem = description.getBuildSystem();
@@ -83,6 +90,8 @@ public final class ResolvedProjectDescription {
 		this.requestedDependencies = Collections.unmodifiableMap(requestedDependencies);
 		this.addJenkinsFile = description.getAddJenkinsFile();
 		this.addSampleUI = description.getAddSampleUI();
+		this.databaseSQLFile = description.getDatabaseSQLFile();
+		this.applyScaffoldingScripts = description.getApplyScaffoldingScripts();
 	}
 
 	private String getPackageName(ProjectDescription description) {
@@ -154,6 +163,14 @@ public final class ResolvedProjectDescription {
 
 	public Boolean getAddSampleUI() {
 		return this.addSampleUI;
+	}
+
+	public String getDatabaseSQLFile() {
+		return this.databaseSQLFile;
+	}
+
+	public Boolean getApplyScaffoldingScripts() {
+		return this.applyScaffoldingScripts;
 	}
 
 }

@@ -73,6 +73,8 @@ public class ProjectRequestToDescriptionConverter {
 						MetadataBuildItemMapper.toDependency(dependency)));
 		description.setAddJenkinsFile(request.getAddJenkinsFile());
 		description.setAddSampleUI(request.getAddSampleUI());
+		description.setDatabaseSQLFile(request.getDatabaseSQLFile());
+		description.setApplyScaffoldingScripts(request.getApplyScaffoldingScripts());
 		return description;
 	}
 

@@ -63,6 +63,12 @@ public class ProjectDescription {
 
 	private Boolean addSampleUI; // svc customisation to add default angularjs client code
 
+	private Boolean applyScaffoldingScripts; // svc customisation to apply scaffolding
+												// scripts
+
+	private String databaseSQLFile; // svc customisation to add database file to apply
+									// scaffolding scripts
+
 	/**
 	 * Resolve the state of this instance to a {@link ResolvedProjectDescription}.
 	 * @return an immutable description.
@@ -189,6 +195,22 @@ public class ProjectDescription {
 
 	public void setAddSampleUI(Boolean addSampleUI) {
 		this.addSampleUI = addSampleUI;
+	}
+
+	public String getDatabaseSQLFile() {
+		return this.databaseSQLFile;
+	}
+
+	public void setDatabaseSQLFile(String databaseSQLFile) {
+		this.databaseSQLFile = databaseSQLFile;
+	}
+
+	public Boolean getApplyScaffoldingScripts() {
+		return this.applyScaffoldingScripts;
+	}
+
+	public void setApplyScaffoldingScripts(Boolean applyScaffoldingScripts) {
+		this.applyScaffoldingScripts = applyScaffoldingScripts;
 	}
 
 }

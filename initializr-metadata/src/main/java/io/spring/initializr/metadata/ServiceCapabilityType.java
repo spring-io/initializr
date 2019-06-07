@@ -42,7 +42,12 @@ public enum ServiceCapabilityType {
 	 * A hierarchical set of values (values in values) with the ability to select multiple
 	 * values.
 	 */
-	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
+	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select"),
+
+	/**
+	 * A simple text value with no option.
+	 */
+	BOOLEAN("boolean");
 
 	private final String name;
 

@@ -22,8 +22,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpServletRequest;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
@@ -50,8 +56,10 @@ import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.types.TarFileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
@@ -60,10 +68,12 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as
@@ -88,6 +98,9 @@ public class MainController extends AbstractInitializrController {
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
 
 	private final ProjectGenerationInvoker projectGenerationInvoker;
+
+	@Autowired
+	private HttpServletRequest request;
 
 	public MainController(InitializrMetadataProvider metadataProvider,
 			TemplateRenderer templateRenderer,
@@ -245,6 +258,12 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping("/starter.zip")
 	@ResponseBody
 	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
+		if (request.getDatabaseSQLFile() != null
+				&& !request.getDatabaseSQLFile().equals("")) {
+			request.setDatabaseSQLFile(
+					this.request.getServletContext().getRealPath("/simpleboot-uploads/")
+							+ request.getDatabaseSQLFile());
+		}
 		ProjectGenerationResult result = this.projectGenerationInvoker
 				.invokeProjectStructureGeneration(request);
 		File dir = result.getRootDirectory().toFile();
@@ -268,6 +287,35 @@ public class MainController extends AbstractInitializrController {
 		zip.setDestFile(download.getCanonicalFile());
 		zip.execute();
 		return upload(download, dir, generateFileName(request, "zip"), "application/zip");
+	}
+
+	@PostMapping("/uploadDatabaseSqlFile")
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+		try {
+			String uploadsDir = "/simpleboot-uploads/";
+			String realPathtoUploads = this.request.getServletContext()
+					.getRealPath(uploadsDir);
+			if (!new File(realPathtoUploads).exists()) {
+				new File(realPathtoUploads).mkdir();
+			}
+
+			logger.info("realPathtoUploads = " + realPathtoUploads);
+			Path fileStorageLocation = Paths.get(realPathtoUploads).toAbsolutePath()
+					.normalize();
+			System.out.println(file.getOriginalFilename());
+			// Copy file to the target location (Replacing existing file with the same
+			// name)
+			Path targetLocation = fileStorageLocation.resolve(file.getOriginalFilename());
+			Files.copy(file.getInputStream(), targetLocation,
+					StandardCopyOption.REPLACE_EXISTING);
+
+			return new ResponseEntity<Object>(
+					"Successfully uploaded - " + file.getOriginalFilename(),
+					new HttpHeaders(), HttpStatus.OK);
+		}
+		catch (IOException ex) {
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")

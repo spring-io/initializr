@@ -63,6 +63,12 @@ public class ProjectRequest {
 
 	private Boolean addSampleUI;
 
+	private Boolean applyScaffoldingScripts; // svc customisation to apply scaffolding
+												// scripts
+
+	private String databaseSQLFile; // svc customisation to add database file to apply
+									// scaffolding scripts
+
 	public List<String> getStyle() {
 		return this.style;
 	}
@@ -203,6 +209,22 @@ public class ProjectRequest {
 
 	public void setAddSampleUI(Boolean addSampleUI) {
 		this.addSampleUI = addSampleUI;
+	}
+
+	public Boolean getApplyScaffoldingScripts() {
+		return this.applyScaffoldingScripts;
+	}
+
+	public void setApplyScaffoldingScripts(Boolean applyScaffoldingScripts) {
+		this.applyScaffoldingScripts = applyScaffoldingScripts;
+	}
+
+	public String getDatabaseSQLFile() {
+		return this.databaseSQLFile;
+	}
+
+	public void setDatabaseSQLFile(String databaseSQLFile) {
+		this.databaseSQLFile = databaseSQLFile;
 	}
 
 }
