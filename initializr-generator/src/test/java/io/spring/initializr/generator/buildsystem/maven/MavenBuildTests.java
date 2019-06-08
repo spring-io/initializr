@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link MavenBuild}.
  *
  * @author Stephane Nicoll
+ * @author Olga Maciaszek-Sharma
  */
 class MavenBuildTests {
 
@@ -92,6 +93,26 @@ class MavenBuildTests {
 		assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
 		assertThat(testPlugin.getExecutions().get(0).getGoals())
 				.containsExactly("run-this", "run-that");
+	}
+
+	@Test
+	void mavenPluginExtensionsNotLoadedByDefault() {
+		MavenBuild build = new MavenBuild();
+		build.plugin("com.example", "test-plugin");
+
+		MavenPlugin testPlugin = build.getPlugins().get(0);
+
+		assertThat(testPlugin.shouldLoadExtensions()).isFalse();
+	}
+
+	@Test
+	void mavenPluginExtensionsCanBeLoaded() {
+		MavenBuild build = new MavenBuild();
+		build.plugin("com.example", "test-plugin").loadExtensions();
+
+		MavenPlugin testPlugin = build.getPlugins().get(0);
+
+		assertThat(testPlugin.shouldLoadExtensions()).isTrue();
 	}
 
 }
