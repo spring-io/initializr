@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link MavenBuildWriter}.
  *
  * @author Stephane Nicoll
+ * @author Olga Maciaszek-Sharma
  */
 class MavenBuildWriterTests {
 
@@ -381,6 +382,7 @@ class MavenBuildWriterTests {
 			assertThat(plugin).textAtPath("artifactId")
 					.isEqualTo("spring-boot-maven-plugin");
 			assertThat(plugin).textAtPath("version").isNullOrEmpty();
+			assertThat(plugin).textAtPath("extensions").isNullOrEmpty();
 		});
 	}
 
@@ -457,6 +459,21 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("artifactId")
 					.isEqualTo("kotlin-maven-allopen");
 			assertThat(dependency).textAtPath("version").isEqualTo("${kotlin.version}");
+		});
+	}
+
+	@Test
+	void pomWithPluginWithExtensions() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.setGroup("com.example.demo");
+		build.setArtifact("demo");
+		MavenPlugin demoPlugin = build.plugin("com.example.demo", "demo-plugin");
+		demoPlugin.extensions();
+		generatePom(build, (pom) -> {
+			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
+			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");
+			assertThat(plugin).textAtPath("artifactId").isEqualTo("demo-plugin");
+			assertThat(plugin).textAtPath("extensions").isEqualTo(Boolean.toString(true));
 		});
 	}
 

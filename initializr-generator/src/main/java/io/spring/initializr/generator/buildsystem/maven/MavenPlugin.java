@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  * A plugin in a {@link MavenBuild}.
  *
  * @author Andy Wilkinson
+ * @author Olga Maciaszek-Sharma
  */
 public class MavenPlugin {
 
@@ -42,6 +43,8 @@ public class MavenPlugin {
 	private final List<Dependency> dependencies = new ArrayList<>();
 
 	private ConfigurationCustomization configurationCustomization = null;
+
+	private boolean extensions;
 
 	public MavenPlugin(String groupId, String artifactId) {
 		this(groupId, artifactId, null);
@@ -97,6 +100,17 @@ public class MavenPlugin {
 	public Configuration getConfiguration() {
 		return (this.configurationCustomization == null) ? null
 				: this.configurationCustomization.build();
+	}
+
+	public boolean shouldLoadExtensions() {
+		return this.extensions;
+	}
+
+	/**
+	 * Enables loading plugin extensions.
+	 */
+	public void extensions() {
+		this.extensions = true;
 	}
 
 	/**
