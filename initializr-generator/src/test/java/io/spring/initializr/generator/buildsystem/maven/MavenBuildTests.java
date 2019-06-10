@@ -108,7 +108,7 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginExtensionsCanBeLoaded() {
 		MavenBuild build = new MavenBuild();
-		build.plugin("com.example", "test-plugin").loadExtensions();
+		build.plugin("com.example", "test-plugin").extensions();
 
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 

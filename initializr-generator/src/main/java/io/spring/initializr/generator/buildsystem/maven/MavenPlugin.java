@@ -44,7 +44,7 @@ public class MavenPlugin {
 
 	private ConfigurationCustomization configurationCustomization = null;
 
-	private boolean loadExtensions;
+	private boolean extensions;
 
 	public MavenPlugin(String groupId, String artifactId) {
 		this(groupId, artifactId, null);
@@ -103,14 +103,14 @@ public class MavenPlugin {
 	}
 
 	public boolean shouldLoadExtensions() {
-		return this.loadExtensions;
+		return this.extensions;
 	}
 
 	/**
 	 * Enables loading plugin extensions.
 	 */
-	public void loadExtensions() {
-		this.loadExtensions = true;
+	public void extensions() {
+		this.extensions = true;
 	}
 
 	/**
