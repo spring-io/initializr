@@ -473,7 +473,7 @@ class MavenBuildWriterTests {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");
 			assertThat(plugin).textAtPath("artifactId").isEqualTo("demo-plugin");
-			assertThat(plugin).textAtPath("extensions").isEqualTo(Boolean.toString(true));
+			assertThat(plugin).textAtPath("extensions").isEqualTo("true");
 		});
 	}
 

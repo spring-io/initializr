@@ -102,7 +102,7 @@ class MavenBuildTests {
 
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 
-		assertThat(testPlugin.shouldLoadExtensions()).isFalse();
+		assertThat(testPlugin.isExtensions()).isFalse();
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class MavenBuildTests {
 
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 
-		assertThat(testPlugin.shouldLoadExtensions()).isTrue();
+		assertThat(testPlugin.isExtensions()).isTrue();
 	}
 
 }

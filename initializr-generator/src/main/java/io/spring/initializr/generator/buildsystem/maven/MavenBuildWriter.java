@@ -271,8 +271,8 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "groupId", plugin.getGroupId());
 			writeSingleElement(writer, "artifactId", plugin.getArtifactId());
 			writeSingleElement(writer, "version", plugin.getVersion());
-			if (plugin.shouldLoadExtensions()) {
-				writeSingleElement(writer, "extensions", Boolean.toString(true));
+			if (plugin.isExtensions()) {
+				writeSingleElement(writer, "extensions", "true");
 			}
 			writePluginConfiguration(writer, plugin.getConfiguration());
 			if (!plugin.getExecutions().isEmpty()) {

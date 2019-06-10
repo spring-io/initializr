@@ -102,7 +102,7 @@ public class MavenPlugin {
 				: this.configurationCustomization.build();
 	}
 
-	public boolean shouldLoadExtensions() {
+	public boolean isExtensions() {
 		return this.extensions;
 	}
 
