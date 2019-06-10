@@ -43,6 +43,7 @@ import io.spring.initializr.generator.version.VersionReference;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Olga Maciaszek-Sharma
  */
 public class MavenBuildWriter {
 
@@ -270,6 +271,9 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "groupId", plugin.getGroupId());
 			writeSingleElement(writer, "artifactId", plugin.getArtifactId());
 			writeSingleElement(writer, "version", plugin.getVersion());
+			if (plugin.isExtensions()) {
+				writeSingleElement(writer, "extensions", "true");
+			}
 			writePluginConfiguration(writer, plugin.getConfiguration());
 			if (!plugin.getExecutions().isEmpty()) {
 				writeElement(writer, "executions", () -> writeCollection(writer,
