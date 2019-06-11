@@ -42,38 +42,31 @@ class HelpDocumentProjectGenerationConfigurationTests {
 
 	private ProjectAssetTester projectTester;
 
-	private InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder
-			.withDefaults();
+	private InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder.withDefaults();
 
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester()
 				.withConfiguration(HelpDocumentProjectGenerationConfiguration.class)
-				.withBean(MustacheTemplateRenderer.class,
-						() -> new MustacheTemplateRenderer("classpath:/templates"))
-				.withBean(InitializrMetadata.class, () -> this.metadataBuilder.build())
-				.withDirectory(directory);
+				.withBean(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"))
+				.withBean(InitializrMetadata.class, () -> this.metadataBuilder.build()).withDirectory(directory);
 	}
 
 	@Test
 	void helpDocumentIsNotContributedWithoutLinks() {
-		assertThat(this.projectTester.generate(new ProjectDescription())
-				.getRelativePathsOfProjectFiles()).isEmpty();
+		assertThat(this.projectTester.generate(new ProjectDescription()).getRelativePathsOfProjectFiles()).isEmpty();
 	}
 
 	@Test
 	void helpDocumentIsContributedWithLinks() {
 		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(
-				Link.create("guide", "https://example.com/how-to", "How-to example"));
-		dependency.getLinks().add(Link.create("reference", "https://example.com/doc",
-				"Reference doc example"));
+		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to", "How-to example"));
+		dependency.getLinks().add(Link.create("reference", "https://example.com/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		ProjectDescription description = new ProjectDescription();
 		description.addDependency("example", null);
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.containsOnly("HELP.md");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).containsOnly("HELP.md");
 	}
 
 	@Test
@@ -81,8 +74,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		GitIgnoreCustomizer gitIgnoreCustomizer = this.projectTester.generate(description,
 				(context) -> context.getBean(GitIgnoreCustomizer.class));
-		assertThat(gitIgnoreCustomizer)
-				.isInstanceOf(HelpDocumentGitIgnoreCustomizer.class);
+		assertThat(gitIgnoreCustomizer).isInstanceOf(HelpDocumentGitIgnoreCustomizer.class);
 	}
 
 }

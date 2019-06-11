@@ -32,8 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-ssl" })
-class MainControllerSslIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class MainControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void forceSsl() {
@@ -45,18 +44,14 @@ class MainControllerSslIntegrationTests
 
 	@Test
 	void forceSslInMetadata() {
-		ResponseEntity<String> response = invokeHome(null,
-				"application/vnd.initializr.v2.1+json");
-		validateMetadata(response, InitializrMetadataVersion.V2_1.getMediaType(),
-				"2.1.0-ssl", JSONCompareMode.STRICT);
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json");
+		validateMetadata(response, InitializrMetadataVersion.V2_1.getMediaType(), "2.1.0-ssl", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void forceSslInMetadataV2() {
-		ResponseEntity<String> response = invokeHome(null,
-				"application/vnd.initializr.v2+json");
-		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(),
-				"2.0.0-ssl", JSONCompareMode.STRICT);
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json");
+		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0-ssl", JSONCompareMode.STRICT);
 	}
 
 }

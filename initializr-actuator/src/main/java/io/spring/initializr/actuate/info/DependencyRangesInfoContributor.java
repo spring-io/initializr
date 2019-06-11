@@ -65,8 +65,7 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 			});
 			if (!dep.isEmpty()) {
 				if (dependency.getRange() == null) {
-					boolean openRange = dep.values().stream()
-							.anyMatch((v) -> v.getHigherVersion() == null);
+					boolean openRange = dep.values().stream().anyMatch((v) -> v.getHigherVersion() == null);
 					if (!openRange) {
 						Version higher = getHigher(dep);
 						dep.put("managed", new VersionRange(higher));

@@ -34,8 +34,7 @@ final class JsonFieldPath {
 	private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern
 			.compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
 
-	private static final Pattern ARRAY_INDEX_PATTERN = Pattern
-			.compile("\\[([0-9]+|\\*){0,1}\\]");
+	private static final Pattern ARRAY_INDEX_PATTERN = Pattern.compile("\\[([0-9]+|\\*){0,1}\\]");
 
 	private final String rawPath;
 
@@ -45,8 +44,7 @@ final class JsonFieldPath {
 
 	private final boolean array;
 
-	private JsonFieldPath(String rawPath, List<String> segments, boolean precise,
-			boolean array) {
+	private JsonFieldPath(String rawPath, List<String> segments, boolean precise, boolean array) {
 		this.rawPath = rawPath;
 		this.segments = segments;
 		this.precise = precise;
@@ -98,8 +96,7 @@ final class JsonFieldPath {
 		List<String> segments = new ArrayList<>();
 		while (matcher.find()) {
 			if (previous != matcher.start()) {
-				segments.addAll(extractDotSeparatedSegments(
-						path.substring(previous, matcher.start())));
+				segments.addAll(extractDotSeparatedSegments(path.substring(previous, matcher.start())));
 			}
 			if (matcher.group(1) != null) {
 				segments.add(matcher.group(1));

@@ -53,8 +53,7 @@ public class SingleResourceProjectContributor implements ProjectContributor {
 			Files.createFile(output);
 		}
 		Resource resource = this.resolver.getResource(this.resourcePattern);
-		FileCopyUtils.copy(resource.getInputStream(),
-				Files.newOutputStream(output, StandardOpenOption.APPEND));
+		FileCopyUtils.copy(resource.getInputStream(), Files.newOutputStream(output, StandardOpenOption.APPEND));
 	}
 
 }

@@ -39,8 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  */
 public class ProjectRequestToDescriptionConverterTests {
 
-	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.build();
+	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 
 	private final ProjectRequestToDescriptionConverter converter = new ProjectRequestToDescriptionConverter();
 
@@ -57,14 +56,12 @@ public class ProjectRequestToDescriptionConverterTests {
 	public void convertWhenTypeDoesNotDefineBuildTagShouldThrowException() {
 		Type type = new Type();
 		type.setId("example-project");
-		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults()
-				.addType(type).build();
+		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults().addType(type).build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("example-project");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, testMetadata))
-				.withMessage(
-						"Invalid type 'example-project' (missing build tag) check project metadata");
+				.withMessage("Invalid type 'example-project' (missing build tag) check project metadata");
 	}
 
 	@Test
@@ -73,8 +70,7 @@ public class ProjectRequestToDescriptionConverterTests {
 		request.setBootVersion("1.2.3.M4");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage(
-						"Invalid Spring Boot version 1.2.3.M4 must be 1.5.0 or higher");
+				.withMessage("Invalid Spring Boot version 1.2.3.M4 must be 1.5.0 or higher");
 	}
 
 	@Test
@@ -108,14 +104,13 @@ public class ProjectRequestToDescriptionConverterTests {
 	void convertWhenDependencyOutOfRangeShouldThrowException() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setRange(new VersionRange(Version.parse("2.2.0.M1")));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("foo", dependency).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
+				.build();
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Collections.singletonList("foo"));
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, metadata))
-				.withMessage("Dependency 'foo' is not compatible "
-						+ "with Spring Boot 2.1.1.RELEASE");
+				.withMessage("Dependency 'foo' is not compatible " + "with Spring Boot 2.1.1.RELEASE");
 	}
 
 	@Test
@@ -172,8 +167,7 @@ public class ProjectRequestToDescriptionConverterTests {
 		Type type = new Type();
 		type.setId("example-type");
 		type.getTags().put("build", "gradle");
-		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults()
-				.addType(type).build();
+		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults().addType(type).build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("example-type");
 		ProjectDescription description = this.converter.convert(request, testMetadata);
@@ -208,8 +202,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	void convertShouldUseDefaultPlatformVersionFromMetadata() {
 		ProjectRequest request = createProjectRequest();
 		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getPlatformVersion())
-				.isEqualTo(Version.parse("2.1.1.RELEASE"));
+		assertThat(description.getPlatformVersion()).isEqualTo(Version.parse("2.1.1.RELEASE"));
 	}
 
 	@Test
@@ -250,8 +243,7 @@ public class ProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setDescription("    ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getDescription())
-				.isEqualTo("Demo project for Spring Boot");
+		assertThat(description.getDescription()).isEqualTo("Demo project for Spring Boot");
 	}
 
 	@Test

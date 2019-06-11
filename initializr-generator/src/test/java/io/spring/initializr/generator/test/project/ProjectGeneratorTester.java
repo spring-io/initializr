@@ -36,12 +36,10 @@ import io.spring.initializr.generator.project.ProjectGenerator;
  *
  * @author Stephane Nicoll
  */
-public class ProjectGeneratorTester
-		extends AbstractProjectGenerationTester<ProjectGeneratorTester> {
+public class ProjectGeneratorTester extends AbstractProjectGenerationTester<ProjectGeneratorTester> {
 
 	private ProjectGeneratorTester(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
 		super(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
@@ -51,35 +49,28 @@ public class ProjectGeneratorTester
 
 	private static Map<Class<?>, Supplier<?>> defaultBeans() {
 		Map<Class<?>, Supplier<?>> beans = new HashMap<>();
-		beans.put(IndentingWriterFactory.class,
-				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
-		beans.put(MustacheTemplateRenderer.class,
-				() -> new MustacheTemplateRenderer("classpath:/templates"));
+		beans.put(IndentingWriterFactory.class, () -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
+		beans.put(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"));
 		return beans;
 	}
 
 	@Override
-	protected ProjectGeneratorTester newInstance(
-			Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<ProjectDescription> descriptionCustomizer) {
-		return new ProjectGeneratorTester(beanDefinitions, contextInitializer,
-				descriptionCustomizer);
+	protected ProjectGeneratorTester newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
+			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
+		return new ProjectGeneratorTester(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
 	public ProjectStructure generate(ProjectDescription description) {
 		return invokeProjectGeneration(description, (contextInitializer) -> {
-			Path directory = new ProjectGenerator(contextInitializer)
-					.generate(description, new DefaultProjectAssetGenerator());
+			Path directory = new ProjectGenerator(contextInitializer).generate(description,
+					new DefaultProjectAssetGenerator());
 			return new ProjectStructure(directory);
 		});
 	}
 
-	public <T> T generate(ProjectDescription description,
-			ProjectAssetGenerator<T> projectAssetGenerator) {
-		return invokeProjectGeneration(description,
-				(contextInitializer) -> new ProjectGenerator(contextInitializer)
-						.generate(description, projectAssetGenerator));
+	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
+		return invokeProjectGeneration(description, (contextInitializer) -> new ProjectGenerator(contextInitializer)
+				.generate(description, projectAssetGenerator));
 	}
 
 }

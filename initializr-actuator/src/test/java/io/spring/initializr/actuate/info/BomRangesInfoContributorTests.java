@@ -38,8 +38,7 @@ class BomRangesInfoContributorTests {
 
 	@Test
 	void noBom() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("bom-ranges");
 	}
@@ -47,8 +46,7 @@ class BomRangesInfoContributorTests {
 	@Test
 	void noMapping() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo", bom).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo", bom).build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("bom-ranges");
 	}
@@ -56,29 +54,23 @@ class BomRangesInfoContributorTests {
 	@Test
 	void withMappings() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.getMappings().add(
-				BillOfMaterials.Mapping.create("[1.3.0.RELEASE,1.3.8.RELEASE]", "1.1.0"));
-		bom.getMappings().add(
-				BillOfMaterials.Mapping.create("1.3.8.BUILD-SNAPSHOT", "1.1.1-SNAPSHOT"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo", bom).build();
+		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.3.0.RELEASE,1.3.8.RELEASE]", "1.1.0"));
+		bom.getMappings().add(BillOfMaterials.Mapping.create("1.3.8.BUILD-SNAPSHOT", "1.1.1-SNAPSHOT"));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo", bom).build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).containsKeys("bom-ranges");
 		@SuppressWarnings("unchecked")
-		Map<String, Object> ranges = (Map<String, Object>) info.getDetails()
-				.get("bom-ranges");
+		Map<String, Object> ranges = (Map<String, Object>) info.getDetails().get("bom-ranges");
 		assertThat(ranges).containsOnlyKeys("foo");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> foo = (Map<String, Object>) ranges.get("foo");
-		assertThat(foo).containsExactly(
-				entry("1.1.0", "Spring Boot >=1.3.0.RELEASE and <=1.3.8.RELEASE"),
+		assertThat(foo).containsExactly(entry("1.1.0", "Spring Boot >=1.3.0.RELEASE and <=1.3.8.RELEASE"),
 				entry("1.1.1-SNAPSHOT", "Spring Boot >=1.3.8.BUILD-SNAPSHOT"));
 	}
 
 	private static Info getInfo(InitializrMetadata metadata) {
 		Info.Builder builder = new Info.Builder();
-		new BomRangesInfoContributor(new SimpleInitializrMetadataProvider(metadata))
-				.contribute(builder);
+		new BomRangesInfoContributor(new SimpleInitializrMetadataProvider(metadata)).contribute(builder);
 		return builder.build();
 	}
 

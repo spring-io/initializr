@@ -37,8 +37,7 @@ public class GradleDependency extends Dependency {
 	}
 
 	public static Builder from(Dependency dependency) {
-		return new Builder(dependency.getGroupId(), dependency.getArtifactId())
-				.initialize(dependency);
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
 	}
 
 	public String getConfiguration() {

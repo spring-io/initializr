@@ -40,19 +40,16 @@ class Gradle3BuildWriterTests {
 	void gradleBuildWithAnnotationProcessorDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("annotation-processor", "org.springframework.boot",
-				"spring-boot-configuration-processor",
-				DependencyScope.ANNOTATION_PROCESSOR);
+				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'",
-				"}");
+				"    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'", "}");
 	}
 
 	@Test
 	void gradleBuildWithCompileDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", "org.springframework.boot",
-				"spring-boot-starter", DependencyScope.COMPILE);
+		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    compile 'org.springframework.boot:spring-boot-starter'", "}");
@@ -61,53 +58,47 @@ class Gradle3BuildWriterTests {
 	@Test
 	void gradleBuildWithRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("driver",
-				Dependency.withCoordinates("com.example", "jdbc-driver")
-						.version(VersionReference.ofValue("1.0.0"))
-						.scope(DependencyScope.RUNTIME));
+		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")
+				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("dependencies {",
-				"    runtime 'com.example:jdbc-driver:1.0.0'", "}");
+		assertThat(lines).containsSequence("dependencies {", "    runtime 'com.example:jdbc-driver:1.0.0'", "}");
 	}
 
 	@Test
 	void gradleBuildWithProvidedRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("tomcat", "org.springframework.boot",
-				"spring-boot-starter-tomcat", DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
+				DependencyScope.PROVIDED_RUNTIME);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'",
-				"}");
+				"    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'", "}");
 	}
 
 	@Test
 	void gradleBuildWithTestCompileDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-test", DependencyScope.TEST_COMPILE);
+		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
+				DependencyScope.TEST_COMPILE);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    testCompile 'org.springframework.boot:spring-boot-starter-test'",
-				"}");
+				"    testCompile 'org.springframework.boot:spring-boot-starter-test'", "}");
 	}
 
 	@Test
 	void gradleBuildWithCompileOnlyDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-foobar", DependencyScope.COMPILE_ONLY);
+		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-foobar",
+				DependencyScope.COMPILE_ONLY);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    compileOnly 'org.springframework.boot:spring-boot-starter-foobar'",
-				"}");
+				"    compileOnly 'org.springframework.boot:spring-boot-starter-foobar'", "}");
 	}
 
 	@Test
 	void gradleBuildWithTestRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("embed-mongo", "de.flapdoodle.embed",
-				"de.flapdoodle.embed.mongo", DependencyScope.TEST_RUNTIME);
+		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
+				DependencyScope.TEST_RUNTIME);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    testRuntime 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'", "}");
@@ -116,8 +107,7 @@ class Gradle3BuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", Dependency
-				.withCoordinates("org.springframework.boot", "spring-boot-starter")
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
 				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
@@ -127,13 +117,12 @@ class Gradle3BuildWriterTests {
 	@Test
 	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", GradleDependency
-				.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
-				.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
+		build.dependencies().add("test",
+				GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
+						.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'",
-				"}");
+				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'", "}");
 	}
 
 	private List<String> generateBuild(GradleBuild build) throws IOException {

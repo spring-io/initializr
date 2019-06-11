@@ -41,8 +41,7 @@ public class GitProjectGenerationConfiguration {
 	@Bean
 	public GitIgnore gitIgnore(ObjectProvider<GitIgnoreCustomizer> gitIgnoreCustomizers) {
 		GitIgnore gitIgnore = createGitIgnore();
-		gitIgnoreCustomizers.orderedStream()
-				.forEach((customizer) -> customizer.customize(gitIgnore));
+		gitIgnoreCustomizers.orderedStream().forEach((customizer) -> customizer.customize(gitIgnore));
 		return gitIgnore;
 	}
 
@@ -59,19 +58,17 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public GitIgnoreCustomizer gradleGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add(".gradle", "/build/",
-					"!gradle/wrapper/gradle-wrapper.jar");
+			gitIgnore.getGeneral().add(".gradle", "/build/", "!gradle/wrapper/gradle-wrapper.jar");
 			gitIgnore.getIntellijIdea().add("/out/");
 		};
 	}
 
 	private GitIgnore createGitIgnore() {
 		GitIgnore gitIgnore = new GitIgnore();
-		gitIgnore.getSts().add(".apt_generated", ".classpath", ".factorypath", ".project",
-				".settings", ".springBeans", ".sts4-cache");
+		gitIgnore.getSts().add(".apt_generated", ".classpath", ".factorypath", ".project", ".settings", ".springBeans",
+				".sts4-cache");
 		gitIgnore.getIntellijIdea().add(".idea", "*.iws", "*.iml", "*.ipr");
-		gitIgnore.getNetBeans().add("/nbproject/private/", "/nbbuild/", "/dist/",
-				"/nbdist/", "/.nb-gradle/");
+		gitIgnore.getNetBeans().add("/nbproject/private/", "/nbbuild/", "/dist/", "/nbdist/", "/.nb-gradle/");
 		gitIgnore.getVscode().add(".vscode/");
 		return gitIgnore;
 	}

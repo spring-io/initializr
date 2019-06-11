@@ -44,8 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public class ProjectGenerationStatPublisher {
 
-	private static final Log logger = LogFactory
-			.getLog(ProjectGenerationStatPublisher.class);
+	private static final Log logger = LogFactory.getLog(ProjectGenerationStatPublisher.class);
 
 	private final ProjectRequestDocumentFactory documentFactory;
 
@@ -58,15 +57,12 @@ public class ProjectGenerationStatPublisher {
 	private final RetryTemplate retryTemplate;
 
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
-			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder,
-			RetryTemplate retryTemplate) {
+			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
 		this.documentFactory = documentFactory;
 		this.objectMapper = createObjectMapper();
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
-		UriComponentsBuilder uriBuilder = UriComponentsBuilder
-				.fromUri(determineEntityUrl(elastic));
-		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic,
-				uriBuilder).build();
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(determineEntityUrl(elastic));
+		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic, uriBuilder).build();
 		this.requestUrl = uriBuilder.userInfo(null).build().toUri();
 		this.retryTemplate = retryTemplate;
 	}
@@ -82,8 +78,8 @@ public class ProjectGenerationStatPublisher {
 			}
 			json = toJson(document);
 
-			RequestEntity<String> request = RequestEntity.post(this.requestUrl)
-					.contentType(MediaType.APPLICATION_JSON).body(json);
+			RequestEntity<String> request = RequestEntity.post(this.requestUrl).contentType(MediaType.APPLICATION_JSON)
+					.body(json);
 
 			this.retryTemplate.execute((context) -> {
 				this.restTemplate.exchange(request, String.class);
@@ -91,9 +87,7 @@ public class ProjectGenerationStatPublisher {
 			});
 		}
 		catch (Exception ex) {
-			logger.warn(String.format(
-					"Failed to publish stat to index, document follows %n%n%s%n", json),
-					ex);
+			logger.warn(String.format("Failed to publish stat to index, document follows %n%n%s%n", json), ex);
 		}
 	}
 
@@ -121,25 +115,21 @@ public class ProjectGenerationStatPublisher {
 		this.requestUrl = requestUrl;
 	}
 
-	private static RestTemplateBuilder configureAuthorization(
-			RestTemplateBuilder restTemplateBuilder, Elastic elastic,
+	private static RestTemplateBuilder configureAuthorization(RestTemplateBuilder restTemplateBuilder, Elastic elastic,
 			UriComponentsBuilder uriComponentsBuilder) {
 		String userInfo = uriComponentsBuilder.build().getUserInfo();
 		if (StringUtils.hasText(userInfo)) {
 			String[] credentials = userInfo.split(":");
-			return restTemplateBuilder.basicAuthentication(credentials[0],
-					credentials[1]);
+			return restTemplateBuilder.basicAuthentication(credentials[0], credentials[1]);
 		}
 		else if (StringUtils.hasText(elastic.getUsername())) {
-			return restTemplateBuilder.basicAuthentication(elastic.getUsername(),
-					elastic.getPassword());
+			return restTemplateBuilder.basicAuthentication(elastic.getUsername(), elastic.getPassword());
 		}
 		return restTemplateBuilder;
 	}
 
 	private static URI determineEntityUrl(Elastic elastic) {
-		String entityUrl = elastic.getUri() + "/" + elastic.getIndexName() + "/"
-				+ elastic.getEntityName();
+		String entityUrl = elastic.getUri() + "/" + elastic.getIndexName() + "/" + elastic.getEntityName();
 		try {
 			return new URI(entityUrl);
 		}

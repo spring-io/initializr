@@ -59,8 +59,7 @@ public class Dependency {
 	}
 
 	public static Builder<?> from(Dependency dependency) {
-		return new Builder(dependency.getGroupId(), dependency.getArtifactId())
-				.initialize(dependency);
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
 	}
 
 	/**
@@ -169,8 +168,7 @@ public class Dependency {
 		}
 
 		public B exclusions(Set<Exclusion> exclusions) {
-			this.exclusions = (exclusions != null) ? new LinkedHashSet<>(exclusions)
-					: new LinkedHashSet<>();
+			this.exclusions = (exclusions != null) ? new LinkedHashSet<>(exclusions) : new LinkedHashSet<>();
 			return self();
 		}
 
@@ -180,8 +178,8 @@ public class Dependency {
 		}
 
 		protected B initialize(Dependency dependency) {
-			version(dependency.getVersion()).scope(dependency.getScope())
-					.type(dependency.getType()).exclusions(dependency.getExclusions());
+			version(dependency.getVersion()).scope(dependency.getScope()).type(dependency.getType())
+					.exclusions(dependency.getExclusions());
 			return self();
 		}
 
@@ -224,8 +222,7 @@ public class Dependency {
 				return false;
 			}
 			Exclusion exclusion = (Exclusion) o;
-			return this.groupId.equals(exclusion.groupId)
-					&& this.artifactId.equals(exclusion.artifactId);
+			return this.groupId.equals(exclusion.groupId) && this.artifactId.equals(exclusion.artifactId);
 		}
 
 		@Override

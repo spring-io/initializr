@@ -42,19 +42,17 @@ class MavenWrapperContributorTests {
 		Path projectDir = contribute();
 		assertThat(projectDir.resolve("mvnw")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("mvnw.cmd")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile()
+		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile().satisfies(isNotExecutable());
+		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.properties")).isRegularFile()
 				.satisfies(isNotExecutable());
-		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.properties"))
-				.isRegularFile().satisfies(isNotExecutable());
-		assertThat(projectDir.resolve(".mvn/wrapper/MavenWrapperDownloader.java"))
-				.isRegularFile().satisfies(isNotExecutable());
+		assertThat(projectDir.resolve(".mvn/wrapper/MavenWrapperDownloader.java")).isRegularFile()
+				.satisfies(isNotExecutable());
 	}
 
 	private Consumer<Path> isNotExecutable() {
 		return (path) -> {
 			if (supportsExecutableFlag() && Files.isExecutable(path)) {
-				throw Failures.instance().failure(String
-						.format("%nExpecting:%n  <%s>%nto not be executable.", path));
+				throw Failures.instance().failure(String.format("%nExpecting:%n  <%s>%nto not be executable.", path));
 			}
 		};
 	}

@@ -27,8 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author Stephane Nicoll
  */
-public class SingleSelectCapability
-		extends ServiceCapability<List<DefaultMetadataElement>>
+public class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataElement>>
 		implements Defaultable<DefaultMetadataElement> {
 
 	private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<>();
@@ -52,8 +51,7 @@ public class SingleSelectCapability
 	 */
 	@Override
 	public DefaultMetadataElement getDefault() {
-		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
-				.orElse(null);
+		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null);
 	}
 
 	/**
@@ -62,8 +60,7 @@ public class SingleSelectCapability
 	 * @return the element or {@code null}
 	 */
 	public DefaultMetadataElement get(String id) {
-		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst()
-				.orElse(null);
+		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null);
 	}
 
 	@Override

@@ -38,20 +38,18 @@ class KotlinDslGradleSettingsWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		List<String> lines = generateSettings(build);
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        mavenCentral()", "        gradlePluginPortal()", "    }", "}");
+		assertThat(lines).containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
+				"        gradlePluginPortal()", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithPluginRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.pluginRepositories().add("spring-milestones", "Spring Milestones",
-				"https://repo.spring.io/milestone");
+		build.pluginRepositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        maven { url = uri(\"https://repo.spring.io/milestone\") }",
-				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
-				"        eachPlugin {",
+				"        maven { url = uri(\"https://repo.spring.io/milestone\") }", "        gradlePluginPortal()",
+				"    }", "    resolutionStrategy {", "        eachPlugin {",
 				"            if (requested.id.id == \"org.springframework.boot\") {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");
@@ -60,13 +58,11 @@ class KotlinDslGradleSettingsWriterTests {
 	@Test
 	void gradleBuildWithSnapshotPluginRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.pluginRepositories().add("spring-snapshots", "Spring Snapshots",
-				"https://repo.spring.io/snapshot", true);
+		build.pluginRepositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
-				"        maven { url = uri(\"https://repo.spring.io/snapshot\") }",
-				"        gradlePluginPortal()", "    }", "    resolutionStrategy {",
-				"        eachPlugin {",
+				"        maven { url = uri(\"https://repo.spring.io/snapshot\") }", "        gradlePluginPortal()",
+				"    }", "    resolutionStrategy {", "        eachPlugin {",
 				"            if (requested.id.id == \"org.springframework.boot\") {",
 				"                useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")",
 				"            }", "        }", "    }", "}");

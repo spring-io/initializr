@@ -42,71 +42,57 @@ class ConditionalOnPlatformVersionTests {
 	void outcomeWithMatchingRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.2.0.RELEASE"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-						.containsOnlyKeys("first");
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).containsOnlyKeys("first");
 	}
 
 	@Test
 	void outcomeWithMatchingOpenRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.1.RELEASE"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-						.containsOnlyKeys("second");
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+				.containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithMatchingStartOfOpenRange() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.M1"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-						.containsOnlyKeys("second");
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
+				.containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithNoMatch() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("0.1.0"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-						.isEmpty();
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithNoAvailablePlatformVersion() {
 		ProjectDescription projectDescription = new ProjectDescription();
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-						.isEmpty();
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithSeveralRangesAndMatchingVersion() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
-						OneOrTwoPlatformVersionTestConfiguration.class))
-								.containsOnlyKeys("second", "firstOrSecond");
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second", "firstOrSecond");
 	}
 
 	@Test
 	void outcomeWithSeveralRangesAndNonMatchingVersion() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.M2"));
-		assertThat(
-				candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
-						OneOrTwoPlatformVersionTestConfiguration.class))
-								.containsOnlyKeys("second");
+		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second");
 	}
 
-	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
-			Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(
-				projectDescription, (projectGenerationContext) -> projectGenerationContext
-						.getBeansOfType(String.class));
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(projectDescription,
+				(projectGenerationContext) -> projectGenerationContext.getBeansOfType(String.class));
 	}
 
 	@Configuration

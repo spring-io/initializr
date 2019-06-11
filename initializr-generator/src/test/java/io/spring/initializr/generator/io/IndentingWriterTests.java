@@ -34,8 +34,7 @@ class IndentingWriterTests {
 
 	private final StringWriter stringWriter = new StringWriter();
 
-	private final IndentingWriter indentingWriter = new IndentingWriter(
-			this.stringWriter);
+	private final IndentingWriter indentingWriter = new IndentingWriter(this.stringWriter);
 
 	@Test
 	void linesAreNotIndentedByDefault() {
@@ -78,8 +77,8 @@ class IndentingWriterTests {
 
 	@Test
 	void customIndentStrategyIsUsed() throws IOException {
-		try (IndentingWriter customIndentingWriter = new IndentingWriter(
-				this.stringWriter, new SimpleIndentStrategy("\t"))) {
+		try (IndentingWriter customIndentingWriter = new IndentingWriter(this.stringWriter,
+				new SimpleIndentStrategy("\t"))) {
 			customIndentingWriter.println("a");
 			customIndentingWriter.indented(() -> {
 				customIndentingWriter.println("b");

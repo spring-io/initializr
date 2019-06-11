@@ -42,8 +42,7 @@ class SettingsGradleProjectContributor implements ProjectContributor {
 
 	private final String settingsFileName;
 
-	SettingsGradleProjectContributor(GradleBuild build,
-			IndentingWriterFactory indentingWriterFactory,
+	SettingsGradleProjectContributor(GradleBuild build, IndentingWriterFactory indentingWriterFactory,
 			GradleSettingsWriter settingsWriter, String settingsFileName) {
 		this.build = build;
 		this.indentingWriterFactory = indentingWriterFactory;
@@ -53,10 +52,9 @@ class SettingsGradleProjectContributor implements ProjectContributor {
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		Path settingsGradle = Files
-				.createFile(projectRoot.resolve(this.settingsFileName));
-		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter(
-				"gradle", Files.newBufferedWriter(settingsGradle))) {
+		Path settingsGradle = Files.createFile(projectRoot.resolve(this.settingsFileName));
+		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle",
+				Files.newBufferedWriter(settingsGradle))) {
 			this.settingsWriter.writeTo(writer, this.build);
 		}
 	}

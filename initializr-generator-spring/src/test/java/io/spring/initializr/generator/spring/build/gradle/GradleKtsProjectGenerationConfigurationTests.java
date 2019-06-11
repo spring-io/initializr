@@ -63,10 +63,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 				.withConfiguration(BuildProjectGenerationConfiguration.class,
 						GradleProjectGenerationConfiguration.class)
 				.withDirectory(directory)
-				.withBean(InitializrMetadata.class,
-						() -> InitializrMetadataTestBuilder.withDefaults().build())
-				.withDescriptionCustomizer((description) -> description.setBuildSystem(
-						new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN)));
+				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
+				.withDescriptionCustomizer((description) -> description
+						.setBuildSystem(new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN)));
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
@@ -93,21 +92,18 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("gradleWrapperParameters")
-	void gradleWrapperIsContributedWhenGeneratingGradleKtsProject(String platformVersion,
-			String expectedGradleVersion) throws IOException {
+	void gradleWrapperIsContributedWhenGeneratingGradleKtsProject(String platformVersion, String expectedGradleVersion)
+			throws IOException {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("gradlew", "gradlew.bat",
-				"gradle/wrapper/gradle-wrapper.properties",
+		assertThat(relativePaths).contains("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		try (Stream<String> lines = Files.lines(
-				projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
-			assertThat(lines.filter((line) -> line
-					.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
-							.hasSize(1);
+		try (Stream<String> lines = Files.lines(projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
+			assertThat(lines.filter((line) -> line.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
+					.hasSize(1);
 		}
 	}
 
@@ -117,23 +113,17 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
-				Dependency.withCoordinates("com.example", "acme")
-						.scope(DependencyScope.COMPILE).build());
+				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE).build());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle.kts");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle.kts");
 		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
-		assertThat(lines).containsExactly("plugins {",
-				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"",
-				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"",
-				"    java", "}", "", "group = \"com.example\"",
-				"version = \"0.0.1-SNAPSHOT\"",
-				"java.sourceCompatibility = JavaVersion.VERSION_11", "", "repositories {",
-				"    mavenCentral()", "}", "", "dependencies {",
-				"    implementation(\"org.springframework.boot:spring-boot-starter\")",
+		assertThat(lines).containsExactly("plugins {", "    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"",
+				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"", "    java", "}", "",
+				"group = \"com.example\"", "version = \"0.0.1-SNAPSHOT\"",
+				"java.sourceCompatibility = JavaVersion.VERSION_11", "", "repositories {", "    mavenCentral()", "}",
+				"", "dependencies {", "    implementation(\"org.springframework.boot:spring-boot-starter\")",
 				"    implementation(\"com.example:acme\")",
-				"    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")",
-				"}");
+				"    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")", "}");
 	}
 
 	@Test
@@ -143,10 +133,8 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setLanguage(new JavaLanguage());
 		description.setPackaging(new WarPackaging());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle.kts");
-		assertThat(projectStructure.readAllLines("build.gradle.kts"))
-				.containsOnlyOnce("    war");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle.kts");
+		assertThat(projectStructure.readAllLines("build.gradle.kts")).containsOnlyOnce("    war");
 	}
 
 	@Test
@@ -155,11 +143,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle.kts");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle.kts");
 		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
-		assertThat(lines).containsSequence("tasks.withType<Test> {",
-				"    useJUnitPlatform()", "}");
+		assertThat(lines).containsSequence("tasks.withType<Test> {", "    useJUnitPlatform()", "}");
 	}
 
 	@Test
@@ -168,11 +154,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle.kts");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle.kts");
 		List<String> lines = projectStructure.readAllLines("build.gradle.kts");
-		assertThat(lines).doesNotContainSequence("tasks.withType<Test> {",
-				"    useJUnitPlatform()", "}");
+		assertThat(lines).doesNotContainSequence("tasks.withType<Test> {", "    useJUnitPlatform()", "}");
 	}
 
 }

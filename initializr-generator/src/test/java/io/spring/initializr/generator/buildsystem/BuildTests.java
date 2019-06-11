@@ -33,14 +33,11 @@ class BuildTests {
 	@Test
 	void buildWithDefaultBuildItemResolver() {
 		TestBuild build = new TestBuild(null);
-		Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> build.dependencies().add("test"))
+		Assertions.assertThatIllegalArgumentException().isThrownBy(() -> build.dependencies().add("test"))
 				.withMessageContaining("No such value with id 'test'");
-		Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> build.boms().add("another"))
+		Assertions.assertThatIllegalArgumentException().isThrownBy(() -> build.boms().add("another"))
 				.withMessageContaining("No such value with id 'another'");
-		Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> build.repositories().add("repo"))
+		Assertions.assertThatIllegalArgumentException().isThrownBy(() -> build.repositories().add("repo"))
 				.withMessageContaining("No such value with id 'repo'");
 	}
 

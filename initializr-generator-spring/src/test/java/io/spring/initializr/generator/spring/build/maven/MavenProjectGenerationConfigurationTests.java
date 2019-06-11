@@ -50,10 +50,8 @@ class MavenProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-				.withConfiguration(BuildProjectGenerationConfiguration.class,
-						MavenProjectGenerationConfiguration.class)
-				.withBean(InitializrMetadata.class,
-						() -> InitializrMetadataTestBuilder.withDefaults().build())
+				.withConfiguration(BuildProjectGenerationConfiguration.class, MavenProjectGenerationConfiguration.class)
+				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
 				.withDirectory(directory).withDescriptionCustomizer((description) -> {
 					description.setBuildSystem(new MavenBuildSystem());
 					description.setLanguage(new JavaLanguage());
@@ -74,9 +72,8 @@ class MavenProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("mvnw",
-				"mvnw.cmd", ".mvn/wrapper/MavenWrapperDownloader.java",
-				".mvn/wrapper/maven-wrapper.properties",
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("mvnw", "mvnw.cmd",
+				".mvn/wrapper/MavenWrapperDownloader.java", ".mvn/wrapper/maven-wrapper.properties",
 				".mvn/wrapper/maven-wrapper.jar");
 	}
 
@@ -96,9 +93,7 @@ class MavenProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
 		try (Stream<String> lines = Files.lines(projectStructure.resolve("pom.xml"))) {
-			assertThat(lines
-					.filter((line) -> line.contains("    <packaging>war</packaging>")))
-							.hasSize(1);
+			assertThat(lines.filter((line) -> line.contains("    <packaging>war</packaging>"))).hasSize(1);
 		}
 	}
 

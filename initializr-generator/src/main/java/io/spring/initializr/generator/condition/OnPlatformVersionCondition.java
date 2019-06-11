@@ -35,19 +35,15 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class OnPlatformVersionCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ResolvedProjectDescription projectDescription,
-			ConditionContext context, AnnotatedTypeMetadata metadata) {
+	protected boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+			AnnotatedTypeMetadata metadata) {
 		Version platformVersion = projectDescription.getPlatformVersion();
 		if (platformVersion == null) {
 			return false;
 		}
-		return Arrays
-				.stream((String[]) metadata
-						.getAnnotationAttributes(
-								ConditionalOnPlatformVersion.class.getName())
-						.get("value"))
-				.anyMatch((range) -> VersionParser.DEFAULT.parseRange(range)
-						.match(platformVersion));
+		return Arrays.stream(
+				(String[]) metadata.getAnnotationAttributes(ConditionalOnPlatformVersion.class.getName()).get("value"))
+				.anyMatch((range) -> VersionParser.DEFAULT.parseRange(range).match(platformVersion));
 
 	}
 

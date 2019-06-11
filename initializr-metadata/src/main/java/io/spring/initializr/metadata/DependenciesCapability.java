@@ -41,8 +41,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	private final Map<String, Dependency> indexedDependencies = new LinkedHashMap<>();
 
 	public DependenciesCapability() {
-		super("dependencies", ServiceCapabilityType.HIERARCHICAL_MULTI_SELECT,
-				"Project dependencies", "dependency identifiers (comma-separated)");
+		super("dependencies", ServiceCapabilityType.HIERARCHICAL_MULTI_SELECT, "Project dependencies",
+				"dependency identifiers (comma-separated)");
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	 * @return all dependencies
 	 */
 	public Collection<Dependency> getAll() {
-		return Collections.unmodifiableCollection(this.indexedDependencies.values()
-				.stream().distinct().collect(Collectors.toList()));
+		return Collections.unmodifiableCollection(
+				this.indexedDependencies.values().stream().distinct().collect(Collectors.toList()));
 	}
 
 	public void validate() {
@@ -74,15 +74,14 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	}
 
 	public void updateVersionRange(VersionParser versionParser) {
-		this.indexedDependencies.values()
-				.forEach((it) -> it.updateVersionRanges(versionParser));
+		this.indexedDependencies.values().forEach((it) -> it.updateVersionRanges(versionParser));
 	}
 
 	@Override
 	public void merge(List<DependencyGroup> otherContent) {
 		otherContent.forEach((group) -> {
-			if (this.content.stream().noneMatch((it) -> group.getName() != null
-					&& group.getName().equals(it.getName()))) {
+			if (this.content.stream()
+					.noneMatch((it) -> group.getName() != null && group.getName().equals(it.getName()))) {
 				this.content.add(group);
 			}
 		});
@@ -114,9 +113,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	private void indexDependency(String id, Dependency dependency) {
 		Dependency existing = this.indexedDependencies.get(id);
 		if (existing != null) {
-			throw new IllegalArgumentException(
-					"Could not register " + dependency + " another dependency "
-							+ "has also the '" + id + "' id " + existing);
+			throw new IllegalArgumentException("Could not register " + dependency + " another dependency "
+					+ "has also the '" + id + "' id " + existing);
 		}
 		this.indexedDependencies.put(id, dependency);
 	}

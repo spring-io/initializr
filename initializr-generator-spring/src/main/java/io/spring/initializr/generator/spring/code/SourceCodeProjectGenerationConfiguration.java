@@ -38,27 +38,25 @@ public class SourceCodeProjectGenerationConfiguration {
 
 	@Bean
 	public MainApplicationTypeCustomizer<TypeDeclaration> springBootApplicationAnnotator() {
-		return (typeDeclaration) -> typeDeclaration.annotate(Annotation
-				.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
+		return (typeDeclaration) -> typeDeclaration
+				.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
 	}
 
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
 	public TestApplicationTypeCustomizer<TypeDeclaration> junit4SpringBootTestTypeCustomizer() {
 		return (typeDeclaration) -> {
-			typeDeclaration.annotate(Annotation.name("org.junit.runner.RunWith",
-					(annotation) -> annotation.attribute("value", Class.class,
-							"org.springframework.test.context.junit4.SpringRunner")));
-			typeDeclaration.annotate(Annotation
-					.name("org.springframework.boot.test.context.SpringBootTest"));
+			typeDeclaration.annotate(Annotation.name("org.junit.runner.RunWith", (annotation) -> annotation
+					.attribute("value", Class.class, "org.springframework.test.context.junit4.SpringRunner")));
+			typeDeclaration.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
 		};
 	}
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
-		return (typeDeclaration) -> typeDeclaration.annotate(
-				Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
+		return (typeDeclaration) -> typeDeclaration
+				.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
 	}
 
 	/**
@@ -78,18 +76,15 @@ public class SourceCodeProjectGenerationConfiguration {
 		@ConditionalOnPlatformVersion("[1.5.0.M1, 2.0.0.M1)")
 		public ServletInitializerContributor boot15ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(
-					this.projectDescription.getPackageName(),
-					"org.springframework.boot.web.support.SpringBootServletInitializer",
-					servletInitializerCustomizers);
+			return new ServletInitializerContributor(this.projectDescription.getPackageName(),
+					"org.springframework.boot.web.support.SpringBootServletInitializer", servletInitializerCustomizers);
 		}
 
 		@Bean
 		@ConditionalOnPlatformVersion("2.0.0.M1")
 		public ServletInitializerContributor boot20ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(
-					this.projectDescription.getPackageName(),
+			return new ServletInitializerContributor(this.projectDescription.getPackageName(),
 					"org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
 					servletInitializerCustomizers);
 		}

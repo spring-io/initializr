@@ -55,16 +55,14 @@ class SimpleIndentStrategyTests {
 
 	@Test
 	void mustHaveIndent() {
-		assertThatExceptionOfType(IllegalArgumentException.class)
-				.isThrownBy(() -> new SimpleIndentStrategy(null));
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new SimpleIndentStrategy(null));
 	}
 
 	@Test
 	void indentLevelMustNotBeNegative() {
 		assertThatExceptionOfType(IllegalArgumentException.class)
 				.isThrownBy(() -> new SimpleIndentStrategy(" ").apply(-1))
-				.withMessageContaining("Indent level must not be negative")
-				.withMessageContaining("-1");
+				.withMessageContaining("Indent level must not be negative").withMessageContaining("-1");
 	}
 
 }

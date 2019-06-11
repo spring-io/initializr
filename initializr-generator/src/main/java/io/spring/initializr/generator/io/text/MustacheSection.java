@@ -36,8 +36,7 @@ public class MustacheSection implements Section {
 
 	private final Map<String, Object> model;
 
-	public MustacheSection(MustacheTemplateRenderer templateRenderer, String templateName,
-			Map<String, Object> model) {
+	public MustacheSection(MustacheTemplateRenderer templateRenderer, String templateName, Map<String, Object> model) {
 		this.templateRenderer = templateRenderer;
 		this.templateName = templateName;
 		this.model = model;
@@ -45,8 +44,7 @@ public class MustacheSection implements Section {
 
 	@Override
 	public void write(PrintWriter writer) throws IOException {
-		writer.println(this.templateRenderer.render(this.templateName,
-				resolveModel(this.model)));
+		writer.println(this.templateRenderer.render(this.templateName, resolveModel(this.model)));
 	}
 
 	/**

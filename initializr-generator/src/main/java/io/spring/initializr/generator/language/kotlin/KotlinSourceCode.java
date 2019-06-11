@@ -23,8 +23,7 @@ import io.spring.initializr.generator.language.SourceCode;
  *
  * @author Stephane Nicoll
  */
-public class KotlinSourceCode
-		extends SourceCode<KotlinTypeDeclaration, KotlinCompilationUnit> {
+public class KotlinSourceCode extends SourceCode<KotlinTypeDeclaration, KotlinCompilationUnit> {
 
 	public KotlinSourceCode() {
 		super(KotlinCompilationUnit::new);

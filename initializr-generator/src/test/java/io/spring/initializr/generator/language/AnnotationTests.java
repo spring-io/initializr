@@ -36,16 +36,14 @@ class AnnotationTests {
 
 	@Test
 	void annotationWithSingleAttribute() {
-		Annotation annotation = Annotation.name("com.example.Test",
-				(builder) -> builder.attribute("test", Enum.class,
-						"com.example.Unit.CENTURIES, com.example.Unit.NANOS"));
+		Annotation annotation = Annotation.name("com.example.Test", (builder) -> builder.attribute("test", Enum.class,
+				"com.example.Unit.CENTURIES, com.example.Unit.NANOS"));
 		assertThat(annotation.getName()).isEqualTo("com.example.Test");
 		assertThat(annotation.getAttributes()).hasSize(1);
 		Annotation.Attribute attribute = annotation.getAttributes().get(0);
 		assertThat(attribute.getName()).isEqualTo("test");
 		assertThat(attribute.getType()).isEqualTo(Enum.class);
-		assertThat(attribute.getValues())
-				.containsExactly("com.example.Unit.CENTURIES, com.example.Unit.NANOS");
+		assertThat(attribute.getValues()).containsExactly("com.example.Unit.CENTURIES, com.example.Unit.NANOS");
 	}
 
 }

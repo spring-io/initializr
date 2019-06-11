@@ -49,23 +49,19 @@ class ServletInitializerContributor implements
 	}
 
 	@Override
-	public void customize(
-			SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode) {
-		CompilationUnit<TypeDeclaration> compilationUnit = sourceCode
-				.createCompilationUnit(this.packageName, "ServletInitializer");
-		TypeDeclaration servletInitializer = compilationUnit
-				.createTypeDeclaration("ServletInitializer");
+	public void customize(SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode) {
+		CompilationUnit<TypeDeclaration> compilationUnit = sourceCode.createCompilationUnit(this.packageName,
+				"ServletInitializer");
+		TypeDeclaration servletInitializer = compilationUnit.createTypeDeclaration("ServletInitializer");
 		servletInitializer.extend(this.initializerClassName);
 		customizeServletInitializer(servletInitializer);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeServletInitializer(TypeDeclaration servletInitializer) {
-		List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers
-				.orderedStream().collect(Collectors.toList());
-		LambdaSafe
-				.callbacks(ServletInitializerCustomizer.class, customizers,
-						servletInitializer)
+		List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers.orderedStream()
+				.collect(Collectors.toList());
+		LambdaSafe.callbacks(ServletInitializerCustomizer.class, customizers, servletInitializer)
 				.invoke((customizer) -> customizer.customize(servletInitializer));
 	}
 

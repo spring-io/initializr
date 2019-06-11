@@ -63,12 +63,10 @@ class ConditionalOnPackagingTests {
 	}
 
 	private String outcomeFor(ProjectDescription projectDescription) {
-		return this.projectTester.generate(projectDescription,
-				(projectGenerationContext) -> {
-					assertThat(projectGenerationContext.getBeansOfType(String.class))
-							.hasSize(1);
-					return projectGenerationContext.getBean(String.class);
-				});
+		return this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
+			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
+			return projectGenerationContext.getBean(String.class);
+		});
 	}
 
 	@Configuration

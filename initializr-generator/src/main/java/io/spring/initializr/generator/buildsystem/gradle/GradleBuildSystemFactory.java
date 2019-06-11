@@ -37,8 +37,7 @@ class GradleBuildSystemFactory implements BuildSystemFactory {
 			if (dialect == null) {
 				return new GradleBuildSystem();
 			}
-			if (dialect.equals(GradleBuildSystem.DIALECT_GROOVY)
-					|| dialect.equals(GradleBuildSystem.DIALECT_KOTLIN)) {
+			if (dialect.equals(GradleBuildSystem.DIALECT_GROOVY) || dialect.equals(GradleBuildSystem.DIALECT_KOTLIN)) {
 				return new GradleBuildSystem(dialect);
 			}
 		}

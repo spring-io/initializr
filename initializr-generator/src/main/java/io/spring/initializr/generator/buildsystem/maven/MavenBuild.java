@@ -112,8 +112,7 @@ public class MavenBuild extends Build {
 	}
 
 	public MavenPlugin plugin(String groupId, String artifactId, String version) {
-		MavenPlugin mavenPlugin = this.plugins.computeIfAbsent(
-				pluginKey(groupId, artifactId),
+		MavenPlugin mavenPlugin = this.plugins.computeIfAbsent(pluginKey(groupId, artifactId),
 				(id) -> new MavenPlugin(groupId, artifactId));
 		mavenPlugin.setVersion(version);
 		return mavenPlugin;

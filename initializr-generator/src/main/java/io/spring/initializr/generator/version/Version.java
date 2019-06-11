@@ -42,8 +42,7 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	private static final VersionQualifierComparator qualifierComparator = new VersionQualifierComparator();
 
-	private static final VersionParser parser = new VersionParser(
-			Collections.emptyList());
+	private static final VersionParser parser = new VersionParser(Collections.emptyList());
 
 	private final Integer major;
 
@@ -185,17 +184,15 @@ public final class Version implements Serializable, Comparable<Version> {
 		result = prime * result + ((this.major == null) ? 0 : this.major.hashCode());
 		result = prime * result + ((this.minor == null) ? 0 : this.minor.hashCode());
 		result = prime * result + ((this.patch == null) ? 0 : this.patch.hashCode());
-		result = prime * result
-				+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+		result = prime * result + ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return this.major + "." + this.minor + "." + this.patch
-				+ ((this.qualifier != null) ? "." + this.qualifier.qualifier
-						+ ((this.qualifier.version != null) ? this.qualifier.version : "")
-						: "");
+		return this.major + "." + this.minor + "." + this.patch + ((this.qualifier != null)
+				? "." + this.qualifier.qualifier + ((this.qualifier.version != null) ? this.qualifier.version : "")
+				: "");
 	}
 
 	/**
@@ -262,18 +259,14 @@ public final class Version implements Serializable, Comparable<Version> {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result
-					+ ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
-			result = prime * result
-					+ ((this.version == null) ? 0 : this.version.hashCode());
+			result = prime * result + ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
+			result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
 			return result;
 		}
 
 		@Override
 		public String toString() {
-			return "Qualifier ["
-					+ ((this.qualifier != null) ? "qualifier=" + this.qualifier + ", "
-							: "")
+			return "Qualifier [" + ((this.qualifier != null) ? "qualifier=" + this.qualifier + ", " : "")
 					+ ((this.version != null) ? "version=" + this.version : "") + "]";
 		}
 
@@ -286,8 +279,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		static final String MILESTONE = "M";
 		static final String RC = "RC";
 
-		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC,
-				SNAPSHOT, RELEASE);
+		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC, SNAPSHOT, RELEASE);
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
@@ -300,8 +292,7 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		private static int compareQualifierVersion(Qualifier first, Qualifier second) {
 			Integer firstVersion = (first.getVersion() != null) ? first.getVersion() : 0;
-			Integer secondVersion = (second.getVersion() != null) ? second.getVersion()
-					: 0;
+			Integer secondVersion = (second.getVersion() != null) ? second.getVersion() : 0;
 			return firstVersion.compareTo(secondVersion);
 		}
 
@@ -319,8 +310,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		private static int getQualifierIndex(String qualifier) {
-			return (StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier)
-					: 0);
+			return (StringUtils.hasText(qualifier) ? KNOWN_QUALIFIERS.indexOf(qualifier) : 0);
 		}
 
 	}

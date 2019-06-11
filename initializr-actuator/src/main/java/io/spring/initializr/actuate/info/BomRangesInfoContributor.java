@@ -41,18 +41,16 @@ public class BomRangesInfoContributor implements InfoContributor {
 	@Override
 	public void contribute(Info.Builder builder) {
 		Map<String, Object> details = new LinkedHashMap<>();
-		this.metadataProvider.get().getConfiguration().getEnv().getBoms()
-				.forEach((k, v) -> {
-					if (v.getMappings() != null && !v.getMappings().isEmpty()) {
-						Map<String, Object> bom = new LinkedHashMap<>();
-						v.getMappings().forEach((it) -> {
-							String requirement = "Spring Boot "
-									+ it.determineVersionRangeRequirement();
-							bom.put(it.getVersion(), requirement);
-						});
-						details.put(k, bom);
-					}
+		this.metadataProvider.get().getConfiguration().getEnv().getBoms().forEach((k, v) -> {
+			if (v.getMappings() != null && !v.getMappings().isEmpty()) {
+				Map<String, Object> bom = new LinkedHashMap<>();
+				v.getMappings().forEach((it) -> {
+					String requirement = "Spring Boot " + it.determineVersionRangeRequirement();
+					bom.put(it.getVersion(), requirement);
 				});
+				details.put(k, bom);
+			}
+		});
 		if (!details.isEmpty()) {
 			builder.withDetail("bom-ranges", details);
 		}

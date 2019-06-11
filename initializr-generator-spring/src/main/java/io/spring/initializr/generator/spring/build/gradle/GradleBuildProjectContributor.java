@@ -60,8 +60,7 @@ public class GradleBuildProjectContributor implements BuildWriter, ProjectContri
 
 	@Override
 	public void writeBuild(Writer out) throws IOException {
-		try (IndentingWriter writer = this.indentingWriterFactory
-				.createIndentingWriter("gradle", out)) {
+		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle", out)) {
 			this.buildWriter.writeTo(writer, this.build);
 		}
 	}

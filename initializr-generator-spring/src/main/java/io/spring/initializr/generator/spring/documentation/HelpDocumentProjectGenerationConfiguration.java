@@ -36,14 +36,12 @@ public class HelpDocumentProjectGenerationConfiguration {
 	public HelpDocument helpDocument(MustacheTemplateRenderer templateRenderer,
 			ObjectProvider<HelpDocumentCustomizer> helpDocumentCustomizers) {
 		HelpDocument helpDocument = new HelpDocument(templateRenderer);
-		helpDocumentCustomizers.orderedStream()
-				.forEach((customizer) -> customizer.customize(helpDocument));
+		helpDocumentCustomizers.orderedStream().forEach((customizer) -> customizer.customize(helpDocument));
 		return helpDocument;
 	}
 
 	@Bean
-	public HelpDocumentProjectContributor helpDocumentProjectContributor(
-			HelpDocument helpDocument) {
+	public HelpDocumentProjectContributor helpDocumentProjectContributor(HelpDocument helpDocument) {
 		return new HelpDocumentProjectContributor(helpDocument);
 	}
 

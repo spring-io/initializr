@@ -60,8 +60,7 @@ public class ProjectGenerationInvoker {
 	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
-			ApplicationEventPublisher eventPublisher,
-			ProjectRequestToDescriptionConverter converter) {
+			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter converter) {
 		this.parentApplicationContext = parentApplicationContext;
 		this.eventPublisher = eventPublisher;
 		this.converter = converter;
@@ -73,18 +72,13 @@ public class ProjectGenerationInvoker {
 	 * @param request the project request
 	 * @return the {@link ProjectGenerationResult}
 	 */
-	public ProjectGenerationResult invokeProjectStructureGeneration(
-			ProjectRequest request) {
-		InitializrMetadata metadata = this.parentApplicationContext
-				.getBean(InitializrMetadataProvider.class).get();
+	public ProjectGenerationResult invokeProjectStructureGeneration(ProjectRequest request) {
+		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription projectDescription = this.converter.convert(request,
-					metadata);
-			ProjectGenerator projectGenerator = new ProjectGenerator(
-					(projectGenerationContext) -> customizeProjectGenerationContext(
-							projectGenerationContext, metadata));
-			ProjectGenerationResult result = projectGenerator.generate(projectDescription,
-					generateProject(request));
+			ProjectDescription projectDescription = this.converter.convert(request, metadata);
+			ProjectGenerator projectGenerator = new ProjectGenerator((
+					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
+			ProjectGenerationResult result = projectGenerator.generate(projectDescription, generateProject(request));
 			File file = result.getRootDirectory().toFile();
 			String name = file.getName();
 			addTempFile(name, file);
@@ -96,13 +90,11 @@ public class ProjectGenerationInvoker {
 		}
 	}
 
-	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(
-			ProjectRequest request) {
+	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(ProjectRequest request) {
 		return (context) -> {
 			Path projectDir = new DefaultProjectAssetGenerator().generate(context);
 			publishProjectGeneratedEvent(request, context);
-			return new ProjectGenerationResult(
-					context.getBean(ResolvedProjectDescription.class), projectDir);
+			return new ProjectGenerationResult(context.getBean(ResolvedProjectDescription.class), projectDir);
 		};
 	}
 
@@ -114,14 +106,11 @@ public class ProjectGenerationInvoker {
 	 * @return the generated build content
 	 */
 	public byte[] invokeBuildGeneration(ProjectRequest request) {
-		InitializrMetadata metadata = this.parentApplicationContext
-				.getBean(InitializrMetadataProvider.class).get();
+		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription projectDescription = this.converter.convert(request,
-					metadata);
-			ProjectGenerator projectGenerator = new ProjectGenerator(
-					(projectGenerationContext) -> customizeProjectGenerationContext(
-							projectGenerationContext, metadata));
+			ProjectDescription projectDescription = this.converter.convert(request, metadata);
+			ProjectGenerator projectGenerator = new ProjectGenerator((
+					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 			return projectGenerator.generate(projectDescription, generateBuild(request));
 		}
 		catch (ProjectGenerationException ex) {
@@ -175,39 +164,34 @@ public class ProjectGenerationInvoker {
 	}
 
 	private byte[] generateBuild(ProjectGenerationContext context) throws IOException {
-		ResolvedProjectDescription projectDescription = context
-				.getBean(ResolvedProjectDescription.class);
+		ResolvedProjectDescription projectDescription = context.getBean(ResolvedProjectDescription.class);
 		StringWriter out = new StringWriter();
-		BuildWriter buildWriter = context.getBeanProvider(BuildWriter.class)
-				.getIfAvailable();
+		BuildWriter buildWriter = context.getBeanProvider(BuildWriter.class).getIfAvailable();
 		if (buildWriter != null) {
 			buildWriter.writeBuild(out);
 			return out.toString().getBytes();
 		}
 		else {
-			throw new IllegalStateException("No BuildWriter implementation found for "
-					+ projectDescription.getLanguage());
+			throw new IllegalStateException(
+					"No BuildWriter implementation found for " + projectDescription.getLanguage());
 		}
 	}
 
-	private void customizeProjectGenerationContext(
-			AnnotationConfigApplicationContext context, InitializrMetadata metadata) {
+	private void customizeProjectGenerationContext(AnnotationConfigApplicationContext context,
+			InitializrMetadata metadata) {
 		context.setParent(this.parentApplicationContext);
 		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(
-				metadata,
+		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
 				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
 	}
 
-	private void publishProjectGeneratedEvent(ProjectRequest request,
-			ProjectGenerationContext context) {
+	private void publishProjectGeneratedEvent(ProjectRequest request, ProjectGenerationContext context) {
 		InitializrMetadata metadata = context.getBean(InitializrMetadata.class);
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, metadata);
 		this.eventPublisher.publishEvent(event);
 	}
 
-	private void publishProjectFailedEvent(ProjectRequest request,
-			InitializrMetadata metadata, Exception cause) {
+	private void publishProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, metadata, cause);
 		this.eventPublisher.publishEvent(event);
 	}

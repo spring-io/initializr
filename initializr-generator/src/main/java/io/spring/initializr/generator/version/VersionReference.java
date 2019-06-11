@@ -80,8 +80,7 @@ public final class VersionReference {
 			return false;
 		}
 		VersionReference that = (VersionReference) o;
-		return Objects.equals(this.property, that.property)
-				&& Objects.equals(this.value, that.value);
+		return Objects.equals(this.property, that.property) && Objects.equals(this.value, that.value);
 	}
 
 	@Override
@@ -91,8 +90,7 @@ public final class VersionReference {
 
 	@Override
 	public String toString() {
-		return (this.property != null) ? "${" + this.property.toStandardFormat() + "}"
-				: this.value;
+		return (this.property != null) ? "${" + this.property.toStandardFormat() + "}" : this.value;
 	}
 
 }

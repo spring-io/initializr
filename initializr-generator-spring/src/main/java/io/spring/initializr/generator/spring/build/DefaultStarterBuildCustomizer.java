@@ -43,14 +43,12 @@ class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 
 	@Override
 	public void customize(Build build) {
-		boolean hasStarter = this.buildResolver.dependencies(build)
-				.anyMatch(this::isValidStarter);
+		boolean hasStarter = this.buildResolver.dependencies(build).anyMatch(this::isValidStarter);
 		if (!hasStarter) {
 			Dependency root = new Dependency();
 			root.setId(DEFAULT_STARTER);
 			root.asSpringBootStarter("");
-			build.dependencies().add(DEFAULT_STARTER,
-					MetadataBuildItemMapper.toDependency(root));
+			build.dependencies().add(DEFAULT_STARTER, MetadataBuildItemMapper.toDependency(root));
 		}
 	}
 
@@ -60,8 +58,7 @@ class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 	}
 
 	private boolean isValidStarter(Dependency dependency) {
-		return dependency.isStarter()
-				&& Dependency.SCOPE_COMPILE.equals(dependency.getScope());
+		return dependency.isStarter() && Dependency.SCOPE_COMPILE.equals(dependency.getScope());
 	}
 
 }

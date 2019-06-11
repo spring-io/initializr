@@ -28,8 +28,7 @@ class GradleWrapperContributor extends MultipleResourcesProjectContributor {
 
 	GradleWrapperContributor(String gradleVersion) {
 		super("classpath:gradle/" + gradleVersion + "/wrapper",
-				(filename) -> filename.equals("gradlew")
-						|| filename.equals("gradlew.bat"));
+				(filename) -> filename.equals("gradlew") || filename.equals("gradlew.bat"));
 	}
 
 }

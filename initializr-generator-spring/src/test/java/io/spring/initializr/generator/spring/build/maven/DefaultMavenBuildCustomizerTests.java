@@ -41,8 +41,7 @@ class DefaultMavenBuildCustomizerTests {
 
 	@Test
 	void customizeSetNameAndDescription() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		ProjectDescription description = initializeDescription();
 		description.setName("my-demo");
 		description.setDescription("Demonstration project");
@@ -53,8 +52,7 @@ class DefaultMavenBuildCustomizerTests {
 
 	@Test
 	void customizeRegisterSpringBootPlugin() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
 		assertThat(build.getPlugins()).hasSize(1);
 		MavenPlugin mavenPlugin = build.getPlugins().get(0);
@@ -65,8 +63,7 @@ class DefaultMavenBuildCustomizerTests {
 
 	@Test
 	void customizeSetJavaVersion() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		ProjectDescription description = initializeDescription();
 		description.setLanguage(new JavaLanguage("11"));
 		MavenBuild build = customizeBuild(metadata, description);
@@ -75,8 +72,7 @@ class DefaultMavenBuildCustomizerTests {
 
 	@Test
 	void customizeWhenNoParentShouldUseSpringBootParent() {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
 		MavenParent parent = build.getParent();
 		assertThat(parent.getGroupId()).isEqualTo("org.springframework.boot");
@@ -96,8 +92,7 @@ class DefaultMavenBuildCustomizerTests {
 		BomContainer boms = build.boms();
 		assertThat(boms.items()).hasSize(1);
 		assertThat(boms.ids()).contains("spring-boot");
-		assertThat(build.getVersionProperties()
-				.get(VersionProperty.of("spring-boot.version"))).isEqualTo("2.0.0");
+		assertThat(build.getVersionProperties().get(VersionProperty.of("spring-boot.version"))).isEqualTo("2.0.0");
 	}
 
 	@Test
@@ -121,13 +116,10 @@ class DefaultMavenBuildCustomizerTests {
 		return customizeBuild(metadata, description);
 	}
 
-	private MavenBuild customizeBuild(InitializrMetadata metadata,
-			ProjectDescription description) {
+	private MavenBuild customizeBuild(InitializrMetadata metadata, ProjectDescription description) {
 		MavenBuild build = new MavenBuild();
-		ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(
-				description);
-		DefaultMavenBuildCustomizer customizer = new DefaultMavenBuildCustomizer(
-				resolvedProjectDescription, metadata);
+		ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(description);
+		DefaultMavenBuildCustomizer customizer = new DefaultMavenBuildCustomizer(resolvedProjectDescription, metadata);
 		customizer.customize(build);
 		return build;
 	}

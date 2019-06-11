@@ -45,8 +45,8 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 	private final List<GroovyStatement> statements;
 
-	private GroovyMethodDeclaration(String name, String returnType, int modifiers,
-			List<Parameter> parameters, List<GroovyStatement> statements) {
+	private GroovyMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
+			List<GroovyStatement> statements) {
 		this.name = name;
 		this.returnType = returnType;
 		this.modifiers = modifiers;
@@ -121,8 +121,8 @@ public final class GroovyMethodDeclaration implements Annotatable {
 		}
 
 		public GroovyMethodDeclaration body(GroovyStatement... statements) {
-			return new GroovyMethodDeclaration(this.name, this.returnType, this.modifiers,
-					this.parameters, Arrays.asList(statements));
+			return new GroovyMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
+					Arrays.asList(statements));
 		}
 
 	}

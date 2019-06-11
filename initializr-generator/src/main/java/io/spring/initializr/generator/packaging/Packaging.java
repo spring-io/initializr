@@ -30,12 +30,9 @@ public interface Packaging {
 	String id();
 
 	static Packaging forId(String id) {
-		return SpringFactoriesLoader
-				.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader())
-				.stream().map((factory) -> factory.createPackaging(id))
-				.filter(Objects::nonNull).findFirst()
-				.orElseThrow(() -> new IllegalStateException(
-						"Unrecognized packaging id '" + id + "'"));
+		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader()).stream()
+				.map((factory) -> factory.createPackaging(id)).filter(Objects::nonNull).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Unrecognized packaging id '" + id + "'"));
 	}
 
 }

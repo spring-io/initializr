@@ -38,8 +38,7 @@ class KotlinMavenBuildCustomizerTests {
 	@Test
 	void kotlinVersionPropertyIsConfigured() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
-				.customize(build);
+		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.getProperties()).hasSize(1);
 		assertThat(build.getProperties()).containsEntry("kotlin.version", "1.2.70");
 	}
@@ -47,19 +46,15 @@ class KotlinMavenBuildCustomizerTests {
 	@Test
 	void buildSourceDirectoriesAreConfigured() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
-				.customize(build);
-		assertThat(build.getSourceDirectory())
-				.isEqualTo("${project.basedir}/src/main/kotlin");
-		assertThat(build.getTestSourceDirectory())
-				.isEqualTo("${project.basedir}/src/test/kotlin");
+		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		assertThat(build.getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
+		assertThat(build.getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
 	}
 
 	@Test
 	void kotlinMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"))
-				.customize(build);
+		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.getPlugins()).hasSize(1);
 		MavenPlugin kotlinPlugin = build.getPlugins().get(0);
 		assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
@@ -71,14 +66,12 @@ class KotlinMavenBuildCustomizerTests {
 		Setting args = configuration.getSettings().get(0);
 		assertThat(args.getName()).isEqualTo("args");
 		assertThat(args.getValue()).asList().hasSize(1);
-		assertThat(args.getValue()).asList().element(0)
-				.hasFieldOrPropertyWithValue("name", "arg")
+		assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
 		Setting compilerPlugins = configuration.getSettings().get(1);
 		assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
 		assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-		assertThat(compilerPlugins.getValue()).asList().element(0)
-				.hasFieldOrPropertyWithValue("name", "plugin")
+		assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
 				.hasFieldOrPropertyWithValue("value", "spring");
 		assertThat(kotlinPlugin.getExecutions()).isEmpty();
 		assertThat(kotlinPlugin.getDependencies()).hasSize(1);
@@ -96,11 +89,9 @@ class KotlinMavenBuildCustomizerTests {
 		Setting args = configuration.getSettings().get(0);
 		assertThat(args.getName()).isEqualTo("args");
 		assertThat(args.getValue()).asList().hasSize(2);
-		assertThat(args.getValue()).asList().element(0)
-				.hasFieldOrPropertyWithValue("name", "arg")
+		assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Done=1");
-		assertThat(args.getValue()).asList().element(1)
-				.hasFieldOrPropertyWithValue("name", "arg")
+		assertThat(args.getValue()).asList().element(1).hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Dtwo=2");
 	}
 

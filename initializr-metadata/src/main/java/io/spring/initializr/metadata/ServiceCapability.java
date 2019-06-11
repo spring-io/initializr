@@ -47,8 +47,7 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	 */
 	private String description;
 
-	protected ServiceCapability(String id, ServiceCapabilityType type, String title,
-			String description) {
+	protected ServiceCapability(String id, ServiceCapabilityType type, String title, String description) {
 		this.id = id;
 		this.type = type;
 		this.title = title;

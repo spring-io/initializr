@@ -36,25 +36,20 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
-	private static final VersionRange GRADLE_3_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("[1.5.0.M1,2.0.0.M1)");
+	private static final VersionRange GRADLE_3_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[1.5.0.M1,2.0.0.M1)");
 
-	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("[2.0.0.M1, 2.1.0.M1)");
+	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.0.0.M1, 2.1.0.M1)");
 
-	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("2.1.0.M1");
+	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.1.0.M1");
 
 	@Override
-	protected boolean matches(ResolvedProjectDescription projectDescription,
-			ConditionContext context, AnnotatedTypeMetadata metadata) {
-		String gradleGeneration = determineGradleGeneration(
-				projectDescription.getPlatformVersion());
+	protected boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+			AnnotatedTypeMetadata metadata) {
+		String gradleGeneration = determineGradleGeneration(projectDescription.getPlatformVersion());
 		if (gradleGeneration == null) {
 			return false;
 		}
-		String[] values = (String[]) metadata
-				.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName())
+		String[] values = (String[]) metadata.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName())
 				.get("value");
 		return Arrays.asList(values).contains(gradleGeneration);
 	}

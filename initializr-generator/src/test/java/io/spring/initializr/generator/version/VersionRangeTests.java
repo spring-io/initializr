@@ -31,8 +31,7 @@ class VersionRangeTests {
 
 	@Test
 	void simpleStartingRange() {
-		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString())
-				.isEqualTo(">=1.3.0.RELEASE");
+		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString()).isEqualTo(">=1.3.0.RELEASE");
 	}
 
 	@Test
@@ -93,68 +92,59 @@ class VersionRangeTests {
 	@Test
 	void matchLatestVersion() {
 		assertThat("1.2.8.RELEASE").is(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Collections
-						.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
+				new VersionParser(Collections.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	void matchOverLatestVersion() {
 		assertThat("1.2.10.RELEASE").isNot(match("[1.2.0.RELEASE,1.2.x.BUILD-SNAPSHOT]",
-				new VersionParser(Collections
-						.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
+				new VersionParser(Collections.singletonList(Version.parse("1.2.9.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	void matchAsOfCurrentVersion() {
-		assertThat("1.3.5.RELEASE").is(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.3.4.RELEASE"),
-						Version.parse("1.3.6.BUILD-SNAPSHOT")))));
+		assertThat("1.3.5.RELEASE").is(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]", new VersionParser(
+				Arrays.asList(Version.parse("1.3.4.RELEASE"), Version.parse("1.3.6.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	void matchOverAsOfCurrentVersion() {
-		assertThat("1.3.5.RELEASE").isNot(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]",
-				new VersionParser(Arrays.asList(Version.parse("1.3.7.RELEASE"),
-						Version.parse("1.3.6.BUILD-SNAPSHOT")))));
+		assertThat("1.3.5.RELEASE").isNot(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]", new VersionParser(
+				Arrays.asList(Version.parse("1.3.7.RELEASE"), Version.parse("1.3.6.BUILD-SNAPSHOT")))));
 	}
 
 	@Test
 	void toVersionRangeWithSimpleVersion() {
-		VersionRange range = new VersionParser(
-				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
-						.parseRange("1.3.5.RELEASE");
+		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
+				.parseRange("1.3.5.RELEASE");
 		assertThat(range.toRangeString()).isEqualTo("1.3.5.RELEASE");
 	}
 
 	@Test
 	void toVersionRangeWithVersionsIncluded() {
-		VersionRange range = new VersionParser(
-				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
-						.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE]");
+		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
+				.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE]");
 		assertThat(range.toRangeString()).isEqualTo("[1.3.5.RELEASE,1.5.5.RELEASE]");
 	}
 
 	@Test
 	void toVersionRangeWithLowerVersionExcluded() {
-		VersionRange range = new VersionParser(
-				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
-						.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE]");
+		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
+				.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE]");
 		assertThat(range.toRangeString()).isEqualTo("(1.3.5.RELEASE,1.5.5.RELEASE]");
 	}
 
 	@Test
 	void toVersionRangeWithHigherVersionExcluded() {
-		VersionRange range = new VersionParser(
-				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
-						.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE)");
+		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
+				.parseRange("[1.3.5.RELEASE,1.5.5.RELEASE)");
 		assertThat(range.toRangeString()).isEqualTo("[1.3.5.RELEASE,1.5.5.RELEASE)");
 	}
 
 	@Test
 	void toVersionRangeWithVersionsExcluded() {
-		VersionRange range = new VersionParser(
-				Collections.singletonList(Version.parse("1.5.6.RELEASE")))
-						.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE)");
+		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
+				.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE)");
 		assertThat(range.toRangeString()).isEqualTo("(1.3.5.RELEASE,1.5.5.RELEASE)");
 	}
 

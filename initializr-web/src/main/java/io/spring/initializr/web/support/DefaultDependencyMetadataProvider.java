@@ -49,23 +49,22 @@ public class DefaultDependencyMetadataProvider implements DependencyMetadataProv
 		Map<String, Repository> repositories = new LinkedHashMap<>();
 		for (Dependency dependency : dependencies.values()) {
 			if (dependency.getRepository() != null) {
-				repositories.put(dependency.getRepository(), metadata.getConfiguration()
-						.getEnv().getRepositories().get(dependency.getRepository()));
+				repositories.put(dependency.getRepository(),
+						metadata.getConfiguration().getEnv().getRepositories().get(dependency.getRepository()));
 			}
 		}
 
 		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
 		for (Dependency dependency : dependencies.values()) {
 			if (dependency.getBom() != null) {
-				boms.put(dependency.getBom(), metadata.getConfiguration().getEnv()
-						.getBoms().get(dependency.getBom()).resolve(bootVersion));
+				boms.put(dependency.getBom(),
+						metadata.getConfiguration().getEnv().getBoms().get(dependency.getBom()).resolve(bootVersion));
 			}
 		}
 		// Each resolved bom may require additional repositories
 		for (BillOfMaterials bom : boms.values()) {
 			for (String id : bom.getRepositories()) {
-				repositories.put(id,
-						metadata.getConfiguration().getEnv().getRepositories().get(id));
+				repositories.put(id, metadata.getConfiguration().getEnv().getRepositories().get(id));
 			}
 		}
 

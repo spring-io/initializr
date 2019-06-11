@@ -47,10 +47,8 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 	private final Cache templateCache;
 
 	public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
-		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix
-				: resourcePrefix + "/");
-		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix))
-				.escapeHTML(false);
+		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix : resourcePrefix + "/");
+		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix)).escapeHTML(false);
 		this.keyGenerator = (name) -> String.format("%s%s", prefix, name);
 		this.templateCache = templateCache;
 	}
@@ -63,9 +61,7 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		return (name) -> {
 			String location = prefix + name + ".mustache";
-			return new InputStreamReader(
-					resourceLoader.getResource(location).getInputStream(),
-					StandardCharsets.UTF_8);
+			return new InputStreamReader(resourceLoader.getResource(location).getInputStream(), StandardCharsets.UTF_8);
 		};
 	}
 
@@ -79,8 +75,7 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 		try {
 			if (this.templateCache != null) {
 				try {
-					return this.templateCache.get(this.keyGenerator.apply(name),
-							() -> loadTemplate(name));
+					return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
 				}
 				catch (ValueRetrievalException ex) {
 					throw ex.getCause();

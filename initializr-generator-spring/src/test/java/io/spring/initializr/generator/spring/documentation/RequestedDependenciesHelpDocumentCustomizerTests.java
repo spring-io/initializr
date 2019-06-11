@@ -36,8 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class RequestedDependenciesHelpDocumentCustomizerTests {
 
-	private final InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder
-			.withDefaults();
+	private final InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder.withDefaults();
 
 	@Test
 	void dependencyLinkWithNoDescriptionIsIgnored() {
@@ -51,13 +50,11 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithReferenceDocLink() {
 		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(Link.create("reference", "https://example.com/doc",
-				"Reference doc example"));
+		dependency.getLinks().add(Link.create("reference", "https://example.com/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted().referenceDocs()
-				.getItems();
+		List<GettingStartedSection.Link> links = document.gettingStarted().referenceDocs().getItems();
 		assertThat(links).hasSize(1);
 		assertLink(links.get(0), "https://example.com/doc", "Reference doc example");
 	}
@@ -65,13 +62,11 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithGuideLink() {
 		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(
-				Link.create("guide", "https://example.com/how-to", "How-to example"));
+		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to", "How-to example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted().guides()
-				.getItems();
+		List<GettingStartedSection.Link> links = document.gettingStarted().guides().getItems();
 		assertThat(links).hasSize(1);
 		assertLink(links.get(0), "https://example.com/how-to", "How-to example");
 	}
@@ -79,19 +74,16 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithAdditionalLink() {
 		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks()
-				.add(Link.create("something", "https://example.com/test", "Test App"));
+		dependency.getLinks().add(Link.create("something", "https://example.com/test", "Test App"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted()
-				.additionalLinks().getItems();
+		List<GettingStartedSection.Link> links = document.gettingStarted().additionalLinks().getItems();
 		assertThat(links).hasSize(1);
 		assertLink(links.get(0), "https://example.com/test", "Test App");
 	}
 
-	private void assertLink(GettingStartedSection.Link link, String href,
-			String description) {
+	private void assertLink(GettingStartedSection.Link link, String href, String description) {
 		assertThat(link.getHref()).isEqualTo(href);
 		assertThat(link.getDescription()).isEqualTo(description);
 	}
@@ -102,11 +94,9 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 			description.addDependency(requestedDependency, null);
 		}
 		InitializrMetadata metadata = this.metadataBuilder.build();
-		HelpDocument document = new HelpDocument(
-				new MustacheTemplateRenderer("classpath:/templates"));
-		new RequestedDependenciesHelpDocumentCustomizer(
-				new ResolvedProjectDescription(description), metadata)
-						.customize(document);
+		HelpDocument document = new HelpDocument(new MustacheTemplateRenderer("classpath:/templates"));
+		new RequestedDependenciesHelpDocumentCustomizer(new ResolvedProjectDescription(description), metadata)
+				.customize(document);
 		return document;
 	}
 

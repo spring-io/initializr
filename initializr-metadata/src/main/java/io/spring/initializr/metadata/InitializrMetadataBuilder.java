@@ -53,8 +53,7 @@ public final class InitializrMetadataBuilder {
 	 * @return this instance
 	 * @see #withInitializrProperties(InitializrProperties, boolean)
 	 */
-	public InitializrMetadataBuilder withInitializrProperties(
-			InitializrProperties properties) {
+	public InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties) {
 		return withInitializrProperties(properties, false);
 	}
 
@@ -64,8 +63,8 @@ public final class InitializrMetadataBuilder {
 	 * @param mergeConfiguration specify if service configuration should be merged as well
 	 * @return this instance
 	 */
-	public InitializrMetadataBuilder withInitializrProperties(
-			InitializrProperties properties, boolean mergeConfiguration) {
+	public InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties,
+			boolean mergeConfiguration) {
 		if (mergeConfiguration) {
 			this.configuration.merge(properties);
 		}
@@ -88,8 +87,7 @@ public final class InitializrMetadataBuilder {
 	 * @return this instance
 	 * @see InitializrMetadataCustomizer
 	 */
-	public InitializrMetadataBuilder withCustomizer(
-			InitializrMetadataCustomizer customizer) {
+	public InitializrMetadataBuilder withCustomizer(InitializrMetadataCustomizer customizer) {
 		this.customizers.add(customizer);
 		return this;
 	}
@@ -145,10 +143,8 @@ public final class InitializrMetadataBuilder {
 	 * @return a new {@link InitializrMetadataBuilder} instance
 	 * @see #withInitializrProperties(InitializrProperties)
 	 */
-	public static InitializrMetadataBuilder fromInitializrProperties(
-			InitializrProperties configuration) {
-		return new InitializrMetadataBuilder(configuration)
-				.withInitializrProperties(configuration);
+	public static InitializrMetadataBuilder fromInitializrProperties(InitializrProperties configuration) {
+		return new InitializrMetadataBuilder(configuration).withInitializrProperties(configuration);
 	}
 
 	/**
@@ -159,8 +155,7 @@ public final class InitializrMetadataBuilder {
 		return new InitializrMetadataBuilder(new InitializrConfiguration());
 	}
 
-	private static class InitializerPropertiesCustomizer
-			implements InitializrMetadataCustomizer {
+	private static class InitializerPropertiesCustomizer implements InitializrMetadataCustomizer {
 
 		private final InitializrProperties properties;
 
@@ -186,11 +181,9 @@ public final class InitializrMetadataBuilder {
 
 	}
 
-	private static class ResourceInitializrMetadataCustomizer
-			implements InitializrMetadataCustomizer {
+	private static class ResourceInitializrMetadataCustomizer implements InitializrMetadataCustomizer {
 
-		private static final Log logger = LogFactory
-				.getLog(ResourceInitializrMetadataCustomizer.class);
+		private static final Log logger = LogFactory.getLog(ResourceInitializrMetadataCustomizer.class);
 
 		private static final Charset UTF_8 = Charset.forName("UTF-8");
 
@@ -206,8 +199,7 @@ public final class InitializrMetadataBuilder {
 			try (InputStream in = this.resource.getInputStream()) {
 				String content = StreamUtils.copyToString(in, UTF_8);
 				ObjectMapper objectMapper = new ObjectMapper();
-				InitializrMetadata anotherMetadata = objectMapper.readValue(content,
-						InitializrMetadata.class);
+				InitializrMetadata anotherMetadata = objectMapper.readValue(content, InitializrMetadata.class);
 				metadata.merge(anotherMetadata);
 			}
 			catch (Exception ex) {

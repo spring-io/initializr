@@ -55,8 +55,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasParent(String groupId, String artifactId, String version) {
-		return hasText("/project/parent/groupId", groupId)
-				.hasText("/project/parent/artifactId", artifactId)
+		return hasText("/project/parent/groupId", groupId).hasText("/project/parent/artifactId", artifactId)
 				.hasText("/project/parent/version", version);
 	}
 
@@ -66,8 +65,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasSpringBootParent(String version) {
-		return hasParent("org.springframework.boot", "spring-boot-starter-parent",
-				version);
+		return hasParent("org.springframework.boot", "spring-boot-starter-parent", version);
 	}
 
 	/**
@@ -158,8 +156,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasDependenciesCount(int count) {
-		assertThat(this.pom).nodesAtPath("project/dependencies/dependency")
-				.hasSize(count);
+		assertThat(this.pom).nodesAtPath("project/dependencies/dependency").hasSize(count);
 		return this;
 	}
 
@@ -170,8 +167,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasSpringBootStarterDependency(String starterId) {
-		return hasDependency("org.springframework.boot",
-				"spring-boot-starter-" + starterId);
+		return hasDependency("org.springframework.boot", "spring-boot-starter-" + starterId);
 	}
 
 	/**
@@ -182,8 +178,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasSpringBootStarterDependency(String starterId, String scope) {
-		return hasDependency("org.springframework.boot",
-				"spring-boot-starter-" + starterId, null, scope);
+		return hasDependency("org.springframework.boot", "spring-boot-starter-" + starterId, null, scope);
 	}
 
 	/**
@@ -232,8 +227,7 @@ public class PomAssert {
 	 * @param scope the scope of the dependency
 	 * @return this
 	 */
-	public PomAssert hasDependency(String groupId, String artifactId, String version,
-			String scope) {
+	public PomAssert hasDependency(String groupId, String artifactId, String version, String scope) {
 		return hasDependency(Dependency.create(groupId, artifactId, version, scope));
 	}
 
@@ -246,15 +240,13 @@ public class PomAssert {
 		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency").areExactly(1,
 				new Condition<>((candidate) -> {
 					Dependency actual = toDependency(candidate);
-					if (dependency.getGroupId().equals(actual.getGroupId()) && dependency
-							.getArtifactId().equals(actual.getArtifactId())) {
+					if (dependency.getGroupId().equals(actual.getGroupId())
+							&& dependency.getArtifactId().equals(actual.getArtifactId())) {
 						if (dependency.getVersion() != null) {
-							assertThat(actual.getVersion())
-									.isEqualTo(dependency.getVersion());
+							assertThat(actual.getVersion()).isEqualTo(dependency.getVersion());
 						}
 						if (dependency.getScope() != null) {
-							assertThat(actual.getScope())
-									.isEqualTo(dependency.getScope());
+							assertThat(actual.getScope()).isEqualTo(dependency.getScope());
 						}
 						if (dependency.getType() != null) {
 							assertThat(actual.getType()).isEqualTo(dependency.getType());
@@ -274,12 +266,10 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert doesNotHaveDependency(String groupId, String artifactId) {
-		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency")
-				.noneMatch((candidate) -> {
-					Dependency actual = toDependency(candidate);
-					return groupId.equals(actual.getGroupId())
-							&& artifactId.equals(actual.getArtifactId());
-				});
+		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency").noneMatch((candidate) -> {
+			Dependency actual = toDependency(candidate);
+			return groupId.equals(actual.getGroupId()) && artifactId.equals(actual.getArtifactId());
+		});
 		return this;
 	}
 
@@ -289,9 +279,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasBomsCount(int count) {
-		assertThat(this.pom)
-				.nodesAtPath("/project/dependencyManagement/dependencies/dependency")
-				.hasSize(count);
+		assertThat(this.pom).nodesAtPath("/project/dependencyManagement/dependencies/dependency").hasSize(count);
 		return this;
 	}
 
@@ -303,13 +291,11 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasBom(String groupId, String artifactId, String version) {
-		assertThat(this.pom)
-				.nodesAtPath("/project/dependencyManagement/dependencies/dependency")
-				.areExactly(1, new Condition<>((candidate) -> {
+		assertThat(this.pom).nodesAtPath("/project/dependencyManagement/dependencies/dependency").areExactly(1,
+				new Condition<>((candidate) -> {
 					BillOfMaterials actual = toBom(candidate);
 					return (actual != null && actual.getGroupId().equals(groupId)
-							&& actual.getArtifactId().equals(artifactId)
-							&& actual.getVersion().equals(version));
+							&& actual.getArtifactId().equals(artifactId) && actual.getVersion().equals(version));
 				}, "matching bom"));
 		return this;
 	}
@@ -320,8 +306,7 @@ public class PomAssert {
 	 * @return this
 	 */
 	public PomAssert hasRepositoriesCount(int count) {
-		assertThat(this.pom).nodesAtPath("/project/repositories/repository")
-				.hasSize(count);
+		assertThat(this.pom).nodesAtPath("/project/repositories/repository").hasSize(count);
 		return this;
 	}
 
@@ -333,12 +318,10 @@ public class PomAssert {
 	 * @param snapshotsEnabled whether snapshot is enabled for the repository
 	 * @return this
 	 */
-	public PomAssert hasRepository(String id, String name, String url,
-			Boolean snapshotsEnabled) {
+	public PomAssert hasRepository(String id, String name, String url, Boolean snapshotsEnabled) {
 		assertThat(this.pom).nodesAtPath("/project/repositories/repository").areExactly(1,
 				new Condition<>((candidate) -> {
-					String actualId = ((Element) candidate).getElementsByTagName("id")
-							.item(0).getTextContent();
+					String actualId = ((Element) candidate).getElementsByTagName("id").item(0).getTextContent();
 					if (actualId.equals(id)) {
 						Repository repository = toRepository(candidate);
 						if (name != null) {
@@ -349,13 +332,11 @@ public class PomAssert {
 								assertThat(repository.getUrl()).isEqualTo(new URL(url));
 							}
 							catch (MalformedURLException ex) {
-								throw new IllegalArgumentException("Cannot parse URL",
-										ex);
+								throw new IllegalArgumentException("Cannot parse URL", ex);
 							}
 						}
 						if (snapshotsEnabled) {
-							assertThat(repository.isSnapshotsEnabled())
-									.isEqualTo(snapshotsEnabled);
+							assertThat(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);
 						}
 						return true;
 					}
@@ -489,8 +470,7 @@ public class PomAssert {
 			Element snapshotsElement = (Element) snapshots.item(0);
 			NodeList snapshotsEnabled = snapshotsElement.getElementsByTagName("enabled");
 			if (snapshotsEnabled.getLength() > 0) {
-				repository.setSnapshotsEnabled(
-						"true".equals(snapshotsEnabled.item(0).getTextContent()));
+				repository.setSnapshotsEnabled("true".equals(snapshotsEnabled.item(0).getTextContent()));
 			}
 		}
 		return repository;

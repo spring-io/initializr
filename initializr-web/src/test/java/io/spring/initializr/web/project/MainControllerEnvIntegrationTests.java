@@ -34,13 +34,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
-class MainControllerEnvIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class MainControllerEnvIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void downloadCliWithCustomRepository() throws Exception {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"),
-				String.class);
+		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"), String.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin.zip";
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
@@ -49,10 +47,9 @@ class MainControllerEnvIntegrationTests
 	@Test
 	void generateProjectWithInvalidName() {
 		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
-				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
-				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(2).hasSpringBootStarterDependency("data-jpa")
-				.hasSpringBootStarterTest();
+				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication").isMavenProject()
+				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
+				.hasSpringBootStarterDependency("data-jpa").hasSpringBootStarterTest();
 	}
 
 }

@@ -39,10 +39,8 @@ import org.springframework.beans.BeanWrapperImpl;
 public class CommandLineHelpGenerator {
 
 	private static final String LOGO = "  .   ____          _            __ _ _\n"
-			+ " /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\\n"
-			+ "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\\n"
-			+ " \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )\n"
-			+ "  '  |____| .__|_| |_|_| |_\\__, | / / / /\n"
+			+ " /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\\n" + "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\\n"
+			+ " \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )\n" + "  '  |____| .__|_| |_|_| |_\\__, | / / / /\n"
 			+ " =========|_|==============|___/=/_/_/_/";
 
 	private final TemplateRenderer template;
@@ -59,8 +57,7 @@ public class CommandLineHelpGenerator {
 	 * @return the generic capabilities text document
 	 * @throws IOException if rendering the capabilities failed
 	 */
-	public String generateGenericCapabilities(InitializrMetadata metadata,
-			String serviceUrl) throws IOException {
+	public String generateGenericCapabilities(InitializrMetadata metadata, String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
 		return this.template.render("cli/cli-capabilities", model);
@@ -73,8 +70,7 @@ public class CommandLineHelpGenerator {
 	 * @return the generic capabilities text document
 	 * @throws IOException if rendering the capabilities failed
 	 */
-	public String generateCurlCapabilities(InitializrMetadata metadata, String serviceUrl)
-			throws IOException {
+	public String generateCurlCapabilities(InitializrMetadata metadata, String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("examples", this.template.render("cli/curl-examples", model));
 		model.put("hasExamples", true);
@@ -88,8 +84,7 @@ public class CommandLineHelpGenerator {
 	 * @return the generic capabilities text document
 	 * @throws IOException if rendering the capabilities failed
 	 */
-	public String generateHttpieCapabilities(InitializrMetadata metadata,
-			String serviceUrl) throws IOException {
+	public String generateHttpieCapabilities(InitializrMetadata metadata, String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("examples", this.template.render("cli/httpie-examples", model));
 		model.put("hasExamples", true);
@@ -104,15 +99,13 @@ public class CommandLineHelpGenerator {
 	 * @return the generic capabilities text document
 	 * @throws IOException if rendering the capabilities failed
 	 */
-	public String generateSpringBootCliCapabilities(InitializrMetadata metadata,
-			String serviceUrl) throws IOException {
+	public String generateSpringBootCliCapabilities(InitializrMetadata metadata, String serviceUrl) throws IOException {
 		Map<String, Object> model = initializeSpringBootCliModel(metadata, serviceUrl);
 		model.put("hasExamples", false);
 		return this.template.render("cli/boot-cli-capabilities", model);
 	}
 
-	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata,
-			String serviceUrl) {
+	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata, String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
 		model.put("logo", LOGO);
 		model.put("serviceUrl", serviceUrl);
@@ -120,8 +113,8 @@ public class CommandLineHelpGenerator {
 		model.put("types", generateTypeTable(metadata, "Rel", false));
 
 		Map<String, Object> defaults = metadata.defaults();
-		defaults.put("applicationName", metadata.getConfiguration()
-				.generateApplicationName(metadata.getName().getContent()));
+		defaults.put("applicationName",
+				metadata.getConfiguration().generateApplicationName(metadata.getName().getContent()));
 		defaults.put("baseDir", "no base dir");
 		defaults.put("dependencies", "none");
 
@@ -129,8 +122,7 @@ public class CommandLineHelpGenerator {
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = new String[] { "Parameter", "Description", "Default value" };
 		int i = 1;
-		for (String id : defaults.keySet().stream().sorted()
-				.collect(Collectors.toList())) {
+		for (String id : defaults.keySet().stream().sorted().collect(Collectors.toList())) {
 			String[] data = new String[3];
 			data[0] = id;
 			data[1] = (String) parametersDescription.get(id);
@@ -142,8 +134,7 @@ public class CommandLineHelpGenerator {
 		return model;
 	}
 
-	protected Map<String, Object> initializeSpringBootCliModel(
-			InitializrMetadata metadata, String serviceUrl) {
+	protected Map<String, Object> initializeSpringBootCliModel(InitializrMetadata metadata, String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
 		model.put("logo", LOGO);
 		model.put("serviceUrl", serviceUrl);
@@ -155,8 +146,7 @@ public class CommandLineHelpGenerator {
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = new String[] { "Id", "Description", "Default value" };
 		int i = 1;
-		for (String id : defaults.keySet().stream().sorted()
-				.collect(Collectors.toList())) {
+		for (String id : defaults.keySet().stream().sorted().collect(Collectors.toList())) {
 			String[] data = new String[3];
 			data[0] = id;
 			data[1] = (String) parametersDescription.get(id);
@@ -168,25 +158,21 @@ public class CommandLineHelpGenerator {
 	}
 
 	protected String generateDependencyTable(InitializrMetadata metadata) {
-		String[][] dependencyTable = new String[metadata.getDependencies().getAll().size()
-				+ 1][];
+		String[][] dependencyTable = new String[metadata.getDependencies().getAll().size() + 1][];
 		dependencyTable[0] = new String[] { "Id", "Description", "Required version" };
 		int i = 1;
 		for (Dependency dep : metadata.getDependencies().getAll().stream()
-				.sorted(Comparator.comparing(MetadataElement::getId))
-				.collect(Collectors.toList())) {
+				.sorted(Comparator.comparing(MetadataElement::getId)).collect(Collectors.toList())) {
 			String[] data = new String[3];
 			data[0] = dep.getId();
-			data[1] = (dep.getDescription() != null) ? dep.getDescription()
-					: dep.getName();
+			data[1] = (dep.getDescription() != null) ? dep.getDescription() : dep.getName();
 			data[2] = dep.getVersionRequirement();
 			dependencyTable[i++] = data;
 		}
 		return TableGenerator.generate(dependencyTable);
 	}
 
-	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader,
-			boolean addTags) {
+	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
 		String[][] typeTable = new String[metadata.getTypes().getContent().size() + 1][];
 		if (addTags) {
 			typeTable[0] = new String[] { linkHeader, "Description", "Tags" };
@@ -195,13 +181,11 @@ public class CommandLineHelpGenerator {
 			typeTable[0] = new String[] { linkHeader, "Description" };
 		}
 		int i = 1;
-		for (Type type : metadata.getTypes().getContent().stream()
-				.sorted(Comparator.comparing(MetadataElement::getId))
+		for (Type type : metadata.getTypes().getContent().stream().sorted(Comparator.comparing(MetadataElement::getId))
 				.collect(Collectors.toList())) {
 			String[] data = new String[typeTable[0].length];
 			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());
-			data[1] = (type.getDescription() != null) ? type.getDescription()
-					: type.getName();
+			data[1] = (type.getDescription() != null) ? type.getDescription() : type.getName();
 			if (addTags) {
 				data[2] = buildTagRepresentation(type);
 			}
@@ -210,17 +194,14 @@ public class CommandLineHelpGenerator {
 		return TableGenerator.generate(typeTable);
 	}
 
-	protected Map<String, Object> buildParametersDescription(
-			InitializrMetadata metadata) {
+	protected Map<String, Object> buildParametersDescription(InitializrMetadata metadata) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
 		for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
 			Object value = wrapper.getPropertyValue(descriptor.getName());
 			BeanWrapperImpl nested = new BeanWrapperImpl(value);
-			if (nested.isReadableProperty("description")
-					&& nested.isReadableProperty("id")) {
-				result.put((String) nested.getPropertyValue("id"),
-						nested.getPropertyValue("description"));
+			if (nested.isReadableProperty("description") && nested.isReadableProperty("id")) {
+				result.put((String) nested.getPropertyValue("id"), nested.getPropertyValue("description"));
 			}
 		}
 		result.put("applicationName", "application name");
@@ -232,10 +213,8 @@ public class CommandLineHelpGenerator {
 		if (type.getTags().isEmpty()) {
 			return "";
 		}
-		return String.join(",",
-				type.getTags().entrySet().stream()
-						.map((entry) -> entry.getKey() + ":" + entry.getValue())
-						.toArray(String[]::new));
+		return String.join(",", type.getTags().entrySet().stream()
+				.map((entry) -> entry.getKey() + ":" + entry.getValue()).toArray(String[]::new));
 	}
 
 	/**
@@ -266,8 +245,7 @@ public class CommandLineHelpGenerator {
 			return sb.toString();
 		}
 
-		private static void appendRow(StringBuilder sb, String[][] content,
-				int[] columnsLength, int rowIndex) {
+		private static void appendRow(StringBuilder sb, String[][] content, int[] columnsLength, int rowIndex) {
 			String[] row = content[rowIndex];
 			if (row != null) {
 				for (int i = 0; i < row.length; i++) {

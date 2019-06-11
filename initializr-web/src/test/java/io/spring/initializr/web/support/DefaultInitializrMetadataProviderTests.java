@@ -35,11 +35,9 @@ class DefaultInitializrMetadataProviderTests {
 	void strategyIsInvokedOnGet() {
 		InitializrMetadata metadata = mock(InitializrMetadata.class);
 		InitializrMetadata updatedMetadata = mock(InitializrMetadata.class);
-		InitializrMetadataUpdateStrategy updateStrategy = mock(
-				InitializrMetadataUpdateStrategy.class);
+		InitializrMetadataUpdateStrategy updateStrategy = mock(InitializrMetadataUpdateStrategy.class);
 		given(updateStrategy.update(metadata)).willReturn(updatedMetadata);
-		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(
-				metadata, updateStrategy);
+		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata, updateStrategy);
 		assertThat(provider.get()).isEqualTo(updatedMetadata);
 		verify(updateStrategy).update(metadata);
 	}

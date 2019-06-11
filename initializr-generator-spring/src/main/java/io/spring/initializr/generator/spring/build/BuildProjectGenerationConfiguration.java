@@ -50,23 +50,22 @@ public class BuildProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
 	public BuildCustomizer<Build> junit4TestStarterContributor() {
-		return (build) -> build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-test", DependencyScope.TEST_COMPILE);
+		return (build) -> build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
+				DependencyScope.TEST_COMPILE);
 	}
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
-		return (build) -> build.dependencies().add("test", Dependency
-				.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
-				.scope(DependencyScope.TEST_COMPILE)
-				.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine"),
-						new Exclusion("junit", "junit")));
+		return (build) -> build.dependencies().add("test",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
+						.scope(DependencyScope.TEST_COMPILE)
+						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine"),
+								new Exclusion("junit", "junit")));
 	}
 
 	@Bean
-	public DefaultStarterBuildCustomizer defaultStarterContributor(
-			InitializrMetadata metadata) {
+	public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata) {
 		return new DefaultStarterBuildCustomizer(metadata);
 	}
 
@@ -78,24 +77,22 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPackaging(WarPackaging.ID)
-	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(
-			InitializrMetadata metadata) {
+	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
 		return new WarPackagingWebStarterBuildCustomizer(metadata);
 	}
 
 	@Bean
 	@ConditionalOnLanguage(KotlinLanguage.ID)
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	public KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(
-			InitializrMetadata metadata, KotlinProjectSettings settings) {
+	public KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
+			KotlinProjectSettings settings) {
 		return new KotlinJpaGradleBuildCustomizer(metadata, settings);
 	}
 
 	@Bean
 	@ConditionalOnLanguage(KotlinLanguage.ID)
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-	public KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(
-			InitializrMetadata metadata) {
+	public KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
 		return new KotlinJpaMavenBuildCustomizer(metadata);
 	}
 
@@ -106,16 +103,14 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(
-			ResolvedProjectDescription projectDescription) {
+	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ResolvedProjectDescription projectDescription) {
 		return new SimpleBuildCustomizer(projectDescription);
 	}
 
 	@Bean
 	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(
 			ResolvedProjectDescription description) {
-		return new SpringBootVersionRepositoriesBuildCustomizer(
-				description.getPlatformVersion());
+		return new SpringBootVersionRepositoriesBuildCustomizer(description.getPlatformVersion());
 	}
 
 }

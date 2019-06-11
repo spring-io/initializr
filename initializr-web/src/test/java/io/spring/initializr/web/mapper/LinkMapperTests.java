@@ -55,8 +55,7 @@ class LinkMapperTests {
 		assertThat(model.has("a")).isTrue();
 		ObjectNode linkModel = (ObjectNode) model.get("a");
 		assertThat(linkModel).hasSize(2);
-		assertThat(linkModel.get("href").textValue())
-				.isEqualTo("https://example.com/{bootVersion}/a");
+		assertThat(linkModel.get("href").textValue()).isEqualTo("https://example.com/{bootVersion}/a");
 		assertThat(linkModel.get("templated").booleanValue()).isEqualTo(true);
 	}
 
@@ -70,10 +69,8 @@ class LinkMapperTests {
 		assertThat(model.has("a")).isTrue();
 		ArrayNode linksModel = (ArrayNode) model.get("a");
 		assertThat(linksModel).hasSize(2);
-		assertThat(linksModel.get(0).get("href").textValue())
-				.isEqualTo("https://example.com");
-		assertThat(linksModel.get(1).get("href").textValue())
-				.isEqualTo("https://example.com/2");
+		assertThat(linksModel.get(0).get("href").textValue()).isEqualTo("https://example.com");
+		assertThat(linksModel.get(1).get("href").textValue()).isEqualTo("https://example.com/2");
 	}
 
 	@Test

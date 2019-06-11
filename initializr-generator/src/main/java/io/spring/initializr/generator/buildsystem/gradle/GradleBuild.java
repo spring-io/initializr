@@ -117,10 +117,9 @@ public class GradleBuild extends Build {
 		return this.buildscript;
 	}
 
-	public void customizeConfiguration(String configurationName,
-			Consumer<ConfigurationCustomization> customizer) {
-		customizer.accept(this.configurationCustomizations.computeIfAbsent(
-				configurationName, (name) -> new ConfigurationCustomization()));
+	public void customizeConfiguration(String configurationName, Consumer<ConfigurationCustomization> customizer) {
+		customizer.accept(this.configurationCustomizations.computeIfAbsent(configurationName,
+				(name) -> new ConfigurationCustomization()));
 	}
 
 	public void addConfiguration(String configurationName) {
@@ -145,15 +144,14 @@ public class GradleBuild extends Build {
 	 * as {@code JavaCompile}, use a fully qualified name if an import is required
 	 * @param customizer a callback to customize tasks matching that type
 	 */
-	public void customizeTasksWithType(String typeName,
-			Consumer<TaskCustomization> customizer) {
+	public void customizeTasksWithType(String typeName, Consumer<TaskCustomization> customizer) {
 		String packageName = ClassUtils.getPackageName(typeName);
 		if (!StringUtils.isEmpty(packageName)) {
 			this.importedTypes.add(typeName);
 		}
 		String shortName = ClassUtils.getShortName(typeName);
-		customizer.accept(this.tasksWithTypeCustomizations.computeIfAbsent(shortName,
-				(name) -> new TaskCustomization()));
+		customizer
+				.accept(this.tasksWithTypeCustomizations.computeIfAbsent(shortName, (name) -> new TaskCustomization()));
 	}
 
 	public Map<String, TaskCustomization> getTasksWithTypeCustomizations() {
@@ -161,8 +159,7 @@ public class GradleBuild extends Build {
 	}
 
 	public void customizeTask(String taskName, Consumer<TaskCustomization> customizer) {
-		customizer.accept(this.taskCustomizations.computeIfAbsent(taskName,
-				(name) -> new TaskCustomization()));
+		customizer.accept(this.taskCustomizations.computeIfAbsent(taskName, (name) -> new TaskCustomization()));
 	}
 
 	public Map<String, TaskCustomization> getTaskCustomizations() {
@@ -227,8 +224,7 @@ public class GradleBuild extends Build {
 		private final Map<String, TaskCustomization> nested = new LinkedHashMap<>();
 
 		public void nested(String property, Consumer<TaskCustomization> customizer) {
-			customizer.accept(this.nested.computeIfAbsent(property,
-					(name) -> new TaskCustomization()));
+			customizer.accept(this.nested.computeIfAbsent(property, (name) -> new TaskCustomization()));
 		}
 
 		public Map<String, TaskCustomization> getNested() {

@@ -134,13 +134,11 @@ public class Agent {
 
 	private static class UserAgentHandler {
 
-		private static final Pattern TOOL_REGEX = Pattern
-				.compile("([^\\/]*)\\/([^ ]*).*");
+		private static final Pattern TOOL_REGEX = Pattern.compile("([^\\/]*)\\/([^ ]*).*");
 
 		private static final Pattern STS_REGEX = Pattern.compile("STS (.*)");
 
-		private static final Pattern NETBEANS_REGEX = Pattern
-				.compile("nb-springboot-plugin\\/(.*)");
+		private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
 
 		public static Agent parse(String userAgent) {
 			Matcher matcher = TOOL_REGEX.matcher(userAgent);

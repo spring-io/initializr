@@ -41,28 +41,25 @@ class GradleWrapperContributorTests {
 	Path directory;
 
 	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments("3"), Arguments.arguments("4"),
-				Arguments.arguments("5"));
+		return Stream.of(Arguments.arguments("3"), Arguments.arguments("4"), Arguments.arguments("5"));
 	}
 
 	@ParameterizedTest(name = "Gradle {0}")
 	@MethodSource("parameters")
-	void gradleWrapperSetExecutableFlagOnScripts(String gradleVersion)
-			throws IOException {
+	void gradleWrapperSetExecutableFlagOnScripts(String gradleVersion) throws IOException {
 		Path projectDir = contribute(gradleVersion);
 		assertThat(projectDir.resolve("gradlew")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("gradlew.bat")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.jar"))
-				.isRegularFile().satisfies(isNotExecutable());
-		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.properties"))
-				.isRegularFile().satisfies(isNotExecutable());
+		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.jar")).isRegularFile()
+				.satisfies(isNotExecutable());
+		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.properties")).isRegularFile()
+				.satisfies(isNotExecutable());
 	}
 
 	private Consumer<Path> isNotExecutable() {
 		return (path) -> {
 			if (supportsExecutableFlag() && Files.isExecutable(path)) {
-				throw Failures.instance().failure(String
-						.format("%nExpecting:%n  <%s>%nto not be executable.", path));
+				throw Failures.instance().failure(String.format("%nExpecting:%n  <%s>%nto not be executable.", path));
 			}
 		};
 	}

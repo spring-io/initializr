@@ -31,8 +31,7 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginCanBeConfigured() {
 		MavenBuild build = new MavenBuild();
-		build.plugin("com.example", "test-plugin").execution("first",
-				(first) -> first.goal("run-this"));
+		build.plugin("com.example", "test-plugin").execution("first", (first) -> first.goal("run-this"));
 		assertThat(build.getPlugins()).hasSize(1);
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 		assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
@@ -40,8 +39,7 @@ class MavenBuildTests {
 		assertThat(testPlugin.getVersion()).isNull();
 		assertThat(testPlugin.getExecutions()).hasSize(1);
 		assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
-		assertThat(testPlugin.getExecutions().get(0).getGoals())
-				.containsExactly("run-this");
+		assertThat(testPlugin.getExecutions().get(0).getGoals()).containsExactly("run-this");
 	}
 
 	@Test
@@ -83,16 +81,13 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginExecutionCanBeAmended() {
 		MavenBuild build = new MavenBuild();
-		build.plugin("com.example", "test-plugin").execution("first",
-				(first) -> first.goal("run-this"));
-		build.plugin("com.example", "test-plugin").execution("first",
-				(first) -> first.goal("run-that"));
+		build.plugin("com.example", "test-plugin").execution("first", (first) -> first.goal("run-this"));
+		build.plugin("com.example", "test-plugin").execution("first", (first) -> first.goal("run-that"));
 		assertThat(build.getPlugins()).hasSize(1);
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 		assertThat(testPlugin.getExecutions()).hasSize(1);
 		assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
-		assertThat(testPlugin.getExecutions().get(0).getGoals())
-				.containsExactly("run-this", "run-that");
+		assertThat(testPlugin.getExecutions().get(0).getGoals()).containsExactly("run-this", "run-that");
 	}
 
 	@Test

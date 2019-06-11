@@ -33,13 +33,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-class MainControllerDependenciesTests
-		extends AbstractInitializrControllerIntegrationTests {
+class MainControllerDependenciesTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void noBootVersion() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies", String.class, null,
-				"application/json");
+		ResponseEntity<String> response = execute("/dependencies", String.class, null, "application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("2.1.4", response.getBody());
@@ -47,18 +45,15 @@ class MainControllerDependenciesTests
 
 	@Test
 	void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute(
-				"/dependencies?bootVersion=2.2.1.RELEASE", String.class, null,
+		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.2.1.RELEASE", String.class, null,
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
 		validateDependenciesOutput("2.2.1", response.getBody());
 	}
 
-	protected void validateDependenciesOutput(String version, String actual)
-			throws JSONException {
-		JSONObject expected = readJsonFrom(
-				"metadata/dependencies/test-dependencies-" + version + ".json");
+	protected void validateDependenciesOutput(String version, String actual) throws JSONException {
+		JSONObject expected = readJsonFrom("metadata/dependencies/test-dependencies-" + version + ".json");
 		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
 	}
 

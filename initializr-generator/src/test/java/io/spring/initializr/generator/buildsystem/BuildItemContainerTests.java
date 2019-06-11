@@ -34,8 +34,7 @@ class BuildItemContainerTests {
 
 	@Test
 	void emptyContainer() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>());
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>());
 		assertThat(container.isEmpty()).isTrue();
 		assertThat(container.ids()).isEmpty();
 		assertThat(container.items()).isEmpty();
@@ -45,8 +44,7 @@ class BuildItemContainerTests {
 
 	@Test
 	void addElement() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>());
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>());
 		container.add("test", "value");
 		assertThat(container.ids()).containsOnly("test");
 		assertThat(container.items()).containsOnly("value");
@@ -57,8 +55,7 @@ class BuildItemContainerTests {
 
 	@Test
 	void addElementWithSameIdOverrideItem() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>());
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>());
 		container.add("test", "value");
 		container.add("test", "another");
 		assertThat(container.get("test")).isEqualTo("another");
@@ -66,24 +63,23 @@ class BuildItemContainerTests {
 
 	@Test
 	void addByIdWithResolution() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>(), (id) -> id.equals("test") ? "value" : null);
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>(),
+				(id) -> id.equals("test") ? "value" : null);
 		container.add("test");
 		assertThat(container.get("test")).isEqualTo("value");
 	}
 
 	@Test
 	void addByIdWithNoResolution() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>(), (id) -> id.equals("test") ? "value" : null);
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>(),
+				(id) -> id.equals("test") ? "value" : null);
 		assertThatIllegalArgumentException().isThrownBy(() -> container.add("unknown"))
 				.withMessageContaining("unknown");
 	}
 
 	@Test
 	void removeExistingElement() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>());
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>());
 		container.add("test", "value");
 		assertThat(container.remove("test")).isTrue();
 		assertThat(container.ids()).isEmpty();
@@ -93,8 +89,7 @@ class BuildItemContainerTests {
 
 	@Test
 	void removeUnknownElement() {
-		BuildItemContainer<String, String> container = createTestContainer(
-				new LinkedHashMap<>());
+		BuildItemContainer<String, String> container = createTestContainer(new LinkedHashMap<>());
 		container.add("test", "value");
 		assertThat(container.remove("unknown")).isFalse();
 		assertThat(container.ids()).containsOnly("test");
@@ -102,13 +97,12 @@ class BuildItemContainerTests {
 		assertThat(container.isEmpty()).isFalse();
 	}
 
-	private BuildItemContainer<String, String> createTestContainer(
-			Map<String, String> content) {
+	private BuildItemContainer<String, String> createTestContainer(Map<String, String> content) {
 		return createTestContainer(content, (id) -> null);
 	}
 
-	private BuildItemContainer<String, String> createTestContainer(
-			Map<String, String> content, Function<String, String> itemResolver) {
+	private BuildItemContainer<String, String> createTestContainer(Map<String, String> content,
+			Function<String, String> itemResolver) {
 		return new BuildItemContainer<>(content, itemResolver);
 	}
 

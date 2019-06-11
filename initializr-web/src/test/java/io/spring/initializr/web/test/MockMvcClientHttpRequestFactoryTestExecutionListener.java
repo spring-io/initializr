@@ -24,20 +24,17 @@ import org.springframework.test.web.servlet.MockMvc;
 /**
  * @author Dave Syer
  */
-public final class MockMvcClientHttpRequestFactoryTestExecutionListener
-		extends AbstractTestExecutionListener {
+public final class MockMvcClientHttpRequestFactoryTestExecutionListener extends AbstractTestExecutionListener {
 
 	private MockMvcClientHttpRequestFactory factory;
 
 	@Override
 	public void beforeTestClass(TestContext testContext) throws Exception {
-		ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) testContext
-				.getApplicationContext().getAutowireCapableBeanFactory();
+		ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) testContext.getApplicationContext()
+				.getAutowireCapableBeanFactory();
 		if (!beanFactory.containsBean("mockMvcClientHttpRequestFactory")) {
-			this.factory = new MockMvcClientHttpRequestFactory(
-					beanFactory.getBean(MockMvc.class));
-			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
-					this.factory);
+			this.factory = new MockMvcClientHttpRequestFactory(beanFactory.getBean(MockMvc.class));
+			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory", this.factory);
 		}
 		else {
 			this.factory = beanFactory.getBean("mockMvcClientHttpRequestFactory",

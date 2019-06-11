@@ -39,21 +39,17 @@ class KotlinMavenFullBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		build.setProperty("kotlin.version", this.settings.getVersion());
 		build.setSourceDirectory("${project.basedir}/src/main/kotlin");
 		build.setTestSourceDirectory("${project.basedir}/src/test/kotlin");
-		MavenPlugin kotlinMavenPlugin = build.plugin("org.jetbrains.kotlin",
-				"kotlin-maven-plugin", "${kotlin.version}");
+		MavenPlugin kotlinMavenPlugin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin",
+				"${kotlin.version}");
 		kotlinMavenPlugin.configuration((configuration) -> {
-			configuration.configure("args", (args) -> this.settings.getCompilerArgs()
-					.forEach((arg) -> args.add("arg", arg)));
-			configuration.configure("compilerPlugins",
-					(compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
+			configuration.configure("args",
+					(args) -> this.settings.getCompilerArgs().forEach((arg) -> args.add("arg", arg)));
+			configuration.configure("compilerPlugins", (compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
 			configuration.add("jvmTarget", this.settings.getJvmTarget());
 		});
-		kotlinMavenPlugin.execution("compile",
-				(compile) -> compile.phase("compile").goal("compile"));
-		kotlinMavenPlugin.execution("test-compile",
-				(compile) -> compile.phase("test-compile").goal("test-compile"));
-		kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen",
-				"${kotlin.version}");
+		kotlinMavenPlugin.execution("compile", (compile) -> compile.phase("compile").goal("compile"));
+		kotlinMavenPlugin.execution("test-compile", (compile) -> compile.phase("test-compile").goal("test-compile"));
+		kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 	}
 
 }

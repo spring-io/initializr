@@ -51,8 +51,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
-		assertThat(resolved.getVersionProperty().toStandardFormat())
-				.isEqualTo("bom.version");
+		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("bom.version");
 		assertThat(resolved.getRepositories()).hasSize(1);
 		assertThat(resolved.getRepositories().get(0)).isEqualTo("repo-main");
 		assertThat(resolved.getAdditionalBoms()).hasSize(1);
@@ -74,8 +73,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example.override");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom-override");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
-		assertThat(resolved.getVersionProperty().toStandardFormat())
-				.isEqualTo("bom.version");
+		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("bom.version");
 		assertThat(resolved.getRepositories()).hasSize(1);
 		assertThat(resolved.getRepositories().get(0)).isEqualTo("repo-main");
 		assertThat(resolved.getAdditionalBoms()).hasSize(1);
@@ -112,8 +110,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
-		assertThat(resolved.getVersionProperty().toStandardFormat())
-				.isEqualTo("example.version");
+		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("example.version");
 	}
 
 	@Test
@@ -122,8 +119,7 @@ class BillOfMaterialsTests {
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
 		bom.validate();
-		assertThatIllegalStateException()
-				.isThrownBy(() -> bom.resolve(Version.parse("1.4.1.RELEASE")))
+		assertThatIllegalStateException().isThrownBy(() -> bom.resolve(Version.parse("1.4.1.RELEASE")))
 				.withMessageContaining("1.4.1.RELEASE");
 	}
 
@@ -131,23 +127,18 @@ class BillOfMaterialsTests {
 	void resolveRangeWithVariablePatch() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.getMappings().add(Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping
-				.create("[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)", "1.1.1-SNAPSHOT"));
+		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)", "1.1.1-SNAPSHOT"));
 		bom.validate();
 
-		bom.updateVersionRange(new VersionParser(Arrays.asList(
-				Version.parse("1.3.8.RELEASE"), Version.parse("1.3.9.BUILD-SNAPSHOT"))));
-		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion())
-				.isEqualTo("1.1.0");
-		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion())
-				.isEqualTo("1.1.1-SNAPSHOT");
+		bom.updateVersionRange(new VersionParser(
+				Arrays.asList(Version.parse("1.3.8.RELEASE"), Version.parse("1.3.9.BUILD-SNAPSHOT"))));
+		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion()).isEqualTo("1.1.0");
+		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion()).isEqualTo("1.1.1-SNAPSHOT");
 
-		bom.updateVersionRange(new VersionParser(Arrays.asList(
-				Version.parse("1.3.9.RELEASE"), Version.parse("1.3.10.BUILD-SNAPSHOT"))));
-		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion())
-				.isEqualTo("1.1.0");
-		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion())
-				.isEqualTo("1.1.0");
+		bom.updateVersionRange(new VersionParser(
+				Arrays.asList(Version.parse("1.3.9.RELEASE"), Version.parse("1.3.10.BUILD-SNAPSHOT"))));
+		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion()).isEqualTo("1.1.0");
+		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion()).isEqualTo("1.1.0");
 	}
 
 }

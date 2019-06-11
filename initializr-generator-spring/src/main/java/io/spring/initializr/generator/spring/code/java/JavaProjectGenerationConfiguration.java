@@ -52,8 +52,7 @@ public class JavaProjectGenerationConfiguration {
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public JavaProjectGenerationConfiguration(
-			ResolvedProjectDescription projectDescription,
+	public JavaProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;
@@ -64,21 +63,18 @@ public class JavaProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription,
-				JavaSourceCode::new,
-				new JavaSourceCodeWriter(this.indentingWriterFactory),
-				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers,
-				mainSourceCodeCustomizers);
+		return new MainSourceCodeProjectContributor<>(this.projectDescription, JavaSourceCode::new,
+				new JavaSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
+				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
 	public TestSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> testJavaSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription,
-				JavaSourceCode::new,
-				new JavaSourceCodeWriter(this.indentingWriterFactory),
-				testApplicationTypeCustomizers, testSourceCodeCustomizers);
+		return new TestSourceCodeProjectContributor<>(this.projectDescription, JavaSourceCode::new,
+				new JavaSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
+				testSourceCodeCustomizers);
 	}
 
 }

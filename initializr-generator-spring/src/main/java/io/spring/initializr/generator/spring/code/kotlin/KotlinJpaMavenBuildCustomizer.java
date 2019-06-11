@@ -40,13 +40,10 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 	@Override
 	public void customize(MavenBuild build) {
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			MavenPlugin kotlinPlugin = build.plugin("org.jetbrains.kotlin",
-					"kotlin-maven-plugin");
-			kotlinPlugin.configuration(
-					(configuration) -> configuration.configure("compilerPlugins",
-							(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
-			kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg",
-					"${kotlin.version}");
+			MavenPlugin kotlinPlugin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
+			kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins",
+					(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
+			kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
 		}
 	}
 

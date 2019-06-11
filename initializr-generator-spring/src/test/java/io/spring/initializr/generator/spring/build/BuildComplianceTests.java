@@ -56,19 +56,15 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	private static final Language kotlin = new KotlinLanguage();
 
 	static Stream<Arguments> previousGenerationParameters() {
-		return Stream.of(
-				Arguments.arguments(BuildSystem.forId(MavenBuildSystem.ID), "pom.xml"),
-				Arguments.arguments(BuildSystem.forId(GradleBuildSystem.ID),
-						"build.gradle"));
+		return Stream.of(Arguments.arguments(BuildSystem.forId(MavenBuildSystem.ID), "pom.xml"),
+				Arguments.arguments(BuildSystem.forId(GradleBuildSystem.ID), "build.gradle"));
 	}
 
 	static Stream<Arguments> parameters() {
-		return Stream
-				.concat(previousGenerationParameters(),
-						Stream.of(Arguments.arguments(
-								BuildSystem.forIdAndDialect(GradleBuildSystem.ID,
-										GradleBuildSystem.DIALECT_KOTLIN),
-								"build.gradle.kts")));
+		return Stream.concat(previousGenerationParameters(),
+				Stream.of(Arguments.arguments(
+						BuildSystem.forIdAndDialect(GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN),
+						"build.gradle.kts")));
 	}
 
 	@ParameterizedTest
@@ -89,11 +85,10 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		testCurrentGenerationJar(kotlin, build, fileName);
 	}
 
-	private void testCurrentGenerationJar(Language language, BuildSystem build,
-			String fileName) {
+	private void testCurrentGenerationJar(Language language, BuildSystem build, String fileName) {
 		ProjectAssert project = generateProject(language, build, "2.1.1.RELEASE");
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/standard/" + getAssertFileName(fileName)));
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + language + "/standard/" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
@@ -114,16 +109,13 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		testCurrentGenerationWar(kotlin, build, fileName);
 	}
 
-	private void testCurrentGenerationWar(Language language, BuildSystem build,
-			String fileName) {
-		ProjectAssert project = generateProject(language, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("web",
-							MetadataBuildItemMapper.toDependency(WEB));
-					description.setPackaging(Packaging.forId("war"));
-				});
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/standard/war-" + getAssertFileName(fileName)));
+	private void testCurrentGenerationWar(Language language, BuildSystem build, String fileName) {
+		ProjectAssert project = generateProject(language, build, "2.1.1.RELEASE", (description) -> {
+			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
+			description.setPackaging(Packaging.forId("war"));
+		});
+		project.sourceCodeAssert(fileName).equalsTo(
+				new ClassPathResource("project/" + language + "/standard/war-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
@@ -144,40 +136,34 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		testPreviousGenerationJar(kotlin, build, fileName);
 	}
 
-	private void testPreviousGenerationJar(Language language, BuildSystem build,
-			String fileName) {
+	private void testPreviousGenerationJar(Language language, BuildSystem build, String fileName) {
 		ProjectAssert project = generateProject(language, build, "1.5.18.RELEASE");
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + language + "/previous/" + getAssertFileName(fileName)));
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + language + "/previous/" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void kotlinJava11(BuildSystem build, String fileName) {
 		ProjectAssert project = generateProject(kotlin, build, "2.1.1.RELEASE",
-				(description) -> description
-						.setLanguage(Language.forId(kotlin.id(), "11")));
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/kotlin-java11-" + getAssertFileName(fileName)));
+				(description) -> description.setLanguage(Language.forId(kotlin.id(), "11")));
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + build + "/kotlin-java11-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void versionOverride(BuildSystem build, String fileName) {
 		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> description.addDependency("web",
-						MetadataBuildItemMapper.toDependency(WEB)),
-				(projectGenerationContext) -> projectGenerationContext
-						.registerBean(BuildCustomizer.class, () -> (projectBuild) -> {
-							projectBuild.addVersionProperty(
-									VersionProperty.of("spring-foo.version", false),
+				(description) -> description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB)),
+				(projectGenerationContext) -> projectGenerationContext.registerBean(BuildCustomizer.class,
+						() -> (projectBuild) -> {
+							projectBuild.addVersionProperty(VersionProperty.of("spring-foo.version", false),
 									"0.1.0.RELEASE");
-							projectBuild.addVersionProperty(
-									VersionProperty.of("spring-bar.version"),
-									"0.2.0.RELEASE");
+							projectBuild.addVersionProperty(VersionProperty.of("spring-bar.version"), "0.2.0.RELEASE");
 						}));
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/version-override-" + getAssertFileName(fileName)));
+		project.sourceCodeAssert(fileName).equalsTo(
+				new ClassPathResource("project/" + build + "/version-override-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
@@ -187,64 +173,49 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		foo.setBom("the-bom");
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom", "1.3.3");
 		bom.setVersionProperty("foo.version");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("foo", foo).addBom("the-bom", bom).build();
-		ProjectAssert project = generateProject(
-				java, build, "2.1.1.RELEASE", (description) -> description
-						.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)),
-				metadata);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/bom-property-" + getAssertFileName(fileName)));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", foo)
+				.addBom("the-bom", bom).build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
+				(description) -> description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)), metadata);
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + build + "/bom-property-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void compileOnlyDependency(BuildSystem build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
-		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot",
-				"spring-boot-starter-data-jpa");
+		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot", "spring-boot-starter-data-jpa");
 		foo.setScope(Dependency.SCOPE_COMPILE_ONLY);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("core", "web", "data-jpa")
-				.addDependencyGroup("foo", foo).build();
-		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("foo",
-							MetadataBuildItemMapper.toDependency(foo));
-					description.addDependency("web",
-							MetadataBuildItemMapper.toDependency(WEB));
-					description.addDependency("data-jpa",
-							MetadataBuildItemMapper.toDependency(dataJpa));
-				}, metadata);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource("project/"
-				+ build + "/compile-only-dependency-" + getAssertFileName(fileName)));
+				.addDependencyGroup("core", "web", "data-jpa").addDependencyGroup("foo", foo).build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE", (description) -> {
+			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
+			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
+			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
+		}, metadata);
+		project.sourceCodeAssert(fileName).equalsTo(
+				new ClassPathResource("project/" + build + "/compile-only-dependency-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void annotationProcessorDependency(BuildSystem build, String fileName) {
-		Dependency annotationProcessor = Dependency.withId("configuration-processor",
-				"org.springframework.boot", "spring-boot-configuration-processor");
-		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot",
-				"spring-boot-starter-data-jpa");
+		Dependency annotationProcessor = Dependency.withId("configuration-processor", "org.springframework.boot",
+				"spring-boot-configuration-processor");
+		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot", "spring-boot-starter-data-jpa");
 		annotationProcessor.setScope(Dependency.SCOPE_ANNOTATION_PROCESSOR);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("core", "web", "data-jpa")
-				.addDependencyGroup("configuration-processor", annotationProcessor)
-				.build();
-		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("configuration-processor",
-							MetadataBuildItemMapper.toDependency(annotationProcessor));
-					description.addDependency("web",
-							MetadataBuildItemMapper.toDependency(WEB));
-					description.addDependency("data-jpa",
-							MetadataBuildItemMapper.toDependency(dataJpa));
-				}, metadata);
-		project.sourceCodeAssert(fileName)
-				.equalsTo(new ClassPathResource(
-						"project/" + build + "/annotation-processor-dependency-"
-								+ getAssertFileName(fileName)));
+				.addDependencyGroup("configuration-processor", annotationProcessor).build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE", (description) -> {
+			description.addDependency("configuration-processor",
+					MetadataBuildItemMapper.toDependency(annotationProcessor));
+			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
+			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
+		}, metadata);
+		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
+				"project/" + build + "/annotation-processor-dependency-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
@@ -261,15 +232,12 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		BillOfMaterials fooBom = BillOfMaterials.create("org.acme", "foo-bom", "1.0");
 		fooBom.setOrder(20);
 		fooBom.getAdditionalBoms().add("biz-bom");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("foo", foo).addBom("foo-bom", fooBom)
-				.addBom("bar-bom", barBom).addBom("biz-bom", bizBom).build();
-		ProjectAssert project = generateProject(
-				java, build, "2.1.1.RELEASE", (description) -> description
-						.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)),
-				metadata);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/bom-ordering-" + getAssertFileName(fileName)));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", foo)
+				.addBom("foo-bom", fooBom).addBom("bar-bom", barBom).addBom("biz-bom", bizBom).build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
+				(description) -> description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)), metadata);
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + build + "/bom-ordering-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
@@ -279,38 +247,29 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		foo.setRepository("foo-repository");
 		Dependency bar = Dependency.withId("bar", "org.acme", "bar");
 		bar.setRepository("bar-repository");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", foo, bar)
-				.addRepository("foo-repository", "foo-repo", "https://example.com/foo",
-						false)
-				.addRepository("bar-repository", "bar-repo", "https://example.com/bar",
-						true)
-				.build();
-		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.addDependency("foo",
-							MetadataBuildItemMapper.toDependency(foo));
-					description.addDependency("bar",
-							MetadataBuildItemMapper.toDependency(bar));
-				}, metadata);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource(
-				"project/" + build + "/repositories-" + getAssertFileName(fileName)));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", foo, bar)
+				.addRepository("foo-repository", "foo-repo", "https://example.com/foo", false)
+				.addRepository("bar-repository", "bar-repo", "https://example.com/bar", true).build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE", (description) -> {
+			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
+			description.addDependency("bar", MetadataBuildItemMapper.toDependency(bar));
+		}, metadata);
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + build + "/repositories-" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void repositoriesMilestone(BuildSystem build, String fileName) {
 		Dependency foo = Dependency.withId("foo", "org.acme", "foo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", foo).build();
-		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE",
-				(description) -> {
-					description.setPlatformVersion(Version.parse("2.2.0.M1"));
-					description.addDependency("foo",
-							MetadataBuildItemMapper.toDependency(foo));
-				}, metadata);
-		project.sourceCodeAssert(fileName).equalsTo(new ClassPathResource("project/"
-				+ build + "/repositories-milestone-" + getAssertFileName(fileName)));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", foo)
+				.build();
+		ProjectAssert project = generateProject(java, build, "2.1.1.RELEASE", (description) -> {
+			description.setPlatformVersion(Version.parse("2.2.0.M1"));
+			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
+		}, metadata);
+		project.sourceCodeAssert(fileName).equalsTo(
+				new ClassPathResource("project/" + build + "/repositories-milestone-" + getAssertFileName(fileName)));
 	}
 
 	private String getAssertFileName(String fileName) {

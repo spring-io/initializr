@@ -44,23 +44,19 @@ class DependencyMetadataJsonMapperTests {
 		Repository repository = new Repository();
 		repository.setName("foo-repo");
 		repository.setUrl(new URL("http://example.com/foo"));
-		BillOfMaterials bom = BillOfMaterials.create("org.foo", "foo-bom",
-				"1.0.0.RELEASE");
-		DependencyMetadata metadata = new DependencyMetadata(
-				Version.parse("1.2.0.RELEASE"), Collections.singletonMap(d.getId(), d),
-				Collections.singletonMap("repo-id", repository),
+		BillOfMaterials bom = BillOfMaterials.create("org.foo", "foo-bom", "1.0.0.RELEASE");
+		DependencyMetadata metadata = new DependencyMetadata(Version.parse("1.2.0.RELEASE"),
+				Collections.singletonMap(d.getId(), d), Collections.singletonMap("repo-id", repository),
 				Collections.singletonMap("bom-id", bom));
 		JSONObject content = new JSONObject(this.mapper.write(metadata));
-		assertThat(content.getJSONObject("dependencies").getJSONObject("foo")
-				.getString("bom")).isEqualTo("my-bom");
-		assertThat(content.getJSONObject("dependencies").getJSONObject("foo")
-				.getString("repository")).isEqualTo("my-repo");
-		assertThat(content.getJSONObject("repositories").getJSONObject("repo-id")
-				.getString("name")).isEqualTo("foo-repo");
-		assertThat(content.getJSONObject("boms").getJSONObject("bom-id")
-				.getString("artifactId")).isEqualTo("foo-bom");
-		assertThat(content.getJSONObject("boms").getJSONObject("bom-id")
-				.getString("version")).isEqualTo("1.0.0.RELEASE");
+		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("bom")).isEqualTo("my-bom");
+		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("repository"))
+				.isEqualTo("my-repo");
+		assertThat(content.getJSONObject("repositories").getJSONObject("repo-id").getString("name"))
+				.isEqualTo("foo-repo");
+		assertThat(content.getJSONObject("boms").getJSONObject("bom-id").getString("artifactId")).isEqualTo("foo-bom");
+		assertThat(content.getJSONObject("boms").getJSONObject("bom-id").getString("version"))
+				.isEqualTo("1.0.0.RELEASE");
 	}
 
 }

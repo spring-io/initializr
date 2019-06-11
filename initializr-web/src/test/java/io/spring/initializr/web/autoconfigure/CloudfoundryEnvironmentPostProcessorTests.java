@@ -42,10 +42,8 @@ class CloudfoundryEnvironmentPostProcessorTests {
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
 				.isEqualTo("https://user:pass@example.com/bar/biz?param=one");
-		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
-				.isNull();
-		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
-				.isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password")).isNull();
 	}
 
 	@Test
@@ -56,10 +54,8 @@ class CloudfoundryEnvironmentPostProcessorTests {
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
 				.isEqualTo("http://example.com/bar/biz?param=one");
-		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
-				.isNull();
-		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
-				.isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password")).isNull();
 	}
 
 	@Test
@@ -67,10 +63,8 @@ class CloudfoundryEnvironmentPostProcessorTests {
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri")).isNull();
-		assertThat(this.environment.getProperty("initializr.stats.elastic.username"))
-				.isNull();
-		assertThat(this.environment.getProperty("initializr.stats.elastic.password"))
-				.isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.username")).isNull();
+		assertThat(this.environment.getProperty("initializr.stats.elastic.password")).isNull();
 	}
 
 }

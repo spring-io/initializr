@@ -32,16 +32,13 @@ public class GradleConfigurationBuildCustomizer implements BuildCustomizer<Gradl
 	@Override
 	public void customize(GradleBuild build) {
 		boolean providedRuntimeUsed = build.dependencies().items()
-				.anyMatch((dependency) -> DependencyScope.PROVIDED_RUNTIME
-						.equals(dependency.getScope()));
-		boolean war = build.getPlugins().stream()
-				.anyMatch((plugin) -> plugin.getId().equals("war"));
+				.anyMatch((dependency) -> DependencyScope.PROVIDED_RUNTIME.equals(dependency.getScope()));
+		boolean war = build.getPlugins().stream().anyMatch((plugin) -> plugin.getId().equals("war"));
 		if (providedRuntimeUsed && !war) {
 			build.addConfiguration("providedRuntime");
 		}
 		boolean annotationProcessorUsed = build.dependencies().items()
-				.anyMatch((dependency) -> dependency
-						.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
+				.anyMatch((dependency) -> dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
 		if (annotationProcessorUsed) {
 			build.customizeConfiguration("compileOnly",
 					(configuration) -> configuration.extendsFrom("annotationProcessor"));

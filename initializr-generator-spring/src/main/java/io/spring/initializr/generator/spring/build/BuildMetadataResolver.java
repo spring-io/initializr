@@ -43,9 +43,7 @@ public class BuildMetadataResolver {
 	 * @return a stream of dependency metadata
 	 */
 	public Stream<Dependency> dependencies(Build build) {
-		return build.dependencies().ids()
-				.map((id) -> this.metadata.getDependencies().get(id))
-				.filter(Objects::nonNull);
+		return build.dependencies().ids().map((id) -> this.metadata.getDependencies().get(id)).filter(Objects::nonNull);
 	}
 
 	/**
@@ -55,8 +53,7 @@ public class BuildMetadataResolver {
 	 * @return {@code true} if this build defines at least a dependency with that facet
 	 */
 	public boolean hasFacet(Build build, String facet) {
-		return dependencies(build)
-				.anyMatch((dependency) -> dependency.getFacets().contains(facet));
+		return dependencies(build).anyMatch((dependency) -> dependency.getFacets().contains(facet));
 	}
 
 }

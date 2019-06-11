@@ -70,8 +70,7 @@ public class HelpDocument {
 	 * @return this document
 	 */
 	public HelpDocument addSection(String templateName, Map<String, Object> model) {
-		return addSection(
-				new MustacheSection(this.templateRenderer, templateName, model));
+		return addSection(new MustacheSection(this.templateRenderer, templateName, model));
 	}
 
 	public List<Section> getSections() {
@@ -88,8 +87,7 @@ public class HelpDocument {
 	}
 
 	public boolean isEmpty() {
-		return gettingStarted().isEmpty() && this.sections.isEmpty()
-				&& nextSteps().isEmpty();
+		return gettingStarted().isEmpty() && this.sections.isEmpty() && nextSteps().isEmpty();
 	}
 
 }

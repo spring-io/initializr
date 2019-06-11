@@ -33,8 +33,7 @@ class GradleConfigurationBuildCustomizerTests {
 	void providedRuntimeConfigurationIsAddedWithNonWarProject() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api",
-				DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
 		assertThat(build.getConfigurations()).containsOnly("providedRuntime");
 	}
@@ -44,8 +43,7 @@ class GradleConfigurationBuildCustomizerTests {
 		GradleBuild build = new GradleBuild();
 		build.addPlugin("war");
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api",
-				DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
 		assertThat(build.getConfigurationCustomizations()).isEmpty();
 	}
@@ -54,8 +52,7 @@ class GradleConfigurationBuildCustomizerTests {
 	void providedRuntimeConfigurationIsNotAddedWithNonMatchingDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("another", "com.example", "another",
-				DependencyScope.RUNTIME);
+		build.dependencies().add("another", "com.example", "another", DependencyScope.RUNTIME);
 		customize(build);
 		assertThat(build.getConfigurationCustomizations()).isEmpty();
 	}

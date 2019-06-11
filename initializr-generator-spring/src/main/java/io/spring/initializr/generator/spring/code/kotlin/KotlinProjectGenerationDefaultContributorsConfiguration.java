@@ -56,8 +56,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
 	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
-			KotlinFunctionDeclaration function = KotlinFunctionDeclaration
-					.function("contextLoads").body();
+			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
 			function.annotate(Annotation.name("org.junit.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
@@ -67,16 +66,14 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
-			KotlinFunctionDeclaration function = KotlinFunctionDeclaration
-					.function("contextLoads").body();
+			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
 			function.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
 	}
 
 	@Bean
-	public BuildCustomizer<Build> kotlinDependenciesConfigurer(
-			ResolvedProjectDescription projectDescription) {
+	public BuildCustomizer<Build> kotlinDependenciesConfigurer(ResolvedProjectDescription projectDescription) {
 		return new KotlinDependenciesConfigurer(projectDescription.getPlatformVersion());
 	}
 
@@ -89,23 +86,18 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-		public KotlinMavenFullBuildCustomizer kotlinBuildCustomizer(
-				KotlinProjectSettings kotlinProjectSettings) {
+		public KotlinMavenFullBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinMavenFullBuildCustomizer(kotlinProjectSettings);
 		}
 
 		@Bean
 		public MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
 				ResolvedProjectDescription projectDescription) {
-			return (compilationUnit) -> compilationUnit
-					.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-							.parameters(new Parameter("Array<String>", "args"))
+			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
+					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
-									new KotlinFunctionInvocation(
-											"org.springframework.boot.SpringApplication",
-											"run", projectDescription.getApplicationName()
-													+ "::class.java",
-											"*args"))));
+									new KotlinFunctionInvocation("org.springframework.boot.SpringApplication", "run",
+											projectDescription.getApplicationName() + "::class.java", "*args"))));
 		}
 
 	}
@@ -119,22 +111,18 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-		public KotlinMavenBuildCustomizer kotlinBuildCustomizer(
-				KotlinProjectSettings kotlinProjectSettings) {
+		public KotlinMavenBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinMavenBuildCustomizer(kotlinProjectSettings);
 		}
 
 		@Bean
 		public MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ResolvedProjectDescription projectDescription) {
-			return (compilationUnit) -> compilationUnit
-					.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-							.parameters(new Parameter("Array<String>", "args"))
+			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
+					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
-									new KotlinReifiedFunctionInvocation(
-											"org.springframework.boot.runApplication",
-											projectDescription.getApplicationName(),
-											"*args"))));
+									new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication",
+											projectDescription.getApplicationName(), "*args"))));
 		}
 
 	}
@@ -150,17 +138,13 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		public ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
-				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration
-						.function("configure").modifiers(KotlinModifier.OVERRIDE)
-						.returning(
-								"org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter(
-								"org.springframework.boot.builder.SpringApplicationBuilder",
+				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
+						.modifiers(KotlinModifier.OVERRIDE)
+						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
+						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
-						.body(new KotlinReturnStatement(
-								new KotlinFunctionInvocation("application", "sources",
-										projectDescription.getApplicationName()
-												+ "::class.java")));
+						.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
+								projectDescription.getApplicationName() + "::class.java")));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};
 		}
@@ -173,13 +157,11 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	 * @author Andy Wilkinson
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_GROOVY)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	static class KotlinGradleProjectConfiguration {
 
 		@Bean
-		public KotlinGradleBuildCustomizer kotlinBuildCustomizer(
-				KotlinProjectSettings kotlinProjectSettings) {
+		public KotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new GroovyDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
 		}
 
@@ -191,13 +173,11 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	 * @author Jean-Baptiste Nizet
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	static class KotlinGradleKtsProjectConfiguration {
 
 		@Bean
-		public KotlinDslKotlinGradleBuildCustomizer kotlinBuildCustomizer(
-				KotlinProjectSettings kotlinProjectSettings) {
+		public KotlinDslKotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
 		}
 

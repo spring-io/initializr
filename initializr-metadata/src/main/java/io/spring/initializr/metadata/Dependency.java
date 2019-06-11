@@ -73,9 +73,8 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * All scope types.
 	 */
-	public static final List<String> SCOPE_ALL = Collections.unmodifiableList(
-			Arrays.asList(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_COMPILE_ONLY,
-					SCOPE_ANNOTATION_PROCESSOR, SCOPE_PROVIDED, SCOPE_TEST));
+	public static final List<String> SCOPE_ALL = Collections.unmodifiableList(Arrays.asList(SCOPE_COMPILE,
+			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_ANNOTATION_PROCESSOR, SCOPE_PROVIDED, SCOPE_TEST));
 
 	private List<String> aliases = new ArrayList<>();
 
@@ -147,15 +146,13 @@ public class Dependency extends MetadataElement implements Describable {
 
 	public void setScope(String scope) {
 		if (!SCOPE_ALL.contains(scope)) {
-			throw new InvalidInitializrMetadataException(
-					"Invalid scope " + scope + " must be one of " + SCOPE_ALL);
+			throw new InvalidInitializrMetadataException("Invalid scope " + scope + " must be one of " + SCOPE_ALL);
 		}
 		this.scope = scope;
 	}
 
 	public void setVersionRange(String versionRange) {
-		this.versionRange = (StringUtils.hasText(versionRange) ? versionRange.trim()
-				: null);
+		this.versionRange = (StringUtils.hasText(versionRange) ? versionRange.trim() : null);
 	}
 
 	/**
@@ -175,8 +172,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 */
 	public Dependency asSpringBootStarter(String name) {
 		this.groupId = "org.springframework.boot";
-		this.artifactId = (StringUtils.hasText(name) ? "spring-boot-starter-" + name
-				: "spring-boot-starter");
+		this.artifactId = (StringUtils.hasText(name) ? "spring-boot-starter-" + name : "spring-boot-starter");
 		if (StringUtils.hasText(name)) {
 			setId(name);
 		}
@@ -209,8 +205,7 @@ public class Dependency extends MetadataElement implements Describable {
 			}
 			else {
 				throw new InvalidInitializrMetadataException(
-						"Invalid dependency, id should have the form groupId:artifactId[:version] but got "
-								+ getId());
+						"Invalid dependency, id should have the form groupId:artifactId[:version] but got " + getId());
 			}
 		}
 		this.links.forEach(Link::resolve);
@@ -225,10 +220,8 @@ public class Dependency extends MetadataElement implements Describable {
 				this.versionRequirement = this.range.toString();
 			}
 			catch (InvalidVersionException ex) {
-				throw new InvalidInitializrMetadataException(
-						"Invalid version range '" + this.versionRange + " for "
-								+ "dependency with id '" + getId() + "'",
-						ex);
+				throw new InvalidInitializrMetadataException("Invalid version range '" + this.versionRange + " for "
+						+ "dependency with id '" + getId() + "'", ex);
 			}
 		}
 		this.mappings.forEach((it) -> {
@@ -253,12 +246,9 @@ public class Dependency extends MetadataElement implements Describable {
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
 				Dependency dependency = new Dependency(this);
-				dependency.groupId = (mapping.groupId != null) ? mapping.groupId
-						: this.groupId;
-				dependency.artifactId = (mapping.artifactId != null) ? mapping.artifactId
-						: this.artifactId;
-				dependency.version = (mapping.version != null) ? mapping.version
-						: this.version;
+				dependency.groupId = (mapping.groupId != null) ? mapping.groupId : this.groupId;
+				dependency.artifactId = (mapping.artifactId != null) ? mapping.artifactId : this.artifactId;
+				dependency.version = (mapping.version != null) ? mapping.version : this.version;
 				dependency.versionRequirement = mapping.range.toString();
 				dependency.mappings = null;
 				return dependency;
@@ -285,8 +275,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 */
 	public String generateId() {
 		if (this.groupId == null || this.artifactId == null) {
-			throw new IllegalArgumentException("Could not generate id for " + this
-					+ ": at least groupId and artifactId must be set.");
+			throw new IllegalArgumentException(
+					"Could not generate id for " + this + ": at least groupId and artifactId must be set.");
 		}
 		setId(this.groupId + ":" + this.artifactId);
 		return getId();
@@ -446,20 +436,17 @@ public class Dependency extends MetadataElement implements Describable {
 
 	@Override
 	public String toString() {
-		return "Dependency{" + "id='" + getId() + '\'' + ", groupId='" + this.groupId
-				+ '\'' + ", artifactId='" + this.artifactId + '\'' + ", version='"
-				+ this.version + '\'' + '}';
+		return "Dependency{" + "id='" + getId() + '\'' + ", groupId='" + this.groupId + '\'' + ", artifactId='"
+				+ this.artifactId + '\'' + ", version='" + this.version + '\'' + '}';
 	}
 
-	public static Dependency create(String groupId, String artifactId, String version,
-			String scope) {
+	public static Dependency create(String groupId, String artifactId, String version, String scope) {
 		Dependency dependency = withId(null, groupId, artifactId, version);
 		dependency.setScope(scope);
 		return dependency;
 	}
 
-	public static Dependency withId(String id, String groupId, String artifactId,
-			String version, String scope) {
+	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope) {
 		Dependency dependency = new Dependency();
 		dependency.setId(id);
 		dependency.groupId = groupId;
@@ -469,8 +456,7 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
-	public static Dependency withId(String id, String groupId, String artifactId,
-			String version) {
+	public static Dependency withId(String id, String groupId, String artifactId, String version) {
 		return withId(id, groupId, artifactId, version, null);
 	}
 
@@ -552,8 +538,7 @@ public class Dependency extends MetadataElement implements Describable {
 			this.versionRange = versionRange;
 		}
 
-		public static Mapping create(String range, String groupId, String artifactId,
-				String version) {
+		public static Mapping create(String range, String groupId, String artifactId, String version) {
 			Mapping mapping = new Mapping();
 			mapping.versionRange = range;
 			mapping.groupId = groupId;

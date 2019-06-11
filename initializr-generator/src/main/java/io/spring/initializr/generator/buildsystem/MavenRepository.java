@@ -26,8 +26,8 @@ public class MavenRepository {
 	/**
 	 * Maven Central.
 	 */
-	public static final MavenRepository MAVEN_CENTRAL = new MavenRepository(
-			"maven-central", "Maven Central", "https://repo.maven.apache.org/maven2");
+	public static final MavenRepository MAVEN_CENTRAL = new MavenRepository("maven-central", "Maven Central",
+			"https://repo.maven.apache.org/maven2");
 
 	private final String id;
 

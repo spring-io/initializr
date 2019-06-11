@@ -52,8 +52,7 @@ public class GroovyProjectGenerationConfiguration {
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public GroovyProjectGenerationConfiguration(
-			ResolvedProjectDescription projectDescription,
+	public GroovyProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;
@@ -64,21 +63,18 @@ public class GroovyProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription,
-				GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory),
-				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers,
-				mainSourceCodeCustomizers);
+		return new MainSourceCodeProjectContributor<>(this.projectDescription, GroovySourceCode::new,
+				new GroovySourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
+				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
 	public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription,
-				GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory),
-				testApplicationTypeCustomizers, testSourceCodeCustomizers);
+		return new TestSourceCodeProjectContributor<>(this.projectDescription, GroovySourceCode::new,
+				new GroovySourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
+				testSourceCodeCustomizers);
 	}
 
 }

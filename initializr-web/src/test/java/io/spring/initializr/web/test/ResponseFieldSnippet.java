@@ -80,12 +80,10 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	 */
 	@Override
 	public void document(Operation operation) throws IOException {
-		RestDocumentationContext context = (RestDocumentationContext) operation
-				.getAttributes().get(RestDocumentationContext.class.getName());
-		WriterResolver writerResolver = (WriterResolver) operation.getAttributes()
-				.get(WriterResolver.class.getName());
-		try (Writer writer = writerResolver.resolve(
-				operation.getName() + "/" + getSnippetName(), this.file, context)) {
+		RestDocumentationContext context = (RestDocumentationContext) operation.getAttributes()
+				.get(RestDocumentationContext.class.getName());
+		WriterResolver writerResolver = (WriterResolver) operation.getAttributes().get(WriterResolver.class.getName());
+		try (Writer writer = writerResolver.resolve(operation.getName() + "/" + getSnippetName(), this.file, context)) {
 			Map<String, Object> model = createModel(operation);
 			model.putAll(getAttributes());
 			TemplateEngine templateEngine = (TemplateEngine) operation.getAttributes()
@@ -97,15 +95,12 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	@Override
 	protected Map<String, Object> createModel(Operation operation) {
 		try {
-			Object object = this.objectMapper.readValue(
-					operation.getResponse().getContentAsString(), Object.class);
-			Object field = this.fieldProcessor.extract(JsonFieldPath.compile(this.path),
-					object);
+			Object object = this.objectMapper.readValue(operation.getResponse().getContentAsString(), Object.class);
+			Object field = this.fieldProcessor.extract(JsonFieldPath.compile(this.path), object);
 			if (field instanceof List && this.index != null) {
 				field = ((List<?>) field).get(this.index);
 			}
-			return Collections.singletonMap("value",
-					this.objectMapper.writeValueAsString(field));
+			return Collections.singletonMap("value", this.objectMapper.writeValueAsString(field));
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);

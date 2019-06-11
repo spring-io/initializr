@@ -63,8 +63,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		typeModifiers.put(Modifier::isFinal, "final");
 		typeModifiers.put(Modifier::isStrict, "strictfp");
 		TYPE_MODIFIERS = typeModifiers;
-		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(
-				typeModifiers);
+		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
 		methodModifiers.put(Modifier::isSynchronized, "synchronized");
 		methodModifiers.put(Modifier::isNative, "native");
 		METHOD_MODIFIERS = methodModifiers;
@@ -86,12 +85,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 	}
 
-	private void writeTo(Path directory, JavaCompilationUnit compilationUnit)
-			throws IOException {
+	private void writeTo(Path directory, JavaCompilationUnit compilationUnit) throws IOException {
 		Path output = fileForCompilationUnit(directory, compilationUnit);
 		Files.createDirectories(output.getParent());
-		try (IndentingWriter writer = this.indentingWriterFactory
-				.createIndentingWriter("java", Files.newBufferedWriter(output))) {
+		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("java",
+				Files.newBufferedWriter(output))) {
 			writer.println("package " + compilationUnit.getPackageName() + ";");
 			writer.println();
 			Set<String> imports = determineImports(compilationUnit);
@@ -110,8 +108,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				}
 				writer.println(" {");
 				writer.println();
-				List<JavaMethodDeclaration> methodDeclarations = type
-						.getMethodDeclarations();
+				List<JavaMethodDeclaration> methodDeclarations = type.getMethodDeclarations();
 				if (!methodDeclarations.isEmpty()) {
 					writer.indented(() -> {
 						for (JavaMethodDeclaration methodDeclaration : methodDeclarations) {
@@ -125,8 +122,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		annotatable.getAnnotations()
-				.forEach((annotation) -> writeAnnotation(writer, annotation));
+		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation));
 	}
 
 	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
@@ -139,8 +135,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			}
 			else {
 				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = "
-								+ formatAnnotationAttribute(attribute))
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
 						.collect(Collectors.joining(", ")));
 			}
 			writer.print(")");
@@ -151,8 +146,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
 		List<String> values = attribute.getValues();
 		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values,
-					(value) -> String.format("%s.class", getUnqualifiedName(value)));
+			return formatValues(values, (value) -> String.format("%s.class", getUnqualifiedName(value)));
 		}
 		if (Enum.class.isAssignableFrom(attribute.getType())) {
 			return formatValues(values, (value) -> {
@@ -172,17 +166,14 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		return (values.size() > 1) ? "{ " + result + " }" : result;
 	}
 
-	private void writeMethodDeclaration(IndentingWriter writer,
-			JavaMethodDeclaration methodDeclaration) {
+	private void writeMethodDeclaration(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
 		writeAnnotations(writer, methodDeclaration);
 		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
-		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " "
-				+ methodDeclaration.getName() + "(");
+		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
 		List<Parameter> parameters = methodDeclaration.getParameters();
 		if (!parameters.isEmpty()) {
-			writer.print(parameters
-					.stream().map((parameter) -> getUnqualifiedName(parameter.getType())
-							+ " " + parameter.getName())
+			writer.print(parameters.stream()
+					.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
 					.collect(Collectors.joining(", ")));
 		}
 		writer.println(") {");
@@ -190,13 +181,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			List<JavaStatement> statements = methodDeclaration.getStatements();
 			for (JavaStatement statement : statements) {
 				if (statement instanceof JavaExpressionStatement) {
-					writeExpression(writer,
-							((JavaExpressionStatement) statement).getExpression());
+					writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
 				}
 				else if (statement instanceof JavaReturnStatement) {
 					writer.print("return ");
-					writeExpression(writer,
-							((JavaReturnStatement) statement).getExpression());
+					writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
 				}
 				writer.println(";");
 			}
@@ -205,11 +194,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		writer.println();
 	}
 
-	private void writeModifiers(IndentingWriter writer,
-			Map<Predicate<Integer>, String> availableModifiers, int declaredModifiers) {
+	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
+			int declaredModifiers) {
 		String modifiers = availableModifiers.entrySet().stream()
-				.filter((entry) -> entry.getKey().test(declaredModifiers))
-				.map(Entry::getValue).collect(Collectors.joining(" "));
+				.filter((entry) -> entry.getKey().test(declaredModifiers)).map(Entry::getValue)
+				.collect(Collectors.joining(" "));
 		if (!modifiers.isEmpty()) {
 			writer.print(modifiers);
 			writer.print(" ");
@@ -222,15 +211,12 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 	}
 
-	private void writeMethodInvocation(IndentingWriter writer,
-			JavaMethodInvocation methodInvocation) {
-		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "."
-				+ methodInvocation.getName() + "("
+	private void writeMethodInvocation(IndentingWriter writer, JavaMethodInvocation methodInvocation) {
+		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
 				+ String.join(", ", methodInvocation.getArguments()) + ")");
 	}
 
-	private Path fileForCompilationUnit(Path directory,
-			JavaCompilationUnit compilationUnit) {
+	private Path fileForCompilationUnit(Path directory, JavaCompilationUnit compilationUnit) {
 		return directoryForPackage(directory, compilationUnit.getPackageName())
 				.resolve(compilationUnit.getName() + ".java");
 	}
@@ -241,31 +227,23 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
 	private Set<String> determineImports(JavaCompilationUnit compilationUnit) {
 		List<String> imports = new ArrayList<>();
-		for (JavaTypeDeclaration typeDeclaration : compilationUnit
-				.getTypeDeclarations()) {
+		for (JavaTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
 			if (requiresImport(typeDeclaration.getExtends())) {
 				imports.add(typeDeclaration.getExtends());
 			}
-			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(),
-					this::determineImports));
-			for (JavaMethodDeclaration methodDeclaration : typeDeclaration
-					.getMethodDeclarations()) {
+			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			for (JavaMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				if (requiresImport(methodDeclaration.getReturnType())) {
 					imports.add(methodDeclaration.getReturnType());
 				}
-				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(),
-						this::determineImports));
+				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
 				imports.addAll(getRequiredImports(
-						methodDeclaration.getStatements().stream()
-								.filter(JavaExpressionStatement.class::isInstance)
-								.map(JavaExpressionStatement.class::cast)
-								.map(JavaExpressionStatement::getExpression)
-								.filter(JavaMethodInvocation.class::isInstance)
-								.map(JavaMethodInvocation.class::cast),
-						(methodInvocation) -> Collections
-								.singleton(methodInvocation.getTarget())));
+						methodDeclaration.getStatements().stream().filter(JavaExpressionStatement.class::isInstance)
+								.map(JavaExpressionStatement.class::cast).map(JavaExpressionStatement::getExpression)
+								.filter(JavaMethodInvocation.class::isInstance).map(JavaMethodInvocation.class::cast),
+						(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
 			}
 		}
 		Collections.sort(imports);
@@ -280,23 +258,20 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(attribute.getValues());
 			}
 			if (Enum.class.isAssignableFrom(attribute.getType())) {
-				imports.addAll(attribute.getValues().stream()
-						.map((value) -> value.substring(0, value.lastIndexOf(".")))
+				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
 						.collect(Collectors.toList()));
 			}
 		});
 		return imports;
 	}
 
-	private <T> List<String> getRequiredImports(List<T> candidates,
-			Function<T, Collection<String>> mapping) {
+	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
 		return getRequiredImports(candidates.stream(), mapping);
 	}
 
-	private <T> List<String> getRequiredImports(Stream<T> candidates,
-			Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping).flatMap(Collection::stream)
-				.filter(this::requiresImport).collect(Collectors.toList());
+	private <T> List<String> getRequiredImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
+		return candidates.map(mapping).flatMap(Collection::stream).filter(this::requiresImport)
+				.collect(Collectors.toList());
 	}
 
 	private String getUnqualifiedName(String name) {

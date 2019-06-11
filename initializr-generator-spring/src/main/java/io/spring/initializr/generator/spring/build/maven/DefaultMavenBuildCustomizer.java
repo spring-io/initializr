@@ -36,8 +36,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 
 	private final InitializrMetadata metadata;
 
-	public DefaultMavenBuildCustomizer(ResolvedProjectDescription projectDescription,
-			InitializrMetadata metadata) {
+	public DefaultMavenBuildCustomizer(ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;
 	}
@@ -46,18 +45,16 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 	public void customize(MavenBuild build) {
 		build.setName(this.projectDescription.getName());
 		build.setDescription(this.projectDescription.getDescription());
-		build.setProperty("java.version",
-				this.projectDescription.getLanguage().jvmVersion());
+		build.setProperty("java.version", this.projectDescription.getLanguage().jvmVersion());
 		build.plugin("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
-		String springBootVersion = this.projectDescription.getPlatformVersion()
-				.toString();
+		String springBootVersion = this.projectDescription.getPlatformVersion().toString();
 		ParentPom parentPom = maven.resolveParentPom(springBootVersion);
 		if (parentPom.isIncludeSpringBootBom()) {
 			String versionProperty = "spring-boot.version";
-			BillOfMaterials springBootBom = MetadataBuildItemMapper.toBom(this.metadata
-					.createSpringBootBom(springBootVersion, versionProperty));
+			BillOfMaterials springBootBom = MetadataBuildItemMapper
+					.toBom(this.metadata.createSpringBootBom(springBootVersion, versionProperty));
 			if (!hasBom(build, springBootBom)) {
 				build.addInternalVersionProperty(versionProperty, springBootVersion);
 				build.boms().add("spring-boot", springBootBom);
@@ -67,14 +64,12 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 			build.setProperty("project.build.sourceEncoding", "UTF-8");
 			build.setProperty("project.reporting.outputEncoding", "UTF-8");
 		}
-		build.parent(parentPom.getGroupId(), parentPom.getArtifactId(),
-				parentPom.getVersion());
+		build.parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
 	}
 
 	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {
-		return build.boms().items()
-				.anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
-						&& candidate.getArtifactId().equals(bom.getArtifactId()));
+		return build.boms().items().anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
+				&& candidate.getArtifactId().equals(bom.getArtifactId()));
 	}
 
 }

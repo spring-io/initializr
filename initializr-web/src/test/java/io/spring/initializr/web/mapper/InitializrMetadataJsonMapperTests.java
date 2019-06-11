@@ -40,24 +40,22 @@ class InitializrMetadataJsonMapperTests {
 	@Test
 	void withNoAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", "test")
-				.addDependencyGroup("foo", "one", "two").build();
+				.addType("foo", true, "/foo.zip", "none", "test").addDependencyGroup("foo", "one", "two").build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
-		assertThat(get(result, "_links.foo.href")).isEqualTo(
-				"/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
+		assertThat(get(result, "_links.foo.href"))
+				.isEqualTo("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
 						+ "groupId,artifactId,version,name,description,packageName}");
 	}
 
 	@Test
 	void withAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", "test")
-				.addDependencyGroup("foo", "one", "two").build();
+				.addType("foo", true, "/foo.zip", "none", "test").addDependencyGroup("foo", "one", "two").build();
 		String json = this.jsonMapper.write(metadata, "http://server:8080/my-app");
 		JsonNode result = objectMapper.readTree(json);
-		assertThat(get(result, "_links.foo.href")).isEqualTo(
-				"http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
+		assertThat(get(result, "_links.foo.href"))
+				.isEqualTo("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
 						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
 	}
 

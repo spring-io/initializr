@@ -57,8 +57,7 @@ public class GradleProjectGenerationConfiguration {
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public GradleProjectGenerationConfiguration(
-			IndentingWriterFactory indentingWriterFactory) {
+	public GradleProjectGenerationConfiguration(IndentingWriterFactory indentingWriterFactory) {
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -72,18 +71,15 @@ public class GradleProjectGenerationConfiguration {
 	@SuppressWarnings("unchecked")
 	private GradleBuild createGradleBuild(BuildItemResolver buildItemResolver,
 			List<BuildCustomizer<?>> buildCustomizers) {
-		GradleBuild build = (buildItemResolver != null)
-				? new GradleBuild(buildItemResolver) : new GradleBuild();
+		GradleBuild build = (buildItemResolver != null) ? new GradleBuild(buildItemResolver) : new GradleBuild();
 		LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
 				.invoke((customizer) -> customizer.customize(build));
 		return build;
 	}
 
 	@Bean
-	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(
-			ResolvedProjectDescription projectDescription) {
-		return (build) -> build
-				.setSourceCompatibility(projectDescription.getLanguage().jvmVersion());
+	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ResolvedProjectDescription projectDescription) {
+		return (build) -> build.setSourceCompatibility(projectDescription.getLanguage().jvmVersion());
 	}
 
 	@Bean
@@ -105,28 +101,23 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_GROOVY)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	public BuildCustomizer<GradleBuild> applyDependencyManagementPluginContributor() {
 		return (build) -> build.applyPlugin("io.spring.dependency-management");
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_GROOVY)
-	public GradleBuildProjectContributor gradleBuildProjectContributor(
-			GroovyDslGradleBuildWriter buildWriter, GradleBuild build) {
-		return new GradleBuildProjectContributor(buildWriter, build,
-				this.indentingWriterFactory, "build.gradle");
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
+	public GradleBuildProjectContributor gradleBuildProjectContributor(GroovyDslGradleBuildWriter buildWriter,
+			GradleBuild build) {
+		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle");
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_KOTLIN)
-	public GradleBuildProjectContributor gradleKtsBuildProjectContributor(
-			KotlinDslGradleBuildWriter buildWriter, GradleBuild build) {
-		return new GradleBuildProjectContributor(buildWriter, build,
-				this.indentingWriterFactory, "build.gradle.kts");
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	public GradleBuildProjectContributor gradleKtsBuildProjectContributor(KotlinDslGradleBuildWriter buildWriter,
+			GradleBuild build) {
+		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle.kts");
 	}
 
 	/**
@@ -148,17 +139,15 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		public Gradle3SettingsGradleProjectContributor settingsGradleProjectContributor(
-				GradleBuild build) {
+		public Gradle3SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build) {
 			return new Gradle3SettingsGradleProjectContributor(build);
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(
-				ResolvedProjectDescription projectDescription) {
+		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
 			return (build) -> {
-				build.buildscript((buildscript) -> buildscript
-						.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
+				build.buildscript(
+						(buildscript) -> buildscript.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
 								+ projectDescription.getPlatformVersion()));
 				build.applyPlugin("org.springframework.boot");
 			};
@@ -199,8 +188,7 @@ public class GradleProjectGenerationConfiguration {
 	 * Configuration specific to projects using Gradle (Groovy DSL) 4 or 5.
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_GROOVY)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	@ConditionalOnGradleVersion({ "4", "5" })
 	static class Gradle4Or5ProjectGenerationConfiguration {
 
@@ -210,15 +198,14 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		public SettingsGradleProjectContributor settingsGradleProjectContributor(
-				GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
+		public SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build,
+				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new GroovyDslGradleSettingsWriter(), "settings.gradle");
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(
-				ResolvedProjectDescription projectDescription) {
+		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
 			return (build) -> build.addPlugin("org.springframework.boot",
 					projectDescription.getPlatformVersion().toString());
 		}
@@ -226,8 +213,7 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		public BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.customizeTask("test",
-					(test) -> test.invoke("useJUnitPlatform"));
+			return (build) -> build.customizeTask("test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 		@Bean
@@ -241,8 +227,7 @@ public class GradleProjectGenerationConfiguration {
 	 * Configuration specific to projects using Gradle (Kotlin DSL).
 	 */
 	@Configuration
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID,
-			dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	@ConditionalOnGradleVersion("5")
 	static class GradleKtsProjectGenerationConfiguration {
 
@@ -252,30 +237,26 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		public SettingsGradleProjectContributor settingsGradleKtsProjectContributor(
-				GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
+		public SettingsGradleProjectContributor settingsGradleKtsProjectContributor(GradleBuild build,
+				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new KotlinDslGradleSettingsWriter(), "settings.gradle.kts");
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(
-				ResolvedProjectDescription projectDescription,
+		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
 				InitializrMetadata metadata) {
 			return (build) -> {
-				build.addPlugin("org.springframework.boot",
-						projectDescription.getPlatformVersion().toString());
+				build.addPlugin("org.springframework.boot", projectDescription.getPlatformVersion().toString());
 				build.addPlugin("io.spring.dependency-management",
-						metadata.getConfiguration().getEnv().getGradle()
-								.getDependencyManagementPluginVersion());
+						metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion());
 			};
 		}
 
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		public BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.customizeTasksWithType("Test",
-					(test) -> test.invoke("useJUnitPlatform"));
+			return (build) -> build.customizeTasksWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 	}

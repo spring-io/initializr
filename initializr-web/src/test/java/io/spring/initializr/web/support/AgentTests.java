@@ -71,8 +71,7 @@ class AgentTests {
 
 	@Test
 	void checkIntelliJIDEAWithVersion() {
-		Agent agent = Agent
-				.fromUserAgent("IntelliJ IDEA/144.2 (Community edition; en-us)");
+		Agent agent = Agent.fromUserAgent("IntelliJ IDEA/144.2 (Community edition; en-us)");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.INTELLIJ_IDEA);
 		assertThat(agent.getVersion()).isEqualTo("144.2");
 	}
@@ -100,8 +99,7 @@ class AgentTests {
 
 	@Test
 	void checkGenericBrowser() {
-		Agent agent = Agent.fromUserAgent(
-				"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ");
+		Agent agent = Agent.fromUserAgent("Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MMB29K) ");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.BROWSER);
 		assertThat(agent.getVersion()).isNull();
 	}

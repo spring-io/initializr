@@ -51,8 +51,8 @@ public class GitIgnore {
 
 	public boolean isEmpty() {
 		return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty()
-				&& this.intellijIdea.getItems().isEmpty()
-				&& this.netBeans.getItems().isEmpty() && this.vscode.getItems().isEmpty();
+				&& this.intellijIdea.getItems().isEmpty() && this.netBeans.getItems().isEmpty()
+				&& this.vscode.getItems().isEmpty();
 	}
 
 	public GitIgnoreSection getGeneral() {

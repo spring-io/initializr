@@ -47,8 +47,7 @@ class BuildMetadataResolverTests {
 		build.dependencies().add("one");
 		BuildMetadataResolver resolver = new BuildMetadataResolver(metadata);
 		assertThat(resolver.dependencies(build)).hasSize(2);
-		assertThat(resolver.dependencies(build).map(MetadataElement::getId))
-				.containsExactly("three", "one");
+		assertThat(resolver.dependencies(build).map(MetadataElement::getId)).containsExactly("three", "one");
 	}
 
 	@Test
@@ -74,14 +73,12 @@ class BuildMetadataResolverTests {
 		web.getFacets().addAll(Arrays.asList("test", "web", "another"));
 		Dependency custom = Dependency.withId("my-custom");
 		custom.getFacets().add("custom");
-		return InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("core", "one", "two", "three")
+		return InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("core", "one", "two", "three")
 				.addDependencyGroup("test", web, custom).build();
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 }

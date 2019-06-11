@@ -31,8 +31,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
  */
 public abstract class GradleSettingsWriter {
 
-	public final void writeTo(IndentingWriter writer, GradleBuild build)
-			throws IOException {
+	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
 		writePluginManagement(writer, build);
 		writer.println("rootProject.name = " + wrapWithQuotes(build.getArtifact()));
 	}
@@ -49,25 +48,21 @@ public abstract class GradleSettingsWriter {
 	private void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writer.println("repositories {");
 		writer.indented(() -> {
-			build.pluginRepositories().items().map(this::repositoryAsString)
-					.forEach(writer::println);
+			build.pluginRepositories().items().map(this::repositoryAsString).forEach(writer::println);
 			writer.println("gradlePluginPortal()");
 		});
 		writer.println("}");
 	}
 
-	private void writeResolutionStrategyIfNecessary(IndentingWriter writer,
-			GradleBuild build) {
-		if (build.pluginRepositories().items()
-				.allMatch(MavenRepository.MAVEN_CENTRAL::equals)) {
+	private void writeResolutionStrategyIfNecessary(IndentingWriter writer, GradleBuild build) {
+		if (build.pluginRepositories().items().allMatch(MavenRepository.MAVEN_CENTRAL::equals)) {
 			return;
 		}
 		writer.println("resolutionStrategy {");
 		writer.indented(() -> {
 			writer.println("eachPlugin {");
 			writer.indented(() -> {
-				writer.println("if (requested.id.id == "
-						+ wrapWithQuotes("org.springframework.boot") + ") {");
+				writer.println("if (requested.id.id == " + wrapWithQuotes("org.springframework.boot") + ") {");
 				writer.indented(() -> writer.println(
 						"useModule(\"org.springframework.boot:spring-boot-gradle-plugin:${requested.version}\")"));
 				writer.println("}");

@@ -31,14 +31,12 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test-default")
 @Import(ProjectDescriptionCustomizerConfiguration.class)
-class ProjectGenerationDescriptionCustomizerTests
-		extends AbstractInitializrControllerIntegrationTests {
+class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void projectDescriptionCustomizersAreInvoked() {
-		downloadZip("/starter.zip?bootVersion=2.0.4.RELEASE&javaVersion=1.8")
-				.isJavaProject().isMavenProject().pomAssert()
-				.hasSpringBootParent("2.2.3.RELEASE").hasProperty("java.version", "1.7");
+		downloadZip("/starter.zip?bootVersion=2.0.4.RELEASE&javaVersion=1.8").isJavaProject().isMavenProject()
+				.pomAssert().hasSpringBootParent("2.2.3.RELEASE").hasProperty("java.version", "1.7");
 	}
 
 	@Configuration

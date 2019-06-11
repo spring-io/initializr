@@ -49,10 +49,8 @@ class WebFoldersContributorTests {
 
 	@Test
 	void webFoldersCreatedWithWebDependency() throws IOException {
-		Dependency simple = Dependency.withId("simple", "com.example", "simple", null,
-				Dependency.SCOPE_COMPILE);
-		Dependency web = Dependency.withId("web", "com.example", "web", null,
-				Dependency.SCOPE_COMPILE);
+		Dependency simple = Dependency.withId("simple", "com.example", "simple", null, Dependency.SCOPE_COMPILE);
+		Dependency web = Dependency.withId("web", "com.example", "web", null, Dependency.SCOPE_COMPILE);
 		web.setFacets(Collections.singletonList("web"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", simple, web).build();
@@ -66,10 +64,8 @@ class WebFoldersContributorTests {
 
 	@Test
 	void webFoldersNotCreatedWithoutWebDependency() throws IOException {
-		Dependency simple = Dependency.withId("simple", "com.example", "simple", null,
-				Dependency.SCOPE_COMPILE);
-		Dependency web = Dependency.withId("web", "com.example", "web", null,
-				Dependency.SCOPE_COMPILE);
+		Dependency simple = Dependency.withId("simple", "com.example", "simple", null, Dependency.SCOPE_COMPILE);
+		Dependency web = Dependency.withId("web", "com.example", "web", null, Dependency.SCOPE_COMPILE);
 		web.setFacets(Collections.singletonList("web"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", simple, web).build();
@@ -81,8 +77,7 @@ class WebFoldersContributorTests {
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 	private Path contribute(Build build, InitializrMetadata metadata) throws IOException {

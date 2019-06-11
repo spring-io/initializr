@@ -169,19 +169,14 @@ public class ProjectRequestDocument {
 
 	@Override
 	public String toString() {
-		return new StringJoiner(", ", ProjectRequestDocument.class.getSimpleName() + "[",
-				"]").add("generationTimestamp=" + this.generationTimestamp)
-						.add("type='" + this.type + "'")
-						.add("buildSystem='" + this.buildSystem + "'")
-						.add("groupId='" + this.groupId + "'")
-						.add("artifactId='" + this.artifactId + "'")
-						.add("javaVersion='" + this.javaVersion + "'")
-						.add("language='" + this.language + "'")
-						.add("packaging='" + this.packaging + "'")
-						.add("packageName='" + this.packageName + "'")
-						.add("version=" + this.version).add("client=" + this.client)
-						.add("dependencies=" + this.dependencies)
-						.add("errorState=" + this.errorState).toString();
+		return new StringJoiner(", ", ProjectRequestDocument.class.getSimpleName() + "[", "]")
+				.add("generationTimestamp=" + this.generationTimestamp).add("type='" + this.type + "'")
+				.add("buildSystem='" + this.buildSystem + "'").add("groupId='" + this.groupId + "'")
+				.add("artifactId='" + this.artifactId + "'").add("javaVersion='" + this.javaVersion + "'")
+				.add("language='" + this.language + "'").add("packaging='" + this.packaging + "'")
+				.add("packageName='" + this.packageName + "'").add("version=" + this.version)
+				.add("client=" + this.client).add("dependencies=" + this.dependencies)
+				.add("errorState=" + this.errorState).toString();
 	}
 
 	/**
@@ -198,8 +193,7 @@ public class ProjectRequestDocument {
 		public VersionInformation(Version version) {
 			this.id = version.toString();
 			this.major = String.format("%s", version.getMajor());
-			this.minor = (version.getMinor() != null)
-					? String.format("%s.%s", version.getMajor(), version.getMinor())
+			this.minor = (version.getMinor() != null) ? String.format("%s.%s", version.getMajor(), version.getMinor())
 					: null;
 		}
 
@@ -217,9 +211,8 @@ public class ProjectRequestDocument {
 
 		@Override
 		public String toString() {
-			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
-					.add("major='" + this.major + "'").add("minor='" + this.minor + "'")
-					.toString();
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'").add("major='" + this.major + "'")
+					.add("minor='" + this.minor + "'").toString();
 		}
 
 	}
@@ -263,8 +256,8 @@ public class ProjectRequestDocument {
 
 		@Override
 		public String toString() {
-			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
-					.add("values=" + this.values).add("count=" + this.count).toString();
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'").add("values=" + this.values)
+					.add("count=" + this.count).toString();
 		}
 
 	}
@@ -307,9 +300,8 @@ public class ProjectRequestDocument {
 
 		@Override
 		public String toString() {
-			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'")
-					.add("version='" + this.version + "'").add("ip='" + this.ip + "'")
-					.add("country='" + this.country + "'").toString();
+			return new StringJoiner(", ", "{", "}").add("id='" + this.id + "'").add("version='" + this.version + "'")
+					.add("ip='" + this.ip + "'").add("country='" + this.country + "'").toString();
 		}
 
 	}
@@ -388,10 +380,9 @@ public class ProjectRequestDocument {
 		@Override
 		public String toString() {
 			return new StringJoiner(", ", "{", "}").add("invalid=" + this.invalid)
-					.add("javaVersion=" + this.javaVersion)
-					.add("language=" + this.language).add("packaging=" + this.packaging)
-					.add("type=" + this.type).add("dependencies=" + this.dependencies)
-					.add("message='" + this.message + "'").toString();
+					.add("javaVersion=" + this.javaVersion).add("language=" + this.language)
+					.add("packaging=" + this.packaging).add("type=" + this.type)
+					.add("dependencies=" + this.dependencies).add("message='" + this.message + "'").toString();
 		}
 
 	}
@@ -419,8 +410,7 @@ public class ProjectRequestDocument {
 
 		@Override
 		public String toString() {
-			return new StringJoiner(", ", "{", "}").add(String.join(", ", this.values))
-					.toString();
+			return new StringJoiner(", ", "{", "}").add(String.join(", ", this.values)).toString();
 		}
 
 	}

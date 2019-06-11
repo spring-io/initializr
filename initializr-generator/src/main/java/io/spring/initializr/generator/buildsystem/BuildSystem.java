@@ -58,13 +58,10 @@ public interface BuildSystem {
 	}
 
 	static BuildSystem forIdAndDialect(String id, String dialect) {
-		return SpringFactoriesLoader
-				.loadFactories(BuildSystemFactory.class,
-						BuildSystem.class.getClassLoader())
-				.stream().map((factory) -> factory.createBuildSystem(id, dialect))
-				.filter(Objects::nonNull).findFirst().orElseThrow(
-						() -> new IllegalStateException("Unrecognized build system id '"
-								+ id + "' and dialect '" + dialect + "'"));
+		return SpringFactoriesLoader.loadFactories(BuildSystemFactory.class, BuildSystem.class.getClassLoader())
+				.stream().map((factory) -> factory.createBuildSystem(id, dialect)).filter(Objects::nonNull).findFirst()
+				.orElseThrow(() -> new IllegalStateException(
+						"Unrecognized build system id '" + id + "' and dialect '" + dialect + "'"));
 	}
 
 }

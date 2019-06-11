@@ -47,8 +47,8 @@ public final class IndentingWriterFactory {
 	 * @return a configured {@link IndentingWriter}
 	 */
 	public IndentingWriter createIndentingWriter(String contentId, Writer out) {
-		Function<Integer, String> indentingStrategy = this.indentingStrategies
-				.getOrDefault(contentId, this.defaultIndentingStrategy);
+		Function<Integer, String> indentingStrategy = this.indentingStrategies.getOrDefault(contentId,
+				this.defaultIndentingStrategy);
 		return new IndentingWriter(out, indentingStrategy);
 	}
 
@@ -65,8 +65,7 @@ public final class IndentingWriterFactory {
 	 * @param defaultIndentingStrategy the default indenting strategy to use
 	 * @return an {@link IndentingWriterFactory}
 	 */
-	public static IndentingWriterFactory create(
-			Function<Integer, String> defaultIndentingStrategy) {
+	public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy) {
 		return new IndentingWriterFactory(new Builder(defaultIndentingStrategy));
 	}
 
@@ -76,8 +75,7 @@ public final class IndentingWriterFactory {
 	 * @param factory a consumer of the builder to apply further customizations
 	 * @return an {@link IndentingWriterFactory}
 	 */
-	public static IndentingWriterFactory create(
-			Function<Integer, String> defaultIndentingStrategy,
+	public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy,
 			Consumer<Builder> factory) {
 		Builder factoryBuilder = new Builder(defaultIndentingStrategy);
 		factory.accept(factoryBuilder);
@@ -104,8 +102,7 @@ public final class IndentingWriterFactory {
 		 * @return this builder
 		 * @see #createIndentingWriter(String, Writer)
 		 */
-		public Builder indentingStrategy(String contentId,
-				Function<Integer, String> indentingStrategy) {
+		public Builder indentingStrategy(String contentId, Function<Integer, String> indentingStrategy) {
 			this.indentingStrategies.put(contentId, indentingStrategy);
 			return this;
 		}

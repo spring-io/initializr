@@ -33,8 +33,7 @@ import org.springframework.context.annotation.Configuration;
 public class InitializrActuatorEndpointsAutoConfiguration {
 
 	@Bean
-	public BomRangesInfoContributor bomRangesInfoContributor(
-			InitializrMetadataProvider metadataProvider) {
+	public BomRangesInfoContributor bomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
 		return new BomRangesInfoContributor(metadataProvider);
 	}
 

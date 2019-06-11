@@ -29,8 +29,7 @@ import org.springframework.core.Ordered;
  * @author Andy Wilkinson
  */
 @FunctionalInterface
-public interface MainApplicationTypeCustomizer<T extends TypeDeclaration>
-		extends Ordered {
+public interface MainApplicationTypeCustomizer<T extends TypeDeclaration> extends Ordered {
 
 	void customize(T typeDeclaration);
 

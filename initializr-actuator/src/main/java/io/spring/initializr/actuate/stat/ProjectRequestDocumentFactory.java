@@ -59,8 +59,7 @@ public class ProjectRequestDocumentFactory {
 		}
 
 		document.setLanguage(request.getLanguage());
-		if (StringUtils.hasText(request.getLanguage())
-				&& metadata.getLanguages().get(request.getLanguage()) == null) {
+		if (StringUtils.hasText(request.getLanguage()) && metadata.getLanguages().get(request.getLanguage()) == null) {
 			document.triggerError().setLanguage(true);
 		}
 
@@ -72,8 +71,7 @@ public class ProjectRequestDocumentFactory {
 
 		document.setType(request.getType());
 		document.setBuildSystem(determineBuildSystem(request));
-		if (StringUtils.hasText(request.getType())
-				&& metadata.getTypes().get(request.getType()) == null) {
+		if (StringUtils.hasText(request.getType()) && metadata.getTypes().get(request.getType()) == null) {
 			document.triggerError().setType(true);
 		}
 
@@ -82,11 +80,9 @@ public class ProjectRequestDocumentFactory {
 		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
 		List<String> validDependencies = dependencies.stream()
-				.filter((id) -> metadata.getDependencies().get(id) != null)
-				.collect(Collectors.toList());
+				.filter((id) -> metadata.getDependencies().get(id) != null).collect(Collectors.toList());
 		document.setDependencies(new DependencyInformation(validDependencies));
-		List<String> invalidDependencies = dependencies.stream()
-				.filter((id) -> (!validDependencies.contains(id)))
+		List<String> invalidDependencies = dependencies.stream().filter((id) -> (!validDependencies.contains(id)))
 				.collect(Collectors.toList());
 		if (!invalidDependencies.isEmpty()) {
 			document.triggerError().triggerInvalidDependencies(invalidDependencies);
@@ -140,8 +136,7 @@ public class ProjectRequestDocumentFactory {
 
 	private String determineIp(WebProjectRequest request) {
 		String candidate = (String) request.getParameters().get("cf-connecting-ip");
-		return (StringUtils.hasText(candidate)) ? candidate
-				: (String) request.getParameters().get("x-forwarded-for");
+		return (StringUtils.hasText(candidate)) ? candidate : (String) request.getParameters().get("x-forwarded-for");
 	}
 
 	private String determineCountry(WebProjectRequest request) {

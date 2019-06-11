@@ -33,11 +33,10 @@ class GroovyDslKotlinGradleBuildCustomizer extends KotlinGradleBuildCustomizer {
 	}
 
 	@Override
-	protected void customizeKotlinOptions(KotlinProjectSettings settings,
-			TaskCustomization compile) {
+	protected void customizeKotlinOptions(KotlinProjectSettings settings, TaskCustomization compile) {
 		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = settings.getCompilerArgs().stream()
-					.map((arg) -> "'" + arg + "'").collect(Collectors.joining(", "));
+			String compilerArgs = settings.getCompilerArgs().stream().map((arg) -> "'" + arg + "'")
+					.collect(Collectors.joining(", "));
 			kotlinOptions.set("freeCompilerArgs", "[" + compilerArgs + "]");
 			kotlinOptions.set("jvmTarget", "'" + settings.getJvmTarget() + "'");
 		});

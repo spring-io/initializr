@@ -33,8 +33,8 @@ import org.springframework.util.StringUtils;
 class OnBuildSystemCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ResolvedProjectDescription projectDescription,
-			ConditionContext context, AnnotatedTypeMetadata metadata) {
+	protected boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+			AnnotatedTypeMetadata metadata) {
 		MultiValueMap<String, Object> attributes = metadata
 				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
 		String buildSystemId = (String) attributes.getFirst("value");

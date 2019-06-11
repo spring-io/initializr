@@ -38,8 +38,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 
 	@Test
 	void addWebStarterWhenNoWebFacetIsPresent() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null,
-				Dependency.SCOPE_COMPILE);
+		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		Build build = createBuild(metadata);
@@ -50,10 +49,8 @@ class WarPackagingWebStarterBuildCustomizerTests {
 
 	@Test
 	void addWebStarterWhenNoWebFacetIsPresentWithCustomWebStarter() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null,
-				Dependency.SCOPE_COMPILE);
-		Dependency web = Dependency.withId("web", "com.example", "custom-web-starter",
-				null, Dependency.SCOPE_COMPILE);
+		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
+		Dependency web = Dependency.withId("web", "com.example", "custom-web-starter", null, Dependency.SCOPE_COMPILE);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency, web).build();
 		Build build = createBuild(metadata);
@@ -64,8 +61,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 
 	@Test
 	void addWebStarterDoesNotReplaceWebFacetDependency() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null,
-				Dependency.SCOPE_COMPILE);
+		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
 		dependency.setFacets(Collections.singletonList("web"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
@@ -76,8 +72,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 }

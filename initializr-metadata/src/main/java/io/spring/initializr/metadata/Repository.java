@@ -112,8 +112,8 @@ public class Repository {
 	@Override
 	public String toString() {
 		return "Repository [" + ((this.name != null) ? "name=" + this.name + ", " : "")
-				+ ((this.url != null) ? "url=" + this.url + ", " : "")
-				+ "snapshotsEnabled=" + this.snapshotsEnabled + "]";
+				+ ((this.url != null) ? "url=" + this.url + ", " : "") + "snapshotsEnabled=" + this.snapshotsEnabled
+				+ "]";
 	}
 
 }

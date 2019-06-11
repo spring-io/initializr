@@ -51,8 +51,7 @@ public class Gradle3BuildWriter extends GroovyDslGradleBuildWriter {
 		case TEST_RUNTIME:
 			return "testRuntime";
 		default:
-			throw new IllegalStateException(
-					"Unrecognized dependency type '" + type + "'");
+			throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
 		}
 	}
 

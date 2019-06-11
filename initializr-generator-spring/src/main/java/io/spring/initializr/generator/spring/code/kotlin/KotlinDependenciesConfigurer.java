@@ -41,18 +41,15 @@ class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 	@Override
 	public void customize(Build build) {
 		VersionReference version = determineDependencyVersion(build);
-		build.dependencies()
-				.add("kotlin-stdlib", Dependency
-						.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-						.version(version).scope(DependencyScope.COMPILE));
-		build.dependencies().add("kotlin-reflect",
-				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
-						.version(version).scope(DependencyScope.COMPILE));
+		build.dependencies().add("kotlin-stdlib",
+				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8").version(version)
+						.scope(DependencyScope.COMPILE));
+		build.dependencies().add("kotlin-reflect", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
+				.version(version).scope(DependencyScope.COMPILE));
 	}
 
 	private VersionReference determineDependencyVersion(Build build) {
-		if (build instanceof MavenBuild
-				&& this.springBootVersion.compareTo(Version.parse("2.0.0.M1")) <= 0) {
+		if (build instanceof MavenBuild && this.springBootVersion.compareTo(Version.parse("2.0.0.M1")) <= 0) {
 			return VersionReference.ofProperty("kotlin.version");
 		}
 		return null;

@@ -33,18 +33,15 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author Stephane Nicoll
  */
-public class DefaultInitializrMetadataUpdateStrategy
-		implements InitializrMetadataUpdateStrategy {
+public class DefaultInitializrMetadataUpdateStrategy implements InitializrMetadataUpdateStrategy {
 
-	private static final Log logger = LogFactory
-			.getLog(DefaultInitializrMetadataUpdateStrategy.class);
+	private static final Log logger = LogFactory.getLog(DefaultInitializrMetadataUpdateStrategy.class);
 
 	private final RestTemplate restTemplate;
 
 	private final ObjectMapper objectMapper;
 
-	public DefaultInitializrMetadataUpdateStrategy(RestTemplate restTemplate,
-			ObjectMapper objectMapper) {
+	public DefaultInitializrMetadataUpdateStrategy(RestTemplate restTemplate, ObjectMapper objectMapper) {
 		this.restTemplate = restTemplate;
 		this.objectMapper = objectMapper;
 	}
@@ -73,8 +70,7 @@ public class DefaultInitializrMetadataUpdateStrategy
 		if (StringUtils.hasText(url)) {
 			try {
 				logger.info("Fetching Spring Boot metadata from " + url);
-				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
-						url).getBootVersions();
+				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate, url).getBootVersions();
 			}
 			catch (Exception ex) {
 				logger.warn("Failed to fetch Spring Boot metadata", ex);

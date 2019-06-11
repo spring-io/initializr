@@ -46,9 +46,8 @@ class ProjectGeneratorIntegrationTests {
 
 	@BeforeEach
 	void setup(@TempDir Path directory) {
-		this.projectTester = new ProjectGeneratorTester().withDirectory(directory)
-				.withBean(InitializrMetadata.class,
-						() -> InitializrMetadataTestBuilder.withDefaults().build());
+		this.projectTester = new ProjectGeneratorTester().withDirectory(directory).withBean(InitializrMetadata.class,
+				() -> InitializrMetadataTestBuilder.withDefaults().build());
 	}
 
 	@Test
@@ -59,13 +58,11 @@ class ProjectGeneratorIntegrationTests {
 		description.setLanguage(new JavaLanguage());
 		description.setGroupId("com.example");
 		description.setBaseDirectory("test/demo-app");
-		List<String> relativePaths = this.projectTester.generate(description)
-				.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).containsOnly("test/demo-app/.gitignore",
-				"test/demo-app/pom.xml", "test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
+		List<String> relativePaths = this.projectTester.generate(description).getRelativePathsOfProjectFiles();
+		assertThat(relativePaths).containsOnly("test/demo-app/.gitignore", "test/demo-app/pom.xml",
+				"test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
 				"test/demo-app/.mvn/wrapper/MavenWrapperDownloader.java",
-				"test/demo-app/.mvn/wrapper/maven-wrapper.properties",
-				"test/demo-app/.mvn/wrapper/maven-wrapper.jar",
+				"test/demo-app/.mvn/wrapper/maven-wrapper.properties", "test/demo-app/.mvn/wrapper/maven-wrapper.jar",
 				"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
 				"test/demo-app/src/main/resources/application.properties",
 				"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java");

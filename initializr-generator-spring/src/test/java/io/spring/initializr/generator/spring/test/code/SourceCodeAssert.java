@@ -43,8 +43,7 @@ public class SourceCodeAssert {
 
 	public SourceCodeAssert equalsTo(Resource expected) {
 		try (InputStream in = expected.getInputStream()) {
-			String expectedContent = StreamUtils.copyToString(in,
-					Charset.forName("UTF-8"));
+			String expectedContent = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
 			assertThat(this.content).describedAs("Content for %s", this.name)
 					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));
 		}
@@ -69,14 +68,12 @@ public class SourceCodeAssert {
 	}
 
 	public SourceCodeAssert contains(String... expressions) {
-		assertThat(this.content).describedAs("Content for %s", this.name)
-				.contains(expressions);
+		assertThat(this.content).describedAs("Content for %s", this.name).contains(expressions);
 		return this;
 	}
 
 	public SourceCodeAssert doesNotContain(String... expressions) {
-		assertThat(this.content).describedAs("Content for %s", this.name)
-				.doesNotContain(expressions);
+		assertThat(this.content).describedAs("Content for %s", this.name).doesNotContain(expressions);
 		return this;
 	}
 

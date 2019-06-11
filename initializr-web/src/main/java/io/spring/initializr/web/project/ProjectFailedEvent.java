@@ -27,8 +27,7 @@ public class ProjectFailedEvent extends ProjectRequestEvent {
 
 	private final Exception cause;
 
-	public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata,
-			Exception cause) {
+	public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
 		super(request, metadata);
 		this.cause = cause;
 	}

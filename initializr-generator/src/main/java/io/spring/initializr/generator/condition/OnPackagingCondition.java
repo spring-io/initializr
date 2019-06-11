@@ -31,13 +31,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class OnPackagingCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ResolvedProjectDescription projectDescription,
-			ConditionContext context, AnnotatedTypeMetadata metadata) {
+	protected boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+			AnnotatedTypeMetadata metadata) {
 		if (projectDescription.getPackaging() == null) {
 			return false;
 		}
-		String packagingId = (String) metadata
-				.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName())
+		String packagingId = (String) metadata.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName())
 				.getFirst("value");
 		Packaging packaging = Packaging.forId(packagingId);
 		return projectDescription.getPackaging().id().equals(packaging.id());

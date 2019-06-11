@@ -56,17 +56,14 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeBuildscript(IndentingWriter writer, GradleBuild build) {
-		if (!(build.getBuildscript().getDependencies().isEmpty()
-				&& build.getBuildscript().getExt().isEmpty())) {
-			throw new IllegalStateException(
-					"build.gradle.kts scripts shouldn't need a buildscript");
+		if (!(build.getBuildscript().getDependencies().isEmpty() && build.getBuildscript().getExt().isEmpty())) {
+			throw new IllegalStateException("build.gradle.kts scripts shouldn't need a buildscript");
 		}
 	}
 
 	@Override
 	protected void writePlugins(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "plugins", build.getPlugins(), this::pluginAsString,
-				null);
+		writeNestedCollection(writer, "plugins", build.getPlugins(), this::pluginAsString, null);
 		writer.println();
 
 		if (!build.getAppliedPlugins().isEmpty()) {
@@ -87,8 +84,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String shortPluginNotation(String pluginId) {
-		if (pluginId.equals("java") || pluginId.equals("war")
-				|| pluginId.equals("groovy")) {
+		if (pluginId.equals("java") || pluginId.equals("war") || pluginId.equals("groovy")) {
 			return pluginId;
 		}
 
@@ -101,8 +97,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer,
-			GradleBuild build) {
+	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build) {
 		writer.println("java.sourceCompatibility = JavaVersion."
 				+ sourceCompatibilitiesToJavaVersion.get(build.getSourceCompatibility()));
 	}
@@ -116,8 +111,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		else {
 			writer.println(configurationName + " {");
 			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
-					configurationCustomization.getExtendsFrom().stream()
-							.collect(Collectors.joining(", ")))));
+					configurationCustomization.getExtendsFrom().stream().collect(Collectors.joining(", ")))));
 			writer.println("}");
 		}
 	}
@@ -132,8 +126,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeConfigurations(IndentingWriter writer, GradleBuild build) {
-		Map<String, ConfigurationCustomization> configurationCustomizations = build
-				.getConfigurationCustomizations();
+		Map<String, ConfigurationCustomization> configurationCustomizations = build.getConfigurationCustomizations();
 		for (String configuration : build.getConfigurations()) {
 			writer.println("val " + configuration + " by configurations.creating");
 		}
@@ -141,8 +134,8 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 			return;
 		}
 		writer.println("configurations {");
-		writer.indented(() -> configurationCustomizations.forEach((name,
-				customization) -> writeConfiguration(writer, name, customization)));
+		writer.indented(() -> configurationCustomizations
+				.forEach((name, customization) -> writeConfiguration(writer, name, customization)));
 		writer.println("}");
 		writer.println("");
 	}
@@ -151,14 +144,13 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	protected void writeDependency(IndentingWriter writer, Dependency dependency) {
 		String version = determineVersion(dependency.getVersion());
 		String type = dependency.getType();
-		writer.print(configurationForDependency(dependency) + "(\""
-				+ dependency.getGroupId() + ":" + dependency.getArtifactId()
-				+ ((version != null) ? ":" + version : "")
+		writer.print(configurationForDependency(dependency) + "(\"" + dependency.getGroupId() + ":"
+				+ dependency.getArtifactId() + ((version != null) ? ":" + version : "")
 				+ ((type != null) ? "@" + type : "") + "\")");
 		if (!dependency.getExclusions().isEmpty()) {
 			writer.println(" {");
-			writer.indented(() -> writeCollection(writer, dependency.getExclusions(),
-					this::dependencyExclusionAsString));
+			writer.indented(
+					() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
 			writer.println("}");
 		}
 		else {
@@ -167,15 +159,12 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String dependencyExclusionAsString(Exclusion exclusion) {
-		return "exclude(group = \"" + exclusion.getGroupId() + "\", module = \""
-				+ exclusion.getArtifactId() + "\")";
+		return "exclude(group = \"" + exclusion.getGroupId() + "\", module = \"" + exclusion.getArtifactId() + "\")";
 	}
 
 	@Override
-	protected void writeExtraProperties(IndentingWriter writer,
-			Map<String, String> allProperties) {
-		writeCollection(writer, allProperties.entrySet(),
-				(e) -> getFormattedExtraProperty(e.getKey(), e.getValue()),
+	protected void writeExtraProperties(IndentingWriter writer, Map<String, String> allProperties) {
+		writeCollection(writer, allProperties.entrySet(), (e) -> getFormattedExtraProperty(e.getKey(), e.getValue()),
 				writer::println);
 	}
 
@@ -185,17 +174,16 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected String bomAsString(BillOfMaterials bom) {
-		return "mavenBom(\"" + bom.getGroupId() + ":" + bom.getArtifactId() + ":"
-				+ determineVersion(bom.getVersion()) + "\")";
+		return "mavenBom(\"" + bom.getGroupId() + ":" + bom.getArtifactId() + ":" + determineVersion(bom.getVersion())
+				+ "\")";
 	}
 
 	private String determineVersion(VersionReference versionReference) {
 		if (versionReference != null) {
 			if (versionReference.isProperty()) {
 				VersionProperty property = versionReference.getProperty();
-				return "${property(\"" + (property.isInternal()
-						? property.toCamelCaseFormat() : property.toStandardFormat())
-						+ "\")}";
+				return "${property(\""
+						+ (property.isInternal() ? property.toCamelCaseFormat() : property.toStandardFormat()) + "\")}";
 			}
 			return versionReference.getValue();
 		}
@@ -203,10 +191,8 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeTasksWithTypeCustomizations(IndentingWriter writer,
-			GradleBuild build) {
-		Map<String, TaskCustomization> tasksWithTypeCustomizations = build
-				.getTasksWithTypeCustomizations();
+	protected void writeTasksWithTypeCustomizations(IndentingWriter writer, GradleBuild build) {
+		Map<String, TaskCustomization> tasksWithTypeCustomizations = build.getTasksWithTypeCustomizations();
 
 		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
 			writer.println();
@@ -230,8 +216,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected String invocationAsString(TaskCustomization.Invocation invocation) {
-		return invocation.getTarget() + "(" + String.join(", ", invocation.getArguments())
-				+ ")";
+		return invocation.getTarget() + "(" + String.join(", ", invocation.getArguments()) + ")";
 	}
 
 	@Override

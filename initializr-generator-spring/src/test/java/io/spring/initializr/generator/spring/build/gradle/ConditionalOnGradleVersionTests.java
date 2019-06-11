@@ -85,8 +85,7 @@ public class ConditionalOnGradleVersionTests {
 	void outcomeWithSpringBoot15AndMultipleGenerations() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		Map<String, String> candidates = candidatesFor(projectDescription,
-				Gradle3Or4TestConfiguration.class);
+		Map<String, String> candidates = candidatesFor(projectDescription, Gradle3Or4TestConfiguration.class);
 		assertThat(candidates).containsOnlyKeys("gradle3", "gradle3AndLater");
 	}
 
@@ -94,8 +93,7 @@ public class ConditionalOnGradleVersionTests {
 	void outcomeWithSpringBoot20AndMultipleGenerations() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		Map<String, String> candidates = candidatesFor(projectDescription,
-				Gradle3Or4TestConfiguration.class);
+		Map<String, String> candidates = candidatesFor(projectDescription, Gradle3Or4TestConfiguration.class);
 		assertThat(candidates).containsOnlyKeys("gradle4", "gradle3AndLater");
 	}
 
@@ -103,24 +101,20 @@ public class ConditionalOnGradleVersionTests {
 	void outcomeWithSpringBoot21AndMultipleNonMatchingGenerations() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
-		Map<String, String> candidates = candidatesFor(projectDescription,
-				Gradle3Or4TestConfiguration.class);
+		Map<String, String> candidates = candidatesFor(projectDescription, Gradle3Or4TestConfiguration.class);
 		assertThat(candidates).containsOnlyKeys("gradle5");
 	}
 
 	private String outcomeFor(ProjectDescription projectDescription) {
-		return this.projectTester.generate(projectDescription,
-				(projectGenerationContext) -> {
-					assertThat(projectGenerationContext.getBeansOfType(String.class))
-							.hasSize(1);
-					return projectGenerationContext.getBean(String.class);
-				});
+		return this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
+			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
+			return projectGenerationContext.getBean(String.class);
+		});
 	}
 
-	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
-			Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(
-				projectDescription, (context) -> context.getBeansOfType(String.class));
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(projectDescription,
+				(context) -> context.getBeansOfType(String.class));
 	}
 
 	@Configuration

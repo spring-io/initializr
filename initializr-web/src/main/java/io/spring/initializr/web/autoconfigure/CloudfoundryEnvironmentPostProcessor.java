@@ -35,16 +35,14 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephane Nicoll
  */
-public class CloudfoundryEnvironmentPostProcessor
-		implements EnvironmentPostProcessor, Ordered {
+public class CloudfoundryEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
 	private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
 
 	private static final int ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
 
 	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment,
-			SpringApplication springApplication) {
+	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication springApplication) {
 
 		Map<String, Object> map = new LinkedHashMap<>();
 		String uri = environment.getProperty("vcap.services.stats-index.credentials.uri");
@@ -59,8 +57,7 @@ public class CloudfoundryEnvironmentPostProcessor
 		return ORDER;
 	}
 
-	private static void addOrReplace(MutablePropertySources propertySources,
-			Map<String, Object> map) {
+	private static void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
 		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
 			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);

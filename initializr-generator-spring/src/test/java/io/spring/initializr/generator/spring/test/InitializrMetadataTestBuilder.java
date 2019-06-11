@@ -68,8 +68,7 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addDependencyGroup(String name,
-			Dependency... dependencies) {
+	public InitializrMetadataTestBuilder addDependencyGroup(String name, Dependency... dependencies) {
 		this.builder.withCustomizer((it) -> {
 			DependencyGroup group = new DependencyGroup();
 			group.setName(name);
@@ -84,8 +83,8 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addBasicDefaults() {
-		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions()
-				.addDefaultLanguages().addDefaultBootVersions();
+		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions().addDefaultLanguages()
+				.addDefaultBootVersions();
 	}
 
 	public InitializrMetadataTestBuilder addDefaultTypes() {
@@ -95,8 +94,8 @@ public class InitializrMetadataTestBuilder {
 				.addType("gradle-project", false, "/starter.zip", "gradle", "project");
 	}
 
-	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue,
-			String action, String build, String format) {
+	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue, String action, String build,
+			String format) {
 		Type type = new Type();
 		type.setId(id);
 		type.setName(id);
@@ -132,12 +131,10 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultJavaVersions() {
-		return addJavaVersion("1.6", false).addJavaVersion("1.7", false)
-				.addJavaVersion("1.8", true);
+		return addJavaVersion("1.6", false).addJavaVersion("1.7", false).addJavaVersion("1.8", true);
 	}
 
-	public InitializrMetadataTestBuilder addJavaVersion(String version,
-			boolean defaultValue) {
+	public InitializrMetadataTestBuilder addJavaVersion(String version, boolean defaultValue) {
 		this.builder.withCustomizer((it) -> {
 			DefaultMetadataElement element = new DefaultMetadataElement();
 			element.setId(version);
@@ -149,8 +146,7 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultLanguages() {
-		return addLanguage("java", true).addLanguage("groovy", false)
-				.addLanguage("kotlin", false);
+		return addLanguage("java", true).addLanguage("groovy", false).addLanguage("kotlin", false);
 	}
 
 	public InitializrMetadataTestBuilder addLanguage(String id, boolean defaultValue) {
@@ -165,10 +161,8 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultBootVersions() {
-		return addBootVersion("1.5.17.RELEASE", false)
-				.addBootVersion("2.0.3.RELEASE", false)
-				.addBootVersion("2.1.1.RELEASE", true)
-				.addBootVersion("2.2.0.BUILD-SNAPSHOT", false);
+		return addBootVersion("1.5.17.RELEASE", false).addBootVersion("2.0.3.RELEASE", false)
+				.addBootVersion("2.1.1.RELEASE", true).addBootVersion("2.2.0.BUILD-SNAPSHOT", false);
 	}
 
 	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {
@@ -182,30 +176,25 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addBom(String id, String groupId,
-			String artifactId, String version) {
+	public InitializrMetadataTestBuilder addBom(String id, String groupId, String artifactId, String version) {
 		BillOfMaterials bom = BillOfMaterials.create(groupId, artifactId, version);
 		return addBom(id, bom);
 	}
 
 	public InitializrMetadataTestBuilder addBom(String id, BillOfMaterials bom) {
-		this.builder.withCustomizer(
-				(it) -> it.getConfiguration().getEnv().getBoms().put(id, bom));
+		this.builder.withCustomizer((it) -> it.getConfiguration().getEnv().getBoms().put(id, bom));
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setGradleEnv(
-			String dependencyManagementPluginVersion) {
+	public InitializrMetadataTestBuilder setGradleEnv(String dependencyManagementPluginVersion) {
 		this.builder.withCustomizer((it) -> it.getConfiguration().getEnv().getGradle()
 				.setDependencyManagementPluginVersion(dependencyManagementPluginVersion));
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setKotlinEnv(String defaultKotlinVersion,
-			Kotlin.Mapping... mappings) {
+	public InitializrMetadataTestBuilder setKotlinEnv(String defaultKotlinVersion, Kotlin.Mapping... mappings) {
 		this.builder.withCustomizer((it) -> {
-			it.getConfiguration().getEnv().getKotlin()
-					.setDefaultVersion(defaultKotlinVersion);
+			it.getConfiguration().getEnv().getKotlin().setDefaultVersion(defaultKotlinVersion);
 			for (Kotlin.Mapping mapping : mappings) {
 				it.getConfiguration().getEnv().getKotlin().getMappings().add(mapping);
 			}
@@ -213,8 +202,8 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId,
-			String version, boolean includeSpringBootBom) {
+	public InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId, String version,
+			boolean includeSpringBootBom) {
 		this.builder.withCustomizer((it) -> {
 			ParentPom parent = it.getConfiguration().getEnv().getMaven().getParent();
 			parent.setGroupId(groupId);
@@ -225,8 +214,7 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addRepository(String id, String name, String url,
-			boolean snapshotsEnabled) {
+	public InitializrMetadataTestBuilder addRepository(String id, String name, String url, boolean snapshotsEnabled) {
 		this.builder.withCustomizer((it) -> {
 			Repository repo = new Repository();
 			repo.setName(name);

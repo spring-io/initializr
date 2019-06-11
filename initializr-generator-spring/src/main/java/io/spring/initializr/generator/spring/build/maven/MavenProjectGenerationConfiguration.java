@@ -56,10 +56,8 @@ public class MavenProjectGenerationConfiguration {
 	}
 
 	@SuppressWarnings("unchecked")
-	private MavenBuild createBuild(BuildItemResolver buildItemResolver,
-			List<BuildCustomizer<?>> buildCustomizers) {
-		MavenBuild build = (buildItemResolver != null) ? new MavenBuild(buildItemResolver)
-				: new MavenBuild();
+	private MavenBuild createBuild(BuildItemResolver buildItemResolver, List<BuildCustomizer<?>> buildCustomizers) {
+		MavenBuild build = (buildItemResolver != null) ? new MavenBuild(buildItemResolver) : new MavenBuild();
 		LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
 				.invoke((customizer) -> customizer.customize(build));
 		return build;

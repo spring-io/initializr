@@ -70,8 +70,7 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @EnableConfigurationProperties(InitializrProperties.class)
-@AutoConfigureAfter({ JacksonAutoConfiguration.class,
-		RestTemplateAutoConfiguration.class })
+@AutoConfigureAfter({ JacksonAutoConfiguration.class, RestTemplateAutoConfiguration.class })
 public class InitializrAutoConfiguration {
 
 	@Bean
@@ -97,8 +96,7 @@ public class InitializrAutoConfiguration {
 	private Cache determineCache(Environment environment, CacheManager cacheManager) {
 		if (cacheManager != null) {
 			Binder binder = Binder.get(environment);
-			boolean cache = binder.bind("spring.mustache.cache", Boolean.class)
-					.orElse(true);
+			boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);
 			if (cache) {
 				return cacheManager.getCache("initializr.templates");
 			}
@@ -108,21 +106,17 @@ public class InitializrAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy(
-			RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
-		return new DefaultInitializrMetadataUpdateStrategy(restTemplateBuilder.build(),
-				objectMapper);
+	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy(RestTemplateBuilder restTemplateBuilder,
+			ObjectMapper objectMapper) {
+		return new DefaultInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
-	public InitializrMetadataProvider initializrMetadataProvider(
-			InitializrProperties properties,
+	public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties,
 			InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
-		InitializrMetadata metadata = InitializrMetadataBuilder
-				.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata,
-				initializrMetadataUpdateStrategy);
+		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build();
+		return new DefaultInitializrMetadataProvider(metadata, initializrMetadataUpdateStrategy);
 	}
 
 	@Bean
@@ -145,19 +139,16 @@ public class InitializrAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean
-		public MainController initializrMainController(
-				InitializrMetadataProvider metadataProvider,
-				TemplateRenderer templateRenderer,
-				DependencyMetadataProvider dependencyMetadataProvider,
+		public MainController initializrMainController(InitializrMetadataProvider metadataProvider,
+				TemplateRenderer templateRenderer, DependencyMetadataProvider dependencyMetadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
-			return new MainController(metadataProvider, templateRenderer,
-					dependencyMetadataProvider, projectGenerationInvoker);
+			return new MainController(metadataProvider, templateRenderer, dependencyMetadataProvider,
+					projectGenerationInvoker);
 		}
 
 		@Bean
 		@ConditionalOnMissingBean
-		public ProjectGenerationInvoker projectGenerationInvoker(
-				ApplicationContext applicationContext,
+		public ProjectGenerationInvoker projectGenerationInvoker(ApplicationContext applicationContext,
 				ApplicationEventPublisher eventPublisher,
 				ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter) {
 			return new ProjectGenerationInvoker(applicationContext, eventPublisher,
@@ -187,8 +178,7 @@ public class InitializrAutoConfiguration {
 		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
 			return (cacheManager) -> {
 				cacheManager.createCache("initializr.metadata",
-						config().setExpiryPolicyFactory(
-								CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+						config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
 				cacheManager.createCache("initializr.dependency-metadata", config());
 				cacheManager.createCache("initializr.project-resources", config());
 				cacheManager.createCache("initializr.templates", config());
@@ -196,8 +186,8 @@ public class InitializrAutoConfiguration {
 		}
 
 		private MutableConfiguration<Object, Object> config() {
-			return new MutableConfiguration<>().setStoreByValue(false)
-					.setManagementEnabled(true).setStatisticsEnabled(true);
+			return new MutableConfiguration<>().setStoreByValue(false).setManagementEnabled(true)
+					.setStatisticsEnabled(true);
 		}
 
 	}

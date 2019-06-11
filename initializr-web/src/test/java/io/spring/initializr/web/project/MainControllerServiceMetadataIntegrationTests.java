@@ -40,8 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-class MainControllerServiceMetadataIntegrationTests
-		extends AbstractFullStackInitializrIntegrationTests {
+class MainControllerServiceMetadataIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider;
@@ -50,21 +49,14 @@ class MainControllerServiceMetadataIntegrationTests
 	void initializeRemoteConfig() throws Exception {
 		InitializrMetadata localMetadata = this.metadataProvider.get();
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new UrlResource(createUrl("/metadata/config")))
-				.build();
+				.withInitializrMetadata(new UrlResource(createUrl("/metadata/config"))).build();
 		// Basic assertions
-		assertThat(metadata.getDependencies().getContent())
-				.hasSameSizeAs(localMetadata.getDependencies().getContent());
-		assertThat(metadata.getTypes().getContent())
-				.hasSameSizeAs(localMetadata.getTypes().getContent());
-		assertThat(metadata.getBootVersions().getContent())
-				.hasSameSizeAs(localMetadata.getBootVersions().getContent());
-		assertThat(metadata.getPackagings().getContent())
-				.hasSameSizeAs(localMetadata.getPackagings().getContent());
-		assertThat(metadata.getJavaVersions().getContent())
-				.hasSameSizeAs(localMetadata.getJavaVersions().getContent());
-		assertThat(metadata.getLanguages().getContent())
-				.hasSameSizeAs(localMetadata.getLanguages().getContent());
+		assertThat(metadata.getDependencies().getContent()).hasSameSizeAs(localMetadata.getDependencies().getContent());
+		assertThat(metadata.getTypes().getContent()).hasSameSizeAs(localMetadata.getTypes().getContent());
+		assertThat(metadata.getBootVersions().getContent()).hasSameSizeAs(localMetadata.getBootVersions().getContent());
+		assertThat(metadata.getPackagings().getContent()).hasSameSizeAs(localMetadata.getPackagings().getContent());
+		assertThat(metadata.getJavaVersions().getContent()).hasSameSizeAs(localMetadata.getJavaVersions().getContent());
+		assertThat(metadata.getLanguages().getContent()).hasSameSizeAs(localMetadata.getLanguages().getContent());
 	}
 
 	@Test
@@ -79,8 +71,7 @@ class MainControllerServiceMetadataIntegrationTests
 
 	@Test
 	void validateJson() throws JSONException {
-		ResponseEntity<String> response = execute("/metadata/config", String.class, null,
-				"application/json");
+		ResponseEntity<String> response = execute("/metadata/config", String.class, null, "application/json");
 		validateContentType(response, MediaType.APPLICATION_JSON);
 		JSONObject json = new JSONObject(response.getBody());
 		JSONObject expected = readJsonFrom("metadata/config/test-default.json");
@@ -89,8 +80,7 @@ class MainControllerServiceMetadataIntegrationTests
 
 	@Test
 	void metadataClientEndpoint() {
-		ResponseEntity<String> response = execute("/metadata/client", String.class, null,
-				"application/json");
+		ResponseEntity<String> response = execute("/metadata/client", String.class, null, "application/json");
 		validateCurrentMetadata(response);
 	}
 

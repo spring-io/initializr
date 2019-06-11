@@ -61,13 +61,12 @@ class GroovyDslGradleBuildWriterTests {
 	void gradleBuildWithBuildscriptDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
-		build.buildscript((buildscript) -> buildscript.dependency(
-				"org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE"));
+		build.buildscript((buildscript) -> buildscript
+				.dependency("org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("buildscript {", "    repositories {",
-				"        mavenCentral()", "    }", "    dependencies {",
-				"        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE'",
-				"    }", "}");
+		assertThat(lines).containsSequence("buildscript {", "    repositories {", "        mavenCentral()", "    }",
+				"    dependencies {",
+				"        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE'", "    }", "}");
 	}
 
 	@Test
@@ -76,8 +75,7 @@ class GroovyDslGradleBuildWriterTests {
 		build.repositories().add("maven-central");
 		build.buildscript((buildscript) -> buildscript.ext("kotlinVersion", "'1.2.51'"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("buildscript {", "    ext {",
-				"        kotlinVersion = '1.2.51'", "    }");
+		assertThat(lines).containsSequence("buildscript {", "    ext {", "        kotlinVersion = '1.2.51'", "    }");
 	}
 
 	@Test
@@ -93,8 +91,8 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.addPlugin("org.springframework.boot", "2.1.0.RELEASE");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("plugins {",
-				"    id 'org.springframework.boot' version '2.1.0.RELEASE'", "}");
+		assertThat(lines).containsSequence("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
+				"}");
 	}
 
 	@Test
@@ -102,8 +100,7 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.applyPlugin("io.spring.dependency-management");
 		List<String> lines = generateBuild(build);
-		assertThat(lines)
-				.containsSequence("apply plugin: 'io.spring.dependency-management'");
+		assertThat(lines).containsSequence("apply plugin: 'io.spring.dependency-management'");
 	}
 
 	@Test
@@ -117,60 +114,49 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add("spring-milestones", "Spring Milestones",
-				"https://repo.spring.io/milestone");
+		build.repositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("repositories {",
-				"    maven { url 'https://repo.spring.io/milestone' }", "}");
+		assertThat(lines).containsSequence("repositories {", "    maven { url 'https://repo.spring.io/milestone' }",
+				"}");
 	}
 
 	@Test
 	void gradleBuildWithSnapshotRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add("spring-snapshots", "Spring Snapshots",
-				"https://repo.spring.io/snapshot", true);
+		build.repositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("repositories {",
-				"    maven { url 'https://repo.spring.io/snapshot' }", "}");
+		assertThat(lines).containsSequence("repositories {", "    maven { url 'https://repo.spring.io/snapshot' }",
+				"}");
 	}
 
 	@Test
 	void gradleBuildWithPluginRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.pluginRepositories().add("spring-milestones", "Spring Milestones",
-				"https://repo.spring.io/milestone");
+		build.pluginRepositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).doesNotContain("repositories {");
 	}
 
 	@Test
-	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments()
-			throws IOException {
+	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-				(task) -> task.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions
-						.set("freeCompilerArgs", "['-Xjsr305=strict']")));
-		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
 				(task) -> task.nested("kotlinOptions",
-						(kotlinOptions) -> kotlinOptions.set("jvmTarget", "'1.8'")));
+						(kotlinOptions) -> kotlinOptions.set("freeCompilerArgs", "['-Xjsr305=strict']")));
+		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+				(task) -> task.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions.set("jvmTarget", "'1.8'")));
 		List<String> lines = generateBuild(build);
-		assertThat(lines)
-				.containsOnlyOnce(
-						"import org.jetbrains.kotlin.gradle.tasks.KotlinCompile")
-				.containsSequence("tasks.withType(KotlinCompile) {",
-						"    kotlinOptions {",
-						"        freeCompilerArgs = ['-Xjsr305=strict']",
-						"        jvmTarget = '1.8'", "    }", "}");
+		assertThat(lines).containsOnlyOnce("import org.jetbrains.kotlin.gradle.tasks.KotlinCompile").containsSequence(
+				"tasks.withType(KotlinCompile) {", "    kotlinOptions {",
+				"        freeCompilerArgs = ['-Xjsr305=strict']", "        jvmTarget = '1.8'", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithTaskWithTypesAndShortTypes() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTasksWithType("JavaCompile",
-				(javaCompile) -> javaCompile.set("options.fork", "true"));
+		build.customizeTasksWithType("JavaCompile", (javaCompile) -> javaCompile.set("options.fork", "true"));
 		assertThat(generateBuild(build)).doesNotContain("import JavaCompile")
-				.containsSequence("tasks.withType(JavaCompile) {",
-						"    options.fork = true", "}");
+				.containsSequence("tasks.withType(JavaCompile) {", "    options.fork = true", "}");
 	}
 
 	@Test
@@ -181,8 +167,7 @@ class GroovyDslGradleBuildWriterTests {
 			task.invoke("dependsOn", "test");
 		});
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("asciidoctor {", "    inputs.dir snippetsDir",
-				"    dependsOn test", "}");
+		assertThat(lines).containsSequence("asciidoctor {", "    inputs.dir snippetsDir", "    dependsOn test", "}");
 	}
 
 	@Test
@@ -202,22 +187,20 @@ class GroovyDslGradleBuildWriterTests {
 		});
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("compileKotlin {",
-				"    kotlinOptions.freeCompilerArgs = ['-Xjsr305=strict']",
-				"    kotlinOptions.jvmTarget = '1.8'", "}");
+				"    kotlinOptions.freeCompilerArgs = ['-Xjsr305=strict']", "    kotlinOptions.jvmTarget = '1.8'", "}");
 	}
 
 	@Test
 	void gradleBuildWithTaskCustomizedWithNestedCustomization() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTask("compileKotlin", (compileKotlin) -> compileKotlin
-				.nested("kotlinOptions", (kotlinOptions) -> {
+		build.customizeTask("compileKotlin",
+				(compileKotlin) -> compileKotlin.nested("kotlinOptions", (kotlinOptions) -> {
 					kotlinOptions.set("freeCompilerArgs", "['-Xjsr305=strict']");
 					kotlinOptions.set("jvmTarget", "'1.8'");
 				}));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("compileKotlin {", "    kotlinOptions {",
-				"        freeCompilerArgs = ['-Xjsr305=strict']",
-				"        jvmTarget = '1.8'", "    }", "}");
+				"        freeCompilerArgs = ['-Xjsr305=strict']", "        jvmTarget = '1.8'", "    }", "}");
 	}
 
 	@Test
@@ -238,10 +221,8 @@ class GroovyDslGradleBuildWriterTests {
 		build.addInternalVersionProperty("internal.property", "4.5.6");
 		build.addExternalVersionProperty("external.property", "7.8.9");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("ext {",
-				"    set('external.property', \"7.8.9\")",
-				"    set('internalProperty', \"4.5.6\")",
-				"    set('versionProperty', \"1.2.3\")", "}");
+		assertThat(lines).containsSequence("ext {", "    set('external.property', \"7.8.9\")",
+				"    set('internalProperty', \"4.5.6\")", "    set('versionProperty', \"1.2.3\")", "}");
 	}
 
 	@Test
@@ -249,12 +230,10 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("kotlin-stdlib",
 				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-						.version(VersionReference.ofProperty("kotlin.version"))
-						.scope(DependencyScope.COMPILE));
+						.version(VersionReference.ofProperty("kotlin.version")).scope(DependencyScope.COMPILE));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}\"",
-				"}");
+				"    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}\"", "}");
 	}
 
 	@Test
@@ -262,13 +241,11 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("acme",
 				Dependency.withCoordinates("com.example", "acme")
-						.version(VersionReference
-								.ofProperty(VersionProperty.of("acme.version", false)))
+						.version(VersionReference.ofProperty(VersionProperty.of("acme.version", false)))
 						.scope(DependencyScope.COMPILE));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    implementation \"com.example:acme:${property('acme.version')}\"",
-				"}");
+				"    implementation \"com.example:acme:${property('acme.version')}\"", "}");
 	}
 
 	@Test
@@ -280,8 +257,8 @@ class GroovyDslGradleBuildWriterTests {
 		build.addExternalVersionProperty("alpha-version", "0.1");
 		build.ext("myProperty", "'42'");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("    set('myProperty', '42')",
-				"    set('alpha-version', \"0.1\")", "    set('testVersion', \"1.0\")");
+		assertThat(lines).containsSequence("    set('myProperty', '42')", "    set('alpha-version', \"0.1\")",
+				"    set('testVersion', \"1.0\")");
 	}
 
 	@Test
@@ -289,17 +266,14 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.addConfiguration("developmentOnly");
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("configurations {", "    developmentOnly",
-				"}");
+		assertThat(lines).containsSequence("configurations {", "    developmentOnly", "}");
 	}
 
 	@Test
 	void gradleBuildWithConfigurationCustomization() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("developmentOnly",
-				(configuration) -> configuration.extendsFrom("compile"));
-		build.customizeConfiguration("developmentOnly",
-				(configuration) -> configuration.extendsFrom("testCompile"));
+		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
+		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("testCompile"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("configurations {", "    developmentOnly {",
 				"        extendsFrom compile, testCompile", "    }", "}");
@@ -308,33 +282,27 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithConfigurationCustomizations() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("developmentOnly",
-				(configuration) -> configuration.extendsFrom("compile"));
-		build.customizeConfiguration("testOnly",
-				(configuration) -> configuration.extendsFrom("testCompile"));
+		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
+		build.customizeConfiguration("testOnly", (configuration) -> configuration.extendsFrom("testCompile"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("configurations {", "    developmentOnly {",
-				"        extendsFrom compile", "    }", "    testOnly {",
-				"        extendsFrom testCompile", "    }", "}");
+		assertThat(lines).containsSequence("configurations {", "    developmentOnly {", "        extendsFrom compile",
+				"    }", "    testOnly {", "        extendsFrom testCompile", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithAnnotationProcessorDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("annotation-processor", "org.springframework.boot",
-				"spring-boot-configuration-processor",
-				DependencyScope.ANNOTATION_PROCESSOR);
+				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'",
-				"}");
+				"    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'", "}");
 	}
 
 	@Test
 	void gradleBuildWithCompileDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", "org.springframework.boot",
-				"spring-boot-starter", DependencyScope.COMPILE);
+		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter'", "}");
@@ -343,122 +311,105 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("driver",
-				Dependency.withCoordinates("com.example", "jdbc-driver")
-						.version(VersionReference.ofValue("1.0.0"))
-						.scope(DependencyScope.RUNTIME));
+		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")
+				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("dependencies {",
-				"    runtimeOnly 'com.example:jdbc-driver:1.0.0'", "}");
+		assertThat(lines).containsSequence("dependencies {", "    runtimeOnly 'com.example:jdbc-driver:1.0.0'", "}");
 	}
 
 	@Test
 	void gradleBuildWithProvidedRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("tomcat", "org.springframework.boot",
-				"spring-boot-starter-tomcat", DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
+				DependencyScope.PROVIDED_RUNTIME);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'",
-				"}");
+				"    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'", "}");
 	}
 
 	@Test
 	void gradleBuildWithTestCompileDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-test", DependencyScope.TEST_COMPILE);
+		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
+				DependencyScope.TEST_COMPILE);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'",
-				"}");
+				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'", "}");
 	}
 
 	@Test
 	void gradleBuildWithCompileOnlyDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot",
-				"spring-boot-starter-foobar", DependencyScope.COMPILE_ONLY);
+		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-foobar",
+				DependencyScope.COMPILE_ONLY);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    compileOnly 'org.springframework.boot:spring-boot-starter-foobar'",
-				"}");
+				"    compileOnly 'org.springframework.boot:spring-boot-starter-foobar'", "}");
 	}
 
 	@Test
 	void gradleBuildWithTestRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("embed-mongo", "de.flapdoodle.embed",
-				"de.flapdoodle.embed.mongo", DependencyScope.TEST_RUNTIME);
+		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
+				DependencyScope.TEST_RUNTIME);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'",
-				"}");
+				"    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'", "}");
 	}
 
 	@Test
 	void gradleBuildWithExclusions() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test",
-				Dependency.withCoordinates("com.example", "test")
-						.scope(DependencyScope.COMPILE)
-						.exclusions(new Exclusion("com.example.legacy", "legacy-one"),
-								new Exclusion("com.example.another", "legacy-two")));
+				Dependency.withCoordinates("com.example", "test").scope(DependencyScope.COMPILE).exclusions(
+						new Exclusion("com.example.legacy", "legacy-one"),
+						new Exclusion("com.example.another", "legacy-two")));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("dependencies {",
-				"    implementation('com.example:test') {",
+		assertThat(lines).containsSequence("dependencies {", "    implementation('com.example:test') {",
 				"        exclude group: 'com.example.legacy', module: 'legacy-one'",
-				"        exclude group: 'com.example.another', module: 'legacy-two'",
-				"    }", "}");
+				"        exclude group: 'com.example.another', module: 'legacy-two'", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", GradleDependency
-				.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
-				.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
+		build.dependencies().add("test",
+				GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
+						.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'",
-				"}");
+				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'", "}");
 	}
 
 	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", Dependency
-				.withCoordinates("org.springframework.boot", "spring-boot-starter")
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
 				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
-				"    implementation 'org.springframework.boot:spring-boot-starter@tar.gz'",
-				"}");
+				"    implementation 'org.springframework.boot:spring-boot-starter@tar.gz'", "}");
 	}
 
 	@Test
 	void gradleBuildWithBom() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("test", "com.example", "my-project-dependencies",
-				VersionReference.ofValue("1.0.0.RELEASE"));
+		build.boms().add("test", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencyManagement {", "    imports {",
-				"        mavenBom 'com.example:my-project-dependencies:1.0.0.RELEASE'",
-				"    }", "}");
+				"        mavenBom 'com.example:my-project-dependencies:1.0.0.RELEASE'", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithOrderedBoms() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("bom1", "com.example", "my-project-dependencies",
-				VersionReference.ofValue("1.0.0.RELEASE"), 5);
-		build.boms().add("bom2", "com.example", "root-dependencies",
-				VersionReference.ofProperty("root.version"), 2);
+		build.boms().add("bom1", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"),
+				5);
+		build.boms().add("bom2", "com.example", "root-dependencies", VersionReference.ofProperty("root.version"), 2);
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencyManagement {", "    imports {",
 				"        mavenBom 'com.example:my-project-dependencies:1.0.0.RELEASE'",
-				"        mavenBom \"com.example:root-dependencies:${rootVersion}\"",
-				"    }", "}");
+				"        mavenBom \"com.example:root-dependencies:${rootVersion}\"", "    }", "}");
 	}
 
 	@Test

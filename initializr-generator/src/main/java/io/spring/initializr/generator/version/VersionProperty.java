@@ -96,12 +96,10 @@ public final class VersionProperty implements Serializable, Comparable<VersionPr
 	private static String validateFormat(String property) {
 		for (char c : property.toCharArray()) {
 			if (Character.isUpperCase(c)) {
-				throw new IllegalArgumentException("Invalid property '" + property
-						+ "', must not contain upper case");
+				throw new IllegalArgumentException("Invalid property '" + property + "', must not contain upper case");
 			}
 			if (!Character.isLetterOrDigit(c) && !SUPPORTED_CHARS.contains(c)) {
-				throw new IllegalArgumentException(
-						"Unsupported character '" + c + "' for '" + property + "'");
+				throw new IllegalArgumentException("Unsupported character '" + c + "' for '" + property + "'");
 			}
 		}
 		return property;

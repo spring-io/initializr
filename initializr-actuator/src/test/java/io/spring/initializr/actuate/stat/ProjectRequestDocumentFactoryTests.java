@@ -35,10 +35,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ProjectRequestDocumentFactoryTests {
 
-	private final InitializrMetadata metadata = InitializrMetadataTestBuilder
-			.withDefaults().addDependencyGroup("core", "security", "validation", "aop")
-			.addDependencyGroup("web", "web", "data-rest", "jersey")
-			.addDependencyGroup("data", "data-jpa", "jdbc")
+	private final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("core", "security", "validation", "aop")
+			.addDependencyGroup("web", "web", "data-rest", "jersey").addDependencyGroup("data", "data-jpa", "jdbc")
 			.addDependencyGroup("database", "h2", "mysql").build();
 
 	private final ProjectRequestDocumentFactory factory = new ProjectRequestDocumentFactory();
@@ -224,8 +223,7 @@ class ProjectRequestDocumentFactoryTests {
 		request.setDependencies(Arrays.asList("web", "invalid", "data-jpa", "invalid-2"));
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getDependencies().getValues()).containsExactly("web",
-				"data-jpa");
+		assertThat(document.getDependencies().getValues()).containsExactly("web", "data-jpa");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
 		assertThat(document.getErrorState().getJavaVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isNull();
@@ -233,8 +231,7 @@ class ProjectRequestDocumentFactoryTests {
 		assertThat(document.getErrorState().getType()).isNull();
 		assertThat(document.getErrorState().getDependencies()).isNotNull();
 		assertThat(document.getErrorState().getDependencies().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getDependencies().getValues())
-				.containsExactly("invalid", "invalid-2");
+		assertThat(document.getErrorState().getDependencies().getValues()).containsExactly("invalid", "invalid-2");
 	}
 
 	@Test

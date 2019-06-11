@@ -46,8 +46,7 @@ public class BulletedSection<T> implements Section {
 		this(templateRenderer, templateName, "items");
 	}
 
-	public BulletedSection(TemplateRenderer templateRenderer, String templateName,
-			String itemName) {
+	public BulletedSection(TemplateRenderer templateRenderer, String templateName, String itemName) {
 		this.templateRenderer = templateRenderer;
 		this.templateName = templateName;
 		this.itemName = itemName;

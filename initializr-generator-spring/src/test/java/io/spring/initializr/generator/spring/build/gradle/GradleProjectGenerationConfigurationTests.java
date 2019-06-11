@@ -64,15 +64,12 @@ class GradleProjectGenerationConfigurationTests {
 				.withConfiguration(BuildProjectGenerationConfiguration.class,
 						GradleProjectGenerationConfiguration.class)
 				.withDirectory(directory)
-				.withBean(InitializrMetadata.class,
-						() -> InitializrMetadataTestBuilder.withDefaults().build())
-				.withDescriptionCustomizer((description) -> description
-						.setBuildSystem(new GradleBuildSystem()));
+				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
+				.withDescriptionCustomizer((description) -> description.setBuildSystem(new GradleBuildSystem()));
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
-		return Stream.of(Arguments.arguments("1.5.17.RELEASE"),
-				Arguments.arguments("2.0.6.RELEASE"),
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE"), Arguments.arguments("2.0.6.RELEASE"),
 				Arguments.arguments("2.1.3.RELEASE"));
 	}
 
@@ -90,28 +87,24 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"),
-				Arguments.arguments("2.0.6.RELEASE", "4.10.3"),
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"), Arguments.arguments("2.0.6.RELEASE", "4.10.3"),
 				Arguments.arguments("2.1.3.RELEASE", "5.4.1"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("gradleWrapperParameters")
-	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion,
-			String expectedGradleVersion) throws IOException {
+	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion, String expectedGradleVersion)
+			throws IOException {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("gradlew", "gradlew.bat",
-				"gradle/wrapper/gradle-wrapper.properties",
+		assertThat(relativePaths).contains("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		try (Stream<String> lines = Files.lines(
-				projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
-			assertThat(lines.filter((line) -> line
-					.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
-							.hasSize(1);
+		try (Stream<String> lines = Files.lines(projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
+			assertThat(lines.filter((line) -> line.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
+					.hasSize(1);
 		}
 	}
 
@@ -121,23 +114,18 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
-				Dependency.withCoordinates("com.example", "acme")
-						.scope(DependencyScope.COMPILE).build());
+				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE).build());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains("build.gradle");
 		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).containsExactly("plugins {",
-				"    id 'org.springframework.boot' version '2.1.0.RELEASE'",
-				"    id 'java'", "}", "",
-				"apply plugin: 'io.spring.dependency-management'", "",
-				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'",
-				"sourceCompatibility = '11'", "", "repositories {", "    mavenCentral()",
-				"}", "", "dependencies {",
+		assertThat(lines).containsExactly("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
+				"    id 'java'", "}", "", "apply plugin: 'io.spring.dependency-management'", "",
+				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'", "sourceCompatibility = '11'", "",
+				"repositories {", "    mavenCentral()", "}", "", "dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter'",
 				"    implementation 'com.example:acme'",
-				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'",
-				"}");
+				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'", "}");
 	}
 
 	@Test
@@ -149,8 +137,7 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
 		assertThat(relativePaths).contains("build.gradle");
-		try (Stream<String> lines = Files
-				.lines(projectStructure.resolve("build.gradle"))) {
+		try (Stream<String> lines = Files.lines(projectStructure.resolve("build.gradle"))) {
 			assertThat(lines.filter((line) -> line.contains("    id 'war'"))).hasSize(1);
 		}
 	}
@@ -161,8 +148,7 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
 		List<String> lines = projectStructure.readAllLines("build.gradle");
 		assertThat(lines).containsSequence("test {", "    useJUnitPlatform()", "}");
 	}
@@ -173,28 +159,25 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("build.gradle");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
 		List<String> lines = projectStructure.readAllLines("build.gradle");
 		assertThat(lines).doesNotContainSequence("test {", "    useJUnitPlatform()", "}");
 	}
 
 	static Stream<Arguments> annotationProcessorScopeBuildParameters() {
-		return Stream.of(Arguments.arguments("1.5.17.RELEASE", false),
-				Arguments.arguments("2.0.6.RELEASE", true),
+		return Stream.of(Arguments.arguments("1.5.17.RELEASE", false), Arguments.arguments("2.0.6.RELEASE", true),
 				Arguments.arguments("2.1.3.RELEASE", true));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("annotationProcessorScopeBuildParameters")
-	void gradleAnnotationProcessorScopeCustomizerIsContributedIfNecessary(
-			String platformVersion, boolean contributorExpected) {
+	void gradleAnnotationProcessorScopeCustomizerIsContributedIfNecessary(String platformVersion,
+			boolean contributorExpected) {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
-		Map<String, GradleAnnotationProcessorScopeBuildCustomizer> generate = this.projectTester
-				.generate(description, (context) -> context.getBeansOfType(
-						GradleAnnotationProcessorScopeBuildCustomizer.class));
+		Map<String, GradleAnnotationProcessorScopeBuildCustomizer> generate = this.projectTester.generate(description,
+				(context) -> context.getBeansOfType(GradleAnnotationProcessorScopeBuildCustomizer.class));
 		assertThat(generate).hasSize((contributorExpected) ? 1 : 0);
 	}
 

@@ -65,8 +65,7 @@ public final class TextTestUtils {
 	public static String readContent(Path source) {
 		assertThat(source).isRegularFile();
 		try {
-			BufferedReader reader = Files.newBufferedReader(source,
-					StandardCharsets.UTF_8);
+			BufferedReader reader = Files.newBufferedReader(source, StandardCharsets.UTF_8);
 			StringWriter writer = new StringWriter();
 			FileCopyUtils.copy(reader, writer);
 			return writer.toString();

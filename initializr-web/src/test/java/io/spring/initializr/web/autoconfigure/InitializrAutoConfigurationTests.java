@@ -60,96 +60,73 @@ class InitializrAutoConfigurationTests {
 
 	@Test
 	void autoConfigRegistersTemplateRenderer() {
-		this.contextRunner.run(
-				(context) -> assertThat(context).hasSingleBean(TemplateRenderer.class));
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(TemplateRenderer.class));
 	}
 
 	@Test
 	void autoConfigWhenTemplateRendererBeanPresentDoesNotRegisterTemplateRenderer() {
-		this.contextRunner
-				.withUserConfiguration(CustomTemplateRendererConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(TemplateRenderer.class);
-					assertThat(context).hasBean("testTemplateRenderer");
-				});
+		this.contextRunner.withUserConfiguration(CustomTemplateRendererConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(TemplateRenderer.class);
+			assertThat(context).hasBean("testTemplateRenderer");
+		});
 	}
 
 	@Test
 	void autoConfigRegistersInitializrMetadataUpdateStrategy() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(InitializrMetadataUpdateStrategy.class));
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(InitializrMetadataUpdateStrategy.class));
 	}
 
 	@Test
 	void autoConfigWhenInitializrMetadataUpdateStrategyPresentDoesNotRegisterInitializrMetadataUpdateStrategy() {
-		this.contextRunner
-				.withUserConfiguration(
-						CustomInitializrMetadataUpdateStrategyConfiguration.class)
+		this.contextRunner.withUserConfiguration(CustomInitializrMetadataUpdateStrategyConfiguration.class)
 				.run((context) -> {
-					assertThat(context)
-							.hasSingleBean(InitializrMetadataUpdateStrategy.class);
+					assertThat(context).hasSingleBean(InitializrMetadataUpdateStrategy.class);
 					assertThat(context).hasBean("testInitializrMetadataUpdateStrategy");
 				});
 	}
 
 	@Test
 	void autoConfigRegistersInitializrMetadataProvider() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(InitializrMetadataProvider.class));
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(InitializrMetadataProvider.class));
 	}
 
 	@Test
 	void autoConfigWhenInitializrMetadataProviderBeanPresentDoesNotRegisterInitializrMetadataProvider() {
-		this.contextRunner
-				.withUserConfiguration(
-						CustomInitializrMetadataProviderConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
-					assertThat(context).hasBean("testInitializrMetadataProvider");
-				});
+		this.contextRunner.withUserConfiguration(CustomInitializrMetadataProviderConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
+			assertThat(context).hasBean("testInitializrMetadataProvider");
+		});
 	}
 
 	@Test
 	void autoConfigRegistersDependencyMetadataProvider() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(DependencyMetadataProvider.class));
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(DependencyMetadataProvider.class));
 	}
 
 	@Test
 	void autoConfigWhenDependencyMetadataProviderBeanPresentDoesNotRegisterDependencyMetadataProvider() {
-		this.contextRunner
-				.withUserConfiguration(
-						CustomDependencyMetadataProviderConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(DependencyMetadataProvider.class);
-					assertThat(context).hasBean("testDependencyMetadataProvider");
-				});
+		this.contextRunner.withUserConfiguration(CustomDependencyMetadataProviderConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(DependencyMetadataProvider.class);
+			assertThat(context).hasBean("testDependencyMetadataProvider");
+		});
 	}
 
 	@Test
 	void customRestTemplateBuilderIsUsed() {
-		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
-				.run((context) -> {
-					assertThat(context)
-							.hasSingleBean(DefaultInitializrMetadataUpdateStrategy.class);
-					RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-							context.getBean(
-									DefaultInitializrMetadataUpdateStrategy.class))
-											.getPropertyValue("restTemplate");
-					assertThat(restTemplate.getErrorHandler())
-							.isSameAs(CustomRestTemplateConfiguration.errorHandler);
-				});
+		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class).run((context) -> {
+			assertThat(context).hasSingleBean(DefaultInitializrMetadataUpdateStrategy.class);
+			RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
+					context.getBean(DefaultInitializrMetadataUpdateStrategy.class)).getPropertyValue("restTemplate");
+			assertThat(restTemplate.getErrorHandler()).isSameAs(CustomRestTemplateConfiguration.errorHandler);
+		});
 	}
 
 	@Test
 	void webConfiguration() {
 		WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner()
-				.withConfiguration(
-						AutoConfigurations.of(RestTemplateAutoConfiguration.class,
-								JacksonAutoConfiguration.class,
-								HttpMessageConvertersAutoConfiguration.class,
-								WebMvcAutoConfiguration.class,
-								InitializrAutoConfiguration.class));
+				.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
+						JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
+						WebMvcAutoConfiguration.class, InitializrAutoConfiguration.class));
 		webContextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
 			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
@@ -168,23 +145,19 @@ class InitializrAutoConfigurationTests {
 
 	@Test
 	void cacheConfiguration() {
-		this.contextRunner.run((context) -> assertThat(context)
-				.hasSingleBean(JCacheManagerCustomizer.class));
+		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(JCacheManagerCustomizer.class));
 	}
 
 	@Test
 	void cacheConfigurationConditionalOnClass() {
-		this.contextRunner
-				.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
-				.run((context) -> assertThat(context)
-						.doesNotHaveBean(JCacheManagerCustomizer.class));
+		this.contextRunner.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
+				.run((context) -> assertThat(context).doesNotHaveBean(JCacheManagerCustomizer.class));
 	}
 
 	@Configuration
 	static class CustomRestTemplateConfiguration {
 
-		private static final ResponseErrorHandler errorHandler = mock(
-				ResponseErrorHandler.class);
+		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
 
 		@Bean
 		public RestTemplateCustomizer testRestTemplateCustomizer() {

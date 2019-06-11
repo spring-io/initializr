@@ -41,27 +41,23 @@ public final class MetadataBuildItemResolver implements BuildItemResolver {
 	 * @param metadata the metadata to use
 	 * @param platformVersion the platform version to consider
 	 */
-	public MetadataBuildItemResolver(InitializrMetadata metadata,
-			Version platformVersion) {
+	public MetadataBuildItemResolver(InitializrMetadata metadata, Version platformVersion) {
 		this.metadata = metadata;
 		this.platformVersion = platformVersion;
 	}
 
 	@Override
 	public Dependency resolveDependency(String id) {
-		io.spring.initializr.metadata.Dependency dependency = this.metadata
-				.getDependencies().get(id);
+		io.spring.initializr.metadata.Dependency dependency = this.metadata.getDependencies().get(id);
 		if (dependency != null) {
-			return MetadataBuildItemMapper
-					.toDependency(dependency.resolve(this.platformVersion));
+			return MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion));
 		}
 		return null;
 	}
 
 	@Override
 	public BillOfMaterials resolveBom(String id) {
-		io.spring.initializr.metadata.BillOfMaterials bom = this.metadata
-				.getConfiguration().getEnv().getBoms().get(id);
+		io.spring.initializr.metadata.BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(id);
 		if (bom != null) {
 			return MetadataBuildItemMapper.toBom(bom.resolve(this.platformVersion));
 		}

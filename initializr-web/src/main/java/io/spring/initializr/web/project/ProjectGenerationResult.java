@@ -31,8 +31,7 @@ public class ProjectGenerationResult {
 
 	private final Path rootDirectory;
 
-	ProjectGenerationResult(ResolvedProjectDescription projectDescription,
-			Path rootDirectory) {
+	ProjectGenerationResult(ResolvedProjectDescription projectDescription, Path rootDirectory) {
 		this.projectDescription = projectDescription;
 		this.rootDirectory = rootDirectory;
 	}

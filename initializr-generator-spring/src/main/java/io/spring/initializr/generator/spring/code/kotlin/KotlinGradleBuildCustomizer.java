@@ -44,7 +44,6 @@ abstract class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuil
 				(compile) -> customizeKotlinOptions(this.settings, compile));
 	}
 
-	protected abstract void customizeKotlinOptions(KotlinProjectSettings settings,
-			TaskCustomization compile);
+	protected abstract void customizeKotlinOptions(KotlinProjectSettings settings, TaskCustomization compile);
 
 }

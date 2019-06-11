@@ -42,8 +42,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		GradleBuild build = getCustomizedBuild(dependency);
 		assertThat(build.getAppliedPlugins()).isEmpty();
 		assertThat(build.getPlugins()).hasSize(1);
-		assertThat(build.getPlugins().get(0).getId())
-				.isEqualTo("org.jetbrains.kotlin.plugin.jpa");
+		assertThat(build.getPlugins().get(0).getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
 		assertThat(build.getPlugins().get(0).getVersion()).isEqualTo("1.2.70");
 	}
 
@@ -59,10 +58,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
-		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(
-				metadata, settings);
-		GradleBuild build = new GradleBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings);
+		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;

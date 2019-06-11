@@ -74,8 +74,7 @@ public final class ResolvedProjectDescription {
 		this.applicationName = description.getApplicationName();
 		this.packageName = getPackageName(description);
 		this.baseDirectory = description.getBaseDirectory();
-		Map<String, Dependency> requestedDependencies = new LinkedHashMap<>(
-				description.getRequestedDependencies());
+		Map<String, Dependency> requestedDependencies = new LinkedHashMap<>(description.getRequestedDependencies());
 		this.requestedDependencies = Collections.unmodifiableMap(requestedDependencies);
 	}
 
@@ -83,8 +82,7 @@ public final class ResolvedProjectDescription {
 		if (StringUtils.hasText(description.getPackageName())) {
 			return description.getPackageName();
 		}
-		if (StringUtils.hasText(description.getGroupId())
-				&& StringUtils.hasText(description.getArtifactId())) {
+		if (StringUtils.hasText(description.getGroupId()) && StringUtils.hasText(description.getArtifactId())) {
 			return description.getGroupId() + "." + description.getArtifactId();
 		}
 		return null;

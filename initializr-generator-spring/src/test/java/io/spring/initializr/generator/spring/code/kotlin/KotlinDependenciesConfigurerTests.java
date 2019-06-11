@@ -36,8 +36,7 @@ class KotlinDependenciesConfigurerTests {
 	void configuresDependenciesForGradleBuild() {
 		GradleBuild build = new GradleBuild();
 		new KotlinDependenciesConfigurer(Version.parse("2.1.0.RELEASE")).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib",
-				"kotlin-reflect");
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib", "kotlin-reflect");
 		Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
@@ -52,10 +51,8 @@ class KotlinDependenciesConfigurerTests {
 	@Test
 	void configuresDependenciesForMavenBuildWithBoot15() {
 		MavenBuild build = new MavenBuild();
-		new KotlinDependenciesConfigurer(Version.parse("1.5.17.RELEASE"))
-				.customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib",
-				"kotlin-reflect");
+		new KotlinDependenciesConfigurer(Version.parse("1.5.17.RELEASE")).customize(build);
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib", "kotlin-reflect");
 		Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
@@ -71,8 +68,7 @@ class KotlinDependenciesConfigurerTests {
 	void configuresDependenciesForMavenBuildWithBoot20() {
 		MavenBuild build = new MavenBuild();
 		new KotlinDependenciesConfigurer(Version.parse("2.0.6.RELEASE")).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib",
-				"kotlin-reflect");
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib", "kotlin-reflect");
 		Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");

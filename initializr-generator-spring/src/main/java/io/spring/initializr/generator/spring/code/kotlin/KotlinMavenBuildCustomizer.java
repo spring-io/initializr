@@ -42,16 +42,13 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		build.setProperty("kotlin.version", this.settings.getVersion());
 		build.setSourceDirectory("${project.basedir}/src/main/kotlin");
 		build.setTestSourceDirectory("${project.basedir}/src/test/kotlin");
-		MavenPlugin kotlinMavenPlugin = build.plugin("org.jetbrains.kotlin",
-				"kotlin-maven-plugin");
+		MavenPlugin kotlinMavenPlugin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
 		kotlinMavenPlugin.configuration((configuration) -> {
-			configuration.configure("args", (args) -> this.settings.getCompilerArgs()
-					.forEach((arg) -> args.add("arg", arg)));
-			configuration.configure("compilerPlugins",
-					(compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
+			configuration.configure("args",
+					(args) -> this.settings.getCompilerArgs().forEach((arg) -> args.add("arg", arg)));
+			configuration.configure("compilerPlugins", (compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
 		});
-		kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen",
-				"${kotlin.version}");
+		kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 	}
 
 }

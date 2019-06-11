@@ -47,8 +47,7 @@ import static org.assertj.core.api.Assertions.fail;
  */
 @Import(StatsMockController.class)
 @ActiveProfiles({ "test-default", "test-custom-stats" })
-class MainControllerStatsIntegrationTests
-		extends AbstractFullStackInitializrIntegrationTests {
+class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private StatsMockController statsMockController;
@@ -60,8 +59,8 @@ class MainControllerStatsIntegrationTests
 	public void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
-		this.projectGenerationStatPublisher.updateRequestUrl(
-				URI.create("http://localhost:" + this.port + "/elastic/test/my-entity"));
+		this.projectGenerationStatPublisher
+				.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic/test/my-entity"));
 	}
 
 	@Test
@@ -100,8 +99,7 @@ class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.has("requestIp")).as("requestIp property should not be set")
-				.isFalse();
+		assertThat(json.has("requestIp")).as("requestIp property should not be set").isFalse();
 	}
 
 	@Test
@@ -113,8 +111,7 @@ class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("client").get("ip").textValue()).as("Wrong requestIp")
-				.isEqualTo("10.0.0.123");
+		assertThat(json.get("client").get("ip").textValue()).as("Wrong requestIp").isEqualTo("10.0.0.123");
 	}
 
 	@Test
@@ -126,22 +123,20 @@ class MainControllerStatsIntegrationTests
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.has("requestIpv4"))
-				.as("requestIpv4 property should not be set if value is not a valid IPv4")
+		assertThat(json.has("requestIpv4")).as("requestIpv4 property should not be set if value is not a valid IPv4")
 				.isFalse();
 	}
 
 	@Test
 	void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-				.header("cf-ipcountry", "XX").build();
+		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip"))).header("cf-ipcountry", "XX")
+				.build();
 		getRestTemplate().exchange(request, String.class);
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.has("requestCountry"))
-				.as("requestCountry property should not be set if value is set to xx")
+		assertThat(json.has("requestCountry")).as("requestCountry property should not be set if value is set to xx")
 				.isFalse();
 	}
 
@@ -170,11 +165,10 @@ class MainControllerStatsIntegrationTests
 
 	@Test
 	void errorPublishingStatsDoesNotBubbleUp() {
-		this.projectGenerationStatPublisher.updateRequestUrl(
-				URI.create("http://localhost:" + this.port + "/elastic-error"));
+		this.projectGenerationStatPublisher
+				.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic-error"));
 		downloadArchive("/starter.zip");
-		assertThat(this.statsMockController.stats).as("No stat should be available")
-				.isEmpty();
+		assertThat(this.statsMockController.stats).as("No stat should be available").isEmpty();
 	}
 
 	@RestController

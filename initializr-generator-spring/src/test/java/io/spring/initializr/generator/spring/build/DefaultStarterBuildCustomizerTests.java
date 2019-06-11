@@ -43,21 +43,19 @@ class DefaultStarterBuildCustomizerTests {
 		Build build = createBuild(metadata);
 		build.dependencies().add("acme");
 		new DefaultStarterBuildCustomizer(metadata).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("acme",
-				DefaultStarterBuildCustomizer.DEFAULT_STARTER);
+		assertThat(build.dependencies().ids()).containsOnly("acme", DefaultStarterBuildCustomizer.DEFAULT_STARTER);
 	}
 
 	@Test
 	void defaultStarterIsAddedIfNoCompileScopedStarterExists() {
-		Dependency dependency = Dependency.withId("runtime", "org.springframework.boot",
-				"runtime-starter", null, Dependency.SCOPE_RUNTIME);
+		Dependency dependency = Dependency.withId("runtime", "org.springframework.boot", "runtime-starter", null,
+				Dependency.SCOPE_RUNTIME);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("runtime");
 		new DefaultStarterBuildCustomizer(metadata).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("runtime",
-				DefaultStarterBuildCustomizer.DEFAULT_STARTER);
+		assertThat(build.dependencies().ids()).containsOnly("runtime", DefaultStarterBuildCustomizer.DEFAULT_STARTER);
 	}
 
 	@Test
@@ -71,8 +69,7 @@ class DefaultStarterBuildCustomizerTests {
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 }

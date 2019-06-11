@@ -76,8 +76,7 @@ class BulletedSectionTests {
 	@Test
 	void bulletedSectionWithDefaultItemName() throws IOException {
 		given(this.renderer.render(eq("template"), any())).willReturn("output");
-		BulletedSection<String> section = new BulletedSection<>(this.renderer,
-				"template");
+		BulletedSection<String> section = new BulletedSection<>(this.renderer, "template");
 		section.addItem("test");
 		section.write(new PrintWriter(new StringWriter()));
 		verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
@@ -88,14 +87,12 @@ class BulletedSectionTests {
 	@Test
 	void bulletedSectionWithCustomItemName() throws IOException {
 		given(this.renderer.render(eq("template"), any())).willReturn("output");
-		BulletedSection<String> section = new BulletedSection<>(this.renderer, "template",
-				"elements");
+		BulletedSection<String> section = new BulletedSection<>(this.renderer, "template", "elements");
 		section.addItem("test");
 		section.write(new PrintWriter(new StringWriter()));
 		verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
 		Map<String, Object> model = this.modelCaptor.getValue();
-		assertThat(model)
-				.containsOnly(entry("elements", Collections.singletonList("test")));
+		assertThat(model).containsOnly(entry("elements", Collections.singletonList("test")));
 	}
 
 }

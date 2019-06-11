@@ -41,8 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:${project.version}",
-		stubsMode = StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids = "io.spring.initializr:initializr-web:${project.version}", stubsMode = StubsMode.LOCAL)
 // tag::test[]
 public class ClientApplicationTests {
 
@@ -55,11 +54,9 @@ public class ClientApplicationTests {
 	@Test
 	public void testCurrentMetadata() {
 		RequestEntity<Void> request = RequestEntity.get(createUri("/"))
-				.accept(MediaType.valueOf("application/vnd.initializr.v2.1+json"))
-				.build();
+				.accept(MediaType.valueOf("application/vnd.initializr.v2.1+json")).build();
 
-		ResponseEntity<String> response = this.restTemplate.exchange(request,
-				String.class);
+		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		// other assertions here
 	}

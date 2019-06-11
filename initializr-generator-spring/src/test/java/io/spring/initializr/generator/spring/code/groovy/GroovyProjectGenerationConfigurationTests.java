@@ -58,8 +58,7 @@ class GroovyProjectGenerationConfigurationTests {
 
 	@Test
 	void mainClassIsContributed() {
-		ProjectStructure projectStructure = this.projectTester
-				.generate(new ProjectDescription());
+		ProjectStructure projectStructure = this.projectTester.generate(new ProjectDescription());
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/groovy/com/example/demo/DemoApplication.groovy");
 	}
@@ -71,15 +70,13 @@ class GroovyProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = projectStructure.readAllLines(
-				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		assertThat(lines).containsExactly("package com.example.demo", "",
-				"import org.junit.Test", "import org.junit.runner.RunWith",
-				"import org.springframework.boot.test.context.SpringBootTest",
-				"import org.springframework.test.context.junit4.SpringRunner", "",
-				"@RunWith(SpringRunner)", "@SpringBootTest",
-				"class DemoApplicationTests {", "", "    @Test",
-				"    void contextLoads() {", "    }", "", "}");
+		List<String> lines = projectStructure
+				.readAllLines("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
+		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.Test",
+				"import org.junit.runner.RunWith", "import org.springframework.boot.test.context.SpringBootTest",
+				"import org.springframework.test.context.junit4.SpringRunner", "", "@RunWith(SpringRunner)",
+				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {",
+				"    }", "", "}");
 	}
 
 	@Test
@@ -89,13 +86,11 @@ class GroovyProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = projectStructure.readAllLines(
-				"src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		assertThat(lines).containsExactly("package com.example.demo", "",
-				"import org.junit.jupiter.api.Test",
-				"import org.springframework.boot.test.context.SpringBootTest", "",
-				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test",
-				"    void contextLoads() {", "    }", "", "}");
+		List<String> lines = projectStructure
+				.readAllLines("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
+		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
+				"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
+				"class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test
@@ -106,13 +101,12 @@ class GroovyProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/groovy/com/example/demo/ServletInitializer.groovy");
-		List<String> lines = projectStructure.readAllLines(
-				"src/main/groovy/com/example/demo/ServletInitializer.groovy");
+		List<String> lines = projectStructure
+				.readAllLines("src/main/groovy/com/example/demo/ServletInitializer.groovy");
 		assertThat(lines).containsExactly("package com.example.demo", "",
 				"import org.springframework.boot.builder.SpringApplicationBuilder",
-				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
-				"", "class ServletInitializer extends SpringBootServletInitializer {", "",
-				"    @Override",
+				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
+				"class ServletInitializer extends SpringBootServletInitializer {", "", "    @Override",
 				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
 				"        application.sources(Demo2Application)", "    }", "", "}");
 	}

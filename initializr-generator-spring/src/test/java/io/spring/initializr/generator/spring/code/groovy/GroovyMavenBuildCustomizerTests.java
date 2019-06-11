@@ -45,9 +45,8 @@ class GroovyMavenBuildCustomizerTests {
 		assertThat(groovyPlugin.getExecutions()).hasSize(1);
 		Execution execution = groovyPlugin.getExecutions().get(0);
 		assertThat(execution.getId()).isNull();
-		assertThat(execution.getGoals()).containsExactly("addSources", "addTestSources",
-				"generateStubs", "compile", "generateTestStubs", "compileTests",
-				"removeStubs", "removeTestStubs");
+		assertThat(execution.getGoals()).containsExactly("addSources", "addTestSources", "generateStubs", "compile",
+				"generateTestStubs", "compileTests", "removeStubs", "removeTestStubs");
 		assertThat(execution.getPhase()).isNull();
 		assertThat(execution.getConfiguration()).isNull();
 	}

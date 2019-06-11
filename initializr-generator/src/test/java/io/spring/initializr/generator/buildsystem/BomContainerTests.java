@@ -41,16 +41,14 @@ class BomContainerTests {
 		assertThat(bom).isNotNull();
 		assertThat(bom.getGroupId()).isEqualTo("org.springframework.boot");
 		assertThat(bom.getArtifactId()).isEqualTo("spring-boot-dependencies");
-		assertThat(bom.getVersion())
-				.isEqualTo(VersionReference.ofProperty("spring-boot.version"));
+		assertThat(bom.getVersion()).isEqualTo(VersionReference.ofProperty("spring-boot.version"));
 		assertThat(bom.getOrder()).isEqualTo(Integer.MAX_VALUE);
 	}
 
 	@Test
 	void addBomWithOrder() {
 		BomContainer container = createTestContainer();
-		container.add("custom", "com.example", "acme", VersionReference.ofValue("1.0.0"),
-				42);
+		container.add("custom", "com.example", "acme", VersionReference.ofValue("1.0.0"), 42);
 		assertThat(container.ids()).containsOnly("custom");
 		assertThat(container.items()).hasSize(1);
 		assertThat(container.isEmpty()).isFalse();

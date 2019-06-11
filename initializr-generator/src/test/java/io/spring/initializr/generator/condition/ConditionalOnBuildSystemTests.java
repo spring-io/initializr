@@ -42,31 +42,27 @@ class ConditionalOnBuildSystemTests {
 	void outcomeWithMavenBuildSystem() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBuildSystem(new MavenBuildSystem());
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
-				.containsOnlyKeys("maven");
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("maven");
 	}
 
 	@Test
 	void outcomeWithGradleBuildSystem() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBuildSystem(new GradleBuildSystem());
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
-				.containsOnlyKeys("gradle");
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle");
 	}
 
 	@Test
 	void conditionalOnGradleWithKotlinDialectMatchesWhenGradleBuildSystemUsesKotlinDialect() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBuildSystem(new GradleBuildSystem("kotlin"));
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class))
-				.containsOnlyKeys("gradle", "gradleKotlin");
+		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle",
+				"gradleKotlin");
 	}
 
-	private Map<String, String> candidatesFor(ProjectDescription projectDescription,
-			Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(
-				projectDescription, (projectGenerationContext) -> projectGenerationContext
-						.getBeansOfType(String.class));
+	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
+		return this.projectTester.withConfiguration(extraConfigurations).generate(projectDescription,
+				(projectGenerationContext) -> projectGenerationContext.getBeansOfType(String.class));
 	}
 
 	@Configuration

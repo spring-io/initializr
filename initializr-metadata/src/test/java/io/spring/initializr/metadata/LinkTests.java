@@ -38,15 +38,13 @@ class LinkTests {
 	void resolveInvalidLinkNoRel() {
 		Link link = new Link();
 		link.setHref("https://example.com");
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(link::resolve);
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(link::resolve);
 	}
 
 	@Test
 	void resolveInvalidLinkNoHref() {
 		Link link = Link.create("reference", null, "foo doc");
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(link::resolve);
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(link::resolve);
 	}
 
 	@Test
@@ -72,8 +70,7 @@ class LinkTests {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("a", "test");
 		map.put("b", "another");
-		assertThat(link.expand(map))
-				.isEqualTo(new URI("https://example.com/test/2/another"));
+		assertThat(link.expand(map)).isEqualTo(new URI("https://example.com/test/2/another"));
 	}
 
 	@Test
@@ -83,16 +80,14 @@ class LinkTests {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("a", "test");
 		map.put("b", "another");
-		assertThat(link.expand(map))
-				.isEqualTo(new URI("https://example.com/test/2/test"));
+		assertThat(link.expand(map)).isEqualTo(new URI("https://example.com/test/2/test"));
 	}
 
 	@Test
 	void expandLinkMissingVariable() {
 		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
 		link.resolve();
-		assertThatIllegalArgumentException()
-				.isThrownBy(() -> link.expand(Collections.singletonMap("a", "test")))
+		assertThatIllegalArgumentException().isThrownBy(() -> link.expand(Collections.singletonMap("a", "test")))
 				.withMessageContaining("missing value for 'b'");
 	}
 

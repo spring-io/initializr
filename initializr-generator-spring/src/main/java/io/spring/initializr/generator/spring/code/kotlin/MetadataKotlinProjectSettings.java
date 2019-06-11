@@ -28,8 +28,7 @@ public class MetadataKotlinProjectSettings implements KotlinProjectSettings {
 
 	private final String version;
 
-	public MetadataKotlinProjectSettings(ResolvedProjectDescription projectDescription,
-			InitializrMetadata metadata) {
+	public MetadataKotlinProjectSettings(ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
 		this.version = metadata.getConfiguration().getEnv().getKotlin()
 				.resolveKotlinVersion(projectDescription.getPlatformVersion());
 	}

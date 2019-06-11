@@ -62,37 +62,30 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 	}
 
 	@Override
-	public ClientHttpRequest createRequest(final URI uri, final HttpMethod httpMethod)
-			throws IOException {
+	public ClientHttpRequest createRequest(final URI uri, final HttpMethod httpMethod) throws IOException {
 		return new MockClientHttpRequest(httpMethod, uri) {
 			@Override
 			public ClientHttpResponse executeInternal() throws IOException {
 				try {
-					MockHttpServletRequestBuilder requestBuilder = request(httpMethod,
-							uri.toString());
+					MockHttpServletRequestBuilder requestBuilder = request(httpMethod, uri.toString());
 					requestBuilder.content(getBodyAsBytes());
 					requestBuilder.headers(getHeaders());
-					MockHttpServletResponse servletResponse = actions(requestBuilder)
-							.andReturn().getResponse();
+					MockHttpServletResponse servletResponse = actions(requestBuilder).andReturn().getResponse();
 					HttpStatus status = HttpStatus.valueOf(servletResponse.getStatus());
 					if (status.value() >= 400) {
 						requestBuilder = request(HttpMethod.GET, "/error")
-								.requestAttr(RequestDispatcher.ERROR_STATUS_CODE,
-										status.value())
-								.requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
-										uri.toString());
+								.requestAttr(RequestDispatcher.ERROR_STATUS_CODE, status.value())
+								.requestAttr(RequestDispatcher.ERROR_REQUEST_URI, uri.toString());
 						if (servletResponse.getErrorMessage() != null) {
 							requestBuilder.requestAttr(RequestDispatcher.ERROR_MESSAGE,
 									servletResponse.getErrorMessage());
 						}
 						// Overwrites the snippets from the first request
-						servletResponse = actions(requestBuilder).andReturn()
-								.getResponse();
+						servletResponse = actions(requestBuilder).andReturn().getResponse();
 					}
 					byte[] body = servletResponse.getContentAsByteArray();
 					HttpHeaders headers = getResponseHeaders(servletResponse);
-					MockClientHttpResponse clientResponse = new MockClientHttpResponse(
-							body, status);
+					MockClientHttpResponse clientResponse = new MockClientHttpResponse(body, status);
 					clientResponse.getHeaders().putAll(headers);
 					return clientResponse;
 				}
@@ -104,16 +97,13 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 		};
 	}
 
-	private ResultActions actions(MockHttpServletRequestBuilder requestBuilder)
-			throws Exception {
-		ResultActions actions = MockMvcClientHttpRequestFactory.this.mockMvc
-				.perform(requestBuilder);
+	private ResultActions actions(MockHttpServletRequestBuilder requestBuilder) throws Exception {
+		ResultActions actions = MockMvcClientHttpRequestFactory.this.mockMvc.perform(requestBuilder);
 		List<Snippet> snippets = new ArrayList<>();
 		for (String field : this.fields) {
 			snippets.add(new ResponseFieldSnippet(field));
 		}
-		actions.andDo(document(this.label, preprocessResponse(prettyPrint()),
-				snippets.toArray(new Snippet[0])));
+		actions.andDo(document(this.label, preprocessResponse(prettyPrint()), snippets.toArray(new Snippet[0])));
 		this.fields = new ArrayList<>();
 		return actions;
 	}

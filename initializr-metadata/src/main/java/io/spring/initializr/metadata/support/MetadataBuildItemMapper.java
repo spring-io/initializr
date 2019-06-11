@@ -38,17 +38,15 @@ public final class MetadataBuildItemMapper {
 	 * @param dependency a dependency metadata
 	 * @return an equivalent build dependency
 	 */
-	public static io.spring.initializr.generator.buildsystem.Dependency toDependency(
-			Dependency dependency) {
+	public static io.spring.initializr.generator.buildsystem.Dependency toDependency(Dependency dependency) {
 		if (dependency == null) {
 			return null;
 		}
 		VersionReference versionReference = (dependency.getVersion() != null)
 				? VersionReference.ofValue(dependency.getVersion()) : null;
 		return io.spring.initializr.generator.buildsystem.Dependency
-				.withCoordinates(dependency.getGroupId(), dependency.getArtifactId())
-				.version(versionReference).scope(toDependencyScope(dependency.getScope()))
-				.type(dependency.getType()).build();
+				.withCoordinates(dependency.getGroupId(), dependency.getArtifactId()).version(versionReference)
+				.scope(toDependencyScope(dependency.getScope())).type(dependency.getType()).build();
 	}
 
 	private static DependencyScope toDependencyScope(String scope) {
@@ -74,16 +72,14 @@ public final class MetadataBuildItemMapper {
 	 * @param bom a metadata bom
 	 * @return an equivalent build bom
 	 */
-	public static io.spring.initializr.generator.buildsystem.BillOfMaterials toBom(
-			BillOfMaterials bom) {
+	public static io.spring.initializr.generator.buildsystem.BillOfMaterials toBom(BillOfMaterials bom) {
 		if (bom == null) {
 			return null;
 		}
 		VersionReference version = (bom.getVersionProperty() != null)
-				? VersionReference.ofProperty(bom.getVersionProperty())
-				: VersionReference.ofValue(bom.getVersion());
-		return new io.spring.initializr.generator.buildsystem.BillOfMaterials(
-				bom.getGroupId(), bom.getArtifactId(), version, bom.getOrder());
+				? VersionReference.ofProperty(bom.getVersionProperty()) : VersionReference.ofValue(bom.getVersion());
+		return new io.spring.initializr.generator.buildsystem.BillOfMaterials(bom.getGroupId(), bom.getArtifactId(),
+				version, bom.getOrder());
 	}
 
 	/**
@@ -92,14 +88,13 @@ public final class MetadataBuildItemMapper {
 	 * @param repository a repository metadata
 	 * @return an equivalent build repository
 	 */
-	public static io.spring.initializr.generator.buildsystem.MavenRepository toRepository(
-			String id, Repository repository) {
+	public static io.spring.initializr.generator.buildsystem.MavenRepository toRepository(String id,
+			Repository repository) {
 		if (repository == null) {
 			return null;
 		}
-		return new io.spring.initializr.generator.buildsystem.MavenRepository(id,
-				repository.getName(), repository.getUrl().toExternalForm(),
-				repository.isSnapshotsEnabled());
+		return new io.spring.initializr.generator.buildsystem.MavenRepository(id, repository.getName(),
+				repository.getUrl().toExternalForm(), repository.isSnapshotsEnabled());
 	}
 
 }

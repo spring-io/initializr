@@ -125,12 +125,10 @@ public class Link {
 
 	public void resolve() {
 		if (this.rel == null) {
-			throw new InvalidInitializrMetadataException(
-					"Invalid link " + this + ": rel attribute is mandatory");
+			throw new InvalidInitializrMetadataException("Invalid link " + this + ": rel attribute is mandatory");
 		}
 		if (this.href == null) {
-			throw new InvalidInitializrMetadataException(
-					"Invalid link " + this + ": href attribute is mandatory");
+			throw new InvalidInitializrMetadataException("Invalid link " + this + ": href attribute is mandatory");
 		}
 		Matcher matcher = VARIABLE_REGEX.matcher(this.href);
 		while (matcher.find()) {
@@ -150,8 +148,8 @@ public class Link {
 		this.templateVariables.forEach((var) -> {
 			Object value = parameters.get(var);
 			if (value == null) {
-				throw new IllegalArgumentException("Could not expand " + this.href
-						+ ", missing value for '" + var + "'");
+				throw new IllegalArgumentException(
+						"Could not expand " + this.href + ", missing value for '" + var + "'");
 			}
 			result.set(result.get().replace("{" + var + "}", value.toString()));
 		});

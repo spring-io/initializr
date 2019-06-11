@@ -28,14 +28,12 @@ import org.springframework.core.Ordered;
  *
  * @author Stephane Nicoll
  */
-public class GradleAnnotationProcessorScopeBuildCustomizer
-		implements BuildCustomizer<GradleBuild> {
+public class GradleAnnotationProcessorScopeBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	@Override
 	public void customize(GradleBuild build) {
 		boolean annotationProcessorUsed = build.dependencies().items()
-				.anyMatch((dependency) -> dependency
-						.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
+				.anyMatch((dependency) -> dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
 		if (annotationProcessorUsed) {
 			build.customizeConfiguration("compileOnly",
 					(configuration) -> configuration.extendsFrom("annotationProcessor"));

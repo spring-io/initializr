@@ -37,8 +37,7 @@ public class BillOfMaterials {
 		this(groupId, artifactId, version, Integer.MAX_VALUE);
 	}
 
-	public BillOfMaterials(String groupId, String artifactId, VersionReference version,
-			int order) {
+	public BillOfMaterials(String groupId, String artifactId, VersionReference version, int order) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;

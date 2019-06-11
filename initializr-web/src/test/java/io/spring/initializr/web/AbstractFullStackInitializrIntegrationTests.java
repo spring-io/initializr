@@ -27,8 +27,7 @@ import org.springframework.boot.web.server.LocalServerPort;
  * @author Dave Syer
  */
 @SpringBootTest(classes = Config.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class AbstractFullStackInitializrIntegrationTests
-		extends AbstractInitializrIntegrationTests {
+public abstract class AbstractFullStackInitializrIntegrationTests extends AbstractInitializrIntegrationTests {
 
 	@LocalServerPort
 	protected int port;
@@ -37,8 +36,7 @@ public abstract class AbstractFullStackInitializrIntegrationTests
 
 	@Override
 	protected String createUrl(String context) {
-		return "http://" + this.host + ":" + this.port
-				+ (context.startsWith("/") ? context : "/" + context);
+		return "http://" + this.host + ":" + this.port + (context.startsWith("/") ? context : "/" + context);
 	}
 
 }

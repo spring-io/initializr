@@ -41,8 +41,7 @@ class ApplicationPropertiesContributorTests {
 	void applicationConfigurationWithDefaultSettings() throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new ApplicationPropertiesContributor().contribute(projectDir);
-		List<String> lines = new ProjectStructure(projectDir)
-				.readAllLines("src/main/resources/application.properties");
+		List<String> lines = new ProjectStructure(projectDir).readAllLines("src/main/resources/application.properties");
 		assertThat(lines).isEmpty();
 	}
 

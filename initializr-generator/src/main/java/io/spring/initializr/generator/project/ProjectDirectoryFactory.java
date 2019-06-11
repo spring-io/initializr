@@ -34,7 +34,6 @@ public interface ProjectDirectoryFactory {
 	 * @return a dedicated existing directory
 	 * @throws IOException if creating the directory failed
 	 */
-	Path createProjectDirectory(ResolvedProjectDescription description)
-			throws IOException;
+	Path createProjectDirectory(ResolvedProjectDescription description) throws IOException;
 
 }

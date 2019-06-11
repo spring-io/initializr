@@ -34,8 +34,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
  */
 class HelpDocumentTests {
 
-	private final MustacheTemplateRenderer templateRenderer = new MustacheTemplateRenderer(
-			"classpath:/templates");
+	private final MustacheTemplateRenderer templateRenderer = new MustacheTemplateRenderer("classpath:/templates");
 
 	@Test
 	void renderEmptyDocumentDoesNotCallWriter() throws IOException {
@@ -63,20 +62,17 @@ class HelpDocumentTests {
 		assertThat(out).contains("# Getting Started", "", "### Reference Documentation",
 				"For further reference, please consider the following sections:", "",
 				"* [Doc](https://example.com/doc)", "", "### Guides",
-				"The following guides illustrate how to use some features concretely:",
-				"", "* [Guide 1](https://example.com/guide-1)",
-				"* [Guide 2](https://example.com/guide-2)", "");
+				"The following guides illustrate how to use some features concretely:", "",
+				"* [Guide 1](https://example.com/guide-1)", "* [Guide 2](https://example.com/guide-2)", "");
 	}
 
 	@Test
 	void renderOnlyAdditionalLink() {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.gettingStarted().addAdditionalLink("https://example.com/app",
-				"Test App");
+		document.gettingStarted().addAdditionalLink("https://example.com/app", "Test App");
 		String out = write(document);
 		assertThat(out).contains("# Getting Started", "", "### Additional Links",
-				"These additional references should also help you:", "",
-				"* [Test App](https://example.com/app)", "");
+				"These additional references should also help you:", "", "* [Test App](https://example.com/app)", "");
 	}
 
 	private String write(HelpDocument document) {

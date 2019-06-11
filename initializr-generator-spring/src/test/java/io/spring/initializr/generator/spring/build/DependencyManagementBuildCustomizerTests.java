@@ -42,11 +42,9 @@ class DependencyManagementBuildCustomizerTests {
 		dependency.setBom("foo-bom");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getAdditionalBoms().add("bar-bom");
-		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom",
-				"1.1.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom).addBom("bar-bom", additionalBom)
-				.addDependencyGroup("test", dependency).build();
+		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
+				.addBom("bar-bom", additionalBom).addDependencyGroup("test", dependency).build();
 		Build build = createBuild(metadata);
 		build.dependencies().add(dependency.getId());
 		customizeBuild(build, metadata);
@@ -60,8 +58,7 @@ class DependencyManagementBuildCustomizerTests {
 		dependency.setRepository("foo-repo");
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getRepositories().add("bar-repo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addBom("foo-bom", bom)
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
 				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
 				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
 				.addDependencyGroup("test", dependency).build();
@@ -73,15 +70,13 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	private MavenBuild createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 	}
 
 	private void customizeBuild(Build build, InitializrMetadata metadata) {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.RELEASE"));
-		new DependencyManagementBuildCustomizer(projectDescription.resolve(), metadata)
-				.customize(build);
+		new DependencyManagementBuildCustomizer(projectDescription.resolve(), metadata).customize(build);
 	}
 
 }

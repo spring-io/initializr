@@ -26,19 +26,16 @@ import org.springframework.test.context.ActiveProfiles;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-defaults" })
-class MainControllerDefaultsIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class MainControllerDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization
 
 	@Test
 	void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"),
-				String.class);
+		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"), String.class);
 		PomAssert pomAssert = new PomAssert(content);
-		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
-				.hasVersion("1.2.4-SNAPSHOT").doesNotHaveNode("/project/packaging")
-				.hasName("FooBar").hasDescription("FooBar Project");
+		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar").hasVersion("1.2.4-SNAPSHOT")
+				.doesNotHaveNode("/project/packaging").hasName("FooBar").hasDescription("FooBar Project");
 	}
 
 }

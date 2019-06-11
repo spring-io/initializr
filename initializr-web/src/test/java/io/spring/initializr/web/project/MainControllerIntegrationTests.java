@@ -43,56 +43,47 @@ import static org.assertj.core.api.Assertions.fail;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-class MainControllerIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class MainControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void simpleZipProject() {
-		ResponseEntity<byte[]> entity = downloadArchive(
-				"/starter.zip?style=web&style=jpa");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"),
-				"demo.zip");
-		zipProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
-				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?style=web&style=jpa");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
+		zipProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore").hasExecutableFile("mvnw")
+				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
+				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
+																									// jpa
+																									// ->
+																									// data-jpa
 				.hasSpringBootStarterTest();
 	}
 
 	@Test
 	void simpleTgzProject() {
-		ResponseEntity<byte[]> entity = downloadArchive(
-				"/starter.tgz?style=org.acme:foo");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"),
-				"demo.tar.gz");
-		tgzProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore")
-				.hasExecutableFile("mvnw").isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?style=org.acme:foo");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
+		tgzProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore").hasExecutableFile("mvnw")
+				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
 				.hasDependency("org.acme", "foo", "1.3.5");
 	}
 
-	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity,
-			MediaType contentType, String fileName) {
+	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {
 		assertThat(entity.getHeaders().getContentType()).isEqualTo(contentType);
 		assertThat(entity.getHeaders().getContentDisposition()).isNotNull();
-		assertThat(entity.getHeaders().getContentDisposition().getFilename())
-				.isEqualTo(fileName);
+		assertThat(entity.getHeaders().getContentDisposition().getFilename()).isEqualTo(fileName);
 	}
 
 	@Test
 	void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
-		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE")
-				.isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false)
-				.pomAssert().hasDependenciesCount(3).hasDependency(biz);
+		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE").isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(3).hasDependency(biz);
 	}
 
 	@Test
 	void dependencyNotInRange() {
 		try {
-			execute("/starter.tgz?style=org.acme:bur", byte[].class, null,
-					(String[]) null);
+			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[]) null);
 		}
 		catch (HttpClientErrorException ex) {
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -101,18 +92,20 @@ class MainControllerIntegrationTests
 
 	@Test
 	void noDependencyProject() {
-		downloadZip("/starter.zip").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
+		downloadZip("/starter.zip").isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
+				.hasDependenciesCount(2)
 				// the root dep is added if none is specified
 				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
 	}
 
 	@Test
 	void dependenciesIsAnAliasOfStyle() {
-		downloadZip("/starter.zip?dependencies=web&dependencies=jpa").isJavaProject()
-				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert()
-				.hasDependenciesCount(3).hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
+		downloadZip("/starter.zip?dependencies=web&dependencies=jpa").isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
+				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
+																									// jpa
+																									// ->
+																									// data-jpa
 				.hasSpringBootStarterTest();
 	}
 
@@ -120,23 +113,23 @@ class MainControllerIntegrationTests
 	void dependenciesIsAnAliasOfStyleCommaSeparated() {
 		downloadZip("/starter.zip?dependencies=web,jpa").isJavaProject().isMavenProject()
 				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterDependency("data-jpa") // alias jpa -> data-jpa
+				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
+																									// jpa
+																									// ->
+																									// data-jpa
 				.hasSpringBootStarterTest();
 	}
 
 	@Test
 	void kotlinRange() {
-		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE")
-				.isKotlinProject().isMavenProject().pomAssert().hasDependenciesCount(4)
-				.hasProperty("kotlin.version", "1.1");
+		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE").isKotlinProject()
+				.isMavenProject().pomAssert().hasDependenciesCount(4).hasProperty("kotlin.version", "1.1");
 	}
 
 	@Test
 	void gradleWarProject() {
-		downloadZip(
-				"/starter.zip?style=web&style=security&packaging=war&type=gradle-project")
-						.isJavaWarProject().isGradleProject();
+		downloadZip("/starter.zip?style=web&style=security&packaging=war&type=gradle-project").isJavaWarProject()
+				.isGradleProject();
 	}
 
 	@Test
@@ -159,10 +152,8 @@ class MainControllerIntegrationTests
 		assertSpringCliRedirect("/spring.tgz", "tar.gz");
 	}
 
-	private void assertSpringCliRedirect(String context, String extension)
-			throws URISyntaxException {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context),
-				ResponseEntity.class);
+	private void assertSpringCliRedirect(String context, String extension) throws URISyntaxException {
+		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context), ResponseEntity.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin."
 				+ extension;
@@ -180,39 +171,31 @@ class MainControllerIntegrationTests
 	@Disabled("Need a comparator that does not care about the number of elements in an array")
 	public void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, "*/*");
-		validateMetadata(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
+		validateMetadata(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
 				JSONCompareMode.LENIENT);
 	}
 
 	@Test
 	void metadataWithV2AcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null,
-				"application/vnd.initializr.v2+json");
-		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0",
-				JSONCompareMode.STRICT);
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json");
+		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
-		getRequests().setFields("_links.maven-project", "dependencies.values[0]",
-				"type.values[0]", "javaVersion.values[0]", "packaging.values[0]",
-				"bootVersion.values[0]", "language.values[0]");
-		ResponseEntity<String> response = invokeHome(null,
-				"application/vnd.initializr.v2.1+json");
+		getRequests().setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
+				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]");
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		validateContentType(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
 	@Test
 	void metadataWithSeveralAcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null,
-				"application/vnd.initializr.v2.1+json",
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json",
 				"application/vnd.initializr.v2+json");
-		validateContentType(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -242,15 +225,13 @@ class MainControllerIntegrationTests
 
 	@Test
 	void curlCanStillDownloadZipArchive() {
-		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class,
-				"curl/1.2.4", "*/*");
+		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class, "curl/1.2.4", "*/*");
 		zipProjectAssert(response.getBody()).isMavenProject().isJavaProject();
 	}
 
 	@Test
 	void curlCanStillDownloadTgzArchive() {
-		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class,
-				"curl/1.2.4", "*/*");
+		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class, "curl/1.2.4", "*/*");
 		tgzProjectAssert(response.getBody()).isMavenProject().isJavaProject();
 	}
 
@@ -258,8 +239,7 @@ class MainControllerIntegrationTests
 	// make sure curl can still receive metadata with json
 	public void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
-		validateContentType(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -285,8 +265,7 @@ class MainControllerIntegrationTests
 	// make sure curl can still receive metadata with json
 	public void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
-		validateContentType(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -305,8 +284,7 @@ class MainControllerIntegrationTests
 	@Test
 	void springBootCliReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
-		validateContentType(response,
-				AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
 	}
 
@@ -339,22 +317,19 @@ class MainControllerIntegrationTests
 	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "http")
-				.doesNotContain("curl");
+		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "http").doesNotContain("curl");
 	}
 
 	private void validateGenericHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Spring Initializr")
-				.doesNotContain("Examples:", "curl");
+		assertThat(response.getBody()).contains("Spring Initializr").doesNotContain("Examples:", "curl");
 	}
 
 	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody())
-				.contains("Service capabilities", "Supported dependencies")
+		assertThat(response.getBody()).contains("Service capabilities", "Supported dependencies")
 				.doesNotContain("Examples:", "curl");
 	}
 
@@ -379,8 +354,7 @@ class MainControllerIntegrationTests
 		}
 		catch (HttpClientErrorException ex) {
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertStandardErrorBody(ex.getResponseBodyAsString(),
-					"Unknown dependency 'foo' check project metadata");
+			assertStandardErrorBody(ex.getResponseBodyAsString(), "Unknown dependency 'foo' check project metadata");
 		}
 	}
 
@@ -392,32 +366,28 @@ class MainControllerIntegrationTests
 
 	@Test
 	void webIsAddedPom() {
-		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"),
-				String.class);
+		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"), String.class);
 		assertThat(body).contains("spring-boot-starter-web");
 		assertThat(body).contains("provided");
 	}
 
 	@Test
 	void webIsAddedGradle() {
-		String body = getRestTemplate()
-				.getForObject(createUrl("/build.gradle?packaging=war"), String.class);
+		String body = getRestTemplate().getForObject(createUrl("/build.gradle?packaging=war"), String.class);
 		assertThat(body).contains("spring-boot-starter-web");
 		assertThat(body).contains("providedRuntime");
 	}
 
 	@Test
 	void downloadStarter() {
-		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"),
-				byte[].class);
+		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"), byte[].class);
 		assertThat(body).isNotNull();
 		assertThat(body.length).isGreaterThan(100);
 	}
 
 	@Test
 	void installer() {
-		ResponseEntity<String> response = getRestTemplate()
-				.getForEntity(createUrl("install.sh"), String.class);
+		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("install.sh"), String.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isNotNull();
 	}

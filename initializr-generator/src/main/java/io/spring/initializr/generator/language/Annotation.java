@@ -38,8 +38,7 @@ public final class Annotation {
 
 	private Annotation(Builder builder) {
 		this.name = builder.name;
-		this.attributes = Collections
-				.unmodifiableList(new ArrayList<>(builder.attributes.values()));
+		this.attributes = Collections.unmodifiableList(new ArrayList<>(builder.attributes.values()));
 	}
 
 	public String getName() {

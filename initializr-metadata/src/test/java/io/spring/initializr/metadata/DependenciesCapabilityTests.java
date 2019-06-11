@@ -32,8 +32,7 @@ class DependenciesCapabilityTests {
 	void indexedDependencies() {
 		Dependency dependency = Dependency.withId("first");
 		Dependency dependency2 = Dependency.withId("second");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency, dependency2);
+		DependenciesCapability capability = createDependenciesCapability("foo", dependency, dependency2);
 		capability.validate();
 
 		assertThat(capability.get("first")).isSameAs(dependency);
@@ -45,10 +44,8 @@ class DependenciesCapabilityTests {
 	void addTwoDependenciesWithSameId() {
 		Dependency dependency = Dependency.withId("conflict");
 		Dependency dependency2 = Dependency.withId("conflict");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency, dependency2);
-		assertThatIllegalArgumentException().isThrownBy(capability::validate)
-				.withMessageContaining("conflict");
+		DependenciesCapability capability = createDependenciesCapability("foo", dependency, dependency2);
+		assertThatIllegalArgumentException().isThrownBy(capability::validate).withMessageContaining("conflict");
 	}
 
 	@Test
@@ -56,8 +53,7 @@ class DependenciesCapabilityTests {
 		Dependency dependency = Dependency.withId("first");
 		dependency.getAliases().add("alias1");
 		dependency.getAliases().add("alias2");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency);
+		DependenciesCapability capability = createDependenciesCapability("foo", dependency);
 		capability.validate();
 		assertThat(capability.get("first")).isSameAs(dependency);
 		assertThat(capability.get("alias1")).isSameAs(dependency);
@@ -74,19 +70,17 @@ class DependenciesCapabilityTests {
 		DependenciesCapability capability = new DependenciesCapability();
 		capability.getContent().add(createDependencyGroup("foo", dependency));
 		capability.getContent().add(createDependencyGroup("bar", dependency2));
-		assertThatIllegalArgumentException().isThrownBy(capability::validate)
-				.withMessageContaining("alias2");
+		assertThatIllegalArgumentException().isThrownBy(capability::validate).withMessageContaining("alias2");
 	}
 
 	@Test
 	void mergeAddEntry() {
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				Dependency.withId("first"), Dependency.withId("second"));
+		DependenciesCapability capability = createDependenciesCapability("foo", Dependency.withId("first"),
+				Dependency.withId("second"));
 
-		DependenciesCapability anotherCapability = createDependenciesCapability("foo",
-				Dependency.withId("bar"), Dependency.withId("biz"));
-		anotherCapability.getContent()
-				.add(createDependencyGroup("bar", Dependency.withId("third")));
+		DependenciesCapability anotherCapability = createDependenciesCapability("foo", Dependency.withId("bar"),
+				Dependency.withId("biz"));
+		anotherCapability.getContent().add(createDependencyGroup("bar", Dependency.withId("third")));
 
 		capability.merge(anotherCapability);
 		assertThat(capability.getContent()).hasSize(2);
@@ -143,16 +137,14 @@ class DependenciesCapabilityTests {
 		assertThat(capability.get("second").getRepository()).isEqualTo("da-repo");
 	}
 
-	private static DependenciesCapability createDependenciesCapability(String groupName,
-			Dependency... dependencies) {
+	private static DependenciesCapability createDependenciesCapability(String groupName, Dependency... dependencies) {
 		DependenciesCapability capability = new DependenciesCapability();
 		DependencyGroup group = createDependencyGroup(groupName, dependencies);
 		capability.getContent().add(group);
 		return capability;
 	}
 
-	private static DependencyGroup createDependencyGroup(String groupName,
-			Dependency... dependencies) {
+	private static DependencyGroup createDependencyGroup(String groupName, Dependency... dependencies) {
 		DependencyGroup group = DependencyGroup.create(groupName);
 		for (Dependency dependency : dependencies) {
 			group.getContent().add(dependency);

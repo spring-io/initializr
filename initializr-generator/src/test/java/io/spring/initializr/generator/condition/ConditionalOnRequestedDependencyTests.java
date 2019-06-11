@@ -41,12 +41,10 @@ class ConditionalOnRequestedDependencyTests {
 	void outcomeWithMatchingDependency() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.addDependency("web", mock(Dependency.class));
-		String bean = this.projectTester.generate(projectDescription,
-				(projectGenerationContext) -> {
-					assertThat(projectGenerationContext.getBeansOfType(String.class))
-							.hasSize(1);
-					return projectGenerationContext.getBean(String.class);
-				});
+		String bean = this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
+			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
+			return projectGenerationContext.getBean(String.class);
+		});
 		assertThat(bean).isEqualTo("webDependency");
 	}
 

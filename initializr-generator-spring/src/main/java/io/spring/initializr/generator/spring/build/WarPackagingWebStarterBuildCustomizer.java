@@ -46,8 +46,7 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 		if (!this.buildMetadataResolver.hasFacet(build, "web")) {
 			// Need to be able to bootstrap the web app
 			Dependency dependency = determineWebDependency(this.metadata);
-			build.dependencies().add(dependency.getId(),
-					MetadataBuildItemMapper.toDependency(dependency));
+			build.dependencies().add(dependency.getId(), MetadataBuildItemMapper.toDependency(dependency));
 		}
 		// Add the tomcat starter in provided scope
 		Dependency tomcat = new Dependency().asSpringBootStarter("tomcat");

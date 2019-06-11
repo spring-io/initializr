@@ -58,22 +58,19 @@ import static org.mockito.Mockito.verify;
  */
 public class ProjectGenerationInvokerTests {
 
-	private static final InitializrMetadata metadata = InitializrMetadataTestBuilder
-			.withDefaults().build();
+	private static final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 
 	private ProjectGenerationInvoker invoker;
 
 	private AnnotationConfigApplicationContext context;
 
-	private final ApplicationEventPublisher eventPublisher = mock(
-			ApplicationEventPublisher.class);
+	private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
 
 	@BeforeEach
 	void setup() {
 		setupContext();
 		ProjectRequestToDescriptionConverter converter = new ProjectRequestToDescriptionConverter();
-		this.invoker = new ProjectGenerationInvoker(this.context, this.eventPublisher,
-				converter);
+		this.invoker = new ProjectGenerationInvoker(this.context, this.eventPublisher, converter);
 	}
 
 	@AfterEach
@@ -89,12 +86,11 @@ public class ProjectGenerationInvokerTests {
 		WebProjectRequest request = new WebProjectRequest();
 		request.setType("maven-project");
 		request.initialize(metadata);
-		ProjectGenerationResult result = this.invoker
-				.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
 		new ProjectAssert(result.getRootDirectory()).isJavaProject();
 		File file = result.getRootDirectory().toFile();
-		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils
-				.getField(this.invoker, "temporaryFiles");
+		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils.getField(this.invoker,
+				"temporaryFiles");
 		assertThat(tempFiles.get(file.getName())).contains(file);
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -119,11 +115,9 @@ public class ProjectGenerationInvokerTests {
 		request.initialize(metadata);
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new PomAssert(content).hasGroupId(request.getGroupId())
-				.hasArtifactId(request.getArtifactId()).hasVersion(request.getVersion())
-				.doesNotHaveNode("/project/packaging").hasName(request.getName())
-				.hasDescription(request.getDescription())
-				.hasJavaVersion(request.getJavaVersion())
+		new PomAssert(content).hasGroupId(request.getGroupId()).hasArtifactId(request.getArtifactId())
+				.hasVersion(request.getVersion()).doesNotHaveNode("/project/packaging").hasName(request.getName())
+				.hasDescription(request.getDescription()).hasJavaVersion(request.getJavaVersion())
 				.hasSpringBootParent(request.getBootVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -135,8 +129,7 @@ public class ProjectGenerationInvokerTests {
 		request.setType("gradle-project");
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new GradleBuildAssert(content).hasVersion(request.getVersion())
-				.hasSpringBootPlugin(request.getBootVersion())
+		new GradleBuildAssert(content).hasVersion(request.getVersion()).hasSpringBootPlugin(request.getBootVersion())
 				.hasJavaVersion(request.getJavaVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -162,8 +155,8 @@ public class ProjectGenerationInvokerTests {
 		File dir = tempDir.toFile();
 		File distributionFile = this.invoker.createDistributionFile(dir, ".zip");
 		assertThat(distributionFile.toString()).isEqualTo(dir.toString() + ".zip");
-		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils
-				.getField(this.invoker, "temporaryFiles");
+		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils.getField(this.invoker,
+				"temporaryFiles");
 		assertThat(tempFiles.get(dir.getName())).contains(distributionFile);
 	}
 
@@ -172,31 +165,26 @@ public class ProjectGenerationInvokerTests {
 		WebProjectRequest request = new WebProjectRequest();
 		request.initialize(metadata);
 		request.setType("gradle-project");
-		ProjectGenerationResult result = this.invoker
-				.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
 		File file = result.getRootDirectory().toFile();
 		this.invoker.cleanTempFiles(file);
 		assertThat(file.listFiles()).isNull();
 	}
 
 	private void setupContext() {
-		InitializrMetadataProvider metadataProvider = mock(
-				InitializrMetadataProvider.class);
-		given(metadataProvider.get())
-				.willReturn(InitializrMetadataTestBuilder.withDefaults().build());
+		InitializrMetadataProvider metadataProvider = mock(InitializrMetadataProvider.class);
+		given(metadataProvider.get()).willReturn(InitializrMetadataTestBuilder.withDefaults().build());
 		this.context = new AnnotationConfigApplicationContext();
 		this.context.register(TestConfiguration.class);
 		this.context.refresh();
 	}
 
 	protected void verifyProjectSuccessfulEventFor(ProjectRequest request) {
-		verify(this.eventPublisher, times(1))
-				.publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
+		verify(this.eventPublisher, times(1)).publishEvent(argThat(new ProjectGeneratedEventMatcher(request)));
 	}
 
 	protected void verifyProjectFailedEventFor(ProjectRequest request, Exception ex) {
-		verify(this.eventPublisher, times(1))
-				.publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
+		verify(this.eventPublisher, times(1)).publishEvent(argThat(new ProjectFailedEventMatcher(request, ex)));
 	}
 
 	@Configuration
@@ -224,8 +212,7 @@ public class ProjectGenerationInvokerTests {
 
 	}
 
-	private static class ProjectFailedEventMatcher
-			implements ArgumentMatcher<ProjectFailedEvent> {
+	private static class ProjectFailedEventMatcher implements ArgumentMatcher<ProjectFailedEvent> {
 
 		private final ProjectRequest request;
 
@@ -238,14 +225,12 @@ public class ProjectGenerationInvokerTests {
 
 		@Override
 		public boolean matches(ProjectFailedEvent event) {
-			return this.request.equals(event.getProjectRequest())
-					&& this.cause.equals(event.getCause());
+			return this.request.equals(event.getProjectRequest()) && this.cause.equals(event.getCause());
 		}
 
 	}
 
-	private static class ProjectGeneratedEventMatcher
-			implements ArgumentMatcher<ProjectGeneratedEvent> {
+	private static class ProjectGeneratedEventMatcher implements ArgumentMatcher<ProjectGeneratedEvent> {
 
 		private final ProjectRequest request;
 

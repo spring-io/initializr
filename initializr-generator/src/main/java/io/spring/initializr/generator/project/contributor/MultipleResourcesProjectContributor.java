@@ -44,8 +44,7 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 		this(rootResource, (filename) -> false);
 	}
 
-	public MultipleResourcesProjectContributor(String rootResource,
-			Predicate<String> executable) {
+	public MultipleResourcesProjectContributor(String rootResource, Predicate<String> executable) {
 		this.rootResource = rootResource;
 		this.executable = executable;
 	}
@@ -55,14 +54,12 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 		Resource root = this.resolver.getResource(this.rootResource);
 		Resource[] resources = this.resolver.getResources(this.rootResource + "/**");
 		for (Resource resource : resources) {
-			String filename = resource.getURI().toString()
-					.substring(root.getURI().toString().length() + 1);
+			String filename = resource.getURI().toString().substring(root.getURI().toString().length() + 1);
 			if (resource.isReadable()) {
 				Path output = projectRoot.resolve(filename);
 				Files.createDirectories(output.getParent());
 				Files.createFile(output);
-				FileCopyUtils.copy(resource.getInputStream(),
-						Files.newOutputStream(output));
+				FileCopyUtils.copy(resource.getInputStream(), Files.newOutputStream(output));
 				// TODO Set executable using NIO
 				output.toFile().setExecutable(this.executable.test(filename));
 			}

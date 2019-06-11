@@ -36,16 +36,15 @@ class InitializrModule extends SimpleModule {
 		addSerializer(new VersionPropertySerializer());
 	}
 
-	private static class VersionPropertySerializer
-			extends StdSerializer<VersionProperty> {
+	private static class VersionPropertySerializer extends StdSerializer<VersionProperty> {
 
 		VersionPropertySerializer() {
 			super(VersionProperty.class);
 		}
 
 		@Override
-		public void serialize(VersionProperty value, JsonGenerator gen,
-				SerializerProvider provider) throws IOException {
+		public void serialize(VersionProperty value, JsonGenerator gen, SerializerProvider provider)
+				throws IOException {
 			gen.writeString(value.toStandardFormat());
 		}
 

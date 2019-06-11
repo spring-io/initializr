@@ -41,11 +41,9 @@ import org.w3c.dom.NodeList;
  *
  * @author Andy Wilkinson
  */
-public class NodeAssert extends AbstractAssert<NodeAssert, Node>
-		implements AssertProvider<NodeAssert> {
+public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements AssertProvider<NodeAssert> {
 
-	private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory
-			.newInstance();
+	private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
 
 	private final XPathFactory xpathFactory = XPathFactory.newInstance();
 
@@ -74,8 +72,8 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node>
 
 	private static Document read(String xmlContent) {
 		try {
-			return FACTORY.newDocumentBuilder().parse(new ByteArrayInputStream(
-					xmlContent.getBytes(StandardCharsets.UTF_8)));
+			return FACTORY.newDocumentBuilder()
+					.parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)));
 		}
 		catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -84,8 +82,7 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node>
 
 	public NodeAssert nodeAtPath(String xpath) {
 		try {
-			return new NodeAssert(
-					(Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
+			return new NodeAssert((Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
 		}
 		catch (XPathExpressionException ex) {
 			throw new RuntimeException(ex);
@@ -94,8 +91,7 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node>
 
 	public ListAssert<Node> nodesAtPath(String xpath) {
 		try {
-			NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual,
-					XPathConstants.NODESET);
+			NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODESET);
 			return new ListAssert<>(toList(nodeList));
 		}
 		catch (XPathExpressionException ex) {
@@ -105,8 +101,8 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node>
 
 	public StringAssert textAtPath(String xpath) {
 		try {
-			return new StringAssert((String) this.xpath.evaluate(xpath + "/text()",
-					this.actual, XPathConstants.STRING));
+			return new StringAssert(
+					(String) this.xpath.evaluate(xpath + "/text()", this.actual, XPathConstants.STRING));
 		}
 		catch (XPathExpressionException ex) {
 			throw new RuntimeException(ex);

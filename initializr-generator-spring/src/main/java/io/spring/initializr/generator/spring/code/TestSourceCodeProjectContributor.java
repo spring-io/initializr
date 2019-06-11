@@ -53,8 +53,8 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 
 	private final ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers;
 
-	public TestSourceCodeProjectContributor(ResolvedProjectDescription projectDescription,
-			Supplier<S> sourceFactory, SourceCodeWriter<S> sourceWriter,
+	public TestSourceCodeProjectContributor(ResolvedProjectDescription projectDescription, Supplier<S> sourceFactory,
+			SourceCodeWriter<S> sourceWriter,
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
 		this.projectDescription = projectDescription;
@@ -68,32 +68,26 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	public void contribute(Path projectRoot) throws IOException {
 		S sourceCode = this.sourceFactory.get();
 		String testName = this.projectDescription.getApplicationName() + "Tests";
-		C compilationUnit = sourceCode.createCompilationUnit(
-				this.projectDescription.getPackageName(), testName);
+		C compilationUnit = sourceCode.createCompilationUnit(this.projectDescription.getPackageName(), testName);
 		T testApplicationType = compilationUnit.createTypeDeclaration(testName);
 		customizeTestApplicationType(testApplicationType);
 		customizeTestSourceCode(sourceCode);
-		this.sourceWriter
-				.writeTo(
-						this.projectDescription.getBuildSystem().getTestDirectory(
-								projectRoot, this.projectDescription.getLanguage()),
-						sourceCode);
+		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getTestDirectory(projectRoot,
+				this.projectDescription.getLanguage()), sourceCode);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeTestApplicationType(TypeDeclaration testApplicationType) {
-		List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers
-				.orderedStream().collect(Collectors.toList());
-		LambdaSafe
-				.callbacks(TestApplicationTypeCustomizer.class, customizers,
-						testApplicationType)
+		List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers.orderedStream()
+				.collect(Collectors.toList());
+		LambdaSafe.callbacks(TestApplicationTypeCustomizer.class, customizers, testApplicationType)
 				.invoke((customizer) -> customizer.customize(testApplicationType));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeTestSourceCode(S sourceCode) {
-		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers
-				.orderedStream().collect(Collectors.toList());
+		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream()
+				.collect(Collectors.toList());
 		LambdaSafe.callbacks(TestSourceCodeCustomizer.class, customizers, sourceCode)
 				.invoke((customizer) -> customizer.customize(sourceCode));
 	}

@@ -52,22 +52,20 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	public MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
-		return (typeDeclaration) -> typeDeclaration
-				.addMethodDeclaration(GroovyMethodDeclaration.method("main")
-						.modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
+		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(
+				GroovyMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
 						.parameters(new Parameter("java.lang.String[]", "args"))
-						.body(new GroovyExpressionStatement(new GroovyMethodInvocation(
-								"org.springframework.boot.SpringApplication", "run",
-								typeDeclaration.getName(), "args"))));
+						.body(new GroovyExpressionStatement(
+								new GroovyMethodInvocation("org.springframework.boot.SpringApplication", "run",
+										typeDeclaration.getName(), "args"))));
 	}
 
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
 	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
-			GroovyMethodDeclaration method = GroovyMethodDeclaration
-					.method("contextLoads").modifiers(Modifier.PUBLIC).returning("void")
-					.body();
+			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").modifiers(Modifier.PUBLIC)
+					.returning("void").body();
 			method.annotate(Annotation.name("org.junit.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
@@ -77,8 +75,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
-			GroovyMethodDeclaration method = GroovyMethodDeclaration
-					.method("contextLoads").returning("void").body();
+			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").returning("void").body();
 			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
@@ -100,16 +97,13 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 		public ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
-				GroovyMethodDeclaration configure = GroovyMethodDeclaration
-						.method("configure").modifiers(Modifier.PROTECTED)
-						.returning(
-								"org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter(
-								"org.springframework.boot.builder.SpringApplicationBuilder",
+				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
+						.modifiers(Modifier.PROTECTED)
+						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
+						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
-						.body(new GroovyReturnStatement(
-								new GroovyMethodInvocation("application", "sources",
-										projectDescription.getApplicationName())));
+						.body(new GroovyReturnStatement(new GroovyMethodInvocation("application", "sources",
+								projectDescription.getApplicationName())));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

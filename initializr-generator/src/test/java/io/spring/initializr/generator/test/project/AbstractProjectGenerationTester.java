@@ -45,27 +45,22 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 
 	private final Consumer<ProjectDescription> descriptionCustomizer;
 
-	protected AbstractProjectGenerationTester(
-			Map<Class<?>, Supplier<?>> beanDefinitions) {
-		this(beanDefinitions, defaultContextInitializer(),
-				defaultDescriptionCustomizer());
+	protected AbstractProjectGenerationTester(Map<Class<?>, Supplier<?>> beanDefinitions) {
+		this(beanDefinitions, defaultContextInitializer(), defaultDescriptionCustomizer());
 	}
 
 	protected AbstractProjectGenerationTester(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
 		this.beanDefinitions = new LinkedHashMap<>(beanDefinitions);
 		this.descriptionCustomizer = descriptionCustomizer;
 		this.contextInitializer = contextInitializer;
 	}
 
 	protected abstract SELF newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<ProjectDescription> descriptionCustomizer);
+			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer);
 
 	public <T> SELF withBean(Class<T> beanType, Supplier<T> beanDefinition) {
-		LinkedHashMap<Class<?>, Supplier<?>> beans = new LinkedHashMap<>(
-				this.beanDefinitions);
+		LinkedHashMap<Class<?>, Supplier<?>> beans = new LinkedHashMap<>(this.beanDefinitions);
 		beans.put(beanType, beanDefinition);
 		return newInstance(beans, this.contextInitializer, this.descriptionCustomizer);
 	}
@@ -81,8 +76,7 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 	}
 
 	public SELF withContextInitializer(Consumer<ProjectGenerationContext> context) {
-		return newInstance(this.beanDefinitions, this.contextInitializer.andThen(context),
-				this.descriptionCustomizer);
+		return newInstance(this.beanDefinitions, this.contextInitializer.andThen(context), this.descriptionCustomizer);
 	}
 
 	public SELF withDescriptionCustomizer(Consumer<ProjectDescription> description) {
@@ -112,8 +106,7 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 		};
 	}
 
-	protected <T> T invokeProjectGeneration(ProjectDescription description,
-			ProjectGenerationInvoker<T> invoker) {
+	protected <T> T invokeProjectGeneration(ProjectDescription description, ProjectGenerationInvoker<T> invoker) {
 		this.descriptionCustomizer.accept(description);
 		try {
 			return invoker.generate(beansConfigurer().andThen(this.contextInitializer));
@@ -129,16 +122,14 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 	}
 
 	// Restore proper generic signature to make sure the context resolve the bean properly
-	private <T> void register(ProjectGenerationContext context, Class<T> type,
-			Object instance) {
+	private <T> void register(ProjectGenerationContext context, Class<T> type, Object instance) {
 		T bean = type.cast(instance);
 		context.registerBean(type, () -> bean);
 	}
 
 	protected interface ProjectGenerationInvoker<T> {
 
-		T generate(Consumer<ProjectGenerationContext> contextInitializer)
-				throws IOException;
+		T generate(Consumer<ProjectGenerationContext> contextInitializer) throws IOException;
 
 	}
 

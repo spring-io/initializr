@@ -82,8 +82,7 @@ public class InitializrConfiguration {
 			result = result + "Application";
 		}
 		String candidate = StringUtils.capitalize(result);
-		if (hasInvalidChar(candidate)
-				|| this.env.invalidApplicationNames.contains(candidate)) {
+		if (hasInvalidChar(candidate) || this.env.invalidApplicationNames.contains(candidate)) {
 			return this.env.fallbackApplicationName;
 		}
 		else {
@@ -111,8 +110,7 @@ public class InitializrConfiguration {
 		if (!StringUtils.hasText(candidate)) {
 			return defaultPackageName;
 		}
-		if (hasInvalidChar(candidate.replace(".", ""))
-				|| this.env.invalidPackageNames.contains(candidate)) {
+		if (hasInvalidChar(candidate.replace(".", "")) || this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
 		}
 		else {
@@ -134,15 +132,13 @@ public class InitializrConfiguration {
 	}
 
 	private static String unsplitWords(String text) {
-		return String.join("", Arrays.stream(text.split("(_|-| |:)+"))
-				.map(StringUtils::capitalize).toArray(String[]::new));
+		return String.join("",
+				Arrays.stream(text.split("(_|-| |:)+")).map(StringUtils::capitalize).toArray(String[]::new));
 	}
 
 	private static String splitCamelCase(String text) {
-		return String.join("",
-				Arrays.stream(text.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
-						.map((it) -> StringUtils.capitalize(it.toLowerCase()))
-						.toArray(String[]::new));
+		return String.join("", Arrays.stream(text.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
+				.map((it) -> StringUtils.capitalize(it.toLowerCase())).toArray(String[]::new));
 	}
 
 	private static boolean hasInvalidChar(String text) {
@@ -196,8 +192,7 @@ public class InitializrConfiguration {
 		 * The list of invalid package names. If such name is chosen or generated, the the
 		 * default package name should be used instead.
 		 */
-		private List<String> invalidPackageNames = new ArrayList<>(
-				Collections.singletonList("org.springframework"));
+		private List<String> invalidPackageNames = new ArrayList<>(Collections.singletonList("org.springframework"));
 
 		/**
 		 * Force SSL support. When enabled, any access using http generate https links and
@@ -238,11 +233,9 @@ public class InitializrConfiguration {
 		public Env() {
 			try {
 				this.repositories.put("spring-snapshots",
-						new Repository("Spring Snapshots",
-								new URL("https://repo.spring.io/snapshot"), true));
+						new Repository("Spring Snapshots", new URL("https://repo.spring.io/snapshot"), true));
 				this.repositories.put("spring-milestones",
-						new Repository("Spring Milestones",
-								new URL("https://repo.spring.io/milestone"), false));
+						new Repository("Spring Milestones", new URL("https://repo.spring.io/milestone"), false));
 			}
 			catch (MalformedURLException ex) {
 				throw new IllegalStateException("Cannot parse URL", ex);
@@ -366,8 +359,7 @@ public class InitializrConfiguration {
 				return this.dependencyManagementPluginVersion;
 			}
 
-			public void setDependencyManagementPluginVersion(
-					String dependencyManagementPluginVersion) {
+			public void setDependencyManagementPluginVersion(String dependencyManagementPluginVersion) {
 				this.dependencyManagementPluginVersion = dependencyManagementPluginVersion;
 			}
 
@@ -423,14 +415,12 @@ public class InitializrConfiguration {
 				this.mappings.forEach((m) -> {
 					if (m.versionRange == null) {
 						throw new InvalidInitializrMetadataException(
-								"VersionRange is mandatory, invalid version mapping for "
-										+ this);
+								"VersionRange is mandatory, invalid version mapping for " + this);
 					}
 					m.range = simpleParser.parseRange(m.versionRange);
 					if (m.version == null) {
 						throw new InvalidInitializrMetadataException(
-								"Version is mandatory, invalid version mapping for "
-										+ this);
+								"Version is mandatory, invalid version mapping for " + this);
 					}
 				});
 			}
@@ -442,9 +432,7 @@ public class InitializrConfiguration {
 					}
 					catch (InvalidVersionException ex) {
 						throw new InvalidInitializrMetadataException(
-								"Invalid version range " + it.versionRange + " for "
-										+ this,
-								ex);
+								"Invalid version range " + it.versionRange + " for " + this, ex);
 					}
 				});
 			}
@@ -526,8 +514,7 @@ public class InitializrConfiguration {
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
 				return (StringUtils.hasText(this.parent.groupId) ? this.parent
-						: new ParentPom(DEFAULT_PARENT_GROUP_ID,
-								DEFAULT_PARENT_ARTIFACT_ID, bootVersion));
+						: new ParentPom(DEFAULT_PARENT_GROUP_ID, DEFAULT_PARENT_ARTIFACT_ID, bootVersion));
 			}
 
 			/**
@@ -609,14 +596,12 @@ public class InitializrConfiguration {
 				}
 
 				public void validate() {
-					if (!((!StringUtils.hasText(this.groupId)
-							&& !StringUtils.hasText(this.artifactId)
+					if (!((!StringUtils.hasText(this.groupId) && !StringUtils.hasText(this.artifactId)
 							&& !StringUtils.hasText(this.version))
-							|| (StringUtils.hasText(this.groupId)
-									&& StringUtils.hasText(this.artifactId)
+							|| (StringUtils.hasText(this.groupId) && StringUtils.hasText(this.artifactId)
 									&& StringUtils.hasText(this.version)))) {
-						throw new InvalidInitializrMetadataException("Custom maven pom "
-								+ "requires groupId, artifactId and version");
+						throw new InvalidInitializrMetadataException(
+								"Custom maven pom " + "requires groupId, artifactId and version");
 					}
 				}
 

@@ -71,14 +71,11 @@ class JavaProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
-		List<String> lines = projectStructure
-				.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
-		assertThat(lines).containsExactly("package com.example.demo;", "",
-				"import org.junit.Test;", "import org.junit.runner.RunWith;",
-				"import org.springframework.boot.test.context.SpringBootTest;",
-				"import org.springframework.test.context.junit4.SpringRunner;", "",
-				"@RunWith(SpringRunner.class)", "@SpringBootTest",
-				"public class DemoApplicationTests {", "", "    @Test",
+		List<String> lines = projectStructure.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertThat(lines).containsExactly("package com.example.demo;", "", "import org.junit.Test;",
+				"import org.junit.runner.RunWith;", "import org.springframework.boot.test.context.SpringBootTest;",
+				"import org.springframework.test.context.junit4.SpringRunner;", "", "@RunWith(SpringRunner.class)",
+				"@SpringBootTest", "public class DemoApplicationTests {", "", "    @Test",
 				"    public void contextLoads() {", "    }", "", "}");
 	}
 
@@ -89,13 +86,10 @@ class JavaProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/test/java/com/example/demo/DemoApplicationTests.java");
-		List<String> lines = projectStructure
-				.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
-		assertThat(lines).containsExactly("package com.example.demo;", "",
-				"import org.junit.jupiter.api.Test;",
-				"import org.springframework.boot.test.context.SpringBootTest;", "",
-				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test",
-				"    void contextLoads() {", "    }", "", "}");
+		List<String> lines = projectStructure.readAllLines("src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertThat(lines).containsExactly("package com.example.demo;", "", "import org.junit.jupiter.api.Test;",
+				"import org.springframework.boot.test.context.SpringBootTest;", "", "@SpringBootTest",
+				"class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test
@@ -106,17 +100,13 @@ class JavaProjectGenerationConfigurationTests {
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles())
 				.contains("src/main/java/com/example/demo/ServletInitializer.java");
-		List<String> lines = projectStructure
-				.readAllLines("src/main/java/com/example/demo/ServletInitializer.java");
+		List<String> lines = projectStructure.readAllLines("src/main/java/com/example/demo/ServletInitializer.java");
 		assertThat(lines).containsExactly("package com.example.demo;", "",
 				"import org.springframework.boot.builder.SpringApplicationBuilder;",
-				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;",
-				"",
-				"public class ServletInitializer extends SpringBootServletInitializer {",
-				"", "    @Override",
+				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;", "",
+				"public class ServletInitializer extends SpringBootServletInitializer {", "", "    @Override",
 				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
-				"        return application.sources(MyDemoApplication.class);", "    }",
-				"", "}");
+				"        return application.sources(MyDemoApplication.class);", "    }", "", "}");
 	}
 
 	@Test

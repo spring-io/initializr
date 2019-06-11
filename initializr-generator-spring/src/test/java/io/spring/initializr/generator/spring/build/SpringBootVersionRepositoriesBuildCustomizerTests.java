@@ -36,48 +36,40 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 	@Test
 	void addMavenCentralWhenUsingRelease() {
 		MavenBuild build = new MavenBuild();
-		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.RELEASE"))
-				.customize(build);
-		assertThat(build.repositories().items())
-				.containsExactly(MavenRepository.MAVEN_CENTRAL);
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.RELEASE")).customize(build);
+		assertThat(build.repositories().items()).containsExactly(MavenRepository.MAVEN_CENTRAL);
 	}
 
 	@Test
 	void addMavenCentralAndNonReleaseWhenUsingMilestone() {
 		MavenBuild build = new MavenBuild();
-		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.M1"))
-				.customize(build);
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.M1")).customize(build);
 		assertNonReleaseRepositories(build);
 	}
 
 	@Test
 	void addMavenCentralAndNonReleaseWhenUsingReleaseCandidate() {
 		MavenBuild build = new MavenBuild();
-		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.RC1"))
-				.customize(build);
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.RC1")).customize(build);
 		assertNonReleaseRepositories(build);
 	}
 
 	@Test
 	void addMavenCentralAndNonReleaseWhenUsingSnapshot() {
 		MavenBuild build = new MavenBuild();
-		new SpringBootVersionRepositoriesBuildCustomizer(
-				Version.parse("2.1.0.BUILD-SNAPSHOT")).customize(build);
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.BUILD-SNAPSHOT")).customize(build);
 		assertNonReleaseRepositories(build);
 	}
 
 	private void assertNonReleaseRepositories(MavenBuild build) {
-		List<MavenRepository> repositories = build.repositories().items()
-				.collect(Collectors.toList());
+		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
 		assertThat(repositories).hasSize(3);
 		assertThat(repositories.get(0)).isEqualTo(MavenRepository.MAVEN_CENTRAL);
-		assertThat(repositories.get(1))
-				.hasFieldOrPropertyWithValue("id", "spring-snapshots")
+		assertThat(repositories.get(1)).hasFieldOrPropertyWithValue("id", "spring-snapshots")
 				.hasFieldOrPropertyWithValue("name", "Spring Snapshots")
 				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
 				.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
-		assertThat(repositories.get(2))
-				.hasFieldOrPropertyWithValue("id", "spring-milestones")
+		assertThat(repositories.get(2)).hasFieldOrPropertyWithValue("id", "spring-milestones")
 				.hasFieldOrPropertyWithValue("name", "Spring Milestones")
 				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/milestone")
 				.hasFieldOrPropertyWithValue("snapshotsEnabled", false);

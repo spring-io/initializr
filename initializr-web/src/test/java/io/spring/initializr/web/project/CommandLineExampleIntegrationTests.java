@@ -32,39 +32,32 @@ import org.springframework.test.context.ActiveProfiles;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-class CommandLineExampleIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class CommandLineExampleIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void generateDefaultProject() {
-		downloadZip("/starter.zip").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
+		downloadZip("/starter.zip").isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
+				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
 	void generateWebProjectWithJava8() {
-		downloadZip("/starter.zip?dependencies=web&javaVersion=1.8").isJavaProject()
-				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert()
-				.hasJavaVersion("1.8").hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterTest().hasDependenciesCount(2);
+		downloadZip("/starter.zip?dependencies=web&javaVersion=1.8").isJavaProject().isMavenProject()
+				.hasStaticAndTemplatesResources(true).pomAssert().hasJavaVersion("1.8")
+				.hasSpringBootStarterDependency("web").hasSpringBootStarterTest().hasDependenciesCount(2);
 	}
 
 	@Test
 	void generateWebDataJpaGradleProject() {
-		downloadTgz(
-				"/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir")
-						.hasBaseDir("my-dir").isJavaProject().isGradleProject()
-						.hasStaticAndTemplatesResources(true).gradleBuildAssert()
-						.contains("spring-boot-starter-web")
-						.contains("spring-boot-starter-data-jpa");
+		downloadTgz("/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir").hasBaseDir("my-dir")
+				.isJavaProject().isGradleProject().hasStaticAndTemplatesResources(true).gradleBuildAssert()
+				.contains("spring-boot-starter-web").contains("spring-boot-starter-data-jpa");
 	}
 
 	@Test
 	void generateMavenPomWithWarPackaging() {
-		ResponseEntity<String> response = getRestTemplate()
-				.getForEntity(createUrl("/pom.xml?packaging=war"), String.class);
+		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"),
+				String.class);
 		PomAssert pomAssert = new PomAssert(response.getBody());
 		pomAssert.hasPackaging("war");
 	}

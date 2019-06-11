@@ -33,15 +33,13 @@ final class JsonFieldProcessor {
 
 	boolean hasField(JsonFieldPath fieldPath, Object payload) {
 		final AtomicReference<Boolean> hasField = new AtomicReference<>(false);
-		traverse(new ProcessingContext(payload, fieldPath),
-				(match) -> hasField.set(true));
+		traverse(new ProcessingContext(payload, fieldPath), (match) -> hasField.set(true));
 		return hasField.get();
 	}
 
 	Object extract(JsonFieldPath path, Object payload) {
 		final List<Object> matches = new ArrayList<>();
-		traverse(new ProcessingContext(payload, path),
-				(match) -> matches.add(match.getValue()));
+		traverse(new ProcessingContext(payload, path), (match) -> matches.add(match.getValue()));
 		if (matches.isEmpty()) {
 			throw new IllegalArgumentException("Field does not exist: " + path);
 		}
@@ -64,40 +62,32 @@ final class JsonFieldProcessor {
 				handleListPayload(context, matchCallback);
 			}
 		}
-		else if (context.getPayload() instanceof Map
-				&& ((Map<?, ?>) context.getPayload()).containsKey(segment)) {
+		else if (context.getPayload() instanceof Map && ((Map<?, ?>) context.getPayload()).containsKey(segment)) {
 			handleMapPayload(context, matchCallback);
 		}
 	}
 
-	private void handleListPayload(ProcessingContext context,
-			MatchCallback matchCallback) {
+	private void handleListPayload(ProcessingContext context, MatchCallback matchCallback) {
 		List<?> list = context.getPayload();
 		final Iterator<?> items = list.iterator();
 		if (context.isLeaf()) {
 			while (items.hasNext()) {
 				Object item = items.next();
-				matchCallback.foundMatch(
-						new ListMatch(items, list, item, context.getParentMatch()));
+				matchCallback.foundMatch(new ListMatch(items, list, item, context.getParentMatch()));
 			}
 		}
 		else {
 			while (items.hasNext()) {
 				Object item = items.next();
-				traverse(
-						context.descend(item,
-								new ListMatch(items, list, item, context.parent)),
-						matchCallback);
+				traverse(context.descend(item, new ListMatch(items, list, item, context.parent)), matchCallback);
 			}
 		}
 	}
 
-	private void handleMapPayload(ProcessingContext context,
-			MatchCallback matchCallback) {
+	private void handleMapPayload(ProcessingContext context, MatchCallback matchCallback) {
 		Map<?, ?> map = context.getPayload();
 		Object item = map.get(context.getSegment());
-		MapMatch mapMatch = new MapMatch(item, map, context.getSegment(),
-				context.getParentMatch());
+		MapMatch mapMatch = new MapMatch(item, map, context.getSegment(), context.getParentMatch());
 		if (context.isLeaf()) {
 			matchCallback.foundMatch(mapMatch);
 		}
@@ -198,8 +188,7 @@ final class JsonFieldProcessor {
 			this(payload, path, null, null);
 		}
 
-		private ProcessingContext(Object payload, JsonFieldPath path,
-				List<String> segments, Match parent) {
+		private ProcessingContext(Object payload, JsonFieldPath path, List<String> segments, Match parent) {
 			this.payload = payload;
 			this.path = path;
 			this.segments = (segments != null) ? segments : path.getSegments();
@@ -224,8 +213,7 @@ final class JsonFieldProcessor {
 		}
 
 		private ProcessingContext descend(Object payload, Match match) {
-			return new ProcessingContext(payload, this.path,
-					this.segments.subList(1, this.segments.size()), match);
+			return new ProcessingContext(payload, this.path, this.segments.subList(1, this.segments.size()), match);
 		}
 
 	}

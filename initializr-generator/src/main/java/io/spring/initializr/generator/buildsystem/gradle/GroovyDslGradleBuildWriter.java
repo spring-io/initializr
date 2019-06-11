@@ -54,8 +54,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private void writeBuildscriptExt(IndentingWriter writer, GradleBuild build) {
-		writeNestedMap(writer, "ext", build.getBuildscript().getExt(),
-				(key, value) -> key + " = " + value);
+		writeNestedMap(writer, "ext", build.getBuildscript().getExt(), (key, value) -> key + " = " + value);
 	}
 
 	private void writeBuildscriptRepositories(IndentingWriter writer, GradleBuild build) {
@@ -63,17 +62,15 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private void writeBuildscriptDependencies(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "dependencies",
-				build.getBuildscript().getDependencies(),
+		writeNestedCollection(writer, "dependencies", build.getBuildscript().getDependencies(),
 				(dependency) -> "classpath '" + dependency + "'");
 	}
 
 	@Override
 	protected void writePlugins(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "plugins", build.getPlugins(),
-				this::pluginAsString);
-		writeCollection(writer, build.getAppliedPlugins(),
-				(plugin) -> "apply plugin: '" + plugin + "'", writer::println);
+		writeNestedCollection(writer, "plugins", build.getPlugins(), this::pluginAsString);
+		writeCollection(writer, build.getAppliedPlugins(), (plugin) -> "apply plugin: '" + plugin + "'",
+				writer::println);
 		writer.println();
 	}
 
@@ -86,8 +83,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer,
-			GradleBuild build) {
+	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build) {
 		writeProperty(writer, "sourceCompatibility", build.getSourceCompatibility());
 	}
 
@@ -95,8 +91,8 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	protected void writeConfiguration(IndentingWriter writer, String configurationName,
 			GradleBuild.ConfigurationCustomization configurationCustomization) {
 		writer.println(configurationName + " {");
-		writer.indented(() -> writer.println(String.format("extendsFrom %s",
-				String.join(", ", configurationCustomization.getExtendsFrom()))));
+		writer.indented(() -> writer.println(
+				String.format("extendsFrom %s", String.join(", ", configurationCustomization.getExtendsFrom()))));
 		writer.println("}");
 	}
 
@@ -109,11 +105,9 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeExtraProperties(IndentingWriter writer,
-			Map<String, String> allProperties) {
+	protected void writeExtraProperties(IndentingWriter writer, Map<String, String> allProperties) {
 		writeNestedCollection(writer, "ext", allProperties.entrySet(),
-				(e) -> getFormattedExtraProperty(e.getKey(), e.getValue()),
-				writer::println);
+				(e) -> getFormattedExtraProperty(e.getKey(), e.getValue()), writer::println);
 	}
 
 	private String getFormattedExtraProperty(String key, String value) {
@@ -122,8 +116,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeConfigurations(IndentingWriter writer, GradleBuild build) {
-		Map<String, ConfigurationCustomization> configurationCustomizations = build
-				.getConfigurationCustomizations();
+		Map<String, ConfigurationCustomization> configurationCustomizations = build.getConfigurationCustomizations();
 		List<String> configurations = build.getConfigurations();
 		if (configurations.isEmpty() && configurationCustomizations.isEmpty()) {
 			return;
@@ -131,8 +124,8 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println("configurations {");
 		writer.indented(() -> {
 			configurations.forEach(writer::println);
-			configurationCustomizations.forEach((name,
-					customization) -> writeConfiguration(writer, name, customization));
+			configurationCustomizations
+					.forEach((name, customization) -> writeConfiguration(writer, name, customization));
 		});
 		writer.println("}");
 		writer.println("");
@@ -146,13 +139,12 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		boolean hasExclusions = !dependency.getExclusions().isEmpty();
 		writer.print(configurationForDependency(dependency));
 		writer.print((hasExclusions) ? "(" : " ");
-		writer.print(quoteStyle + dependency.getGroupId() + ":"
-				+ dependency.getArtifactId() + ((version != null) ? ":" + version : "")
-				+ ((type != null) ? "@" + type : "") + quoteStyle);
+		writer.print(quoteStyle + dependency.getGroupId() + ":" + dependency.getArtifactId()
+				+ ((version != null) ? ":" + version : "") + ((type != null) ? "@" + type : "") + quoteStyle);
 		if (hasExclusions) {
 			writer.println(") {");
-			writer.indented(() -> writeCollection(writer, dependency.getExclusions(),
-					this::dependencyExclusionAsString));
+			writer.indented(
+					() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
 			writer.println("}");
 		}
 		else {
@@ -161,8 +153,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String dependencyExclusionAsString(Exclusion exclusion) {
-		return "exclude group: '" + exclusion.getGroupId() + "', module: '"
-				+ exclusion.getArtifactId() + "'";
+		return "exclude group: '" + exclusion.getGroupId() + "', module: '" + exclusion.getArtifactId() + "'";
 	}
 
 	private String determineQuoteStyle(VersionReference versionReference) {
@@ -172,18 +163,16 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected String bomAsString(BillOfMaterials bom) {
 		String quoteStyle = determineQuoteStyle(bom.getVersion());
-		return "mavenBom " + quoteStyle + bom.getGroupId() + ":" + bom.getArtifactId()
-				+ ":" + determineVersion(bom.getVersion()) + quoteStyle;
+		return "mavenBom " + quoteStyle + bom.getGroupId() + ":" + bom.getArtifactId() + ":"
+				+ determineVersion(bom.getVersion()) + quoteStyle;
 	}
 
 	private String determineVersion(VersionReference versionReference) {
 		if (versionReference != null) {
 			if (versionReference.isProperty()) {
 				VersionProperty property = versionReference.getProperty();
-				return "${"
-						+ (property.isInternal() ? property.toCamelCaseFormat()
-								: ("property('" + property.toStandardFormat() + "')"))
-						+ "}";
+				return "${" + (property.isInternal() ? property.toCamelCaseFormat()
+						: ("property('" + property.toStandardFormat() + "')")) + "}";
 			}
 			return versionReference.getValue();
 		}
@@ -191,10 +180,8 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeTasksWithTypeCustomizations(IndentingWriter writer,
-			GradleBuild build) {
-		Map<String, GradleBuild.TaskCustomization> tasksWithTypeCustomizations = build
-				.getTasksWithTypeCustomizations();
+	protected void writeTasksWithTypeCustomizations(IndentingWriter writer, GradleBuild build) {
+		Map<String, GradleBuild.TaskCustomization> tasksWithTypeCustomizations = build.getTasksWithTypeCustomizations();
 
 		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
 			writer.println();
@@ -206,8 +193,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeTaskCustomizations(IndentingWriter writer, GradleBuild build) {
-		Map<String, GradleBuild.TaskCustomization> taskCustomizations = build
-				.getTaskCustomizations();
+		Map<String, GradleBuild.TaskCustomization> taskCustomizations = build.getTaskCustomizations();
 
 		taskCustomizations.forEach((name, customization) -> {
 			writer.println();
@@ -218,8 +204,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected String invocationAsString(
-			GradleBuild.TaskCustomization.Invocation invocation) {
+	protected String invocationAsString(GradleBuild.TaskCustomization.Invocation invocation) {
 		String arguments = (invocation.getArguments().isEmpty()) ? "()"
 				: " " + String.join(", ", invocation.getArguments());
 		return invocation.getTarget() + arguments;

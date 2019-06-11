@@ -42,11 +42,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GradleBuildProjectContributorTests {
 
 	@Test
-	void groovyDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir)
-			throws IOException {
+	void groovyDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		GradleBuild build = new GradleBuild();
-		groovyDslGradleBuildProjectContributor(build,
-				IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
+		groovyDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings())
+				.contribute(projectDir);
 		Path buildGradle = projectDir.resolve("build.gradle");
 		assertThat(buildGradle).isRegularFile();
 	}
@@ -57,33 +56,27 @@ class GradleBuildProjectContributorTests {
 		build.setGroup("com.example");
 		build.setVersion("1.0.0-SNAPSHOT");
 		build.buildscript((buildscript) -> buildscript.ext("someVersion", "'1.2.3'"));
-		List<String> lines = generateBuild(groovyDslGradleBuildProjectContributor(build,
-				IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("buildscript {", "    ext {",
-				"        someVersion = '1.2.3'", "    }", "}");
-		assertThat(lines).containsSequence("group = 'com.example'",
-				"version = '1.0.0-SNAPSHOT'");
+		List<String> lines = generateBuild(
+				groovyDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
+		assertThat(lines).containsSequence("buildscript {", "    ext {", "        someVersion = '1.2.3'", "    }", "}");
+		assertThat(lines).containsSequence("group = 'com.example'", "version = '1.0.0-SNAPSHOT'");
 	}
 
 	@Test
 	void groovyDslGradleBuildIsContributedUsingGradleContentId() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory
-				.create(new SimpleIndentStrategy("    "), (factory) -> factory
-						.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
+		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
+				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		GradleBuild build = new GradleBuild();
 		build.buildscript((buildscript) -> buildscript.ext("someVersion", "'1.2.3'"));
-		List<String> lines = generateBuild(
-				groovyDslGradleBuildProjectContributor(build, indentingWriterFactory));
-		assertThat(lines).containsSequence("buildscript {", "  ext {",
-				"    someVersion = '1.2.3'", "  }", "}");
+		List<String> lines = generateBuild(groovyDslGradleBuildProjectContributor(build, indentingWriterFactory));
+		assertThat(lines).containsSequence("buildscript {", "  ext {", "    someVersion = '1.2.3'", "  }", "}");
 	}
 
 	@Test
-	void kotlinDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir)
-			throws IOException {
+	void kotlinDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		GradleBuild build = new GradleBuild();
-		kotlinDslGradleBuildProjectContributor(build,
-				IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
+		kotlinDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings())
+				.contribute(projectDir);
 		Path buildGradleKts = projectDir.resolve("build.gradle.kts");
 		assertThat(buildGradleKts).isRegularFile();
 	}
@@ -93,41 +86,37 @@ class GradleBuildProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.setGroup("com.example");
 		build.setVersion("1.0.0-SNAPSHOT");
-		List<String> lines = generateBuild(kotlinDslGradleBuildProjectContributor(build,
-				IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("group = \"com.example\"",
-				"version = \"1.0.0-SNAPSHOT\"");
+		List<String> lines = generateBuild(
+				kotlinDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
+		assertThat(lines).containsSequence("group = \"com.example\"", "version = \"1.0.0-SNAPSHOT\"");
 	}
 
 	@Test
 	void kotlinDslGradleBuildIsContributedUsingGradleContentId() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory
-				.create(new SimpleIndentStrategy("    "), (factory) -> factory
-						.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
+		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
+				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		GradleBuild build = new GradleBuild();
 		build.addPlugin("java");
-		List<String> lines = generateBuild(
-				kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory));
+		List<String> lines = generateBuild(kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory));
 		assertThat(lines).containsSequence("plugins {", "  java", "}");
 	}
 
-	private List<String> generateBuild(GradleBuildProjectContributor contributor)
-			throws IOException {
+	private List<String> generateBuild(GradleBuildProjectContributor contributor) throws IOException {
 		StringWriter writer = new StringWriter();
 		contributor.writeBuild(writer);
 		return TextTestUtils.readAllLines(writer.toString());
 	}
 
-	private GradleBuildProjectContributor groovyDslGradleBuildProjectContributor(
-			GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
-		return new GradleBuildProjectContributor(new GroovyDslGradleBuildWriter(), build,
-				indentingWriterFactory, "build.gradle");
+	private GradleBuildProjectContributor groovyDslGradleBuildProjectContributor(GradleBuild build,
+			IndentingWriterFactory indentingWriterFactory) {
+		return new GradleBuildProjectContributor(new GroovyDslGradleBuildWriter(), build, indentingWriterFactory,
+				"build.gradle");
 	}
 
-	private GradleBuildProjectContributor kotlinDslGradleBuildProjectContributor(
-			GradleBuild build, IndentingWriterFactory indentingWriterFactory) {
-		return new GradleBuildProjectContributor(new KotlinDslGradleBuildWriter(), build,
-				indentingWriterFactory, "build.gradle.kts");
+	private GradleBuildProjectContributor kotlinDslGradleBuildProjectContributor(GradleBuild build,
+			IndentingWriterFactory indentingWriterFactory) {
+		return new GradleBuildProjectContributor(new KotlinDslGradleBuildWriter(), build, indentingWriterFactory,
+				"build.gradle.kts");
 	}
 
 }

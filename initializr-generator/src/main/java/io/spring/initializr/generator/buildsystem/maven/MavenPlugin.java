@@ -80,13 +80,11 @@ public class MavenPlugin {
 	}
 
 	public void execution(String id, Consumer<ExecutionBuilder> customizer) {
-		customizer.accept(
-				this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
+		customizer.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
 	}
 
 	public List<Execution> getExecutions() {
-		return this.executions.values().stream().map(ExecutionBuilder::build)
-				.collect(Collectors.toList());
+		return this.executions.values().stream().map(ExecutionBuilder::build).collect(Collectors.toList());
 	}
 
 	public void dependency(String groupId, String artifactId, String version) {
@@ -98,8 +96,7 @@ public class MavenPlugin {
 	}
 
 	public Configuration getConfiguration() {
-		return (this.configurationCustomization == null) ? null
-				: this.configurationCustomization.build();
+		return (this.configurationCustomization == null) ? null : this.configurationCustomization.build();
 	}
 
 	public boolean isExtensions() {
@@ -132,8 +129,7 @@ public class MavenPlugin {
 
 		Execution build() {
 			return new Execution(this.id, this.phase, this.goals,
-					(this.configurationCustomization == null) ? null
-							: this.configurationCustomization.build());
+					(this.configurationCustomization == null) ? null : this.configurationCustomization.build());
 		}
 
 		public ExecutionBuilder phase(String phase) {
@@ -181,20 +177,16 @@ public class MavenPlugin {
 		 * @throws IllegalArgumentException if a parameter with the same name is
 		 * registered with a single value
 		 */
-		public ConfigurationCustomization configure(String name,
-				Consumer<ConfigurationCustomization> consumer) {
-			Object value = this.settings.stream()
-					.filter((candidate) -> candidate.getName().equals(name)).findFirst()
+		public ConfigurationCustomization configure(String name, Consumer<ConfigurationCustomization> consumer) {
+			Object value = this.settings.stream().filter((candidate) -> candidate.getName().equals(name)).findFirst()
 					.orElseGet(() -> {
-						Setting nestedSetting = new Setting(name,
-								new ConfigurationCustomization());
+						Setting nestedSetting = new Setting(name, new ConfigurationCustomization());
 						this.settings.add(nestedSetting);
 						return nestedSetting;
 					}).getValue();
 			if (!(value instanceof ConfigurationCustomization)) {
 				throw new IllegalArgumentException(String.format(
-						"Could not customize parameter '%s', a single value %s is already registered",
-						name, value));
+						"Could not customize parameter '%s', a single value %s is already registered", name, value));
 			}
 			ConfigurationCustomization nestedConfiguration = (ConfigurationCustomization) value;
 			consumer.accept(nestedConfiguration);
@@ -202,17 +194,14 @@ public class MavenPlugin {
 		}
 
 		Configuration build() {
-			return new Configuration(this.settings.stream()
-					.map((entry) -> resolve(entry.getName(), entry.getValue()))
+			return new Configuration(this.settings.stream().map((entry) -> resolve(entry.getName(), entry.getValue()))
 					.collect(Collectors.toList()));
 		}
 
 		private Setting resolve(String key, Object value) {
 			if (value instanceof ConfigurationCustomization) {
-				List<Setting> values = ((ConfigurationCustomization) value).settings
-						.stream()
-						.map((entry) -> resolve(entry.getName(), entry.getValue()))
-						.collect(Collectors.toList());
+				List<Setting> values = ((ConfigurationCustomization) value).settings.stream()
+						.map((entry) -> resolve(entry.getName(), entry.getValue())).collect(Collectors.toList());
 				return new Setting(key, values);
 			}
 			else {
@@ -276,8 +265,7 @@ public class MavenPlugin {
 
 		private final Configuration configuration;
 
-		private Execution(String id, String phase, List<String> goals,
-				Configuration configuration) {
+		private Execution(String id, String phase, List<String> goals, Configuration configuration) {
 			this.id = id;
 			this.phase = phase;
 			this.goals = goals;

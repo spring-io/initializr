@@ -26,8 +26,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author Stephane Nicoll
  */
-@SpringBootApplication(exclude = { InitializrAutoConfiguration.class,
-		InitializrActuatorEndpointsAutoConfiguration.class })
+@SpringBootApplication(
+		exclude = { InitializrAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class })
 public class SampleApp {
 
 }

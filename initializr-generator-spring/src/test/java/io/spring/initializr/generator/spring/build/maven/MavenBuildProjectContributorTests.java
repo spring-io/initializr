@@ -39,11 +39,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MavenBuildProjectContributorTests {
 
 	@Test
-	void mavenBuildIsContributedInProjectStructure(@TempDir Path projectDir)
-			throws IOException {
+	void mavenBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		MavenBuild build = new MavenBuild();
-		new MavenBuildProjectContributor(build,
-				IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
+		new MavenBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
 		Path buildGradle = projectDir.resolve("pom.xml");
 		assertThat(buildGradle).isRegularFile();
 	}
@@ -53,41 +51,34 @@ class MavenBuildProjectContributorTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.parent("org.springframework.boot", "spring-boot-starter-parent",
-				"2.1.0.RELEASE");
+		build.parent("org.springframework.boot", "spring-boot-starter-parent", "2.1.0.RELEASE");
 		List<String> lines = generatePom(build);
-		assertThat(lines).containsSequence("    <parent>",
-				"        <groupId>org.springframework.boot</groupId>",
+		assertThat(lines).containsSequence("    <parent>", "        <groupId>org.springframework.boot</groupId>",
 				"        <artifactId>spring-boot-starter-parent</artifactId>",
 				"        <version>2.1.0.RELEASE</version>");
 	}
 
 	@Test
 	void pomIsContributedUsingMavenContentId() throws Exception {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory
-				.create(new SimpleIndentStrategy("    "), (factory) -> factory
-						.indentingStrategy("maven", new SimpleIndentStrategy("\t")));
+		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
+				(factory) -> factory.indentingStrategy("maven", new SimpleIndentStrategy("\t")));
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.parent("org.springframework.boot", "spring-boot-starter-parent",
-				"2.1.0.RELEASE");
+		build.parent("org.springframework.boot", "spring-boot-starter-parent", "2.1.0.RELEASE");
 		List<String> lines = generatePom(build, indentingWriterFactory);
-		assertThat(lines).containsSequence("\t<parent>",
-				"\t\t<groupId>org.springframework.boot</groupId>",
-				"\t\t<artifactId>spring-boot-starter-parent</artifactId>",
-				"\t\t<version>2.1.0.RELEASE</version>");
+		assertThat(lines).containsSequence("\t<parent>", "\t\t<groupId>org.springframework.boot</groupId>",
+				"\t\t<artifactId>spring-boot-starter-parent</artifactId>", "\t\t<version>2.1.0.RELEASE</version>");
 	}
 
 	private List<String> generatePom(MavenBuild mavenBuild) throws Exception {
 		return generatePom(mavenBuild, IndentingWriterFactory.withDefaultSettings());
 	}
 
-	private List<String> generatePom(MavenBuild mavenBuild,
-			IndentingWriterFactory indentingWriterFactory) throws Exception {
+	private List<String> generatePom(MavenBuild mavenBuild, IndentingWriterFactory indentingWriterFactory)
+			throws Exception {
 		StringWriter writer = new StringWriter();
-		new MavenBuildProjectContributor(mavenBuild, indentingWriterFactory)
-				.writeBuild(writer);
+		new MavenBuildProjectContributor(mavenBuild, indentingWriterFactory).writeBuild(writer);
 		return TextTestUtils.readAllLines(writer.toString());
 	}
 

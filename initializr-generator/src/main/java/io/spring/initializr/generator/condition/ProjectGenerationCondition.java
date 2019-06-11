@@ -36,7 +36,7 @@ public abstract class ProjectGenerationCondition implements Condition {
 		return matches(projectDescription, context, metadata);
 	}
 
-	protected abstract boolean matches(ResolvedProjectDescription projectDescription,
-			ConditionContext context, AnnotatedTypeMetadata metadata);
+	protected abstract boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+			AnnotatedTypeMetadata metadata);
 
 }

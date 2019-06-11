@@ -50,39 +50,29 @@ class ProjectGeneratorTests {
 		description.setBuildSystem(new MavenBuildSystem());
 		Version platformVersion = Version.parse("2.1.0.RELEASE");
 		description.setPackageName("com.example.test");
-		ResolvedProjectDescription resolvedProjectDescription = this.projectTester
-				.generate(description,
-						(projectGenerationContext) -> projectGenerationContext
-								.getBean(ResolvedProjectDescription.class));
-		assertThat(resolvedProjectDescription.getPlatformVersion())
-				.isEqualTo(platformVersion);
-		assertThat(resolvedProjectDescription.getPackageName())
-				.isEqualTo("com.example.test");
+		ResolvedProjectDescription resolvedProjectDescription = this.projectTester.generate(description,
+				(projectGenerationContext) -> projectGenerationContext.getBean(ResolvedProjectDescription.class));
+		assertThat(resolvedProjectDescription.getPlatformVersion()).isEqualTo(platformVersion);
+		assertThat(resolvedProjectDescription.getPackageName()).isEqualTo("com.example.test");
 	}
 
 	@Test
 	void generateInvokesCustomizers() {
-		ProjectGeneratorTester tester = this.projectTester
-				.withContextInitializer((context) -> {
-					context.registerBean("customizer1",
-							TestProjectDescriptionCustomizer.class,
-							() -> new TestProjectDescriptionCustomizer(5,
-									(description) -> description.setName("Test")));
-					context.registerBean("customizer2",
-							TestProjectDescriptionCustomizer.class,
-							() -> new TestProjectDescriptionCustomizer(3,
-									(description) -> {
-										description.setName("First");
-										description.setGroupId("com.acme");
-									}));
-				});
+		ProjectGeneratorTester tester = this.projectTester.withContextInitializer((context) -> {
+			context.registerBean("customizer1", TestProjectDescriptionCustomizer.class,
+					() -> new TestProjectDescriptionCustomizer(5, (description) -> description.setName("Test")));
+			context.registerBean("customizer2", TestProjectDescriptionCustomizer.class,
+					() -> new TestProjectDescriptionCustomizer(3, (description) -> {
+						description.setName("First");
+						description.setGroupId("com.acme");
+					}));
+		});
 		ProjectDescription description = new ProjectDescription();
 		description.setGroupId("com.example.demo");
 		description.setName("Original");
 
-		ResolvedProjectDescription resolvedProjectDescription = tester.generate(
-				description, (projectGenerationContext) -> projectGenerationContext
-						.getBean(ResolvedProjectDescription.class));
+		ResolvedProjectDescription resolvedProjectDescription = tester.generate(description,
+				(projectGenerationContext) -> projectGenerationContext.getBean(ResolvedProjectDescription.class));
 		assertThat(resolvedProjectDescription.getGroupId()).isEqualTo("com.acme");
 		assertThat(resolvedProjectDescription.getName()).isEqualTo("Test");
 	}
@@ -92,29 +82,25 @@ class ProjectGeneratorTests {
 		ProjectGeneratorTester tester = this.projectTester.withDirectory(directory)
 				.withContextInitializer((context) -> {
 					context.registerBean("contributor1", ProjectContributor.class,
-							() -> (projectDirectory) -> Files
-									.createFile(projectDirectory.resolve("test.text")));
-					context.registerBean("contributor2", ProjectContributor.class,
-							() -> (projectDirectory) -> {
-								Path subDir = projectDirectory.resolve("src/main/test");
-								Files.createDirectories(subDir);
-								Files.createFile(subDir.resolve("Test.src"));
-							});
+							() -> (projectDirectory) -> Files.createFile(projectDirectory.resolve("test.text")));
+					context.registerBean("contributor2", ProjectContributor.class, () -> (projectDirectory) -> {
+						Path subDir = projectDirectory.resolve("src/main/test");
+						Files.createDirectories(subDir);
+						Files.createFile(subDir.resolve("Test.src"));
+					});
 				});
 		ProjectStructure projectStructure = tester.generate(new ProjectDescription());
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.containsOnly("test.text", "src/main/test/Test.src");
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).containsOnly("test.text",
+				"src/main/test/Test.src");
 	}
 
-	private static class TestProjectDescriptionCustomizer
-			implements ProjectDescriptionCustomizer {
+	private static class TestProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {
 
 		private final Integer order;
 
 		private final Consumer<ProjectDescription> projectDescription;
 
-		TestProjectDescriptionCustomizer(Integer order,
-				Consumer<ProjectDescription> projectDescription) {
+		TestProjectDescriptionCustomizer(Integer order, Consumer<ProjectDescription> projectDescription) {
 			this.order = order;
 			this.projectDescription = projectDescription;
 		}

@@ -36,13 +36,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 class MustacheSectionTests {
 
-	private final MustacheTemplateRenderer renderer = new MustacheTemplateRenderer(
-			"classpath:/templates/mustache");
+	private final MustacheTemplateRenderer renderer = new MustacheTemplateRenderer("classpath:/templates/mustache");
 
 	@Test
 	void renderSection() throws IOException {
-		MustacheSection section = new MustacheSection(this.renderer, "test",
-				Collections.singletonMap("key", "hello"));
+		MustacheSection section = new MustacheSection(this.renderer, "test", Collections.singletonMap("key", "hello"));
 		StringWriter writer = new StringWriter();
 		section.write(new PrintWriter(writer));
 		assertThat(writer.toString()).isEqualTo(String.format("hello%n"));
@@ -58,8 +56,7 @@ class MustacheSectionTests {
 
 	@Test
 	void renderSectionWithCustomModelResolution() throws IOException {
-		MustacheSection section = new MustacheSection(this.renderer, "test",
-				Collections.emptyMap()) {
+		MustacheSection section = new MustacheSection(this.renderer, "test", Collections.emptyMap()) {
 			@Override
 			protected Map<String, Object> resolveModel(Map<String, Object> model) {
 				return Collections.singletonMap("key", "custom");

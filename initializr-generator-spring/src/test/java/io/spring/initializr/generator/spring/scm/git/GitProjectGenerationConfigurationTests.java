@@ -46,13 +46,11 @@ class GitProjectGenerationConfigurationTests {
 	void gitIgnoreIsContributedToProject(@TempDir Path directory) {
 		ProjectDescription description = new ProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
-		Path projectDirectory = this.projectTester.withDirectory(directory)
-				.generate(description, (context) -> {
-					GitIgnoreContributor contributor = context
-							.getBean(GitIgnoreContributor.class);
-					contributor.contribute(directory);
-					return directory;
-				});
+		Path projectDirectory = this.projectTester.withDirectory(directory).generate(description, (context) -> {
+			GitIgnoreContributor contributor = context.getBean(GitIgnoreContributor.class);
+			contributor.contribute(directory);
+			return directory;
+		});
 		assertThat(projectDirectory.resolve(".gitignore")).isRegularFile();
 	}
 
@@ -60,8 +58,8 @@ class GitProjectGenerationConfigurationTests {
 	void gitIgnore() {
 		ProjectDescription description = new ProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
-		assertThat(generateGitIgnore(description)).contains("### STS ###",
-				"### IntelliJ IDEA ###", "### NetBeans ###", "### VS Code ###");
+		assertThat(generateGitIgnore(description)).contains("### STS ###", "### IntelliJ IDEA ###", "### NetBeans ###",
+				"### VS Code ###");
 	}
 
 	@Test
@@ -70,8 +68,7 @@ class GitProjectGenerationConfigurationTests {
 		description.setBuildSystem(new GradleBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(generateGitIgnore(description))
-				.contains(".gradle", "/build/", "!gradle/wrapper/gradle-wrapper.jar",
-						"/out/")
+				.contains(".gradle", "/build/", "!gradle/wrapper/gradle-wrapper.jar", "/out/")
 				.doesNotContain("/target/", "!.mvn/wrapper/maven-wrapper.jar");
 	}
 
@@ -80,8 +77,7 @@ class GitProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setBuildSystem(new MavenBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		assertThat(generateGitIgnore(description))
-				.contains("/target/", "!.mvn/wrapper/maven-wrapper.jar")
+		assertThat(generateGitIgnore(description)).contains("/target/", "!.mvn/wrapper/maven-wrapper.jar")
 				.doesNotContain(".gradle", "!gradle/wrapper/gradle-wrapper.jar", "/out/");
 	}
 

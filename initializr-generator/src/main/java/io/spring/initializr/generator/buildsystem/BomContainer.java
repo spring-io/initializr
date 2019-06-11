@@ -40,8 +40,7 @@ public class BomContainer extends BuildItemContainer<String, BillOfMaterials> {
 	 * @param artifactId the artifactId
 	 * @param version the {@link VersionReference}
 	 */
-	public void add(String id, String groupId, String artifactId,
-			VersionReference version) {
+	public void add(String id, String groupId, String artifactId, VersionReference version) {
 		add(id, new BillOfMaterials(groupId, artifactId, version));
 	}
 
@@ -54,8 +53,7 @@ public class BomContainer extends BuildItemContainer<String, BillOfMaterials> {
 	 * @param version the {@link VersionReference}
 	 * @param order the order of the bom
 	 */
-	public void add(String id, String groupId, String artifactId,
-			VersionReference version, int order) {
+	public void add(String id, String groupId, String artifactId, VersionReference version, int order) {
 		add(id, new BillOfMaterials(groupId, artifactId, version, order));
 	}
 

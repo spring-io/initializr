@@ -108,23 +108,21 @@ class DependencyTests {
 	void invalidSpringBootRange() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.setVersionRange("A.B.C");
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(dependency::resolve).withMessageContaining("A.B.C");
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve)
+				.withMessageContaining("A.B.C");
 	}
 
 	@Test
 	void invalidIdFormatTooManyColons() {
 		Dependency dependency = Dependency.withId("org.foo:bar:1.0:test:external");
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(dependency::resolve);
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve);
 	}
 
 	@Test
 	void invalidLink() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.getLinks().add(Link.create(null, "https://example.com"));
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(dependency::resolve);
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve);
 	}
 
 	@Test
@@ -145,28 +143,25 @@ class DependencyTests {
 	void resolveNoMapping() {
 		Dependency dependency = Dependency.withId("web");
 		dependency.resolve();
-		assertThat(dependency.resolve(Version.parse("1.2.0.RELEASE")))
-				.isSameAs(dependency);
+		assertThat(dependency.resolve(Version.parse("1.2.0.RELEASE"))).isSameAs(dependency);
 	}
 
 	@Test
 	void resolveInvalidMapping() {
 		Dependency dependency = Dependency.withId("web");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE"));
-		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
-				.isThrownBy(dependency::resolve).withMessageContaining("foo-bar");
+		dependency.getMappings().add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE"));
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve)
+				.withMessageContaining("foo-bar");
 	}
 
 	@Test
 	void resolveVersionRequirement() {
 		Dependency dependency = Dependency.withId("web");
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
 		dependency.resolve();
 		Dependency resolved = dependency.resolve(Version.parse("1.1.5.RELEASE"));
-		assertThat(resolved.getVersionRequirement())
-				.isEqualTo(">=1.1.0.RELEASE and <1.2.0.RELEASE");
+		assertThat(resolved.getVersionRequirement()).isEqualTo(">=1.1.0.RELEASE and <1.2.0.RELEASE");
 	}
 
 	@Test
@@ -176,18 +171,18 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE"));
 		dependency.resolve();
 
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.2.0.RELEASE")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.2.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.1.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.2.0.RELEASE")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.2.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.3.0.RELEASE"); // default
 	}
 
 	@Test
@@ -197,18 +192,18 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", "org.spring.boot", null, null));
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "starter-web", null));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", "org.spring.boot", null, null));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "starter-web", null));
 		dependency.resolve();
 
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
-				"org.spring.boot", "spring-boot-starter-web", "0.3.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.2.0.RELEASE")),
-				"org.springframework.boot", "starter-web", "0.3.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.spring.boot",
+				"spring-boot-starter-web", "0.3.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.2.0.RELEASE")), "org.springframework.boot",
+				"starter-web", "0.3.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.3.0.RELEASE"); // default
 	}
 
 	@Test
@@ -218,54 +213,49 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.0.RELEASE, 1.1.x.RELEASE]", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping.create(
-				"[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE"));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.1.x.RELEASE]", null, null, "0.1.0.RELEASE"));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE"));
 		dependency.resolve();
 
-		dependency.updateVersionRanges(new VersionParser(Arrays.asList(
-				Version.parse("1.1.5.RELEASE"), Version.parse("1.1.6.BUILD-SNAPSHOT"))));
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(
-				dependency.resolve(Version.parse("1.1.6.BUILD-SNAPSHOT")),
+		dependency.updateVersionRanges(new VersionParser(
+				Arrays.asList(Version.parse("1.1.5.RELEASE"), Version.parse("1.1.6.BUILD-SNAPSHOT"))));
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.1.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.6.BUILD-SNAPSHOT")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.2.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
+		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.3.0.RELEASE"); // default
 
-		dependency.updateVersionRanges(new VersionParser(Arrays.asList(
-				Version.parse("1.1.6.RELEASE"), Version.parse("1.1.7.BUILD-SNAPSHOT"))));
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.6.RELEASE")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.1.0.RELEASE");
-		validateResolvedWebDependency(
-				dependency.resolve(Version.parse("1.1.7.BUILD-SNAPSHOT")),
+		dependency.updateVersionRanges(new VersionParser(
+				Arrays.asList(Version.parse("1.1.6.RELEASE"), Version.parse("1.1.7.BUILD-SNAPSHOT"))));
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.1.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.6.RELEASE")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.1.0.RELEASE");
+		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.7.BUILD-SNAPSHOT")),
 				"org.springframework.boot", "spring-boot-starter-web", "0.2.0.RELEASE");
-		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")),
-				"org.springframework.boot", "spring-boot-starter-web", "0.3.0.RELEASE"); // default
+		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")), "org.springframework.boot",
+				"spring-boot-starter-web", "0.3.0.RELEASE"); // default
 	}
 
 	@Test
 	void resolveMatchingWithCustomGroupId() {
-		Dependency dependency = Dependency.withId("foo", "com.acme", "foo",
-				"0.3.0.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping
-				.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "bar", null));
+		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE"));
+		dependency.getMappings().add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "bar", null));
 		dependency.resolve();
-		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")),
-				"foo", "com.acme", "foo", "1.0.0.RELEASE");
-		validateResolvedDependency(dependency.resolve(Version.parse("1.2.5.RELEASE")),
-				"foo", "com.acme", "bar", "0.3.0.RELEASE");
+		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
+				"1.0.0.RELEASE");
+		validateResolvedDependency(dependency.resolve(Version.parse("1.2.5.RELEASE")), "foo", "com.acme", "bar",
+				"0.3.0.RELEASE");
 	}
 
 	@Test
 	void resolveVersionWithX() {
-		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1",
-				"0.3.0.RELEASE");
+		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1", "0.3.0.RELEASE");
 		dependency1.setVersionRange("1.2.x.RELEASE");
 		dependency1.resolve();
 		assertThat(dependency1.getVersionRange()).isEqualTo("1.2.999.RELEASE");
@@ -273,25 +263,22 @@ class DependencyTests {
 
 	@Test
 	void resolveVersionRangeWithX() {
-		Dependency dependency = Dependency.withId("foo1", "com.acme", "foo1",
-				"0.3.0.RELEASE");
+		Dependency dependency = Dependency.withId("foo1", "com.acme", "foo1", "0.3.0.RELEASE");
 		dependency.setVersionRange("[1.1.0.RELEASE, 1.2.x.RELEASE)");
 		dependency.resolve();
-		assertThat(dependency.getVersionRange())
-				.isEqualTo("[1.1.0.RELEASE,1.2.999.RELEASE)");
+		assertThat(dependency.getVersionRange()).isEqualTo("[1.1.0.RELEASE,1.2.999.RELEASE)");
 	}
 
-	private static void validateResolvedWebDependency(Dependency dependency,
-			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
-		validateResolvedDependency(dependency, "web", expectedGroupId, expectedArtifactId,
-				expectedVersion);
+	private static void validateResolvedWebDependency(Dependency dependency, String expectedGroupId,
+			String expectedArtifactId, String expectedVersion) {
+		validateResolvedDependency(dependency, "web", expectedGroupId, expectedArtifactId, expectedVersion);
 		assertThat(dependency.getKeywords()).hasSize(2);
 		assertThat(dependency.getAliases()).hasSize(1);
 		assertThat(dependency.getFacets()).hasSize(1);
 	}
 
-	private static void validateResolvedDependency(Dependency dependency, String id,
-			String expectedGroupId, String expectedArtifactId, String expectedVersion) {
+	private static void validateResolvedDependency(Dependency dependency, String id, String expectedGroupId,
+			String expectedArtifactId, String expectedVersion) {
 		assertThat(dependency.getId()).isEqualTo(id);
 		assertThat(dependency.getGroupId()).isEqualTo(expectedGroupId);
 		assertThat(dependency.getArtifactId()).isEqualTo(expectedArtifactId);

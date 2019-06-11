@@ -80,8 +80,7 @@ public class MainController extends AbstractInitializrController {
 	/**
 	 * HAL JSON content type.
 	 */
-	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
-			.parseMediaType("application/hal+json");
+	public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType.parseMediaType("application/hal+json");
 
 	private final DependencyMetadataProvider dependencyMetadataProvider;
 
@@ -89,10 +88,8 @@ public class MainController extends AbstractInitializrController {
 
 	private final ProjectGenerationInvoker projectGenerationInvoker;
 
-	public MainController(InitializrMetadataProvider metadataProvider,
-			TemplateRenderer templateRenderer,
-			DependencyMetadataProvider dependencyMetadataProvider,
-			ProjectGenerationInvoker projectGenerationInvoker) {
+	public MainController(InitializrMetadataProvider metadataProvider, TemplateRenderer templateRenderer,
+			DependencyMetadataProvider dependencyMetadataProvider, ProjectGenerationInvoker projectGenerationInvoker) {
 		super(metadataProvider);
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
@@ -115,9 +112,7 @@ public class MainController extends AbstractInitializrController {
 
 	@RequestMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
-			@RequestHeader(value = HttpHeaders.USER_AGENT,
-					required = false) String userAgent)
-			throws IOException {
+			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) throws IOException {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
 
@@ -126,31 +121,26 @@ public class MainController extends AbstractInitializrController {
 			Agent agent = Agent.fromUserAgent(userAgent);
 			if (agent != null) {
 				if (AgentId.CURL.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator
-							.generateCurlCapabilities(metadata, appUrl);
+					String content = this.commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
 				if (AgentId.HTTPIE.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator
-							.generateHttpieCapabilities(metadata, appUrl);
+					String content = this.commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
 				if (AgentId.SPRING_BOOT_CLI.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator
-							.generateSpringBootCliCapabilities(metadata, appUrl);
+					String content = this.commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl);
 					return builder.eTag(createUniqueId(content)).body(content);
 				}
 			}
 		}
-		String content = this.commandLineHelpGenerator
-				.generateGenericCapabilities(metadata, appUrl);
+		String content = this.commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl);
 		return builder.eTag(createUniqueId(content)).body(content);
 	}
 
 	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
-		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1,
-				HAL_JSON_CONTENT_TYPE);
+		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
 	}
 
 	@RequestMapping(path = { "/", "/metadata/client" },
@@ -159,29 +149,23 @@ public class MainController extends AbstractInitializrController {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
 
-	@RequestMapping(path = { "/", "/metadata/client" },
-			produces = "application/vnd.initializr.v2+json")
+	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
 
-	private ResponseEntity<String> serviceCapabilitiesFor(
-			InitializrMetadataVersion version) {
+	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
 		return serviceCapabilitiesFor(version, version.getMediaType());
 	}
 
-	private ResponseEntity<String> serviceCapabilitiesFor(
-			InitializrMetadataVersion version, MediaType contentType) {
+	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl();
-		String content = getJsonMapper(version).write(this.metadataProvider.get(),
-				appUrl);
-		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content))
-				.varyBy("Accept").cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS))
-				.body(content);
+		String content = getJsonMapper(version).write(this.metadataProvider.get(), appUrl);
+		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content)).varyBy("Accept")
+				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
 	}
 
-	private static InitializrMetadataJsonMapper getJsonMapper(
-			InitializrMetadataVersion version) {
+	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
 		switch (version) {
 		case V2:
 			return new InitializrMetadataV2JsonMapper();
@@ -190,23 +174,18 @@ public class MainController extends AbstractInitializrController {
 		}
 	}
 
-	@RequestMapping(path = "/dependencies",
-			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
-	public ResponseEntity<String> dependenciesV21(
-			@RequestParam(required = false) String bootVersion) {
+	@RequestMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
+	public ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
 	}
 
-	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version,
-			String bootVersion) {
+	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version, String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
 		Version v = (bootVersion != null) ? Version.parse(bootVersion)
 				: Version.parse(metadata.getBootVersions().getDefault().getId());
-		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider
-				.get(metadata, v);
+		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
-		return ResponseEntity.ok().contentType(version.getMediaType())
-				.eTag(createUniqueId(content))
+		return ResponseEntity.ok().contentType(version.getMediaType()).eTag(createUniqueId(content))
 				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
 	}
 
@@ -235,15 +214,13 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<byte[]> gradle(ProjectRequest request) {
 		request.setType("gradle-build");
 		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
-		return createResponseEntity(gradleBuild, "application/octet-stream",
-				"build.gradle");
+		return createResponseEntity(gradleBuild, "application/octet-stream", "build.gradle");
 	}
 
 	@RequestMapping("/starter.zip")
 	@ResponseBody
 	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
-		ProjectGenerationResult result = this.projectGenerationInvoker
-				.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		File dir = result.getRootDirectory().toFile();
 		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".zip");
 		String wrapperScript = getWrapperScript(result.getProjectDescription());
@@ -270,11 +247,9 @@ public class MainController extends AbstractInitializrController {
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
 	public ResponseEntity<byte[]> springTgz(ProjectRequest request) throws IOException {
-		ProjectGenerationResult result = this.projectGenerationInvoker
-				.invokeProjectStructureGeneration(request);
+		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		File dir = result.getRootDirectory().toFile();
-		File download = this.projectGenerationInvoker.createDistributionFile(dir,
-				".tar.gz");
+		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".tar.gz");
 		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		Tar zip = new Tar();
 		zip.setProject(new Project());
@@ -294,13 +269,11 @@ public class MainController extends AbstractInitializrController {
 		method.setValue("gzip");
 		zip.setCompression(method);
 		zip.execute();
-		return upload(download, dir, generateFileName(request, "tar.gz"),
-				"application/x-compress");
+		return upload(download, dir, generateFileName(request, "tar.gz"), "application/x-compress");
 	}
 
 	private String generateFileName(ProjectRequest request, String extension) {
-		String candidate = (StringUtils.hasText(request.getArtifactId())
-				? request.getArtifactId()
+		String candidate = (StringUtils.hasText(request.getArtifactId()) ? request.getArtifactId()
 				: this.metadataProvider.get().getArtifactId().getContent());
 		String tmp = candidate.replaceAll(" ", "_");
 		try {
@@ -314,22 +287,19 @@ public class MainController extends AbstractInitializrController {
 	private static String getWrapperScript(ResolvedProjectDescription description) {
 		BuildSystem buildSystem = description.getBuildSystem();
 		String script = buildSystem.id().equals(MavenBuildSystem.ID) ? "mvnw" : "gradlew";
-		return (description.getBaseDirectory() != null)
-				? description.getBaseDirectory() + "/" + script : script;
+		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;
 	}
 
-	private ResponseEntity<byte[]> upload(File download, File dir, String fileName,
-			String contentType) throws IOException {
+	private ResponseEntity<byte[]> upload(File download, File dir, String fileName, String contentType)
+			throws IOException {
 		byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(download));
 		logger.info(String.format("Uploading: %s (%s bytes)", download, bytes.length));
-		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType,
-				fileName);
+		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType, fileName);
 		this.projectGenerationInvoker.cleanTempFiles(dir);
 		return result;
 	}
 
-	private ResponseEntity<byte[]> createResponseEntity(byte[] content,
-			String contentType, String fileName) {
+	private ResponseEntity<byte[]> createResponseEntity(byte[] content, String contentType, String fileName) {
 		String contentDispositionValue = "attachment; filename=\"" + fileName + "\"";
 		return ResponseEntity.ok().header("Content-Type", contentType)
 				.header("Content-Disposition", contentDispositionValue).body(content);
@@ -337,8 +307,7 @@ public class MainController extends AbstractInitializrController {
 
 	private String createUniqueId(String content) {
 		StringBuilder builder = new StringBuilder();
-		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8),
-				builder);
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);
 		return builder.toString();
 	}
 

@@ -53,15 +53,13 @@ class BuildSystemTests {
 
 	@Test
 	void defaultMainDirectory(@TempDir Path directory) {
-		Path mainDirectory = BuildSystem.forId("gradle").getMainDirectory(directory,
-				new JavaLanguage());
+		Path mainDirectory = BuildSystem.forId("gradle").getMainDirectory(directory, new JavaLanguage());
 		assertThat(mainDirectory).isEqualTo(directory.resolve("src/main/java"));
 	}
 
 	@Test
 	void defaultTestDirectory(@TempDir Path directory) {
-		Path mainDirectory = BuildSystem.forId("gradle").getTestDirectory(directory,
-				new KotlinLanguage());
+		Path mainDirectory = BuildSystem.forId("gradle").getTestDirectory(directory, new KotlinLanguage());
 		assertThat(mainDirectory).isEqualTo(directory.resolve("src/test/kotlin"));
 	}
 

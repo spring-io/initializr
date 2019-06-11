@@ -63,8 +63,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1
-			.getMediaType();
+	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.getMediaType();
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -88,13 +87,11 @@ public abstract class AbstractInitializrIntegrationTests {
 	 * @param response the response
 	 * @param expected the expected result
 	 */
-	protected void validateContentType(ResponseEntity<String> response,
-			MediaType expected) {
+	protected void validateContentType(ResponseEntity<String> response, MediaType expected) {
 		MediaType actual = response.getHeaders().getContentType();
 		assertThat(actual).isNotNull();
 		assertThat(actual.isCompatibleWith(expected))
-				.as("Non compatible media-type, expected " + expected + ", got " + actual)
-				.isTrue();
+				.as("Non compatible media-type, expected " + expected + ", got " + actual).isTrue();
 	}
 
 	protected JsonNode parseJson(String text) {
@@ -106,8 +103,8 @@ public abstract class AbstractInitializrIntegrationTests {
 		}
 	}
 
-	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
-			String version, JSONCompareMode compareMode) {
+	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType, String version,
+			JSONCompareMode compareMode) {
 		try {
 			validateContentType(response, mediaType);
 			JSONObject json = new JSONObject(response.getBody());
@@ -127,8 +124,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	protected void validateCurrentMetadata(String json) {
 		try {
 			JSONObject expected = readMetadataJson("2.1.0");
-			JSONAssert.assertEquals(expected, new JSONObject(json),
-					JSONCompareMode.STRICT);
+			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
 		}
 		catch (JSONException ex) {
 			throw new IllegalArgumentException("Invalid json", ex);
@@ -171,13 +167,12 @@ public abstract class AbstractInitializrIntegrationTests {
 		return this.restTemplate.getForEntity(createUrl(context), byte[].class);
 	}
 
-	protected ResponseEntity<String> invokeHome(String userAgentHeader,
-			String... acceptHeaders) {
+	protected ResponseEntity<String> invokeHome(String userAgentHeader, String... acceptHeaders) {
 		return execute("/", String.class, userAgentHeader, acceptHeaders);
 	}
 
-	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
-			String userAgentHeader, String... acceptHeaders) {
+	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType, String userAgentHeader,
+			String... acceptHeaders) {
 		HttpHeaders headers = new HttpHeaders();
 		if (userAgentHeader != null) {
 			headers.set("User-Agent", userAgentHeader);
@@ -192,8 +187,8 @@ public abstract class AbstractInitializrIntegrationTests {
 		else {
 			headers.setAccept(Collections.emptyList());
 		}
-		return this.restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
-				new HttpEntity<Void>(headers), responseType);
+		return this.restTemplate.exchange(createUrl(contextPath), HttpMethod.GET, new HttpEntity<Void>(headers),
+				responseType);
 	}
 
 	protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {

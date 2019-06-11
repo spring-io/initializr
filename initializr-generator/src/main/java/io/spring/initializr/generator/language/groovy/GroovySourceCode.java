@@ -23,8 +23,7 @@ import io.spring.initializr.generator.language.SourceCode;
  *
  * @author Stephane Nicoll
  */
-public class GroovySourceCode
-		extends SourceCode<GroovyTypeDeclaration, GroovyCompilationUnit> {
+public class GroovySourceCode extends SourceCode<GroovyTypeDeclaration, GroovyCompilationUnit> {
 
 	public GroovySourceCode() {
 		super(GroovyCompilationUnit::new);

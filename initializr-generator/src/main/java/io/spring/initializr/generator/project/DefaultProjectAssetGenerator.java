@@ -34,14 +34,11 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 
 	@Override
 	public Path generate(ProjectGenerationContext context) throws IOException {
-		ResolvedProjectDescription resolvedProjectDescription = context
-				.getBean(ResolvedProjectDescription.class);
+		ResolvedProjectDescription resolvedProjectDescription = context.getBean(ResolvedProjectDescription.class);
 		Path projectRoot = context.getBean(ProjectDirectoryFactory.class)
 				.createProjectDirectory(resolvedProjectDescription);
-		Path projectDirectory = initializerProjectDirectory(projectRoot,
-				resolvedProjectDescription);
-		List<ProjectContributor> contributors = context
-				.getBeanProvider(ProjectContributor.class).orderedStream()
+		Path projectDirectory = initializerProjectDirectory(projectRoot, resolvedProjectDescription);
+		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class).orderedStream()
 				.collect(Collectors.toList());
 		for (ProjectContributor contributor : contributors) {
 			contributor.contribute(projectDirectory);
@@ -49,8 +46,7 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 		return projectRoot;
 	}
 
-	private Path initializerProjectDirectory(Path rootDir,
-			ResolvedProjectDescription description) throws IOException {
+	private Path initializerProjectDirectory(Path rootDir, ResolvedProjectDescription description) throws IOException {
 		if (description.getBaseDirectory() != null) {
 			Path dir = rootDir.resolve(description.getBaseDirectory());
 			Files.createDirectories(dir);

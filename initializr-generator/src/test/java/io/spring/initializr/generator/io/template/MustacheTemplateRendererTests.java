@@ -38,43 +38,35 @@ class MustacheTemplateRendererTests {
 
 	@Test
 	void renderTemplate() throws IOException {
-		MustacheTemplateRenderer render = new MustacheTemplateRenderer(
-				"classpath:/templates/mustache", this.templatesCache);
-		assertThat(this.templatesCache.get("classpath:/templates/mustache/test"))
-				.isNull();
-		assertThat(render.render("test", Collections.singletonMap("key", "value")))
-				.isEqualTo("value");
-		assertThat(this.templatesCache.get("classpath:/templates/mustache/test"))
-				.isNotNull();
+		MustacheTemplateRenderer render = new MustacheTemplateRenderer("classpath:/templates/mustache",
+				this.templatesCache);
+		assertThat(this.templatesCache.get("classpath:/templates/mustache/test")).isNull();
+		assertThat(render.render("test", Collections.singletonMap("key", "value"))).isEqualTo("value");
+		assertThat(this.templatesCache.get("classpath:/templates/mustache/test")).isNotNull();
 	}
 
 	@Test
 	void renderTemplateWithoutCache() throws IOException {
-		MustacheTemplateRenderer render = new MustacheTemplateRenderer(
-				"classpath:/templates/mustache");
-		assertThat(render.render("test", Collections.singletonMap("key", "value")))
-				.isEqualTo("value");
+		MustacheTemplateRenderer render = new MustacheTemplateRenderer("classpath:/templates/mustache");
+		assertThat(render.render("test", Collections.singletonMap("key", "value"))).isEqualTo("value");
 	}
 
 	@Test
 	void renderUnknownTemplate() {
-		MustacheTemplateRenderer render = new MustacheTemplateRenderer(
-				"classpath:/templates/mustache", this.templatesCache);
+		MustacheTemplateRenderer render = new MustacheTemplateRenderer("classpath:/templates/mustache",
+				this.templatesCache);
 		assertThatExceptionOfType(IllegalStateException.class)
 				.isThrownBy(() -> render.render("does-not-exist", Collections.emptyMap()))
-				.withMessageContaining("Cannot load template")
-				.withMessageContaining("does-not-exist");
+				.withMessageContaining("Cannot load template").withMessageContaining("does-not-exist");
 	}
 
 	@Test
 	void htmlEscapingIsDisabled() throws IOException {
-		MustacheTemplateRenderer render = new MustacheTemplateRenderer(
-				"classpath:/templates/mustache", this.templatesCache);
-		assertThat(this.templatesCache.get("classpath:/templates/mustache/test"))
-				.isNull();
-		assertThat(
-				render.render("test", Collections.singletonMap("key", "it's a `<div>`")))
-						.isEqualTo("it's a `<div>`");
+		MustacheTemplateRenderer render = new MustacheTemplateRenderer("classpath:/templates/mustache",
+				this.templatesCache);
+		assertThat(this.templatesCache.get("classpath:/templates/mustache/test")).isNull();
+		assertThat(render.render("test", Collections.singletonMap("key", "it's a `<div>`")))
+				.isEqualTo("it's a `<div>`");
 	}
 
 }

@@ -44,8 +44,8 @@ public class VersionRange {
 
 	private final boolean higherInclusive;
 
-	protected VersionRange(Version lowerVersion, boolean lowerInclusive,
-			Version higherVersion, boolean higherInclusive) {
+	protected VersionRange(Version lowerVersion, boolean lowerInclusive, Version higherVersion,
+			boolean higherInclusive) {
 		this.lowerVersion = lowerVersion;
 		this.lowerInclusive = lowerInclusive;
 		this.higherVersion = higherVersion;
@@ -105,8 +105,7 @@ public class VersionRange {
 			return "";
 		}
 		if (this.higherVersion != null) {
-			sb.append(this.lowerInclusive ? "[" : "(").append(this.lowerVersion)
-					.append(",").append(this.higherVersion)
+			sb.append(this.lowerInclusive ? "[" : "(").append(this.lowerVersion).append(",").append(this.higherVersion)
 					.append(this.higherInclusive ? "]" : ")");
 		}
 		else {
@@ -157,11 +156,9 @@ public class VersionRange {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (this.higherInclusive ? 1231 : 1237);
-		result = prime * result
-				+ ((this.higherVersion == null) ? 0 : this.higherVersion.hashCode());
+		result = prime * result + ((this.higherVersion == null) ? 0 : this.higherVersion.hashCode());
 		result = prime * result + (this.lowerInclusive ? 1231 : 1237);
-		result = prime * result
-				+ ((this.lowerVersion == null) ? 0 : this.lowerVersion.hashCode());
+		result = prime * result + ((this.lowerVersion == null) ? 0 : this.lowerVersion.hashCode());
 		return result;
 	}
 
@@ -172,8 +169,7 @@ public class VersionRange {
 			sb.append(this.lowerInclusive ? ">=" : ">").append(this.lowerVersion);
 		}
 		if (this.higherVersion != null) {
-			sb.append(" and ").append(this.higherInclusive ? "<=" : "<")
-					.append(this.higherVersion);
+			sb.append(" and ").append(this.higherInclusive ? "<=" : "<").append(this.higherVersion);
 		}
 		return sb.toString();
 	}

@@ -54,12 +54,10 @@ public class ProjectGenerator {
 	 * @return the generated content
 	 * @throws ProjectGenerationException if an error occurs while generating the project
 	 */
-	public <T> T generate(ProjectDescription description,
-			ProjectAssetGenerator<T> projectAssetGenerator)
+	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator)
 			throws ProjectGenerationException {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class,
-					resolve(description, context));
+			context.registerBean(ResolvedProjectDescription.class, resolve(description, context));
 			context.register(CoreConfiguration.class);
 			this.projectGenerationContext.accept(context);
 			context.refresh();
@@ -100,8 +98,8 @@ public class ProjectGenerator {
 
 		@Override
 		public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-			List<String> factories = SpringFactoriesLoader.loadFactoryNames(
-					ProjectGenerationConfiguration.class, getClass().getClassLoader());
+			List<String> factories = SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
+					getClass().getClassLoader());
 			return factories.toArray(new String[0]);
 		}
 

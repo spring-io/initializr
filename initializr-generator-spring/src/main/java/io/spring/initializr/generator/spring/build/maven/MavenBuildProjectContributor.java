@@ -42,8 +42,7 @@ public class MavenBuildProjectContributor implements BuildWriter, ProjectContrib
 
 	private final MavenBuildWriter buildWriter;
 
-	public MavenBuildProjectContributor(MavenBuild build,
-			IndentingWriterFactory indentingWriterFactory) {
+	public MavenBuildProjectContributor(MavenBuild build, IndentingWriterFactory indentingWriterFactory) {
 		this.build = build;
 		this.indentingWriterFactory = indentingWriterFactory;
 		this.buildWriter = new MavenBuildWriter();
@@ -57,8 +56,7 @@ public class MavenBuildProjectContributor implements BuildWriter, ProjectContrib
 
 	@Override
 	public void writeBuild(Writer out) throws IOException {
-		try (IndentingWriter writer = this.indentingWriterFactory
-				.createIndentingWriter("maven", out)) {
+		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("maven", out)) {
 			this.buildWriter.writeTo(writer, this.build);
 		}
 	}

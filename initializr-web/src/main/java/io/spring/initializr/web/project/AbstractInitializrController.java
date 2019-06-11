@@ -43,16 +43,15 @@ public abstract class AbstractInitializrController {
 
 	public boolean isForceSsl() {
 		if (this.forceSsl == null) {
-			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv()
-					.isForceSsl();
+			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
 		}
 		return this.forceSsl;
 
 	}
 
 	@ExceptionHandler
-	public void invalidProjectRequest(HttpServletResponse response,
-			InvalidProjectRequestException ex) throws IOException {
+	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex)
+			throws IOException {
 		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
@@ -62,8 +61,7 @@ public abstract class AbstractInitializrController {
 	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
 	 */
 	protected String generateAppUrl() {
-		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder
-				.fromCurrentServletMapping();
+		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
 		if (isForceSsl()) {
 			builder.scheme("https");
 		}

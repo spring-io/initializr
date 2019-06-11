@@ -57,20 +57,17 @@ class VersionReferenceTests {
 
 	@Test
 	void equalsWithSameValue() {
-		assertThat(VersionReference.ofValue("1"))
-				.isEqualTo(VersionReference.ofValue("1"));
+		assertThat(VersionReference.ofValue("1")).isEqualTo(VersionReference.ofValue("1"));
 	}
 
 	@Test
 	void equalsWithDifferentValue() {
-		assertThat(VersionReference.ofValue("1"))
-				.isNotEqualTo(VersionReference.ofValue("2"));
+		assertThat(VersionReference.ofValue("1")).isNotEqualTo(VersionReference.ofValue("2"));
 	}
 
 	@Test
 	void equalsWithSameProperty() {
-		assertThat(VersionReference.ofProperty("test.version"))
-				.isEqualTo(VersionReference.ofProperty("test.version"));
+		assertThat(VersionReference.ofProperty("test.version")).isEqualTo(VersionReference.ofProperty("test.version"));
 	}
 
 	@Test
@@ -82,8 +79,7 @@ class VersionReferenceTests {
 	@Test
 	void equalsWithDifferentPropertyScope() {
 		assertThat(VersionReference.ofProperty(VersionProperty.of("test.version", false)))
-				.isNotEqualTo(VersionReference
-						.ofProperty(VersionProperty.of("test.version", true)));
+				.isNotEqualTo(VersionReference.ofProperty(VersionProperty.of("test.version", true)));
 	}
 
 }

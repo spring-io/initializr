@@ -114,10 +114,9 @@ public class MavenBuildWriter {
 		}
 		writer.println();
 		writeElement(writer, "properties", () -> {
-			build.getProperties()
-					.forEach((key, value) -> writeSingleElement(writer, key, value));
-			build.getVersionProperties().forEach((key,
-					value) -> writeSingleElement(writer, key.toStandardFormat(), value));
+			build.getProperties().forEach((key, value) -> writeSingleElement(writer, key, value));
+			build.getVersionProperties()
+					.forEach((key, value) -> writeSingleElement(writer, key.toStandardFormat(), value));
 		});
 	}
 
@@ -128,8 +127,8 @@ public class MavenBuildWriter {
 		DependencyContainer dependencies = build.dependencies();
 		writer.println();
 		writeElement(writer, "dependencies", () -> {
-			Collection<Dependency> compiledDependencies = writeDependencies(writer,
-					dependencies, DependencyScope.COMPILE);
+			Collection<Dependency> compiledDependencies = writeDependencies(writer, dependencies,
+					DependencyScope.COMPILE);
 			if (!compiledDependencies.isEmpty()) {
 				writer.println();
 			}
@@ -137,13 +136,12 @@ public class MavenBuildWriter {
 			writeDependencies(writer, dependencies, DependencyScope.COMPILE_ONLY);
 			writeDependencies(writer, dependencies, DependencyScope.ANNOTATION_PROCESSOR);
 			writeDependencies(writer, dependencies, DependencyScope.PROVIDED_RUNTIME);
-			writeDependencies(writer, dependencies, DependencyScope.TEST_COMPILE,
-					DependencyScope.TEST_RUNTIME);
+			writeDependencies(writer, dependencies, DependencyScope.TEST_COMPILE, DependencyScope.TEST_RUNTIME);
 		});
 	}
 
-	private Collection<Dependency> writeDependencies(IndentingWriter writer,
-			DependencyContainer dependencies, DependencyScope... types) {
+	private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
+			DependencyScope... types) {
 		Collection<Dependency> candidates = filterDependencies(dependencies, types);
 		writeCollection(writer, candidates, this::writeDependency);
 		return candidates;
@@ -153,16 +151,15 @@ public class MavenBuildWriter {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", dependency.getGroupId());
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
-			writeSingleElement(writer, "version",
-					determineVersion(dependency.getVersion()));
+			writeSingleElement(writer, "version", determineVersion(dependency.getVersion()));
 			writeSingleElement(writer, "scope", scopeForType(dependency.getScope()));
 			if (isOptional(dependency)) {
 				writeSingleElement(writer, "optional", Boolean.toString(true));
 			}
 			writeSingleElement(writer, "type", dependency.getType());
 			if (!dependency.getExclusions().isEmpty()) {
-				writeElement(writer, "exclusions", () -> writeCollection(writer,
-						dependency.getExclusions(), this::writeDependencyExclusion));
+				writeElement(writer, "exclusions",
+						() -> writeCollection(writer, dependency.getExclusions(), this::writeDependencyExclusion));
 			}
 		});
 	}
@@ -174,8 +171,8 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private static Collection<Dependency> filterDependencies(
-			DependencyContainer dependencies, DependencyScope... scopes) {
+	private static Collection<Dependency> filterDependencies(DependencyContainer dependencies,
+			DependencyScope... scopes) {
 		List<DependencyScope> candidates = Arrays.asList(scopes);
 		return dependencies.items().filter((dep) -> candidates.contains(dep.getScope()))
 				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
@@ -198,14 +195,12 @@ public class MavenBuildWriter {
 		case TEST_RUNTIME:
 			return "test";
 		default:
-			throw new IllegalStateException(
-					"Unrecognized dependency type '" + type + "'");
+			throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
 		}
 	}
 
 	private boolean isOptional(Dependency dependency) {
-		if (dependency instanceof MavenDependency
-				&& ((MavenDependency) dependency).isOptional()) {
+		if (dependency instanceof MavenDependency && ((MavenDependency) dependency).isOptional()) {
 			return true;
 		}
 		return (dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR
@@ -216,12 +211,11 @@ public class MavenBuildWriter {
 		if (build.boms().isEmpty()) {
 			return;
 		}
-		List<BillOfMaterials> boms = build.boms().items()
-				.sorted(Comparator.comparing(BillOfMaterials::getOrder))
+		List<BillOfMaterials> boms = build.boms().items().sorted(Comparator.comparing(BillOfMaterials::getOrder))
 				.collect(Collectors.toList());
 		writer.println();
-		writeElement(writer, "dependencyManagement", () -> writeElement(writer,
-				"dependencies", () -> writeCollection(writer, boms, this::writeBom)));
+		writeElement(writer, "dependencyManagement",
+				() -> writeElement(writer, "dependencies", () -> writeCollection(writer, boms, this::writeBom)));
 	}
 
 	private void writeBom(IndentingWriter writer, BillOfMaterials bom) {
@@ -238,8 +232,7 @@ public class MavenBuildWriter {
 		if (versionReference == null) {
 			return null;
 		}
-		return (versionReference.isProperty())
-				? "${" + versionReference.getProperty().toStandardFormat() + "}"
+		return (versionReference.isProperty()) ? "${" + versionReference.getProperty().toStandardFormat() + "}"
 				: versionReference.getValue();
 	}
 
@@ -251,8 +244,7 @@ public class MavenBuildWriter {
 		writer.println();
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "sourceDirectory", build.getSourceDirectory());
-			writeSingleElement(writer, "testSourceDirectory",
-					build.getTestSourceDirectory());
+			writeSingleElement(writer, "testSourceDirectory", build.getTestSourceDirectory());
 			writePlugins(writer, build);
 
 		});
@@ -262,8 +254,7 @@ public class MavenBuildWriter {
 		if (build.getPlugins().isEmpty()) {
 			return;
 		}
-		writeElement(writer, "plugins",
-				() -> writeCollection(writer, build.getPlugins(), this::writePlugin));
+		writeElement(writer, "plugins", () -> writeCollection(writer, build.getPlugins(), this::writePlugin));
 	}
 
 	private void writePlugin(IndentingWriter writer, MavenPlugin plugin) {
@@ -276,23 +267,22 @@ public class MavenBuildWriter {
 			}
 			writePluginConfiguration(writer, plugin.getConfiguration());
 			if (!plugin.getExecutions().isEmpty()) {
-				writeElement(writer, "executions", () -> writeCollection(writer,
-						plugin.getExecutions(), this::writePluginExecution));
+				writeElement(writer, "executions",
+						() -> writeCollection(writer, plugin.getExecutions(), this::writePluginExecution));
 			}
 			if (!plugin.getDependencies().isEmpty()) {
-				writeElement(writer, "dependencies", () -> writeCollection(writer,
-						plugin.getDependencies(), this::writePluginDependency));
+				writeElement(writer, "dependencies",
+						() -> writeCollection(writer, plugin.getDependencies(), this::writePluginDependency));
 			}
 		});
 	}
 
-	private void writePluginConfiguration(IndentingWriter writer,
-			Configuration configuration) {
+	private void writePluginConfiguration(IndentingWriter writer, Configuration configuration) {
 		if (configuration == null || configuration.getSettings().isEmpty()) {
 			return;
 		}
-		writeElement(writer, "configuration", () -> writeCollection(writer,
-				configuration.getSettings(), this::writeSetting));
+		writeElement(writer, "configuration",
+				() -> writeCollection(writer, configuration.getSettings(), this::writeSetting));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -301,8 +291,8 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, setting.getName(), (String) setting.getValue());
 		}
 		else if (setting.getValue() instanceof List) {
-			writeElement(writer, setting.getName(), () -> writeCollection(writer,
-					(List<Setting>) setting.getValue(), this::writeSetting));
+			writeElement(writer, setting.getName(),
+					() -> writeCollection(writer, (List<Setting>) setting.getValue(), this::writeSetting));
 		}
 	}
 
@@ -312,15 +302,13 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "phase", execution.getPhase());
 			List<String> goals = execution.getGoals();
 			if (!goals.isEmpty()) {
-				writeElement(writer, "goals", () -> goals
-						.forEach((goal) -> writeSingleElement(writer, "goal", goal)));
+				writeElement(writer, "goals", () -> goals.forEach((goal) -> writeSingleElement(writer, "goal", goal)));
 			}
 			writePluginConfiguration(writer, execution.getConfiguration());
 		});
 	}
 
-	private void writePluginDependency(IndentingWriter writer,
-			MavenPlugin.Dependency dependency) {
+	private void writePluginDependency(IndentingWriter writer, MavenPlugin.Dependency dependency) {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", dependency.getGroupId());
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
@@ -329,10 +317,8 @@ public class MavenBuildWriter {
 	}
 
 	private void writeRepositories(IndentingWriter writer, MavenBuild build) {
-		List<MavenRepository> repositories = filterRepositories(
-				build.repositories().items());
-		List<MavenRepository> pluginRepositories = filterRepositories(
-				build.pluginRepositories().items());
+		List<MavenRepository> repositories = filterRepositories(build.repositories().items());
+		List<MavenRepository> pluginRepositories = filterRepositories(build.pluginRepositories().items());
 		if (repositories.isEmpty() && pluginRepositories.isEmpty()) {
 			return;
 		}
@@ -341,28 +327,25 @@ public class MavenBuildWriter {
 			writeRepositories(writer, "repositories", "repository", repositories);
 		}
 		if (!pluginRepositories.isEmpty()) {
-			writeRepositories(writer, "pluginRepositories", "pluginRepository",
-					pluginRepositories);
+			writeRepositories(writer, "pluginRepositories", "pluginRepository", pluginRepositories);
 		}
 	}
 
-	private List<MavenRepository> filterRepositories(
-			Stream<MavenRepository> repositories) {
-		return repositories
-				.filter((repository) -> !MavenRepository.MAVEN_CENTRAL.equals(repository))
+	private List<MavenRepository> filterRepositories(Stream<MavenRepository> repositories) {
+		return repositories.filter((repository) -> !MavenRepository.MAVEN_CENTRAL.equals(repository))
 				.collect(Collectors.toList());
 	}
 
-	private void writeRepositories(IndentingWriter writer, String containerName,
-			String childName, List<MavenRepository> repositories) {
-		writeElement(writer, containerName, () -> repositories
-				.forEach((repository) -> writeElement(writer, childName, () -> {
+	private void writeRepositories(IndentingWriter writer, String containerName, String childName,
+			List<MavenRepository> repositories) {
+		writeElement(writer, containerName,
+				() -> repositories.forEach((repository) -> writeElement(writer, childName, () -> {
 					writeSingleElement(writer, "id", repository.getId());
 					writeSingleElement(writer, "name", repository.getName());
 					writeSingleElement(writer, "url", repository.getUrl());
 					if (repository.isSnapshotsEnabled()) {
-						writeElement(writer, "snapshots", () -> writeSingleElement(writer,
-								"enabled", Boolean.toString(true)));
+						writeElement(writer, "snapshots",
+								() -> writeSingleElement(writer, "enabled", Boolean.toString(true)));
 					}
 				})));
 	}

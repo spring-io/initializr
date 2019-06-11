@@ -47,8 +47,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 		assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 		MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
-		assertThat(settings.getValue()).asList().element(0)
-				.hasFieldOrPropertyWithValue("name", "plugin")
+		assertThat(settings.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
 				.hasFieldOrPropertyWithValue("value", "jpa");
 		assertThat(plugin.getDependencies()).hasSize(1);
 		MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
@@ -67,10 +66,8 @@ class KotlinJpaMavenBuildCustomizerTests {
 	private MavenBuild getCustomizedBuild(Dependency dependency) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
-		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(
-				metadata);
-		MavenBuild build = new MavenBuild(
-				new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(metadata);
+		MavenBuild build = new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;

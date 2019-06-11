@@ -33,11 +33,9 @@ class DependencyComparatorTests {
 	private static final Dependency SPRING_BOOT_B = Dependency
 			.withCoordinates("org.springframework.boot", "spring-boot-b").build();
 
-	private static final Dependency LIB_ALPHA = Dependency
-			.withCoordinates("com.example.alpha", "test").build();
+	private static final Dependency LIB_ALPHA = Dependency.withCoordinates("com.example.alpha", "test").build();
 
-	private static final Dependency LIB_BETA = Dependency
-			.withCoordinates("com.example.beta", "test").build();
+	private static final Dependency LIB_BETA = Dependency.withCoordinates("com.example.beta", "test").build();
 
 	private final DependencyComparator comparator = new DependencyComparator();
 
@@ -63,9 +61,8 @@ class DependencyComparatorTests {
 
 	@Test
 	void compareLibSameGroupId() {
-		assertThat(this.comparator.compare(LIB_BETA,
-				Dependency.withCoordinates("com.example.beta", "a").build()))
-						.isPositive();
+		assertThat(this.comparator.compare(LIB_BETA, Dependency.withCoordinates("com.example.beta", "a").build()))
+				.isPositive();
 	}
 
 }

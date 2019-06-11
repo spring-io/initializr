@@ -27,15 +27,14 @@ import org.springframework.core.Ordered;
  *
  * @author Stephane Nicoll
  */
-public class RequestedDependenciesHelpDocumentCustomizer
-		implements HelpDocumentCustomizer {
+public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
 	private final ResolvedProjectDescription projectDescription;
 
 	private final InitializrMetadata metadata;
 
-	public RequestedDependenciesHelpDocumentCustomizer(
-			ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
+	public RequestedDependenciesHelpDocumentCustomizer(ResolvedProjectDescription projectDescription,
+			InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;
 	}
@@ -60,16 +59,13 @@ public class RequestedDependenciesHelpDocumentCustomizer
 		dependency.getLinks().forEach((link) -> {
 			if (link.getDescription() != null && link.getRel() != null) {
 				if ("reference".equals(link.getRel())) {
-					gettingStartedSection.addReferenceDocLink(link.getHref(),
-							link.getDescription());
+					gettingStartedSection.addReferenceDocLink(link.getHref(), link.getDescription());
 				}
 				else if ("guide".equals(link.getRel())) {
-					gettingStartedSection.addGuideLink(link.getHref(),
-							link.getDescription());
+					gettingStartedSection.addGuideLink(link.getHref(), link.getDescription());
 				}
 				else {
-					gettingStartedSection.addAdditionalLink(link.getHref(),
-							link.getDescription());
+					gettingStartedSection.addAdditionalLink(link.getHref(), link.getDescription());
 				}
 			}
 		});

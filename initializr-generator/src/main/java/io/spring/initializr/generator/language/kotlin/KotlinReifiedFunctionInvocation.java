@@ -32,8 +32,7 @@ public class KotlinReifiedFunctionInvocation extends KotlinExpression {
 
 	private final List<String> arguments;
 
-	public KotlinReifiedFunctionInvocation(String name, String targetClass,
-			String... arguments) {
+	public KotlinReifiedFunctionInvocation(String name, String targetClass, String... arguments) {
 		this.name = name;
 		this.targetClass = targetClass;
 		this.arguments = Arrays.asList(arguments);

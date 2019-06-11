@@ -54,8 +54,7 @@ public class KotlinProjectGenerationConfiguration {
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinProjectGenerationConfiguration(
-			ResolvedProjectDescription projectDescription,
+	public KotlinProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;
@@ -66,21 +65,18 @@ public class KotlinProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription,
-				KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory),
-				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers,
-				mainSourceCodeCustomizers);
+		return new MainSourceCodeProjectContributor<>(this.projectDescription, KotlinSourceCode::new,
+				new KotlinSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
+				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
 	public TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription,
-				KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory),
-				testApplicationTypeCustomizers, testSourceCodeCustomizers);
+		return new TestSourceCodeProjectContributor<>(this.projectDescription, KotlinSourceCode::new,
+				new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
+				testSourceCodeCustomizers);
 	}
 
 	@Bean

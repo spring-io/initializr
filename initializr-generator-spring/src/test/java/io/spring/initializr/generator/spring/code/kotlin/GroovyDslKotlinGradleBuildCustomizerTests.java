@@ -33,24 +33,19 @@ class GroovyDslKotlinGradleBuildCustomizerTests {
 	@Test
 	void kotlinPluginsAreConfigured() {
 		GradleBuild build = new GradleBuild();
-		new GroovyDslKotlinGradleBuildCustomizer(
-				new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		new GroovyDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.getPlugins()).hasSize(2);
-		assertThat(build.getPlugins().get(0).getId())
-				.isEqualTo("org.jetbrains.kotlin.jvm");
+		assertThat(build.getPlugins().get(0).getId()).isEqualTo("org.jetbrains.kotlin.jvm");
 		assertThat(build.getPlugins().get(0).getVersion()).isEqualTo("1.2.70");
-		assertThat(build.getPlugins().get(1).getId())
-				.isEqualTo("org.jetbrains.kotlin.plugin.spring");
+		assertThat(build.getPlugins().get(1).getId()).isEqualTo("org.jetbrains.kotlin.plugin.spring");
 		assertThat(build.getPlugins().get(1).getVersion()).isEqualTo("1.2.70");
 	}
 
 	@Test
 	void kotlinCompilationTasksAreCustomized() {
 		GradleBuild build = new GradleBuild();
-		new GroovyDslKotlinGradleBuildCustomizer(
-				new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getImportedTypes())
-				.contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		new GroovyDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		assertThat(build.getImportedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
 		assertThat(build.getTasksWithTypeCustomizations()).hasSize(1);
 		assertThat(build.getTasksWithTypeCustomizations()).containsKeys("KotlinCompile");
 		assertKotlinOptions(build.getTasksWithTypeCustomizations().get("KotlinCompile"));
@@ -64,8 +59,7 @@ class GroovyDslKotlinGradleBuildCustomizerTests {
 		assertThat(kotlinOptions.getInvocations()).hasSize(0);
 		assertThat(kotlinOptions.getNested()).hasSize(0);
 		assertThat(kotlinOptions.getAssignments()).hasSize(2);
-		assertThat(kotlinOptions.getAssignments())
-				.containsEntry("freeCompilerArgs", "['-Xjsr305=strict']")
+		assertThat(kotlinOptions.getAssignments()).containsEntry("freeCompilerArgs", "['-Xjsr305=strict']")
 				.containsEntry("jvmTarget", "'1.8'");
 	}
 

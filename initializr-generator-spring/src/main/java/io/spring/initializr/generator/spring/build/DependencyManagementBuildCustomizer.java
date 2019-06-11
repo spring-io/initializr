@@ -43,8 +43,8 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 
 	private final InitializrMetadata metadata;
 
-	public DependencyManagementBuildCustomizer(
-			ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
+	public DependencyManagementBuildCustomizer(ResolvedProjectDescription projectDescription,
+			InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;
 	}
@@ -64,20 +64,17 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		Map<String, Repository> repositories = new LinkedHashMap<>();
 		mapDependencies(build).forEach((dependency) -> {
 			if (dependency.getBom() != null) {
-				resolveBom(resolvedBoms, dependency.getBom(),
-						this.projectDescription.getPlatformVersion());
+				resolveBom(resolvedBoms, dependency.getBom(), this.projectDescription.getPlatformVersion());
 			}
 			if (dependency.getRepository() != null) {
 				String repositoryId = dependency.getRepository();
-				repositories.computeIfAbsent(repositoryId, (key) -> this.metadata
-						.getConfiguration().getEnv().getRepositories().get(key));
+				repositories.computeIfAbsent(repositoryId,
+						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key));
 			}
 		});
-		resolvedBoms.values()
-				.forEach((bom) -> bom.getRepositories()
-						.forEach((repositoryId) -> repositories.computeIfAbsent(
-								repositoryId, (key) -> this.metadata.getConfiguration()
-										.getEnv().getRepositories().get(key))));
+		resolvedBoms.values().forEach(
+				(bom) -> bom.getRepositories().forEach((repositoryId) -> repositories.computeIfAbsent(repositoryId,
+						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key))));
 		resolvedBoms.forEach((key, bom) -> {
 			build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
 			if (bom.getVersionProperty() != null) {
@@ -88,18 +85,14 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 	}
 
 	private Stream<Dependency> mapDependencies(Build build) {
-		return build.dependencies().ids()
-				.map((id) -> this.metadata.getDependencies().get(id))
-				.filter(Objects::nonNull);
+		return build.dependencies().ids().map((id) -> this.metadata.getDependencies().get(id)).filter(Objects::nonNull);
 	}
 
-	private void resolveBom(Map<String, BillOfMaterials> boms, String bomId,
-			Version requestedVersion) {
+	private void resolveBom(Map<String, BillOfMaterials> boms, String bomId, Version requestedVersion) {
 		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms()
-					.get(bomId).resolve(requestedVersion);
-			bom.getAdditionalBoms()
-					.forEach((id) -> resolveBom(boms, id, requestedVersion));
+			BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(bomId)
+					.resolve(requestedVersion);
+			bom.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
 			boms.put(bomId, bom);
 		}
 	}

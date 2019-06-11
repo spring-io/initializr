@@ -30,8 +30,7 @@ class GroovyDependenciesConfigurer implements BuildCustomizer<Build> {
 
 	@Override
 	public void customize(Build build) {
-		build.dependencies().add("groovy", "org.codehaus.groovy", "groovy",
-				DependencyScope.COMPILE);
+		build.dependencies().add("groovy", "org.codehaus.groovy", "groovy", DependencyScope.COMPILE);
 	}
 
 }

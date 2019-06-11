@@ -44,8 +44,8 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	private final List<JavaStatement> statements;
 
-	private JavaMethodDeclaration(String name, String returnType, int modifiers,
-			List<Parameter> parameters, List<JavaStatement> statements) {
+	private JavaMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
+			List<JavaStatement> statements) {
 		this.name = name;
 		this.returnType = returnType;
 		this.modifiers = modifiers;
@@ -120,8 +120,8 @@ public final class JavaMethodDeclaration implements Annotatable {
 		}
 
 		public JavaMethodDeclaration body(JavaStatement... statements) {
-			return new JavaMethodDeclaration(this.name, this.returnType, this.modifiers,
-					this.parameters, Arrays.asList(statements));
+			return new JavaMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
+					Arrays.asList(statements));
 		}
 
 	}

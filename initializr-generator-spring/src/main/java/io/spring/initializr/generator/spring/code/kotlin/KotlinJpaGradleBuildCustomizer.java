@@ -34,8 +34,7 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	private final KotlinProjectSettings settings;
 
-	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
-			KotlinProjectSettings settings) {
+	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings) {
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
 		this.settings = settings;
 	}
@@ -43,8 +42,7 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 	@Override
 	public void customize(GradleBuild build) {
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			build.addPlugin("org.jetbrains.kotlin.plugin.jpa",
-					this.settings.getVersion());
+			build.addPlugin("org.jetbrains.kotlin.plugin.jpa", this.settings.getVersion());
 		}
 	}
 

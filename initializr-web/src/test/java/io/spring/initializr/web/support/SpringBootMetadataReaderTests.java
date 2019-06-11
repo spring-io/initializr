@@ -42,26 +42,20 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 class SpringBootMetadataReaderTests {
 
-	private final InitializrMetadata metadata = InitializrMetadataBuilder.create()
-			.build();
+	private final InitializrMetadata metadata = InitializrMetadataBuilder.create().build();
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	private final MockRestServiceServer server = MockRestServiceServer
-			.bindTo(this.restTemplate).build();
+	private final MockRestServiceServer server = MockRestServiceServer.bindTo(this.restTemplate).build();
 
 	@Test
 	void readAvailableVersions() throws IOException {
-		this.server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
-				.andRespond(withSuccess(
-						new ClassPathResource("metadata/sagan/spring-boot.json"),
-						MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(
-				this.objectMapper, this.restTemplate,
-				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
-						.getBootVersions();
+		this.server.expect(requestTo("https://spring.io/project_metadata/spring-boot")).andRespond(
+				withSuccess(new ClassPathResource("metadata/sagan/spring-boot.json"), MediaType.APPLICATION_JSON));
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
 		assertThat(versions).as("spring boot versions should not be null").isNotNull();
 		AtomicBoolean defaultFound = new AtomicBoolean(false);
 		versions.forEach((it) -> {
