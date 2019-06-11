@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  *
  * @author Madhura Bhave
  * @author Stephane Nicoll
+ * @author HaiTao Zhang
  */
 public class ProjectRequestToDescriptionConverterTests {
 
@@ -268,6 +269,39 @@ public class ProjectRequestToDescriptionConverterTests {
 		request.setArtifactId("  ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	void conventionCorrectionForArtifactIdWithDifferentNameAsBaseDir() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		String validArtifactId = "correct-ID";
+		request.setArtifactId(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo(validArtifactId);
+		assertThat(description.getBaseDirectory()).isEqualTo(request.getBaseDir());
+	}
+
+	@Test
+	void conventionCorrectionForArtifactIdWithSameNameAsBaseDir() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		String validArtifactId = "correct-ID";
+		request.setArtifactId(artifactId);
+		request.setBaseDir(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo(validArtifactId);
+		assertThat(description.getBaseDirectory()).isEqualTo(validArtifactId);
+	}
+
+	@Test
+	void conventionCorrectionForGroupId() {
+		ProjectRequest request = createProjectRequest();
+		String groupId = "correct !  ID12 @";
+		String validGroupId = "correct.ID12";
+		request.setGroupId(groupId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getGroupId()).isEqualTo(validGroupId);
 	}
 
 	private ProjectRequest createProjectRequest() {

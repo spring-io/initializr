@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
  * Validates a {@link ProjectRequest} and creates a {@link ProjectDescription} from it.
  *
  * @author Madhura Bhave
+ * @author HaiTao Zhang
  */
 public class ProjectRequestToDescriptionConverter {
 
@@ -49,12 +50,14 @@ public class ProjectRequestToDescriptionConverter {
 		validateDependencyRange(springBootVersion, resolvedDependencies);
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
-		description.setArtifactId(determineValue(request.getArtifactId(), () -> metadata.getArtifactId().getContent()));
-		description.setBaseDirectory(request.getBaseDir());
+		description.setArtifactId(determineValue(artificialIdCorrection(request.getArtifactId()),
+				() -> metadata.getArtifactId().getContent()));
+		description.setBaseDirectory(baseDirectoryCorrection(request.getBaseDir(), request.getArtifactId()));
 		description.setBuildSystem(getBuildSystem(request, metadata));
 		description
 				.setDescription(determineValue(request.getDescription(), () -> metadata.getDescription().getContent()));
-		description.setGroupId(determineValue(request.getGroupId(), () -> metadata.getGroupId().getContent()));
+		description.setGroupId(
+				determineValue(groupIdCorrection(request.getGroupId()), () -> metadata.getGroupId().getContent()));
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
 		description.setName(determineValue(request.getName(), () -> metadata.getName().getContent()));
 		description.setPackageName(getPackageName(request, metadata));
@@ -63,11 +66,44 @@ public class ProjectRequestToDescriptionConverter {
 		description.setVersion(determineValue(request.getVersion(), () -> metadata.getVersion().getContent()));
 		resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 				MetadataBuildItemMapper.toDependency(dependency)));
+
 		return description;
 	}
 
 	private String determineValue(String candidate, Supplier<String> fallback) {
 		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
+	}
+
+	private String baseDirectoryCorrection(String baseDir, String artifactId) {
+		if (baseDir != null && baseDir.equals(artifactId)) {
+			return coordinateCorrection(baseDir, "-");
+		}
+		return baseDir;
+	}
+
+	private String artificialIdCorrection(String artifactId) {
+		return coordinateCorrection(artifactId, "-");
+	}
+
+	private String groupIdCorrection(String groupId) {
+		return coordinateCorrection(groupId, ".");
+	}
+
+	private String coordinateCorrection(String coordinate, String delimiter) {
+		String[] elements = coordinate.split("[^A-Za-z0-9_\\-.]+");
+		if (elements.length <= 1) {
+			return coordinate;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (String element : elements) {
+			if (!(element.startsWith("-") || element.startsWith("_") || element.startsWith(".")) && sb.length() > 0
+					&& !(sb.charAt(sb.length() - 1) == '-' || sb.charAt(sb.length() - 1) == '_'
+							|| sb.charAt(sb.length() - 1) == '.')) {
+				sb.append(delimiter);
+			}
+			sb.append(element);
+		}
+		return sb.toString();
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
