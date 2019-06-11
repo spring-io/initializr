@@ -44,7 +44,7 @@
 		<junit-jupiter.version>5.4.2</junit-jupiter.version>
 		<spring-boot.version>2.1.5.RELEASE</spring-boot.version>
 		<spring-cloud-contract.version>2.1.1.RELEASE</spring-cloud-contract.version>
-		<spring-javaformat.version>0.0.9</spring-javaformat.version>
+		<spring-javaformat.version>0.0.12</spring-javaformat.version>
 	</properties>
 
 	<modules>
@@ -175,7 +175,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
