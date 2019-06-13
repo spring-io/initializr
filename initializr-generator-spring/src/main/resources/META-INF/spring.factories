@@ -9,3 +9,6 @@ io.spring.initializr.generator.spring.code.kotlin.KotlinProjectGenerationConfigu
 io.spring.initializr.generator.spring.configuration.ApplicationConfigurationProjectGenerationConfiguration,\
 io.spring.initializr.generator.spring.documentation.HelpDocumentProjectGenerationConfiguration,\
 io.spring.initializr.generator.spring.scm.git.GitProjectGenerationConfiguration
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.spring.initializr.generator.spring.autoconfigure.GeneratorSpringAutoConfiguration

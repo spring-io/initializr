@@ -27,6 +27,8 @@ import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.spring.code.kotlin.InitializrMetadataKotlinVersionResolver;
+import io.spring.initializr.generator.spring.code.kotlin.KotlinVersionResolver;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
@@ -102,6 +104,8 @@ public abstract class AbstractComplianceTests {
 				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
 		context.registerBean(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
+		context.registerBean(KotlinVersionResolver.class,
+				() -> new InitializrMetadataKotlinVersionResolver(() -> metadata));
 	}
 
 	private void setupProjectDescription(Language language, String version, BuildSystem buildSystem,

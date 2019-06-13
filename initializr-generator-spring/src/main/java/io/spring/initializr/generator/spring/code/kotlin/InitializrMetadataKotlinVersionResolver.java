@@ -18,24 +18,26 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 /**
- * A {@link KotlinProjectSettings} that resolves the version to use from the metadata.
+ * {@link KotlinVersionResolver} that resolves the version from the
+ * {@link InitializrMetadata}.
  *
- * @author Stephane Nicoll
+ * @author Andy Wilkinson
  */
-public class MetadataKotlinProjectSettings implements KotlinProjectSettings {
+public class InitializrMetadataKotlinVersionResolver implements KotlinVersionResolver {
 
-	private final String version;
+	private final InitializrMetadataProvider metadataProvider;
 
-	public MetadataKotlinProjectSettings(ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
-		this.version = metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(projectDescription.getPlatformVersion());
+	public InitializrMetadataKotlinVersionResolver(InitializrMetadataProvider metadataProvider) {
+		this.metadataProvider = metadataProvider;
 	}
 
 	@Override
-	public String getVersion() {
-		return this.version;
+	public String resolveKotlinVersion(ResolvedProjectDescription description) {
+		return this.metadataProvider.get().getConfiguration().getEnv().getKotlin()
+				.resolveKotlinVersion(description.getPlatformVersion());
 	}
 
 }
