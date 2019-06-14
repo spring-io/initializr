@@ -17,7 +17,7 @@ Finally, Initializr offers a configuration structure to define all the aspects
 related to the project to generate: list of dependencies, supported java and boot
 versions, etc. Check {service}[the companion project] that defines
 https://start.spring.io and, in particular, the
-{service}/blob/master/src/main/resources/application.yml[configuration of our instance]
+{service}/blob/master/start-site/src/main/resources/application.yml[configuration of our instance]
 for an example. Such configuration is also described in details in the documentation.
 
 NOTE: Check the https://github.com/spring-io/initializr/milestones[milestones page] for an
