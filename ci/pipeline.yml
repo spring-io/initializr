@@ -27,6 +27,17 @@ resources:
     password: ((github-password))
     branch: ((branch))
     ignore_paths: ["ci/images/*"]
+- name: git-repo-windows
+  type: git
+  source:
+    uri: ((github-repo))
+    username: ((github-username))
+    password: ((github-password))
+    branch: ((branch))
+    ignore_paths: ["ci/images/*"]
+    git_config:
+    - name: core.autocrlf
+      value: true
 - name: git-pull-request
   type: pull-request
   source:
@@ -132,6 +143,7 @@ jobs:
   - get: 24h
     trigger: true
   - get: git-repo
+    resource: git-repo-windows
   - task: build-project
     tags: [WIN64]
     file: git-repo/ci/tasks/build-project-windows.yml
