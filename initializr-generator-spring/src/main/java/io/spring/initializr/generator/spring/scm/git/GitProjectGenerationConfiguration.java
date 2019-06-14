@@ -49,8 +49,9 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
 	public GitIgnoreCustomizer mavenGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add("/target/", "!.mvn/wrapper/maven-wrapper.jar");
-			gitIgnore.getNetBeans().add("/build/");
+			gitIgnore.getGeneral().add("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**",
+					"!**/src/test/**");
+			gitIgnore.getNetBeans().add("build/");
 		};
 	}
 
@@ -58,8 +59,9 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public GitIgnoreCustomizer gradleGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add(".gradle", "/build/", "!gradle/wrapper/gradle-wrapper.jar");
-			gitIgnore.getIntellijIdea().add("/out/");
+			gitIgnore.getGeneral().add(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar", "!**/src/main/**",
+					"!**/src/test/**");
+			gitIgnore.getIntellijIdea().add("out/");
 		};
 	}
 
