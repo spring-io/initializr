@@ -37,10 +37,13 @@ import org.springframework.util.StringUtils;
  * Validates a {@link ProjectRequest} and creates a {@link ProjectDescription} from it.
  *
  * @author Madhura Bhave
+ * @author HaiTao Zhang
  */
 public class ProjectRequestToDescriptionConverter {
 
 	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
+
+	private static final char[] VALID_MAVEN_SPECIAL_CHARACTERS = new char[] { '_', '-', '.' };
 
 	public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
 		validate(request, metadata);
@@ -49,25 +52,86 @@ public class ProjectRequestToDescriptionConverter {
 		validateDependencyRange(springBootVersion, resolvedDependencies);
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
-		description.setArtifactId(determineValue(request.getArtifactId(), () -> metadata.getArtifactId().getContent()));
-		description.setBaseDirectory(request.getBaseDir());
+		description.setArtifactId(getArtifactId(request, metadata));
+		description.setBaseDirectory(getBaseDirectory(request.getBaseDir(), request.getArtifactId()));
 		description.setBuildSystem(getBuildSystem(request, metadata));
 		description
 				.setDescription(determineValue(request.getDescription(), () -> metadata.getDescription().getContent()));
-		description.setGroupId(determineValue(request.getGroupId(), () -> metadata.getGroupId().getContent()));
+		description.setGroupId(getGroupId(request, metadata));
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
-		description.setName(determineValue(request.getName(), () -> metadata.getName().getContent()));
+		description.setName(getName(request, metadata));
 		description.setPackageName(getPackageName(request, metadata));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(Version.parse(springBootVersion));
 		description.setVersion(determineValue(request.getVersion(), () -> metadata.getVersion().getContent()));
 		resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 				MetadataBuildItemMapper.toDependency(dependency)));
+
 		return description;
 	}
 
 	private String determineValue(String candidate, Supplier<String> fallback) {
 		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
+	}
+
+	private String getBaseDirectory(String baseDir, String artifactId) {
+		if (baseDir != null && baseDir.equals(artifactId)) {
+			return cleanMavenCoordinate(baseDir, "-");
+		}
+		return baseDir;
+	}
+
+	private String getName(ProjectRequest request, InitializrMetadata metadata) {
+		String name = request.getName();
+		if (!StringUtils.hasText(name)) {
+			return metadata.getName().getContent();
+		}
+		if (name.equals(request.getArtifactId())) {
+			return cleanMavenCoordinate(name, "-");
+		}
+		return name;
+	}
+
+	private String getGroupId(ProjectRequest request, InitializrMetadata metadata) {
+		if (!StringUtils.hasText(request.getGroupId())) {
+			return metadata.getGroupId().getContent();
+		}
+		return cleanMavenCoordinate(request.getGroupId(), ".");
+	}
+
+	private String getArtifactId(ProjectRequest request, InitializrMetadata metadata) {
+		if (!StringUtils.hasText(request.getArtifactId())) {
+			return metadata.getArtifactId().getContent();
+		}
+		return cleanMavenCoordinate(request.getArtifactId(), "-");
+	}
+
+	private String cleanMavenCoordinate(String coordinate, String delimiter) {
+		String[] elements = coordinate.split("[^\\w\\-.]+");
+		if (elements.length == 1) {
+			return coordinate;
+		}
+		StringBuilder builder = new StringBuilder();
+		for (String element : elements) {
+			if (shouldAppendDelimiter(element, builder)) {
+				builder.append(delimiter);
+			}
+			builder.append(element);
+		}
+		return builder.toString();
+	}
+
+	private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
+		if (builder.length() == 0) {
+			return false;
+		}
+		for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {
+			int prevIndex = builder.length() - 1;
+			if (element.charAt(0) == c || builder.charAt(prevIndex) == c) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {

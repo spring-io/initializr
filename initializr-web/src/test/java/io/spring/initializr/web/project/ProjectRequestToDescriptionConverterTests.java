@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  *
  * @author Madhura Bhave
  * @author Stephane Nicoll
+ * @author HaiTao Zhang
  */
 public class ProjectRequestToDescriptionConverterTests {
 
@@ -268,6 +269,92 @@ public class ProjectRequestToDescriptionConverterTests {
 		request.setArtifactId("  ");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
+	}
+
+	@Test
+	void baseDirWhenNotSameAsArtifactIdShouldNotBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		request.setArtifactId(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getBaseDirectory()).isEqualTo(request.getBaseDir());
+	}
+
+	@Test
+	void baseDirWhenSameAsArtifactIdShouldBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		request.setArtifactId(artifactId);
+		request.setBaseDir(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getBaseDirectory()).isEqualTo("correct-ID");
+	}
+
+	@Test
+	void nameWhenNotSameAsArtifactIdShouldNotBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		request.setArtifactId(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getName()).isEqualTo(request.getName());
+	}
+
+	@Test
+	void nameWhenSameAsArtifactIdShouldBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		request.setArtifactId(artifactId);
+		request.setName(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getName()).isEqualTo("correct-ID");
+	}
+
+	@Test
+	void artifactIdWhenHasValidCharsOnlyShouldNotBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct_test";
+		request.setArtifactId(artifactId);
+		request.setBaseDir(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo("correct_test");
+	}
+
+	@Test
+	void artifactIdWhenInvalidShouldBeCleanedWithHyphenDelimiter() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct ! ID @";
+		request.setArtifactId(artifactId);
+		request.setBaseDir(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo("correct-ID");
+	}
+
+	@Test
+	void artifactIdWhenCleanedShouldNotContainHyphenBeforeOrAfterValidSpecialCharacter() {
+		ProjectRequest request = createProjectRequest();
+		String artifactId = "correct !_!ID @";
+		request.setArtifactId(artifactId);
+		request.setBaseDir(artifactId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getArtifactId()).isEqualTo("correct_ID");
+	}
+
+	@Test
+	void groupIdWhenInvalidShouldBeCleanedWithDotDelimiter() {
+		ProjectRequest request = createProjectRequest();
+		String groupId = "correct !  ID12 @";
+		request.setGroupId(groupId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getGroupId()).isEqualTo("correct.ID12");
+	}
+
+	@Test
+	void groupIdWhenHasValidCharactersOnlyShouldNotBeCleaned() {
+		ProjectRequest request = createProjectRequest();
+		String groupId = "correct_ID12";
+		request.setGroupId(groupId);
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getGroupId()).isEqualTo("correct_ID12");
 	}
 
 	private ProjectRequest createProjectRequest() {
