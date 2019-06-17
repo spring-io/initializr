@@ -43,6 +43,8 @@ public class ProjectRequestToDescriptionConverter {
 
 	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
 
+	private static final char[] VALID_MAVEN_SPECIAL_CHARACTERS = new char[] { '_', '-', '.' };
+
 	public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
 		validate(request, metadata);
 		String springBootVersion = getSpringBootVersion(request, metadata);
@@ -50,16 +52,14 @@ public class ProjectRequestToDescriptionConverter {
 		validateDependencyRange(springBootVersion, resolvedDependencies);
 		ProjectDescription description = new ProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
-		description.setArtifactId(determineValue(artificialIdCorrection(request.getArtifactId()),
-				() -> metadata.getArtifactId().getContent()));
-		description.setBaseDirectory(baseDirectoryCorrection(request.getBaseDir(), request.getArtifactId()));
+		description.setArtifactId(getArtifactId(request, metadata));
+		description.setBaseDirectory(getBaseDirectory(request.getBaseDir(), request.getArtifactId()));
 		description.setBuildSystem(getBuildSystem(request, metadata));
 		description
 				.setDescription(determineValue(request.getDescription(), () -> metadata.getDescription().getContent()));
-		description.setGroupId(
-				determineValue(groupIdCorrection(request.getGroupId()), () -> metadata.getGroupId().getContent()));
+		description.setGroupId(getGroupId(request, metadata));
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
-		description.setName(determineValue(request.getName(), () -> metadata.getName().getContent()));
+		description.setName(getName(request, metadata));
 		description.setPackageName(getPackageName(request, metadata));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(Version.parse(springBootVersion));
@@ -74,36 +74,64 @@ public class ProjectRequestToDescriptionConverter {
 		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
 	}
 
-	private String baseDirectoryCorrection(String baseDir, String artifactId) {
+	private String getBaseDirectory(String baseDir, String artifactId) {
 		if (baseDir != null && baseDir.equals(artifactId)) {
-			return coordinateCorrection(baseDir, "-");
+			return cleanMavenCoordinate(baseDir, "-");
 		}
 		return baseDir;
 	}
 
-	private String artificialIdCorrection(String artifactId) {
-		return coordinateCorrection(artifactId, "-");
+	private String getName(ProjectRequest request, InitializrMetadata metadata) {
+		String name = request.getName();
+		if (!StringUtils.hasText(name)) {
+			return metadata.getName().getContent();
+		}
+		if (name.equals(request.getArtifactId())) {
+			return cleanMavenCoordinate(name, "-");
+		}
+		return name;
 	}
 
-	private String groupIdCorrection(String groupId) {
-		return coordinateCorrection(groupId, ".");
+	private String getGroupId(ProjectRequest request, InitializrMetadata metadata) {
+		if (!StringUtils.hasText(request.getGroupId())) {
+			return metadata.getGroupId().getContent();
+		}
+		return cleanMavenCoordinate(request.getGroupId(), ".");
 	}
 
-	private String coordinateCorrection(String coordinate, String delimiter) {
-		String[] elements = coordinate.split("[^A-Za-z0-9_\\-.]+");
-		if (elements.length <= 1) {
+	private String getArtifactId(ProjectRequest request, InitializrMetadata metadata) {
+		if (!StringUtils.hasText(request.getArtifactId())) {
+			return metadata.getArtifactId().getContent();
+		}
+		return cleanMavenCoordinate(request.getArtifactId(), "-");
+	}
+
+	private String cleanMavenCoordinate(String coordinate, String delimiter) {
+		String[] elements = coordinate.split("[^\\w\\-.]+");
+		if (elements.length == 1) {
 			return coordinate;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (String element : elements) {
-			if (!(element.startsWith("-") || element.startsWith("_") || element.startsWith(".")) && sb.length() > 0
-					&& !(sb.charAt(sb.length() - 1) == '-' || sb.charAt(sb.length() - 1) == '_'
-							|| sb.charAt(sb.length() - 1) == '.')) {
-				sb.append(delimiter);
+			if (shouldAppendDelimiter(element, builder)) {
+				builder.append(delimiter);
 			}
-			sb.append(element);
+			builder.append(element);
 		}
-		return sb.toString();
+		return builder.toString();
+	}
+
+	private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
+		if (builder.length() == 0) {
+			return false;
+		}
+		for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {
+			int prevIndex = builder.length() - 1;
+			if (element.charAt(0) == c || builder.charAt(prevIndex) == c) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
