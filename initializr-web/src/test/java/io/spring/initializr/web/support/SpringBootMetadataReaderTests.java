@@ -37,6 +37,8 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 /**
+ * Tests for {@link SpringBootMetadataReader}.
+ *
  * @author Stephane Nicoll
  * @author Dave Syer
  */
