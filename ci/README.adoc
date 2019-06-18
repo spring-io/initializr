@@ -1,0 +1,18 @@
+== Concourse pipeline
+
+Ensure that you've setup the target and can login
+
+[source]
+----
+$ fly -t initializr login -n initializr -c https://ci.spring.io
+----
+
+The pipeline can be deployed using the following command:
+
+[source]
+----
+$ fly -t initializr set-pipeline -p initializr -c ci/pipeline.yml -l ci/parameters.yml
+----
+
+NOTE: This assumes that you have credhub integration configured with the appropriate
+secrets.

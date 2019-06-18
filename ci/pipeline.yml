@@ -41,7 +41,7 @@ resources:
 - name: git-pull-request
   type: pull-request
   source:
-    access_token: ((github-access-token))
+    access_token: ((github-ci-pull-request-token))
     repo: spring-io/initializr
     base: ((branch))
     ignore_paths: ["ci/*"]
@@ -73,7 +73,7 @@ resources:
   type: github-status-resource
   source:
     repository: spring-io/initializr
-    access_token: ((github-access-token))
+    access_token: ((github-ci-status-token))
     branch: ((branch))
     context: build
 - name: github-release
@@ -81,7 +81,7 @@ resources:
   source:
     owner: spring-io
     repository: initializr
-    access_token: ((github-release-notes-access-token))
+    access_token: ((github-ci-release-token))
     pre_release: false
 - name: 24h
   type: time
@@ -214,7 +214,7 @@ jobs:
       GITHUB_ORGANIZATION: spring-io
       GITHUB_REPO: initializr
       GITHUB_USERNAME: ((github-username))
-      GITHUB_TOKEN: ((github-release-notes-access-token))
+      GITHUB_TOKEN: ((github-ci-release-token))
   - put: github-release
     params:
       name: generated-release-notes/version
