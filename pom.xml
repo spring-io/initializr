@@ -42,7 +42,7 @@
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit-jupiter.version>5.4.2</junit-jupiter.version>
-		<spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+		<spring-boot.version>2.1.6.RELEASE</spring-boot.version>
 		<spring-cloud-contract.version>2.1.1.RELEASE</spring-cloud-contract.version>
 		<spring-javaformat.version>0.0.12</spring-javaformat.version>
 	</properties>
