@@ -42,8 +42,8 @@ class MavenBuildProjectContributorTests {
 	void mavenBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		MavenBuild build = new MavenBuild();
 		new MavenBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
-		Path buildGradle = projectDir.resolve("pom.xml");
-		assertThat(buildGradle).isRegularFile();
+		Path pomFile = projectDir.resolve("pom.xml");
+		assertThat(pomFile).isRegularFile();
 	}
 
 	@Test

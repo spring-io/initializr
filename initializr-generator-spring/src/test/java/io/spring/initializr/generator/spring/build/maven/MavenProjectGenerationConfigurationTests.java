@@ -17,9 +17,8 @@
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
+import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -92,9 +91,8 @@ class MavenProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		ProjectStructure projectStructure = this.projectTester.generate(description);
 		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
-		try (Stream<String> lines = Files.lines(projectStructure.resolve("pom.xml"))) {
-			assertThat(lines.filter((line) -> line.contains("    <packaging>war</packaging>"))).hasSize(1);
-		}
+		List<String> lines = projectStructure.readAllLines("pom.xml");
+		assertThat(lines).containsOnlyOnce("    <packaging>war</packaging>");
 	}
 
 }
