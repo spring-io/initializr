@@ -164,6 +164,31 @@ class GradleProjectGenerationConfigurationTests {
 		assertThat(lines).doesNotContainSequence("test {", "    useJUnitPlatform()", "}");
 	}
 
+	@Test
+	void testStarterExcludesVintageEngineAndJUnitWithCompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.M4"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
+		List<String> lines = projectStructure.readAllLines("build.gradle");
+		assertThat(lines).containsSequence(
+				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
+				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'",
+				"        exclude group: 'junit', module: 'junit'", "    }");
+	}
+
+	@Test
+	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
+		List<String> lines = projectStructure.readAllLines("build.gradle");
+		assertThat(lines).doesNotContain("exclude group");
+	}
+
 	static Stream<Arguments> annotationProcessorScopeBuildParameters() {
 		return Stream.of(Arguments.arguments("1.5.17.RELEASE", false), Arguments.arguments("2.0.6.RELEASE", true),
 				Arguments.arguments("2.1.3.RELEASE", true));
