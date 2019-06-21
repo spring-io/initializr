@@ -42,6 +42,8 @@
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit-jupiter.version>5.4.2</junit-jupiter.version>
+		<maven.version>3.6.1</maven.version>
+		<maven-resolver.version>1.3.3</maven-resolver.version>
 		<spring-boot.version>2.1.6.RELEASE</spring-boot.version>
 		<spring-cloud-contract.version>2.1.1.RELEASE</spring-cloud-contract.version>
 		<spring-javaformat.version>0.0.12</spring-javaformat.version>
@@ -54,6 +56,7 @@
 		<module>initializr-generator-spring</module>
 		<module>initializr-metadata</module>
 		<module>initializr-service-sample</module>
+		<module>initializr-version-resolver</module>
 		<module>initializr-web</module>
 	</modules>
 
@@ -101,6 +104,21 @@
 				<artifactId>initializr-web</artifactId>
 				<version>${revision}</version>
 				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-resolver-provider</artifactId>
+				<version>${maven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.resolver</groupId>
+				<artifactId>maven-resolver-connector-basic</artifactId>
+				<version>${maven-resolver.version}</version>
+			</dependency>
+	   		<dependency>
+				<groupId>org.apache.maven.resolver</groupId>
+				<artifactId>maven-resolver-transport-http</artifactId>
+				<version>${maven-resolver.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.junit</groupId>
