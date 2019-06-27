@@ -259,6 +259,11 @@ public class GradleProjectGenerationConfiguration {
 			return (build) -> build.customizeTasksWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
+		@Bean
+		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
+			return new GradleAnnotationProcessorScopeBuildCustomizer();
+		}
+
 	}
 
 }
