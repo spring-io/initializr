@@ -17,6 +17,7 @@
 package io.spring.initializr.stub;
 
 import io.spring.initializr.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration;
+import io.spring.initializr.generator.spring.autoconfigure.GeneratorSpringAutoConfiguration;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,8 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author Stephane Nicoll
  */
-@SpringBootApplication(
-		exclude = { InitializrAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class })
+@SpringBootApplication(exclude = { InitializrAutoConfiguration.class,
+		InitializrActuatorEndpointsAutoConfiguration.class, GeneratorSpringAutoConfiguration.class })
 public class SampleApp {
 
 }
