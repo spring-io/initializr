@@ -10,7 +10,7 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 configurations {
 	compileOnly {
-		extendsFrom(annotationProcessor)
+		extendsFrom(configurations.annotationProcessor.get())
 	}
 }
 

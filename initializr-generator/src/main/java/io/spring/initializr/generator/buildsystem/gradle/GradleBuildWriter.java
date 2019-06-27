@@ -86,7 +86,7 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleBuild build);
 
 	protected abstract void writeConfiguration(IndentingWriter writer, String configurationName,
-			ConfigurationCustomization configurationCustomization);
+			ConfigurationCustomization configurationCustomization, List<String> customConfigurations);
 
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "repositories", build.repositories().items().collect(Collectors.toList()),

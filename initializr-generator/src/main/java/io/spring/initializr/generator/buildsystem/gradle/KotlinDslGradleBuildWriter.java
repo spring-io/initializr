@@ -16,8 +16,10 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -104,16 +106,25 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeConfiguration(IndentingWriter writer, String configurationName,
-			ConfigurationCustomization configurationCustomization) {
+			ConfigurationCustomization configurationCustomization, List<String> customConfigurations) {
 		if (configurationCustomization.getExtendsFrom().isEmpty()) {
 			writer.println(configurationName);
 		}
 		else {
 			writer.println(configurationName + " {");
 			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
-					configurationCustomization.getExtendsFrom().stream().collect(Collectors.joining(", ")))));
+					configurationCustomization.getExtendsFrom().stream()
+							.map((name) -> configurationReference(name, customConfigurations))
+							.collect(Collectors.joining(", ")))));
 			writer.println("}");
 		}
+	}
+
+	private String configurationReference(String configurationName, Collection<String> customConfigurations) {
+		if (customConfigurations.contains(configurationName)) {
+			return configurationName;
+		}
+		return "configurations." + configurationName + ".get()";
 	}
 
 	@Override
@@ -127,7 +138,8 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeConfigurations(IndentingWriter writer, GradleBuild build) {
 		Map<String, ConfigurationCustomization> configurationCustomizations = build.getConfigurationCustomizations();
-		for (String configuration : build.getConfigurations()) {
+		List<String> configurations = build.getConfigurations();
+		for (String configuration : configurations) {
 			writer.println("val " + configuration + " by configurations.creating");
 		}
 		if (configurationCustomizations.isEmpty()) {
@@ -135,7 +147,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		}
 		writer.println("configurations {");
 		writer.indented(() -> configurationCustomizations
-				.forEach((name, customization) -> writeConfiguration(writer, name, customization)));
+				.forEach((name, customization) -> writeConfiguration(writer, name, customization, configurations)));
 		writer.println("}");
 		writer.println("");
 	}

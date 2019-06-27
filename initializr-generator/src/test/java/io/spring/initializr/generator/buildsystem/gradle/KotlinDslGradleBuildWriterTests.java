@@ -277,21 +277,24 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithConfigurationCustomization() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom1"));
-		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom2"));
+		build.addConfiguration("custom");
+		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom"));
+		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("builtIn"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("configurations {", "    runtimeClasspath {",
-				"        extendsFrom(custom1, custom2)", "    }", "}");
+		assertThat(lines).containsSequence("val custom by configurations.creating", "configurations {",
+				"    runtimeClasspath {", "        extendsFrom(custom, configurations.builtIn.get())", "    }", "}");
 	}
 
 	@Test
 	void gradleBuildWithConfigurationCustomizations() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom1"));
-		build.customizeConfiguration("testRuntimeClasspath", (configuration) -> configuration.extendsFrom("custom2"));
+		build.addConfiguration("custom");
+		build.customizeConfiguration("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom"));
+		build.customizeConfiguration("testRuntimeClasspath", (configuration) -> configuration.extendsFrom("builtIn"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("configurations {", "    runtimeClasspath {", "        extendsFrom(custom1)",
-				"    }", "    testRuntimeClasspath {", "        extendsFrom(custom2)", "    }", "}");
+		assertThat(lines).containsSequence("val custom by configurations.creating", "configurations {",
+				"    runtimeClasspath {", "        extendsFrom(custom)", "    }", "    testRuntimeClasspath {",
+				"        extendsFrom(configurations.builtIn.get())", "    }", "}");
 	}
 
 	@Test

@@ -89,7 +89,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeConfiguration(IndentingWriter writer, String configurationName,
-			GradleBuild.ConfigurationCustomization configurationCustomization) {
+			GradleBuild.ConfigurationCustomization configurationCustomization, List<String> customConfigurations) {
 		writer.println(configurationName + " {");
 		writer.indented(() -> writer.println(
 				String.format("extendsFrom %s", String.join(", ", configurationCustomization.getExtendsFrom()))));
@@ -125,7 +125,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		writer.indented(() -> {
 			configurations.forEach(writer::println);
 			configurationCustomizations
-					.forEach((name, customization) -> writeConfiguration(writer, name, customization));
+					.forEach((name, customization) -> writeConfiguration(writer, name, customization, configurations));
 		});
 		writer.println("}");
 		writer.println("");
