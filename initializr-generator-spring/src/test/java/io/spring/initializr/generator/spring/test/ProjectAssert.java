@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.test;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -192,8 +193,14 @@ public class ProjectAssert {
 	}
 
 	public ProjectAssert hasExecutableFile(String... localPaths) {
+		if (runningOnWindows()) {
+			for (String localPath : localPaths) {
+				assertFile(localPath, true);
+			}
+			return this;
+		}
 		for (String localPath : localPaths) {
-			assertFile(localPath, true);
+			assertExecutable(localPath, true);
 		}
 		return this;
 	}
@@ -208,6 +215,19 @@ public class ProjectAssert {
 		assertThat(Files.exists(candidate)).describedAs("Invalid presence (%s) exist for %s", exist, localPath)
 				.isEqualTo(exist);
 		return this;
+	}
+
+	public ProjectAssert assertExecutable(String localPath, boolean exist) {
+		Path candidate = this.projectStructure.resolve(localPath);
+		assertThat(Files.exists(candidate)).describedAs("Invalid presence (%s) exist for %s", exist, localPath)
+				.isEqualTo(exist);
+		assertThat(Files.isExecutable(candidate)).describedAs("File (%s) is not an executable", localPath)
+				.isEqualTo(exist);
+		return this;
+	}
+
+	private boolean runningOnWindows() {
+		return File.separatorChar == '\\';
 	}
 
 	private Properties properties(String localPath) {

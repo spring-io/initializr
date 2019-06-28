@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -32,6 +33,7 @@ import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Untar;
 import org.json.JSONException;
@@ -211,22 +213,58 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	private void untar(Path archiveFile, Path project) {
-		Untar expand = new Untar();
-		expand.setProject(new Project());
-		expand.setDest(project.toFile());
-		expand.setSrc(archiveFile.toFile());
-		Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
-		method.setValue("gzip");
-		expand.setCompression(method);
-		expand.execute();
+		if (!runningOnWindows()) {
+			createProjectDir(project);
+			ExecTask execTask = new ExecTask();
+			execTask.setProject(new Project());
+			execTask.setExecutable("tar");
+			execTask.createArg().setValue("-C");
+			execTask.createArg().setValue(project.toFile().getAbsolutePath());
+			execTask.createArg().setValue("-xf");
+			execTask.createArg().setValue(archiveFile.toFile().getAbsolutePath());
+			execTask.execute();
+		}
+		else {
+			Untar expand = new Untar();
+			expand.setProject(new Project());
+			expand.setDest(project.toFile());
+			expand.setSrc(archiveFile.toFile());
+			Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
+			method.setValue("gzip");
+			expand.setCompression(method);
+			expand.execute();
+		}
+	}
+
+	private void createProjectDir(Path project) {
+		ExecTask execTask = new ExecTask();
+		execTask.setProject(new Project());
+		execTask.setExecutable("mkdir");
+		execTask.createArg().setValue(project.toFile().getAbsolutePath());
+		execTask.execute();
 	}
 
 	private void unzip(Path archiveFile, Path project) {
-		Expand expand = new Expand();
-		expand.setProject(new Project());
-		expand.setDest(project.toFile());
-		expand.setSrc(archiveFile.toFile());
-		expand.execute();
+		if (!runningOnWindows()) {
+			ExecTask execTask = new ExecTask();
+			execTask.setProject(new Project());
+			execTask.setExecutable("unzip");
+			execTask.createArg().setValue(archiveFile.toFile().getAbsolutePath());
+			execTask.createArg().setValue("-d");
+			execTask.createArg().setValue(project.toFile().getAbsolutePath());
+			execTask.execute();
+		}
+		else {
+			Expand expand = new Expand();
+			expand.setProject(new Project());
+			expand.setDest(project.toFile());
+			expand.setSrc(archiveFile.toFile());
+			expand.execute();
+		}
+	}
+
+	private boolean runningOnWindows() {
+		return File.separatorChar == '\\';
 	}
 
 	protected Path writeArchive(byte[] body) throws IOException {
