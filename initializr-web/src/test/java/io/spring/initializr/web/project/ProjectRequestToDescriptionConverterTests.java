@@ -38,14 +38,14 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * @author Stephane Nicoll
  * @author HaiTao Zhang
  */
-public class ProjectRequestToDescriptionConverterTests {
+class ProjectRequestToDescriptionConverterTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 
 	private final ProjectRequestToDescriptionConverter converter = new ProjectRequestToDescriptionConverter();
 
 	@Test
-	public void convertWhenTypeIsInvalidShouldThrowException() {
+	void convertWhenTypeIsInvalidShouldThrowException() {
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo-build");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
@@ -54,7 +54,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	public void convertWhenTypeDoesNotDefineBuildTagShouldThrowException() {
+	void convertWhenTypeDoesNotDefineBuildTagShouldThrowException() {
 		Type type = new Type();
 		type.setId("example-project");
 		InitializrMetadata testMetadata = InitializrMetadataTestBuilder.withDefaults().addType(type).build();
@@ -75,7 +75,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	public void convertWhenPackagingIsInvalidShouldThrowException() {
+	void convertWhenPackagingIsInvalidShouldThrowException() {
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("star");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
@@ -84,7 +84,7 @@ public class ProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	public void convertWhenLanguageIsInvalidShouldThrowException() {
+	void convertWhenLanguageIsInvalidShouldThrowException() {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage("english");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
