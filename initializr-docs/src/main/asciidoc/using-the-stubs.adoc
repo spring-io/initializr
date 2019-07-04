@@ -31,15 +31,14 @@ A convenient way to consume the stubs in your project is to add a test dependenc
 
 and then pull the stubs from the classpath. In a Spring Boot application, using
 Spring Cloud Contract, you can start a WireMock server and register all the stubs
-with it like this:
+with it, as shown in the following JUnit 5-based example:
 
 [source,java,indent=0,subs="attributes"]
 ----
-	@RunWith(SpringRunner.class)
 	@SpringBootTest
 	@AutoConfigureWireMock(port = 0,
 		stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
-	public class ClientApplicationTests {
+	class ClientApplicationTests {
 
 		@Value("${wiremock.server.port}")
 		private int port;
@@ -80,16 +79,16 @@ stubs declared as a dependency):
 	</dependency>
 ----
 
-The test should use `@AutoConfigureStubRunner` instead:
+The test should use `@AutoConfigureStubRunner` instead, as shown in the following JUnit
+5-based example:
 
 [source,java,indent=0,,subs="attributes,specialchars"]
 ----
-	@RunWith(SpringRunner.class)
 	@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 	@AutoConfigureStubRunner(
 		ids = "io.spring.initializr:initializr-web:{spring-initializr-version}",
 		repositoryRoot = "https://repo.spring.io/{initializr-repo}")
-	public class ClientApplicationTests {
+	class ClientApplicationTests {
 
 		@Autowired
 		private StubFinder stubFinder;
@@ -100,9 +99,9 @@ The test should use `@AutoConfigureStubRunner` instead:
 	}
 ----
 
-Here is an example of a test that retrieves the metadata of the service. The assertions
-do not matter much here but it illustrates how you could integrate that in the test suite
-of a custom client:
+Here is JUnit 5-based example of a test that retrieves the metadata of the service. The
+assertions do not matter much here but it illustrates how you could integrate that in the
+test suite of a custom client:
 
 [source,java,indent=0,subs="verbatim,quotes,attributes"]
 ----

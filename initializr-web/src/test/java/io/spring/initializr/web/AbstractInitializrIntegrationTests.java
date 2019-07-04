@@ -77,7 +77,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	private RestTemplate restTemplate;
 
 	@BeforeEach
-	public void before(@TempDir Path folder) {
+	void before(@TempDir Path folder) {
 		this.restTemplate = this.restTemplateBuilder.build();
 		this.folder = folder;
 	}

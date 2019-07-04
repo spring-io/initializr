@@ -76,7 +76,7 @@ class ProjectGenerationStatPublisherTests {
 	private MockRestServiceServer mockServer;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		configureService(createProperties());
 	}
 

@@ -5,8 +5,7 @@
 <module name="com.puppycrawl.tools.checkstyle.Checker">
 	<module name="io.spring.javaformat.checkstyle.SpringChecks"/>
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
-		<module
-				name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
+		<module name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
 			<property name="file"
 					  value="${main.basedir}/src/checkstyle/import-control.xml"/>
 			<property name="path" value="^.*[\\/]src[\\/]main[\\/].*$"/>
@@ -19,5 +18,6 @@
 					  value="Please use BDDMockito imports."/>
 			<property name="ignoreComments" value="true"/>
 		</module>
+		<module name="io.spring.javaformat.checkstyle.check.SpringJUnit5Check"/>
 	</module>
 </module>

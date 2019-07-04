@@ -39,7 +39,7 @@ class CommandLineHelpGeneratorTests {
 	private CommandLineHelpGenerator generator;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		this.generator = new CommandLineHelpGenerator(new MustacheTemplateRenderer("classpath:/templates"));
 	}
 

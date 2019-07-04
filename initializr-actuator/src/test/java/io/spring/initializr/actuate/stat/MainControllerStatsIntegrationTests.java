@@ -56,7 +56,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	private ProjectGenerationStatPublisher projectGenerationStatPublisher;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
 		this.projectGenerationStatPublisher

@@ -169,7 +169,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	@Disabled("Need a comparator that does not care about the number of elements in an array")
-	public void currentMetadataCompatibleWithV2() {
+	void currentMetadataCompatibleWithV2() {
 		ResponseEntity<String> response = invokeHome(null, "*/*");
 		validateMetadata(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
 				JSONCompareMode.LENIENT);
@@ -237,7 +237,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	// make sure curl can still receive metadata with json
-	public void curlWithAcceptHeaderJson() {
+	void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
 		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
@@ -263,7 +263,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	// make sure curl can still receive metadata with json
-	public void httpieWithAcceptHeaderJson() {
+	void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
 		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response.getBody());
@@ -296,7 +296,7 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	// Test that the current output is exactly what we expect
-	public void validateCurrentProjectMetadata() {
+	void validateCurrentProjectMetadata() {
 		validateCurrentMetadata(getMetadataJson());
 	}
 
