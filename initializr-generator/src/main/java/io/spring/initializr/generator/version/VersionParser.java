@@ -71,7 +71,7 @@ public class VersionParser {
 		Matcher matcher = VERSION_REGEX.matcher(text.trim());
 		if (!matcher.matches()) {
 			throw new InvalidVersionException("Could not determine version based on '" + text + "': version format "
-					+ "is Minor.Major.Patch.Qualifier " + "(e.g. 1.0.5.RELEASE)");
+					+ "is Major.Minor.Patch.Qualifier " + "(e.g. 1.0.5.RELEASE)");
 		}
 		Integer major = Integer.valueOf(matcher.group(1));
 		String minor = matcher.group(2);
