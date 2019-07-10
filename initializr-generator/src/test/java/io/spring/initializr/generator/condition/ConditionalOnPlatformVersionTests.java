@@ -100,13 +100,13 @@ class ConditionalOnPlatformVersionTests {
 
 		@Bean
 		@ConditionalOnPlatformVersion("[1.0.0.RELEASE, 2.0.0.M1)")
-		public String first() {
+		String first() {
 			return "one";
 		}
 
 		@Bean
 		@ConditionalOnPlatformVersion("2.0.0.M1")
-		public String second() {
+		String second() {
 			return "two";
 		}
 
@@ -117,7 +117,7 @@ class ConditionalOnPlatformVersionTests {
 
 		@Bean
 		@ConditionalOnPlatformVersion({ "[1.0.0.RELEASE, 2.0.0.M1)", "2.0.0.RELEASE" })
-		public String firstOrSecond() {
+		String firstOrSecond() {
 			return "oneOrTwo";
 		}
 

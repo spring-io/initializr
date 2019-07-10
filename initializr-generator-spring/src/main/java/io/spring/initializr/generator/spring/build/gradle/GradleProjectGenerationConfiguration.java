@@ -129,22 +129,22 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle3ProjectGenerationConfiguration {
 
 		@Bean
-		public Gradle3BuildWriter gradleBuildWriter() {
+		Gradle3BuildWriter gradleBuildWriter() {
 			return new Gradle3BuildWriter();
 		}
 
 		@Bean
-		public GradleWrapperContributor gradle3WrapperContributor() {
+		GradleWrapperContributor gradle3WrapperContributor() {
 			return new GradleWrapperContributor("3");
 		}
 
 		@Bean
-		public Gradle3SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build) {
+		Gradle3SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build) {
 			return new Gradle3SettingsGradleProjectContributor(build);
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
 			return (build) -> {
 				build.buildscript(
 						(buildscript) -> buildscript.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
@@ -164,7 +164,7 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle4ProjectGenerationConfiguration {
 
 		@Bean
-		public GradleWrapperContributor gradle4WrapperContributor() {
+		GradleWrapperContributor gradle4WrapperContributor() {
 			return new GradleWrapperContributor("4");
 		}
 
@@ -178,7 +178,7 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle5ProjectGenerationConfiguration {
 
 		@Bean
-		public GradleWrapperContributor gradle4WrapperContributor() {
+		GradleWrapperContributor gradle4WrapperContributor() {
 			return new GradleWrapperContributor("5");
 		}
 
@@ -193,31 +193,31 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle4Or5ProjectGenerationConfiguration {
 
 		@Bean
-		public GroovyDslGradleBuildWriter gradleBuildWriter() {
+		GroovyDslGradleBuildWriter gradleBuildWriter() {
 			return new GroovyDslGradleBuildWriter();
 		}
 
 		@Bean
-		public SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build,
+		SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build,
 				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new GroovyDslGradleSettingsWriter(), "settings.gradle");
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
 			return (build) -> build.addPlugin("org.springframework.boot",
 					projectDescription.getPlatformVersion().toString());
 		}
 
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
-		public BuildCustomizer<GradleBuild> testTaskContributor() {
+		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return (build) -> build.customizeTask("test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 		@Bean
-		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
+		GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
 			return new GradleAnnotationProcessorScopeBuildCustomizer();
 		}
 
@@ -232,19 +232,19 @@ public class GradleProjectGenerationConfiguration {
 	static class GradleKtsProjectGenerationConfiguration {
 
 		@Bean
-		public KotlinDslGradleBuildWriter gradleKtsBuildWriter() {
+		KotlinDslGradleBuildWriter gradleKtsBuildWriter() {
 			return new KotlinDslGradleBuildWriter();
 		}
 
 		@Bean
-		public SettingsGradleProjectContributor settingsGradleKtsProjectContributor(GradleBuild build,
+		SettingsGradleProjectContributor settingsGradleKtsProjectContributor(GradleBuild build,
 				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new KotlinDslGradleSettingsWriter(), "settings.gradle.kts");
 		}
 
 		@Bean
-		public BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
 				InitializrMetadata metadata) {
 			return (build) -> {
 				build.addPlugin("org.springframework.boot", projectDescription.getPlatformVersion().toString());
@@ -255,12 +255,12 @@ public class GradleProjectGenerationConfiguration {
 
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
-		public BuildCustomizer<GradleBuild> testTaskContributor() {
+		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return (build) -> build.customizeTasksWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 		@Bean
-		public GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
+		GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
 			return new GradleAnnotationProcessorScopeBuildCustomizer();
 		}
 

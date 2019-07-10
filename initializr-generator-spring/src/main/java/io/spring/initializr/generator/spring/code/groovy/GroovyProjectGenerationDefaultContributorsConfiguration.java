@@ -51,7 +51,7 @@ import org.springframework.context.annotation.Configuration;
 class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
-	public MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
+	MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
 		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(
 				GroovyMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
 						.parameters(new Parameter("java.lang.String[]", "args"))
@@ -62,7 +62,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
-	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junit4TestMethodContributor() {
+	TestApplicationTypeCustomizer<GroovyTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").modifiers(Modifier.PUBLIC)
 					.returning("void").body();
@@ -73,7 +73,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
-	public TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
+	TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
 			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").returning("void").body();
 			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
@@ -82,7 +82,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	public BuildCustomizer<Build> groovyDependenciesConfigurer() {
+	BuildCustomizer<Build> groovyDependenciesConfigurer() {
 		return new GroovyDependenciesConfigurer();
 	}
 
@@ -94,7 +94,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	static class WarPackagingConfiguration {
 
 		@Bean
-		public ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
+		ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
@@ -119,7 +119,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	static class GroovyMavenProjectConfiguration {
 
 		@Bean
-		public GroovyMavenBuildCustomizer groovyBuildCustomizer() {
+		GroovyMavenBuildCustomizer groovyBuildCustomizer() {
 			return new GroovyMavenBuildCustomizer();
 		}
 
@@ -133,7 +133,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	static class GroovyGradleProjectConfiguration {
 
 		@Bean
-		public GroovyGradleBuildCustomizer groovyBuildCustomizer() {
+		GroovyGradleBuildCustomizer groovyBuildCustomizer() {
 			return new GroovyGradleBuildCustomizer();
 		}
 

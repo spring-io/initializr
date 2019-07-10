@@ -90,7 +90,7 @@ class InitializrStatsAutoConfigurationTests {
 	static class CustomStatsRetryTemplateConfiguration {
 
 		@Bean
-		public RetryTemplate statsRetryTemplate() {
+		RetryTemplate statsRetryTemplate() {
 			RetryTemplate retryTemplate = new RetryTemplate();
 			ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
 			backOffPolicy.setMultiplier(10);
@@ -104,7 +104,7 @@ class InitializrStatsAutoConfigurationTests {
 	static class InfrastructureConfiguration {
 
 		@Bean
-		public InitializrMetadataProvider initializrMetadataProvider() {
+		InitializrMetadataProvider initializrMetadataProvider() {
 			return mock(InitializrMetadataProvider.class);
 		}
 
@@ -117,7 +117,7 @@ class InitializrStatsAutoConfigurationTests {
 		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
 
 		@Bean
-		public RestTemplateCustomizer testRestTemplateCustomizer() {
+		RestTemplateCustomizer testRestTemplateCustomizer() {
 			return (b) -> b.setErrorHandler(errorHandler);
 		}
 

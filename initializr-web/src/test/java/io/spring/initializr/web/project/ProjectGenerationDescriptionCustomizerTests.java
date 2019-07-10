@@ -43,7 +43,7 @@ class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrCont
 	static class ProjectDescriptionCustomizerConfiguration {
 
 		@Bean
-		public ProjectDescriptionCustomizer secondPostProcessor() {
+		ProjectDescriptionCustomizer secondPostProcessor() {
 			return new ProjectDescriptionCustomizer() {
 				@Override
 				public void customize(ProjectDescription description) {
@@ -58,7 +58,7 @@ class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrCont
 		}
 
 		@Bean
-		public ProjectDescriptionCustomizer firstPostProcessor() {
+		ProjectDescriptionCustomizer firstPostProcessor() {
 			return new ProjectDescriptionCustomizer() {
 				@Override
 				public void customize(ProjectDescription description) {

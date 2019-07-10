@@ -140,7 +140,7 @@ public class Agent {
 
 		private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
 
-		public static Agent parse(String userAgent) {
+		static Agent parse(String userAgent) {
 			Matcher matcher = TOOL_REGEX.matcher(userAgent);
 			if (matcher.matches()) {
 				String name = matcher.group(1);

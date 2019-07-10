@@ -191,22 +191,22 @@ public class ProjectGenerationInvokerTests {
 	static class TestConfiguration {
 
 		@Bean
-		public IndentingWriterFactory factory() {
+		IndentingWriterFactory factory() {
 			return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"));
 		}
 
 		@Bean
-		public MustacheTemplateRenderer templateRenderer() {
+		MustacheTemplateRenderer templateRenderer() {
 			return new MustacheTemplateRenderer("classpath:/templates");
 		}
 
 		@Bean
-		public ProjectDirectoryFactory projectDirectoryFactory() {
+		ProjectDirectoryFactory projectDirectoryFactory() {
 			return (description) -> Files.createTempDirectory("project-");
 		}
 
 		@Bean
-		public InitializrMetadataProvider initializrMetadataProvider() {
+		InitializrMetadataProvider initializrMetadataProvider() {
 			return () -> metadata;
 		}
 

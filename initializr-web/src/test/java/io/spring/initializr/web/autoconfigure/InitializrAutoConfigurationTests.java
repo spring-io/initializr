@@ -160,7 +160,7 @@ class InitializrAutoConfigurationTests {
 		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
 
 		@Bean
-		public RestTemplateCustomizer testRestTemplateCustomizer() {
+		RestTemplateCustomizer testRestTemplateCustomizer() {
 			return (b) -> b.setErrorHandler(errorHandler);
 		}
 
@@ -170,7 +170,7 @@ class InitializrAutoConfigurationTests {
 	static class CustomTemplateRendererConfiguration {
 
 		@Bean
-		public TemplateRenderer testTemplateRenderer() {
+		TemplateRenderer testTemplateRenderer() {
 			return Mockito.mock(TemplateRenderer.class);
 		}
 
@@ -180,7 +180,7 @@ class InitializrAutoConfigurationTests {
 	static class CustomInitializrMetadataUpdateStrategyConfiguration {
 
 		@Bean
-		public InitializrMetadataUpdateStrategy testInitializrMetadataUpdateStrategy() {
+		InitializrMetadataUpdateStrategy testInitializrMetadataUpdateStrategy() {
 			return Mockito.mock(InitializrMetadataUpdateStrategy.class);
 		}
 
@@ -190,7 +190,7 @@ class InitializrAutoConfigurationTests {
 	static class CustomInitializrMetadataProviderConfiguration {
 
 		@Bean
-		public InitializrMetadataProvider testInitializrMetadataProvider() {
+		InitializrMetadataProvider testInitializrMetadataProvider() {
 			return Mockito.mock(InitializrMetadataProvider.class);
 		}
 
@@ -200,7 +200,7 @@ class InitializrAutoConfigurationTests {
 	static class CustomDependencyMetadataProviderConfiguration {
 
 		@Bean
-		public DependencyMetadataProvider testDependencyMetadataProvider() {
+		DependencyMetadataProvider testDependencyMetadataProvider() {
 			return Mockito.mock(DependencyMetadataProvider.class);
 		}
 

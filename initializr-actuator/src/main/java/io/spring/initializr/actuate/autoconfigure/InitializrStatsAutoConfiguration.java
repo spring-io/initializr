@@ -57,14 +57,14 @@ class InitializrStatsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnBean(InitializrMetadataProvider.class)
-	public ProjectGenerationStatPublisher projectRequestStatHandler(RestTemplateBuilder restTemplateBuilder) {
+	ProjectGenerationStatPublisher projectRequestStatHandler(RestTemplateBuilder restTemplateBuilder) {
 		return new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(), this.statsProperties,
 				restTemplateBuilder, statsRetryTemplate());
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(name = "statsRetryTemplate")
-	public RetryTemplate statsRetryTemplate() {
+	RetryTemplate statsRetryTemplate() {
 		RetryTemplate retryTemplate = new RetryTemplate();
 		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
 		backOffPolicy.setInitialInterval(3000L);

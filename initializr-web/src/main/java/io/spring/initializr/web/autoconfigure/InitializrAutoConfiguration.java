@@ -133,13 +133,13 @@ public class InitializrAutoConfiguration {
 	static class InitializrWebConfiguration {
 
 		@Bean
-		public InitializrWebConfig initializrWebConfig() {
+		InitializrWebConfig initializrWebConfig() {
 			return new InitializrWebConfig();
 		}
 
 		@Bean
 		@ConditionalOnMissingBean
-		public MainController initializrMainController(InitializrMetadataProvider metadataProvider,
+		MainController initializrMainController(InitializrMetadataProvider metadataProvider,
 				TemplateRenderer templateRenderer, DependencyMetadataProvider dependencyMetadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
 			return new MainController(metadataProvider, templateRenderer, dependencyMetadataProvider,
@@ -148,7 +148,7 @@ public class InitializrAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean
-		public ProjectGenerationInvoker projectGenerationInvoker(ApplicationContext applicationContext,
+		ProjectGenerationInvoker projectGenerationInvoker(ApplicationContext applicationContext,
 				ApplicationEventPublisher eventPublisher,
 				ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter) {
 			return new ProjectGenerationInvoker(applicationContext, eventPublisher,
@@ -156,12 +156,12 @@ public class InitializrAutoConfiguration {
 		}
 
 		@Bean
-		public ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter() {
+		ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter() {
 			return new ProjectRequestToDescriptionConverter();
 		}
 
 		@Bean
-		public InitializrModule InitializrJacksonModule() {
+		InitializrModule InitializrJacksonModule() {
 			return new InitializrModule();
 		}
 
@@ -175,7 +175,7 @@ public class InitializrAutoConfiguration {
 	static class InitializrCacheConfiguration {
 
 		@Bean
-		public JCacheManagerCustomizer initializrCacheManagerCustomizer() {
+		JCacheManagerCustomizer initializrCacheManagerCustomizer() {
 			return (cacheManager) -> {
 				cacheManager.createCache("initializr.metadata",
 						config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));

@@ -232,7 +232,7 @@ public class CommandLineHelpGenerator {
 		 * @param content the table content
 		 * @return the generated table
 		 */
-		public static String generate(String[][] content) {
+		static String generate(String[][] content) {
 			StringBuilder sb = new StringBuilder();
 			int[] columnsLength = computeColumnsLength(content);
 			appendTableSeparation(sb, columnsLength);

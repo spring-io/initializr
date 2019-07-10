@@ -122,19 +122,19 @@ public class ConditionalOnGradleVersionTests {
 
 		@Bean
 		@ConditionalOnGradleVersion("3")
-		public String gradle3() {
+		String gradle3() {
 			return "testGradle3";
 		}
 
 		@Bean
 		@ConditionalOnGradleVersion("4")
-		public String gradle4() {
+		String gradle4() {
 			return "testGradle4";
 		}
 
 		@Bean
 		@ConditionalOnGradleVersion("5")
-		public String gradle5() {
+		String gradle5() {
 			return "testGradle5";
 		}
 
@@ -145,7 +145,7 @@ public class ConditionalOnGradleVersionTests {
 
 		@Bean
 		@ConditionalOnGradleVersion({ "3", "4" })
-		public String gradle3AndLater() {
+		String gradle3AndLater() {
 			return "testGradle3AndLater";
 		}
 

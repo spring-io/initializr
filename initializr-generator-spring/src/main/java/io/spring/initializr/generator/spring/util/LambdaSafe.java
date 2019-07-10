@@ -121,7 +121,7 @@ public final class LambdaSafe {
 		 * @param loggerSource the logger source to use
 		 * @return this instance
 		 */
-		public SELF withLogger(Class<?> loggerSource) {
+		SELF withLogger(Class<?> loggerSource) {
 			return withLogger(LogFactory.getLog(loggerSource));
 		}
 
@@ -130,7 +130,7 @@ public final class LambdaSafe {
 		 * @param logger the logger to use
 		 * @return this instance
 		 */
-		public SELF withLogger(Log logger) {
+		SELF withLogger(Log logger) {
 			Assert.notNull(logger, "Logger must not be null");
 			this.logger = logger;
 			return self();
@@ -143,7 +143,7 @@ public final class LambdaSafe {
 		 * @param filter the filter to use
 		 * @return this instance
 		 */
-		public SELF withFilter(Filter<C, A> filter) {
+		SELF withFilter(Filter<C, A> filter) {
 			Assert.notNull(filter, "Filter must not be null");
 			this.filter = filter;
 			return self();

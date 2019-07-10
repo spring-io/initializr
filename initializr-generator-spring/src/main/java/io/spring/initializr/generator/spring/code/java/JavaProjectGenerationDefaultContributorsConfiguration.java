@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Configuration;
 class JavaProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
-	public MainApplicationTypeCustomizer<JavaTypeDeclaration> mainMethodContributor() {
+	MainApplicationTypeCustomizer<JavaTypeDeclaration> mainMethodContributor() {
 		return (typeDeclaration) -> {
 			typeDeclaration.modifiers(Modifier.PUBLIC);
 			typeDeclaration.addMethodDeclaration(
@@ -60,7 +60,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
-	public TestApplicationTypeCustomizer<JavaTypeDeclaration> junit4TestMethodContributor() {
+	TestApplicationTypeCustomizer<JavaTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			typeDeclaration.modifiers(Modifier.PUBLIC);
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads").modifiers(Modifier.PUBLIC)
@@ -72,7 +72,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
-	public TestApplicationTypeCustomizer<JavaTypeDeclaration> junitJupiterTestMethodContributor() {
+	TestApplicationTypeCustomizer<JavaTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads").returning("void").body();
 			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
@@ -88,7 +88,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 	static class WarPackagingConfiguration {
 
 		@Bean
-		public ServletInitializerCustomizer<JavaTypeDeclaration> javaServletInitializerCustomizer(
+		ServletInitializerCustomizer<JavaTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				typeDeclaration.modifiers(Modifier.PUBLIC);

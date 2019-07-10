@@ -54,7 +54,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
-	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
+	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
 			function.annotate(Annotation.name("org.junit.Test"));
@@ -64,7 +64,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.2.0.M3")
-	public TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
+	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
 			function.annotate(Annotation.name("org.junit.jupiter.api.Test"));
@@ -73,7 +73,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	public BuildCustomizer<Build> kotlinDependenciesConfigurer(ResolvedProjectDescription projectDescription) {
+	BuildCustomizer<Build> kotlinDependenciesConfigurer(ResolvedProjectDescription projectDescription) {
 		return new KotlinDependenciesConfigurer(projectDescription.getPlatformVersion());
 	}
 
@@ -86,12 +86,12 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-		public KotlinMavenFullBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+		KotlinMavenFullBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinMavenFullBuildCustomizer(kotlinProjectSettings);
 		}
 
 		@Bean
-		public MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
+		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
 				ResolvedProjectDescription projectDescription) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
@@ -111,12 +111,12 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-		public KotlinMavenBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+		KotlinMavenBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinMavenBuildCustomizer(kotlinProjectSettings);
 		}
 
 		@Bean
-		public MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
+		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ResolvedProjectDescription projectDescription) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
@@ -135,7 +135,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	static class WarPackagingConfiguration {
 
 		@Bean
-		public ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
+		ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
 				ResolvedProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
@@ -161,7 +161,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	static class KotlinGradleProjectConfiguration {
 
 		@Bean
-		public KotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+		KotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new GroovyDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
 		}
 
@@ -177,7 +177,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	static class KotlinGradleKtsProjectConfiguration {
 
 		@Bean
-		public KotlinDslKotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+		KotlinDslKotlinGradleBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
 			return new KotlinDslKotlinGradleBuildCustomizer(kotlinProjectSettings);
 		}
 

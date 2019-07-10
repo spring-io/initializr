@@ -85,13 +85,13 @@ class ConditionalOnLanguageTests {
 
 		@Bean
 		@ConditionalOnLanguage("java")
-		public String java() {
+		String java() {
 			return "testJava";
 		}
 
 		@Bean
 		@ConditionalOnLanguage("groovy")
-		public String groovy() {
+		String groovy() {
 			return "testGroovy";
 		}
 

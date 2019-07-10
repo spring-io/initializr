@@ -74,13 +74,13 @@ class ConditionalOnPackagingTests {
 
 		@Bean
 		@ConditionalOnPackaging("jar")
-		public String jar() {
+		String jar() {
 			return "testJar";
 		}
 
 		@Bean
 		@ConditionalOnPackaging("war")
-		public String war() {
+		String war() {
 			return "testWar";
 		}
 

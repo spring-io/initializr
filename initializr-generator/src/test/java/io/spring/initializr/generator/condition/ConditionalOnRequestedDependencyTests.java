@@ -63,7 +63,7 @@ class ConditionalOnRequestedDependencyTests {
 
 		@Bean
 		@ConditionalOnRequestedDependency("web")
-		public String webActive() {
+		String webActive() {
 			return "webDependency";
 		}
 

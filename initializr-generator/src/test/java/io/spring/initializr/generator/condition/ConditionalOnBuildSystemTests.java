@@ -70,25 +70,25 @@ class ConditionalOnBuildSystemTests {
 
 		@Bean
 		@ConditionalOnBuildSystem("gradle")
-		public String gradle() {
+		String gradle() {
 			return "testGradle";
 		}
 
 		@Bean
 		@ConditionalOnBuildSystem("maven")
-		public String maven() {
+		String maven() {
 			return "testMaven";
 		}
 
 		@Bean
 		@ConditionalOnBuildSystem("not-a-build-system")
-		public String notABuildSystem() {
+		String notABuildSystem() {
 			return "testNone";
 		}
 
 		@Bean
 		@ConditionalOnBuildSystem(id = "gradle", dialect = "kotlin")
-		public String gradleKotlin() {
+		String gradleKotlin() {
 			return "testGradleKotlinDialect";
 		}
 
