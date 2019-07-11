@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -230,7 +232,7 @@ public abstract class AbstractInitializrIntegrationTests {
 					Files.createDirectories(path.getParent());
 					Files.write(path, StreamUtils.copyToByteArray(input));
 				}
-				Files.setPosixFilePermissions(path, getPosixFilePermissions(entry.getMode()));
+				applyPermissions(path, getPosixFilePermissions(entry.getMode()));
 			}
 		}
 	}
@@ -248,7 +250,7 @@ public abstract class AbstractInitializrIntegrationTests {
 					Files.createDirectories(path.getParent());
 					Files.write(path, StreamUtils.copyToByteArray(zip.getInputStream(entry)));
 				}
-				Files.setPosixFilePermissions(path, getPosixFilePermissions(entry.getUnixMode()));
+				applyPermissions(path, getPosixFilePermissions(entry.getUnixMode()));
 			}
 		}
 	}
@@ -256,6 +258,31 @@ public abstract class AbstractInitializrIntegrationTests {
 	private Set<PosixFilePermission> getPosixFilePermissions(int unixMode) {
 		return Arrays.stream(BitMaskFilePermission.values()).filter((permission) -> permission.permitted(unixMode))
 				.map(BitMaskFilePermission::getFilePermission).collect(Collectors.toSet());
+	}
+
+	private void applyPermissions(Path target, Set<PosixFilePermission> permissions) throws IOException {
+		if (isWindows()) {
+			File file = target.toFile();
+			applyPermission(file::setReadable, permissions, PosixFilePermission.OWNER_READ,
+					PosixFilePermission.GROUP_READ, PosixFilePermission.OTHERS_READ);
+			applyPermission(file::setWritable, permissions, PosixFilePermission.OWNER_WRITE,
+					PosixFilePermission.GROUP_WRITE, PosixFilePermission.OTHERS_WRITE);
+			applyPermission(file::setExecutable, permissions, PosixFilePermission.OWNER_EXECUTE,
+					PosixFilePermission.GROUP_EXECUTE, PosixFilePermission.OTHERS_EXECUTE);
+		}
+		else {
+			Files.setPosixFilePermissions(target, permissions);
+		}
+	}
+
+	private void applyPermission(BiConsumer<Boolean, Boolean> target, Set<PosixFilePermission> permissions,
+			PosixFilePermission ownerPermission, PosixFilePermission... nonOwnerPermissions) {
+		boolean ownerOnly = Arrays.stream(nonOwnerPermissions).noneMatch(permissions::contains);
+		target.accept(permissions.contains(ownerPermission), ownerOnly);
+	}
+
+	private boolean isWindows() {
+		return File.separatorChar == '\\';
 	}
 
 	protected Path writeArchive(byte[] body) throws IOException {
