@@ -16,7 +16,6 @@
 
 package io.spring.initializr.web.project;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -57,7 +56,7 @@ public class ProjectGenerationInvoker {
 
 	private final ProjectRequestToDescriptionConverter converter;
 
-	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
+	private transient Map<Path, List<Path>> temporaryFiles = new LinkedHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
 			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter converter) {
@@ -79,9 +78,7 @@ public class ProjectGenerationInvoker {
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 			ProjectGenerationResult result = projectGenerator.generate(projectDescription, generateProject(request));
-			File file = result.getRootDirectory().toFile();
-			String name = file.getName();
-			addTempFile(name, file);
+			addTempFile(result.getRootDirectory(), result.getRootDirectory());
 			return result;
 		}
 		catch (ProjectGenerationException ex) {
@@ -134,13 +131,13 @@ public class ProjectGenerationInvoker {
 	 * @param extension the extension to use for the new file
 	 * @return the newly created file
 	 */
-	public File createDistributionFile(File dir, String extension) {
-		File download = new File(dir.getParent(), dir.getName() + extension);
-		addTempFile(dir.getName(), download);
+	public Path createDistributionFile(Path dir, String extension) {
+		Path download = dir.resolveSibling(dir.getFileName() + extension);
+		addTempFile(dir, download);
 		return download;
 	}
 
-	private void addTempFile(String group, File file) {
+	private void addTempFile(Path group, Path file) {
 		this.temporaryFiles.computeIfAbsent(group, (key) -> new ArrayList<>()).add(file);
 	}
 
@@ -149,15 +146,15 @@ public class ProjectGenerationInvoker {
 	 * @param dir the directory to clean
 	 * @see #createDistributionFile
 	 */
-	public void cleanTempFiles(File dir) {
-		List<File> tempFiles = this.temporaryFiles.remove(dir.getName());
+	public void cleanTempFiles(Path dir) {
+		List<Path> tempFiles = this.temporaryFiles.remove(dir);
 		if (!tempFiles.isEmpty()) {
-			tempFiles.forEach((File file) -> {
-				if (file.isDirectory()) {
-					FileSystemUtils.deleteRecursively(file);
+			tempFiles.forEach((path) -> {
+				try {
+					FileSystemUtils.deleteRecursively(path);
 				}
-				else if (file.exists()) {
-					file.delete();
+				catch (IOException ex) {
+					// Continue
 				}
 			});
 		}

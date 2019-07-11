@@ -17,11 +17,12 @@
 package io.spring.initializr.web.project;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +58,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -222,7 +222,7 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		File dir = result.getRootDirectory().toFile();
-		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".zip");
+		Path archive = this.projectGenerationInvoker.createDistributionFile(result.getRootDirectory(), ".zip");
 		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		Zip zip = new Zip();
 		zip.setProject(new Project());
@@ -239,9 +239,9 @@ public class MainController extends AbstractInitializrController {
 		set.createExclude().setName(wrapperScript);
 		set.setDefaultexcludes(false);
 		zip.addFileset(set);
-		zip.setDestFile(download.getCanonicalFile());
+		zip.setDestFile(archive.toFile().getCanonicalFile());
 		zip.execute();
-		return upload(download, dir, generateFileName(request, "zip"), "application/zip");
+		return upload(archive, result.getRootDirectory(), generateFileName(request, "zip"), "application/zip");
 	}
 
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
@@ -249,7 +249,7 @@ public class MainController extends AbstractInitializrController {
 	public ResponseEntity<byte[]> springTgz(ProjectRequest request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		File dir = result.getRootDirectory().toFile();
-		File download = this.projectGenerationInvoker.createDistributionFile(dir, ".tar.gz");
+		Path download = this.projectGenerationInvoker.createDistributionFile(result.getRootDirectory(), ".tar.gz");
 		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		Tar zip = new Tar();
 		zip.setProject(new Project());
@@ -264,12 +264,13 @@ public class MainController extends AbstractInitializrController {
 		set.setIncludes("**,");
 		set.createExclude().setName(wrapperScript);
 		set.setDefaultexcludes(false);
-		zip.setDestFile(download.getCanonicalFile());
+		zip.setDestFile(download.toFile().getCanonicalFile());
 		Tar.TarCompressionMethod method = new Tar.TarCompressionMethod();
 		method.setValue("gzip");
 		zip.setCompression(method);
 		zip.execute();
-		return upload(download, dir, generateFileName(request, "tar.gz"), "application/x-compress");
+		return upload(download, result.getRootDirectory(), generateFileName(request, "tar.gz"),
+				"application/x-compress");
 	}
 
 	private String generateFileName(ProjectRequest request, String extension) {
@@ -290,10 +291,10 @@ public class MainController extends AbstractInitializrController {
 		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;
 	}
 
-	private ResponseEntity<byte[]> upload(File download, File dir, String fileName, String contentType)
+	private ResponseEntity<byte[]> upload(Path archive, Path dir, String fileName, String contentType)
 			throws IOException {
-		byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(download));
-		logger.info(String.format("Uploading: %s (%s bytes)", download, bytes.length));
+		byte[] bytes = Files.readAllBytes(archive);
+		logger.info(String.format("Uploading: %s (%s bytes)", archive, bytes.length));
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType, fileName);
 		this.projectGenerationInvoker.cleanTempFiles(dir);
 		return result;

@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.project;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -88,10 +88,9 @@ public class ProjectGenerationInvokerTests {
 		request.initialize(metadata);
 		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
 		new ProjectAssert(result.getRootDirectory()).isJavaProject();
-		File file = result.getRootDirectory().toFile();
-		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils.getField(this.invoker,
+		Map<Path, List<Path>> tempFiles = (Map<Path, List<Path>>) ReflectionTestUtils.getField(this.invoker,
 				"temporaryFiles");
-		assertThat(tempFiles.get(file.getName())).contains(file);
+		assertThat(tempFiles.get(result.getRootDirectory())).contains(result.getRootDirectory());
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -152,23 +151,21 @@ public class ProjectGenerationInvokerTests {
 	void createDistributionDirectory(@TempDir Path tempDir) {
 		ProjectRequest request = new ProjectRequest();
 		request.setType("gradle-project");
-		File dir = tempDir.toFile();
-		File distributionFile = this.invoker.createDistributionFile(dir, ".zip");
-		assertThat(distributionFile.toString()).isEqualTo(dir.toString() + ".zip");
-		Map<String, List<File>> tempFiles = (Map<String, List<File>>) ReflectionTestUtils.getField(this.invoker,
+		Path distributionFile = this.invoker.createDistributionFile(tempDir, ".zip");
+		assertThat(distributionFile.toString()).isEqualTo(tempDir + ".zip");
+		Map<Path, List<Path>> tempFiles = (Map<Path, List<Path>>) ReflectionTestUtils.getField(this.invoker,
 				"temporaryFiles");
-		assertThat(tempFiles.get(dir.getName())).contains(distributionFile);
+		assertThat(tempFiles.get(tempDir)).contains(distributionFile);
 	}
 
 	@Test
-	void cleanupTempFilesShouldOnlyCleanupSpecifiedDir() {
+	void cleanupTempFilesShouldOnlyCleanupSpecifiedDir() throws IOException {
 		WebProjectRequest request = new WebProjectRequest();
 		request.initialize(metadata);
 		request.setType("gradle-project");
 		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
-		File file = result.getRootDirectory().toFile();
-		this.invoker.cleanTempFiles(file);
-		assertThat(file.listFiles()).isNull();
+		this.invoker.cleanTempFiles(result.getRootDirectory());
+		assertThat(result.getRootDirectory()).doesNotExist();
 	}
 
 	private void setupContext() {
