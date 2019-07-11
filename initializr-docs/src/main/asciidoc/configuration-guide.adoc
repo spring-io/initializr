@@ -31,8 +31,9 @@ according to the chosen generation.
 Convenient implementations for those concepts are available:
 
 * A `Build` abstraction model with dedicated models for Apache Maven and Gradle. A writer
-abstraction to generate `pom.xml`, `build.gradle` and `settings.gradle` files is also
-available
+abstraction that can generate build files for Maven (`pom.xml`) and Gradle
+(`build.gradle` and `settings.gradle` or `build.gradle.kts` and `settings.gradle.kts`)
+is also available
 * Out-of-the-box support for `jar` and `war` packaging
 * Source code model and writers for Java, Kotlin and Apache Groovy
 
