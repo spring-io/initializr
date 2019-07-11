@@ -16,15 +16,19 @@
 
 package io.spring.initializr.web;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,10 +36,11 @@ import io.spring.initializr.generator.spring.test.ProjectAssert;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.ExecTask;
-import org.apache.tools.ant.taskdefs.Expand;
-import org.apache.tools.ant.taskdefs.Untar;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -212,59 +217,45 @@ public abstract class AbstractInitializrIntegrationTests {
 		}
 	}
 
-	private void untar(Path archiveFile, Path project) {
-		if (!runningOnWindows()) {
-			createProjectDir(project);
-			ExecTask execTask = new ExecTask();
-			execTask.setProject(new Project());
-			execTask.setExecutable("tar");
-			execTask.createArg().setValue("-C");
-			execTask.createArg().setValue(project.toFile().getAbsolutePath());
-			execTask.createArg().setValue("-xf");
-			execTask.createArg().setValue(archiveFile.toFile().getAbsolutePath());
-			execTask.execute();
-		}
-		else {
-			Untar expand = new Untar();
-			expand.setProject(new Project());
-			expand.setDest(project.toFile());
-			expand.setSrc(archiveFile.toFile());
-			Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
-			method.setValue("gzip");
-			expand.setCompression(method);
-			expand.execute();
+	private void untar(Path archiveFile, Path project) throws IOException {
+		try (TarArchiveInputStream input = new TarArchiveInputStream(
+				new GzipCompressorInputStream(Files.newInputStream(archiveFile)))) {
+			TarArchiveEntry entry = null;
+			while ((entry = input.getNextTarEntry()) != null) {
+				Path path = project.resolve(entry.getName());
+				if (entry.isDirectory()) {
+					Files.createDirectories(path);
+				}
+				else {
+					Files.createDirectories(path.getParent());
+					Files.write(path, StreamUtils.copyToByteArray(input));
+				}
+				Files.setPosixFilePermissions(path, getPosixFilePermissions(entry.getMode()));
+			}
 		}
 	}
 
-	private void createProjectDir(Path project) {
-		ExecTask execTask = new ExecTask();
-		execTask.setProject(new Project());
-		execTask.setExecutable("mkdir");
-		execTask.createArg().setValue(project.toFile().getAbsolutePath());
-		execTask.execute();
-	}
-
-	private void unzip(Path archiveFile, Path project) {
-		if (!runningOnWindows()) {
-			ExecTask execTask = new ExecTask();
-			execTask.setProject(new Project());
-			execTask.setExecutable("unzip");
-			execTask.createArg().setValue(archiveFile.toFile().getAbsolutePath());
-			execTask.createArg().setValue("-d");
-			execTask.createArg().setValue(project.toFile().getAbsolutePath());
-			execTask.execute();
-		}
-		else {
-			Expand expand = new Expand();
-			expand.setProject(new Project());
-			expand.setDest(project.toFile());
-			expand.setSrc(archiveFile.toFile());
-			expand.execute();
+	private void unzip(Path archiveFile, Path project) throws IOException {
+		try (ZipFile zip = new ZipFile(archiveFile.toFile())) {
+			Enumeration<? extends ZipArchiveEntry> entries = zip.getEntries();
+			while (entries.hasMoreElements()) {
+				ZipArchiveEntry entry = entries.nextElement();
+				Path path = project.resolve(entry.getName());
+				if (entry.isDirectory()) {
+					Files.createDirectories(path);
+				}
+				else {
+					Files.createDirectories(path.getParent());
+					Files.write(path, StreamUtils.copyToByteArray(zip.getInputStream(entry)));
+				}
+				Files.setPosixFilePermissions(path, getPosixFilePermissions(entry.getUnixMode()));
+			}
 		}
 	}
 
-	private boolean runningOnWindows() {
-		return File.separatorChar == '\\';
+	private Set<PosixFilePermission> getPosixFilePermissions(int unixMode) {
+		return Arrays.stream(BitMaskFilePermission.values()).filter((permission) -> permission.permitted(unixMode))
+				.map(BitMaskFilePermission::getFilePermission).collect(Collectors.toSet());
 	}
 
 	protected Path writeArchive(byte[] body) throws IOException {
@@ -316,6 +307,45 @@ public abstract class AbstractInitializrIntegrationTests {
 		@Bean
 		public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy() {
 			return (metadata) -> metadata;
+		}
+
+	}
+
+	private enum BitMaskFilePermission {
+
+		OWNER_READ(0400),
+
+		OWNER_WRITE(0200),
+
+		OWNER_EXECUTE(0100),
+
+		GROUP_READ(0040),
+
+		GROUP_WRITE(0020),
+
+		GROUP_EXECUTE(0010),
+
+		OTHERS_READ(0004),
+
+		OTHERS_WRITE(0002),
+
+		OTHERS_EXECUTE(0001);
+
+		private int mask;
+
+		private PosixFilePermission filePermission;
+
+		BitMaskFilePermission(int mask) {
+			this.mask = mask;
+			this.filePermission = PosixFilePermission.valueOf(this.name());
+		}
+
+		boolean permitted(int unixMode) {
+			return (this.mask & unixMode) == this.mask;
+		}
+
+		PosixFilePermission getFilePermission() {
+			return this.filePermission;
 		}
 
 	}
