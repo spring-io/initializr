@@ -3,22 +3,53 @@
 
 [partintro]
 --
-This section describes how you can create your own instance of the service and tune it for
-your needs, and also how you can configure an existing instance. You'll also find some
-advanced tips to make sure the available options are consistent with the chosen Spring
-Boot generation.
+You can use Initializr to create your own service that can generate JVM projects.
+This section describes how you can create your own service and tune it for
+your needs, and also how you can configure an existing service.
 --
 
-[[project-generation]]
-== Project generation concepts
-Spring Initializr offers an API for project generation that can be reused in many
-contexts. So far, we've mentioned how we've used it on start.spring.io but the low-level
-concepts are quite independent from that as you'll discover in the section.
+[[create-instance]]
+== Creating your own instance
+Initializr jars are available on https://repo.spring.io and can be used to create your own service.
 
-Project generation requires a `ProjectDescription` that gathers several properties from
-the project:
+Initializr is split across several modules:
 
-* A platform `Version` used by the project. This helps fine-tuning available dependencies
+* `initializr-generator`: core project generation library
+* `initializr-generator-spring`: optional module defining the conventions for a Spring
+Boot project. Can be replaced by your own conventions if necessary.
+* `initializr-metadata`: metadata infrastructure for various aspects of the project
+* `initializr-web`: REST endpoints
+* `initializr-actuator`: optional module to provide additional information and statistics
+on project generation
+* `initializr-docs`: documentation
+
+To understand concepts behind project generation, let's take a look at the first two in
+a little more detail.
+
+[[initializr-generator]]
+== Initializr Generator
+The `initializr-generator` module contains all the infrastructure necessary to generate projects.
+The `ProjectGenerator` class is the main entry point for project generation.
+
+Project generation occurs in a dedicated application context (`ProjectGenerationContext`),
+which means that for every project that is generated, the context only contains configuration and components
+corresponding to that project. The components registered in a `ProjectGenerationContext` are decided based on
+an immutable `ProjectDescription`.
+
+Components for a `ProjectGenerationContext` are defined in `@ProjectGenerationConfiguration`-annotated
+configuration classes. The `ProjectGenerationContext` imports `@ProjectGenerationConfiguration`-annotated
+configuration classes that are registered in `META-INF/spring.factories`.
+
+[indent=0]
+----
+io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
+com.example.acme.build.BuildProjectGenerationConfiguration,\
+com.example.acme.code.SourceCodeProjectGenerationConfiguration
+----
+
+A project is defined by a `ProjectDescription` which consists of the following project properties:
+
+* A platform `Version` used by the project. This can be used to tune available dependencies
 according to the chosen generation.
 * The `BuildSystem` and `Packaging`
 * The JVM `Language`
@@ -28,39 +59,18 @@ according to the chosen generation.
 * The root package name
 * The base directory for the project
 
-Convenient implementations for those concepts are available:
+Before any project assets are generated, the `ProjectDescription` can be customized
+using ``ProjectDescriptionCustomizer``s. ``ProjectDescriptionCustomizer``s are
+beans in a `ProjectGenerationContext` and they can be ordered using Spring's `Ordered` interface.
 
-* A `Build` abstraction model with dedicated models for Apache Maven and Gradle. A writer
-abstraction that can generate build files for Maven (`pom.xml`) and Gradle
-(`build.gradle` and `settings.gradle` or `build.gradle.kts` and `settings.gradle.kts`)
-is also available
-* Out-of-the-box support for `jar` and `war` packaging
-* Source code model and writers for Java, Kotlin and Apache Groovy
+Once the description has been customized based on the available ``ProjectDescriptionCustomizer``s,
+the generator uses a `ProjectAssetGenerator` to generate the project assets. The default implementation
+of `ProjectAssetGenerator` generates a directory structure using ``ProjectContributor``s available in the
+`ProjectGenerationContext`. ``ProjectContributor``s can also be ordered using `Ordered`.
 
-Based on a project description, project generation occurs in a dedicated
-`ProjectGenerationContext` where the following happens:
-
-* Components that should be invoked for the described project are identified
-* Customizers populates and customizes models for various assets of the project (build
-file, source code, etc)
-* Contributors use the models to generate assets in a directory structure
-
-Available components are declared in a `@ProjectGenerationConfiguration`-annotated
-configuration class that is registered in `META-INF/spring.factories`:
-
-[indent=0]
-----
-io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
-com.example.acme.build.BuildProjectGenerationConfiguration,\
-com.example.acme.code.SourceCodeProjectGenerationConfiguration
-----
-
-
-=== Project generation conditions
-Spring Initializr offers several conditions that components defined in the
-`ProjectGenerationContext` can declare to only run when necessary. This avoids exposing
-beans that have to check if they have to do something and makes the declaration more
-idiomatic.
+Components such as ``ProjectContributor``s and ``ProjectDescriptionCustomizer``s are made available in
+a `ProjectGenerationContext` using conditions. Using conditions avoids exposing beans that have to
+check if they have to do something and makes the declaration idiomatic.
 
 Consider the following example:
 
@@ -78,25 +88,58 @@ This registers a bean only if the project to generate uses Gradle and `war` pack
 Check the `io.spring.initializr.generator.condition` package for more details. Custom
 conditions can easily be created by inheriting from `ProjectGenerationCondition`.
 
+This module also contains abstractions for various aspects of the project along with
+some convenient implementations:
+
+* A build system abstraction with Maven and Gradle implementations.
+* A language abstraction with Java, Groovy and Kotlin implementations, including a SourceCodeWriter for each implementation
+* A packaging abstraction with implementations for `jar` and `war`
+
+Adding new implementations for these involves creating a `BuildSystemFactory`, `LanguageFactory`
+and `PackagingFactory` and registering it in `META-INF/spring.factories` under
+`io.spring.initializr.generator.buildsystem.BuildSystemFactory`, `io.spring.initializr.generator.language.LanguageFactory`
+and `io.spring.initializr.generator.packaging.PackagingFactory` respectively.
+
+A JVM project typically contains a build file which contains the build configuration
+for the project. The `initializr-generator` module provides a model for `Build`
+with implementations for `Maven` and `Gradle`. This model can be manipulated depending
+on the conventions. The library also provides a `MavenBuildWriter` and `GradleBuildWriter`
+that can convert a `Build` model to a build file.
+
+The next section about the <<initializr-generator-spring,`initializr-generator-spring`>> module showcases how the `Build`
+can be manipulated before the build file is written using customizers.
+
+
+
+[[initializr-generator-spring]]
+== Initializr Conventions for Spring Boot
+
+This is an optional module that defines the conventions that we think will be useful
+for any Spring Boot project. You can include this jar in your project if your
+service is meant for generating Spring Boot projects.
+
+In the section above, we looked at how ``ProjectContributor``s can be used to contribute
+assets to a project. This module contains concrete implementations of `ProjectContributor`
+along with the ``@ProjectGenerationConfiguration``s that configure them. For example, there is
+a `MavenBuildProjectContributor` which contributes the files for a Maven build, such as `pom.xml`.
+This contributor is registered as a bean in a `ProjectGenerationConfiguration` which is conditional
+on the build system being Maven.
+
+This module also introduces the concept of ``BuildCustomizer``s. ``BuildCustomizer``s are used to
+customize a project's `Build` and are ordered. For instance, if your service requires you to
+add a certain plugin to the build, you can provide a `BuildCustomizer` that adds the plugin
+and the customizer will be called according to the order specified on it.
+
 
 
 [[create-instance]]
 == Creating your own instance
-Spring Initializr is split across several modules:
 
-* `initializr-generator`: core project generation library
-* `initializr-metadata`: metadata infrastructure for various aspects of the project
-* `initializr-generator-spring`: optional module defining the conventions for a Spring
-Boot project. Can be replaced by your own conventions if necessary.
-* `initializr-web`: REST endpoints and web interface
-* `initializr-actuator`: optional module to provide additional information and statistics
-on project generation
-* `initializr-docs`: documentation
+NOTE: This walkthrough of how to create your own service assumes that the service will be used
+for creating Spring Boot projects which is the why `initializr-generator-spring` jar is included.
 
-Because it contains several auto-configurations, creating your own instance is quite easy.
-You could get started using Spring Initializr itself to generate a starting point!
-
-Create a new project with the `web` dependency and add the following dependency:
+You can generate a project for your own instance on https://start.spring.io.
+Create a new project with the `web` dependency and add the following dependencies:
 
 [source,xml,indent=0,subs="verbatim,attributes"]
 ----
@@ -123,8 +166,9 @@ implementation("io.spring.initializr:initializr-generator-spring:{spring-initial
 NOTE: Spring Initializr releases are not available on Maven Central so you will need to
 configure the build to add an extra repository at `https://repo.spring.io/release`.
 
-If you start the application, you'll see the familiar interface but none of the drop down
-lists have values (except the one for the Spring Boot version, we will
+Once you've started the application, you can hit http://localhost:8080. You'll get a json
+document that describes the capabilities of the service. None of the select capabilities
+will have values (except the one for the Spring Boot version, we will
 <<create-instance-boot-versions,come back to that later>>). In the rest of this section,
 we will configure those basic settings.
 
@@ -140,7 +184,7 @@ format that is more readable for such structure. If you agree, go ahead and rena
 
 [[create-instance-basic-settings]]
 === Configuring basic settings
-Most of the drop-down lists are configured via a simple list-based structure where each
+Most of the select capabilities are configured via a simple list-based structure where each
 entry has an `id`, a `name` and whether that entry is the default or not. If no `name` is
 provided, the `id` is used instead.
 
@@ -163,11 +207,12 @@ Let's configure the languages and the JVM generations we want to support:
 		  default: false
 ----
 
-If you click on the "Switch to the full version" link, the two drop down lists now offer
-the options and default values defined above.
+If you restart the application and refresh http://localhost:8080, the language capability
+now has the options and default values defined above.
 
 NOTE: The language identifiers defined there must have a corresponding `Language`
-implementation. `java`, `kotlin` and `groovy` can be used out-of-the-box.
+implementation. `java`, `kotlin` and `groovy` can be used out-of-the-box as implementations
+for those are available in the core library itself.
 
 The available packagings are also configurable that way:
 
@@ -183,7 +228,8 @@ The available packagings are also configurable that way:
 		  default: false
 ----
 
-NOTE: Additional packaging formats can be configured by implementing the `Packaging` abstraction.
+NOTE: `Jar` and `War` packaging is available out-of-the-box. For additional packaging formats, you need
+to implement the `Packaging` abstraction and provide a `PackagingFactory` that corresponds to it.
 
 
 [[create-instance-boot-versions]]
@@ -191,7 +237,7 @@ NOTE: Additional packaging formats can be configured by implementing the `Packag
 If you look at http://projects.spring.io/spring-boot[the project home page for Spring
 Boot], the latest versions are displayed. And you've probably noticed that they match the
 drop down list that you automatically get with a default instance of the Initializr. The
-reason for that is that Spring Initializr calls an API on spring.io to retrieve the
+reason for that is that Spring Initializr calls an API on https://spring.io to retrieve the
 latest versions automatically. This makes sure that you always get the latest available
 versions.
 

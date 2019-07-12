@@ -6,6 +6,12 @@
 If you're wondering how to use https://start.spring.io or what features are available,
 this section is for you! You'll find the various ways you can interact with the service and
 get a better insight at what you can do with it.
+
+The service allows you to generate Spring Boot projects quickly.
+You can customize the project to generate: the build system and packaging, the language,
+the packaging, the coordinates, the platform version and, finally, the dependencies to add
+to the project. Most dependencies available on https://start.spring.io are Spring Boot starters
+which is the recommended way to add dependencies to a Spring Boot application.
 --
 
 
