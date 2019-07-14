@@ -61,8 +61,10 @@ class MetadataBuildItemResolverTests {
 		InitializrMetadata metadata = new InitializrMetadata();
 		DependencyGroup group = DependencyGroup.create("test");
 		Dependency dependency = Dependency.withId("test-dep", "com.example", "test");
-		dependency.getMappings().add(Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", null, null, "1.0.0.RELEASE"));
-		dependency.getMappings().add(Mapping.create("2.0.0.RELEASE", "com.example.override", "test-override", null));
+		dependency.getMappings()
+				.add(Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", null, null, "1.0.0.RELEASE", null));
+		dependency.getMappings()
+				.add(Mapping.create("2.0.0.RELEASE", "com.example.override", "test-override", null, null));
 		group.getContent().add(dependency);
 		metadata.getDependencies().getContent().add(group);
 		metadata.validate();

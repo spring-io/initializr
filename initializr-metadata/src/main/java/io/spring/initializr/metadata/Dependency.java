@@ -249,6 +249,7 @@ public class Dependency extends MetadataElement implements Describable {
 				dependency.groupId = (mapping.groupId != null) ? mapping.groupId : this.groupId;
 				dependency.artifactId = (mapping.artifactId != null) ? mapping.artifactId : this.artifactId;
 				dependency.version = (mapping.version != null) ? mapping.version : this.version;
+				dependency.starter = (mapping.starter != null) ? mapping.starter : this.starter;
 				dependency.versionRequirement = mapping.range.toString();
 				dependency.mappings = null;
 				return dependency;
@@ -499,6 +500,11 @@ public class Dependency extends MetadataElement implements Describable {
 		 */
 		private String version;
 
+		/**
+		 * The starter setting to use for the mapping or {@code null} to use the default.
+		 */
+		private Boolean starter;
+
 		@JsonIgnore
 		private VersionRange range;
 
@@ -526,6 +532,14 @@ public class Dependency extends MetadataElement implements Describable {
 			this.version = version;
 		}
 
+		public Boolean getStarter() {
+			return this.starter;
+		}
+
+		public void setStarter(Boolean starter) {
+			this.starter = starter;
+		}
+
 		public VersionRange getRange() {
 			return this.range;
 		}
@@ -538,12 +552,13 @@ public class Dependency extends MetadataElement implements Describable {
 			this.versionRange = versionRange;
 		}
 
-		public static Mapping create(String range, String groupId, String artifactId, String version) {
+		public static Mapping create(String range, String groupId, String artifactId, String version, Boolean starter) {
 			Mapping mapping = new Mapping();
 			mapping.versionRange = range;
 			mapping.groupId = groupId;
 			mapping.artifactId = artifactId;
 			mapping.version = version;
+			mapping.starter = starter;
 			return mapping;
 		}
 

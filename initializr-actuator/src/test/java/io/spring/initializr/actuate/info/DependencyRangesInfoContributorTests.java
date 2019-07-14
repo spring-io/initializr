@@ -56,7 +56,8 @@ class DependencyRangesInfoContributorTests {
 	@Test
 	void dependencyWithRangeOnArtifact() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, "foo2", null));
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, "foo2", null, null));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
 				.build();
 		Info info = getInfo(metadata);
@@ -68,7 +69,7 @@ class DependencyRangesInfoContributorTests {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null));
 		dependency.setBom("bom");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom", bom)
 				.addDependencyGroup("foo", dependency).build();
@@ -96,8 +97,8 @@ class DependencyRangesInfoContributorTests {
 	void dependencyWithMappingAndOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
-		dependency.getMappings().add(Dependency.Mapping.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE"));
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null));
+		dependency.getMappings().add(Dependency.Mapping.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE", null));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		Info info = getInfo(metadata);
@@ -111,9 +112,9 @@ class DependencyRangesInfoContributorTests {
 	void dependencyWithMappingAndNoOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE"));
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null));
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE"));
+				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE", null));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
 		Info info = getInfo(metadata);
