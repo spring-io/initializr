@@ -34,7 +34,7 @@ class ProjectGenerationControllerCustomDefaultsIntegrationTests extends Abstract
 
 	@Test
 	void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"), String.class);
+		String content = getRestTemplate().getForObject(createUrl("/pom.xml?dependencies=web"), String.class);
 		MavenBuildAssert pomAssert = new MavenBuildAssert(content);
 		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar").hasVersion("1.2.4-SNAPSHOT")
 				.doesNotHaveNode("/project/packaging").hasName("FooBar").hasDescription("FooBar Project");

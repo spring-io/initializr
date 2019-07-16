@@ -200,7 +200,7 @@ public class DefaultProjectRequestToDescriptionConverter
 	}
 
 	private void validateDependencies(ProjectRequest request, InitializrMetadata metadata) {
-		List<String> dependencies = (!request.getStyle().isEmpty() ? request.getStyle() : request.getDependencies());
+		List<String> dependencies = request.getDependencies();
 		dependencies.forEach((dep) -> {
 			Dependency dependency = metadata.getDependencies().get(dep);
 			if (dependency == null) {
@@ -242,7 +242,7 @@ public class DefaultProjectRequestToDescriptionConverter
 
 	private List<Dependency> getResolvedDependencies(ProjectRequest request, String springBootVersion,
 			InitializrMetadata metadata) {
-		List<String> depIds = (!request.getStyle().isEmpty() ? request.getStyle() : request.getDependencies());
+		List<String> depIds = request.getDependencies();
 		Version requestedVersion = Version.parse(springBootVersion);
 		return depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);

@@ -28,8 +28,6 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequest {
 
-	private List<String> style = new ArrayList<>();
-
 	private List<String> dependencies = new ArrayList<>();
 
 	private String name;
@@ -58,14 +56,6 @@ public class ProjectRequest {
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
-
-	public List<String> getStyle() {
-		return this.style;
-	}
-
-	public void setStyle(List<String> style) {
-		this.style = style;
-	}
 
 	public List<String> getDependencies() {
 		return this.dependencies;

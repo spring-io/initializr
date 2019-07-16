@@ -42,7 +42,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleZipProject() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?style=web&style=jpa");
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&dependencies=jpa");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
 		ProjectStructure project = projectFromArchive(entity.getBody());
 		assertDefaultProject(project);
@@ -56,7 +56,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleTgzProject() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?style=org.acme:foo");
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?dependencies=org.acme:foo");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
 		ProjectStructure project = tgzProjectAssert(entity.getBody());
 		assertDefaultProject(project);
@@ -74,7 +74,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
-		ProjectStructure project = downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE");
+		ProjectStructure project = downloadTgz("/starter.tgz?dependencies=org.acme:biz&bootVersion=2.2.1.RELEASE");
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
 		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(biz);
@@ -83,7 +83,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void dependencyNotInRange() {
 		try {
-			execute("/starter.tgz?style=org.acme:bur", byte[].class, null, (String[]) null);
+			execute("/starter.tgz?dependencies=org.acme:bur", byte[].class, null, (String[]) null);
 		}
 		catch (HttpClientErrorException ex) {
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -125,7 +125,8 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void kotlinRange() {
-		ProjectStructure project = downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE");
+		ProjectStructure project = downloadZip(
+				"/starter.zip?dependencies=web&language=kotlin&bootVersion=2.0.1.RELEASE");
 		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
 				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
 				"src/main/resources/application.properties");
@@ -135,7 +136,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void gradleWarProject() {
 		ProjectStructure project = downloadZip(
-				"/starter.zip?style=web&style=security&packaging=war&type=gradle-project");
+				"/starter.zip?dependencies=web&dependencies=security&packaging=war&type=gradle-project");
 		assertThat(project).hasGroovyDslGradleBuild().hasGradleWrapper();
 		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java",
 				"src/main/java/com/example/demo/ServletInitializer.java",
@@ -147,7 +148,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void missingDependencyProperException() {
 		try {
-			downloadArchive("/starter.zip?style=foo:bar");
+			downloadArchive("/starter.zip?dependencies=foo:bar");
 			fail("Should have failed");
 		}
 		catch (HttpClientErrorException ex) {
@@ -160,7 +161,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void invalidDependencyProperException() {
 		try {
-			downloadArchive("/starter.zip?style=foo");
+			downloadArchive("/starter.zip?dependencies=foo");
 			fail("Should have failed");
 		}
 		catch (HttpClientErrorException ex) {

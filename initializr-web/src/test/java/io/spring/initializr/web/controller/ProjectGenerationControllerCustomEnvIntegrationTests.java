@@ -35,7 +35,7 @@ class ProjectGenerationControllerCustomEnvIntegrationTests extends AbstractIniti
 
 	@Test
 	void generateProjectWithInvalidName() {
-		ProjectStructure project = downloadZip("/starter.zip?style=data-jpa&name=Invalid");
+		ProjectStructure project = downloadZip("/starter.zip?dependencies=data-jpa&name=Invalid");
 		assertThat(project).containsFiles("src/main/java/com/example/demo/FooBarApplication.java",
 				"src/test/java/com/example/demo/FooBarApplicationTests.java");
 		assertThat(project).doesNotContainFiles("src/main/java/com/example/demo/DemoApplication.java",

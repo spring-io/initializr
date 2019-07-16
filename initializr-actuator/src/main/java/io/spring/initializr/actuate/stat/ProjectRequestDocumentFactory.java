@@ -77,7 +77,6 @@ public class ProjectRequestDocumentFactory {
 
 		// Let's not rely on the resolved dependencies here
 		List<String> dependencies = new ArrayList<>();
-		dependencies.addAll(request.getStyle());
 		dependencies.addAll(request.getDependencies());
 		List<String> validDependencies = dependencies.stream()
 				.filter((id) -> metadata.getDependencies().get(id) != null).collect(Collectors.toList());
