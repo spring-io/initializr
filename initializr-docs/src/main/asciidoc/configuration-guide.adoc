@@ -232,6 +232,24 @@ NOTE: `Jar` and `War` packaging is available out-of-the-box. For additional pack
 to implement the `Packaging` abstraction and provide a `PackagingFactory` that corresponds to it.
 
 
+
+[[create-instance-text-only-settings]]
+=== Configuring text-only settings
+
+Text-only capabilities include `groupId`, `artifactId`, `name`, `description`, `version` and `packageName`.
+Each capability has a default value if nothing is configured. The defaults can be overriden as show below:
+
+[source,yaml,indent=0]
+----
+ initializr:
+   group-id:
+     value: org.acme
+   artifact-id:
+     value: my-app
+----
+
+
+
 [[create-instance-boot-versions]]
 === Configuring available Spring Boot versions
 If you look at http://projects.spring.io/spring-boot[the project home page for Spring
