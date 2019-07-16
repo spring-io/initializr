@@ -28,6 +28,7 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
+import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
 import org.eclipse.aether.repository.LocalRepository;
@@ -85,9 +86,8 @@ class MavenResolverDependencyManagementVersionResolver implements DependencyMana
 	public Map<String, String> resolve(String groupId, String artifactId, String version) {
 		ArtifactDescriptorResult bom = resolveBom(groupId, artifactId, version);
 		Map<String, String> managedVersions = new HashMap<>();
-		bom.getManagedDependencies().stream().map((dependency) -> dependency.getArtifact())
-				.forEach((artifact) -> managedVersions
-						.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getVersion()));
+		bom.getManagedDependencies().stream().map(Dependency::getArtifact).forEach((artifact) -> managedVersions
+				.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getVersion()));
 		return managedVersions;
 	}
 
