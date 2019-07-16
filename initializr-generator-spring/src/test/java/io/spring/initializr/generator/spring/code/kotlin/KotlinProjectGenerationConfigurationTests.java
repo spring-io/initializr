@@ -17,16 +17,22 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -46,10 +52,16 @@ class KotlinProjectGenerationConfigurationTests {
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
 				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
-						KotlinProjectGenerationConfiguration.class)
+						KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
+						MavenProjectGenerationConfiguration.class)
 				.withDirectory(directory)
 				.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("1.2.70"))
-				.withDescriptionCustomizer((description) -> {
+				.withBean(InitializrMetadata.class, () -> {
+					io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
+							.withId("foo");
+					dependency.setFacets(Collections.singletonList("json"));
+					return InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
+				}).withDescriptionCustomizer((description) -> {
 					description.setLanguage(new KotlinLanguage());
 					if (description.getPlatformVersion() == null) {
 						description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
@@ -108,6 +120,17 @@ class KotlinProjectGenerationConfigurationTests {
 				"class ServletInitializer : SpringBootServletInitializer() {", "",
 				"    override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {",
 				"        return application.sources(KotlinDemoApplication::class.java)", "    }", "", "}");
+	}
+
+	@Test
+	void jacksonKotlinModuleShouldBeAddedWhenJsonFacetPresent() {
+		ProjectDescription description = new ProjectDescription();
+		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo").build());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		List<String> lines = projectStructure.readAllLines("pom.xml");
+		assertThat(lines).contains("        <dependency>",
+				"            <groupId>com.fasterxml.jackson.module</groupId>",
+				"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
 	}
 
 }
