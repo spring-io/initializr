@@ -1,5 +1,5 @@
 = Spring Initializr Reference Guide
-Stéphane Nicoll; Dave Syer
+Stéphane Nicoll; Dave Syer; Madhura Bhave
 :doctype: book
 :idprefix:
 :idseparator: -

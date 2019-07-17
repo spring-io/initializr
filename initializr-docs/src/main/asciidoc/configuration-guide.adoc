@@ -853,6 +853,26 @@ repository,version mapping>> to override the default repository for a dependency
 
 
 
+[[howto-configure-custom-parent-pom]]
+=== Configure a custom parent POM
+For Maven projects, you can configure a custom parent POM as follows:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  env:
+		maven:
+		  parent:
+			groupId: com.example
+			artifactId: my-parent
+			version: 1.0.0
+			includeSpringBootBom : true
+----
+
+`includeSpringBootBom` is `false` by default. When set to `true`, the `spring-boot-dependencies`
+bom is added to the `dependencyManagement` section with the version of Spring Boot used for the project.
+
+
 [[howto-dependency-starter-flag]]
 === Make sure a regular dependency brings the base starter
 If a dependency does not stand on its own (and specifically if it does not depend on an
