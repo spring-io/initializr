@@ -112,23 +112,34 @@ can be manipulated before the build file is written using customizers.
 
 
 [[initializr-generator-spring]]
-== Initializr Conventions for Spring Boot
-
-This is an optional module that defines the conventions that we think will be useful
-for any Spring Boot project. You can include this jar in your project if your
-service is meant for generating Spring Boot projects.
+== Conventions for Spring Boot
+This is an optional module that defines the conventions that we think will be useful for
+any Spring Boot project. You can include this jar in your project if your service is meant
+for generating Spring Boot projects.
 
 In the section above, we looked at how ``ProjectContributor``s can be used to contribute
 assets to a project. This module contains concrete implementations of `ProjectContributor`
-along with the ``@ProjectGenerationConfiguration``s that configure them. For example, there is
-a `MavenBuildProjectContributor` which contributes the files for a Maven build, such as `pom.xml`.
-This contributor is registered as a bean in a `ProjectGenerationConfiguration` which is conditional
-on the build system being Maven.
+along with the ``@ProjectGenerationConfiguration``s that configure them. For example,
+there is a `MavenBuildProjectContributor` which contributes the files for a Maven build,
+such as `pom.xml`. This contributor is registered as a bean in a
+`ProjectGenerationConfiguration` which is conditional on the build system being Maven.
 
-This module also introduces the concept of ``BuildCustomizer``s. ``BuildCustomizer``s are used to
-customize a project's `Build` and are ordered. For instance, if your service requires you to
-add a certain plugin to the build, you can provide a `BuildCustomizer` that adds the plugin
-and the customizer will be called according to the order specified on it.
+This module also introduces the concept of ``BuildCustomizer``s. ``BuildCustomizer``s are
+used to customize a project's `Build` and are ordered. For instance, if your service
+requires you to add a certain plugin to the build, you can provide a `BuildCustomizer`
+that adds the plugin and the customizer will be called according to the order specified on
+it.
+
+[[initializr-generator-spring-facets]]
+=== Supported facets
+The following facets are handled:
+
+* `web`: used to drive the inclusion of a dependency with id `web` (defaulting to
+`spring-boot-starter-web` if no dependency with that facet is present
+* `jpa`: used to tag that this project uses JPA. When combined with Kotlin, this makes
+sure to configure the appropriate plugin
+* `json`: used to tag that this project depends on Jackson. When combined with Kotlin,
+this makes sure to add the Kotlin-specific jackson module for better interoperability.
 
 
 
