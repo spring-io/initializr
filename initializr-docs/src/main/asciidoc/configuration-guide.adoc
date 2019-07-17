@@ -8,9 +8,11 @@ This section describes how you can create your own service and tune it for
 your needs, and also how you can configure an existing service.
 --
 
-[[create-instance]]
-== Creating your own instance
-Initializr jars are available on https://repo.spring.io and can be used to create your own service.
+[[project-generation-overview]]
+== Project Generation Overview
+
+Before getting into <<#create-instance, creating your own service>>, let's take a look at
+the core concepts of project generation and how the library is structured to support them.
 
 Initializr is split across several modules:
 
@@ -27,7 +29,7 @@ To understand concepts behind project generation, let's take a look at the first
 a little more detail.
 
 [[initializr-generator]]
-== Initializr Generator
+=== Initializr Generator
 The `initializr-generator` module contains all the infrastructure necessary to generate projects.
 The `ProjectGenerator` class is the main entry point for project generation.
 
@@ -112,7 +114,7 @@ can be manipulated before the build file is written using customizers.
 
 
 [[initializr-generator-spring]]
-== Conventions for Spring Boot
+=== Conventions for Spring Boot
 This is an optional module that defines the conventions that we think will be useful for
 any Spring Boot project. You can include this jar in your project if your service is meant
 for generating Spring Boot projects.
@@ -131,7 +133,7 @@ that adds the plugin and the customizer will be called according to the order sp
 it.
 
 [[initializr-generator-spring-facets]]
-=== Supported facets
+==== Supported facets
 The following facets are handled:
 
 * `web`: used to drive the inclusion of a dependency with id `web` (defaulting to
