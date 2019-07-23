@@ -16,9 +16,10 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
-import java.util.List;
+import java.util.Arrays;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
@@ -39,48 +40,93 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	private final InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder.withDefaults();
 
 	@Test
-	void dependencyLinkWithNoDescriptionIsIgnored() {
-		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
+	void dependencyWithReferenceDocLink() {
+		Dependency dependency = createDependency("example",
+				Link.create("reference", "https://example.com/doc", "Reference doc example"));
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp("example");
+		assertThat(document.gettingStarted().isEmpty()).isFalse();
+		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/doc", "Reference doc example");
+	}
+
+	@Test
+	void dependencyWithReferenceDocLinkGetDependencyNameByDefault() {
+		Dependency dependency = createDependency("example", Link.create("reference", "https://example.com/doc"));
+		dependency.setName("Example Library");
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp("example");
+		assertThat(document.gettingStarted().isEmpty()).isFalse();
+		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/doc", "Example Library");
+	}
+
+	@Test
+	void dependencyWithSeveralReferenceDocLinksDoNotGetDependencyNameByDefault() {
+		Dependency dependency = createDependency("example", Link.create("reference", "https://example.com/doc"),
+				Link.create("reference", "https://example.com/doc2"));
+		dependency.setName("Example Library");
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isTrue();
 	}
 
 	@Test
-	void dependencyWithReferenceDocLink() {
-		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(Link.create("reference", "https://example.com/doc", "Reference doc example"));
+	void dependencyWithGuideLink() {
+		Dependency dependency = createDependency("example",
+				Link.create("guide", "https://example.com/how-to", "How-to example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted().referenceDocs().getItems();
-		assertThat(links).hasSize(1);
-		assertLink(links.get(0), "https://example.com/doc", "Reference doc example");
+		assertSingleLink(document.gettingStarted().guides(), "https://example.com/how-to", "How-to example");
 	}
 
 	@Test
-	void dependencyWithGuideLink() {
-		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to", "How-to example"));
+	void dependencyWithGuideLinkGetDependencyNameByDefault() {
+		Dependency dependency = createDependency("example", Link.create("guide", "https://example.com/how-to"));
+		dependency.setName("Example Library");
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted().guides().getItems();
-		assertThat(links).hasSize(1);
-		assertLink(links.get(0), "https://example.com/how-to", "How-to example");
+		assertSingleLink(document.gettingStarted().guides(), "https://example.com/how-to", "Example Library");
+	}
+
+	@Test
+	void dependencyWithSeveralGuideLinksDoNotGetDependencyNameByDefault() {
+		Dependency dependency = createDependency("example", Link.create("guide", "https://example.com/how-to"),
+				Link.create("guide", "https://example.com/anothero"));
+		dependency.setName("Example Library");
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp("example");
+		assertThat(document.gettingStarted().isEmpty()).isTrue();
 	}
 
 	@Test
 	void dependencyWithAdditionalLink() {
-		Dependency dependency = Dependency.withId("example", "com.example", "example");
-		dependency.getLinks().add(Link.create("something", "https://example.com/test", "Test App"));
+		Dependency dependency = createDependency("example",
+				Link.create("something", "https://example.com/test", "Test App"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		List<GettingStartedSection.Link> links = document.gettingStarted().additionalLinks().getItems();
-		assertThat(links).hasSize(1);
-		assertLink(links.get(0), "https://example.com/test", "Test App");
+		assertSingleLink(document.gettingStarted().additionalLinks(), "https://example.com/test", "Test App");
+	}
+
+	@Test
+	void dependencyWithAdditionalLinkDoNotDependencyNameByDefault() {
+		Dependency dependency = createDependency("example", Link.create("something", "https://example.com/test"));
+		dependency.setName("Example Library");
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp("example");
+		assertThat(document.gettingStarted().isEmpty()).isTrue();
+	}
+
+	private Dependency createDependency(String id, Link... links) {
+		Dependency dependency = Dependency.withId(id, "com.example", "example");
+		dependency.getLinks().addAll(Arrays.asList(links));
+		return dependency;
+	}
+
+	private void assertSingleLink(BulletedSection<GettingStartedSection.Link> links, String href, String description) {
+		assertThat(links.getItems()).hasSize(1);
+		assertLink(links.getItems().get(0), href, description);
 	}
 
 	private void assertLink(GettingStartedSection.Link link, String href, String description) {

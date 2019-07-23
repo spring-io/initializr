@@ -16,11 +16,20 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.Link;
 
 import org.springframework.core.Ordered;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
 
 /**
  * A {@link HelpDocumentCustomizer} that register links for selected dependencies.
@@ -56,19 +65,54 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 
 	private void handleDependency(HelpDocument document, Dependency dependency) {
 		GettingStartedSection gettingStartedSection = document.gettingStarted();
-		dependency.getLinks().forEach((link) -> {
-			if (link.getDescription() != null && link.getRel() != null) {
-				if ("reference".equals(link.getRel())) {
-					gettingStartedSection.addReferenceDocLink(link.getHref(), link.getDescription());
-				}
-				else if ("guide".equals(link.getRel())) {
-					gettingStartedSection.addGuideLink(link.getHref(), link.getDescription());
-				}
-				else {
-					gettingStartedSection.addAdditionalLink(link.getHref(), link.getDescription());
+		MultiValueMap<GuideType, Link> indexedLinks = indexLinks(dependency);
+		registerLinks(indexedLinks.get(GuideType.REFERENCE), defaultLinkDescription(dependency),
+				gettingStartedSection::referenceDocs);
+		registerLinks(indexedLinks.get(GuideType.GUIDE), defaultLinkDescription(dependency),
+				gettingStartedSection::guides);
+		registerLinks(indexedLinks.get(GuideType.OTHER), (links) -> null, gettingStartedSection::additionalLinks);
+	}
+
+	private void registerLinks(List<Link> links, Function<List<Link>, String> defaultDescription,
+			Supplier<BulletedSection<GettingStartedSection.Link>> section) {
+		if (ObjectUtils.isEmpty(links)) {
+			return;
+		}
+		links.forEach((link) -> {
+			if (link.getHref() != null) {
+				String description = (link.getDescription() != null) ? link.getDescription()
+						: defaultDescription.apply(links);
+				if (description != null) {
+					section.get().addItem(new GettingStartedSection.Link(link.getHref(), description));
 				}
 			}
 		});
+	}
+
+	private Function<List<Link>, String> defaultLinkDescription(Dependency dependency) {
+		return (links) -> (links.size() == 1) ? dependency.getName() : null;
+	}
+
+	private MultiValueMap<GuideType, Link> indexLinks(Dependency dependency) {
+		MultiValueMap<GuideType, Link> links = new LinkedMultiValueMap<>();
+		dependency.getLinks().forEach((link) -> {
+			if ("reference".equals(link.getRel())) {
+				links.add(GuideType.REFERENCE, link);
+			}
+			else if ("guide".equals(link.getRel())) {
+				links.add(GuideType.GUIDE, link);
+			}
+			else {
+				links.add(GuideType.OTHER, link);
+			}
+		});
+		return links;
+	}
+
+	private enum GuideType {
+
+		REFERENCE, GUIDE, OTHER
+
 	}
 
 }
