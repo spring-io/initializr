@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link ProjectContributor} that contributes all of the resources found beneath a root
@@ -45,7 +46,7 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 	}
 
 	public MultipleResourcesProjectContributor(String rootResource, Predicate<String> executable) {
-		this.rootResource = rootResource;
+		this.rootResource = StringUtils.trimTrailingCharacter(rootResource, '/');
 		this.executable = executable;
 	}
 
