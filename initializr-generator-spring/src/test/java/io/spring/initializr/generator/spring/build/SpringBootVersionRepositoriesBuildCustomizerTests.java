@@ -41,17 +41,17 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 	}
 
 	@Test
-	void addMavenCentralAndNonReleaseWhenUsingMilestone() {
+	void addMavenCentralAndMilestonesWhenUsingMilestone() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.M1")).customize(build);
-		assertNonReleaseRepositories(build);
+		assertMavenCentralAndMilestonesRepositories(build);
 	}
 
 	@Test
-	void addMavenCentralAndNonReleaseWhenUsingReleaseCandidate() {
+	void addMavenCentralAndMilestonesWhenUsingReleaseCandidate() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.RC1")).customize(build);
-		assertNonReleaseRepositories(build);
+		assertMavenCentralAndMilestonesRepositories(build);
 	}
 
 	@Test
@@ -70,6 +70,16 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
 				.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
 		assertThat(repositories.get(2)).hasFieldOrPropertyWithValue("id", "spring-milestones")
+				.hasFieldOrPropertyWithValue("name", "Spring Milestones")
+				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/milestone")
+				.hasFieldOrPropertyWithValue("snapshotsEnabled", false);
+	}
+
+	private void assertMavenCentralAndMilestonesRepositories(MavenBuild build) {
+		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
+		assertThat(repositories).hasSize(2);
+		assertThat(repositories.get(0)).isEqualTo(MavenRepository.MAVEN_CENTRAL);
+		assertThat(repositories.get(1)).hasFieldOrPropertyWithValue("id", "spring-milestones")
 				.hasFieldOrPropertyWithValue("name", "Spring Milestones")
 				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/milestone")
 				.hasFieldOrPropertyWithValue("snapshotsEnabled", false);
