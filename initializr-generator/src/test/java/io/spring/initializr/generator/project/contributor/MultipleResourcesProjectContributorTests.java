@@ -28,32 +28,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link MultipleResourcesProjectContributor}.
  *
  * @author Toon Geens
+ * @author Stephane Nicoll
  */
 class MultipleResourcesProjectContributorTests {
 
-	private static final String classLocation = MultipleResourcesProjectContributorTests.class.getPackage().getName()
-			.replace('.', '/');
-
-	private static final String classFile = MultipleResourcesProjectContributorTests.class.getSimpleName() + ".class";
-
 	@Test
 	void contribute(@TempDir Path directory) throws IOException {
-		String rootResource = "classpath:" + classLocation;
-		MultipleResourcesProjectContributor contributor = new MultipleResourcesProjectContributor(rootResource);
-
-		contributor.contribute(directory);
-
-		assertThat(directory.resolve(classFile)).exists();
+		new MultipleResourcesProjectContributor("classpath:/data/multi").contribute(directory);
+		assertThat(directory.resolve("one.properties")).exists().isRegularFile();
+		assertThat(directory.resolve("two.xml")).exists().isRegularFile();
 	}
 
 	@Test
 	void contributeWithTrailingSlash(@TempDir Path directory) throws IOException {
-		String rootResource = "classpath:" + classLocation + "/";
-		MultipleResourcesProjectContributor contributor = new MultipleResourcesProjectContributor(rootResource);
-
-		contributor.contribute(directory);
-
-		assertThat(directory.resolve(classFile)).exists();
+		new MultipleResourcesProjectContributor("classpath:/data/multi/").contribute(directory);
+		assertThat(directory.resolve("one.properties")).exists().isRegularFile();
+		assertThat(directory.resolve("two.xml")).exists().isRegularFile();
 	}
 
 }
