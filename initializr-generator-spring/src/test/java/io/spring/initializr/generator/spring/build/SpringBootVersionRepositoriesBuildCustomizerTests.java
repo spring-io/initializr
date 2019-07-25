@@ -65,14 +65,14 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
 		assertThat(repositories).hasSize(3);
 		assertThat(repositories.get(0)).isEqualTo(MavenRepository.MAVEN_CENTRAL);
-		assertThat(repositories.get(1)).hasFieldOrPropertyWithValue("id", "spring-snapshots")
-				.hasFieldOrPropertyWithValue("name", "Spring Snapshots")
-				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
-				.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
-		assertThat(repositories.get(2)).hasFieldOrPropertyWithValue("id", "spring-milestones")
+		assertThat(repositories.get(1)).hasFieldOrPropertyWithValue("id", "spring-milestones")
 				.hasFieldOrPropertyWithValue("name", "Spring Milestones")
 				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/milestone")
 				.hasFieldOrPropertyWithValue("snapshotsEnabled", false);
+		assertThat(repositories.get(2)).hasFieldOrPropertyWithValue("id", "spring-snapshots")
+				.hasFieldOrPropertyWithValue("name", "Spring Snapshots")
+				.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
+				.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
 	}
 
 	private void assertMavenCentralAndMilestonesRepositories(MavenBuild build) {
