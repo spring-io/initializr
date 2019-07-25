@@ -42,6 +42,7 @@ import io.spring.initializr.generator.language.SourceCodeWriter;
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode> {
 
@@ -82,19 +83,32 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				if (type.getExtends() != null) {
 					writer.print(" : " + getUnqualifiedName(type.getExtends()) + "()");
 				}
+				List<KotlinPropertyDeclaration> propertyDeclarations = type.getPropertyDeclarations();
 				List<KotlinFunctionDeclaration> functionDeclarations = type.getFunctionDeclarations();
-				if (!functionDeclarations.isEmpty()) {
+				boolean hasDeclarations = !propertyDeclarations.isEmpty() || !functionDeclarations.isEmpty();
+				if (hasDeclarations) {
 					writer.println(" {");
+				}
+				if (!propertyDeclarations.isEmpty()) {
+					writer.indented(() -> {
+						for (KotlinPropertyDeclaration propertyDeclaration : propertyDeclarations) {
+							writeProperty(writer, propertyDeclaration);
+						}
+					});
+				}
+				if (!functionDeclarations.isEmpty()) {
 					writer.indented(() -> {
 						for (KotlinFunctionDeclaration functionDeclaration : functionDeclarations) {
 							writeFunction(writer, functionDeclaration);
 						}
 					});
 					writer.println();
-					writer.println("}");
 				}
 				else {
 					writer.println("");
+				}
+				if (hasDeclarations) {
+					writer.println("}");
 				}
 			}
 			List<KotlinFunctionDeclaration> topLevelFunctions = compilationUnit.getTopLevelFunctions();
@@ -104,6 +118,48 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				}
 			}
 
+		}
+	}
+
+	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {
+		writer.println();
+		writeModifiers(writer, propertyDeclaration.getModifiers());
+		if (propertyDeclaration.isVal()) {
+			writer.print("val ");
+		}
+		else {
+			writer.print("var ");
+		}
+		writer.print(propertyDeclaration.getName());
+		if (propertyDeclaration.getReturnType() != null) {
+			writer.print(": " + getUnqualifiedName(propertyDeclaration.getReturnType()));
+		}
+		if (propertyDeclaration.getValueExpression() != null) {
+			writer.print(" = ");
+			writeExpression(writer, propertyDeclaration.getValueExpression().getExpression());
+		}
+		if (propertyDeclaration.getGetter() != null) {
+			writer.println();
+			writer.indented(() -> writeAccessor(writer, "get", propertyDeclaration.getGetter()));
+		}
+		if (propertyDeclaration.getSetter() != null) {
+			writer.println();
+			writer.indented(() -> writeAccessor(writer, "set", propertyDeclaration.getSetter()));
+		}
+		writer.println();
+	}
+
+	private void writeAccessor(IndentingWriter writer, String accessorName,
+			KotlinPropertyDeclaration.Accessor accessor) {
+		if (!accessor.getAnnotations().isEmpty()) {
+			for (Annotation annotation : accessor.getAnnotations()) {
+				writeAnnotation(writer, annotation, false);
+			}
+		}
+		writer.print(accessorName);
+		if (!accessor.isEmptyBody()) {
+			writer.print("() = ");
+			writeExpression(writer, accessor.getBody().getExpression());
 		}
 	}
 
@@ -142,11 +198,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
 		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation);
+			writeAnnotation(writer, annotation, true);
 		}
 	}
 
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
 		writer.print("@" + getUnqualifiedName(annotation.getName()));
 		List<Annotation.Attribute> attributes = annotation.getAttributes();
 		if (!attributes.isEmpty()) {
@@ -161,7 +217,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 			writer.print(")");
 		}
-		writer.println();
+		if (newLine) {
+			writer.println();
+		}
+		else {
+			writer.print(" ");
+		}
 	}
 
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
@@ -203,6 +264,9 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		else if (expression instanceof KotlinReifiedFunctionInvocation) {
 			writeReifiedFunctionInvocation(writer, (KotlinReifiedFunctionInvocation) expression);
 		}
+		else if (expression != null) {
+			writer.print(expression.toString());
+		}
 	}
 
 	private void writeFunctionInvocation(IndentingWriter writer, KotlinFunctionInvocation functionInvocation) {
@@ -233,6 +297,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				imports.add(typeDeclaration.getExtends());
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			typeDeclaration.getPropertyDeclarations()
+					.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
 			typeDeclaration.getFunctionDeclarations()
 					.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		}
@@ -240,6 +306,14 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
+	}
+
+	private Set<String> determinePropertyImports(KotlinPropertyDeclaration propertyDeclaration) {
+		Set<String> imports = new LinkedHashSet<>();
+		if (requiresImport(propertyDeclaration.getReturnType())) {
+			imports.add(propertyDeclaration.getReturnType());
+		}
+		return imports;
 	}
 
 	private Set<String> determineFunctionImports(KotlinFunctionDeclaration functionDeclaration) {

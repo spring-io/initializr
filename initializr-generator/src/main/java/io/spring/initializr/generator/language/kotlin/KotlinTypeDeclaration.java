@@ -31,6 +31,8 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 
 	private List<KotlinModifier> modifiers = new ArrayList<>();
 
+	private final List<KotlinPropertyDeclaration> propertyDeclarations = new ArrayList<>();
+
 	private final List<KotlinFunctionDeclaration> functionDeclarations = new ArrayList<>();
 
 	KotlinTypeDeclaration(String name) {
@@ -43,6 +45,14 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 
 	List<KotlinModifier> getModifiers() {
 		return this.modifiers;
+	}
+
+	public void addPropertyDeclaration(KotlinPropertyDeclaration propertyDeclaration) {
+		this.propertyDeclarations.add(propertyDeclaration);
+	}
+
+	public List<KotlinPropertyDeclaration> getPropertyDeclarations() {
+		return this.propertyDeclarations;
 	}
 
 	public void addFunctionDeclaration(KotlinFunctionDeclaration methodDeclaration) {

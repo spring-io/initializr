@@ -30,6 +30,8 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 
 	private int modifiers;
 
+	private final List<GroovyFieldDeclaration> fieldDeclarations = new ArrayList<>();
+
 	private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
 
 	GroovyTypeDeclaration(String name) {
@@ -42,6 +44,14 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 
 	public int getModifiers() {
 		return this.modifiers;
+	}
+
+	public void addFieldDeclaration(GroovyFieldDeclaration fieldDeclaration) {
+		this.fieldDeclarations.add(fieldDeclaration);
+	}
+
+	public List<GroovyFieldDeclaration> getFieldDeclarations() {
+		return this.fieldDeclarations;
 	}
 
 	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {

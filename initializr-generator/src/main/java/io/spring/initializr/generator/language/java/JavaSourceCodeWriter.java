@@ -46,10 +46,13 @@ import io.spring.initializr.generator.language.SourceCodeWriter;
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Java.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
 public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
 	private static final Map<Predicate<Integer>, String> TYPE_MODIFIERS;
+
+	private static final Map<Predicate<Integer>, String> FIELD_MODIFIERS;
 
 	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
 
@@ -63,6 +66,15 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		typeModifiers.put(Modifier::isFinal, "final");
 		typeModifiers.put(Modifier::isStrict, "strictfp");
 		TYPE_MODIFIERS = typeModifiers;
+		Map<Predicate<Integer>, String> fieldModifiers = new LinkedHashMap<>();
+		fieldModifiers.put(Modifier::isPublic, "public");
+		fieldModifiers.put(Modifier::isProtected, "protected");
+		fieldModifiers.put(Modifier::isPrivate, "private");
+		fieldModifiers.put(Modifier::isStatic, "static");
+		fieldModifiers.put(Modifier::isFinal, "final");
+		fieldModifiers.put(Modifier::isTransient, "transient");
+		fieldModifiers.put(Modifier::isVolatile, "volatile");
+		FIELD_MODIFIERS = fieldModifiers;
 		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
 		methodModifiers.put(Modifier::isSynchronized, "synchronized");
 		methodModifiers.put(Modifier::isNative, "native");
@@ -108,6 +120,14 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				}
 				writer.println(" {");
 				writer.println();
+				List<JavaFieldDeclaration> fieldDeclarations = type.getFieldDeclarations();
+				if (!fieldDeclarations.isEmpty()) {
+					writer.indented(() -> {
+						for (JavaFieldDeclaration fieldDeclaration : fieldDeclarations) {
+							writeFieldDeclaration(writer, fieldDeclaration);
+						}
+					});
+				}
 				List<JavaMethodDeclaration> methodDeclarations = type.getMethodDeclarations();
 				if (!methodDeclarations.isEmpty()) {
 					writer.indented(() -> {
@@ -164,6 +184,20 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	private String formatValues(List<String> values, Function<String, String> formatter) {
 		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
 		return (values.size() > 1) ? "{ " + result + " }" : result;
+	}
+
+	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
+		writeAnnotations(writer, fieldDeclaration);
+		writeModifiers(writer, FIELD_MODIFIERS, fieldDeclaration.getModifiers());
+		writer.print(getUnqualifiedName(fieldDeclaration.getReturnType()));
+		writer.print(" ");
+		writer.print(fieldDeclaration.getName());
+		if (fieldDeclaration.isInitialized()) {
+			writer.print(" = ");
+			writer.print(String.valueOf(fieldDeclaration.getValue()));
+		}
+		writer.println(";");
+		writer.println();
 	}
 
 	private void writeMethodDeclaration(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
@@ -232,6 +266,12 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.add(typeDeclaration.getExtends());
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			for (JavaFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
+				if (requiresImport(fieldDeclaration.getReturnType())) {
+					imports.add(fieldDeclaration.getReturnType());
+				}
+				imports.addAll(getRequiredImports(fieldDeclaration.getAnnotations(), this::determineImports));
+			}
 			for (JavaMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				if (requiresImport(methodDeclaration.getReturnType())) {
 					imports.add(methodDeclaration.getReturnType());

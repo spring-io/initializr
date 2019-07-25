@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GroovySourceCodeWriter}.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 class GroovySourceCodeWriterTests {
 
@@ -112,6 +113,74 @@ class GroovySourceCodeWriterTests {
 				"import org.springframework.boot.autoconfigure.SpringBootApplication", "", "@SpringBootApplication",
 				"class Test {", "", "    static void main(String[] args) {",
 				"        SpringApplication.run(Test, args)", "    }", "", "}");
+	}
+
+	@Test
+	void field() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").returning("java.lang.String"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    String testString", "",
+				"}");
+	}
+
+	@Test
+	void fieldsWithValues() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testNoInit").returning("boolean"));
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testInteger").value("42").returning("java.lang.Integer"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE).value("1986.0")
+				.returning("double"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testLong").value("1986L").returning("long"));
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testNullBoolean").value(null).returning("java.lang.Boolean"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    boolean testNoInit", "",
+				"    Integer testInteger = 42", "", "    private double testDouble = 1986.0", "",
+				"    long testLong = 1986L", "", "    Boolean testNullBoolean = null", "", "}");
+	}
+
+	@Test
+	void privateField() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE).returning("java.lang.String"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    private String testString", "", "}");
+	}
+
+	@Test
+	void fieldImport() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testString").modifiers(Modifier.PUBLIC).returning("com.example.One"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "", "class Test {", "",
+				"    public One testString", "", "}");
+	}
+
+	@Test
+	void fieldAnnotation() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		GroovyFieldDeclaration field = GroovyFieldDeclaration.field("testString").returning("java.lang.String");
+		field.annotate(Annotation.name("org.springframework.beans.factory.annotation.Autowired"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "",
+				"import org.springframework.beans.factory.annotation.Autowired", "", "class Test {", "",
+				"    @Autowired", "    String testString", "", "}");
 	}
 
 	@Test

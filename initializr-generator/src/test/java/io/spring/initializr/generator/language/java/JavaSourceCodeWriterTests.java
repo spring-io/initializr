@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link JavaSourceCodeWriter}.
  *
  * @author Andy Wilkinson
+ * @author Matt Berteaux
  */
 class JavaSourceCodeWriterTests {
 
@@ -93,6 +94,74 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
 				"    public String trim(String value) {", "        return value.trim();", "    }", "", "}");
+	}
+
+	@Test
+	void field() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE).returning("java.lang.String"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "public class Test {", "",
+				"    private String testString;", "", "}");
+	}
+
+	@Test
+	void fieldImport() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testString").modifiers(Modifier.PUBLIC).returning("com.example.One"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import com.example.One;", "", "class Test {", "",
+				"    public One testString;", "", "}");
+	}
+
+	@Test
+	void fieldAnnotation() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
+				.returning("java.lang.String");
+		field.annotate(Annotation.name("org.springframework.beans.factory.annotation.Autowired"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "",
+				"import org.springframework.beans.factory.annotation.Autowired;", "", "public class Test {", "",
+				"    @Autowired", "    private String testString;", "", "}");
+	}
+
+	@Test
+	void fields() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.PUBLIC);
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
+				.value("\"Test String\"").returning("java.lang.String"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testChar").modifiers(Modifier.PRIVATE | Modifier.TRANSIENT)
+				.value("'\\u03a9'").returning("char"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testInt").modifiers(Modifier.PRIVATE | Modifier.FINAL)
+				.value(1337).returning("int"));
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE).value("3.14").returning("Double"));
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testLong").modifiers(Modifier.PRIVATE).value("1986L").returning("Long"));
+		test.addFieldDeclaration(
+				JavaFieldDeclaration.field("testFloat").modifiers(Modifier.PUBLIC).value("99.999f").returning("float"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testBool").value("true").returning("boolean"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "public class Test {", "",
+				"    private String testString = \"Test String\";", "",
+				"    private transient char testChar = '\\u03a9';", "", "    private final int testInt = 1337;", "",
+				"    private Double testDouble = 3.14;", "", "    private Long testLong = 1986L;", "",
+				"    public float testFloat = 99.999f;", "", "    boolean testBool = true;", "", "}");
 	}
 
 	@Test
