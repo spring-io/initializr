@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,15 +24,22 @@ import java.util.List;
  *
  * @author Stephane Nicoll
  */
-public class KotlinFunctionInvocation implements KotlinExpression {
+public class KotlinFunctionInvocation extends KotlinExpression {
+
+	private final String target;
 
 	private final String name;
 
 	private final List<String> arguments;
 
-	public KotlinFunctionInvocation(String name, List<String> arguments) {
+	public KotlinFunctionInvocation(String target, String name, String... arguments) {
+		this.target = target;
 		this.name = name;
-		this.arguments = arguments;
+		this.arguments = Arrays.asList(arguments);
+	}
+
+	public String getTarget() {
+		return this.target;
 	}
 
 	public String getName() {

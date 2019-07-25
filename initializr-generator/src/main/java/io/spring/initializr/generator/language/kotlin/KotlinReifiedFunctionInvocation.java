@@ -17,23 +17,37 @@
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Invocation of a function with a reified type parameter.
  *
  * @author Stephane Nicoll
  */
-public class KotlinReifiedFunctionInvocation extends KotlinFunctionInvocation implements KotlinExpression {
+public class KotlinReifiedFunctionInvocation extends KotlinExpression {
+
+	private final String name;
 
 	private final String targetClass;
 
+	private final List<String> arguments;
+
 	public KotlinReifiedFunctionInvocation(String name, String targetClass, String... arguments) {
-		super(name, Arrays.asList(arguments));
+		this.name = name;
 		this.targetClass = targetClass;
+		this.arguments = Arrays.asList(arguments);
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 	public String getTargetClass() {
 		return this.targetClass;
+	}
+
+	public List<String> getArguments() {
+		return this.arguments;
 	}
 
 }

@@ -21,7 +21,7 @@ package io.spring.initializr.generator.language.groovy;
  *
  * @author Stephane Nicoll
  */
-public class GroovyExpressionStatement implements GroovyStatement {
+public class GroovyExpressionStatement extends GroovyStatement {
 
 	private final GroovyExpression expression;
 

@@ -24,13 +24,13 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 
 /**
- * Declaration, and potential initialization, of a field in Groovy.
+ * Declaration of a field written in Groovy.
  *
  * @author Matt Berteaux
  */
 public final class GroovyFieldDeclaration implements Annotatable {
 
-	private final List<Annotation> annotations;
+	private final List<Annotation> annotations = new ArrayList<>();
 
 	private final int modifiers;
 
@@ -40,12 +40,14 @@ public final class GroovyFieldDeclaration implements Annotatable {
 
 	private final Object value;
 
+	private final boolean initialized;
+
 	private GroovyFieldDeclaration(Builder builder) {
 		this.modifiers = builder.modifiers;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.value = builder.value;
-		this.annotations = builder.annotations;
+		this.initialized = builder.initialized;
 	}
 
 	public static Builder field(String name) {
@@ -78,9 +80,11 @@ public final class GroovyFieldDeclaration implements Annotatable {
 		return this.value;
 	}
 
-	public static final class Builder {
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
-		private final List<Annotation> annotations = new ArrayList<>();
+	public static final class Builder {
 
 		private final String name;
 
@@ -88,7 +92,9 @@ public final class GroovyFieldDeclaration implements Annotatable {
 
 		private int modifiers;
 
-		private Object value = InitializedStatus.NOT_INITIALIZED;
+		private Object value;
+
+		private boolean initialized;
 
 		private Builder(String name) {
 			this.name = name;
@@ -99,13 +105,9 @@ public final class GroovyFieldDeclaration implements Annotatable {
 			return this;
 		}
 
-		public Builder value(GroovyExpression value) {
+		public Builder value(Object value) {
 			this.value = value;
-			return this;
-		}
-
-		public Builder withAnnotation(Annotation annotation) {
-			this.annotations.add(annotation);
+			this.initialized = true;
 			return this;
 		}
 
@@ -113,16 +115,6 @@ public final class GroovyFieldDeclaration implements Annotatable {
 			this.returnType = returnType;
 			return new GroovyFieldDeclaration(this);
 		}
-
-	}
-
-	/**
-	 * Track if the value has been set or not. Using this because initializing a field to
-	 * null should be possible.
-	 */
-	enum InitializedStatus {
-
-		NOT_INITIALIZED;
 
 	}
 

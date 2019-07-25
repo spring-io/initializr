@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -53,9 +52,9 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 
 	private static final Map<Predicate<Integer>, String> TYPE_MODIFIERS;
 
-	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
-
 	private static final Map<Predicate<Integer>, String> FIELD_MODIFIERS;
+
+	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
 
 	static {
 		Map<Predicate<Integer>, String> typeModifiers = new LinkedHashMap<>();
@@ -66,11 +65,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		typeModifiers.put(Modifier::isFinal, "final");
 		typeModifiers.put(Modifier::isStrict, "strictfp");
 		TYPE_MODIFIERS = typeModifiers;
-		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
-		methodModifiers.put(Modifier::isSynchronized, "synchronized");
-		methodModifiers.put(Modifier::isNative, "native");
-		METHOD_MODIFIERS = methodModifiers;
-
 		Map<Predicate<Integer>, String> fieldModifiers = new LinkedHashMap<>();
 		fieldModifiers.put(Modifier::isPublic, "public");
 		fieldModifiers.put(Modifier::isProtected, "protected");
@@ -80,6 +74,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		fieldModifiers.put(Modifier::isTransient, "transient");
 		fieldModifiers.put(Modifier::isVolatile, "volatile");
 		FIELD_MODIFIERS = fieldModifiers;
+		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
+		methodModifiers.put(Modifier::isSynchronized, "synchronized");
+		methodModifiers.put(Modifier::isNative, "native");
+		METHOD_MODIFIERS = methodModifiers;
 	}
 
 	private final IndentingWriterFactory indentingWriterFactory;
@@ -90,7 +88,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 
 	@Override
 	public void writeTo(Path directory, GroovySourceCode sourceCode) throws IOException {
-		if (!directory.toFile().exists()) {
+		if (!Files.exists(directory)) {
 			Files.createDirectories(directory);
 		}
 		for (GroovyCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
@@ -142,35 +140,63 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 	}
 
-	private void writeFieldDeclaration(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
-		if (!fieldDeclaration.getAnnotations().isEmpty()) {
-			writeAnnotations(writer, fieldDeclaration);
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation));
+	}
+
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
+		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		List<Annotation.Attribute> attributes = annotation.getAttributes();
+		if (!attributes.isEmpty()) {
+			writer.print("(");
+			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
+				writer.print(formatAnnotationAttribute(attributes.get(0)));
+			}
+			else {
+				writer.print(attributes.stream()
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+						.collect(Collectors.joining(", ")));
+			}
+			writer.print(")");
 		}
-		writeFieldModifiers(writer, fieldDeclaration);
+		writer.println();
+	}
+
+	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
+		List<String> values = attribute.getValues();
+		if (attribute.getType().equals(Class.class)) {
+			return formatValues(values, this::getUnqualifiedName);
+		}
+		if (Enum.class.isAssignableFrom(attribute.getType())) {
+			return formatValues(values, (value) -> {
+				String enumValue = value.substring(value.lastIndexOf(".") + 1);
+				String enumClass = value.substring(0, value.lastIndexOf("."));
+				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
+			});
+		}
+		if (attribute.getType().equals(String.class)) {
+			return formatValues(values, (value) -> String.format("\"%s\"", value));
+		}
+		return formatValues(values, (value) -> String.format("%s", value));
+	}
+
+	private String formatValues(List<String> values, Function<String, String> formatter) {
+		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
+		return (values.size() > 1) ? "{ " + result + " }" : result;
+	}
+
+	private void writeFieldDeclaration(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
+		writeAnnotations(writer, fieldDeclaration);
+		writeModifiers(writer, FIELD_MODIFIERS, fieldDeclaration.getModifiers());
 		writer.print(getUnqualifiedName(fieldDeclaration.getReturnType()));
 		writer.print(" ");
 		writer.print(fieldDeclaration.getName());
-		if (!Objects.equals(GroovyFieldDeclaration.InitializedStatus.NOT_INITIALIZED, fieldDeclaration.getValue())) {
+		if (fieldDeclaration.isInitialized()) {
 			writer.print(" = ");
-			writeFieldValue(writer, fieldDeclaration.getValue(), fieldDeclaration.getReturnType());
+			writer.print(String.valueOf(fieldDeclaration.getValue()));
 		}
 		writer.println();
 		writer.println();
-	}
-
-	private void writeFieldValue(IndentingWriter writer, Object value, String returnType) {
-		quote(writer, value, returnType);
-		writer.print(String.valueOf(value));
-		quote(writer, value, returnType);
-	}
-
-	private void quote(IndentingWriter writer, Object value, String returnType) {
-		if (value instanceof Character || "char".equals(returnType) || "java.lang.Character".equals(returnType)) {
-			writer.print("\'");
-		}
-		else if (value instanceof CharSequence) {
-			writer.print("\"");
-		}
 	}
 
 	private void writeMethodDeclaration(IndentingWriter writer, GroovyMethodDeclaration methodDeclaration) {
@@ -200,10 +226,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		writer.println();
 	}
 
-	private void writeFieldModifiers(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
-		writeModifiers(writer, FIELD_MODIFIERS, fieldDeclaration.getModifiers());
-	}
-
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
 			int declaredModifiers) {
 		String modifiers = availableModifiers.entrySet().stream()
@@ -213,10 +235,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			writer.print(modifiers);
 			writer.print(" ");
 		}
-	}
-
-	private void writeMethodModifiers(IndentingWriter writer, GroovyMethodDeclaration methodDeclaration) {
-		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 	}
 
 	private void writeExpression(IndentingWriter writer, GroovyExpression expression) {
@@ -246,6 +264,12 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				imports.add(typeDeclaration.getExtends());
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			for (GroovyFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
+				if (requiresImport(fieldDeclaration.getReturnType())) {
+					imports.add(fieldDeclaration.getReturnType());
+				}
+				imports.addAll(getRequiredImports(fieldDeclaration.getAnnotations(), this::determineImports));
+			}
 			for (GroovyMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				if (requiresImport(methodDeclaration.getReturnType())) {
 					imports.add(methodDeclaration.getReturnType());
@@ -262,85 +286,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		writeAnnotations(writer, annotatable, true);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, boolean newLine) {
-		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation, newLine);
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
-		if (newLine) {
-			writer.println();
-		}
-		else {
-			writer.print(" ");
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writeAnnotation(writer, annotation, true);
-	}
-
-	protected String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format(annotationFormatString(), getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? formatAnnotationArray(result) : result;
-	}
-
-	private String formatAnnotationArray(String values) {
-		return "{ " + values + " }";
-	}
-
-	private String getUnqualifiedName(String name) {
-		if (!name.contains(".")) {
-			return name;
-		}
-		return name.substring(name.lastIndexOf(".") + 1);
-	}
-
-	private boolean requiresImport(String name) {
-		if (name == null || !name.contains(".")) {
-			return false;
-		}
-		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !"java.lang".equals(packageName);
 	}
 
 	private Collection<String> determineImports(Annotation annotation) {
@@ -367,8 +312,19 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				.collect(Collectors.toList());
 	}
 
-	private String annotationFormatString() {
-		return "%s";
+	private String getUnqualifiedName(String name) {
+		if (!name.contains(".")) {
+			return name;
+		}
+		return name.substring(name.lastIndexOf(".") + 1);
+	}
+
+	private boolean requiresImport(String name) {
+		if (name == null || !name.contains(".")) {
+			return false;
+		}
+		String packageName = name.substring(0, name.lastIndexOf('.'));
+		return !"java.lang".equals(packageName);
 	}
 
 }

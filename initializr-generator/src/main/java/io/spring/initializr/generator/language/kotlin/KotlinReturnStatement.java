@@ -20,12 +20,17 @@ package io.spring.initializr.generator.language.kotlin;
  * A return statement.
  *
  * @author Andy Wilkinson
- * @author Matt Berteaux
  */
-public class KotlinReturnStatement extends KotlinExpressionStatement {
+public class KotlinReturnStatement extends KotlinStatement {
+
+	private final KotlinExpression expression;
 
 	public KotlinReturnStatement(KotlinExpression expression) {
-		super(expression);
+		this.expression = expression;
+	}
+
+	public KotlinExpression getExpression() {
+		return this.expression;
 	}
 
 }

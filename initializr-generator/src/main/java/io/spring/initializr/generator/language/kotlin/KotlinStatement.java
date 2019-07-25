@@ -21,6 +21,6 @@ package io.spring.initializr.generator.language.kotlin;
  *
  * @author Stephane Nicoll
  */
-public interface KotlinStatement {
+public class KotlinStatement {
 
 }

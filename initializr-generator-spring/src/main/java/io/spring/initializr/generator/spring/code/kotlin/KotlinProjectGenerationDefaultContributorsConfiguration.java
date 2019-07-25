@@ -27,7 +27,7 @@ import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
 import io.spring.initializr.generator.language.kotlin.KotlinExpressionStatement;
 import io.spring.initializr.generator.language.kotlin.KotlinFunctionDeclaration;
-import io.spring.initializr.generator.language.kotlin.KotlinMethodInvocation;
+import io.spring.initializr.generator.language.kotlin.KotlinFunctionInvocation;
 import io.spring.initializr.generator.language.kotlin.KotlinModifier;
 import io.spring.initializr.generator.language.kotlin.KotlinReifiedFunctionInvocation;
 import io.spring.initializr.generator.language.kotlin.KotlinReturnStatement;
@@ -96,7 +96,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
-									new KotlinMethodInvocation("org.springframework.boot.SpringApplication", "run",
+									new KotlinFunctionInvocation("org.springframework.boot.SpringApplication", "run",
 											projectDescription.getApplicationName() + "::class.java", "*args"))));
 		}
 
@@ -143,7 +143,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
-						.body(new KotlinReturnStatement(new KotlinMethodInvocation("application", "sources",
+						.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
 								projectDescription.getApplicationName() + "::class.java")));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};

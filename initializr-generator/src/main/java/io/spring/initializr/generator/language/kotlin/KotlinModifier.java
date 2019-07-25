@@ -56,6 +56,11 @@ public enum KotlinModifier {
 	/**
 	 * Override a member.
 	 */
-	OVERRIDE
+	OVERRIDE,
+
+	/**
+	 * Declare a late-initialized property.
+	 */
+	LATEINIT
 
 }

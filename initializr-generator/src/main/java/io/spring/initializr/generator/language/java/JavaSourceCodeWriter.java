@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -53,9 +52,9 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
 	private static final Map<Predicate<Integer>, String> TYPE_MODIFIERS;
 
-	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
-
 	private static final Map<Predicate<Integer>, String> FIELD_MODIFIERS;
+
+	private static final Map<Predicate<Integer>, String> METHOD_MODIFIERS;
 
 	static {
 		Map<Predicate<Integer>, String> typeModifiers = new LinkedHashMap<>();
@@ -67,11 +66,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		typeModifiers.put(Modifier::isFinal, "final");
 		typeModifiers.put(Modifier::isStrict, "strictfp");
 		TYPE_MODIFIERS = typeModifiers;
-		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
-		methodModifiers.put(Modifier::isSynchronized, "synchronized");
-		methodModifiers.put(Modifier::isNative, "native");
-		METHOD_MODIFIERS = methodModifiers;
-
 		Map<Predicate<Integer>, String> fieldModifiers = new LinkedHashMap<>();
 		fieldModifiers.put(Modifier::isPublic, "public");
 		fieldModifiers.put(Modifier::isProtected, "protected");
@@ -81,6 +75,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		fieldModifiers.put(Modifier::isTransient, "transient");
 		fieldModifiers.put(Modifier::isVolatile, "volatile");
 		FIELD_MODIFIERS = fieldModifiers;
+		Map<Predicate<Integer>, String> methodModifiers = new LinkedHashMap<>(typeModifiers);
+		methodModifiers.put(Modifier::isSynchronized, "synchronized");
+		methodModifiers.put(Modifier::isNative, "native");
+		METHOD_MODIFIERS = methodModifiers;
 	}
 
 	private final IndentingWriterFactory indentingWriterFactory;
@@ -91,7 +89,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
 	@Override
 	public void writeTo(Path directory, JavaSourceCode sourceCode) throws IOException {
-		if (!directory.toFile().exists()) {
+		if (!Files.exists(directory)) {
 			Files.createDirectories(directory);
 		}
 		for (JavaCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
@@ -143,37 +141,63 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 	}
 
-	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
-		writeAnnotations(writer, fieldDeclaration);
-		writeFieldModifiers(writer, fieldDeclaration);
-		writer.print(getUnqualifiedName(fieldDeclaration.getReturnType()));
-		writer.print(" ");
-		writer.print(fieldDeclaration.getName());
-		if (!Objects.equals(JavaFieldDeclaration.InitializedStatus.NOT_INITIALIZED, fieldDeclaration.getValue())) {
-			writer.print(" = ");
-			writeFieldValue(writer, fieldDeclaration.getValue(), fieldDeclaration.getReturnType());
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation));
+	}
+
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
+		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		List<Annotation.Attribute> attributes = annotation.getAttributes();
+		if (!attributes.isEmpty()) {
+			writer.print("(");
+			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
+				writer.print(formatAnnotationAttribute(attributes.get(0)));
+			}
+			else {
+				writer.print(attributes.stream()
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+						.collect(Collectors.joining(", ")));
+			}
+			writer.print(")");
 		}
-		writer.println(";");
 		writer.println();
 	}
 
-	private void writeFieldValue(IndentingWriter writer, Object value, String returnType) {
-		quote(writer, value, returnType);
-		writer.print(String.valueOf(value));
-		quote(writer, value, returnType);
+	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
+		List<String> values = attribute.getValues();
+		if (attribute.getType().equals(Class.class)) {
+			return formatValues(values, (value) -> String.format("%s.class", getUnqualifiedName(value)));
+		}
+		if (Enum.class.isAssignableFrom(attribute.getType())) {
+			return formatValues(values, (value) -> {
+				String enumValue = value.substring(value.lastIndexOf(".") + 1);
+				String enumClass = value.substring(0, value.lastIndexOf("."));
+				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
+			});
+		}
+		if (attribute.getType().equals(String.class)) {
+			return formatValues(values, (value) -> String.format("\"%s\"", value));
+		}
+		return formatValues(values, (value) -> String.format("%s", value));
 	}
 
-	private void quote(IndentingWriter writer, Object value, String returnType) {
-		if (value instanceof Character || "char".equals(returnType) || "java.lang.Character".equals(returnType)) {
-			writer.print("\'");
-		}
-		else if (value instanceof CharSequence) {
-			writer.print("\"");
-		}
+	private String formatValues(List<String> values, Function<String, String> formatter) {
+		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
+		return (values.size() > 1) ? "{ " + result + " }" : result;
 	}
 
-	private void writeFieldModifiers(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
+	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
+		writeAnnotations(writer, fieldDeclaration);
 		writeModifiers(writer, FIELD_MODIFIERS, fieldDeclaration.getModifiers());
+		writer.print(getUnqualifiedName(fieldDeclaration.getReturnType()));
+		writer.print(" ");
+		writer.print(fieldDeclaration.getName());
+		if (fieldDeclaration.isInitialized()) {
+			writer.print(" = ");
+			writer.print(String.valueOf(fieldDeclaration.getValue()));
+		}
+		writer.println(";");
+		writer.println();
 	}
 
 	private void writeMethodDeclaration(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
@@ -190,22 +214,18 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		writer.indented(() -> {
 			List<JavaStatement> statements = methodDeclaration.getStatements();
 			for (JavaStatement statement : statements) {
-				if (statement instanceof JavaReturnStatement) {
+				if (statement instanceof JavaExpressionStatement) {
+					writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
+				}
+				else if (statement instanceof JavaReturnStatement) {
 					writer.print("return ");
 					writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
-				}
-				else if (statement instanceof JavaExpressionStatement) {
-					writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
 				}
 				writer.println(";");
 			}
 		});
 		writer.println("}");
 		writer.println();
-	}
-
-	private void writeMethodModifiers(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
-		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 	}
 
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
@@ -294,78 +314,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				.collect(Collectors.toList());
 	}
 
-	private boolean requiresImport(String name) {
-		if (name == null || !name.contains(".")) {
-			return false;
-		}
-		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !"java.lang".equals(packageName);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		writeAnnotations(writer, annotatable, true);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, boolean newLine) {
-		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation, newLine);
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
-		if (newLine) {
-			writer.println();
-		}
-		else {
-			writer.print(" ");
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writeAnnotation(writer, annotation, true);
-	}
-
-	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format(annotationFormatString(), getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? formatAnnotationArray(result) : result;
-	}
-
-	private String formatAnnotationArray(String values) {
-		return "{ " + values + " }";
-	}
-
 	private String getUnqualifiedName(String name) {
 		if (!name.contains(".")) {
 			return name;
@@ -373,8 +321,12 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
-	private String annotationFormatString() {
-		return "%s.class";
+	private boolean requiresImport(String name) {
+		if (name == null || !name.contains(".")) {
+			return false;
+		}
+		String packageName = name.substring(0, name.lastIndexOf('.'));
+		return !"java.lang".equals(packageName);
 	}
 
 }

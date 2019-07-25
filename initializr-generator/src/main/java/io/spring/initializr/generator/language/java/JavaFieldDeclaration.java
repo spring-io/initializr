@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.language.java;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 
 /**
- * Declaration, and potential initialization, of a field in Java.
+ * Declaration of a field written in Java.
  *
  * @author Matt Berteaux
  */
@@ -41,31 +40,18 @@ public final class JavaFieldDeclaration implements Annotatable {
 
 	private final Object value;
 
-	private JavaFieldDeclaration(int modifiers, String name, String returnType, Object value) {
-		this.modifiers = modifiers;
-		this.name = name;
-		this.returnType = returnType;
-		this.value = value;
+	private final boolean initialized;
+
+	private JavaFieldDeclaration(Builder builder) {
+		this.modifiers = builder.modifiers;
+		this.name = builder.name;
+		this.returnType = builder.returnType;
+		this.value = builder.value;
+		this.initialized = builder.initialized;
 	}
 
 	public static Builder field(String name) {
 		return new Builder(name);
-	}
-
-	String getName() {
-		return this.name;
-	}
-
-	String getReturnType() {
-		return this.returnType;
-	}
-
-	int getModifiers() {
-		return this.modifiers;
-	}
-
-	Object getValue() {
-		return this.value;
 	}
 
 	@Override
@@ -78,6 +64,26 @@ public final class JavaFieldDeclaration implements Annotatable {
 		return Collections.unmodifiableList(this.annotations);
 	}
 
+	public int getModifiers() {
+		return this.modifiers;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getReturnType() {
+		return this.returnType;
+	}
+
+	public Object getValue() {
+		return this.value;
+	}
+
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+
 	/**
 	 * Builder for creating a {@link JavaFieldDeclaration}.
 	 */
@@ -85,17 +91,16 @@ public final class JavaFieldDeclaration implements Annotatable {
 
 		private final String name;
 
-		private int modifiers = Modifier.PUBLIC;
+		private String returnType;
 
-		private Object value = InitializedStatus.NOT_INITIALIZED;
+		private int modifiers;
+
+		private Object value;
+
+		private boolean initialized;
 
 		private Builder(String name) {
 			this.name = name;
-		}
-
-		public Builder packagePrivate() {
-			this.modifiers = 0;
-			return this;
 		}
 
 		public Builder modifiers(int modifiers) {
@@ -103,24 +108,16 @@ public final class JavaFieldDeclaration implements Annotatable {
 			return this;
 		}
 
-		public Builder value(JavaExpression value) {
+		public Builder value(Object value) {
 			this.value = value;
+			this.initialized = true;
 			return this;
 		}
 
 		public JavaFieldDeclaration returning(String returnType) {
-			return new JavaFieldDeclaration(this.modifiers, this.name, returnType, this.value);
+			this.returnType = returnType;
+			return new JavaFieldDeclaration(this);
 		}
-
-	}
-
-	/**
-	 * Track if the value has been set or not. Using this because initializing a field to
-	 * null should be possible.
-	 */
-	enum InitializedStatus {
-
-		NOT_INITIALIZED;
 
 	}
 

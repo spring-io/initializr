@@ -20,12 +20,17 @@ package io.spring.initializr.generator.language.java;
  * A return statement.
  *
  * @author Andy Wilkinson
- * @author Matt Berteaux
  */
-public class JavaReturnStatement extends JavaExpressionStatement {
+public class JavaReturnStatement extends JavaStatement {
+
+	private final JavaExpression expression;
 
 	public JavaReturnStatement(JavaExpression expression) {
-		super(expression);
+		this.expression = expression;
+	}
+
+	public JavaExpression getExpression() {
+		return this.expression;
 	}
 
 }

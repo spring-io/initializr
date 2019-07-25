@@ -54,7 +54,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	@Override
 	public void writeTo(Path directory, KotlinSourceCode sourceCode) throws IOException {
-		if (!directory.toFile().exists()) {
+		if (!Files.exists(directory)) {
 			Files.createDirectories(directory);
 		}
 		for (KotlinCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
@@ -123,6 +123,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {
 		writer.println();
+		writeModifiers(writer, propertyDeclaration.getModifiers());
 		if (propertyDeclaration.isVal()) {
 			writer.print("val ");
 		}
@@ -137,11 +138,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writer.print(" = ");
 			writeExpression(writer, propertyDeclaration.getValueExpression().getExpression());
 		}
-		if (propertyDeclaration.hasGetter()) {
+		if (propertyDeclaration.getGetter() != null) {
 			writer.println();
 			writer.indented(() -> writeAccessor(writer, "get", propertyDeclaration.getGetter()));
 		}
-		if (propertyDeclaration.hasSetter()) {
+		if (propertyDeclaration.getSetter() != null) {
 			writer.println();
 			writer.indented(() -> writeAccessor(writer, "set", propertyDeclaration.getSetter()));
 		}
@@ -154,9 +155,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			for (Annotation annotation : accessor.getAnnotations()) {
 				writeAnnotation(writer, annotation, false);
 			}
-		}
-		if (accessor.isPrivate()) {
-			writer.print("private ");
 		}
 		writer.print(accessorName);
 		if (!accessor.isEmptyBody()) {
@@ -185,17 +183,69 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		List<KotlinStatement> statements = functionDeclaration.getStatements();
 		writer.indented(() -> {
 			for (KotlinStatement statement : statements) {
-				if (statement instanceof KotlinReturnStatement) {
+				if (statement instanceof KotlinExpressionStatement) {
+					writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
+				}
+				else if (statement instanceof KotlinReturnStatement) {
 					writer.print("return ");
 					writeExpression(writer, ((KotlinReturnStatement) statement).getExpression());
-				}
-				else if (statement instanceof KotlinExpressionStatement) {
-					writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
 				}
 				writer.println("");
 			}
 		});
 		writer.println("}");
+	}
+
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		for (Annotation annotation : annotatable.getAnnotations()) {
+			writeAnnotation(writer, annotation, true);
+		}
+	}
+
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
+		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		List<Annotation.Attribute> attributes = annotation.getAttributes();
+		if (!attributes.isEmpty()) {
+			writer.print("(");
+			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
+				writer.print(formatAnnotationAttribute(attributes.get(0)));
+			}
+			else {
+				writer.print(attributes.stream()
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+						.collect(Collectors.joining(", ")));
+			}
+			writer.print(")");
+		}
+		if (newLine) {
+			writer.println();
+		}
+		else {
+			writer.print(" ");
+		}
+	}
+
+	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
+		List<String> values = attribute.getValues();
+		if (attribute.getType().equals(Class.class)) {
+			return formatValues(values, (value) -> String.format("%s::class", getUnqualifiedName(value)));
+		}
+		if (Enum.class.isAssignableFrom(attribute.getType())) {
+			return formatValues(values, (value) -> {
+				String enumValue = value.substring(value.lastIndexOf(".") + 1);
+				String enumClass = value.substring(0, value.lastIndexOf("."));
+				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
+			});
+		}
+		if (attribute.getType().equals(String.class)) {
+			return formatValues(values, (value) -> String.format("\"%s\"", value));
+		}
+		return formatValues(values, (value) -> String.format("%s", value));
+	}
+
+	private String formatValues(List<String> values, Function<String, String> formatter) {
+		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
+		return (values.size() > 1) ? "[" + result + "]" : result;
 	}
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
@@ -208,14 +258,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeExpression(IndentingWriter writer, KotlinExpression expression) {
-		if (expression instanceof KotlinMethodInvocation) {
-			writeMethodInvocation(writer, (KotlinMethodInvocation) expression);
+		if (expression instanceof KotlinFunctionInvocation) {
+			writeFunctionInvocation(writer, (KotlinFunctionInvocation) expression);
 		}
 		else if (expression instanceof KotlinReifiedFunctionInvocation) {
 			writeReifiedFunctionInvocation(writer, (KotlinReifiedFunctionInvocation) expression);
-		}
-		else if (expression instanceof KotlinFunctionInvocation) {
-			writeFunctionInvocation(writer, (KotlinFunctionInvocation) expression);
 		}
 		else if (expression != null) {
 			writer.print(expression.toString());
@@ -223,10 +270,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeFunctionInvocation(IndentingWriter writer, KotlinFunctionInvocation functionInvocation) {
-		writer.print(functionInvocation.getName() + "(" + String.join(", ", functionInvocation.getArguments()) + ")");
-	}
-
-	private void writeMethodInvocation(IndentingWriter writer, KotlinMethodInvocation functionInvocation) {
 		writer.print(getUnqualifiedName(functionInvocation.getTarget()) + "." + functionInvocation.getName() + "("
 				+ String.join(", ", functionInvocation.getArguments()) + ")");
 	}
@@ -282,86 +325,14 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		imports.addAll(getRequiredImports(functionDeclaration.getParameters(),
 				(parameter) -> Collections.singleton(parameter.getType())));
 		imports.addAll(getRequiredImports(
-				getKotlinExpressions(functionDeclaration).filter(KotlinMethodInvocation.class::isInstance)
-						.map(KotlinMethodInvocation.class::cast),
+				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
+						.map(KotlinFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getTarget())));
 		imports.addAll(getRequiredImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
 						.map(KotlinReifiedFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getName())));
 		return imports;
-	}
-
-	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
-		return functionDeclaration.getStatements().stream().filter(KotlinExpressionStatement.class::isInstance)
-				.map(KotlinExpressionStatement.class::cast).map(KotlinExpressionStatement::getExpression);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		writeAnnotations(writer, annotatable, true);
-	}
-
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, boolean newLine) {
-		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation, newLine);
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
-		if (newLine) {
-			writer.println();
-		}
-		else {
-			writer.print(" ");
-		}
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writeAnnotation(writer, annotation, true);
-	}
-
-	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format(annotationFormatString(), getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? formatAnnotationArray(result) : result;
-	}
-
-	private String getUnqualifiedName(String name) {
-		if (!name.contains(".")) {
-			return name;
-		}
-		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
 	private Collection<String> determineImports(Annotation annotation) {
@@ -379,6 +350,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return imports;
 	}
 
+	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
+		return functionDeclaration.getStatements().stream().filter(KotlinExpressionStatement.class::isInstance)
+				.map(KotlinExpressionStatement.class::cast).map(KotlinExpressionStatement::getExpression);
+	}
+
 	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
 		return getRequiredImports(candidates.stream(), mapping);
 	}
@@ -388,20 +364,19 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				.collect(Collectors.toList());
 	}
 
+	private String getUnqualifiedName(String name) {
+		if (!name.contains(".")) {
+			return name;
+		}
+		return name.substring(name.lastIndexOf(".") + 1);
+	}
+
 	private boolean requiresImport(String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !("java.lang".equals(packageName) || "kotlin".equals(packageName));
-	}
-
-	private String annotationFormatString() {
-		return "%s::class";
-	}
-
-	private String formatAnnotationArray(String values) {
-		return "[" + values + "]";
+		return !"java.lang".equals(packageName);
 	}
 
 }

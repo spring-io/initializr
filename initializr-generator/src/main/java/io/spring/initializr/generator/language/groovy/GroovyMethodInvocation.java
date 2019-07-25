@@ -23,9 +23,8 @@ import java.util.List;
  * An invocation of a method.
  *
  * @author Stephane Nicoll
- * @author Matt Berteaux
  */
-public class GroovyMethodInvocation implements GroovyExpression, GroovyStatement {
+public class GroovyMethodInvocation extends GroovyExpression {
 
 	private final String target;
 

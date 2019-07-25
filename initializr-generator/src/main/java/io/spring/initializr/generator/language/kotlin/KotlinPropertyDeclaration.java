@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -25,7 +26,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 
 /**
- * Declaration of a property in Kotlin.
+ * Declaration of a property written in Kotlin.
  *
  * @author Matt Berteaux
  */
@@ -39,15 +40,18 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	private final String returnType;
 
+	private final List<KotlinModifier> modifiers;
+
 	private final KotlinExpressionStatement valueExpression;
 
 	private final Accessor getter;
 
 	private final Accessor setter;
 
-	private KotlinPropertyDeclaration(Builder builder) {
+	private KotlinPropertyDeclaration(Builder<?> builder) {
 		this.name = builder.name;
 		this.returnType = builder.returnType;
+		this.modifiers = new ArrayList<>(builder.modifiers);
 		this.isVal = builder.isVal;
 		this.valueExpression = builder.initializerStatement;
 		this.getter = builder.getter;
@@ -74,6 +78,10 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		return this.returnType;
 	}
 
+	public List<KotlinModifier> getModifiers() {
+		return this.modifiers;
+	}
+
 	KotlinExpressionStatement getValueExpression() {
 		return this.valueExpression;
 	}
@@ -84,14 +92,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	Accessor getSetter() {
 		return this.setter;
-	}
-
-	public boolean hasGetter() {
-		return getGetter() != null;
-	}
-
-	public boolean hasSetter() {
-		return getSetter() != null;
 	}
 
 	@Override
@@ -116,6 +116,8 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		private final String name;
 
 		private String returnType;
+
+		private List<KotlinModifier> modifiers = new ArrayList<>();
 
 		private KotlinExpressionStatement initializerStatement;
 
@@ -145,12 +147,17 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			return self();
 		}
 
+		public T modifiers(KotlinModifier... modifiers) {
+			this.modifiers = Arrays.asList(modifiers);
+			return self();
+		}
+
 		public KotlinPropertyDeclaration emptyValue() {
 			return new KotlinPropertyDeclaration(this);
 		}
 
-		public KotlinPropertyDeclaration value(KotlinExpression expression) {
-			this.initializerStatement = new KotlinExpressionStatement(expression);
+		public KotlinPropertyDeclaration value(Object value) {
+			this.initializerStatement = new KotlinExpressionStatement(new SimpleValueExpression(value));
 			return new KotlinPropertyDeclaration(this);
 		}
 
@@ -192,8 +199,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private KotlinExpressionStatement body;
 
-		private boolean isPrivate = false;
-
 		private final T parent;
 
 		private final Consumer<Accessor> accessorFunction;
@@ -203,17 +208,12 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			this.accessorFunction = accessorFunction;
 		}
 
-		public AccessorBuilder isPrivate() {
-			this.isPrivate = true;
-			return this;
-		}
-
-		public AccessorBuilder withAnnotation(Annotation annotation) {
+		public AccessorBuilder<?> withAnnotation(Annotation annotation) {
 			this.annotations.add(annotation);
 			return this;
 		}
 
-		public AccessorBuilder withBody(KotlinExpressionStatement expressionStatement) {
+		public AccessorBuilder<?> withBody(KotlinExpressionStatement expressionStatement) {
 			this.body = expressionStatement;
 			return this;
 		}
@@ -231,17 +231,9 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final KotlinExpressionStatement body;
 
-		private final boolean isPrivate;
-
-		@SuppressWarnings("unchecked")
-		Accessor(AccessorBuilder builder) {
+		Accessor(AccessorBuilder<?> builder) {
 			this.annotations.addAll(builder.annotations);
 			this.body = builder.body;
-			this.isPrivate = builder.isPrivate;
-		}
-
-		boolean isPrivate() {
-			return this.isPrivate;
 		}
 
 		boolean isEmptyBody() {
@@ -260,6 +252,21 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		@Override
 		public List<Annotation> getAnnotations() {
 			return Collections.unmodifiableList(this.annotations);
+		}
+
+	}
+
+	private static class SimpleValueExpression extends KotlinExpression {
+
+		private final Object value;
+
+		SimpleValueExpression(Object value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(this.value);
 		}
 
 	}

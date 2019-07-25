@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Andy Wilkinson
  */
-public class JavaMethodInvocation implements JavaExpression, JavaStatement {
+public class JavaMethodInvocation extends JavaExpression {
 
 	private final String target;
 

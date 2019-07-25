@@ -30,9 +30,9 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 
 	private int modifiers;
 
-	private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
-
 	private final List<GroovyFieldDeclaration> fieldDeclarations = new ArrayList<>();
+
+	private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
 
 	GroovyTypeDeclaration(String name) {
 		super(name);
@@ -46,20 +46,20 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 		return this.modifiers;
 	}
 
-	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {
-		this.methodDeclarations.add(methodDeclaration);
-	}
-
-	public List<GroovyMethodDeclaration> getMethodDeclarations() {
-		return this.methodDeclarations;
-	}
-
 	public void addFieldDeclaration(GroovyFieldDeclaration fieldDeclaration) {
 		this.fieldDeclarations.add(fieldDeclaration);
 	}
 
 	public List<GroovyFieldDeclaration> getFieldDeclarations() {
 		return this.fieldDeclarations;
+	}
+
+	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {
+		this.methodDeclarations.add(methodDeclaration);
+	}
+
+	public List<GroovyMethodDeclaration> getMethodDeclarations() {
+		return this.methodDeclarations;
 	}
 
 }

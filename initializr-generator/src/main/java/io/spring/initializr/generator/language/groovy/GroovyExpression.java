@@ -20,8 +20,7 @@ package io.spring.initializr.generator.language.groovy;
  * A Groovy expression.
  *
  * @author Stephane Nicoll
- * @author Matt Berteaux
  */
-public interface GroovyExpression {
+public class GroovyExpression {
 
 }

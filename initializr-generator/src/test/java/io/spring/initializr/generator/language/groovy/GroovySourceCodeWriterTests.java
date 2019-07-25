@@ -26,7 +26,6 @@ import java.util.List;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.java.JavaPrimitives;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -37,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GroovySourceCodeWriter}.
  *
  * @author Stephane Nicoll
+ * @author Matt Berteaux
  */
 class GroovySourceCodeWriterTests {
 
@@ -120,7 +120,7 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").returning(GroovyString.CLASS_NAME));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").returning("java.lang.String"));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    String testString", "",
 				"}");
@@ -131,18 +131,18 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testInteger").value(GroovyPrimitives.integerValue(42))
-				.returning(GroovyPrimitives.GroovyInteger.BOXED_CLASS_NAME));
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE)
-				.value(GroovyPrimitives.doubleValue(1986d)).returning(JavaPrimitives.JavaDouble.TYPE));
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testLong").value(GroovyPrimitives.longValue(1986L))
-				.returning(GroovyPrimitives.GroovyLong.TYPE));
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testNullBoolean")
-				.value(GroovyPrimitives.booleanValue(null)).returning(GroovyPrimitives.GroovyBoolean.BOXED_CLASS_NAME));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testNoInit").returning("boolean"));
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testInteger").value("42").returning("java.lang.Integer"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE).value("1986.0")
+				.returning("double"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testLong").value("1986L").returning("long"));
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testNullBoolean").value(null).returning("java.lang.Boolean"));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    Integer testInteger = 42",
-				"", "    private double testDouble = 1986.0", "", "    long testLong = 1986L", "",
-				"    Boolean testNullBoolean = null", "", "}");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    boolean testNoInit", "",
+				"    Integer testInteger = 42", "", "    private double testDouble = 1986.0", "",
+				"    long testLong = 1986L", "", "    Boolean testNullBoolean = null", "", "}");
 	}
 
 	@Test
@@ -150,11 +150,23 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
-				.returning(GroovyString.CLASS_NAME));
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE).returning("java.lang.String"));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    private String testString", "", "}");
+	}
+
+	@Test
+	void fieldImport() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(
+				GroovyFieldDeclaration.field("testString").modifiers(Modifier.PUBLIC).returning("com.example.One"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "", "class Test {", "",
+				"    public One testString", "", "}");
 	}
 
 	@Test
@@ -162,12 +174,13 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString")
-				.withAnnotation(Annotation.name("org.springframework.beans.factory.annotation.Autowired"))
-				.returning(GroovyString.CLASS_NAME));
+		GroovyFieldDeclaration field = GroovyFieldDeclaration.field("testString").returning("java.lang.String");
+		field.annotate(Annotation.name("org.springframework.beans.factory.annotation.Autowired"));
+		test.addFieldDeclaration(field);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @Autowired",
-				"    String testString", "", "}");
+		assertThat(lines).containsExactly("package com.example", "",
+				"import org.springframework.beans.factory.annotation.Autowired", "", "class Test {", "",
+				"    @Autowired", "    String testString", "", "}");
 	}
 
 	@Test
