@@ -95,6 +95,21 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
+	void generateGeneralCapabilitiesWithLineWrap() throws IOException {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", createDependency("id-b",
+						"Ratpack is a set of Java libraries that facilitate fast, efficient, evolvable and well tested HTTP applications. Built on Netty the event-driven networking engine."))
+				.build();
+		String content = this.generator.generateGenericCapabilities(metadata, "https://fake-service");
+		assertCommandLineCapabilities(content);
+		assertThat(content).contains(
+				"id-b | Ratpack is a set of Java libraries that facilitate fast, efficient, evolvable and well tested HTTP   |");
+		assertThat(content).contains(
+				"     | applications. Built on Netty the event-driven networking engine.                                     |");
+		assertThat(content).contains("https://fake-service");
+	}
+
+	@Test
 	void generateHttpCapabilities() throws IOException {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
 				createDependency("id-b", "depB"), createDependency("id-a", "depA", "and some description")).build();
