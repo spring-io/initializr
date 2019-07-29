@@ -18,8 +18,10 @@ package io.spring.initializr.web.support;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.metadata.Type;
+import org.apache.commons.text.WordUtils;
 
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -44,6 +47,8 @@ public class CommandLineHelpGenerator {
 			+ " =========|_|==============|___/=/_/_/_/";
 
 	private final TemplateRenderer template;
+
+	private final int desiredWidth = 100;
 
 	public CommandLineHelpGenerator(TemplateRenderer template) {
 		this.template = template;
@@ -74,6 +79,7 @@ public class CommandLineHelpGenerator {
 		Map<String, Object> model = initializeCommandLineModel(metadata, serviceUrl);
 		model.put("examples", this.template.render("cli/curl-examples", model));
 		model.put("hasExamples", true);
+
 		return this.template.render("cli/cli-capabilities", model);
 	}
 
@@ -129,7 +135,7 @@ public class CommandLineHelpGenerator {
 			data[2] = (String) defaults.get(id);
 			parameterTable[i++] = data;
 		}
-		model.put("parameters", TableGenerator.generate(parameterTable));
+		model.put("parameters", TableGenerator.generate(parameterTable, false, this.desiredWidth));
 
 		return model;
 	}
@@ -153,7 +159,7 @@ public class CommandLineHelpGenerator {
 			data[2] = (String) defaults.get(id);
 			parameterTable[i++] = data;
 		}
-		model.put("parameters", TableGenerator.generate(parameterTable));
+		model.put("parameters", TableGenerator.generate(parameterTable, false, this.desiredWidth));
 		return model;
 	}
 
@@ -169,7 +175,7 @@ public class CommandLineHelpGenerator {
 			data[2] = dep.getVersionRequirement();
 			dependencyTable[i++] = data;
 		}
-		return TableGenerator.generate(dependencyTable);
+		return TableGenerator.generate(dependencyTable, true, this.desiredWidth);
 	}
 
 	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
@@ -191,7 +197,7 @@ public class CommandLineHelpGenerator {
 			}
 			typeTable[i++] = data;
 		}
-		return TableGenerator.generate(typeTable);
+		return TableGenerator.generate(typeTable, false, this.desiredWidth);
 	}
 
 	protected Map<String, Object> buildParametersDescription(InitializrMetadata metadata) {
@@ -230,27 +236,44 @@ public class CommandLineHelpGenerator {
 		 * The {@code content} is a two-dimensional array holding the rows of the table.
 		 * The first entry holds the header of the table.
 		 * @param content the table content
+		 * @param emptyRowSeparation add an empty row separator
+		 * @param desiredWidth the width bound for each column
 		 * @return the generated table
 		 */
-		static String generate(String[][] content) {
+		static String generate(String[][] content, boolean emptyRowSeparation, int desiredWidth) {
 			StringBuilder sb = new StringBuilder();
-			int[] columnsLength = computeColumnsLength(content);
+			int[] columnsLength = computeColumnsLength(content, desiredWidth);
 			appendTableSeparation(sb, columnsLength);
-			appendRow(sb, content, columnsLength, 0); // Headers
+			appendRow(sb, content, columnsLength, 0, desiredWidth); // Headers
 			appendTableSeparation(sb, columnsLength);
 			for (int i = 1; i < content.length; i++) {
-				appendRow(sb, content, columnsLength, i);
+				appendRow(sb, content, columnsLength, i, desiredWidth);
+				if (emptyRowSeparation && i < content.length - 1) {
+					appendEmptyRow(sb, columnsLength);
+				}
 			}
 			appendTableSeparation(sb, columnsLength);
 			return sb.toString();
 		}
 
-		private static void appendRow(StringBuilder sb, String[][] content, int[] columnsLength, int rowIndex) {
-			String[] row = content[rowIndex];
-			if (row != null) {
-				for (int i = 0; i < row.length; i++) {
-					sb.append("| ").append(fill(row[i], columnsLength[i])).append(" ");
+		private static void appendRow(StringBuilder sb, String[][] content, int[] columnsLength, int rowIndex,
+				int desiredWidth) {
+			String[] line = content[rowIndex];
+			List<String[]> rows = HelpFormatter.format(line, desiredWidth);
+			if (rows != null) {
+				for (String[] row : rows) {
+					for (int i = 0; i < row.length; i++) {
+						sb.append("| ").append(fill(row[i], columnsLength[i])).append(" ");
+					}
+					sb.append("|");
+					sb.append(NEW_LINE);
 				}
+			}
+		}
+
+		private static void appendEmptyRow(StringBuilder sb, int[] columnsLength) {
+			for (int columnLength : columnsLength) {
+				sb.append("| ").append(fill(null, columnLength)).append(" ");
 			}
 			sb.append("|");
 			sb.append(NEW_LINE);
@@ -282,16 +305,16 @@ public class CommandLineHelpGenerator {
 			return s.toString();
 		}
 
-		private static int[] computeColumnsLength(String[][] content) {
+		private static int[] computeColumnsLength(String[][] content, int desiredWidth) {
 			int count = content[0].length;
 			int[] result = new int[count];
 			for (int i = 0; i < count; i++) {
-				result[i] = largest(content, i);
+				result[i] = largest(content, i, desiredWidth);
 			}
 			return result;
 		}
 
-		private static int largest(String[][] content, int column) {
+		private static int largest(String[][] content, int column, int desiredWidth) {
 			int max = 0;
 			for (String[] rows : content) {
 				if (rows != null) {
@@ -301,7 +324,65 @@ public class CommandLineHelpGenerator {
 					}
 				}
 			}
+			return (max < desiredWidth) ? max : desiredWidth;
+		}
+
+	}
+
+	private static class HelpFormatter {
+
+		private static final String NEW_LINE = System.getProperty("line.separator");
+
+		/**
+		 * Formats a given content to a desired width.
+		 * @param content the content to format.
+		 * @param desiredWidth the desired width of each column
+		 * @return the formatted rows.
+		 */
+		private static List<String[]> format(String[] content, int desiredWidth) {
+			List<String[]> columns = lineWrap(content, desiredWidth);
+			List<String[]> rows = new ArrayList<>();
+			for (int i = 0; i < largest(columns); ++i) {
+				rows.add(computeRow(columns, i));
+			}
+			return rows;
+		}
+
+		private static String[] computeRow(List<String[]> columns, int index) {
+			String[] line = new String[columns.size()];
+			int position = 0;
+			for (String[] column : columns) {
+				line[position] = itemOrNull(column, index);
+				position++;
+			}
+			return line;
+		}
+
+		private static List<String[]> lineWrap(String[] content, int desiredWidth) {
+			List<String[]> lineWrapped = new ArrayList<>();
+			for (String column : content) {
+				if (column == null) {
+					lineWrapped.add(new String[0]);
+				}
+				else {
+					lineWrapped.add(WordUtils.wrap(column, desiredWidth).split(NEW_LINE));
+				}
+			}
+			return lineWrapped;
+		}
+
+		private static int largest(List<String[]> columns) {
+			int max = 0;
+			for (String[] column : columns) {
+				if (max < column.length) {
+					max = column.length;
+				}
+			}
 			return max;
+		}
+
+		private static String itemOrNull(String[] column, int index) {
+			return (index >= column.length) ? null : column[index];
 		}
 
 	}
