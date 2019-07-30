@@ -33,6 +33,7 @@ import io.spring.initializr.generator.buildsystem.DependencyComparator;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
@@ -240,16 +241,39 @@ public class MavenBuildWriter {
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
-		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.plugins().isEmpty()) {
+		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.plugins().isEmpty()
+				&& build.getResources().isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "sourceDirectory", build.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", build.getTestSourceDirectory());
+			writeResources(writer, build);
 			writePlugins(writer, build);
 
 		});
+	}
+
+	private void writeResources(IndentingWriter writer, MavenBuild build) {
+		if (build.getResources().isEmpty()) {
+			return;
+		}
+		writeElement(writer, "resources", () -> writeCollection(writer, build.getResources(), this::writeResource));
+	}
+
+	private void writeResource(IndentingWriter writer, Resource resource) {
+		writeElement(writer, "resource", () -> {
+			writeSingleElement(writer, "directory", resource.getDirectory());
+			if (!resource.getIncludes().isEmpty()) {
+				writeElement(writer, "includes",
+						() -> writeCollection(writer, resource.getIncludes(), this::writeResourceInclude));
+			}
+		});
+	}
+
+	private void writeResourceInclude(IndentingWriter writer, String include) {
+		writeSingleElement(writer, "include", include);
 	}
 
 	private void writePlugins(IndentingWriter writer, MavenBuild build) {
