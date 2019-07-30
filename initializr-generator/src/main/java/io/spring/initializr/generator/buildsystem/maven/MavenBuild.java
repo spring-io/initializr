@@ -47,6 +47,8 @@ public class MavenBuild extends Build {
 
 	private final Map<String, MavenPlugin> plugins = new LinkedHashMap<>();
 
+	private final Map<String, ResourceBuilder> resources = new LinkedHashMap<>();
+
 	private String packaging;
 
 	public MavenBuild(BuildItemResolver buildItemResolver) {
@@ -132,6 +134,70 @@ public class MavenBuild extends Build {
 
 	public String getPackaging() {
 		return this.packaging;
+	}
+
+	public void resource(String directory, Consumer<ResourceBuilder> customizer) {
+		customizer.accept(this.resources.computeIfAbsent(directory,
+				(key) -> new ResourceBuilder(directory)));
+	}
+
+	public List<Resource> getResources() {
+		return this.resources.values().stream().map(ResourceBuilder::build)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 *
+	 * Builder to create a {@link Resource}.
+	 *
+	 *
+	 */
+	public static final class ResourceBuilder {
+
+		private String directory;
+
+		private List<String> includes = new ArrayList<>();
+
+		public ResourceBuilder(String directory) {
+			this.directory = directory;
+		}
+
+		Resource build() {
+			return new Resource(this.directory, this.includes);
+		}
+
+		public ResourceBuilder include(String include) {
+			this.includes.add(include);
+			return this;
+		}
+
+	}
+
+	/**
+	 *
+	 * An {@code <resource>} of a {@link MavenBuild}.
+	 *
+	 *
+	 */
+	public static final class Resource {
+
+		private final String directory;
+
+		private final List<String> includes;
+
+		public Resource(String directory, List<String> includes) {
+			this.directory = directory;
+			this.includes = includes;
+		}
+
+		public String getDirectory() {
+			return this.directory;
+		}
+
+		public List<String> getIncludes() {
+			return this.includes;
+		}
+
 	}
 
 }

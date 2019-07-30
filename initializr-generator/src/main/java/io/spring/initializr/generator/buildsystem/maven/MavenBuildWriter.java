@@ -245,9 +245,32 @@ public class MavenBuildWriter {
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "sourceDirectory", build.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", build.getTestSourceDirectory());
+			writeResources(writer, build);
 			writePlugins(writer, build);
 
 		});
+	}
+
+	private void writeResources(IndentingWriter writer, MavenBuild build) {
+		if (build.getResources().isEmpty()) {
+			return;
+		}
+		writeElement(writer, "resources",
+				() -> writeCollection(writer, build.getResources(), this::writeResource));
+	}
+
+	private void writeResource(IndentingWriter writer, Resource resource) {
+		writeElement(writer, "resource", () -> {
+			writeSingleElement(writer, "directory", resource.getDirectory());
+			if (!resource.getIncludes().isEmpty()) {
+				writeElement(writer, "includes", () -> writeCollection(writer,
+						resource.getIncludes(), this::writeResourceInclude));
+			}
+		});
+	}
+
+	private void writeResourceInclude(IndentingWriter writer, String include) {
+		writeSingleElement(writer, "include", include);
 	}
 
 	private void writePlugins(IndentingWriter writer, MavenBuild build) {
