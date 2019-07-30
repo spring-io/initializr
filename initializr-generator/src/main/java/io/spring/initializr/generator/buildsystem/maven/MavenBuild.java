@@ -137,13 +137,11 @@ public class MavenBuild extends Build {
 	}
 
 	public void resource(String directory, Consumer<ResourceBuilder> customizer) {
-		customizer.accept(this.resources.computeIfAbsent(directory,
-				(key) -> new ResourceBuilder(directory)));
+		customizer.accept(this.resources.computeIfAbsent(directory, (key) -> new ResourceBuilder(directory)));
 	}
 
 	public List<Resource> getResources() {
-		return this.resources.values().stream().map(ResourceBuilder::build)
-				.collect(Collectors.toList());
+		return this.resources.values().stream().map(ResourceBuilder::build).collect(Collectors.toList());
 	}
 
 	/**

@@ -255,16 +255,15 @@ public class MavenBuildWriter {
 		if (build.getResources().isEmpty()) {
 			return;
 		}
-		writeElement(writer, "resources",
-				() -> writeCollection(writer, build.getResources(), this::writeResource));
+		writeElement(writer, "resources", () -> writeCollection(writer, build.getResources(), this::writeResource));
 	}
 
 	private void writeResource(IndentingWriter writer, Resource resource) {
 		writeElement(writer, "resource", () -> {
 			writeSingleElement(writer, "directory", resource.getDirectory());
 			if (!resource.getIncludes().isEmpty()) {
-				writeElement(writer, "includes", () -> writeCollection(writer,
-						resource.getIncludes(), this::writeResourceInclude));
+				writeElement(writer, "includes",
+						() -> writeCollection(writer, resource.getIncludes(), this::writeResourceInclude));
 			}
 		});
 	}
