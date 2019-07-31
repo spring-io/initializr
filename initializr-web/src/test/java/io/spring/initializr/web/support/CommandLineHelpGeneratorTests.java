@@ -18,13 +18,13 @@ package io.spring.initializr.web.support;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,12 +36,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class CommandLineHelpGeneratorTests {
 
-	private CommandLineHelpGenerator generator;
+	private static final MustacheTemplateRenderer template = new MustacheTemplateRenderer("classpath:/templates");
 
-	@BeforeEach
-	void init() {
-		this.generator = new CommandLineHelpGenerator(new MustacheTemplateRenderer("classpath:/templates"));
-	}
+	private CommandLineHelpGenerator generator = new CommandLineHelpGenerator(template);
 
 	@Test
 	void generateGenericCapabilities() throws IOException {
@@ -95,17 +92,37 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateGeneralCapabilitiesWithLineWrap() throws IOException {
+	void generateGeneralCapabilitiesWithDefaultLineWrap() throws IOException {
+		CommandLineHelpGenerator lineWrapTemplateGenerator = new CommandLineHelpGenerator(template);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", createDependency("id-b",
-						"Ratpack is a set of Java libraries that facilitate fast, efficient, evolvable and well tested HTTP applications. Built on Netty the event-driven networking engine."))
+				.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
+						"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
 				.build();
-		String content = this.generator.generateGenericCapabilities(metadata, "https://fake-service");
+		String content = lineWrapTemplateGenerator.generateGenericCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
-		assertThat(content).contains(
-				"id-b | Ratpack is a set of Java libraries that facilitate fast, efficient, evolvable and well tested HTTP   |");
-		assertThat(content).contains(
-				"     | applications. Built on Netty the event-driven networking engine.                                     |");
+		assertThat(readAllLines(content)).containsSequence(
+				"| id-a | Short description                                            |                  |",
+				"|      |                                                              |                  |",
+				"| id-b | Version control for your database so you can migrate from    |                  |",
+				"|      | any version (incl. an empty database) to the latest version  |                  |",
+				"|      | of the schema.                                               |                  |");
+		assertThat(content).contains("https://fake-service");
+	}
+
+	@Test
+	void generateGeneralCapabilitiesWithCustomLineWrap() throws IOException {
+		CommandLineHelpGenerator lineWrapTemplateGenerator = new CommandLineHelpGenerator(template, 100);
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
+						"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
+				.build();
+		String content = lineWrapTemplateGenerator.generateGenericCapabilities(metadata, "https://fake-service");
+		assertCommandLineCapabilities(content);
+		assertThat(readAllLines(content)).containsSequence(
+				"| id-a | Short description                                                                                    |                  |",
+				"|      |                                                                                                      |                  |",
+				"| id-b | Version control for your database so you can migrate from any version (incl. an empty database) to   |                  |",
+				"|      | the latest version of the schema.                                                                    |                  |");
 		assertThat(content).contains("https://fake-service");
 	}
 
@@ -173,6 +190,11 @@ class CommandLineHelpGeneratorTests {
 		dependency.setDescription(description);
 		dependency.setName(name);
 		return dependency;
+	}
+
+	private static List<String> readAllLines(String source) {
+		String[] lines = source.split("\\r?\\n");
+		return Arrays.asList(lines);
 	}
 
 }
