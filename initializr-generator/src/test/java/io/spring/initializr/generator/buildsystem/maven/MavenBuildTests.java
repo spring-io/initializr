@@ -16,9 +16,14 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
 
 /**
  * Tests for {@link MavenBuild}.
@@ -108,6 +113,31 @@ class MavenBuildTests {
 		MavenPlugin testPlugin = build.getPlugins().get(0);
 
 		assertThat(testPlugin.isExtensions()).isTrue();
+	}
+
+	@Test
+	void mavenResourcesCanBeLoaded() {
+
+		MavenBuild build = new MavenBuild();
+
+		List<String> includes = Arrays.asList("**/*.yml");
+		List<String> excludes = Arrays.asList("**/*.properties");
+
+		build.resource("src/main/resources", (resource) -> {
+			resource.include(includes);
+			resource.targetPath("targetPath");
+			resource.filtering(false);
+			resource.excludes(excludes);
+		});
+
+		Resource resource = build.getResources().get(0);
+
+		assertThat(resource.getIncludes().get(0)).isEqualTo("**/*.yml");
+		assertThat(resource.getExcludes().get(0)).isEqualTo("**/*.properties");
+		assertThat(resource.isFiltering()).isFalse();
+		assertThat(resource.getTargetPath()).isEqualTo("targetPath");
+		assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
+
 	}
 
 }

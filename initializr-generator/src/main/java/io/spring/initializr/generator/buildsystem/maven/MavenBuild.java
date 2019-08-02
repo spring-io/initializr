@@ -156,18 +156,39 @@ public class MavenBuild extends Build {
 
 		private String directory;
 
+		private String targetPath;
+
+		private Boolean filtering;
+
 		private List<String> includes = new ArrayList<>();
+
+		private List<String> excludes = new ArrayList<>();
 
 		public ResourceBuilder(String directory) {
 			this.directory = directory;
 		}
 
 		Resource build() {
-			return new Resource(this.directory, this.includes);
+			return new Resource(this.directory, this.targetPath, this.filtering, this.includes, this.excludes);
 		}
 
-		public ResourceBuilder include(String include) {
-			this.includes.add(include);
+		public ResourceBuilder include(List<String> includes) {
+			this.includes = includes;
+			return this;
+		}
+
+		public ResourceBuilder targetPath(String targetPath) {
+			this.targetPath = targetPath;
+			return this;
+		}
+
+		public ResourceBuilder filtering(Boolean filtering) {
+			this.filtering = filtering;
+			return this;
+		}
+
+		public ResourceBuilder excludes(List<String> excludes) {
+			this.excludes = excludes;
 			return this;
 		}
 
@@ -181,13 +202,24 @@ public class MavenBuild extends Build {
 	 */
 	public static final class Resource {
 
-		private final String directory;
+		private String directory;
 
-		private final List<String> includes;
+		private String targetPath;
 
-		public Resource(String directory, List<String> includes) {
+		private Boolean filtering;
+
+		private List<String> includes = new ArrayList<>();
+
+		private List<String> excludes = new ArrayList<>();
+
+		public Resource(String directory, String targetPath, Boolean filtering, List<String> includes,
+				List<String> excludes) {
+			super();
 			this.directory = directory;
+			this.targetPath = targetPath;
+			this.filtering = filtering;
 			this.includes = includes;
+			this.excludes = excludes;
 		}
 
 		public String getDirectory() {
@@ -196,6 +228,18 @@ public class MavenBuild extends Build {
 
 		public List<String> getIncludes() {
 			return this.includes;
+		}
+
+		public String getTargetPath() {
+			return targetPath;
+		}
+
+		public Boolean isFiltering() {
+			return filtering;
+		}
+
+		public List<String> getExcludes() {
+			return excludes;
 		}
 
 	}
