@@ -13,7 +13,7 @@ to generate and endpoints that you can use via plain HTTP.
 Spring Initializr also exposes an endpoint that serves its metadata in a well-known
 format to allow third-party clients to provide the necessary assistance.
 
-Finally, Initializr offers a configuration structure to define all the aspects
+Finally, Spring Initializr offers a configuration structure to define all the aspects
 related to the project to generate: list of dependencies, supported java and boot
 versions, etc. Check {service}[the companion project] that defines
 https://start.spring.io and, in particular, the

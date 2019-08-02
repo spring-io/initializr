@@ -1,6 +1,6 @@
 [[configuration-format]]
 # Configuration Format
-This section describes the configuration structure that is used by the initializr.
+This section describes the configuration structure that is used by Spring initializr.
 The metadata provided through configuration are driving the options exposed by a
 particular instance and <<metadata-format.adoc#metadata-format,the project metadata
 format>>.

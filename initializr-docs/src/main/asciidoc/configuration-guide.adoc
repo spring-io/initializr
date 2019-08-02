@@ -3,7 +3,7 @@
 
 [partintro]
 --
-You can use Initializr to create your own service that can generate JVM projects.
+You can use Spring Initializr to create your own service that can generate JVM projects.
 This section describes how you can create your own service and tune it for
 your needs, and also how you can configure an existing service.
 --
@@ -267,7 +267,7 @@ Each capability has a default value if nothing is configured. The defaults can b
 === Configuring available Spring Boot versions
 If you look at http://projects.spring.io/spring-boot[the project home page for Spring
 Boot], the latest versions are displayed. And you've probably noticed that they match the
-drop down list that you automatically get with a default instance of the Initializr. The
+drop down list that you automatically get with a default instance of Spring Initializr. The
 reason for that is that Spring Initializr calls an API on https://spring.io to retrieve the
 latest versions automatically. This makes sure that you always get the latest available
 versions.
@@ -536,10 +536,10 @@ ecosystem we usually use the suffix `-dependencies` on the artifact id of a BOM.
 projects we see `-bom`. It is recommended that all dependencies are included in a BOM of
 some sort, since they provide nice high level features for users of the dependency. It is
 also important that 2 BOMs used in a project do not contain conflicting versions for the
-same dependency, so the best practice is to look at the existing BOMs in the Initializr
+same dependency, so the best practice is to look at the existing BOMs in Spring Initializr
 before you add a new one, and make sure that you aren't adding a conflict.
 
-In the Initializr a BOM is declared at the `env` level, and given an id through the
+In Spring Initializr a BOM is declared at the `env` level, and given an id through the
 configuration key. Example:
 
 [source,yaml,indent=0]

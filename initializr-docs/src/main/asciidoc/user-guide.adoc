@@ -125,7 +125,7 @@ able to select that dependency.
 
 [[getting-started-tuning-defaults]]
 === Tuning default values
-The Initializr service is configured to offer default values so that you can generate a
+A Spring Initializr service is configured to offer default values so that you can generate a
 new project with minimum fuss. Maybe you are a Kotlin fan? Or a Gradle fan? Currently
 start.spring.io defaults to Java and Maven but it also allows you to tune these defaults
 easily.

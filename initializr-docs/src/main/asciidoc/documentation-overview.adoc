@@ -24,17 +24,17 @@ using the jars as libraries in your own app.
 The API can be used standalone or embedded in other tools (e.g. it is used in major IDEs
 such as Spring Tool Suite, IntelliJ IDEA Ultimate, Netbeans and VSCode).
 
-You can easily create your own instance of the Initializr, by using the jars as libraries
+You can easily create your own instance of the Spring Initializr, by using the jars as libraries
 in your own app. There is minimal code involved and the service has a very rich
 configuration structure, allowing you to define not only the values of various project
 attributes but also the list of dependencies and the constraints to apply to them. If that
 sounds interesting, then <<configuration-guide.adoc#configuration-guide>> has all the
-details you need. You might only want to modify an existing instance of the Initializr,
+details you need. You might only want to modify an existing instance of Spring Initializr,
 e.g. to add a new dependency type, or update the version of an existing
 one. For those and other simple and common use cases check out
 <<configuration-guide.adoc#configuration-howto>>.
 
-The Initializr also provides an extensible API to generate quickstart projects, and to
+Spring Initializr also provides an extensible API to generate quickstart projects, and to
 inspect the metadata used to generate projects, for instance to list the available
 dependencies and versions. The API can be used standalone or embedded in other tools
 (e.g. it is used in major IDEs such as Spring Tool Suite, IntelliJ IDEA Ultimate, Netbeans
