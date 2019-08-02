@@ -16,14 +16,13 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
 import org.junit.jupiter.api.Test;
 
-import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link MavenBuild}.

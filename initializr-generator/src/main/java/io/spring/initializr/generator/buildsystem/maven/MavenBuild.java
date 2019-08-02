@@ -231,15 +231,15 @@ public class MavenBuild extends Build {
 		}
 
 		public String getTargetPath() {
-			return targetPath;
+			return this.targetPath;
 		}
 
 		public Boolean isFiltering() {
-			return filtering;
+			return this.filtering;
 		}
 
 		public List<String> getExcludes() {
-			return excludes;
+			return this.excludes;
 		}
 
 	}
