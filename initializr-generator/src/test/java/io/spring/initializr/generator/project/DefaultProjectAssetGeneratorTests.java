@@ -39,7 +39,7 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithExplicitFactoryDoesNotLookupBean(@TempDir Path tempDir) throws IOException {
-		ResolvedProjectDescription description = new ResolvedProjectDescription(new ProjectDescription());
+		ResolvedProjectDescription description = new ProjectDescription().resolve();
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
@@ -56,7 +56,7 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithoutExplicitFactoryLookupsBean(@TempDir Path tempDir) throws IOException {
-		ResolvedProjectDescription description = new ResolvedProjectDescription(new ProjectDescription());
+		ResolvedProjectDescription description = new ProjectDescription().resolve();
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
@@ -74,7 +74,7 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithoutExplicitFactoryFailIfBeanIsNotPresent() {
-		ResolvedProjectDescription description = new ResolvedProjectDescription(new ProjectDescription());
+		ResolvedProjectDescription description = new ProjectDescription().resolve();
 		assertThatThrownBy(() -> {
 			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
 				context.registerBean(ResolvedProjectDescription.class, () -> description);
@@ -89,7 +89,7 @@ class DefaultProjectAssetGeneratorTests {
 	void generationWithBaseDirCreatesBaseDirStructure(@TempDir Path tempDir) throws IOException {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setBaseDirectory("my-project");
-		ResolvedProjectDescription description = new ResolvedProjectDescription(projectDescription);
+		ResolvedProjectDescription description = projectDescription.resolve();
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
