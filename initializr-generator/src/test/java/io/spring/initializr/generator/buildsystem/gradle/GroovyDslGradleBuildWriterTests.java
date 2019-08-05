@@ -309,6 +309,15 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithNoScopeDependencyDefaultsToCompile() throws IOException {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    implementation 'org.springframework.boot:spring-boot-starter'", "}");
+	}
+
+	@Test
 	void gradleBuildWithRuntimeDependency() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")

@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -114,19 +115,24 @@ public abstract class GradleBuildWriter {
 	private void writeDependencies(IndentingWriter writer, GradleBuild build) {
 		Set<Dependency> sortedDependencies = new LinkedHashSet<>();
 		DependencyContainer dependencies = build.dependencies();
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.COMPILE));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.COMPILE_ONLY));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.RUNTIME));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.ANNOTATION_PROCESSOR));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.PROVIDED_RUNTIME));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.TEST_COMPILE));
-		sortedDependencies.addAll(filterDependencies(dependencies, DependencyScope.TEST_RUNTIME));
+		sortedDependencies
+				.addAll(filterDependencies(dependencies, (scope) -> scope == null || scope == DependencyScope.COMPILE));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.COMPILE_ONLY)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.RUNTIME)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_RUNTIME)));
 		if (!sortedDependencies.isEmpty()) {
 			writer.println();
 			writer.println("dependencies" + " {");
 			writer.indented(() -> sortedDependencies.forEach((dependency) -> writeDependency(writer, dependency)));
 			writer.println("}");
 		}
+	}
+
+	private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
+		return (scope) -> Arrays.asList(validScopes).contains(scope);
 	}
 
 	protected abstract void writeDependency(IndentingWriter writer, Dependency dependency);
@@ -139,6 +145,9 @@ public abstract class GradleBuildWriter {
 			}
 		}
 		DependencyScope type = dependency.getScope();
+		if (type == null) {
+			return "implementation";
+		}
 		switch (type) {
 		case ANNOTATION_PROCESSOR:
 			return "annotationProcessor";
@@ -229,10 +238,9 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeProperty(IndentingWriter writer, String name, String value);
 
 	private static Collection<Dependency> filterDependencies(DependencyContainer dependencies,
-			DependencyScope... types) {
-		List<DependencyScope> candidates = Arrays.asList(types);
-		return dependencies.items().filter((dep) -> candidates.contains(dep.getScope()))
-				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
+			Predicate<DependencyScope> filter) {
+		return dependencies.items().filter((dep) -> filter.test(dep.getScope())).sorted(DependencyComparator.INSTANCE)
+				.collect(Collectors.toList());
 	}
 
 }

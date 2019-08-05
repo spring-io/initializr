@@ -168,6 +168,22 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithNoScopeDependencyDefaultsToCompile() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.setGroup("com.example.demo");
+		build.setArtifact("demo");
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("spring-boot-starter");
+			assertThat(dependency).textAtPath("version").isNullOrEmpty();
+			assertThat(dependency).textAtPath("scope").isNullOrEmpty();
+			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+		});
+	}
+
+	@Test
 	void pomWithRuntimeDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");

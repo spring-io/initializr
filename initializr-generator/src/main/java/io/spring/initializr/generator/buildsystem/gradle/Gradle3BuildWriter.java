@@ -35,6 +35,9 @@ public class Gradle3BuildWriter extends GroovyDslGradleBuildWriter {
 			}
 		}
 		DependencyScope type = dependency.getScope();
+		if (type == null) {
+			return "compile";
+		}
 		switch (type) {
 		case ANNOTATION_PROCESSOR:
 			return "compileOnly";

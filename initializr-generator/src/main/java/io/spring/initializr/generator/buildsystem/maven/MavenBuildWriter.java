@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -128,21 +129,27 @@ public class MavenBuildWriter {
 		writer.println();
 		writeElement(writer, "dependencies", () -> {
 			Collection<Dependency> compiledDependencies = writeDependencies(writer, dependencies,
-					DependencyScope.COMPILE);
+					(scope) -> scope == null || scope == DependencyScope.COMPILE);
 			if (!compiledDependencies.isEmpty()) {
 				writer.println();
 			}
-			writeDependencies(writer, dependencies, DependencyScope.RUNTIME);
-			writeDependencies(writer, dependencies, DependencyScope.COMPILE_ONLY);
-			writeDependencies(writer, dependencies, DependencyScope.ANNOTATION_PROCESSOR);
-			writeDependencies(writer, dependencies, DependencyScope.PROVIDED_RUNTIME);
-			writeDependencies(writer, dependencies, DependencyScope.TEST_COMPILE, DependencyScope.TEST_RUNTIME);
+			writeDependencies(writer, dependencies, hasScope(DependencyScope.RUNTIME));
+			writeDependencies(writer, dependencies, hasScope(DependencyScope.COMPILE_ONLY));
+			writeDependencies(writer, dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR));
+			writeDependencies(writer, dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME));
+			writeDependencies(writer, dependencies,
+					hasScope(DependencyScope.TEST_COMPILE, DependencyScope.TEST_RUNTIME));
 		});
 	}
 
+	private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
+		return (scope) -> Arrays.asList(validScopes).contains(scope);
+	}
+
 	private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
-			DependencyScope... types) {
-		Collection<Dependency> candidates = filterDependencies(dependencies, types);
+			Predicate<DependencyScope> filter) {
+		Collection<Dependency> candidates = dependencies.items().filter((dep) -> filter.test(dep.getScope()))
+				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
 		writeCollection(writer, candidates, this::writeDependency);
 		return candidates;
 	}
@@ -171,14 +178,10 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private static Collection<Dependency> filterDependencies(DependencyContainer dependencies,
-			DependencyScope... scopes) {
-		List<DependencyScope> candidates = Arrays.asList(scopes);
-		return dependencies.items().filter((dep) -> candidates.contains(dep.getScope()))
-				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
-	}
-
 	private String scopeForType(DependencyScope type) {
+		if (type == null) {
+			return null;
+		}
 		switch (type) {
 		case ANNOTATION_PROCESSOR:
 			return null;
