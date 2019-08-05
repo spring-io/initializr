@@ -25,18 +25,37 @@ import java.util.stream.Collectors;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * The default {@link ProjectAssetGenerator}. Generates a directory structure with all
- * available {@link ProjectContributor project contributors}.
+ * A default {@link ProjectAssetGenerator} implementation that generates a directory
+ * structure with all available {@link ProjectContributor project contributors}. Uses a
+ * {@link ProjectDirectoryFactory} to determine the root directory to use based on a
+ * {@link ResolvedProjectDescription}.
  *
  * @author Stephane Nicoll
  */
 public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path> {
 
+	private final ProjectDirectoryFactory projectDirectoryFactory;
+
+	/**
+	 * Create a new instance with the {@link ProjectDirectoryFactory} to use.
+	 * @param projectDirectoryFactory the project directory factory to use
+	 */
+	public DefaultProjectAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
+		this.projectDirectoryFactory = projectDirectoryFactory;
+	}
+
+	/**
+	 * Create a new instance without an explicit {@link ProjectDirectoryFactory}. A bean
+	 * of that type is expected to be available in the context.
+	 */
+	public DefaultProjectAssetGenerator() {
+		this(null);
+	}
+
 	@Override
 	public Path generate(ProjectGenerationContext context) throws IOException {
 		ResolvedProjectDescription resolvedProjectDescription = context.getBean(ResolvedProjectDescription.class);
-		Path projectRoot = context.getBean(ProjectDirectoryFactory.class)
-				.createProjectDirectory(resolvedProjectDescription);
+		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(resolvedProjectDescription);
 		Path projectDirectory = initializerProjectDirectory(projectRoot, resolvedProjectDescription);
 		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class).orderedStream()
 				.collect(Collectors.toList());
@@ -44,6 +63,11 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 			contributor.contribute(projectDirectory);
 		}
 		return projectRoot;
+	}
+
+	private ProjectDirectoryFactory resolveProjectDirectoryFactory(ProjectGenerationContext context) {
+		return (this.projectDirectoryFactory != null) ? this.projectDirectoryFactory
+				: context.getBean(ProjectDirectoryFactory.class);
 	}
 
 	private Path initializerProjectDirectory(Path rootDir, ResolvedProjectDescription description) throws IOException {
