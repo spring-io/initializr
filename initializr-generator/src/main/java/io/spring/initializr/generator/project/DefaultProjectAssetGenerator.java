@@ -47,14 +47,16 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 	}
 
 	private Path initializerProjectDirectory(Path rootDir, ResolvedProjectDescription description) throws IOException {
+		Path projectDirectory = resolveProjectDirectory(rootDir, description);
+		Files.createDirectories(projectDirectory);
+		return projectDirectory;
+	}
+
+	private Path resolveProjectDirectory(Path rootDir, ResolvedProjectDescription description) {
 		if (description.getBaseDirectory() != null) {
-			Path dir = rootDir.resolve(description.getBaseDirectory());
-			Files.createDirectories(dir);
-			return dir;
+			return rootDir.resolve(description.getBaseDirectory());
 		}
-		else {
-			return rootDir;
-		}
+		return rootDir;
 	}
 
 }
