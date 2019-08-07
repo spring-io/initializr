@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link GroovySourceCodeWriter}.
@@ -45,6 +46,18 @@ class GroovySourceCodeWriterTests {
 
 	private final GroovySourceCodeWriter writer = new GroovySourceCodeWriter(
 			IndentingWriterFactory.withDefaultSettings());
+
+	@Test
+	void nullPackageInvalidCompilationUnit() {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit(null, "Test"));
+	}
+
+	@Test
+	void nullNameInvalidCompilationUnit() {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit("com.example", null));
+	}
 
 	@Test
 	void emptyCompilationUnit() throws IOException {

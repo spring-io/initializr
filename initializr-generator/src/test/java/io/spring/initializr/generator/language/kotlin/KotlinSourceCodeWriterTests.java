@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link KotlinSourceCodeWriter}.
@@ -44,6 +45,18 @@ class KotlinSourceCodeWriterTests {
 
 	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(
 			IndentingWriterFactory.withDefaultSettings());
+
+	@Test
+	void nullPackageInvalidCompilationUnit() {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit(null, "Test"));
+	}
+
+	@Test
+	void nullNameInvalidCompilationUnit() {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit("com.example", null));
+	}
 
 	@Test
 	void emptyCompilationUnit() throws IOException {
