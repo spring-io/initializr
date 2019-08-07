@@ -180,7 +180,7 @@
 								<spring-boot-docs-version>${spring-boot.version}</spring-boot-docs-version>
 								<snippets>${snippets.location}</snippets>
 								<github-tag>${github-tag}</github-tag>
-								<sources-root>${project.basedir}/src/</sources-root>
+								<sources-root>${project.basedir}/src</sources-root>
 							</attributes>
 						</configuration>
 						<executions>

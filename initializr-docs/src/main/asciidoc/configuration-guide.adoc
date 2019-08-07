@@ -30,17 +30,34 @@ a little more detail.
 
 [[initializr-generator]]
 === Initializr Generator
-The `initializr-generator` module contains all the infrastructure necessary to generate projects.
-The `ProjectGenerator` class is the main entry point for project generation.
+The `initializr-generator` module contains the low-level infrastructure necessary to
+generate JVM-based projects.
+
+[[initializr-generator-project]]
+==== Project Generator
+The `ProjectGenerator` class is the main entry point for project generation. A
+`ProjectGenerator` takes a `ProjectDescription` that defines a particular project to
+generate as well as an implementation of `ProjectAssetGenerator` that is responsible to
+generate assets based on available candidates.
+
+A project is defined by `ProjectDescription` which consists of the following properties:
+
+* Basic coordinates such as `groupId`, `artifactId`, `name`, `description`
+* The `BuildSystem` and `Packaging`
+* The JVM `Language`
+* The requested dependencies, indexed by ID
+* A platform `Version` used by the project. This can be used to tune available
+dependencies according to the chosen generation.
+* The name of the `application`
+* The root package name
+* The base directory for the project (if different from the root)
 
 Project generation occurs in a dedicated application context (`ProjectGenerationContext`),
-which means that for every project that is generated, the context only contains configuration and components
-corresponding to that project. The components registered in a `ProjectGenerationContext` are decided based on
-an immutable `ProjectDescription`.
-
-Components for a `ProjectGenerationContext` are defined in `@ProjectGenerationConfiguration`-annotated
-configuration classes. The `ProjectGenerationContext` imports `@ProjectGenerationConfiguration`-annotated
-configuration classes that are registered in `META-INF/spring.factories`.
+which means that for every project that is generated, the context only contains
+configuration and components relevant to that particular project. Candidate components for
+a `ProjectGenerationContext` are defined in `@ProjectGenerationConfiguration`-annotated
+configuration classes. These configuration classes are imported automatically if they are
+registered in `META-INF/spring.factories`, as shown in the following example:
 
 [indent=0]
 ----
@@ -49,32 +66,9 @@ com.example.acme.build.BuildProjectGenerationConfiguration,\
 com.example.acme.code.SourceCodeProjectGenerationConfiguration
 ----
 
-A project is defined by a `ProjectDescription` which consists of the following project properties:
-
-* A platform `Version` used by the project. This can be used to tune available dependencies
-according to the chosen generation.
-* The `BuildSystem` and `Packaging`
-* The JVM `Language`
-* The requested dependencies, indexed by ID
-* Basic coordinates such as `groupId`, `artifactId`, `name`, `description`
-* The name of the `application`
-* The root package name
-* The base directory for the project
-
-Before any project assets are generated, the `ProjectDescription` can be customized
-using ``ProjectDescriptionCustomizer``s. ``ProjectDescriptionCustomizer``s are
-beans in a `ProjectGenerationContext` and they can be ordered using Spring's `Ordered` interface.
-
-Once the description has been customized based on the available ``ProjectDescriptionCustomizer``s,
-the generator uses a `ProjectAssetGenerator` to generate the project assets. The default implementation
-of `ProjectAssetGenerator` generates a directory structure using ``ProjectContributor``s available in the
-`ProjectGenerationContext`. ``ProjectContributor``s can also be ordered using `Ordered`.
-
-Components such as ``ProjectContributor``s and ``ProjectDescriptionCustomizer``s are made available in
-a `ProjectGenerationContext` using conditions. Using conditions avoids exposing beans that have to
-check if they have to do something and makes the declaration idiomatic.
-
-Consider the following example:
+Components that are added to the `ProjectGenerationContext` are generally made available
+using conditions. Using conditions avoids exposing beans that have to check if they have
+to do something and makes the declaration more idiomatic. Consider the following example:
 
 [source,java,indent=0]
 ----
@@ -86,30 +80,83 @@ Consider the following example:
 	}
 ----
 
-This registers a bean only if the project to generate uses Gradle and `war` packaging.
-Check the `io.spring.initializr.generator.condition` package for more details. Custom
-conditions can easily be created by inheriting from `ProjectGenerationCondition`.
+This registers a component that can customize a Gradle build only if the project to
+generate uses the "Gradle" `BuildSystem` and "war" `Packaging`. Check the
+`io.spring.initializr.generator.condition` package for more conditions. Also, custom
+conditions can easily be created by inheriting from `ProjectGenerationCondition`. Finally,
+any use of those conditions should be done on beans registered in the
+`ProjectGenerationContext` (i.e. via a `@ProjectGenerationConfiguration` class).
 
+Project generation may also rely on infrastructure that is not specific to a particular
+project configuration and is usually configured in the main `ApplicationContext` to avoid
+registering it every time a new request comes in. A common use case is to set the main
+`ApplicationContext` as the parent of the `ProjectGenerationContext`, as shown in the
+following example:
+
+[source,java,indent=0,subs="verbatim,quotes,attributes"]
+----
+include::{code-examples}/doc/generator/project/ProjectGeneratorSetupExample.java[tag=code]
+----
+
+This creates a new `ProjectGenerator` that can use any bean of the application, register
+all contributors found in `META-INF/spring.factories` and also registers an additional
+`ProjectContributor` programmatically.
+
+`ProjectContributor` is the highest level interface one can implement to contribute assets
+to a a project. The `SampleContributor` registered above generates a `test.txt` file at
+the root of the project structure, as shown below:
+
+[source,java,indent=0,subs="verbatim,quotes,attributes"]
+----
+include::{code-examples}/doc/generator/project/SampleContributor.java[tag=code]
+----
+
+
+
+[[initializr-generator-project-lifecycle]]
+==== Project Generation Lifecycle
+When a `ProjectGenerator` is instructed to generate a project, the specified
+`ProjectDescription` can be customized using available `ProjectDescriptionCustomizer`
+beans and can be ordered using Spring's `Ordered` interface.
+
+Once the description has been customized based on the available
+``ProjectDescriptionCustomizer``s, the generator uses a `ProjectAssetGenerator` to
+generate the project assets. The `initializr-generator` provides a default implementation
+of this interface (``DefaultProjectAssetGenerator`) that generates a directory structure
+using available `ProjectContributor` beans.
+
+While the default `ProjectAssetGenerator` use the file system and invoke a particular set
+of components, it is possible to use the same `ProjectGenerator` instance with a custom
+implementation that focus on something else entirely.
+
+
+
+[[initializr-generator-abstractions]]
+==== Project Abstractions
 This module also contains abstractions for various aspects of the project along with
 some convenient implementations:
 
 * A build system abstraction with Maven and Gradle implementations.
-* A language abstraction with Java, Groovy and Kotlin implementations, including a SourceCodeWriter for each implementation
-* A packaging abstraction with implementations for `jar` and `war`
+* A language abstraction with Java, Groovy and Kotlin implementations, including a
+`SourceCodeWriter` for each implementation.
+* A packaging abstraction with implementations for `jar` and `war`.
 
-Adding new implementations for these involves creating a `BuildSystemFactory`, `LanguageFactory`
-and `PackagingFactory` and registering it in `META-INF/spring.factories` under
-`io.spring.initializr.generator.buildsystem.BuildSystemFactory`, `io.spring.initializr.generator.language.LanguageFactory`
-and `io.spring.initializr.generator.packaging.PackagingFactory` respectively.
+Adding new implementations for these involves creating a `BuildSystemFactory`,
+`LanguageFactory` and `PackagingFactory` and registering them in
+`META-INF/spring.factories` under
+`io.spring.initializr.generator.buildsystem.BuildSystemFactory`,
+`io.spring.initializr.generator.language.LanguageFactory` and
+`io.spring.initializr.generator.packaging.PackagingFactory` respectively.
 
-A JVM project typically contains a build file which contains the build configuration
-for the project. The `initializr-generator` module provides a model for `Build`
-with implementations for `Maven` and `Gradle`. This model can be manipulated depending
-on the conventions. The library also provides a `MavenBuildWriter` and `GradleBuildWriter`
-that can convert a `Build` model to a build file.
+A JVM project typically contains a build file which contains the build configuration for
+the project. The `initializr-generator` module provides a model for `Build` with
+implementations for `Maven` and `Gradle`. This model can be manipulated depending on the
+conventions. The library also provides a `MavenBuildWriter` and `GradleBuildWriter` that
+can convert a `Build` model to build file(s).
 
-The next section about the <<initializr-generator-spring,`initializr-generator-spring`>> module showcases how the `Build`
-can be manipulated before the build file is written using customizers.
+The next section about the <<initializr-generator-spring,`initializr-generator-spring`>>
+module showcases how the `Build` can be manipulated before the build file is written
+using customizers.
 
 
 
@@ -119,18 +166,39 @@ This is an optional module that defines the conventions that we think will be us
 any Spring Boot project. You can include this jar in your project if your service is meant
 for generating Spring Boot projects.
 
-In the section above, we looked at how ``ProjectContributor``s can be used to contribute
-assets to a project. This module contains concrete implementations of `ProjectContributor`
-along with the ``@ProjectGenerationConfiguration``s that configure them. For example,
-there is a `MavenBuildProjectContributor` which contributes the files for a Maven build,
-such as `pom.xml`. This contributor is registered as a bean in a
-`ProjectGenerationConfiguration` which is conditional on the build system being Maven.
+In the <<initializr-generator-project,Project Generator section>>, we looked at how
+``ProjectContributor``s can be used to contribute assets to a project. This module
+contains concrete implementations of `ProjectContributor` along with the
+``@ProjectGenerationConfiguration``s that configure them. For example, there is a
+`MavenBuildProjectContributor` which contributes the files for a Maven build, such as
+`pom.xml`. This contributor is registered as a bean in a `ProjectGenerationConfiguration`
+which is conditional on the build system being Maven.
 
 This module also introduces the concept of ``BuildCustomizer``s. ``BuildCustomizer``s are
 used to customize a project's `Build` and are ordered. For instance, if your service
 requires you to add a certain plugin to the build, you can provide a `BuildCustomizer`
 that adds the plugin and the customizer will be called according to the order specified on
 it.
+
+
+
+[[initializr-generator-spring-requirements]]
+==== Requirements
+Contributors of this module expect the following beans to be available in the
+`ProjectGenerationContext`:
+
+* The `InitializrMetadata` instance to use
+* Optionally, a `MetadataBuildItemResolver` that can resolve various build items (such as
+dependencies and BOMs based on their id in the metadata
+
+If you are using a parent context, it is advised to configure those there as you should
+not register them every time a new project is generated:
+
+* An `IndentingWriterFactory` that represents that indenting strategy to use.
+* A `MustacheTemplateRenderer` using `classpath:/templates` as root location. Consider
+registering such bean with a cache strategy to avoid resolving templates every time.
+
+
 
 [[initializr-generator-spring-facets]]
 ==== Supported facets
