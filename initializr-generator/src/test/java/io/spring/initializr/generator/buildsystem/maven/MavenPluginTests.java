@@ -57,11 +57,13 @@ class MavenPluginTests {
 	@SuppressWarnings("unchecked")
 	void configurationParameterWithNestedValuesCanBeCustomized() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "one")));
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "two")));
+		plugin.configuration(
+				(configuration) -> configuration.configure("plugins", (items) -> items.add("item", "one")));
+		plugin.configuration(
+				(configuration) -> configuration.configure("plugins", (items) -> items.add("item", "two")));
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
-		assertThat(setting.getName()).isEqualTo("items");
+		assertThat(setting.getName()).isEqualTo("plugins");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> values = (List<Setting>) setting.getValue();
 		assertThat(values.stream().map(Setting::getName)).containsExactly("item", "item");
@@ -72,13 +74,13 @@ class MavenPluginTests {
 	@SuppressWarnings("unchecked")
 	void configurationParameterWithSeveralLevelOfNestedValuesCanBeCustomized() {
 		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.configure("items",
+		plugin.configuration((configuration) -> configuration.configure("plugins",
 				(items) -> items.configure("item", (subItems) -> subItems.add("subItem", "one"))));
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.configure("item",
+		plugin.configuration((configuration) -> configuration.configure("plugins", (items) -> items.configure("item",
 				(subItems) -> subItems.add("subItem", "two").add("subItem", "three"))));
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
-		assertThat(setting.getName()).isEqualTo("items");
+		assertThat(setting.getName()).isEqualTo("plugins");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> items = (List<Setting>) setting.getValue();
 		assertThat(items).hasSize(1);

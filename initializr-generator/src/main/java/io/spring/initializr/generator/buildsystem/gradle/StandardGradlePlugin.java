@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.code.groovy;
+package io.spring.initializr.generator.buildsystem.gradle;
 
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.spring.build.BuildCustomizer;
+public class StandardGradlePlugin extends GradlePlugin {
 
-/**
- * {@link BuildCustomizer} for Groovy projects build with Gradle.
- *
- * @author Stephane Nicoll
- */
-class GroovyGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
+	private String version;
 
-	@Override
-	public void customize(GradleBuild build) {
-		build.plugins().add("groovy");
+	public StandardGradlePlugin(String id) {
+		super(id, false);
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getVersion() {
+		return this.version;
 	}
 
 }

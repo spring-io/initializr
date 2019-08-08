@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.groovy;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
 /**
@@ -29,11 +28,13 @@ class GroovyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
 	@Override
 	public void customize(MavenBuild build) {
-		MavenPlugin groovyMavenPlugin = build.plugin("org.codehaus.gmavenplus", "gmavenplus-plugin", "1.6.3");
-		groovyMavenPlugin.execution(null,
-				(execution) -> execution.goal("addSources").goal("addTestSources").goal("generateStubs").goal("compile")
-						.goal("generateTestStubs").goal("compileTests").goal("removeStubs").goal("removeTestStubs"));
-
+		build.plugins().add("org.codehaus.gmavenplus", "gmavenplus-plugin", (groovyMavenPlugin) -> {
+			groovyMavenPlugin.setVersion("1.6.3");
+			groovyMavenPlugin.execution(null,
+					(execution) -> execution.goal("addSources").goal("addTestSources").goal("generateStubs")
+							.goal("compile").goal("generateTestStubs").goal("compileTests").goal("removeStubs")
+							.goal("removeTestStubs"));
+		});
 	}
 
 }

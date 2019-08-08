@@ -32,8 +32,8 @@ class GroovyGradleBuildCustomizerTests {
 	void groovyPluginIsConfigured() {
 		GradleBuild build = new GradleBuild();
 		new GroovyGradleBuildCustomizer().customize(build);
-		assertThat(build.getPlugins()).hasSize(1);
-		assertThat(build.getPlugins().get(0).getId()).isEqualTo("groovy");
+		assertThat(build.plugins().values()).hasSize(1);
+		build.plugins().values().findFirst().ifPresent((plugin) -> assertThat(plugin.getId()).isEqualTo("groovy"));
 	}
 
 }

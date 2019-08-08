@@ -42,25 +42,26 @@ class KotlinJpaMavenBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.getPlugins()).hasSize(1);
-		MavenPlugin plugin = build.getPlugins().get(0);
-		assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-		MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
-		assertThat(settings.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
-				.hasFieldOrPropertyWithValue("value", "jpa");
-		assertThat(plugin.getDependencies()).hasSize(1);
-		MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
-		assertThat(pluginDependency.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(pluginDependency.getArtifactId()).isEqualTo("kotlin-maven-noarg");
-		assertThat(pluginDependency.getVersion()).isEqualTo("${kotlin.version}");
+		assertThat(build.plugins().values()).hasSize(1);
+		build.plugins().values().findFirst().ifPresent((plugin) -> {
+			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
+			assertThat(settings.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
+					.hasFieldOrPropertyWithValue("value", "jpa");
+			assertThat(plugin.getDependencies()).hasSize(1);
+			MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
+			assertThat(pluginDependency.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(pluginDependency.getArtifactId()).isEqualTo("kotlin-maven-noarg");
+			assertThat(pluginDependency.getVersion()).isEqualTo("${kotlin.version}");
+		});
 	}
 
 	@Test
 	void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
 		Dependency dependency = Dependency.withId("foo");
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.getPlugins()).hasSize(0);
+		assertThat(build.plugins().values()).hasSize(0);
 	}
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {

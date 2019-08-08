@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -40,10 +39,11 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 	@Override
 	public void customize(MavenBuild build) {
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			MavenPlugin kotlinPlugin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
-			kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins",
-					(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
-			kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
+			build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinPlugin) -> {
+				kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins",
+						(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
+				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
+			});
 		}
 	}
 

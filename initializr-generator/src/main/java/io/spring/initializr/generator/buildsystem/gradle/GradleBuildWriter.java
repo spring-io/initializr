@@ -168,6 +168,11 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
+	protected List<StandardGradlePlugin> extractStandardPlugin(GradleBuild build) {
+		return (List<StandardGradlePlugin>) (List<? extends GradlePlugin>) build.plugins().values()
+				.filter((plugin) -> plugin instanceof StandardGradlePlugin).collect(Collectors.toList());
+	}
+
 	private void writeBoms(IndentingWriter writer, GradleBuild build) {
 		if (build.boms().isEmpty()) {
 			return;
