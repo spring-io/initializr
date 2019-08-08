@@ -38,8 +38,9 @@ abstract class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuil
 
 	@Override
 	public void customize(GradleBuild build) {
-		build.addPlugin("org.jetbrains.kotlin.jvm", this.settings.getVersion());
-		build.addPlugin("org.jetbrains.kotlin.plugin.spring", this.settings.getVersion());
+		build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+		build.plugins().add("org.jetbrains.kotlin.plugin.spring",
+				(plugin) -> plugin.setVersion(this.settings.getVersion()));
 		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
 				(compile) -> customizeKotlinOptions(this.settings, compile));
 	}

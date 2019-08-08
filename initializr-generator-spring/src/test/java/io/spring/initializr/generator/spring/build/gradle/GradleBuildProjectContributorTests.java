@@ -96,7 +96,7 @@ class GradleBuildProjectContributorTests {
 		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
 				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("java");
+		build.plugins().add("java");
 		List<String> lines = generateBuild(kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory));
 		assertThat(lines).containsSequence("plugins {", "  java", "}");
 	}

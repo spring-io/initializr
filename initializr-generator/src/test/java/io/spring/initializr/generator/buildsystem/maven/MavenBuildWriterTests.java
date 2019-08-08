@@ -350,7 +350,7 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.plugin("org.springframework.boot", "spring-boot-maven-plugin");
+		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("org.springframework.boot");
@@ -365,11 +365,12 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		MavenPlugin kotlin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
-		kotlin.configuration((configuration) -> {
-			configuration.configure("args", (args) -> args.add("arg", "-Xjsr305=strict"));
-			configuration.configure("compilerPlugins", (compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
-		});
+		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin",
+				(plugin) -> plugin.configuration((configuration) -> {
+					configuration.configure("args", (args) -> args.add("arg", "-Xjsr305=strict"));
+					configuration.configure("compilerPlugins",
+							(compilerPlugins) -> compilerPlugins.add("plugin", "spring"));
+				}));
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("org.jetbrains.kotlin");
@@ -386,13 +387,15 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		MavenPlugin asciidoctor = build.plugin("org.asciidoctor", "asciidoctor-maven-plugin", "1.5.3");
-		asciidoctor.execution("generateProject-docs", (execution) -> {
-			execution.goal("process-asciidoc");
-			execution.phase("generateProject-resources");
-			execution.configuration((configuration) -> {
-				configuration.add("doctype", "book");
-				configuration.add("backend", "html");
+		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
+			plugin.setVersion("1.5.3");
+			plugin.execution("generateProject-docs", (execution) -> {
+				execution.goal("process-asciidoc");
+				execution.phase("generateProject-resources");
+				execution.configuration((configuration) -> {
+					configuration.add("doctype", "book");
+					configuration.add("backend", "html");
+				});
 			});
 		});
 		generatePom(build, (pom) -> {
@@ -415,8 +418,8 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		MavenPlugin kotlin = build.plugin("org.jetbrains.kotlin", "kotlin-maven-plugin");
-		kotlin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
+		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin",
+				(plugin) -> plugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}"));
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("org.jetbrains.kotlin");
@@ -433,8 +436,7 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		MavenPlugin demoPlugin = build.plugin("com.example.demo", "demo-plugin");
-		demoPlugin.extensions();
+		build.plugins().add("com.example.demo", "demo-plugin", (plugin) -> plugin.extensions());
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");

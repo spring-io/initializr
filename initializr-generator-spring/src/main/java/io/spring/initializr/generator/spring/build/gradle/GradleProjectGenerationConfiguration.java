@@ -90,20 +90,20 @@ public class GradleProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnLanguage(JavaLanguage.ID)
 	public BuildCustomizer<GradleBuild> javaPluginContributor() {
-		return (build) -> build.addPlugin("java");
+		return (build) -> build.plugins().add("java");
 	}
 
 	@Bean
 	@ConditionalOnPackaging(WarPackaging.ID)
 	public BuildCustomizer<GradleBuild> warPluginContributor() {
-		return (build) -> build.addPlugin("war");
+		return (build) -> build.plugins().add("war");
 	}
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	public BuildCustomizer<GradleBuild> applyDependencyManagementPluginContributor() {
-		return (build) -> build.applyPlugin("io.spring.dependency-management");
+		return (build) -> build.plugins().apply("io.spring.dependency-management");
 	}
 
 	@Bean
@@ -149,7 +149,7 @@ public class GradleProjectGenerationConfiguration {
 				build.buildscript(
 						(buildscript) -> buildscript.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
 								+ projectDescription.getPlatformVersion()));
-				build.applyPlugin("org.springframework.boot");
+				build.plugins().apply("org.springframework.boot");
 			};
 		}
 
@@ -206,8 +206,8 @@ public class GradleProjectGenerationConfiguration {
 
 		@Bean
 		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
-			return (build) -> build.addPlugin("org.springframework.boot",
-					projectDescription.getPlatformVersion().toString());
+			return (build) -> build.plugins().add("org.springframework.boot",
+					(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
 		}
 
 		@Bean
@@ -247,9 +247,10 @@ public class GradleProjectGenerationConfiguration {
 		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
 				InitializrMetadata metadata) {
 			return (build) -> {
-				build.addPlugin("org.springframework.boot", projectDescription.getPlatformVersion().toString());
-				build.addPlugin("io.spring.dependency-management",
-						metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion());
+				build.plugins().add("org.springframework.boot",
+						(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
+				build.plugins().add("io.spring.dependency-management", (plugin) -> plugin.setVersion(
+						metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion()));
 			};
 		}
 

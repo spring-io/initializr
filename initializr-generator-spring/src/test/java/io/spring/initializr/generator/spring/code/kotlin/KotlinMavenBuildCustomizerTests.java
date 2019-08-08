@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
@@ -55,44 +54,48 @@ class KotlinMavenBuildCustomizerTests {
 	void kotlinMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getPlugins()).hasSize(1);
-		MavenPlugin kotlinPlugin = build.getPlugins().get(0);
-		assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-		assertThat(kotlinPlugin.getVersion()).isNull();
-		Configuration configuration = kotlinPlugin.getConfiguration();
-		assertThat(configuration).isNotNull();
-		assertThat(configuration.getSettings()).hasSize(2);
-		Setting args = configuration.getSettings().get(0);
-		assertThat(args.getName()).isEqualTo("args");
-		assertThat(args.getValue()).asList().hasSize(1);
-		assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
-		Setting compilerPlugins = configuration.getSettings().get(1);
-		assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
-		assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-		assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
-				.hasFieldOrPropertyWithValue("value", "spring");
-		assertThat(kotlinPlugin.getExecutions()).isEmpty();
-		assertThat(kotlinPlugin.getDependencies()).hasSize(1);
-		Dependency allOpen = kotlinPlugin.getDependencies().get(0);
-		assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
-		assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
+		assertThat(build.plugins().values()).hasSize(1);
+		build.plugins().values().findFirst().ifPresent((kotlinPlugin) -> {
+			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+			assertThat(kotlinPlugin.getVersion()).isNull();
+			Configuration configuration = kotlinPlugin.getConfiguration();
+			assertThat(configuration).isNotNull();
+			assertThat(configuration.getSettings()).hasSize(2);
+			Setting args = configuration.getSettings().get(0);
+			assertThat(args.getName()).isEqualTo("args");
+			assertThat(args.getValue()).asList().hasSize(1);
+			assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
+					.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
+			Setting compilerPlugins = configuration.getSettings().get(1);
+			assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
+			assertThat(compilerPlugins.getValue()).asList().hasSize(1);
+			assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
+					.hasFieldOrPropertyWithValue("value", "spring");
+			assertThat(kotlinPlugin.getExecutions()).isEmpty();
+			assertThat(kotlinPlugin.getDependencies()).hasSize(1);
+			Dependency allOpen = kotlinPlugin.getDependencies().get(0);
+			assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
+			assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
+		});
 	}
 
 	@Test
 	void kotlinMavenPluginWithSeveralArgs() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
-		Configuration configuration = build.getPlugins().get(0).getConfiguration();
-		Setting args = configuration.getSettings().get(0);
-		assertThat(args.getName()).isEqualTo("args");
-		assertThat(args.getValue()).asList().hasSize(2);
-		assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Done=1");
-		assertThat(args.getValue()).asList().element(1).hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Dtwo=2");
+		assertThat(build.plugins().values()).hasSize(1);
+		build.plugins().values().findFirst().ifPresent((kotlinPlugin) -> {
+			Configuration configuration = kotlinPlugin.getConfiguration();
+			Setting args = configuration.getSettings().get(0);
+			assertThat(args.getName()).isEqualTo("args");
+			assertThat(args.getValue()).asList().hasSize(2);
+			assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
+					.hasFieldOrPropertyWithValue("value", "-Done=1");
+			assertThat(args.getValue()).asList().element(1).hasFieldOrPropertyWithValue("name", "arg")
+					.hasFieldOrPropertyWithValue("value", "-Dtwo=2");
+		});
 	}
 
 	private static class TestKotlinProjectSettings extends SimpleKotlinProjectSettings {

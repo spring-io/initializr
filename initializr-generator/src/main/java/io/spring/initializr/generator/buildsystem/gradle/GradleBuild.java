@@ -46,10 +46,6 @@ public class GradleBuild extends Build {
 
 	private final Map<String, String> ext = new TreeMap<>();
 
-	private final List<GradlePlugin> plugins = new ArrayList<>();
-
-	private final List<String> appliedPlugins = new ArrayList<>();
-
 	private final List<String> configurations = new ArrayList<>();
 
 	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
@@ -61,6 +57,8 @@ public class GradleBuild extends Build {
 	private final Map<String, TaskCustomization> tasksWithTypeCustomizations = new LinkedHashMap<>();
 
 	private final Buildscript buildscript = new Buildscript();
+
+	private final GradlePluginContainer plugins = new GradlePluginContainer();
 
 	public GradleBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
@@ -87,26 +85,8 @@ public class GradleBuild extends Build {
 		return Collections.unmodifiableMap(this.ext);
 	}
 
-	public GradlePlugin addPlugin(String id) {
-		return this.addPlugin(id, null);
-	}
-
-	public GradlePlugin addPlugin(String id, String version) {
-		GradlePlugin plugin = new GradlePlugin(id, version);
-		this.plugins.add(plugin);
-		return plugin;
-	}
-
-	public void applyPlugin(String id) {
-		this.appliedPlugins.add(id);
-	}
-
-	public List<GradlePlugin> getPlugins() {
-		return Collections.unmodifiableList(this.plugins);
-	}
-
-	public List<String> getAppliedPlugins() {
-		return Collections.unmodifiableList(this.appliedPlugins);
+	public GradlePluginContainer plugins() {
+		return this.plugins;
 	}
 
 	public void buildscript(Consumer<Buildscript> customizer) {

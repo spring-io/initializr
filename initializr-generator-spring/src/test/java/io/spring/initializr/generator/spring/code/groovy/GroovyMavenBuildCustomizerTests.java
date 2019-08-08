@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.groovy;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import org.junit.jupiter.api.Test;
@@ -35,20 +34,21 @@ class GroovyMavenBuildCustomizerTests {
 	void groovyMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
 		new GroovyMavenBuildCustomizer().customize(build);
-		assertThat(build.getPlugins()).hasSize(1);
-		MavenPlugin groovyPlugin = build.getPlugins().get(0);
-		assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
-		assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
-		assertThat(groovyPlugin.getVersion()).isEqualTo("1.6.3");
-		Configuration configuration = groovyPlugin.getConfiguration();
-		assertThat(configuration).isNull();
-		assertThat(groovyPlugin.getExecutions()).hasSize(1);
-		Execution execution = groovyPlugin.getExecutions().get(0);
-		assertThat(execution.getId()).isNull();
-		assertThat(execution.getGoals()).containsExactly("addSources", "addTestSources", "generateStubs", "compile",
-				"generateTestStubs", "compileTests", "removeStubs", "removeTestStubs");
-		assertThat(execution.getPhase()).isNull();
-		assertThat(execution.getConfiguration()).isNull();
+		assertThat(build.plugins().values()).hasSize(1);
+		build.plugins().values().findFirst().ifPresent((groovyPlugin) -> {
+			assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
+			assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
+			assertThat(groovyPlugin.getVersion()).isEqualTo("1.6.3");
+			Configuration configuration = groovyPlugin.getConfiguration();
+			assertThat(configuration).isNull();
+			assertThat(groovyPlugin.getExecutions()).hasSize(1);
+			Execution execution = groovyPlugin.getExecutions().get(0);
+			assertThat(execution.getId()).isNull();
+			assertThat(execution.getGoals()).containsExactly("addSources", "addTestSources", "generateStubs", "compile",
+					"generateTestStubs", "compileTests", "removeStubs", "removeTestStubs");
+			assertThat(execution.getPhase()).isNull();
+			assertThat(execution.getConfiguration()).isNull();
+		});
 	}
 
 }
