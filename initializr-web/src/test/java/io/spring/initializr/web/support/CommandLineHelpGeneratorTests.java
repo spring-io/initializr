@@ -159,13 +159,13 @@ class CommandLineHelpGeneratorTests {
 	}
 
 	@Test
-	void generateCapabilitiesWithVersionRange() throws IOException {
+	void generateCapabilitiesWithCompatibilityRange() throws IOException {
 		Dependency first = Dependency.withId("first");
 		first.setDescription("first desc");
-		first.setVersionRange("1.2.0.RELEASE");
+		first.setCompatibilityRange("1.2.0.RELEASE");
 		Dependency second = Dependency.withId("second");
 		second.setDescription("second desc");
-		second.setVersionRange(" [1.2.0.RELEASE,1.3.0.M1)  ");
+		second.setCompatibilityRange(" [1.2.0.RELEASE,1.3.0.M1)  ");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second).build();
 		String content = this.generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");

@@ -413,11 +413,11 @@ public class InitializrConfiguration {
 			public void validate() {
 				VersionParser simpleParser = new VersionParser(Collections.emptyList());
 				this.mappings.forEach((m) -> {
-					if (m.versionRange == null) {
+					if (m.compatibilityRange == null) {
 						throw new InvalidInitializrMetadataException(
-								"VersionRange is mandatory, invalid version mapping for " + this);
+								"CompatibilityRange is mandatory, invalid version mapping for " + this);
 					}
-					m.range = simpleParser.parseRange(m.versionRange);
+					m.range = simpleParser.parseRange(m.compatibilityRange);
 					if (m.version == null) {
 						throw new InvalidInitializrMetadataException(
 								"Version is mandatory, invalid version mapping for " + this);
@@ -425,14 +425,14 @@ public class InitializrConfiguration {
 				});
 			}
 
-			public void updateVersionRange(VersionParser versionParser) {
+			public void updateCompatibilityRange(VersionParser versionParser) {
 				this.mappings.forEach((it) -> {
 					try {
-						it.range = versionParser.parseRange(it.versionRange);
+						it.range = versionParser.parseRange(it.compatibilityRange);
 					}
 					catch (InvalidVersionException ex) {
 						throw new InvalidInitializrMetadataException(
-								"Invalid version range " + it.versionRange + " for " + this, ex);
+								"Invalid compatibility range " + it.compatibilityRange + " for " + this, ex);
 					}
 				});
 			}
@@ -444,14 +444,14 @@ public class InitializrConfiguration {
 			}
 
 			/**
-			 * Map several attribute of the dependency for a given version range.
+			 * Map several attribute of the dependency for a given compatibility range.
 			 */
 			public static class Mapping {
 
 				/**
-				 * The version range of this mapping.
+				 * The compatibility range of this mapping.
 				 */
-				private String versionRange;
+				private String compatibilityRange;
 
 				/**
 				 * The kotlin version for this mapping.
@@ -461,12 +461,12 @@ public class InitializrConfiguration {
 				@JsonIgnore
 				private VersionRange range;
 
-				public String getVersionRange() {
-					return this.versionRange;
+				public String getCompatibilityRange() {
+					return this.compatibilityRange;
 				}
 
-				public void setVersionRange(String versionRange) {
-					this.versionRange = versionRange;
+				public void setCompatibilityRange(String compatibilityRange) {
+					this.compatibilityRange = compatibilityRange;
 				}
 
 				public String getVersion() {

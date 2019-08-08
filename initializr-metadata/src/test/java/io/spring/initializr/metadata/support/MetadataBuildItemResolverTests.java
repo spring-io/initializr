@@ -57,7 +57,7 @@ class MetadataBuildItemResolverTests {
 	}
 
 	@Test
-	void resoleDependencyWithMatchingEntryAndVersionRange() {
+	void resoleDependencyWithMatchingEntryAndCompatibilityRange() {
 		InitializrMetadata metadata = new InitializrMetadata();
 		DependencyGroup group = DependencyGroup.create("test");
 		Dependency dependency = Dependency.withId("test-dep", "com.example", "test");
@@ -102,7 +102,7 @@ class MetadataBuildItemResolverTests {
 	}
 
 	@Test
-	void resoleBomWithMatchingEntryAndVersionRange() throws MalformedURLException {
+	void resoleBomWithMatchingEntryAndCompatibilityRange() throws MalformedURLException {
 		InitializrMetadata metadata = new InitializrMetadata();
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "0.0.1");
 		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", "1.0.0"));

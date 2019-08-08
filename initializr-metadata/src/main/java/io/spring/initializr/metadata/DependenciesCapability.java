@@ -73,8 +73,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 		index();
 	}
 
-	public void updateVersionRange(VersionParser versionParser) {
-		this.indexedDependencies.values().forEach((it) -> it.updateVersionRanges(versionParser));
+	public void updateCompatibilityRange(VersionParser versionParser) {
+		this.indexedDependencies.values().forEach((it) -> it.updateCompatibilityRange(versionParser));
 	}
 
 	@Override
@@ -92,8 +92,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 		this.indexedDependencies.clear();
 		this.content.forEach((group) -> group.content.forEach((dependency) -> {
 			// Apply defaults
-			if (dependency.getVersionRange() == null && group.getVersionRange() != null) {
-				dependency.setVersionRange(group.getVersionRange());
+			if (dependency.getCompatibilityRange() == null && group.getCompatibilityRange() != null) {
+				dependency.setCompatibilityRange(group.getCompatibilityRange());
 			}
 			if (dependency.getBom() == null && group.getBom() != null) {
 				dependency.setBom(group.getBom());

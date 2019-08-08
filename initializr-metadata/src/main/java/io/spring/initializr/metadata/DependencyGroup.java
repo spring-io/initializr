@@ -31,7 +31,7 @@ public class DependencyGroup {
 	private String name;
 
 	@JsonIgnore
-	private String versionRange;
+	private String compatibilityRange;
 
 	@JsonIgnore
 	private String bom;
@@ -54,16 +54,16 @@ public class DependencyGroup {
 	}
 
 	/**
-	 * Return the default version range to apply to all dependencies of this group unless
-	 * specified otherwise.
-	 * @return the version range
+	 * Return the default compatibility range to apply to all dependencies of this group
+	 * unless specified otherwise.
+	 * @return the compatibility range
 	 */
-	public String getVersionRange() {
-		return this.versionRange;
+	public String getCompatibilityRange() {
+		return this.compatibilityRange;
 	}
 
-	public void setVersionRange(String versionRange) {
-		this.versionRange = versionRange;
+	public void setCompatibilityRange(String compatibilityRange) {
+		this.compatibilityRange = compatibilityRange;
 	}
 
 	/**

@@ -94,7 +94,7 @@ public class Dependency extends MetadataElement implements Describable {
 
 	private String description;
 
-	private String versionRange;
+	private String compatibilityRange;
 
 	@JsonIgnore
 	private String versionRequirement;
@@ -133,7 +133,7 @@ public class Dependency extends MetadataElement implements Describable {
 		this.mappings.addAll(dependency.mappings);
 		this.scope = dependency.scope;
 		this.description = dependency.description;
-		this.versionRange = dependency.versionRange;
+		this.compatibilityRange = dependency.compatibilityRange;
 		this.versionRequirement = dependency.versionRequirement;
 		this.range = dependency.range;
 		this.bom = dependency.bom;
@@ -151,8 +151,8 @@ public class Dependency extends MetadataElement implements Describable {
 		this.scope = scope;
 	}
 
-	public void setVersionRange(String versionRange) {
-		this.versionRange = (StringUtils.hasText(versionRange) ? versionRange.trim() : null);
+	public void setCompatibilityRange(String compatibilityRange) {
+		this.compatibilityRange = (StringUtils.hasText(compatibilityRange) ? compatibilityRange.trim() : null);
 	}
 
 	/**
@@ -209,28 +209,28 @@ public class Dependency extends MetadataElement implements Describable {
 			}
 		}
 		this.links.forEach(Link::resolve);
-		updateVersionRanges(VersionParser.DEFAULT);
+		updateCompatibilityRange(VersionParser.DEFAULT);
 	}
 
-	public void updateVersionRanges(VersionParser versionParser) {
-		if (this.versionRange != null) {
+	public void updateCompatibilityRange(VersionParser versionParser) {
+		if (this.compatibilityRange != null) {
 			try {
-				this.range = versionParser.parseRange(this.versionRange);
-				this.versionRange = this.range.toRangeString();
+				this.range = versionParser.parseRange(this.compatibilityRange);
+				this.compatibilityRange = this.range.toRangeString();
 				this.versionRequirement = this.range.toString();
 			}
 			catch (InvalidVersionException ex) {
-				throw new InvalidInitializrMetadataException("Invalid version range '" + this.versionRange + " for "
-						+ "dependency with id '" + getId() + "'", ex);
+				throw new InvalidInitializrMetadataException("Invalid compatibility range '" + this.compatibilityRange
+						+ " for " + "dependency with id '" + getId() + "'", ex);
 			}
 		}
 		this.mappings.forEach((it) -> {
 			try {
-				it.range = versionParser.parseRange(it.versionRange);
+				it.range = versionParser.parseRange(it.compatibilityRange);
 			}
 			catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException(
-						"Invalid version range " + it.versionRange + " for " + this, ex);
+						"Invalid compatibility range " + it.compatibilityRange + " for " + this, ex);
 			}
 		});
 	}
@@ -431,8 +431,8 @@ public class Dependency extends MetadataElement implements Describable {
 		return this.scope;
 	}
 
-	public String getVersionRange() {
-		return this.versionRange;
+	public String getCompatibilityRange() {
+		return this.compatibilityRange;
 	}
 
 	@Override
@@ -476,14 +476,14 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	/**
-	 * Map several attribute of the dependency for a given version range.
+	 * Map several attribute of the dependency for a given compatibility range.
 	 */
 	public static class Mapping {
 
 		/**
-		 * The version range of this mapping.
+		 * The compatibility range of this mapping.
 		 */
-		private String versionRange;
+		private String compatibilityRange;
 
 		/**
 		 * The version to use for this mapping or {@code null} to use the default.
@@ -544,17 +544,17 @@ public class Dependency extends MetadataElement implements Describable {
 			return this.range;
 		}
 
-		public String getVersionRange() {
-			return this.versionRange;
+		public String getCompatibilityRange() {
+			return this.compatibilityRange;
 		}
 
-		public void setVersionRange(String versionRange) {
-			this.versionRange = versionRange;
+		public void setCompatibilityRange(String compatibilityRange) {
+			this.compatibilityRange = compatibilityRange;
 		}
 
 		public static Mapping create(String range, String groupId, String artifactId, String version, Boolean starter) {
 			Mapping mapping = new Mapping();
-			mapping.versionRange = range;
+			mapping.compatibilityRange = range;
 			mapping.groupId = groupId;
 			mapping.artifactId = artifactId;
 			mapping.version = version;

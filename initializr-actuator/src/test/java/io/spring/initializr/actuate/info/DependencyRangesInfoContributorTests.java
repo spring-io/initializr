@@ -80,7 +80,7 @@ class DependencyRangesInfoContributorTests {
 	@Test
 	void dependencyNoMappingSimpleRange() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
-		dependency.setVersionRange("[1.1.0.RELEASE, 1.5.0.RELEASE)");
+		dependency.setCompatibilityRange("[1.1.0.RELEASE, 1.5.0.RELEASE)");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
 				.build();
 		Info info = getInfo(metadata);
