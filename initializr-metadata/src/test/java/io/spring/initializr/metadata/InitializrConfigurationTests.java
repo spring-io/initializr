@@ -196,9 +196,9 @@ class InitializrConfigurationTests {
 		assertThat(kotlin.resolveKotlinVersion(Version.parse("1.3.2.RELEASE"))).isEqualTo("1.2.3");
 	}
 
-	private Kotlin.Mapping createKotlinVersionMapping(String versionRange, String kotlinVersion) {
+	private Kotlin.Mapping createKotlinVersionMapping(String compatibilityRange, String kotlinVersion) {
 		Kotlin.Mapping mapping = new Kotlin.Mapping();
-		mapping.setVersionRange(versionRange);
+		mapping.setCompatibilityRange(compatibilityRange);
 		mapping.setVersion(kotlinVersion);
 		return mapping;
 	}
