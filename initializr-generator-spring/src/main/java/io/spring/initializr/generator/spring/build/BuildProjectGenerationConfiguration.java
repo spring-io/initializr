@@ -55,13 +55,23 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("2.2.0.M3")
-	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+	@ConditionalOnPlatformVersion("[2.2.0.M3,2.2.0.M4]")
+	@Deprecated
+	public BuildCustomizer<Build> junitJupiterLegacyTestStarterContributor() {
 		return (build) -> build.dependencies().add("test",
 				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
 						.scope(DependencyScope.TEST_COMPILE)
 						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine"),
 								new Exclusion("junit", "junit")));
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.2.0.M5")
+	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+		return (build) -> build.dependencies().add("test",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
+						.scope(DependencyScope.TEST_COMPILE)
+						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine")));
 	}
 
 	@Bean

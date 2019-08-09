@@ -165,7 +165,8 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testStarterExcludesVintageEngineAndJUnitWithCompatibleVersion() {
+	@Deprecated
+	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
@@ -176,6 +177,19 @@ class GradleProjectGenerationConfigurationTests {
 				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
 				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'",
 				"        exclude group: 'junit', module: 'junit'", "    }");
+	}
+
+	@Test
+	void testStarterExcludesVintageEngineWithCompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.M5"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
+		List<String> lines = projectStructure.readAllLines("build.gradle");
+		assertThat(lines).containsSequence(
+				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
+				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'", "    }");
 	}
 
 	@Test

@@ -96,7 +96,8 @@ class MavenProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testStarterExcludesVintageEngineAndJUnitWithCompatibleVersion() {
+	@Deprecated
+	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
@@ -108,6 +109,20 @@ class MavenProjectGenerationConfigurationTests {
 				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
 				"                <exclusion>", "                    <groupId>junit</groupId>",
 				"                    <artifactId>junit</artifactId>", "                </exclusion>",
+				"            </exclusions>");
+	}
+
+	@Test
+	void testStarterExcludesVintageEngineWithCompatibleVersion() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.M5"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure projectStructure = this.projectTester.generate(description);
+		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
+		List<String> lines = projectStructure.readAllLines("pom.xml");
+		assertThat(lines).containsSequence("            <exclusions>", "                <exclusion>",
+				"                    <groupId>org.junit.vintage</groupId>",
+				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
 				"            </exclusions>");
 	}
 
