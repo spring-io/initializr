@@ -29,8 +29,8 @@ import org.springframework.hateoas.UriTemplate;
 /**
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.1
  * <p>
- * Version 2.1 brings the "versionRange" attribute for a dependency to restrict the Spring
- * Boot versions that can be used against it. That version also adds an additional
+ * Version 2.1 brings the "compatibilityRange" attribute for a dependency to restrict the
+ * Spring Boot versions that can be used against it. That version also adds an additional
  * `dependencies` endpoint.
  *
  * @author Stephane Nicoll
