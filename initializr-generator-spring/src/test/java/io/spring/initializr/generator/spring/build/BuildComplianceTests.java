@@ -119,6 +119,30 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	}
 
 	@ParameterizedTest
+	@MethodSource("parameters")
+	void nextGenerationJarJava(BuildSystem build, String fileName) {
+		testNextGenerationJar(java, build, fileName);
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void nextGenerationJarGroovy(BuildSystem build, String fileName) {
+		testNextGenerationJar(groovy, build, fileName);
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void nextGenerationJarKotlin(BuildSystem build, String fileName) {
+		testNextGenerationJar(kotlin, build, fileName);
+	}
+
+	private void testNextGenerationJar(Language language, BuildSystem build, String fileName) {
+		ProjectAssert project = generateProject(language, build, "2.2.0.RELEASE");
+		project.sourceCodeAssert(fileName)
+				.equalsTo(new ClassPathResource("project/" + language + "/next/" + getAssertFileName(fileName)));
+	}
+
+	@ParameterizedTest
 	@MethodSource("previousGenerationParameters")
 	void previousGenerationJarJava(BuildSystem build, String fileName) {
 		testPreviousGenerationJar(java, build, fileName);
