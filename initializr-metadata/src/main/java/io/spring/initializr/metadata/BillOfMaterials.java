@@ -28,6 +28,8 @@ import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionRange;
 
+import org.springframework.util.Assert;
+
 /**
  * Define a Bill Of Materials to be represented in the generated project if a dependency
  * refers to it.
@@ -166,6 +168,8 @@ public class BillOfMaterials {
 	public void updateCompatibilityRange(VersionParser versionParser) {
 		this.mappings.forEach((it) -> {
 			try {
+				Assert.notNull(it.compatibilityRange,
+						"Invalid mapping for " + this + ": compatibility range is mandatory");
 				it.range = versionParser.parseRange(it.compatibilityRange);
 			}
 			catch (InvalidVersionException ex) {

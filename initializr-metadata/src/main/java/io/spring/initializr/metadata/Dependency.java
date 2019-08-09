@@ -29,6 +29,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -226,6 +227,8 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 		this.mappings.forEach((it) -> {
 			try {
+				Assert.notNull(it.compatibilityRange,
+						"Invalid mapping for " + this + ": compatibility range is mandatory");
 				it.range = versionParser.parseRange(it.compatibilityRange);
 			}
 			catch (InvalidVersionException ex) {
