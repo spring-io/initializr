@@ -37,10 +37,10 @@ class DefaultDependencyMetadataProviderTests {
 	@Test
 	void filterDependencies() {
 		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setVersionRange("2.1.4.RELEASE");
+		first.setCompatibilityRange("2.1.4.RELEASE");
 		Dependency second = Dependency.withId("second", "org.foo", "second");
 		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setVersionRange("2.1.8.RELEASE");
+		third.setCompatibilityRange("2.1.8.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second, third).build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("2.1.5.RELEASE"));

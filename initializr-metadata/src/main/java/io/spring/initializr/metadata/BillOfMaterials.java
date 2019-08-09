@@ -160,17 +160,17 @@ public class BillOfMaterials {
 		if (this.version == null && this.mappings.isEmpty()) {
 			throw new InvalidInitializrMetadataException("No version available for " + this);
 		}
-		updateVersionRange(VersionParser.DEFAULT);
+		updateCompatibilityRange(VersionParser.DEFAULT);
 	}
 
-	public void updateVersionRange(VersionParser versionParser) {
+	public void updateCompatibilityRange(VersionParser versionParser) {
 		this.mappings.forEach((it) -> {
 			try {
-				it.range = versionParser.parseRange(it.versionRange);
+				it.range = versionParser.parseRange(it.compatibilityRange);
 			}
 			catch (InvalidVersionException ex) {
 				throw new InvalidInitializrMetadataException(
-						"Invalid version range " + it.versionRange + " for " + this, ex);
+						"Invalid compatibility range " + it.compatibilityRange + " for " + this, ex);
 			}
 		});
 	}
@@ -229,7 +229,7 @@ public class BillOfMaterials {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public static class Mapping {
 
-		private String versionRange;
+		private String compatibilityRange;
 
 		/**
 		 * The groupId to use for this mapping or {@code null} to use the default.
@@ -254,12 +254,12 @@ public class BillOfMaterials {
 		}
 
 		private Mapping(String range, String version, String... repositories) {
-			this.versionRange = range;
+			this.compatibilityRange = range;
 			this.version = version;
 			this.repositories.addAll(Arrays.asList(repositories));
 		}
 
-		public String determineVersionRangeRequirement() {
+		public String determineCompatibilityRangeRequirement() {
 			return this.range.toString();
 		}
 
@@ -271,12 +271,12 @@ public class BillOfMaterials {
 			return new Mapping(range, version, repositories);
 		}
 
-		public String getVersionRange() {
-			return this.versionRange;
+		public String getCompatibilityRange() {
+			return this.compatibilityRange;
 		}
 
-		public void setVersionRange(String versionRange) {
-			this.versionRange = versionRange;
+		public void setCompatibilityRange(String compatibilityRange) {
+			this.compatibilityRange = compatibilityRange;
 		}
 
 		public String getGroupId() {
@@ -329,7 +329,8 @@ public class BillOfMaterials {
 
 		@Override
 		public String toString() {
-			return "Mapping [" + ((this.versionRange != null) ? "versionRange=" + this.versionRange + ", " : "")
+			return "Mapping ["
+					+ ((this.compatibilityRange != null) ? "compatibilityRange=" + this.compatibilityRange + ", " : "")
 					+ ((this.groupId != null) ? "groupId=" + this.groupId + ", " : "")
 					+ ((this.artifactId != null) ? "artifactId=" + this.artifactId + ", " : "")
 					+ ((this.version != null) ? "version=" + this.version + ", " : "")

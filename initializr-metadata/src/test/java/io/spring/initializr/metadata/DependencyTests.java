@@ -107,7 +107,7 @@ class DependencyTests {
 	@Test
 	void invalidSpringBootRange() {
 		Dependency dependency = Dependency.withId("web");
-		dependency.setVersionRange("A.B.C");
+		dependency.setCompatibilityRange("A.B.C");
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve)
 				.withMessageContaining("A.B.C");
 	}
@@ -219,7 +219,7 @@ class DependencyTests {
 				Dependency.Mapping.create("[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE", null));
 		dependency.resolve();
 
-		dependency.updateVersionRanges(new VersionParser(
+		dependency.updateCompatibilityRange(new VersionParser(
 				Arrays.asList(Version.parse("1.1.5.RELEASE"), Version.parse("1.1.6.BUILD-SNAPSHOT"))));
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
 				"spring-boot-starter-web", "0.1.0.RELEASE", true);
@@ -228,7 +228,7 @@ class DependencyTests {
 		validateResolvedWebDependency(dependency.resolve(Version.parse("2.1.3.M1")), "org.springframework.boot",
 				"spring-boot-starter-web", "0.3.0.RELEASE", true); // default
 
-		dependency.updateVersionRanges(new VersionParser(
+		dependency.updateCompatibilityRange(new VersionParser(
 				Arrays.asList(Version.parse("1.1.6.RELEASE"), Version.parse("1.1.7.BUILD-SNAPSHOT"))));
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
 				"spring-boot-starter-web", "0.1.0.RELEASE", true);
@@ -278,17 +278,17 @@ class DependencyTests {
 	@Test
 	void resolveVersionWithX() {
 		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1", "0.3.0.RELEASE");
-		dependency1.setVersionRange("1.2.x.RELEASE");
+		dependency1.setCompatibilityRange("1.2.x.RELEASE");
 		dependency1.resolve();
-		assertThat(dependency1.getVersionRange()).isEqualTo("1.2.999.RELEASE");
+		assertThat(dependency1.getCompatibilityRange()).isEqualTo("1.2.999.RELEASE");
 	}
 
 	@Test
-	void resolveVersionRangeWithX() {
+	void resolveCompatibilityRangeWithX() {
 		Dependency dependency = Dependency.withId("foo1", "com.acme", "foo1", "0.3.0.RELEASE");
-		dependency.setVersionRange("[1.1.0.RELEASE, 1.2.x.RELEASE)");
+		dependency.setCompatibilityRange("[1.1.0.RELEASE, 1.2.x.RELEASE)");
 		dependency.resolve();
-		assertThat(dependency.getVersionRange()).isEqualTo("[1.1.0.RELEASE,1.2.999.RELEASE)");
+		assertThat(dependency.getCompatibilityRange()).isEqualTo("[1.1.0.RELEASE,1.2.999.RELEASE)");
 	}
 
 	private static void validateResolvedWebDependency(Dependency dependency, String expectedGroupId,

@@ -92,7 +92,7 @@ that dependency.
 * A `scope` (can be `compile`, `runtime`, `provided` or `test`).
 * The reference to a `bom` or a `repository` that must be added to the project once
 that dependency is added.
-* A `versionRange` used to determine the Spring Boot versions that are compatible
+* A `compatibilityRange` used to determine the platform versions that are compatible
 with the dependency.
 * Links to resources such as a guide or a reference doc section.
 
@@ -136,7 +136,7 @@ lines and further for some reason.
 	          artifactId: foo-core
 	          bom: foo-bom
 	          repository: foo-repo
-	          versionRange: "[1.2.0.RELEASE,1.3.0.M1)"
+	          compatibilityRange: "[1.2.0.RELEASE,1.3.0.M1)"
 ----
 
 If one selects this entry, the `com.example.foo:foo-core}` dependency will be added
@@ -145,7 +145,7 @@ the project as well (see the "Env section" above for a reference to those
 identifiers). Because the bom provides a dependency management for `foo-core` there
 is no need to hard code the version in the configuration.
 
-The `versionRange` syntax follows some simple rules: a square bracket "[" or "]"
+The `compatibilityRange` syntax follows some simple rules: a square bracket "[" or "]"
 denotes an inclusive end of the range and a round bracket "(" or ")" denotes an
 exclusive end of the range. A range can also be unbounded by defining a a single
 version. In the example above, the dependency will be available as from
@@ -155,7 +155,7 @@ version. In the example above, the dependency will be available as from
 ### Dependency group
 
 A dependency group gather a set of dependencies as well as some common settings:
-`bom`, `repository` and `versionRange`. If one of them is set, it is applied for all
+`bom`, `repository` and `compatibilityRange`. If one of them is set, it is applied for all
 dependencies within that group. It is still possible to override a particular value
 at the dependency level.
 

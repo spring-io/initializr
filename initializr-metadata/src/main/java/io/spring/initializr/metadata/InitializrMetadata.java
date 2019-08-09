@@ -205,9 +205,9 @@ public class InitializrMetadata {
 		List<Version> bootVersions = this.bootVersions.getContent().stream().map((it) -> Version.parse(it.getId()))
 				.collect(Collectors.toList());
 		VersionParser parser = new VersionParser(bootVersions);
-		this.dependencies.updateVersionRange(parser);
-		this.configuration.getEnv().getBoms().values().forEach((it) -> it.updateVersionRange(parser));
-		this.configuration.getEnv().getKotlin().updateVersionRange(parser);
+		this.dependencies.updateCompatibilityRange(parser);
+		this.configuration.getEnv().getBoms().values().forEach((it) -> it.updateCompatibilityRange(parser));
+		this.configuration.getEnv().getKotlin().updateCompatibilityRange(parser);
 	}
 
 	/**

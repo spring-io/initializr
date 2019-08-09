@@ -90,19 +90,19 @@ class DependenciesCapabilityTests {
 	}
 
 	@Test
-	void addDefaultVersionRange() {
+	void addDefaultCompatibilityRange() {
 		Dependency first = Dependency.withId("first");
 		Dependency second = Dependency.withId("second");
-		second.setVersionRange("1.2.3.RELEASE");
+		second.setCompatibilityRange("1.2.3.RELEASE");
 		DependencyGroup group = createDependencyGroup("test", first, second);
-		group.setVersionRange("1.2.0.RELEASE");
+		group.setCompatibilityRange("1.2.0.RELEASE");
 
 		DependenciesCapability capability = new DependenciesCapability();
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertThat(capability.get("first").getVersionRange()).isEqualTo("1.2.0.RELEASE");
-		assertThat(capability.get("second").getVersionRange()).isEqualTo("1.2.3.RELEASE");
+		assertThat(capability.get("first").getCompatibilityRange()).isEqualTo("1.2.0.RELEASE");
+		assertThat(capability.get("second").getCompatibilityRange()).isEqualTo("1.2.3.RELEASE");
 	}
 
 	@Test

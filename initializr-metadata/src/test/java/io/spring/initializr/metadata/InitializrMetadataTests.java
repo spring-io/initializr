@@ -92,7 +92,7 @@ class InitializrMetadataTests {
 	}
 
 	@Test
-	void invalidBomVersionRangeMapping() {
+	void invalidBomCompatibilityRangeMapping() {
 		InitializrMetadata metadata = initializeMetadata();
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.0.0"));
@@ -103,7 +103,7 @@ class InitializrMetadataTests {
 	}
 
 	@Test
-	void invalidBomVersionRangeMappingUnknownRepo() {
+	void invalidBomCompatibilityRangeMappingUnknownRepo() {
 		InitializrMetadata metadata = initializeMetadata();
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
@@ -117,7 +117,7 @@ class InitializrMetadataTests {
 	}
 
 	@Test
-	void invalidBomVersionRangeMappingUnknownAdditionalBom() {
+	void invalidBomCompatibilityRangeMappingUnknownAdditionalBom() {
 		InitializrMetadata metadata = initializeMetadata();
 		BillOfMaterials bom = BillOfMaterials.create("org.acme", "foo-bom");
 		bom.getMappings().add(Mapping.create("[1.0.0.RELEASE,1.3.0.M1)", "1.0.0"));
@@ -201,9 +201,9 @@ class InitializrMetadataTests {
 		metadata.getDependencies().getContent().add(group);
 	}
 
-	private Kotlin.Mapping createKotlinVersionMapping(String versionRange, String kotlinVersion) {
+	private Kotlin.Mapping createKotlinVersionMapping(String compatibilityRange, String kotlinVersion) {
 		Kotlin.Mapping mapping = new Kotlin.Mapping();
-		mapping.setVersionRange(versionRange);
+		mapping.setCompatibilityRange(compatibilityRange);
 		mapping.setVersion(kotlinVersion);
 		return mapping;
 	}
