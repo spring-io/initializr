@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.project.contributor;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Predicate;
@@ -55,8 +56,8 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 		Resource root = this.resolver.getResource(this.rootResource);
 		Resource[] resources = this.resolver.getResources(this.rootResource + "/**");
 		for (Resource resource : resources) {
-			String filename = resource.getURI().toString().substring(root.getURI().toString().length() + 1);
 			if (resource.isReadable()) {
+				String filename = extractFileName(root.getURI(), resource.getURI());
 				Path output = projectRoot.resolve(filename);
 				Files.createDirectories(output.getParent());
 				Files.createFile(output);
@@ -65,6 +66,11 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 				output.toFile().setExecutable(this.executable.test(filename));
 			}
 		}
+	}
+
+	private String extractFileName(URI root, URI resource) {
+		String candidate = resource.toString().substring(root.toString().length());
+		return StringUtils.trimLeadingCharacter(candidate, '/');
 	}
 
 }
