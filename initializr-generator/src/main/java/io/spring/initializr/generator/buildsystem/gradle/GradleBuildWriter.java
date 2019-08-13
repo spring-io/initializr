@@ -82,6 +82,11 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writePlugins(IndentingWriter writer, GradleBuild build);
 
+	protected List<StandardGradlePlugin> extractStandardPlugin(GradleBuild build) {
+		return build.plugins().values().filter(StandardGradlePlugin.class::isInstance)
+				.map(StandardGradlePlugin.class::cast).collect(Collectors.toList());
+	}
+
 	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build);
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleBuild build);

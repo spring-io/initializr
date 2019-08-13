@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -68,13 +69,17 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writePlugins(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "plugins", build.getPlugins(), this::pluginAsString);
-		writeCollection(writer, build.getAppliedPlugins(), (plugin) -> "apply plugin: '" + plugin + "'",
+		writeNestedCollection(writer, "plugins", extractStandardPlugin(build), this::pluginAsString);
+		writeCollection(writer, extractApplyPlugins(build), (plugin) -> "apply plugin: '" + plugin.getId() + "'",
 				writer::println);
 		writer.println();
 	}
 
-	private String pluginAsString(GradlePlugin plugin) {
+	private List<GradlePlugin> extractApplyPlugins(GradleBuild build) {
+		return build.plugins().values().filter(GradlePlugin::isApply).collect(Collectors.toList());
+	}
+
+	private String pluginAsString(StandardGradlePlugin plugin) {
 		String string = "id '" + plugin.getId() + "'";
 		if (plugin.getVersion() != null) {
 			string += " version '" + plugin.getVersion() + "'";

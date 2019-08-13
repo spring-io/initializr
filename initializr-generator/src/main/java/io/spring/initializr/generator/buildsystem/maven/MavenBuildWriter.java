@@ -240,8 +240,7 @@ public class MavenBuildWriter {
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
-		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null
-				&& build.getPlugins().isEmpty()) {
+		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.plugins().isEmpty()) {
 			return;
 		}
 		writer.println();
@@ -254,10 +253,11 @@ public class MavenBuildWriter {
 	}
 
 	private void writePlugins(IndentingWriter writer, MavenBuild build) {
-		if (build.getPlugins().isEmpty()) {
+		if (build.plugins().isEmpty()) {
 			return;
 		}
-		writeElement(writer, "plugins", () -> writeCollection(writer, build.getPlugins(), this::writePlugin));
+		writeElement(writer, "plugins", () -> writeCollection(writer,
+				build.plugins().values().collect(Collectors.toList()), this::writePlugin));
 	}
 
 	private void writePlugin(IndentingWriter writer, MavenPlugin plugin) {

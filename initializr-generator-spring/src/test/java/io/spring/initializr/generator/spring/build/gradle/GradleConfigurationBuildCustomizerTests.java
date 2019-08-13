@@ -41,7 +41,7 @@ class GradleConfigurationBuildCustomizerTests {
 	@Test
 	void providedRuntimeConfigurationIsNotAddedWithWarProject() {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("war");
+		build.plugins().add("war");
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);

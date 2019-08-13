@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.code.groovy;
-
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package io.spring.initializr.generator.buildsystem.gradle;
 
 /**
- * Tests for {@link GroovyGradleBuildCustomizer}.
+ * A standard {@link GradlePlugin} used in the {@code plugins} block.
  *
- * @author Stephane Nicoll
+ * @author HaiTao Zhang
  */
-class GroovyGradleBuildCustomizerTests {
+public class StandardGradlePlugin extends GradlePlugin {
 
-	@Test
-	void groovyPluginIsConfigured() {
-		GradleBuild build = new GradleBuild();
-		new GroovyGradleBuildCustomizer().customize(build);
-		assertThat(build.plugins().values())
-				.hasOnlyOneElementSatisfying((plugin) -> assertThat(plugin.getId()).isEqualTo("groovy"));
+	private String version;
+
+	public StandardGradlePlugin(String id) {
+		super(id, false);
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getVersion() {
+		return this.version;
 	}
 
 }

@@ -19,7 +19,6 @@ package io.spring.initializr.generator.spring.build.maven;
 import io.spring.initializr.generator.buildsystem.BomContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenParent;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
@@ -54,11 +53,11 @@ class DefaultMavenBuildCustomizerTests {
 	void customizeRegisterSpringBootPlugin() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
-		assertThat(build.getPlugins()).hasSize(1);
-		MavenPlugin mavenPlugin = build.getPlugins().get(0);
-		assertThat(mavenPlugin.getGroupId()).isEqualTo("org.springframework.boot");
-		assertThat(mavenPlugin.getArtifactId()).isEqualTo("spring-boot-maven-plugin");
-		assertThat(mavenPlugin.getVersion()).isNull();
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((mavenPlugin) -> {
+			assertThat(mavenPlugin.getGroupId()).isEqualTo("org.springframework.boot");
+			assertThat(mavenPlugin.getArtifactId()).isEqualTo("spring-boot-maven-plugin");
+			assertThat(mavenPlugin.getVersion()).isNull();
+		});
 	}
 
 	@Test

@@ -82,8 +82,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithBuiltinPlugin() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("java");
-		build.addPlugin("war");
+		build.plugins().add("java");
+		build.plugins().add("war");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    java", "    war", "}");
 	}
@@ -91,8 +91,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithKotlinPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("org.jetbrains.kotlin.jvm", "1.3.21");
-		build.addPlugin("org.jetbrains.kotlin.plugin.spring", "1.3.21");
+		build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion("1.3.21"));
+		build.plugins().add("org.jetbrains.kotlin.plugin.spring", (plugin) -> plugin.setVersion("1.3.21"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    kotlin(\"jvm\") version \"1.3.21\"",
 				"    kotlin(\"plugin.spring\") version \"1.3.21\"", "}");
@@ -101,7 +101,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("org.springframework.boot", "2.1.0.RELEASE");
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {",
 				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"", "}");
@@ -110,7 +110,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithApplyPlugin() {
 		GradleBuild build = new GradleBuild();
-		build.applyPlugin("io.spring.dependency-management");
+		build.plugins().apply("io.spring.dependency-management");
 		assertThatIllegalStateException().isThrownBy(() -> generateBuild(build));
 	}
 

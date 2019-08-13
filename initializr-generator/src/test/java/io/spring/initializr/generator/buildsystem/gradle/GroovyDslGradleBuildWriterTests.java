@@ -81,7 +81,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPlugin() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("java");
+		build.plugins().add("java");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    id 'java'", "}");
 	}
@@ -89,7 +89,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addPlugin("org.springframework.boot", "2.1.0.RELEASE");
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
 				"}");
@@ -98,7 +98,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithApplyPlugin() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.applyPlugin("io.spring.dependency-management");
+		build.plugins().apply("io.spring.dependency-management");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("apply plugin: 'io.spring.dependency-management'");
 	}

@@ -25,19 +25,19 @@ public class GradlePlugin {
 
 	private final String id;
 
-	private final String version;
+	private final boolean apply;
 
-	public GradlePlugin(String id, String version) {
+	public GradlePlugin(String id, boolean apply) {
 		this.id = id;
-		this.version = version;
+		this.apply = apply;
 	}
 
 	public String getId() {
 		return this.id;
 	}
 
-	public String getVersion() {
-		return this.version;
+	public boolean isApply() {
+		return this.apply;
 	}
 
 }

@@ -28,7 +28,7 @@ class GroovyGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	@Override
 	public void customize(GradleBuild build) {
-		build.addPlugin("groovy");
+		build.plugins().add("groovy");
 	}
 
 }
