@@ -245,12 +245,15 @@ public class GradleProjectGenerationConfiguration {
 
 		@Bean
 		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
+				ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver,
 				InitializrMetadata metadata) {
 			return (build) -> {
 				build.plugins().add("org.springframework.boot",
 						(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
-				build.plugins().add("io.spring.dependency-management", (plugin) -> plugin.setVersion(
-						metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion()));
+				build.plugins().add("io.spring.dependency-management",
+						(plugin) -> plugin.setVersion(versionResolver
+								.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata))
+								.resolveDependencyManagementPluginVersion(projectDescription)));
 			};
 		}
 

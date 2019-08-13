@@ -127,6 +127,26 @@ class GradleKtsProjectGenerationConfigurationTests {
 	}
 
 	@Test
+	void dependencyManagementPluginFallbacksToMetadataIfNotPresent() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		description.setLanguage(new JavaLanguage("11"));
+		List<String> lines = this.projectTester.generate(description).readAllLines("build.gradle.kts");
+		assertThat(lines).contains("    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"");
+	}
+
+	@Test
+	void dependencyManagementPluginVersionResolverIsUsedIfPresent() {
+		ProjectDescription description = new ProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		description.setLanguage(new JavaLanguage("11"));
+		List<String> lines = this.projectTester
+				.withBean(DependencyManagementPluginVersionResolver.class, () -> (d) -> "1.5.1.RC1")
+				.generate(description).readAllLines("build.gradle.kts");
+		assertThat(lines).contains("    id(\"io.spring.dependency-management\") version \"1.5.1.RC1\"");
+	}
+
+	@Test
 	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
