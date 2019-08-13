@@ -28,11 +28,7 @@ import java.util.stream.Stream;
  */
 public class MavenPluginContainer {
 
-	private final Map<String, MavenPlugin> plugins;
-
-	public MavenPluginContainer() {
-		this.plugins = new LinkedHashMap<>();
-	}
+	private final Map<String, MavenPlugin> plugins = new LinkedHashMap<>();
 
 	/**
 	 * Specify if this container is empty.
@@ -43,19 +39,19 @@ public class MavenPluginContainer {
 	}
 
 	/**
-	 * Specify if this container has a MavenPlugin with the specified groupId and
-	 * artifactId.
-	 * @param groupId groupId associated with the {@link MavenPlugin}
-	 * @param artifactId artifactId associated with the {@link MavenPlugin}
+	 * Specify if this container has a plugin with the specified {@code groupId} and
+	 * {@code artifactId}.
+	 * @param groupId the groupId of the plugin
+	 * @param artifactId the artifactId of the plugin
 	 * @return {@code true} if an item with the specified {@code groupId} and
-	 * {@code artifactId} is added
+	 * {@code artifactId} exists
 	 */
 	public boolean has(String groupId, String artifactId) {
 		return this.plugins.containsKey(pluginKey(groupId, artifactId));
 	}
 
 	/**
-	 * Returns a {@link Stream} of added {@link MavenPlugin}s.
+	 * Returns a {@link Stream} of registered {@link MavenPlugin}s.
 	 * @return a stream of {@link MavenPlugin}s
 	 */
 	public Stream<MavenPlugin> values() {
@@ -63,31 +59,39 @@ public class MavenPluginContainer {
 	}
 
 	/**
-	 * Add a {@link MavenPlugin} by specifying the groupId and artifactId.
-	 * @param groupId groupId associated with the {@link MavenPlugin}
-	 * @param artifactId artifactId associated with the {@link MavenPlugin}
+	 * Add a {@link MavenPlugin} with the specified {@code groupId} and
+	 * {@code artifactId}. Does nothing if the plugin has already been added.
+	 * @param groupId the groupId of the plugin
+	 * @param artifactId the artifactId of the plugin
+	 * @see #add(String, String, Consumer)
 	 */
 	public void add(String groupId, String artifactId) {
 		addPlugin(groupId, artifactId);
 	}
 
 	/**
-	 * Add a {@link MavenPlugin} by specifying the groupId and artifactId, along with a
-	 * {@link Consumer} to customize the object.
-	 * @param groupId groupId associated with the {@link MavenPlugin}
-	 * @param artifactId artifactId associated with the {@link MavenPlugin}
-	 * @param plugin {@link Consumer} to customize the object
+	 * Add a {@link MavenPlugin}with the specified {@code groupId} and {@code artifactId}
+	 * and {@link Consumer} to customize the object. If the plugin has already been *
+	 * added, the consumer can be used to further tune the existing plugin configuration.
+	 * @param groupId the groupId of the plugin
+	 * @param artifactId the artifactId of the plugin
+	 * @param plugin a {@link Consumer} to customize the {@link MavenPlugin}
 	 */
 	public void add(String groupId, String artifactId, Consumer<MavenPlugin> plugin) {
 		MavenPlugin mavenPlugin = addPlugin(groupId, artifactId);
 		plugin.accept(mavenPlugin);
 	}
 
+	private MavenPlugin addPlugin(String groupId, String artifactId) {
+		return this.plugins.computeIfAbsent(pluginKey(groupId, artifactId),
+				(pluginId) -> new MavenPlugin(groupId, artifactId));
+	}
+
 	/**
-	 * Remove a {@link MavenPlugin} by specifying the groupId and artifactId.
-	 * @param groupId groupId associated with the {@link MavenPlugin}
-	 * @param artifactId artifactId associated with the {@link MavenPlugin}
-	 * @return {@code true} if an object was removed
+	 * Remove the plugin with the specified {@code groupId} and {@code artifactId}.
+	 * @param groupId the groupId of the plugin to remove
+	 * @param artifactId the artifactId of the plugin to remove
+	 * @return {@code true} if such a plugin was registered, {@code false} otherwise
 	 */
 	public boolean remove(String groupId, String artifactId) {
 		return this.plugins.remove(pluginKey(groupId, artifactId)) != null;
@@ -95,11 +99,6 @@ public class MavenPluginContainer {
 
 	private String pluginKey(String groupId, String artifactId) {
 		return String.format("%s:%s", groupId, artifactId);
-	}
-
-	private MavenPlugin addPlugin(String groupId, String artifactId) {
-		return this.plugins.computeIfAbsent(pluginKey(groupId, artifactId),
-				(pluginId) -> new MavenPlugin(groupId, artifactId));
 	}
 
 }

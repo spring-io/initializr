@@ -16,6 +16,11 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+/**
+ * A standard {@link GradlePlugin} used in the {@code plugins} block.
+ *
+ * @author HaiTao Zhang
+ */
 public class StandardGradlePlugin extends GradlePlugin {
 
 	private String version;

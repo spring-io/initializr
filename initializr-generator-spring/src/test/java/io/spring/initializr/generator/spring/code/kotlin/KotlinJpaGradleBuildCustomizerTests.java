@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
 import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
 import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
@@ -41,9 +42,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values().filter((plugin) -> plugin.isApply())).isEmpty();
-		assertThat(build.plugins().values()).hasSize(1);
-		build.plugins().values().findFirst().ifPresent((plugin) -> {
+		assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
 			assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("1.2.70");
 		});
@@ -53,7 +53,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 	void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
 		Dependency dependency = Dependency.withId("foo");
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values().filter((plugin) -> plugin.isApply())).isEmpty();
+		assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
 		assertThat(build.plugins().values()).isEmpty();
 	}
 

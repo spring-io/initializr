@@ -436,7 +436,7 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
 		build.setArtifact("demo");
-		build.plugins().add("com.example.demo", "demo-plugin", (plugin) -> plugin.extensions());
+		build.plugins().add("com.example.demo", "demo-plugin", MavenPlugin::extensions);
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");

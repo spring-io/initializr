@@ -89,8 +89,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.plugins().add("org.springframework.boot",
-				(StandardGradlePlugin standardGradlePlugin) -> standardGradlePlugin.setVersion("2.1.0.RELEASE"));
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
 				"}");

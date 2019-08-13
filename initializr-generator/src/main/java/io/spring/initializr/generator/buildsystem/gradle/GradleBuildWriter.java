@@ -82,6 +82,11 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writePlugins(IndentingWriter writer, GradleBuild build);
 
+	protected List<StandardGradlePlugin> extractStandardPlugin(GradleBuild build) {
+		return build.plugins().values().filter(StandardGradlePlugin.class::isInstance)
+				.map(StandardGradlePlugin.class::cast).collect(Collectors.toList());
+	}
+
 	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build);
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleBuild build);
@@ -166,11 +171,6 @@ public abstract class GradleBuildWriter {
 		default:
 			throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
 		}
-	}
-
-	protected List<StandardGradlePlugin> extractStandardPlugin(GradleBuild build) {
-		return (List<StandardGradlePlugin>) (List<? extends GradlePlugin>) build.plugins().values()
-				.filter((plugin) -> plugin instanceof StandardGradlePlugin).collect(Collectors.toList());
 	}
 
 	private void writeBoms(IndentingWriter writer, GradleBuild build) {

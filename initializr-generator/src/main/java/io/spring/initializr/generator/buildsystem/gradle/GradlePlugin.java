@@ -25,7 +25,7 @@ public class GradlePlugin {
 
 	private final String id;
 
-	private boolean apply;
+	private final boolean apply;
 
 	public GradlePlugin(String id, boolean apply) {
 		this.id = id;

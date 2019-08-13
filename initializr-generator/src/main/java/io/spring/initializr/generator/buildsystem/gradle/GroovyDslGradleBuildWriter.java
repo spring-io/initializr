@@ -76,7 +76,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private List<GradlePlugin> extractApplyPlugins(GradleBuild build) {
-		return build.plugins().values().filter((plugin) -> plugin.isApply()).collect(Collectors.toList());
+		return build.plugins().values().filter(GradlePlugin::isApply).collect(Collectors.toList());
 	}
 
 	private String pluginAsString(StandardGradlePlugin plugin) {

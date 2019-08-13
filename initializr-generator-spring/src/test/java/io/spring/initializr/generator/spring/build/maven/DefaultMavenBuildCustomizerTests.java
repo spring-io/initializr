@@ -53,8 +53,7 @@ class DefaultMavenBuildCustomizerTests {
 	void customizeRegisterSpringBootPlugin() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
-		assertThat(build.plugins().values()).hasSize(1);
-		build.plugins().values().findFirst().ifPresent((mavenPlugin) -> {
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((mavenPlugin) -> {
 			assertThat(mavenPlugin.getGroupId()).isEqualTo("org.springframework.boot");
 			assertThat(mavenPlugin.getArtifactId()).isEqualTo("spring-boot-maven-plugin");
 			assertThat(mavenPlugin.getVersion()).isNull();

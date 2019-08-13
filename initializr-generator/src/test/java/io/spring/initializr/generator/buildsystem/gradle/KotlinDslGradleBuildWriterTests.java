@@ -91,10 +91,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithKotlinPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.plugins().add("org.jetbrains.kotlin.jvm",
-				(StandardGradlePlugin standardGradlePlugin) -> standardGradlePlugin.setVersion("1.3.21"));
-		build.plugins().add("org.jetbrains.kotlin.plugin.spring",
-				(StandardGradlePlugin standardGradlePlugin) -> standardGradlePlugin.setVersion("1.3.21"));
+		build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion("1.3.21"));
+		build.plugins().add("org.jetbrains.kotlin.plugin.spring", (plugin) -> plugin.setVersion("1.3.21"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {", "    kotlin(\"jvm\") version \"1.3.21\"",
 				"    kotlin(\"plugin.spring\") version \"1.3.21\"", "}");
@@ -103,8 +101,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPluginAndVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.plugins().add("org.springframework.boot",
-				(StandardGradlePlugin standardGradlePlugin) -> standardGradlePlugin.setVersion("2.1.0.RELEASE"));
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("plugins {",
 				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"", "}");

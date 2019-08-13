@@ -42,8 +42,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).hasSize(1);
-		build.plugins().values().findFirst().ifPresent((plugin) -> {
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
@@ -61,7 +60,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 	void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
 		Dependency dependency = Dependency.withId("foo");
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).hasSize(0);
+		assertThat(build.plugins().isEmpty()).isTrue();
 	}
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {

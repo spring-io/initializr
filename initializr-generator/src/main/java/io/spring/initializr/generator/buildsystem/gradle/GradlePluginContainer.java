@@ -29,11 +29,7 @@ import java.util.stream.Stream;
  */
 public class GradlePluginContainer {
 
-	private final Map<String, GradlePlugin> plugins;
-
-	public GradlePluginContainer() {
-		this.plugins = new LinkedHashMap<>();
-	}
+	private final Map<String, GradlePlugin> plugins = new LinkedHashMap<>();
 
 	/**
 	 * Specify if this container is empty.
@@ -44,16 +40,16 @@ public class GradlePluginContainer {
 	}
 
 	/**
-	 * Specify if this container has a GradlePlugin with the specified id.
-	 * @param id id associated with the {@link GradlePlugin}
-	 * @return {@code true} if an object with the specified id is added
+	 * Specify if this container has a plugin with the specified id.
+	 * @param id the identifier of a gradle plugin
+	 * @return {@code true} if a plugin with the specified {@code id} exists
 	 */
 	public boolean has(String id) {
 		return this.plugins.containsKey(id);
 	}
 
 	/**
-	 * Returns a {@link Stream} of added {@link GradlePlugin}s.
+	 * Returns a {@link Stream} of registered {@link GradlePlugin}s.
 	 * @return a stream of {@link GradlePlugin}s
 	 */
 	public Stream<GradlePlugin> values() {
@@ -61,41 +57,49 @@ public class GradlePluginContainer {
 	}
 
 	/**
-	 * Add a {@link GradlePlugin} to the Gradle's legacy apply block by specifying the id.
-	 * @param id id associated with the {@link GradlePlugin}
-	 */
-	public void apply(String id) {
-		addPlugin(id, (pluginId) -> new GradlePlugin(pluginId, true));
-	}
-
-	/**
-	 * Add a {@link GradlePlugin} to the Gradle's standard plugins DSL block by specifying
-	 * the id.
-	 * @param id id associated with the {@link GradlePlugin}
+	 * Add a {@link GradlePlugin} to the standard {@code plugins} block with the specified
+	 * id. Does nothing if the plugin has already been added.
+	 * @param id the id of the plugin
+	 * @see #add(String, Consumer)
 	 */
 	public void add(String id) {
-		addPlugin(id, (pluginId) -> new StandardGradlePlugin(pluginId));
+		addPlugin(id, StandardGradlePlugin::new);
 	}
 
 	/**
-	 * Add a {@link GradlePlugin} to the Gradle's standard plugins DSL block by specifying
-	 * the id, along with a {@link Consumer} to customize the object.
-	 * @param id id associated with the {@link GradlePlugin}
-	 * @param plugin consumer to customize the {@link GradlePlugin}
+	 * Add a {@link GradlePlugin} to the standard {@code plugins} block with the specified
+	 * id and {@link Consumer} to customize the object. If the plugin has already been
+	 * added, the consumer can be used to further tune the existing plugin configuration.
+	 * @param id the id of the plugin
+	 * @param plugin a {@link Consumer} to customize the {@link GradlePlugin}
 	 */
 	public void add(String id, Consumer<StandardGradlePlugin> plugin) {
-		GradlePlugin gradlePlugin = addPlugin(id, (pluginId) -> new StandardGradlePlugin(pluginId));
+		GradlePlugin gradlePlugin = addPlugin(id, StandardGradlePlugin::new);
 		if (gradlePlugin instanceof StandardGradlePlugin) {
 			plugin.accept((StandardGradlePlugin) gradlePlugin);
 		}
 	}
 
-	public boolean remove(String id) {
-		return this.plugins.remove(id) != null;
+	/**
+	 * Apply a {@link GradlePlugin} with the specified id. Does nothing if the plugin has
+	 * already been applied.
+	 * @param id the id of the plugin
+	 */
+	public void apply(String id) {
+		addPlugin(id, (pluginId) -> new GradlePlugin(pluginId, true));
 	}
 
 	private GradlePlugin addPlugin(String id, Function<String, GradlePlugin> pluginId) {
 		return this.plugins.computeIfAbsent(id, pluginId);
+	}
+
+	/**
+	 * Remove the plugin with the specified {@code id}.
+	 * @param id the id of the plugin to remove
+	 * @return {@code true} if such a plugin was registered, {@code false} otherwise
+	 */
+	public boolean remove(String id) {
+		return this.plugins.remove(id) != null;
 	}
 
 }

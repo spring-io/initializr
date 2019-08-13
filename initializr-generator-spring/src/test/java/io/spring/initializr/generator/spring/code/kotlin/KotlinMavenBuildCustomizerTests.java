@@ -54,8 +54,7 @@ class KotlinMavenBuildCustomizerTests {
 	void kotlinMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.plugins().values()).hasSize(1);
-		build.plugins().values().findFirst().ifPresent((kotlinPlugin) -> {
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((kotlinPlugin) -> {
 			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			assertThat(kotlinPlugin.getVersion()).isNull();
@@ -85,8 +84,7 @@ class KotlinMavenBuildCustomizerTests {
 	void kotlinMavenPluginWithSeveralArgs() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
-		assertThat(build.plugins().values()).hasSize(1);
-		build.plugins().values().findFirst().ifPresent((kotlinPlugin) -> {
+		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((kotlinPlugin) -> {
 			Configuration configuration = kotlinPlugin.getConfiguration();
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");

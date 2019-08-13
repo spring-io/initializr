@@ -46,6 +46,8 @@ public class GradleBuild extends Build {
 
 	private final Map<String, String> ext = new TreeMap<>();
 
+	private final GradlePluginContainer plugins = new GradlePluginContainer();
+
 	private final List<String> configurations = new ArrayList<>();
 
 	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
@@ -57,8 +59,6 @@ public class GradleBuild extends Build {
 	private final Map<String, TaskCustomization> tasksWithTypeCustomizations = new LinkedHashMap<>();
 
 	private final Buildscript buildscript = new Buildscript();
-
-	private final GradlePluginContainer plugins = new GradlePluginContainer();
 
 	public GradleBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
