@@ -120,7 +120,7 @@ class GradleProjectGenerationConfigurationTests {
 		assertThat(relativePaths).contains("build.gradle");
 		List<String> lines = projectStructure.readAllLines("build.gradle");
 		assertThat(lines).containsExactly("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
-				"    id 'java'", "}", "", "apply plugin: 'io.spring.dependency-management'", "",
+				"    id 'io.spring.dependency-management' version '1.0.6.RELEASE'", "    id 'java'", "}", "",
 				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'", "sourceCompatibility = '11'", "",
 				"repositories {", "    mavenCentral()", "}", "", "dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter'",

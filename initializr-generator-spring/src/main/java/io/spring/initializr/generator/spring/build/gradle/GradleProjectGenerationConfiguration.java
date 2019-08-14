@@ -101,9 +101,10 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
-	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
-	public BuildCustomizer<GradleBuild> applyDependencyManagementPluginContributor() {
-		return (build) -> build.plugins().apply("io.spring.dependency-management");
+	BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
+			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
+		return new SpringBootPluginBuildCustomizer(projectDescription, versionResolver
+				.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
 	}
 
 	@Bean
@@ -241,20 +242,6 @@ public class GradleProjectGenerationConfiguration {
 				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new KotlinDslGradleSettingsWriter(), "settings.gradle.kts");
-		}
-
-		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
-				ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver,
-				InitializrMetadata metadata) {
-			return (build) -> {
-				build.plugins().add("org.springframework.boot",
-						(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
-				build.plugins().add("io.spring.dependency-management",
-						(plugin) -> plugin.setVersion(versionResolver
-								.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata))
-								.resolveDependencyManagementPluginVersion(projectDescription)));
-			};
 		}
 
 		@Bean
