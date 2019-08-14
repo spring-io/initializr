@@ -16,11 +16,9 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import java.util.Collections;
-
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
-import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,11 +34,9 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 	void kotlinPluginsAreConfigured() {
 		GradleBuild build = new GradleBuild();
 		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.plugins().values()).hasSize(2);
-		assertThat(build.plugins().values().map(
-				(plugin) -> Collections.singletonMap(plugin.getId(), ((StandardGradlePlugin) plugin).getVersion())))
-						.containsExactlyInAnyOrder(Collections.singletonMap("org.jetbrains.kotlin.jvm", "1.2.70"),
-								Collections.singletonMap("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
+		assertThat(build.plugins().values()).extracting("id", "version").containsExactlyInAnyOrder(
+				Tuple.tuple("org.jetbrains.kotlin.jvm", "1.2.70"),
+				Tuple.tuple("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
 	}
 
 	@Test
