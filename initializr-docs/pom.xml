@@ -28,6 +28,11 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-metadata</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
 			<artifactId>initializr-web</artifactId>
 			<optional>true</optional>
 		</dependency>
@@ -223,7 +228,7 @@
 									<dependencySourceIncludes>
 										<dependencySourceInclude>${project.groupId}:*</dependencySourceInclude>
 									</dependencySourceIncludes>
-									<subpackages>io.spring.initializr</subpackages>
+									<sourceFileExcludes>io/spring/initializr/doc/**/*.java</sourceFileExcludes>
 									<detectOfflineLinks>false</detectOfflineLinks>
 									<attach>false</attach>
 									<quiet>true</quiet>
