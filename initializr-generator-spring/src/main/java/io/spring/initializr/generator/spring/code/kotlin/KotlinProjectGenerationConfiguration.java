@@ -80,8 +80,12 @@ public class KotlinProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public KotlinProjectSettings kotlinProjectSettings(KotlinVersionResolver kotlinVersionResolver) {
-		return new SimpleKotlinProjectSettings(kotlinVersionResolver.resolveKotlinVersion(this.projectDescription));
+	public KotlinProjectSettings kotlinProjectSettings(ObjectProvider<KotlinVersionResolver> kotlinVersionResolver,
+			InitializrMetadata metadata) {
+		String kotlinVersion = kotlinVersionResolver
+				.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
+				.resolveKotlinVersion(this.projectDescription);
+		return new SimpleKotlinProjectSettings(kotlinVersion);
 	}
 
 	@Bean

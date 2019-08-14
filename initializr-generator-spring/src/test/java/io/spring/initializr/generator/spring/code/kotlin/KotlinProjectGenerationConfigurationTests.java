@@ -54,9 +54,7 @@ class KotlinProjectGenerationConfigurationTests {
 				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
 						KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
 						MavenProjectGenerationConfiguration.class)
-				.withDirectory(directory)
-				.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("1.2.70"))
-				.withBean(InitializrMetadata.class, () -> {
+				.withDirectory(directory).withBean(InitializrMetadata.class, () -> {
 					io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
 							.withId("foo");
 					dependency.setFacets(Collections.singletonList("json"));
@@ -68,6 +66,21 @@ class KotlinProjectGenerationConfigurationTests {
 					}
 					description.setBuildSystem(new MavenBuildSystem());
 				});
+	}
+
+	@Test
+	void kotlinVersionFallbacksToMetadataIfNotPresent() {
+		KotlinProjectSettings settings = this.projectTester.generate(new ProjectDescription(),
+				(context) -> context.getBean(KotlinProjectSettings.class));
+		assertThat(settings.getVersion()).isEqualTo("1.1.1");
+	}
+
+	@Test
+	void kotlinVersionResolverIsUsedIfPresent() {
+		KotlinProjectSettings settings = this.projectTester
+				.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("0.9.12"))
+				.generate(new ProjectDescription(), (context) -> context.getBean(KotlinProjectSettings.class));
+		assertThat(settings.getVersion()).isEqualTo("0.9.12");
 	}
 
 	@Test
