@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -141,7 +142,7 @@ public class CommandLineHelpGenerator {
 			data[2] = (String) defaults.get(id);
 			parameterTable[i++] = data;
 		}
-		model.put("parameters", TableGenerator.generate(parameterTable, false, this.maxColumnWidth));
+		model.put("parameters", TableGenerator.generate(parameterTable, this.maxColumnWidth));
 
 		return model;
 	}
@@ -165,7 +166,7 @@ public class CommandLineHelpGenerator {
 			data[2] = (String) defaults.get(id);
 			parameterTable[i++] = data;
 		}
-		model.put("parameters", TableGenerator.generate(parameterTable, false, this.maxColumnWidth));
+		model.put("parameters", TableGenerator.generate(parameterTable, this.maxColumnWidth));
 		return model;
 	}
 
@@ -181,7 +182,7 @@ public class CommandLineHelpGenerator {
 			data[2] = dep.getVersionRequirement();
 			dependencyTable[i++] = data;
 		}
-		return TableGenerator.generate(dependencyTable, true, this.maxColumnWidth);
+		return TableGenerator.generate(dependencyTable, this.maxColumnWidth);
 	}
 
 	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
@@ -203,7 +204,7 @@ public class CommandLineHelpGenerator {
 			}
 			typeTable[i++] = data;
 		}
-		return TableGenerator.generate(typeTable, false, this.maxColumnWidth);
+		return TableGenerator.generate(typeTable, this.maxColumnWidth);
 	}
 
 	protected Map<String, Object> buildParametersDescription(InitializrMetadata metadata) {
@@ -240,18 +241,26 @@ public class CommandLineHelpGenerator {
 		 * The {@code content} is a two-dimensional array holding the rows of the table.
 		 * The first entry holds the header of the table.
 		 * @param content the table content
-		 * @param emptyRow add an empty row separator
 		 * @param maxWidth the width bound for each column
 		 * @return the generated table
 		 */
-		static String generate(String[][] content, boolean emptyRow, int maxWidth) {
+		static String generate(String[][] content, int maxWidth) {
 			StringBuilder sb = new StringBuilder();
+			boolean emptyRow = false;
 			int[] columnsLength = computeColumnsLength(content, maxWidth);
+			List<List<String[]>> formattedContent = new LinkedList<>();
+			for (int i = 0; i < content.length; i++) {
+				List<String[]> rows = computeRow(content, i, maxWidth);
+				formattedContent.add(rows);
+				if (rows.size() > 1) {
+					emptyRow = true;
+				}
+			}
 			appendTableSeparation(sb, columnsLength);
-			appendRow(sb, content, columnsLength, 0, maxWidth); // Headers
+			appendRow(sb, formattedContent, columnsLength, 0); // Headers
 			appendTableSeparation(sb, columnsLength);
-			for (int i = 1; i < content.length; i++) {
-				appendRow(sb, content, columnsLength, i, maxWidth);
+			for (int i = 1; i < formattedContent.size(); i++) {
+				appendRow(sb, formattedContent, columnsLength, i);
 				if (emptyRow && i < content.length - 1) {
 					appendEmptyRow(sb, columnsLength);
 				}
@@ -260,10 +269,9 @@ public class CommandLineHelpGenerator {
 			return sb.toString();
 		}
 
-		private static void appendRow(StringBuilder sb, String[][] content, int[] columnsLength, int rowIndex,
-				int maxWidth) {
-			String[] line = content[rowIndex];
-			List<String[]> rows = HelpFormatter.format(line, maxWidth);
+		private static void appendRow(StringBuilder sb, List<List<String[]>> formattedContent, int[] columnsLength,
+				int rowIndex) {
+			List<String[]> rows = formattedContent.get(rowIndex);
 			for (String[] row : rows) {
 				for (int i = 0; i < row.length; i++) {
 					sb.append("| ").append(fill(row[i], columnsLength[i])).append(" ");
@@ -271,6 +279,12 @@ public class CommandLineHelpGenerator {
 				sb.append("|");
 				sb.append(NEW_LINE);
 			}
+		}
+
+		private static List<String[]> computeRow(String[][] content, int rowIndex, int maxWidth) {
+			String[] line = content[rowIndex];
+			List<String[]> row = HelpFormatter.format(line, maxWidth);
+			return row;
 		}
 
 		private static void appendEmptyRow(StringBuilder sb, int[] columnsLength) {
