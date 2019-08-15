@@ -5,8 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr</artifactId>
+		<artifactId>initializr-parent</artifactId>
 		<version>${revision}</version>
+		<relativePath>../initializr-parent</relativePath>
 	</parent>
 	<artifactId>initializr-service-sample</artifactId>
 	<name>Spring Initializr :: Service (Sample)</name>
