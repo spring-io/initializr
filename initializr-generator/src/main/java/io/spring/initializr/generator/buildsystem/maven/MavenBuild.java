@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -158,7 +159,7 @@ public class MavenBuild extends Build {
 
 		private String targetPath;
 
-		private Boolean filtering;
+		private boolean filtering;
 
 		private List<String> includes = new ArrayList<>();
 
@@ -172,8 +173,8 @@ public class MavenBuild extends Build {
 			return new Resource(this.directory, this.targetPath, this.filtering, this.includes, this.excludes);
 		}
 
-		public ResourceBuilder include(List<String> includes) {
-			this.includes = includes;
+		public ResourceBuilder include(String... includes) {
+			this.includes = Arrays.asList(includes);
 			return this;
 		}
 
@@ -187,8 +188,8 @@ public class MavenBuild extends Build {
 			return this;
 		}
 
-		public ResourceBuilder excludes(List<String> excludes) {
-			this.excludes = excludes;
+		public ResourceBuilder excludes(String... excludes) {
+			this.excludes = Arrays.asList(excludes);
 			return this;
 		}
 
@@ -206,13 +207,13 @@ public class MavenBuild extends Build {
 
 		private String targetPath;
 
-		private Boolean filtering;
+		private boolean filtering;
 
 		private List<String> includes = new ArrayList<>();
 
 		private List<String> excludes = new ArrayList<>();
 
-		public Resource(String directory, String targetPath, Boolean filtering, List<String> includes,
+		public Resource(String directory, String targetPath, boolean filtering, List<String> includes,
 				List<String> excludes) {
 			super();
 			this.directory = directory;
@@ -234,7 +235,7 @@ public class MavenBuild extends Build {
 			return this.targetPath;
 		}
 
-		public Boolean isFiltering() {
+		public boolean isFiltering() {
 			return this.filtering;
 		}
 

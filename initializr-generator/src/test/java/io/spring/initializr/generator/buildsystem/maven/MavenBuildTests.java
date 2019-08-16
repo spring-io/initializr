@@ -16,13 +16,13 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
-import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
 
 /**
  * Tests for {@link MavenBuild}.
@@ -119,23 +119,46 @@ class MavenBuildTests {
 
 		MavenBuild build = new MavenBuild();
 
-		List<String> includes = Arrays.asList("**/*.yml");
-		List<String> excludes = Arrays.asList("**/*.properties");
-
 		build.resource("src/main/resources", (resource) -> {
-			resource.include(includes);
+			resource.include("**/*.yml");
+			resource.filtering(true);
 			resource.targetPath("targetPath");
-			resource.filtering(false);
-			resource.excludes(excludes);
+			resource.excludes("**/*.properties");
 		});
 
 		Resource resource = build.getResources().get(0);
 
 		assertThat(resource.getIncludes().get(0)).isEqualTo("**/*.yml");
 		assertThat(resource.getExcludes().get(0)).isEqualTo("**/*.properties");
-		assertThat(resource.isFiltering()).isFalse();
+		assertThat(resource.isFiltering()).isTrue();
 		assertThat(resource.getTargetPath()).isEqualTo("targetPath");
 		assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
+
+	}
+	
+	@Test
+	void mavenResourcesFilteringFalseByDefault() {
+
+		MavenBuild build = new MavenBuild();
+
+		build.resource("src/main/resources", (resource) -> {
+		});
+
+		Resource resource = build.getResources().get(0);
+
+		assertThat(resource.isFiltering()).isFalse();
+
+	}
+	
+	@Test
+	void mavenResourcesNotLoadedByDefault() {
+
+		MavenBuild build = new MavenBuild();
+		build.plugin("com.example", "test-plugin");
+
+		List<Resource> resources = build.getResources();
+
+		assertThat(resources).isEmpty();
 
 	}
 
