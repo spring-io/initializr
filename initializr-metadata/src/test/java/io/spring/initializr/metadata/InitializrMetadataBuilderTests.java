@@ -120,13 +120,13 @@ class InitializrMetadataBuilderTests {
 		Repository myRepo = repositories.get("my-repo");
 		assertThat(myRepo).isNotNull();
 		assertThat(myRepo.getName()).isEqualTo("my repo");
-		assertThat(myRepo.getUrl()).isEqualTo(new URL("http://example.com/my"));
+		assertThat(myRepo.getUrl()).isEqualTo(new URL("https://example.com/my"));
 		assertThat(myRepo.isSnapshotsEnabled()).isEqualTo(true);
 
 		Repository anotherRepo = repositories.get("another-repo");
 		assertThat(anotherRepo).isNotNull();
 		assertThat(anotherRepo.getName()).isEqualTo("another repo");
-		assertThat(anotherRepo.getUrl()).isEqualTo(new URL("http://example.com/another"));
+		assertThat(anotherRepo.getUrl()).isEqualTo(new URL("https://example.com/another"));
 		assertThat(anotherRepo.isSnapshotsEnabled()).isEqualTo(false);
 	}
 

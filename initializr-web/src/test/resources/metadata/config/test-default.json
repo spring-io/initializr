@@ -68,17 +68,17 @@
     "repositories": {
       "my-api-repo-1": {
         "name": "repo1",
-        "url": "http://example.com/repo1",
+        "url": "https://example.com/repo1",
         "snapshotsEnabled": false
       },
       "my-api-repo-2": {
         "name": "repo2",
-        "url": "http://example.com/repo2",
+        "url": "https://example.com/repo2",
         "snapshotsEnabled": false
       },
       "my-api-repo-3": {
         "name": "repo3",
-        "url": "http://example.com/repo3",
+        "url": "https://example.com/repo3",
         "snapshotsEnabled": false
       },
       "spring-milestones": {

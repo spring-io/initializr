@@ -59,8 +59,8 @@ class DependencyManagementBuildCustomizerTests {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getRepositories().add("bar-repo");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
-				.addRepository("foo-repo", "foo-repo", "http://example.com/foo", false)
-				.addRepository("bar-repo", "bar-repo", "http://example.com/bar", false)
+				.addRepository("foo-repo", "foo-repo", "https://example.com/foo", false)
+				.addRepository("bar-repo", "bar-repo", "https://example.com/bar", false)
 				.addDependencyGroup("test", dependency).build();
 		Build build = createBuild(metadata);
 		build.dependencies().add(dependency.getId());

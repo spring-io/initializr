@@ -31,8 +31,8 @@ class StatsPropertiesTests {
 
 	@Test
 	void cleanTrailingSlash() {
-		this.properties.getElastic().setUri("http://example.com/");
-		assertThat(this.properties.getElastic().getUri()).isEqualTo("http://example.com");
+		this.properties.getElastic().setUri("https://example.com/");
+		assertThat(this.properties.getElastic().getUri()).isEqualTo("https://example.com");
 	}
 
 }

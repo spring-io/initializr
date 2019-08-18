@@ -43,7 +43,7 @@ class DependencyMetadataJsonMapperTests {
 		d.setBom("my-bom");
 		Repository repository = new Repository();
 		repository.setName("foo-repo");
-		repository.setUrl(new URL("http://example.com/foo"));
+		repository.setUrl(new URL("https://example.com/foo"));
 		BillOfMaterials bom = BillOfMaterials.create("org.foo", "foo-bom", "1.0.0.RELEASE");
 		DependencyMetadata metadata = new DependencyMetadata(Version.parse("1.2.0.RELEASE"),
 				Collections.singletonMap(d.getId(), d), Collections.singletonMap("repo-id", repository),

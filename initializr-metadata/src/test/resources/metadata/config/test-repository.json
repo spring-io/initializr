@@ -4,12 +4,12 @@
       "repositories": {
         "my-repo": {
           "name": "my repo",
-          "url": "http://example.com/my",
+          "url": "https://example.com/my",
           "snapshotsEnabled": true
         },
         "another-repo": {
           "name": "another repo",
-          "url": "http://example.com/another",
+          "url": "https://example.com/another",
           "snapshotsEnabled": false
         }
       }

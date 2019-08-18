@@ -1,6 +1,6 @@
 = Service sample
 
-:docs: http://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html
+:docs: https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference/html
 
 This sample demonstrates how you can create your own service easily as described in the
 {docs}/#create-instance[reference documentation].

@@ -56,7 +56,7 @@ class InitializrMetadataTests {
 		foo.setRepository("foo-repo");
 		addTestDependencyGroup(metadata, foo);
 		metadata.getConfiguration().getEnv().getRepositories().put("my-repo",
-				new Repository("repo", new URL("http://example.com/repo"), true));
+				new Repository("repo", new URL("https://example.com/repo"), true));
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(metadata::validate)
 				.withMessageContaining("foo-repo").withMessageContaining("my-repo");
 	}

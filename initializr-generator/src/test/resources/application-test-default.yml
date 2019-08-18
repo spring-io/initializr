@@ -32,13 +32,13 @@ initializr:
     repositories:
       my-api-repo-1:
         name: repo1
-        url: http://example.com/repo1
+        url: https://example.com/repo1
       my-api-repo-2:
         name: repo2
-        url: http://example.com/repo2
+        url: https://example.com/repo2
       my-api-repo-3:
         name: repo3
-        url: http://example.com/repo3
+        url: https://example.com/repo3
   dependencies:
     - name: Core
       content:

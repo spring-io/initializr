@@ -224,7 +224,7 @@ The following IDEs have dedicated support:
 
 * Eclipse/STS
 * IntelliJ IDEA (Ultimate Edition)
-* NetBeans (using the http://plugins.netbeans.org/plugin/67888/nb-springboot[NB SpringBoot plugin])
+* NetBeans (using the https://plugins.netbeans.org/plugin/67888/nb-springboot[NB SpringBoot plugin])
 * Microsoft VSCode
 
 Refer to the documentation of your favorite IDE for more details.

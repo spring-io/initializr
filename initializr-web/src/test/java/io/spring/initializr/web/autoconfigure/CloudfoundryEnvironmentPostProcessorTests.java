@@ -49,11 +49,11 @@ class CloudfoundryEnvironmentPostProcessorTests {
 	@Test
 	void parseUri() {
 		this.environment.setProperty("vcap.services.stats-index.credentials.uri",
-				"http://example.com/bar/biz?param=one");
+				"https://example.com/bar/biz?param=one");
 		this.postProcessor.postProcessEnvironment(this.environment, this.application);
 
 		assertThat(this.environment.getProperty("initializr.stats.elastic.uri"))
-				.isEqualTo("http://example.com/bar/biz?param=one");
+				.isEqualTo("https://example.com/bar/biz?param=one");
 		assertThat(this.environment.getProperty("initializr.stats.elastic.username")).isNull();
 		assertThat(this.environment.getProperty("initializr.stats.elastic.password")).isNull();
 	}

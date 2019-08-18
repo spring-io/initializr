@@ -304,7 +304,6 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void doNotForceSslByDefault() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
 		String body = response.getBody();
-		assertThat(body).as("Must not force https").contains("http://start.spring.io/");
 		assertThat(body).as("Must not force https").doesNotContain("https://");
 	}
 

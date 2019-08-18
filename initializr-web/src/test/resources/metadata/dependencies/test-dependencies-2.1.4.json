@@ -3,7 +3,7 @@
   "repositories": {
     "my-api-repo-1": {
       "name": "repo1",
-      "url": "http://example.com/repo1",
+      "url": "https://example.com/repo1",
       "snapshotEnabled": false
     }
   },

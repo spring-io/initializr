@@ -354,7 +354,7 @@ defaults can be overridden as shown below:
 
 [[create-instance-boot-versions]]
 === Configuring available Spring Boot versions
-If you look at http://projects.spring.io/spring-boot[the project home page for Spring
+If you look at https://projects.spring.io/spring-boot[the project home page for Spring
 Boot], the latest versions are displayed. And you've probably noticed that they match the
 drop down list that you automatically get with a default instance of Spring Initializr.
 The reason for that is that Spring Initializr calls an API on https://spring.io to
@@ -592,7 +592,7 @@ declared at the top level (under `env`) and given an id via the key in the confi
 		repositories:
 		  my-api-repo-1:
 			name: repo1
-			url: http://example.com/repo1
+			url: https://example.com/repo1
 ----
 
 Once defined, the repository can then be referred back to in a dependency
@@ -789,7 +789,7 @@ Here is an example that adds two links to the `acme` dependency:
 				  href: https://com.example/guides/acme/
 				  description: Getting started with Acme
 			    - rel: reference
-				  href: http://docs.example.com/acme/html
+				  href: https://docs.example.com/acme/html
 ----
 
 

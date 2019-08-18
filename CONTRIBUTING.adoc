@@ -10,7 +10,7 @@ unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
 == Using GitHub issues
 We use GitHub issues to track bugs and enhancements. If you have a general usage question
-please ask on http://stackoverflow.com[Stack Overflow] or join us on the
+please ask on https://stackoverflow.com[Stack Overflow] or join us on the
 https://gitter.im/spring-io/initializr[Gitter channel].
 
 == Sign the Contributor License Agreement
@@ -38,7 +38,7 @@ added after the original pull request but before a merge.
 * A few unit tests would help a lot as well -- someone has to do it.
 * If no-one else is using your branch, please rebase it against the current master (or
   other target branch in the main project).
-* When writing a commit message please follow http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions],
+* When writing a commit message please follow https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions],
   if you are fixing an existing issue please add `Fixes gh-XXXX` at the end of the commit
   message (where XXXX is the issue number).
 
@@ -50,7 +50,7 @@ added after the original pull request but before a merge.
 
 === Building from Source
 Spring Initializer source can be build from the command line using
-http://maven.apache.org/run-maven/index.html[Apache Maven] on JDK 1.8 or above.
+https://maven.apache.org/run-maven/index.html[Apache Maven] on JDK 1.8 or above.
 We include '`Maven Wrapper`' scripts (`./mvnw` or `mvnw.bat`) that you can run rather
 than needing to install Maven locally.
 
