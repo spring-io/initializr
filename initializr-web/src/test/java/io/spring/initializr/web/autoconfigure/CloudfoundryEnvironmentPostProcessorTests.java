@@ -24,6 +24,8 @@ import org.springframework.mock.env.MockEnvironment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Tests for {@link CloudfoundryEnvironmentPostProcessor}.
+ *
  * @author Stephane Nicoll
  */
 class CloudfoundryEnvironmentPostProcessorTests {
