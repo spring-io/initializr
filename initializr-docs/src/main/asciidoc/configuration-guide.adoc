@@ -284,9 +284,9 @@ format that is more readable for such structure. If you agree, go ahead and rena
 
 [[create-instance-basic-settings]]
 === Configuring basic settings
-Most of the select capabilities are configured via a simple list-based structure where each
-entry has an `id`, a `name` and whether that entry is the default or not. If no `name` is
-provided, the `id` is used instead.
+Most of the select capabilities are configured via a simple list-based structure where
+each entry has an `id`, a `name` and whether that entry is the default or not. If no
+`name` is provided, the `id` is used instead.
 
 Let's configure the languages and the JVM generations we want to support:
 
@@ -311,8 +311,8 @@ If you restart the application and refresh http://localhost:8080, the language c
 now has the options and default values defined above.
 
 NOTE: The language identifiers defined there must have a corresponding `Language`
-implementation. `java`, `kotlin` and `groovy` can be used out-of-the-box as implementations
-for those are available in the core library itself.
+implementation. `java`, `kotlin` and `groovy` can be used out-of-the-box as
+implementations for those are available in the core library itself.
 
 The available packagings are also configurable that way:
 
@@ -328,16 +328,18 @@ The available packagings are also configurable that way:
 		  default: false
 ----
 
-NOTE: `Jar` and `War` packaging is available out-of-the-box. For additional packaging formats, you need
-to implement the `Packaging` abstraction and provide a `PackagingFactory` that corresponds to it.
+NOTE: `Jar` and `War` packaging is available out-of-the-box. For additional packaging
+formats, you need to implement the `Packaging` abstraction and provide a
+`PackagingFactory` that corresponds to it.
 
 
 
 [[create-instance-text-only-settings]]
 === Configuring text-only settings
 
-Text-only capabilities include `groupId`, `artifactId`, `name`, `description`, `version` and `packageName`.
-Each capability has a default value if nothing is configured. The defaults can be overriden as show below:
+Text-only capabilities include `groupId`, `artifactId`, `name`, `description`, `version`
+and `packageName`. Each capability has a default value if nothing is configured. The
+defaults can be overridden as shown below:
 
 [source,yaml,indent=0]
 ----
@@ -354,10 +356,10 @@ Each capability has a default value if nothing is configured. The defaults can b
 === Configuring available Spring Boot versions
 If you look at http://projects.spring.io/spring-boot[the project home page for Spring
 Boot], the latest versions are displayed. And you've probably noticed that they match the
-drop down list that you automatically get with a default instance of Spring Initializr. The
-reason for that is that Spring Initializr calls an API on https://spring.io to retrieve the
-latest versions automatically. This makes sure that you always get the latest available
-versions.
+drop down list that you automatically get with a default instance of Spring Initializr.
+The reason for that is that Spring Initializr calls an API on https://spring.io to
+retrieve the latest versions automatically. This makes sure that you always get the latest
+available versions.
 
 If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
 scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
@@ -738,9 +740,9 @@ The same project can now be generated with `dependencies=ws` or
 ==== Facets
 A "facet" is a label on a dependency which is used to drive a code modification in the
 generated project. For example, `initializr-generator-spring` checks for the presence of a
-dependency with the `web` facet if the packaging type is `war`. The absence of a dependency
-with the `web` facet drives inclusion of a dependency with id `web` (defaulting to
-`spring-boot-starter-web` if such dependency is not available).
+dependency with the `web` facet if the packaging type is `war`. The absence of a
+dependency with the `web` facet drives inclusion of a dependency with id `web` (defaulting
+to `spring-boot-starter-web` if such dependency is not available).
 
 The value of the "facets" property of a dependency is a list of strings.
 
@@ -959,8 +961,9 @@ For Maven projects, you can configure a custom parent POM as follows:
 			includeSpringBootBom : true
 ----
 
-`includeSpringBootBom` is `false` by default. When set to `true`, the `spring-boot-dependencies`
-bom is added to the `dependencyManagement` section with the version of Spring Boot used for the project.
+`includeSpringBootBom` is `false` by default. When set to `true`, the
+`spring-boot-dependencies` bom is added to the `dependencyManagement` section with the
+version of Spring Boot used for the project.
 
 
 [[howto-dependency-starter-flag]]
