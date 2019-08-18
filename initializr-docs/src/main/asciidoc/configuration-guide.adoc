@@ -215,33 +215,52 @@ this makes sure to add the Kotlin-specific jackson module for better interoperab
 
 [[create-instance]]
 == Creating your own instance
+NOTE: This walkthrough of how to create your own service assumes that the service will be
+used for creating Spring Boot projects which is the why `initializr-generator-spring` jar
+is included.
 
-NOTE: This walkthrough of how to create your own service assumes that the service will be used
-for creating Spring Boot projects which is the why `initializr-generator-spring` jar is included.
-
-You can generate a project for your own instance on https://start.spring.io.
-Create a new project with the `web` dependency and add the following dependencies:
+Spring Initializr provides a Bill of Materials (BOM) so that you don't have to worry about
+versions. You can generate a project for your own instance on https://start.spring.io.
+Create a new project with the `web` dependency and add the following dependencies and BOM:
 
 [source,xml,indent=0,subs="verbatim,attributes"]
 ----
-	<dependency>
-		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr-web</artifactId>
-		<version>{spring-initializr-version}</version>
-	</dependency>
-	<dependency>
-		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr-generator-spring</artifactId>
-		<version>{spring-initializr-version}</version>
-	</dependency>
+	<dependencies>
+		<dependency>
+    		<groupId>io.spring.initializr</groupId>
+    		<artifactId>initializr-web</artifactId>
+    	</dependency>
+    	<dependency>
+    		<groupId>io.spring.initializr</groupId>
+    		<artifactId>initializr-generator-spring</artifactId>
+    	</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.spring.initializr</groupId>
+				<artifactId>initializr-bom</artifactId>
+				<type>pom</type>
+				<scope>import</scope>
+				<version>{spring-initializr-version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 ----
 
 Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
-implementation("io.spring.initializr:initializr-web:{spring-initializr-version}")
-implementation("io.spring.initializr:initializr-generator-spring:{spring-initializr-version}")
+implementation("io.spring.initializr:initializr-web")
+implementation("io.spring.initializr:initializr-generator-spring")
+
+dependencyManagement {
+  imports {
+    mavenBom "io.spring.initializr:initializr-bom:{spring-initializr-version}"
+  }
+}
 ----
 
 NOTE: Spring Initializr releases are not available on Maven Central so you will need to
