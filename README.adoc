@@ -5,21 +5,27 @@
 :docs: https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference
 :service: https://github.com/spring-io/start.spring.io
 
-Spring Initializr provides an extensible API to generate quickstart projects. It also
-provides a configurable service (you can see our default instance at
-link:https://start.spring.io[]). It provides a simple web UI to configure the project
-to generate and endpoints that you can use via plain HTTP.
+Spring Initializr provides an extensible API to generate JVM-based projects with
+implementations for several common concepts:
 
-Spring Initializr also exposes an endpoint that serves its metadata in a well-known
-format to allow third-party clients to provide the necessary assistance.
+* Basic language generation for Java, Kotlin and Groovy.
+* Build system abstraction with implementations for Apache Maven and Gradle.
+* Git integration.
+* Various low-level hook-points for custom resources generations.
 
-Finally, Spring Initializr offers a configuration structure to define all the aspects
-related to the project to generate: list of dependencies, supported java and boot
-versions, etc. Check {service}[the companion project] that defines
-https://start.spring.io and, in particular, the
+The various options for the projects are expressed in a metadata model that allows you to
+configure the list of dependencies, supported JVM and platform versions, etc.
+
+Spring Initializr also exposes web endpoints to generate an actual project and also
+serve its metadata in a well-known format to allow third-party clients to provide the
+necessary assistance.
+
+A set of optional conventions for Spring Boot projects is provided and are used in our
+production instance at link:https://start.spring.io[]. To better understand how our
+service is configured, you may want to check {service}[the companion project] and, in
+particular, the
 {service}/blob/master/start-site/src/main/resources/application.yml[configuration of our
-instance] for an example. Such configuration is also described in details in the
-documentation.
+instance]. Such configuration is also described in details in the documentation.
 
 NOTE: Check the https://github.com/spring-io/initializr/milestones[milestones page] for an
 overview of the changes.
@@ -31,45 +37,45 @@ The reference documentation is available in {docs}/html/[HTML format].
 == Modules
 Spring Initializr has the following modules:
 
-* `initializr-generator`: core project generation library
-* `initializr-metadata`: metadata infrastructure for various aspects of the project
-* `initializr-generator-spring`: optional module defining the conventions for a Spring
-Boot project. Can be replaced by your own conventions if necessary.
-* `initializr-web`: REST endpoints and web interface
 * `initializr-actuator`: optional module to provide additional information and statistics
-on project generation
-* `initializr-docs`: documentation
+on project generation.
+* `initializr-bom`: provides a Bill of Materials for easier dependency management in your
+project.
+* `initializr-docs`: documentation.
+* `initializr-generator`: core project generation library.
+* `initializr-generator-spring`: optional module defining the conventions for a typical
+Spring Boot project. Can be reused or replaced by your own conventions.
+* `initializr-metadata`: metadata infrastructure for various aspects of the project.
+* `initializr-service-sample`: showcases a basic custom instance.
+* `initializr-version-resolver`: optional module to extract version numbers for an
+arbitrary BOM.
+* `initializr-web`: web endpoints for third party clients.
 
 == Supported interfaces
-
 Spring Initializr can be used as follows:
 
-* With your browser (i.e. link:https://start.spring.io[])
-* In your IDE if you are using STS, IntelliJ IDEA Ultimate or NetBeans (with
-https://github.com/AlexFalappa/nb-springboot[this plugin])
 * On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with
-`cURL` or `HTTPie`
+`cURL` or `HTTPie`.
+* In your IDE if you are using STS, IntelliJ IDEA Ultimate, NetBeans (with
+https://github.com/AlexFalappa/nb-springboot[this plugin]) or VSCode (with
+https://github.com/microsoft/vscode-spring-initializr[the `vscode-spring-initializr`
+plugin]).
+* With a custom Web UI (check ours at link:https://start.spring.io[]).
 
-[TIP]
-====
-You can "curl" an instance to get a usage page with examples (try
-`curl https://start.spring.io`)
-====
+There are other command-line integrations out there and you can also build your own!
 
 == Generating a project
-If you click on "Generate Project" on the web ui of our instance, it will download a
-project archive with a Maven-based project and the necessary infrastructure to start
+As Spring Initializr doesn't come with a Web UI, you can use any of the out-of-the-box
+integration to generate a project. For instance, the following `curl` command downloads
+a project archive with a Maven-based project and the necessary infrastructure to start
 a basic Spring Boot app.
-
-You could achieve the same result with a simple `curl` command
 
 [source,bash]
 ----
 $ curl https://start.spring.io/starter.zip -o demo.zip
 ----
 
-The web ui exposes a bunch of options that you can configure. These are mapped to the
-following request attributes:
+The project to generate can be customized of course with a number of options:
 
 * Basic information for the generated project: `groupId`, `artifactId`, `version`,
 `name`, `description` and `packageName`
@@ -80,20 +86,26 @@ specified name contains an invalid character for a java identifier, `Application
 used as fallback.
 ** The `artifactId` attribute not only defines the identifier of the project in the
 build but also the name of the generated archive.
-* `dependencies` (or `style`): the identifiers of the dependencies to add to the
+* `dependencies`: the identifiers of the dependencies to add to the
 project. Such identifiers are defined through configuration and are exposed in the
 <<metadata,metadata>>.
 * `type`: the _kind_ of project to generate (e.g. `maven-project`). Again, each
 service exposes an arbitrary number of supported types and these are available in the
 <<metadata,metadata>>.
-* `javaVersion`: the language level (e.g. `1.8`).
-* `bootVersion`: the Spring Boot version to use (e.g. `1.2.0.RELEASE`).
+* `javaVersion`: the JVM language level (e.g. `1.8`).
+* `bootVersion`: the platform version to use (e.g. `2.1.0.RELEASE`).
 * `language`: the programming language to use (e.g. `java`).
 * `packaging`: the packaging of the project (e.g. `jar`).
 * `applicationName`: the name of the application class (inferred by the `name`
 attribute by default).
 * `baseDir`: the name of the base directory to create in the archive. By default, the
 project is stored in the root.
+
+[TIP]
+====
+You can "curl" an instance to get a usage page with examples (try
+`curl https://start.spring.io`)
+====
 
 This command generates an `another-project` directory holding a Gradle web-based
 Groovy project using the actuator:
@@ -110,27 +122,12 @@ generates a compressed tarball instead.
 You could use this infrastructure to create your own client since the project is
 generated via a plain HTTP call.
 
-[[customize-form]]
-== Customize form inputs
-
-You can share or bookmark URLs that will automatically customize form inputs. For
-instance, the following URL from the default instance uses `groovy` by default and
-set the name to `Groovy Sample`:
-
-[source,bash]
-----
-https://start.spring.io/#!language=groovy&name=Groovy%20Sample
-----
-
-The following hashbang parameters are supported: `type`, `groupId`, `artifactId`,
-`name`, `description`, `packageName`, `packaging`, `javaVersion` and `language`.
-Review the section above for a description of each of them.
-
 [[metadata]]
 == Service metadata
-
-The service metadata is used by the web UI and is exposed to ease the creation of
-third-party clients. You can grab the metadata by _curling_ the root
+The service metadata is used by all clients to know which values they should expose for
+the standard attributes of a project. For instance, a custom version can specify that the
+default `groupId` is `com.example.acme`. You can grab the metadata on the root endpoint
+with the appropriate `Accept` header:
 
 [source,bash]
 ----
@@ -138,7 +135,9 @@ $ curl -H 'Accept: application/json' https://start.spring.io
 ----
 
 NOTE: As stated above, if you use `curl` without an accept header, you'll retrieve a
-human readable text version of the metadata. `HTTPie` is also supported:
+human readable text version of the metadata.
+
+`HTTPie` is also supported:
 
 [source,bash]
 ----
@@ -146,8 +145,8 @@ $ http https://start.spring.io Accept:application/json
 ----
 
 The metadata basically lists the _capabilities_ of the service, that is the available
-options for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) The
-web UI uses that information to initialize the select options and the tree of
+options for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) A client
+to the service uses that information to initialize the select options and the tree of
 available dependencies.
 
 The metadata also lists the default values for simple _text_ parameter (i.e. the
@@ -157,52 +156,27 @@ NOTE: More details about the structure of the metadata are
 {docs}/html/#metadata-format[available in the documentation].
 
 == Running your own instance
-
 You can easily run your own instance. The `initializr-web` modules uses Spring Boot
 so when it is added to a project, it will trigger the necessary auto-configuration to
 deploy the service.
 
-You first need to create or update your configuration to define the necessary
-attributes that your instance will use. Again, check the documentation for a
-{docs}/html/#create-instance[description of the configuration] and
-{service}[review our own config] for a sample.
+The `initializr-service-sample` showcases a basic custom instance with dedicated metadata.
 
-You can integrate the library in a traditional Java-based project or by writing the
-super-simple script below:
+NOTE: Spring Initializr is not available on Maven central yet so you will have to either
+build it <<build,from source>> if you want the latest state or use the latest release
+that is available on https://repo.spring.io/release.
 
-[source,groovy]
-----
-package org.acme.myapp
-
-@Grab('io.spring.initializr:initializr-web:1.0.0.BUILD-SNAPSHOT')
-@Grab('spring-boot-starter-web')
-class YourInitializrApplication { }
-----
-
-NOTE: Spring Initializr is not available on Maven central yet so you will have to
-build it <<build,from source>> in order to use it in your own environment.
-
-Once you have created that script (`my-instance.groovy`), place your configuration
-in the same directory and simply execute this command to start the service:
-
-[source,bash]
-----
-$ spring run my-instance.groovy
-----
-
-You may also want to https://github.com/spring-io/start.spring.io#run-app[run the default
-instance locally].
+If you want to run our instance at https://start.spring.io, refer to
+https://github.com/spring-io/start.spring.io#run-app[run the default instance locally].
 
 
 [[build]]
 == Building from Source
-
 You need Java 1.8 and a bash-like shell.
 
 [[building]]
 === Building
-
-Just invoke the build at the root of the project
+Invoke the build at the root of the project:
 
 [indent=0]
 ----
