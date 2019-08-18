@@ -68,7 +68,7 @@ public class MavenBuildWriter {
 				"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
 		writer.indented(() -> {
 			writer.println(
-					"xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">");
+					"xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">");
 			writeSingleElement(writer, "modelVersion", "4.0.0");
 			whenWritten.run();
 		});
