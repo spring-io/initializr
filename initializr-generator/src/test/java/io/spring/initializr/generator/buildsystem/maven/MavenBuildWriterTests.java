@@ -534,9 +534,7 @@ class MavenBuildWriterTests {
 
 		MavenBuild build = new MavenBuild();
 
-		build.resource("src/main/resources", (resource) -> {
-			resource.include("**/*.properties");
-		});
+		build.resource("src/main/resources", (resource) -> resource.include("**/*.properties"));
 
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/build/resources/resource/includes/include")
