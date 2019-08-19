@@ -87,7 +87,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.4.1"));
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.6"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
