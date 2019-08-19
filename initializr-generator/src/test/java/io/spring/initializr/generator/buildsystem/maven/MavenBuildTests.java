@@ -135,7 +135,7 @@ class MavenBuildTests {
 		assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
 
 	}
-	
+
 	@Test
 	void mavenResourcesFilteringFalseByDefault() {
 
@@ -149,7 +149,7 @@ class MavenBuildTests {
 		assertThat(resource.isFiltering()).isFalse();
 
 	}
-	
+
 	@Test
 	void mavenResourcesNotLoadedByDefault() {
 
