@@ -529,6 +529,24 @@ class MavenBuildWriterTests {
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
 	}
 
+	@Test
+	void pomWithResources() throws Exception {
+
+		MavenBuild build = new MavenBuild();
+
+		build.resource("src/main/resources", (resource) -> {
+			resource.include("**/*.properties");
+		});
+
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/build/resources/resource/includes/include")
+					.isEqualTo("**/*.properties");
+
+			assertThat(pom).textAtPath("/project/build/resources/resource/directory").isEqualTo("src/main/resources");
+		});
+
+	}
+
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) throws Exception {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();

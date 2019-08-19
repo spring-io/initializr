@@ -238,8 +238,8 @@ public class MavenBuildWriter {
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
-		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null
-				&& build.getPlugins().isEmpty()) {
+		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.getPlugins().isEmpty()
+				&& build.getResources().isEmpty()) {
 			return;
 		}
 		writer.println();
