@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
@@ -45,12 +46,12 @@ public interface BuildSystem {
 		return null;
 	}
 
-	default Path getMainDirectory(Path projectRoot, Language language) {
-		return projectRoot.resolve("src/main/" + language.id());
+	default SourceCodeStructure getMainDirectory(Path projectRoot, Language language) {
+		return new SourceCodeStructure(projectRoot.resolve("src/main/" + language.id()));
 	}
 
-	default Path getTestDirectory(Path projectRoot, Language language) {
-		return projectRoot.resolve("src/test/" + language.id());
+	default SourceCodeStructure getTestDirectory(Path projectRoot, Language language) {
+		return new SourceCodeStructure(projectRoot.resolve("src/test/" + language.id()));
 	}
 
 	static BuildSystem forId(String id) {

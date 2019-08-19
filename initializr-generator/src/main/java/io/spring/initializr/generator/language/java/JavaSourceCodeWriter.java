@@ -40,6 +40,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 
 /**
@@ -88,17 +89,15 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	@Override
-	public void writeTo(Path directory, JavaSourceCode sourceCode) throws IOException {
-		if (!Files.exists(directory)) {
-			Files.createDirectories(directory);
-		}
+	public void writeTo(SourceCodeStructure structure, JavaSourceCode sourceCode) throws IOException {
 		for (JavaCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
-			writeTo(directory, compilationUnit);
+			writeTo(structure, compilationUnit);
 		}
 	}
 
-	private void writeTo(Path directory, JavaCompilationUnit compilationUnit) throws IOException {
-		Path output = fileForCompilationUnit(directory, compilationUnit);
+	private void writeTo(SourceCodeStructure structure, JavaCompilationUnit compilationUnit) throws IOException {
+		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(),
+				compilationUnit.getName() + ".java");
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("java",
 				Files.newBufferedWriter(output))) {
@@ -248,15 +247,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	private void writeMethodInvocation(IndentingWriter writer, JavaMethodInvocation methodInvocation) {
 		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
 				+ String.join(", ", methodInvocation.getArguments()) + ")");
-	}
-
-	private Path fileForCompilationUnit(Path directory, JavaCompilationUnit compilationUnit) {
-		return directoryForPackage(directory, compilationUnit.getPackageName())
-				.resolve(compilationUnit.getName() + ".java");
-	}
-
-	private Path directoryForPackage(Path directory, String packageName) {
-		return directory.resolve(packageName.replace('.', '/'));
 	}
 
 	private Set<String> determineImports(JavaCompilationUnit compilationUnit) {

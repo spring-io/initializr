@@ -36,6 +36,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 
 /**
@@ -53,17 +54,14 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	@Override
-	public void writeTo(Path directory, KotlinSourceCode sourceCode) throws IOException {
-		if (!Files.exists(directory)) {
-			Files.createDirectories(directory);
-		}
+	public void writeTo(SourceCodeStructure structure, KotlinSourceCode sourceCode) throws IOException {
 		for (KotlinCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
-			writeTo(directory, compilationUnit);
+			writeTo(structure, compilationUnit);
 		}
 	}
 
-	private void writeTo(Path directory, KotlinCompilationUnit compilationUnit) throws IOException {
-		Path output = fileForCompilationUnit(directory, compilationUnit);
+	private void writeTo(SourceCodeStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
+		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(), compilationUnit.getName() + ".kt");
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",
 				Files.newBufferedWriter(output))) {
@@ -279,15 +277,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		writer.print(getUnqualifiedName(functionInvocation.getName()) + "<"
 				+ getUnqualifiedName(functionInvocation.getTargetClass()) + ">("
 				+ String.join(", ", functionInvocation.getArguments()) + ")");
-	}
-
-	private Path fileForCompilationUnit(Path directory, KotlinCompilationUnit compilationUnit) {
-		return directoryForPackage(directory, compilationUnit.getPackageName())
-				.resolve(compilationUnit.getName() + ".kt");
-	}
-
-	private Path directoryForPackage(Path directory, String packageName) {
-		return directory.resolve(packageName.replace('.', '/'));
 	}
 
 	private Set<String> determineImports(KotlinCompilationUnit compilationUnit) {

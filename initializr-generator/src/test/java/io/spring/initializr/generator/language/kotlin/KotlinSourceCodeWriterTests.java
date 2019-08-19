@@ -25,6 +25,7 @@ import java.util.List;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -335,7 +336,7 @@ class KotlinSourceCodeWriterTests {
 
 	private Path writeSourceCode(KotlinSourceCode sourceCode) throws IOException {
 		Path projectDirectory = Files.createTempDirectory(this.directory, "project-");
-		this.writer.writeTo(projectDirectory, sourceCode);
+		this.writer.writeTo(new SourceCodeStructure(projectDirectory), sourceCode);
 		return projectDirectory;
 	}
 

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import org.junit.jupiter.api.Test;
@@ -53,14 +54,16 @@ class BuildSystemTests {
 
 	@Test
 	void defaultMainDirectory(@TempDir Path directory) {
-		Path mainDirectory = BuildSystem.forId("gradle").getMainDirectory(directory, new JavaLanguage());
-		assertThat(mainDirectory).isEqualTo(directory.resolve("src/main/java"));
+		SourceCodeStructure mainCodeStructure = BuildSystem.forId("gradle").getMainDirectory(directory,
+				new JavaLanguage());
+		assertThat(mainCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/main/java"));
 	}
 
 	@Test
 	void defaultTestDirectory(@TempDir Path directory) {
-		Path mainDirectory = BuildSystem.forId("gradle").getTestDirectory(directory, new KotlinLanguage());
-		assertThat(mainDirectory).isEqualTo(directory.resolve("src/test/kotlin"));
+		SourceCodeStructure testCodeStructure = BuildSystem.forId("gradle").getTestDirectory(directory,
+				new KotlinLanguage());
+		assertThat(testCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/test/kotlin"));
 	}
 
 	@Test

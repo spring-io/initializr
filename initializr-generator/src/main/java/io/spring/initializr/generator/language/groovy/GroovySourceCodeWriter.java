@@ -40,6 +40,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
+import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 
 /**
@@ -87,18 +88,15 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	}
 
 	@Override
-	public void writeTo(Path directory, GroovySourceCode sourceCode) throws IOException {
-		if (!Files.exists(directory)) {
-			Files.createDirectories(directory);
-		}
+	public void writeTo(SourceCodeStructure structure, GroovySourceCode sourceCode) throws IOException {
 		for (GroovyCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
-			writeTo(directory, compilationUnit);
+			writeTo(structure, compilationUnit);
 		}
 	}
 
-	private void writeTo(Path directory, GroovyCompilationUnit compilationUnit) throws IOException {
-		Path output = fileForCompilationUnit(directory, compilationUnit);
-		Files.createDirectories(output.getParent());
+	private void writeTo(SourceCodeStructure structure, GroovyCompilationUnit compilationUnit) throws IOException {
+		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(),
+				compilationUnit.getName() + ".groovy");
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("groovy",
 				Files.newBufferedWriter(output))) {
 			writer.println("package " + compilationUnit.getPackageName());
@@ -246,15 +244,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	private void writeMethodInvocation(IndentingWriter writer, GroovyMethodInvocation methodInvocation) {
 		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
 				+ String.join(", ", methodInvocation.getArguments()) + ")");
-	}
-
-	private Path fileForCompilationUnit(Path directory, GroovyCompilationUnit compilationUnit) {
-		return directoryForPackage(directory, compilationUnit.getPackageName())
-				.resolve(compilationUnit.getName() + ".groovy");
-	}
-
-	private Path directoryForPackage(Path directory, String packageName) {
-		return directory.resolve(packageName.replace('.', '/'));
 	}
 
 	private Set<String> determineImports(GroovyCompilationUnit compilationUnit) {
