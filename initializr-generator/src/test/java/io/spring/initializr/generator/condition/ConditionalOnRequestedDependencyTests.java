@@ -16,9 +16,12 @@
 
 package io.spring.initializr.generator.condition;
 
+import java.util.function.Consumer;
+
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.test.project.ProjectAssetTester;
+import io.spring.initializr.generator.project.ProjectGenerationContext;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -34,28 +37,30 @@ import static org.mockito.Mockito.mock;
  */
 class ConditionalOnRequestedDependencyTests {
 
-	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(RequestedDependencyTestConfiguration.class);
-
 	@Test
 	void outcomeWithMatchingDependency() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.addDependency("web", mock(Dependency.class));
-		String bean = this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
-			return projectGenerationContext.getBean(String.class);
+		assertCondition(projectDescription, (context) -> {
+			assertThat(context.getBeansOfType(String.class)).hasSize(1);
+			assertThat(context.getBean(String.class)).isEqualTo("webDependency");
 		});
-		assertThat(bean).isEqualTo("webDependency");
 	}
 
 	@Test
 	void outcomeWithNoMatch() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.addDependency("another", mock(Dependency.class));
-		this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+	}
+
+	private void assertCondition(ProjectDescription projectDescription, Consumer<ProjectGenerationContext> context) {
+		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
+			projectContext.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			projectContext.register(RequestedDependencyTestConfiguration.class);
+			projectContext.refresh();
+			context.accept(projectContext);
+		}
 	}
 
 	@Configuration

@@ -23,7 +23,6 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.test.assertj.NodeAssert;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;

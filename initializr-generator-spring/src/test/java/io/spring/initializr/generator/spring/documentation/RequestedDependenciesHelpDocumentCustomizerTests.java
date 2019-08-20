@@ -22,7 +22,7 @@ import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;

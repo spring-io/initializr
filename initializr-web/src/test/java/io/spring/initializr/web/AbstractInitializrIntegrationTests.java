@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.generator.spring.test.ProjectAssert;
+import io.spring.initializr.generator.test.project.ProjectAssert;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;

@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;

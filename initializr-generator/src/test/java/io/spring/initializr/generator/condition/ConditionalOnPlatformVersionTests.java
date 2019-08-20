@@ -19,7 +19,8 @@ package io.spring.initializr.generator.condition;
 import java.util.Map;
 
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.test.project.ProjectAssetTester;
+import io.spring.initializr.generator.project.ProjectGenerationContext;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
 
@@ -34,9 +35,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 class ConditionalOnPlatformVersionTests {
-
-	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(PlatformVersionTestConfiguration.class);
 
 	@Test
 	void outcomeWithMatchingRange() {
@@ -91,8 +89,13 @@ class ConditionalOnPlatformVersionTests {
 	}
 
 	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(projectDescription,
-				(projectGenerationContext) -> projectGenerationContext.getBeansOfType(String.class));
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			context.register(PlatformVersionTestConfiguration.class);
+			context.register(extraConfigurations);
+			context.refresh();
+			return context.getBeansOfType(String.class);
+		}
 	}
 
 	@Configuration

@@ -21,7 +21,8 @@ import java.util.Map;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.test.project.ProjectAssetTester;
+import io.spring.initializr.generator.project.ProjectGenerationContext;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -35,8 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 class ConditionalOnBuildSystemTests {
-
-	private final ProjectAssetTester projectTester = new ProjectAssetTester();
 
 	@Test
 	void outcomeWithMavenBuildSystem() {
@@ -61,8 +60,12 @@ class ConditionalOnBuildSystemTests {
 	}
 
 	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(projectDescription,
-				(projectGenerationContext) -> projectGenerationContext.getBeansOfType(String.class));
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			context.register(extraConfigurations);
+			context.refresh();
+			return context.getBeansOfType(String.class);
+		}
 	}
 
 	@Configuration

@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.test;
+package io.spring.initializr.generator.test.project;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import io.spring.initializr.generator.spring.test.build.GradleBuildAssert;
-import io.spring.initializr.generator.spring.test.build.GradleSettingsAssert;
-import io.spring.initializr.generator.spring.test.build.PomAssert;
-import io.spring.initializr.generator.spring.test.code.SourceCodeAssert;
+import io.spring.initializr.generator.test.buildsystem.gradle.GradleBuildAssert;
+import io.spring.initializr.generator.test.buildsystem.gradle.GradleSettingsAssert;
+import io.spring.initializr.generator.test.buildsystem.maven.PomAssert;
 import io.spring.initializr.generator.test.io.TextTestUtils;
-import io.spring.initializr.generator.test.project.ProjectStructure;
+import io.spring.initializr.generator.test.language.SourceCodeAssert;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -41,8 +40,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ProjectAssert {
 
+	/**
+	 * Default package name.
+	 */
 	public static final String DEFAULT_PACKAGE_NAME = "com.example.demo";
 
+	/**
+	 * Default application name.
+	 */
 	public static final String DEFAULT_APPLICATION_NAME = "DemoApplication";
 
 	private final ProjectStructure projectStructure;
@@ -95,7 +100,7 @@ public class ProjectAssert {
 
 	/**
 	 * Return a {@link GradleSettingsAssert} for this project.
-	 * @return A gradle settings assert
+	 * @return a Gradle Settings assertion utility
 	 */
 	public GradleSettingsAssert gradleSettingsAssert() {
 		return new GradleSettingsAssert(TextTestUtils.readContent(this.projectStructure.resolve("settings.gradle")));
@@ -104,7 +109,7 @@ public class ProjectAssert {
 	/**
 	 * Return a {@link SourceCodeAssert} for the specified source code.
 	 * @param sourceCodePath the source code path
-	 * @return a source assert
+	 * @return a source code assertion utility
 	 */
 	public SourceCodeAssert sourceCodeAssert(String sourceCodePath) {
 		hasFile(sourceCodePath);

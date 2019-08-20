@@ -16,10 +16,13 @@
 
 package io.spring.initializr.generator.condition;
 
+import java.util.function.Consumer;
+
 import io.spring.initializr.generator.packaging.jar.JarPackaging;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.test.project.ProjectAssetTester;
+import io.spring.initializr.generator.project.ProjectGenerationContext;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -34,39 +37,39 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ConditionalOnPackagingTests {
 
-	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(PackagingTestConfiguration.class);
-
 	@Test
 	void outcomeWithJarPackaging() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPackaging(new JarPackaging());
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("testJar");
+		assertCondition(projectDescription, (context) -> {
+			assertThat(context.getBeansOfType(String.class)).hasSize(1);
+			assertThat(context.getBean(String.class)).isEqualTo("testJar");
+		});
 	}
 
 	@Test
 	void outcomeWithWarPackaging() {
 		ProjectDescription projectDescription = new ProjectDescription();
 		projectDescription.setPackaging(new WarPackaging());
-		String bean = outcomeFor(projectDescription);
-		assertThat(bean).isEqualTo("testWar");
+		assertCondition(projectDescription, (context) -> {
+			assertThat(context.getBeansOfType(String.class)).hasSize(1);
+			assertThat(context.getBean(String.class)).isEqualTo("testWar");
+		});
 	}
 
 	@Test
 	void outcomeWithNoAvailablePackaging() {
 		ProjectDescription projectDescription = new ProjectDescription();
-		this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private String outcomeFor(ProjectDescription projectDescription) {
-		return this.projectTester.generate(projectDescription, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
-			return projectGenerationContext.getBean(String.class);
-		});
+	private void assertCondition(ProjectDescription projectDescription, Consumer<ProjectGenerationContext> context) {
+		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
+			projectContext.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			projectContext.register(PackagingTestConfiguration.class);
+			projectContext.refresh();
+			context.accept(projectContext);
+		}
 	}
 
 	@Configuration

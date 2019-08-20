@@ -18,13 +18,13 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
@@ -441,7 +441,8 @@ class KotlinDslGradleBuildWriterTests {
 		GradleBuildWriter writer = new KotlinDslGradleBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);
-		return TextTestUtils.readAllLines(out.toString());
+		String[] lines = out.toString().split("\\r?\\n");
+		return Arrays.asList(lines);
 	}
 
 }

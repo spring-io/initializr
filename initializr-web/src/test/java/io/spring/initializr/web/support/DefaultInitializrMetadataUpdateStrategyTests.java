@@ -19,7 +19,7 @@ package io.spring.initializr.web.support;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;

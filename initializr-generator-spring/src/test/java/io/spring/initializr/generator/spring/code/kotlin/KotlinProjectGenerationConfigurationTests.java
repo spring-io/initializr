@@ -28,7 +28,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;

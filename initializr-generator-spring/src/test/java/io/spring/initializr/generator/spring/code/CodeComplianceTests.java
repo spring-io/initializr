@@ -26,7 +26,7 @@ import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.spring.AbstractComplianceTests;
-import io.spring.initializr.generator.spring.test.ProjectAssert;
+import io.spring.initializr.generator.test.project.ProjectAssert;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -21,7 +21,7 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
 import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;

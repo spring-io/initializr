@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.support;
 
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;

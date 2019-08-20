@@ -49,6 +49,7 @@
 		<module>initializr-docs</module>
 		<module>initializr-generator</module>
 		<module>initializr-generator-spring</module>
+		<module>initializr-generator-test</module>
 		<module>initializr-metadata</module>
 		<module>initializr-parent</module>
 		<module>initializr-service-sample</module>

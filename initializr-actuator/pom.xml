@@ -80,14 +80,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator-spring</artifactId>
-			<type>test-jar</type>
+			<artifactId>initializr-generator-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

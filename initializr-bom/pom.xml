@@ -30,20 +30,13 @@
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
-				<artifactId>initializr-generator</artifactId>
-				<version>${revision}</version>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-generator-spring</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
-				<artifactId>initializr-generator-spring</artifactId>
+				<artifactId>initializr-generator-test</artifactId>
 				<version>${revision}</version>
-				<type>test-jar</type>
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>

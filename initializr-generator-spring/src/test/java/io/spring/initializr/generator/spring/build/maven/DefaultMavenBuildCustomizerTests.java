@@ -22,7 +22,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenParent;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.metadata.InitializrMetadata;

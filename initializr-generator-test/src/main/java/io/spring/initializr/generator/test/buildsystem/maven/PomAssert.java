@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.test.build;
+package io.spring.initializr.generator.test.buildsystem.maven;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import io.spring.initializr.generator.test.assertj.NodeAssert;
+import io.spring.initializr.generator.test.io.NodeAssert;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Repository;

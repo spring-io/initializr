@@ -19,7 +19,7 @@ package io.spring.initializr.generator.spring.build;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;

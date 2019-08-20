@@ -18,7 +18,7 @@ package io.spring.initializr.actuate.stat;
 
 import java.util.Arrays;
 
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.web.project.ProjectFailedEvent;
 import io.spring.initializr.web.project.ProjectGeneratedEvent;

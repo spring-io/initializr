@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.test.code;
+package io.spring.initializr.generator.test.language;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
@@ -43,7 +43,7 @@ public class SourceCodeAssert {
 
 	public SourceCodeAssert equalsTo(Resource expected) {
 		try (InputStream in = expected.getInputStream()) {
-			String expectedContent = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+			String expectedContent = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
 			assertThat(this.content).describedAs("Content for %s", this.name)
 					.isEqualTo(expectedContent.replaceAll("\r\n", "\n"));
 		}

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.test.assertj;
+package io.spring.initializr.generator.buildsystem.maven;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Andy Wilkinson
  */
-public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements AssertProvider<NodeAssert> {
+class NodeAssert extends AbstractAssert<NodeAssert, Node> implements AssertProvider<NodeAssert> {
 
 	private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
 
@@ -49,25 +48,12 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 
 	private final XPath xpath = this.xpathFactory.newXPath();
 
-	public NodeAssert(Path xmlFile) {
-		this(read(xmlFile));
-	}
-
-	public NodeAssert(String xmlContent) {
+	NodeAssert(String xmlContent) {
 		this(read(xmlContent));
 	}
 
-	public NodeAssert(Node actual) {
+	NodeAssert(Node actual) {
 		super(actual, NodeAssert.class);
-	}
-
-	private static Document read(Path xmlFile) {
-		try {
-			return FACTORY.newDocumentBuilder().parse(xmlFile.toFile());
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 
 	private static Document read(String xmlContent) {
@@ -80,7 +66,7 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
-	public NodeAssert nodeAtPath(String xpath) {
+	NodeAssert nodeAtPath(String xpath) {
 		try {
 			return new NodeAssert((Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
 		}
@@ -89,7 +75,7 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
-	public ListAssert<Node> nodesAtPath(String xpath) {
+	ListAssert<Node> nodesAtPath(String xpath) {
 		try {
 			NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODESET);
 			return new ListAssert<>(toList(nodeList));
@@ -99,7 +85,7 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
-	public StringAssert textAtPath(String xpath) {
+	StringAssert textAtPath(String xpath) {
 		try {
 			return new StringAssert(
 					(String) this.xpath.evaluate(xpath + "/text()", this.actual, XPathConstants.STRING));

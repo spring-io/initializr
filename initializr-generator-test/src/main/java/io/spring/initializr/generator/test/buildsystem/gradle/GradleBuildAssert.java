@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.test.build;
+package io.spring.initializr.generator.test.buildsystem.gradle;
 
 import org.assertj.core.api.AbstractStringAssert;
 

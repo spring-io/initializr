@@ -17,8 +17,12 @@
 package io.spring.initializr.generator.language.kotlin;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,9 +30,10 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
-import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -331,7 +336,10 @@ class KotlinSourceCodeWriterTests {
 
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
-		return TextTestUtils.readAllLines(source);
+		try (InputStream stream = Files.newInputStream(source)) {
+			String[] lines = StreamUtils.copyToString(stream, StandardCharsets.UTF_8).split("\\r?\\n");
+			return Arrays.asList(lines);
+		}
 	}
 
 	private Path writeSourceCode(KotlinSourceCode sourceCode) throws IOException {

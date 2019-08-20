@@ -16,16 +16,15 @@
 
 package io.spring.initializr.generator.test.io;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,11 +63,8 @@ public final class TextTestUtils {
 	 */
 	public static String readContent(Path source) {
 		assertThat(source).isRegularFile();
-		try {
-			BufferedReader reader = Files.newBufferedReader(source, StandardCharsets.UTF_8);
-			StringWriter writer = new StringWriter();
-			FileCopyUtils.copy(reader, writer);
-			return writer.toString();
+		try (InputStream stream = Files.newInputStream(source)) {
+			return StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException(ex);

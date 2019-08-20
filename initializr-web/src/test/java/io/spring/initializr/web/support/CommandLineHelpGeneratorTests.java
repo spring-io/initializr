@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
-import io.spring.initializr.generator.spring.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;

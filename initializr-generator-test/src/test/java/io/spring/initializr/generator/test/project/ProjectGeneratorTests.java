@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.project;
+package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
+import io.spring.initializr.generator.project.ProjectGenerator;
+import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
-import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
-import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
