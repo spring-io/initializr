@@ -52,6 +52,11 @@
 			</dependency>
 			<dependency>
 				<groupId>io.spring.initializr</groupId>
+				<artifactId>initializr-version-resolver</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr</groupId>
 				<artifactId>initializr-web</artifactId>
 				<version>${revision}</version>
 			</dependency>
