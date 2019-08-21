@@ -45,9 +45,8 @@ class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 	public void customize(Build build) {
 		boolean hasStarter = this.buildResolver.dependencies(build).anyMatch(this::isValidStarter);
 		if (!hasStarter) {
-			Dependency root = new Dependency();
+			Dependency root = Dependency.createSpringBootStarter("");
 			root.setId(DEFAULT_STARTER);
-			root.asSpringBootStarter("");
 			build.dependencies().add(DEFAULT_STARTER, MetadataBuildItemMapper.toDependency(root));
 		}
 	}

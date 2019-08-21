@@ -166,21 +166,6 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	/**
-	 * Define this dependency as a standard spring boot starter with the specified name.
-	 * If no name is specified, the root "spring-boot-starter" is assumed.
-	 * @param name the starter name or {@code null}
-	 * @return this instance
-	 */
-	public Dependency asSpringBootStarter(String name) {
-		this.groupId = "org.springframework.boot";
-		this.artifactId = (StringUtils.hasText(name) ? "spring-boot-starter-" + name : "spring-boot-starter");
-		if (StringUtils.hasText(name)) {
-			setId(name);
-		}
-		return this;
-	}
-
-	/**
 	 * Validate the dependency and complete its state based on the available information.
 	 */
 	public void resolve() {
@@ -211,6 +196,15 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 		this.links.forEach(Link::resolve);
 		updateCompatibilityRange(VersionParser.DEFAULT);
+	}
+
+	private Dependency asSpringBootStarter(String name) {
+		this.groupId = "org.springframework.boot";
+		this.artifactId = (StringUtils.hasText(name) ? "spring-boot-starter-" + name : "spring-boot-starter");
+		if (StringUtils.hasText(name)) {
+			setId(name);
+		}
+		return this;
 	}
 
 	public void updateCompatibilityRange(VersionParser versionParser) {
@@ -447,6 +441,19 @@ public class Dependency extends MetadataElement implements Describable {
 	public static Dependency create(String groupId, String artifactId, String version, String scope) {
 		Dependency dependency = withId(null, groupId, artifactId, version);
 		dependency.setScope(scope);
+		return dependency;
+	}
+
+	public static Dependency createSpringBootStarter(String name) {
+		return createSpringBootStarter(name, null);
+	}
+
+	public static Dependency createSpringBootStarter(String name, String scope) {
+		Dependency dependency = new Dependency();
+		dependency.asSpringBootStarter(name);
+		if (StringUtils.hasText(scope)) {
+			dependency.setScope(scope);
+		}
 		return dependency;
 	}
 

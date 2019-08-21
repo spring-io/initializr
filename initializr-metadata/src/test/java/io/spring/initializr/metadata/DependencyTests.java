@@ -35,8 +35,7 @@ class DependencyTests {
 
 	@Test
 	void createRootSpringBootStarter() {
-		Dependency d = new Dependency();
-		d.asSpringBootStarter("");
+		Dependency d = Dependency.createSpringBootStarter("");
 		assertThat(d.getGroupId()).isEqualTo("org.springframework.boot");
 		assertThat(d.getArtifactId()).isEqualTo("spring-boot-starter");
 	}

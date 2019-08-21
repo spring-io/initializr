@@ -49,7 +49,7 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 			build.dependencies().add(dependency.getId(), MetadataBuildItemMapper.toDependency(dependency));
 		}
 		// Add the tomcat starter in provided scope
-		Dependency tomcat = new Dependency().asSpringBootStarter("tomcat");
+		Dependency tomcat = Dependency.createSpringBootStarter("tomcat");
 		tomcat.setScope(Dependency.SCOPE_PROVIDED);
 		build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat));
 	}
@@ -61,7 +61,7 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	private Dependency determineWebDependency(InitializrMetadata metadata) {
 		Dependency web = metadata.getDependencies().get("web");
-		return (web != null) ? web : Dependency.withId("web").asSpringBootStarter("web");
+		return (web != null) ? web : Dependency.createSpringBootStarter("web");
 	}
 
 }
