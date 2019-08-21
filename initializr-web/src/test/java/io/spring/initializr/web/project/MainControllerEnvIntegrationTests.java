@@ -18,7 +18,8 @@ package io.spring.initializr.web.project;
 
 import java.net.URI;
 
-import io.spring.initializr.generator.test.project.ProjectAssert;
+import io.spring.initializr.generator.test.project.ProjectStructure;
+import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
@@ -46,10 +47,15 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 
 	@Test
 	void generateProjectWithInvalidName() {
-		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
-				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication").isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
-				.hasSpringBootStarterDependency("data-jpa").hasSpringBootStarterTest();
+		ProjectStructure project = downloadZip("/starter.zip?style=data-jpa&name=Invalid");
+		assertThat(project).containsFiles("src/main/java/com/example/demo/FooBarApplication.java",
+				"src/test/java/com/example/demo/FooBarApplicationTests.java");
+		assertThat(project).doesNotContainFiles("src/main/java/com/example/demo/DemoApplication.java",
+				"src/test/java/com/example/demo/DemoApplicationTests.java");
+		assertDoesNotHaveWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(2)
+				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 }

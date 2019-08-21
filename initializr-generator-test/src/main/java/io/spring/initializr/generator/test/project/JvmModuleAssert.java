@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
+package io.spring.initializr.generator.test.project;
+
+import java.nio.file.Path;
+
+import io.spring.initializr.generator.language.Language;
+
 /**
- * Support for testing source code.
+ * Assertions for a module with code for a particular {@link Language}.
+ *
+ * @author Stephane Nicoll
  */
-package io.spring.initializr.generator.test.language;
+public class JvmModuleAssert extends AbstractJvmModuleAssert<JvmModuleAssert> {
+
+	public JvmModuleAssert(Path projectDirectory, Language language, String sourceFileExtension) {
+		super(projectDirectory, language, sourceFileExtension, JvmModuleAssert.class);
+	}
+
+}

@@ -16,10 +16,7 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -93,19 +90,15 @@ class GradleProjectGenerationConfigurationTests {
 
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("gradleWrapperParameters")
-	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion, String expectedGradleVersion)
-			throws IOException {
+	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion, String expectedGradleVersion) {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).containsFiles("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
-		try (Stream<String> lines = Files.lines(projectStructure.resolve("gradle/wrapper/gradle-wrapper.properties"))) {
-			assertThat(lines.filter((line) -> line.contains(String.format("gradle-%s-bin.zip", expectedGradleVersion))))
-					.hasSize(1);
-		}
+		assertThat(project).textFile("gradle/wrapper/gradle-wrapper.properties")
+				.containsOnlyOnce(String.format("gradle-%s-bin.zip", expectedGradleVersion));
 	}
 
 	@Test
@@ -115,11 +108,9 @@ class GradleProjectGenerationConfigurationTests {
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
 				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE).build());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).containsExactly("plugins {", "    id 'org.springframework.boot' version '2.1.0.RELEASE'",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").containsExactly("plugins {",
+				"    id 'org.springframework.boot' version '2.1.0.RELEASE'",
 				"    id 'io.spring.dependency-management' version '1.0.6.RELEASE'", "    id 'java'", "}", "",
 				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'", "sourceCompatibility = '11'", "",
 				"repositories {", "    mavenCentral()", "}", "", "dependencies {",
@@ -129,17 +120,13 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() throws IOException {
+	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		description.setPackaging(new WarPackaging());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> relativePaths = projectStructure.getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).contains("build.gradle");
-		try (Stream<String> lines = Files.lines(projectStructure.resolve("build.gradle"))) {
-			assertThat(lines.filter((line) -> line.contains("    id 'war'"))).hasSize(1);
-		}
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().containsOnlyOnce("    id 'war'");
 	}
 
 	@Test
@@ -147,10 +134,8 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).containsSequence("test {", "    useJUnitPlatform()", "}");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().containsSequence("test {", "    useJUnitPlatform()", "}");
 	}
 
 	@Test
@@ -158,10 +143,9 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).doesNotContainSequence("test {", "    useJUnitPlatform()", "}");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().doesNotContainSequence("test {", "    useJUnitPlatform()",
+				"}");
 	}
 
 	@Test
@@ -170,10 +154,8 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).containsSequence(
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().containsSequence(
 				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
 				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'",
 				"        exclude group: 'junit', module: 'junit'", "    }");
@@ -184,10 +166,8 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M5"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).containsSequence(
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().containsSequence(
 				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
 				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'", "    }");
 	}
@@ -197,10 +177,8 @@ class GradleProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("build.gradle");
-		List<String> lines = projectStructure.readAllLines("build.gradle");
-		assertThat(lines).doesNotContain("exclude group");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");
 	}
 
 	static Stream<Arguments> annotationProcessorScopeBuildParameters() {

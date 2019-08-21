@@ -28,7 +28,6 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
-import io.spring.initializr.generator.test.project.ProjectAssert;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
@@ -55,26 +54,26 @@ public abstract class AbstractComplianceTests {
 		this.tempDir = dir;
 	}
 
-	protected ProjectAssert generateProject(Language language, BuildSystem buildSystem, String version) {
+	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version) {
 		return generateProject(language, buildSystem, version, (description) -> {
 		});
 	}
 
-	protected ProjectAssert generateProject(Language language, BuildSystem buildSystem, String version,
+	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<ProjectDescription> descriptionCustomizer) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
 				.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata);
 	}
 
-	protected ProjectAssert generateProject(Language language, BuildSystem buildSystem, String version,
+	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<ProjectDescription> descriptionCustomizer, Consumer<ProjectGenerationContext> contextCustomizer) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
 				.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, contextCustomizer);
 	}
 
-	protected ProjectAssert generateProject(Language language, BuildSystem buildSystem, String version,
+	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<ProjectDescription> descriptionCustomizer, InitializrMetadata metadata) {
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata,
 				(projectGenerationContext) -> {
@@ -82,7 +81,7 @@ public abstract class AbstractComplianceTests {
 
 	}
 
-	private ProjectAssert generateProject(Language language, BuildSystem buildSystem, String version,
+	private ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<ProjectDescription> descriptionCustomizer, InitializrMetadata metadata,
 			Consumer<ProjectGenerationContext> contextCustomizer) {
 		ProjectGeneratorTester projectTester = new ProjectGeneratorTester().withDirectory(this.tempDir)
@@ -91,9 +90,7 @@ public abstract class AbstractComplianceTests {
 				.withDescriptionCustomizer(descriptionCustomizer)
 				.withContextInitializer((context) -> setupProjectGenerationContext(metadata, context))
 				.withContextInitializer(contextCustomizer);
-		ProjectStructure projectStructure = projectTester.generate(new ProjectDescription());
-		Path resolve = projectStructure.resolve("");
-		return new ProjectAssert(resolve);
+		return projectTester.generate(new ProjectDescription());
 	}
 
 	private void setupProjectGenerationContext(InitializrMetadata metadata, ProjectGenerationContext context) {

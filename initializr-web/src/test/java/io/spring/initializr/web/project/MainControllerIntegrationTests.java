@@ -19,6 +19,7 @@ package io.spring.initializr.web.project;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests;
@@ -49,22 +50,25 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	void simpleZipProject() {
 		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?style=web&style=jpa");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		zipProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore").hasExecutableFile("mvnw")
-				.isMavenProject().hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
-																									// jpa
-																									// ->
-																									// data-jpa
-				.hasSpringBootStarterTest();
+		ProjectStructure project = projectFromArchive(entity.getBody());
+		assertDefaultProject(project);
+		assertHasWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
+				// alias: jpa -> data-jpa
+				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+
 	}
 
 	@Test
 	void simpleTgzProject() {
 		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?style=org.acme:foo");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
-		tgzProjectAssert(entity.getBody()).isJavaProject().hasFile(".gitignore").hasExecutableFile("mvnw")
-				.isMavenProject().hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(2)
-				.hasDependency("org.acme", "foo", "1.3.5");
+		ProjectStructure project = tgzProjectAssert(entity.getBody());
+		assertDefaultProject(project);
+		assertDoesNotHaveWebResources(project);
+		assertThat(project).doesNotContainDirectories("src/main/resources/templates", "src/main/resources/static");
+		assertThat(project).mavenBuild().hasDependenciesSize(2).hasDependency("org.acme", "foo", "1.3.5");
 	}
 
 	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {
@@ -76,8 +80,10 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
-		downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert().hasDependenciesCount(3).hasDependency(biz);
+		ProjectStructure project = downloadTgz("/starter.tgz?style=org.acme:biz&bootVersion=2.2.1.RELEASE");
+		assertDefaultProject(project);
+		assertDoesNotHaveWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(biz);
 	}
 
 	@Test
@@ -92,44 +98,56 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 
 	@Test
 	void noDependencyProject() {
-		downloadZip("/starter.zip").isJavaProject().isMavenProject().hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(2)
+		ProjectStructure project = downloadZip("/starter.zip");
+		assertDefaultProject(project);
+		assertDoesNotHaveWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(2)
 				// the root dep is added if none is specified
-				.hasSpringBootStarterRootDependency().hasSpringBootStarterTest();
+				.hasDependency(Dependency.createSpringBootStarter(""))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
 	void dependenciesIsAnAliasOfStyle() {
-		downloadZip("/starter.zip?dependencies=web&dependencies=jpa").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
-																									// jpa
-																									// ->
-																									// data-jpa
-				.hasSpringBootStarterTest();
+		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&dependencies=jpa");
+		assertDefaultProject(project);
+		assertHasWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
+				// alias: jpa -> data-jpa
+				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
 	void dependenciesIsAnAliasOfStyleCommaSeparated() {
-		downloadZip("/starter.zip?dependencies=web,jpa").isJavaProject().isMavenProject()
-				.hasStaticAndTemplatesResources(true).pomAssert().hasDependenciesCount(3)
-				.hasSpringBootStarterDependency("web").hasSpringBootStarterDependency("data-jpa") // alias
-																									// jpa
-																									// ->
-																									// data-jpa
-				.hasSpringBootStarterTest();
+		ProjectStructure project = downloadZip("/starter.zip?dependencies=web,jpa");
+		assertDefaultProject(project);
+		assertHasWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
+				// alias: jpa -> data-jpa
+				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
 	void kotlinRange() {
-		downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE").isKotlinProject()
-				.isMavenProject().pomAssert().hasDependenciesCount(4).hasProperty("kotlin.version", "1.1");
+		ProjectStructure project = downloadZip("/starter.zip?style=web&language=kotlin&bootVersion=2.0.1.RELEASE");
+		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
+				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
+				"src/main/resources/application.properties");
+		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.1");
 	}
 
 	@Test
 	void gradleWarProject() {
-		downloadZip("/starter.zip?style=web&style=security&packaging=war&type=gradle-project").isJavaWarProject()
-				.isGradleProject();
+		ProjectStructure project = downloadZip(
+				"/starter.zip?style=web&style=security&packaging=war&type=gradle-project");
+		assertThat(project).hasGroovyDslGradleBuild().hasGradleWrapper();
+		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java",
+				"src/main/java/com/example/demo/ServletInitializer.java",
+				"src/test/java/com/example/demo/DemoApplicationTests.java",
+				"src/main/resources/application.properties");
+		assertHasWebResources(project);
 	}
 
 	@Test
@@ -226,13 +244,13 @@ class MainControllerIntegrationTests extends AbstractInitializrControllerIntegra
 	@Test
 	void curlCanStillDownloadZipArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class, "curl/1.2.4", "*/*");
-		zipProjectAssert(response.getBody()).isMavenProject().isJavaProject();
+		assertDefaultProject(projectFromArchive(response.getBody()));
 	}
 
 	@Test
 	void curlCanStillDownloadTgzArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class, "curl/1.2.4", "*/*");
-		tgzProjectAssert(response.getBody()).isMavenProject().isJavaProject();
+		assertDefaultProject(tgzProjectAssert(response.getBody()));
 	}
 
 	@Test

@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.groovy;
 
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.groovy.GroovyLanguage;
@@ -58,22 +57,18 @@ class GroovyProjectGenerationConfigurationTests {
 
 	@Test
 	void mainClassIsContributed() {
-		ProjectStructure projectStructure = this.projectTester.generate(new ProjectDescription());
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/main/groovy/com/example/demo/DemoApplication.groovy");
+		ProjectStructure project = this.projectTester.generate(new ProjectDescription());
+		assertThat(project).containsFiles("src/main/groovy/com/example/demo/DemoApplication.groovy");
 	}
 
 	@Test
 	void testClassIsContributedWithJUnit4() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = projectStructure
-				.readAllLines("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.Test",
-				"import org.junit.runner.RunWith", "import org.springframework.boot.test.context.SpringBootTest",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/test/groovy/com/example/demo/DemoApplicationTests.groovy").containsExactly(
+				"package com.example.demo", "", "import org.junit.Test", "import org.junit.runner.RunWith",
+				"import org.springframework.boot.test.context.SpringBootTest",
 				"import org.springframework.test.context.junit4.SpringRunner", "", "@RunWith(SpringRunner)",
 				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {",
 				"    }", "", "}");
@@ -83,12 +78,9 @@ class GroovyProjectGenerationConfigurationTests {
 	void testClassIsContributedWithJUnit5() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		List<String> lines = projectStructure
-				.readAllLines("src/test/groovy/com/example/demo/DemoApplicationTests.groovy");
-		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/test/groovy/com/example/demo/DemoApplicationTests.groovy").containsExactly(
+				"package com.example.demo", "", "import org.junit.jupiter.api.Test",
 				"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
 				"class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {", "    }", "", "}");
 	}
@@ -98,13 +90,9 @@ class GroovyProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("Demo2Application");
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/main/groovy/com/example/demo/ServletInitializer.groovy");
-		List<String> lines = projectStructure
-				.readAllLines("src/main/groovy/com/example/demo/ServletInitializer.groovy");
-		assertThat(lines).containsExactly("package com.example.demo", "",
-				"import org.springframework.boot.builder.SpringApplicationBuilder",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/main/groovy/com/example/demo/ServletInitializer.groovy").containsExactly(
+				"package com.example.demo", "", "import org.springframework.boot.builder.SpringApplicationBuilder",
 				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
 				"class ServletInitializer extends SpringBootServletInitializer {", "", "    @Override",
 				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",

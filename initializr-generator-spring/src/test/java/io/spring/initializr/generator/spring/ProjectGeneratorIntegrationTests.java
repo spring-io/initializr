@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring;
 
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
@@ -26,6 +25,7 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.project.ProjectGenerator;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +58,8 @@ class ProjectGeneratorIntegrationTests {
 		description.setLanguage(new JavaLanguage());
 		description.setGroupId("com.example");
 		description.setBaseDirectory("test/demo-app");
-		List<String> relativePaths = this.projectTester.generate(description).getRelativePathsOfProjectFiles();
-		assertThat(relativePaths).containsOnly("test/demo-app/.gitignore", "test/demo-app/pom.xml",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths().containsOnly("test/demo-app/.gitignore", "test/demo-app/pom.xml",
 				"test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
 				"test/demo-app/.mvn/wrapper/MavenWrapperDownloader.java",
 				"test/demo-app/.mvn/wrapper/maven-wrapper.properties", "test/demo-app/.mvn/wrapper/maven-wrapper.jar",

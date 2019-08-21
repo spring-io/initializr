@@ -18,7 +18,6 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -85,21 +84,18 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void mainClassIsContributedWhenGeneratingProject() {
-		ProjectStructure projectStructure = this.projectTester.generate(new ProjectDescription());
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/main/kotlin/com/example/demo/DemoApplication.kt");
+		ProjectStructure project = this.projectTester.generate(new ProjectDescription());
+		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt");
 	}
 
 	@Test
 	void testClassIsContributedWithJunit4() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/test/kotlin/com/example/demo/DemoApplicationTests.kt");
-		List<String> lines = projectStructure.readAllLines("src/test/kotlin/com/example/demo/DemoApplicationTests.kt");
-		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.Test",
-				"import org.junit.runner.RunWith", "import org.springframework.boot.test.context.SpringBootTest",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt").containsExactly(
+				"package com.example.demo", "", "import org.junit.Test", "import org.junit.runner.RunWith",
+				"import org.springframework.boot.test.context.SpringBootTest",
 				"import org.springframework.test.context.junit4.SpringRunner", "", "@RunWith(SpringRunner::class)",
 				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test", "    fun contextLoads() {", "    }",
 				"", "}");
@@ -109,11 +105,9 @@ class KotlinProjectGenerationConfigurationTests {
 	void testClassIsContributedWithJunit5() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/test/kotlin/com/example/demo/DemoApplicationTests.kt");
-		List<String> lines = projectStructure.readAllLines("src/test/kotlin/com/example/demo/DemoApplicationTests.kt");
-		assertThat(lines).containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt").containsExactly(
+				"package com.example.demo", "", "import org.junit.jupiter.api.Test",
 				"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
 				"class DemoApplicationTests {", "", "    @Test", "    fun contextLoads() {", "    }", "", "}");
 	}
@@ -123,12 +117,9 @@ class KotlinProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("KotlinDemoApplication");
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles())
-				.contains("src/main/kotlin/com/example/demo/ServletInitializer.kt");
-		List<String> lines = projectStructure.readAllLines("src/main/kotlin/com/example/demo/ServletInitializer.kt");
-		assertThat(lines).containsExactly("package com.example.demo", "",
-				"import org.springframework.boot.builder.SpringApplicationBuilder",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("src/main/kotlin/com/example/demo/ServletInitializer.kt").containsExactly(
+				"package com.example.demo", "", "import org.springframework.boot.builder.SpringApplicationBuilder",
 				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
 				"class ServletInitializer : SpringBootServletInitializer() {", "",
 				"    override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {",
@@ -139,9 +130,8 @@ class KotlinProjectGenerationConfigurationTests {
 	void jacksonKotlinModuleShouldBeAddedWhenJsonFacetPresent() {
 		ProjectDescription description = new ProjectDescription();
 		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo").build());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		List<String> lines = projectStructure.readAllLines("pom.xml");
-		assertThat(lines).contains("        <dependency>",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml").contains("        <dependency>",
 				"            <groupId>com.fasterxml.jackson.module</groupId>",
 				"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
 	}

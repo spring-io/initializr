@@ -44,18 +44,6 @@ public final class TextTestUtils {
 	}
 
 	/**
-	 * Read all lines from the specified {@link Path source}. Check the given
-	 * {@code source} is a regular file that ends with a new line.
-	 * @param source a text file
-	 * @return all lines from the file
-	 */
-	public static List<String> readAllLines(Path source) {
-		String content = readContent(source);
-		assertThat(content).endsWith(System.lineSeparator());
-		return readAllLines(content);
-	}
-
-	/**
 	 * Read the content from the specified {@link Path source}. Check the given
 	 * {@code source} is a regular file.
 	 * @param source a text file

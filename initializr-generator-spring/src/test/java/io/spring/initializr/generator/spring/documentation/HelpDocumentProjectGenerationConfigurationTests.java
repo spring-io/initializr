@@ -54,7 +54,8 @@ class HelpDocumentProjectGenerationConfigurationTests {
 
 	@Test
 	void helpDocumentIsNotContributedWithoutLinks() {
-		assertThat(this.projectTester.generate(new ProjectDescription()).getRelativePathsOfProjectFiles()).isEmpty();
+		ProjectStructure project = this.projectTester.generate(new ProjectDescription());
+		assertThat(project).filePaths().isEmpty();
 	}
 
 	@Test
@@ -65,8 +66,8 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		ProjectDescription description = new ProjectDescription();
 		description.addDependency("example", null);
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).containsOnly("HELP.md");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths().containsOnly("HELP.md");
 	}
 
 	@Test

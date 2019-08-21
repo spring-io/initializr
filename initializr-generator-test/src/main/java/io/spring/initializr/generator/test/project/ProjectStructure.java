@@ -16,24 +16,18 @@
 
 package io.spring.initializr.generator.test.project;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
 
-import io.spring.initializr.generator.test.io.TextTestUtils;
+import org.assertj.core.api.AssertProvider;
 
 /**
- * Test helper to assert content of a generated project structure.
+ * Represent a generated project structure and act as an entry point for AssertJ
+ * assertions.
  *
  * @author Stephane Nicoll
  */
-public class ProjectStructure {
+public final class ProjectStructure implements AssertProvider<ModuleAssert> {
 
 	private final Path projectDirectory;
 
@@ -45,6 +39,11 @@ public class ProjectStructure {
 		this.projectDirectory = projectDirectory;
 	}
 
+	@Override
+	public ModuleAssert assertThat() {
+		return new ModuleAssert(this.getProjectDirectory());
+	}
+
 	/**
 	 * Return the project directory.
 	 * @return the project directory
@@ -54,55 +53,17 @@ public class ProjectStructure {
 	}
 
 	/**
-	 * Resolve a {@link Path} relative to the project directory.
-	 * @param other the path string to resolve against the root of the project structure
-	 * @return the resulting path
-	 * @see Path#resolve(String)
+	 * Resolve a {@link ProjectStructure} based on the specified module name.
+	 * @param name the name of a sub-directory of the current project
+	 * @return a new {@link ProjectStructure} for the sub-directory
 	 */
-	public Path resolve(String other) {
-		return this.projectDirectory.resolve(other);
-	}
-
-	/**
-	 * Resolve a {@link Path} relative to the project directory and return all lines.
-	 * Check that the resolved {@link Path} is a regular text file that ends with a
-	 * newline.
-	 * @param other the path string to resolve against the root of the project structure
-	 * @return all lines from the resolve file
-	 * @see TextTestUtils#readAllLines(Path)
-	 */
-	public List<String> readAllLines(String other) {
-		return TextTestUtils.readAllLines(resolve(other));
-	}
-
-	/**
-	 * Return the relative paths of all files. For consistency, always use {@code /} as
-	 * path separator.
-	 * @return the relative path of all files
-	 */
-	public List<String> getRelativePathsOfProjectFiles() {
-		List<String> relativePaths = new ArrayList<>();
-		try {
-			Files.walkFileTree(this.projectDirectory, new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-					relativePaths.add(createRelativePath(file));
-					return FileVisitResult.CONTINUE;
-				}
-			});
+	public ProjectStructure resolveModule(String name) {
+		Path projectDir = this.projectDirectory.resolve(name);
+		if (!Files.isDirectory(projectDir)) {
+			throw new IllegalArgumentException(
+					String.format("No directory '%s' found in '%s'", name, this.projectDirectory));
 		}
-		catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-		return relativePaths;
-	}
-
-	private String createRelativePath(Path file) {
-		String relativePath = this.projectDirectory.relativize(file).toString();
-		if (FileSystems.getDefault().getSeparator().equals("\\")) {
-			return relativePath.replace('\\', '/');
-		}
-		return relativePath;
+		return new ProjectStructure(projectDir);
 	}
 
 }

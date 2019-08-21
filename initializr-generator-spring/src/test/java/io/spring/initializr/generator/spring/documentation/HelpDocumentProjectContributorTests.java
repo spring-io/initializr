@@ -19,10 +19,10 @@ package io.spring.initializr.generator.spring.documentation;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
-import io.spring.initializr.generator.test.project.ProjectStructure;
+import io.spring.initializr.generator.test.io.TextAssert;
+import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -61,8 +61,7 @@ class HelpDocumentProjectContributorTests {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted().addGuideLink("https://test.example.com", "test")
 				.addGuideLink("https://test2.example.com", "test2");
-		List<String> lines = generateDocument(document);
-		assertThat(lines).containsExactly("# Getting Started", "", "### Guides",
+		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides",
 				"The following guides illustrate how to use some features concretely:", "",
 				"* [test](https://test.example.com)", "* [test2](https://test2.example.com)");
 	}
@@ -72,8 +71,7 @@ class HelpDocumentProjectContributorTests {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted().addReferenceDocLink("https://test.example.com", "doc")
 				.addReferenceDocLink("https://test2.example.com", "doc2");
-		List<String> lines = generateDocument(document);
-		assertThat(lines).containsExactly("# Getting Started", "", "### Reference Documentation",
+		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Reference Documentation",
 				"For further reference, please consider the following sections:", "",
 				"* [doc](https://test.example.com)", "* [doc2](https://test2.example.com)");
 	}
@@ -82,8 +80,7 @@ class HelpDocumentProjectContributorTests {
 	void helpDocumentWithLinksToOtherLinks() throws IOException {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted().addAdditionalLink("https://test.example.com", "Something");
-		List<String> lines = generateDocument(document);
-		assertThat(lines).containsExactly("# Getting Started", "", "### Additional Links",
+		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Additional Links",
 				"These additional references should also help you:", "", "* [Something](https://test.example.com)");
 	}
 
@@ -91,8 +88,7 @@ class HelpDocumentProjectContributorTests {
 	void helpDocumentWithSimpleSection() throws IOException {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
-		List<String> lines = generateDocument(document);
-		assertThat(lines).containsExactly("# My test section", "", "    * Test");
+		assertHelpDocument(document).containsExactly("# My test section", "", "    * Test");
 	}
 
 	@Test
@@ -100,16 +96,15 @@ class HelpDocumentProjectContributorTests {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted().addGuideLink("https://test.example.com", "test")
 				.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
-		List<String> lines = generateDocument(document);
-		assertThat(lines).containsExactly("# Getting Started", "", "### Guides",
+		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides",
 				"The following guides illustrate how to use some features concretely:", "",
 				"* [test](https://test.example.com)", "", "# My test section", "", "    * Test");
 	}
 
-	private List<String> generateDocument(HelpDocument document) throws IOException {
+	private ListAssert<String> assertHelpDocument(HelpDocument document) throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new HelpDocumentProjectContributor(document).contribute(projectDir);
-		return new ProjectStructure(projectDir).readAllLines("HELP.md");
+		return new TextAssert(projectDir.resolve("HELP.md")).lines();
 	}
 
 }

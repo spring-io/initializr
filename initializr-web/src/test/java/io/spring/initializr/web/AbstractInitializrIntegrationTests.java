@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.generator.test.project.ProjectAssert;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
@@ -145,29 +145,54 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	/**
-	 * Return a {@link ProjectAssert} for the following archive content.
-	 * @param content the source content
-	 * @return a project assert
+	 * Assert that the specified {@link ProjectStructure} has a structure with default
+	 * settings, i.e. a Java-based project with the default package and maven build.
+	 * @param project the project structure to assert
 	 */
-	protected ProjectAssert zipProjectAssert(byte[] content) {
-		return projectAssert(content, ArchiveType.ZIP);
+	protected void assertDefaultProject(ProjectStructure project) {
+		assertDefaultJavaProject(project);
+		assertThat(project).containsFiles(".gitignore");
+		assertThat(project).hasMavenBuild().hasMavenWrapper().file("mvnw").isExecutable();
+	}
+
+	protected void assertDefaultJavaProject(ProjectStructure project) {
+		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java",
+				"src/test/java/com/example/demo/DemoApplicationTests.java",
+				"src/main/resources/application.properties");
+	}
+
+	protected void assertHasWebResources(ProjectStructure project) {
+		assertThat(project).containsDirectories("src/main/resources/templates", "src/main/resources/static");
+	}
+
+	protected void assertDoesNotHaveWebResources(ProjectStructure project) {
+		assertThat(project).doesNotContainDirectories("src/main/resources/templates", "src/main/resources/static");
 	}
 
 	/**
-	 * Return a {@link ProjectAssert} for the following TGZ archive.
+	 * Return a {@link ProjectStructure} for the following archive content.
 	 * @param content the source content
 	 * @return a project assert
 	 */
-	protected ProjectAssert tgzProjectAssert(byte[] content) {
-		return projectAssert(content, ArchiveType.TGZ);
+	protected ProjectStructure projectFromArchive(byte[] content) {
+		return getProjectStructure(content, ArchiveType.ZIP);
 	}
 
-	protected ProjectAssert downloadZip(String context) {
+	/**
+	 * Return a {@link ProjectStructure} for the following TGZ archive.
+	 * @param content the source content
+	 * @return a project assert
+	 */
+	protected ProjectStructure tgzProjectAssert(byte[] content) {
+		return getProjectStructure(content, ArchiveType.TGZ);
+	}
+
+	protected ProjectStructure downloadZip(String context) {
 		byte[] body = downloadArchive(context).getBody();
-		return zipProjectAssert(body);
+		return projectFromArchive(body);
 	}
 
-	protected ProjectAssert downloadTgz(String context) {
+	protected ProjectStructure downloadTgz(String context) {
 		byte[] body = downloadArchive(context).getBody();
 		return tgzProjectAssert(body);
 	}
@@ -200,7 +225,7 @@ public abstract class AbstractInitializrIntegrationTests {
 				responseType);
 	}
 
-	protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
+	protected ProjectStructure getProjectStructure(byte[] content, ArchiveType archiveType) {
 		try {
 			Path archiveFile = writeArchive(content);
 			Path project = this.folder.resolve("project");
@@ -212,7 +237,7 @@ public abstract class AbstractInitializrIntegrationTests {
 				untar(archiveFile, project);
 				break;
 			}
-			return new ProjectAssert(project);
+			return new ProjectStructure(project);
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException("Cannot unpack archive", ex);

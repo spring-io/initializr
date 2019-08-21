@@ -91,9 +91,8 @@ class ProjectGeneratorTests {
 						Files.createFile(subDir.resolve("Test.src"));
 					});
 				});
-		ProjectStructure projectStructure = tester.generate(new ProjectDescription());
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).containsOnly("test.text",
-				"src/main/test/Test.src");
+		ProjectStructure project = tester.generate(new ProjectDescription());
+		assertThat(project).filePaths().containsOnly("test.text", "src/main/test/Test.src");
 	}
 
 	private static class TestProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {

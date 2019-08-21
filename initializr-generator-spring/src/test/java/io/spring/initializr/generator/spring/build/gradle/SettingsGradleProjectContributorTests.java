@@ -19,18 +19,15 @@ package io.spring.initializr.generator.spring.build.gradle;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleSettingsWriter;
 import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleSettingsWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
-import io.spring.initializr.generator.test.project.ProjectStructure;
+import io.spring.initializr.generator.test.io.TextAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link SettingsGradleProjectContributorTests}.
@@ -47,10 +44,9 @@ class SettingsGradleProjectContributorTests {
 	void groovyDslGradleSettingsIsContributedToProject() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
-		List<String> lines = generateSettings(
-				groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
-				"        gradlePluginPortal()", "    }", "}");
+		assertSettings(groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
+				.lines().containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
+						"        gradlePluginPortal()", "    }", "}");
 	}
 
 	@Test
@@ -59,28 +55,26 @@ class SettingsGradleProjectContributorTests {
 				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
-		List<String> lines = generateSettings(groovyDslSettingsGradleProjectContributor(build, indentingWriterFactory));
-		assertThat(lines).containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
-				"    gradlePluginPortal()", "  }", "}");
+		assertSettings(groovyDslSettingsGradleProjectContributor(build, indentingWriterFactory)).lines()
+				.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
+						"    gradlePluginPortal()", "  }", "}");
 	}
 
 	@Test
 	void groovyDslGradleSettingsDoesNotUseRepositories() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
-		List<String> lines = generateSettings(
-				groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).doesNotContain("pluginManagement");
+		assertSettings(groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
+				.doesNotContain("pluginManagement");
 	}
 
 	@Test
 	void kotlinDslGradleSettingsIsContributedToProject() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
-		List<String> lines = generateSettings(
-				kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
-				"        gradlePluginPortal()", "    }", "}");
+		assertSettings(kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
+				.lines().containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
+						"        gradlePluginPortal()", "    }", "}");
 	}
 
 	@Test
@@ -89,24 +83,23 @@ class SettingsGradleProjectContributorTests {
 				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
-		List<String> lines = generateSettings(kotlinDslSettingsGradleProjectContributor(build, indentingWriterFactory));
-		assertThat(lines).containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
-				"    gradlePluginPortal()", "  }", "}");
+		assertSettings(kotlinDslSettingsGradleProjectContributor(build, indentingWriterFactory)).lines()
+				.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
+						"    gradlePluginPortal()", "  }", "}");
 	}
 
 	@Test
 	void kotlinDslGradleSettingsDoesNotUseRepositories() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
-		List<String> lines = generateSettings(
-				kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
-		assertThat(lines).doesNotContain("pluginManagement");
+		assertSettings(kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
+				.doesNotContain("pluginManagement");
 	}
 
-	private List<String> generateSettings(SettingsGradleProjectContributor contributor) throws IOException {
+	private TextAssert assertSettings(SettingsGradleProjectContributor contributor) throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		contributor.contribute(projectDir);
-		return new ProjectStructure(projectDir).readAllLines("test.gradle");
+		return new TextAssert(projectDir.resolve("test.gradle"));
 	}
 
 	private SettingsGradleProjectContributor groovyDslSettingsGradleProjectContributor(GradleBuild build,

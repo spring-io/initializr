@@ -16,7 +16,7 @@
 
 package io.spring.initializr.web.project;
 
-import io.spring.initializr.generator.test.buildsystem.maven.PomAssert;
+import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ class MainControllerDefaultsIntegrationTests extends AbstractInitializrControlle
 	@Test
 	void generateDefaultPom() {
 		String content = getRestTemplate().getForObject(createUrl("/pom.xml?style=web"), String.class);
-		PomAssert pomAssert = new PomAssert(content);
+		MavenBuildAssert pomAssert = new MavenBuildAssert(content);
 		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar").hasVersion("1.2.4-SNAPSHOT")
 				.doesNotHaveNode("/project/packaging").hasName("FooBar").hasDescription("FooBar Project");
 	}

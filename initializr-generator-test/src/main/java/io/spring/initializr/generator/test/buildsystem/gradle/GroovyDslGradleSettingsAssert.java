@@ -16,38 +16,37 @@
 
 package io.spring.initializr.generator.test.buildsystem.gradle;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.spring.initializr.generator.test.io.AbstractTextAssert;
 
 /**
- * Very simple assertions for the gradle settings.
+ * Simple assertions for a gradle settings using the Groovy DSL.
  *
  * @author Stephane Nicoll
  */
-public class GradleSettingsAssert {
+public class GroovyDslGradleSettingsAssert extends AbstractTextAssert<GroovyDslGradleSettingsAssert> {
 
-	private final String content;
-
-	public GradleSettingsAssert(String content) {
-		this.content = content;
+	public GroovyDslGradleSettingsAssert(String content) {
+		super(content, GroovyDslGradleSettingsAssert.class);
 	}
 
 	/**
 	 * Assert {@code settings.gradle} defines the specified project name.
 	 * @param name the name of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public GradleSettingsAssert hasProjectName(String name) {
-		return contains(String.format("rootProject.name = '%s'", name));
+	public GroovyDslGradleSettingsAssert hasProjectName(String name) {
+		return hasProperty("rootProject.name", name);
 	}
 
 	/**
-	 * Assert {@code settings.gradle} contains the specified expression.
-	 * @param expression an expected expression
-	 * @return this
+	 * Assert {@code settings.gradle} defines a property with the specified name and
+	 * value.
+	 * @param name the name of the property
+	 * @param value the value
+	 * @return {@code this} assertion object
 	 */
-	public GradleSettingsAssert contains(String expression) {
-		assertThat(this.content).contains(expression);
-		return this;
+	public GroovyDslGradleSettingsAssert hasProperty(String name, String value) {
+		return contains(String.format("%s = '%s", name, value));
 	}
 
 }

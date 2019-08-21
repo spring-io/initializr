@@ -19,6 +19,7 @@ package io.spring.initializr.web.project;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.project.ProjectGenerationDescriptionCustomizerTests.ProjectDescriptionCustomizerConfiguration;
@@ -29,14 +30,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ActiveProfiles("test-default")
 @Import(ProjectDescriptionCustomizerConfiguration.class)
 class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void projectDescriptionCustomizersAreInvoked() {
-		downloadZip("/starter.zip?bootVersion=2.0.4.RELEASE&javaVersion=1.8").isJavaProject().isMavenProject()
-				.pomAssert().hasSpringBootParent("2.2.3.RELEASE").hasProperty("java.version", "1.7");
+		ProjectStructure project = downloadZip("/starter.zip?bootVersion=2.0.4.RELEASE&javaVersion=1.8");
+		assertDefaultJavaProject(project);
+		assertThat(project).mavenBuild()
+				.hasParent("org.springframework.boot", "spring-boot-starter-parent", "2.2.3.RELEASE")
+				.hasProperty("java.version", "1.7");
 	}
 
 	@Configuration

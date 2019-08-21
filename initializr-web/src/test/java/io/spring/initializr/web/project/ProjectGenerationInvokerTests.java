@@ -27,9 +27,9 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
-import io.spring.initializr.generator.test.buildsystem.gradle.GradleBuildAssert;
-import io.spring.initializr.generator.test.buildsystem.maven.PomAssert;
-import io.spring.initializr.generator.test.project.ProjectAssert;
+import io.spring.initializr.generator.test.buildsystem.gradle.GroovyDslGradleBuildAssert;
+import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import org.junit.jupiter.api.AfterEach;
@@ -87,7 +87,7 @@ public class ProjectGenerationInvokerTests {
 		request.setType("maven-project");
 		request.initialize(metadata);
 		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
-		new ProjectAssert(result.getRootDirectory()).isJavaProject();
+		assertThat(new ProjectStructure(result.getRootDirectory())).hasMavenBuild();
 		Map<Path, List<Path>> tempFiles = (Map<Path, List<Path>>) ReflectionTestUtils.getField(this.invoker,
 				"temporaryFiles");
 		assertThat(tempFiles.get(result.getRootDirectory())).contains(result.getRootDirectory());
@@ -114,10 +114,10 @@ public class ProjectGenerationInvokerTests {
 		request.initialize(metadata);
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new PomAssert(content).hasGroupId(request.getGroupId()).hasArtifactId(request.getArtifactId())
+		new MavenBuildAssert(content).hasGroupId(request.getGroupId()).hasArtifactId(request.getArtifactId())
 				.hasVersion(request.getVersion()).doesNotHaveNode("/project/packaging").hasName(request.getName())
-				.hasDescription(request.getDescription()).hasJavaVersion(request.getJavaVersion())
-				.hasSpringBootParent(request.getBootVersion());
+				.hasDescription(request.getDescription()).hasProperty("java.version", request.getJavaVersion())
+				.hasParent("org.springframework.boot", "spring-boot-starter-parent", request.getBootVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -128,8 +128,9 @@ public class ProjectGenerationInvokerTests {
 		request.setType("gradle-project");
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new GradleBuildAssert(content).hasVersion(request.getVersion()).hasSpringBootPlugin(request.getBootVersion())
-				.hasJavaVersion(request.getJavaVersion());
+		new GroovyDslGradleBuildAssert(content).hasVersion(request.getVersion())
+				.hasPlugin("org.springframework.boot", request.getBootVersion())
+				.hasSourceCompatibility(request.getJavaVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
 

@@ -19,7 +19,6 @@ package io.spring.initializr.generator.spring.configuration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import org.junit.jupiter.api.Test;
@@ -41,8 +40,8 @@ class ApplicationPropertiesContributorTests {
 	void applicationConfigurationWithDefaultSettings() throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new ApplicationPropertiesContributor().contribute(projectDir);
-		List<String> lines = new ProjectStructure(projectDir).readAllLines("src/main/resources/application.properties");
-		assertThat(lines).isEmpty();
+		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties").lines()
+				.isEmpty();
 	}
 
 }

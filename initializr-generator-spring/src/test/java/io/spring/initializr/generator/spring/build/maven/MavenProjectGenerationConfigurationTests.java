@@ -16,9 +16,7 @@
 
 package io.spring.initializr.generator.spring.build.maven;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -70,29 +68,26 @@ class MavenProjectGenerationConfigurationTests {
 	void mavenWrapperIsContributedWhenGeneratingMavenProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("mvnw", "mvnw.cmd",
-				".mvn/wrapper/MavenWrapperDownloader.java", ".mvn/wrapper/maven-wrapper.properties",
-				".mvn/wrapper/maven-wrapper.jar");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/MavenWrapperDownloader.java",
+				".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
 	}
 
 	@Test
 	void mavenPomIsContributedWhenGeneratingMavenProject() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths().contains("pom.xml");
 	}
 
 	@Test
-	void warPackagingIsUsedWhenBuildingProjectThatUsesWarPackaging() throws IOException {
+	void warPackagingIsUsedWhenBuildingProjectThatUsesWarPackaging() {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setPackaging(new WarPackaging());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
-		List<String> lines = projectStructure.readAllLines("pom.xml");
-		assertThat(lines).containsOnlyOnce("    <packaging>war</packaging>");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml").containsOnlyOnce("    <packaging>war</packaging>");
 	}
 
 	@Test
@@ -101,11 +96,9 @@ class MavenProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
-		List<String> lines = projectStructure.readAllLines("pom.xml");
-		assertThat(lines).containsSequence("            <exclusions>", "                <exclusion>",
-				"                    <groupId>org.junit.vintage</groupId>",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>",
+				"                <exclusion>", "                    <groupId>org.junit.vintage</groupId>",
 				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
 				"                <exclusion>", "                    <groupId>junit</groupId>",
 				"                    <artifactId>junit</artifactId>", "                </exclusion>",
@@ -117,11 +110,9 @@ class MavenProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M5"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
-		List<String> lines = projectStructure.readAllLines("pom.xml");
-		assertThat(lines).containsSequence("            <exclusions>", "                <exclusion>",
-				"                    <groupId>org.junit.vintage</groupId>",
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>",
+				"                <exclusion>", "                    <groupId>org.junit.vintage</groupId>",
 				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
 				"            </exclusions>");
 	}
@@ -131,10 +122,8 @@ class MavenProjectGenerationConfigurationTests {
 		ProjectDescription description = new ProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
 		description.setLanguage(new JavaLanguage());
-		ProjectStructure projectStructure = this.projectTester.generate(description);
-		assertThat(projectStructure.getRelativePathsOfProjectFiles()).contains("pom.xml");
-		List<String> lines = projectStructure.readAllLines("pom.xml");
-		assertThat(lines).doesNotContain("            <exclusions>");
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
 	}
 
 }

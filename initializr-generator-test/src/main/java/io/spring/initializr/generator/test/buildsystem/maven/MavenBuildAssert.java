@@ -18,33 +18,39 @@ package io.spring.initializr.generator.test.buildsystem.maven;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 
+import io.spring.initializr.generator.test.io.AbstractTextAssert;
 import io.spring.initializr.generator.test.io.NodeAssert;
+import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Repository;
+import org.assertj.core.api.BooleanAssert;
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.StringAssert;
+import org.assertj.core.api.UrlAssert;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
- * {@link Node} assertions that are specific to a standard Maven POM.
+ * Assertions for a Maven build.
  *
  * @author Stephane Nicoll
  */
-public class PomAssert {
-
-	private final String content;
+public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 
 	private final NodeAssert pom;
 
-	public PomAssert(String content) {
-		this.content = content;
+	public MavenBuildAssert(String content) {
+		super(content, MavenBuildAssert.class);
 		this.pom = new NodeAssert(content);
+	}
+
+	public MavenBuildAssert(Path pomFile) {
+		this(TextTestUtils.readContent(pomFile));
 	}
 
 	/**
@@ -52,73 +58,64 @@ public class PomAssert {
 	 * @param groupId the groupId of the parent
 	 * @param artifactId the artifactId of the parent
 	 * @param version the version of the parent
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasParent(String groupId, String artifactId, String version) {
+	public MavenBuildAssert hasParent(String groupId, String artifactId, String version) {
 		return hasText("/project/parent/groupId", groupId).hasText("/project/parent/artifactId", artifactId)
 				.hasText("/project/parent/version", version);
 	}
 
 	/**
-	 * Assert {@code pom.xml} defines the standard {@code spring-boot-starter-parent}.
-	 * @param version the spring boot version
-	 * @return this
-	 */
-	public PomAssert hasSpringBootParent(String version) {
-		return hasParent("org.springframework.boot", "spring-boot-starter-parent", version);
-	}
-
-	/**
 	 * Assert {@code pom.xml} uses the specified {@code groupId}.
 	 * @param groupId the groupId of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasGroupId(String groupId) {
+	public MavenBuildAssert hasGroupId(String groupId) {
 		return hasText("/project/groupId", groupId);
 	}
 
 	/**
 	 * Assert {@code pom.xml} uses the specified {@code artifactId}.
 	 * @param artifactId the artifactId of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasArtifactId(String artifactId) {
+	public MavenBuildAssert hasArtifactId(String artifactId) {
 		return hasText("/project/artifactId", artifactId);
 	}
 
 	/**
 	 * Assert {@code pom.xml} uses the specified {@code version}.
 	 * @param version the version of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasVersion(String version) {
+	public MavenBuildAssert hasVersion(String version) {
 		return hasText("/project/version", version);
 	}
 
 	/**
 	 * Assert {@code pom.xml} uses the specified {@code packaging}.
 	 * @param packaging the packaging of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasPackaging(String packaging) {
+	public MavenBuildAssert hasPackaging(String packaging) {
 		return hasText("/project/packaging", packaging);
 	}
 
 	/**
 	 * Assert {@code pom.xml} uses the specified {@code name}.
 	 * @param name the name of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasName(String name) {
+	public MavenBuildAssert hasName(String name) {
 		return hasText("/project/name", name);
 	}
 
 	/**
 	 * Assert {@code pom.xml} uses the specified {@code description}.
 	 * @param description the description of the project
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDescription(String description) {
+	public MavenBuildAssert hasDescription(String description) {
 		return hasText("/project/description", description);
 	}
 
@@ -126,75 +123,29 @@ public class PomAssert {
 	 * Assert {@code pom.xml} defines the specified property.
 	 * @param name the name of the property
 	 * @param value the value of the property
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasProperty(String name, String value) {
+	public MavenBuildAssert hasProperty(String name, String value) {
 		return hasText("/project/properties/" + name, value);
 	}
 
 	/**
-	 * Assert {@code pom.xml} does not defined the specified property.
+	 * Assert {@code pom.xml} does not define the specified property.
 	 * @param name the name of the property
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert doesNotHaveProperty(String name) {
+	public MavenBuildAssert doesNotHaveProperty(String name) {
 		return doesNotHaveNode("/project/properties/" + name);
 	}
 
 	/**
-	 * Assert {@code pom.xml} defines the specified Java version.
-	 * @param javaVersion the java version of the project
-	 * @return this
-	 */
-	public PomAssert hasJavaVersion(String javaVersion) {
-		return hasProperty("java.version", javaVersion);
-	}
-
-	/**
 	 * Assert {@code pom.xml} defines the specified number of dependencies.
-	 * @param count the number of dependencies
-	 * @return this
+	 * @param size the number of dependencies
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDependenciesCount(int count) {
-		assertThat(this.pom).nodesAtPath("project/dependencies/dependency").hasSize(count);
+	public MavenBuildAssert hasDependenciesSize(int size) {
+		this.pom.nodesAtPath("project/dependencies/dependency").hasSize(size);
 		return this;
-	}
-
-	/**
-	 * Assert {@code pom.xml} defines the specified starter.
-	 * @param starterId the id of the starter (e.g. {@code web} for
-	 * {@code spring-boot-starter-web}.
-	 * @return this
-	 */
-	public PomAssert hasSpringBootStarterDependency(String starterId) {
-		return hasDependency("org.springframework.boot", "spring-boot-starter-" + starterId);
-	}
-
-	/**
-	 * Assert {@code pom.xml} defines the specified starter in the specified scope.
-	 * @param starterId the id of the starter (e.g. {@code web} for
-	 * {@code spring-boot-starter-web}.
-	 * @param scope the scope of the starter
-	 * @return this
-	 */
-	public PomAssert hasSpringBootStarterDependency(String starterId, String scope) {
-		return hasDependency("org.springframework.boot", "spring-boot-starter-" + starterId, null, scope);
-	}
-
-	/**
-	 * Assert {@code pom.xml} defines the root {@code spring-boot-starter} starter.
-	 * @return this
-	 */
-	public PomAssert hasSpringBootStarterRootDependency() {
-		return hasDependency("org.springframework.boot", "spring-boot-starter");
-	}
-
-	/**
-	 * Assert {@code pom.xml} defines the {@code spring-boot-starter-test} starter.
-	 * @return this
-	 */
-	public PomAssert hasSpringBootStarterTest() {
-		return hasSpringBootStarterDependency("test", "test");
 	}
 
 	/**
@@ -202,9 +153,9 @@ public class PomAssert {
 	 * scope.
 	 * @param groupId the groupId of the dependency
 	 * @param artifactId the artifactId of the dependency
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDependency(String groupId, String artifactId) {
+	public MavenBuildAssert hasDependency(String groupId, String artifactId) {
 		return hasDependency(groupId, artifactId, null);
 	}
 
@@ -213,9 +164,9 @@ public class PomAssert {
 	 * @param groupId the groupId of the dependency
 	 * @param artifactId the artifactId of the dependency
 	 * @param version the version of the dependency
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDependency(String groupId, String artifactId, String version) {
+	public MavenBuildAssert hasDependency(String groupId, String artifactId, String version) {
 		return hasDependency(Dependency.create(groupId, artifactId, version, "compile"));
 	}
 
@@ -225,36 +176,35 @@ public class PomAssert {
 	 * @param artifactId the artifactId of the dependency
 	 * @param version the version of the dependency
 	 * @param scope the scope of the dependency
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDependency(String groupId, String artifactId, String version, String scope) {
+	public MavenBuildAssert hasDependency(String groupId, String artifactId, String version, String scope) {
 		return hasDependency(Dependency.create(groupId, artifactId, version, scope));
 	}
 
 	/**
 	 * Assert {@code pom.xml} defines the specified dependency.
 	 * @param dependency the dependency
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasDependency(Dependency dependency) {
-		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency").areExactly(1,
-				new Condition<>((candidate) -> {
-					Dependency actual = toDependency(candidate);
-					if (dependency.getGroupId().equals(actual.getGroupId())
-							&& dependency.getArtifactId().equals(actual.getArtifactId())) {
-						if (dependency.getVersion() != null) {
-							assertThat(actual.getVersion()).isEqualTo(dependency.getVersion());
-						}
-						if (dependency.getScope() != null) {
-							assertThat(actual.getScope()).isEqualTo(dependency.getScope());
-						}
-						if (dependency.getType() != null) {
-							assertThat(actual.getType()).isEqualTo(dependency.getType());
-						}
-						return true;
-					}
-					return false;
-				}, "matching dependency"));
+	public MavenBuildAssert hasDependency(Dependency dependency) {
+		this.pom.nodesAtPath("/project/dependencies/dependency").areExactly(1, new Condition<>((candidate) -> {
+			Dependency actual = toDependency(candidate);
+			if (dependency.getGroupId().equals(actual.getGroupId())
+					&& dependency.getArtifactId().equals(actual.getArtifactId())) {
+				if (dependency.getVersion() != null) {
+					new StringAssert(actual.getVersion()).isEqualTo(dependency.getVersion());
+				}
+				if (dependency.getScope() != null) {
+					new StringAssert(actual.getScope()).isEqualTo(dependency.getScope());
+				}
+				if (dependency.getType() != null) {
+					new StringAssert(actual.getType()).isEqualTo(dependency.getType());
+				}
+				return true;
+			}
+			return false;
+		}, "matching dependency"));
 		return this;
 	}
 
@@ -263,10 +213,10 @@ public class PomAssert {
 	 * {@code groupId} and {@code artifactId}.
 	 * @param groupId the dependency's groupId
 	 * @param artifactId the dependency's artifactId
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert doesNotHaveDependency(String groupId, String artifactId) {
-		assertThat(this.pom).nodesAtPath("/project/dependencies/dependency").noneMatch((candidate) -> {
+	public MavenBuildAssert doesNotHaveDependency(String groupId, String artifactId) {
+		this.pom.nodesAtPath("/project/dependencies/dependency").noneMatch((candidate) -> {
 			Dependency actual = toDependency(candidate);
 			return groupId.equals(actual.getGroupId()) && artifactId.equals(actual.getArtifactId());
 		});
@@ -275,11 +225,11 @@ public class PomAssert {
 
 	/**
 	 * Assert {@code pom.xml} defines the specified number of boms.
-	 * @param count the number of boms
-	 * @return this
+	 * @param size the number of boms
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasBomsCount(int count) {
-		assertThat(this.pom).nodesAtPath("/project/dependencyManagement/dependencies/dependency").hasSize(count);
+	public MavenBuildAssert hasBomsSize(int size) {
+		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency").hasSize(size);
 		return this;
 	}
 
@@ -288,10 +238,10 @@ public class PomAssert {
 	 * @param groupId the groupId of the bom
 	 * @param artifactId the artifactId of the bom
 	 * @param version the version of the bom
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasBom(String groupId, String artifactId, String version) {
-		assertThat(this.pom).nodesAtPath("/project/dependencyManagement/dependencies/dependency").areExactly(1,
+	public MavenBuildAssert hasBom(String groupId, String artifactId, String version) {
+		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency").areExactly(1,
 				new Condition<>((candidate) -> {
 					BillOfMaterials actual = toBom(candidate);
 					return (actual != null && actual.getGroupId().equals(groupId)
@@ -302,11 +252,11 @@ public class PomAssert {
 
 	/**
 	 * Assert {@code pom.xml} defines the specified number of repositories.
-	 * @param count the number of repositories
-	 * @return this
+	 * @param size the number of repositories
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasRepositoriesCount(int count) {
-		assertThat(this.pom).nodesAtPath("/project/repositories/repository").hasSize(count);
+	public MavenBuildAssert hasRepositoriesSize(int size) {
+		this.pom.nodesAtPath("/project/repositories/repository").hasSize(size);
 		return this;
 	}
 
@@ -316,32 +266,31 @@ public class PomAssert {
 	 * @param name the name of the repository
 	 * @param url the url of the repository
 	 * @param snapshotsEnabled whether snapshot is enabled for the repository
-	 * @return this
+	 * @return {@code this} assertion object
 	 */
-	public PomAssert hasRepository(String id, String name, String url, Boolean snapshotsEnabled) {
-		assertThat(this.pom).nodesAtPath("/project/repositories/repository").areExactly(1,
-				new Condition<>((candidate) -> {
-					String actualId = ((Element) candidate).getElementsByTagName("id").item(0).getTextContent();
-					if (actualId.equals(id)) {
-						Repository repository = toRepository(candidate);
-						if (name != null) {
-							assertThat(repository.getName()).isEqualTo(name);
-						}
-						if (url != null) {
-							try {
-								assertThat(repository.getUrl()).isEqualTo(new URL(url));
-							}
-							catch (MalformedURLException ex) {
-								throw new IllegalArgumentException("Cannot parse URL", ex);
-							}
-						}
-						if (snapshotsEnabled) {
-							assertThat(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);
-						}
-						return true;
+	public MavenBuildAssert hasRepository(String id, String name, String url, Boolean snapshotsEnabled) {
+		this.pom.nodesAtPath("/project/repositories/repository").areExactly(1, new Condition<>((candidate) -> {
+			String actualId = ((Element) candidate).getElementsByTagName("id").item(0).getTextContent();
+			if (actualId.equals(id)) {
+				Repository repository = toRepository(candidate);
+				if (name != null) {
+					new StringAssert(repository.getName()).isEqualTo(name);
+				}
+				if (url != null) {
+					try {
+						new UrlAssert(repository.getUrl()).isEqualTo(new URL(url));
 					}
-					return false;
-				}, "matching repository"));
+					catch (MalformedURLException ex) {
+						throw new IllegalArgumentException("Cannot parse URL", ex);
+					}
+				}
+				if (snapshotsEnabled) {
+					new BooleanAssert(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);
+				}
+				return true;
+			}
+			return false;
+		}, "matching repository"));
 		return this;
 	}
 
@@ -350,28 +299,8 @@ public class PomAssert {
 	 * @param path the path of the node
 	 * @return this
 	 */
-	public PomAssert doesNotHaveNode(String path) {
-		assertThat(this.pom.nodeAtPath(path)).isNull();
-		return this;
-	}
-
-	/**
-	 * Assert {@code pom.xml} contains the specified expression.
-	 * @param expression an expected expression
-	 * @return this
-	 */
-	public PomAssert contains(String expression) {
-		assertThat(this.content).contains(expression);
-		return this;
-	}
-
-	/**
-	 * Assert {@code pom.xml} does not contain the specified expression.
-	 * @param expression an unexpected expression
-	 * @return this
-	 */
-	public PomAssert doesNotContain(String expression) {
-		assertThat(this.content).doesNotContain(expression);
+	public MavenBuildAssert doesNotHaveNode(String path) {
+		this.pom.nodeAtPath(path).isNull();
 		return this;
 	}
 
@@ -381,8 +310,8 @@ public class PomAssert {
 	 * @param value the expected value of the element
 	 * @return this
 	 */
-	public PomAssert hasText(String path, String value) {
-		assertThat(this.pom).textAtPath(path).isEqualTo(value);
+	public MavenBuildAssert hasText(String path, String value) {
+		this.pom.textAtPath(path).isEqualTo(value);
 		return this;
 	}
 

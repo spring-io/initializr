@@ -16,10 +16,10 @@
 
 package io.spring.initializr.web.project;
 
+import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -30,8 +30,8 @@ public class MainControllerArchiveIntegrationTests extends AbstractFullStackInit
 
 	@Test
 	void baseDirectorySeparatedBySpace() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?artifactId=demo&baseDir=demo trial");
-		zipProjectAssert(entity.getBody()).hasBaseDir("demo trial").hasExecutableFile("mvnw").isJavaProject();
+		ProjectStructure project = downloadZip("/starter.zip?artifactId=demo&baseDir=demo trial");
+		assertDefaultProject(project.resolveModule("demo trial"));
 	}
 
 }
