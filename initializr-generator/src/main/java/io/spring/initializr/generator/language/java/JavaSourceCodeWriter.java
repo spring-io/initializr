@@ -40,8 +40,8 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
-import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.SourceCodeWriter;
+import io.spring.initializr.generator.language.SourceStructure;
 
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Java.
@@ -89,13 +89,13 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	@Override
-	public void writeTo(SourceCodeStructure structure, JavaSourceCode sourceCode) throws IOException {
+	public void writeTo(SourceStructure structure, JavaSourceCode sourceCode) throws IOException {
 		for (JavaCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
 			writeTo(structure, compilationUnit);
 		}
 	}
 
-	private void writeTo(SourceCodeStructure structure, JavaCompilationUnit compilationUnit) throws IOException {
+	private void writeTo(SourceStructure structure, JavaCompilationUnit compilationUnit) throws IOException {
 		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(),
 				compilationUnit.getName() + ".java");
 		Files.createDirectories(output.getParent());

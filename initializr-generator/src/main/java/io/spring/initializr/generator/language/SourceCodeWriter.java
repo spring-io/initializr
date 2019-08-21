@@ -28,11 +28,11 @@ public interface SourceCodeWriter<S extends SourceCode<?, ?>> {
 
 	/**
 	 * Write, to the given {@code structure}, the given {@code sourceCode}.
-	 * @param structure the {@link SourceCodeStructure} beneath which the source code is
+	 * @param structure the {@link SourceStructure} beneath which the source code is
 	 * written
 	 * @param sourceCode the source code to write
 	 * @throws IOException if writing fails
 	 */
-	void writeTo(SourceCodeStructure structure, S sourceCode) throws IOException;
+	void writeTo(SourceStructure structure, S sourceCode) throws IOException;
 
 }

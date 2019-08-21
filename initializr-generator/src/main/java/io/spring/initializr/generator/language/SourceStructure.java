@@ -21,20 +21,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Provide dedicated method for directories that hold code.
+ * Provide dedicated method for directories that hold sources.
  *
  * @author Stephane Nicoll
  */
-public class SourceCodeStructure {
+public class SourceStructure {
 
 	private final Path rootDirectory;
 
-	public SourceCodeStructure(Path rootDirectory) {
+	private final Path sourcesDirectory;
+
+	public SourceStructure(Path rootDirectory, String sourcesDirectoryName) {
 		this.rootDirectory = rootDirectory;
+		this.sourcesDirectory = rootDirectory.resolve(sourcesDirectoryName);
 	}
 
+	/**
+	 * Return the root {@link Path} of this structure. Can be used to access additional
+	 * resources.
+	 * @return the root directory
+	 */
 	public Path getRootDirectory() {
 		return this.rootDirectory;
+	}
+
+	/**
+	 * Return the sources {@link Path} of this structure.
+	 * @return the source code directory
+	 */
+	public Path getSourcesDirectory() {
+		return this.sourcesDirectory;
 	}
 
 	/**
@@ -47,21 +63,22 @@ public class SourceCodeStructure {
 	 * structure
 	 */
 	public Path resolveSourceFile(String packageName, String file) throws IOException {
-		return createPackage(packageName).resolve(file);
+		return createPackage(this.sourcesDirectory, packageName).resolve(file);
 	}
 
 	/**
 	 * Create the specified package if necessary.
+	 * @param srcDirectory the source directory for the package
 	 * @param packageName the name of the package to create
-	 * @return the directory where source code to this package should reside
+	 * @return the directory where source for this package should reside
 	 * @throws IOException if an error occurred while trying to create the directory
 	 * structure
 	 */
-	public Path createPackage(String packageName) throws IOException {
-		if (!Files.exists(this.rootDirectory)) {
-			Files.createDirectories(this.rootDirectory);
+	protected Path createPackage(Path srcDirectory, String packageName) throws IOException {
+		if (!Files.exists(srcDirectory)) {
+			Files.createDirectories(srcDirectory);
 		}
-		Path directory = this.rootDirectory.resolve(packageName.replace('.', '/'));
+		Path directory = srcDirectory.resolve(packageName.replace('.', '/'));
 		Files.createDirectories(directory);
 		return directory;
 	}

@@ -36,8 +36,8 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
-import io.spring.initializr.generator.language.SourceCodeStructure;
 import io.spring.initializr.generator.language.SourceCodeWriter;
+import io.spring.initializr.generator.language.SourceStructure;
 
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
@@ -54,13 +54,13 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	@Override
-	public void writeTo(SourceCodeStructure structure, KotlinSourceCode sourceCode) throws IOException {
+	public void writeTo(SourceStructure structure, KotlinSourceCode sourceCode) throws IOException {
 		for (KotlinCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
 			writeTo(structure, compilationUnit);
 		}
 	}
 
-	private void writeTo(SourceCodeStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
+	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
 		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(), compilationUnit.getName() + ".kt");
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",

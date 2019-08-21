@@ -18,15 +18,15 @@ package io.spring.initializr.generator.language.groovy;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.SourceCodeStructure;
+import io.spring.initializr.generator.language.SourceStructure;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -277,9 +277,9 @@ class GroovySourceCodeWriterTests {
 	}
 
 	private Path writeSourceCode(GroovySourceCode sourceCode) throws IOException {
-		Path projectDirectory = Files.createTempDirectory(this.directory, "project-");
-		this.writer.writeTo(new SourceCodeStructure(projectDirectory), sourceCode);
-		return projectDirectory;
+		SourceStructure sourceStructure = new SourceStructure(this.directory, UUID.randomUUID().toString());
+		this.writer.writeTo(sourceStructure, sourceCode);
+		return sourceStructure.getSourcesDirectory();
 	}
 
 }

@@ -20,7 +20,7 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
-import io.spring.initializr.generator.language.SourceCodeStructure;
+import io.spring.initializr.generator.language.SourceStructure;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import org.junit.jupiter.api.Test;
@@ -54,16 +54,16 @@ class BuildSystemTests {
 
 	@Test
 	void defaultMainDirectory(@TempDir Path directory) {
-		SourceCodeStructure mainCodeStructure = BuildSystem.forId("gradle").getMainDirectory(directory,
-				new JavaLanguage());
-		assertThat(mainCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/main/java"));
+		SourceStructure mainCodeStructure = BuildSystem.forId("gradle").getMainSource(directory, new JavaLanguage());
+		assertThat(mainCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/main"));
+		assertThat(mainCodeStructure.getSourcesDirectory()).isEqualTo(directory.resolve("src/main/java"));
 	}
 
 	@Test
 	void defaultTestDirectory(@TempDir Path directory) {
-		SourceCodeStructure testCodeStructure = BuildSystem.forId("gradle").getTestDirectory(directory,
-				new KotlinLanguage());
-		assertThat(testCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/test/kotlin"));
+		SourceStructure testCodeStructure = BuildSystem.forId("gradle").getTestSource(directory, new KotlinLanguage());
+		assertThat(testCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("src/test"));
+		assertThat(testCodeStructure.getSourcesDirectory()).isEqualTo(directory.resolve("src/test/kotlin"));
 	}
 
 	@Test

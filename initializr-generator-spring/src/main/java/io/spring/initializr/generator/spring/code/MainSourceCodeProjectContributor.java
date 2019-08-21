@@ -77,7 +77,7 @@ public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 		customizeMainApplicationType(mainApplicationType);
 		customizeMainCompilationUnit(compilationUnit);
 		customizeMainSourceCode(sourceCode);
-		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getMainDirectory(projectRoot,
+		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getMainSource(projectRoot,
 				this.projectDescription.getLanguage()), sourceCode);
 	}
 

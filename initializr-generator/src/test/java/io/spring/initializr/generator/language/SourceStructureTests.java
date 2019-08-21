@@ -26,15 +26,15 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link SourceCodeStructure}.
+ * Tests for {@link SourceStructure}.
  *
  * @author Stephane Nicoll
  */
-class SourceCodeStructureTests {
+class SourceStructureTests {
 
 	@Test
 	void createPackage(@TempDir Path dir) throws IOException {
-		Path target = new SourceCodeStructure(dir).createPackage("com.example.test");
+		Path target = new SourceStructure(dir, "java").createPackage(dir, "com.example.test");
 		assertThat(target).exists().isDirectory().isEqualByComparingTo(dir.resolve("com/example/test"));
 	}
 
@@ -43,28 +43,28 @@ class SourceCodeStructureTests {
 		Path target = dir.resolve("com/example");
 		Files.createDirectories(target);
 		assertThat(target).exists().isDirectory();
-		Path path = new SourceCodeStructure(dir).createPackage("com.example");
+		Path path = new SourceStructure(dir, "java").createPackage(dir, "com.example");
 		assertThat(path).isEqualByComparingTo(target);
 	}
 
 	@Test
 	void resolveSourceFile(@TempDir Path dir) throws IOException {
-		Path rootDir = dir.resolve("com/example");
+		Path rootDir = dir.resolve("src/main/java/com/example");
 		assertThat(rootDir).doesNotExist();
 		Path target = rootDir.resolve("Test.java");
-		Path path = new SourceCodeStructure(dir).resolveSourceFile("com.example", "Test.java");
+		Path path = new SourceStructure(dir, "src/main/java").resolveSourceFile("com.example", "Test.java");
 		assertThat(path).doesNotExist().isEqualByComparingTo(target);
 		assertThat(rootDir).exists().isDirectory();
 	}
 
 	@Test
 	void resolveSourceFileWithExistingPackage(@TempDir Path dir) throws IOException {
-		Path rootDir = dir.resolve("com/example");
+		Path rootDir = dir.resolve("src/main/java/com/example");
 		Files.createDirectories(rootDir);
 		assertThat(rootDir).exists().isDirectory();
 		Path target = rootDir.resolve("Test.java");
 		assertThat(target).doesNotExist();
-		Path path = new SourceCodeStructure(dir).resolveSourceFile("com.example", "Test.java");
+		Path path = new SourceStructure(dir, "src/main/java").resolveSourceFile("com.example", "Test.java");
 		assertThat(path).doesNotExist().isEqualByComparingTo(target);
 	}
 

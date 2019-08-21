@@ -72,7 +72,7 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 		T testApplicationType = compilationUnit.createTypeDeclaration(testName);
 		customizeTestApplicationType(testApplicationType);
 		customizeTestSourceCode(sourceCode);
-		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getTestDirectory(projectRoot,
+		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getTestSource(projectRoot,
 				this.projectDescription.getLanguage()), sourceCode);
 	}
 
