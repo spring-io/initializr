@@ -240,16 +240,63 @@ public class MavenBuildWriter {
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
-		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.plugins().isEmpty()) {
+		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.resources().isEmpty()
+				&& build.testResources().isEmpty() && build.plugins().isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "sourceDirectory", build.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", build.getTestSourceDirectory());
+			writeResources(writer, build);
 			writePlugins(writer, build);
 
 		});
+	}
+
+	private void writeResources(IndentingWriter writer, MavenBuild build) {
+		if (!build.resources().isEmpty()) {
+			writeElement(writer, "resources", () -> writeCollection(writer,
+					build.resources().values().collect(Collectors.toList()), this::writeResource));
+		}
+		if (!build.testResources().isEmpty()) {
+			writeElement(writer, "testResources", () -> writeCollection(writer,
+					build.testResources().values().collect(Collectors.toList()), this::writeTestResource));
+		}
+	}
+
+	private void writeResource(IndentingWriter writer, MavenResource resource) {
+		writeResource(writer, resource, "resource");
+	}
+
+	private void writeTestResource(IndentingWriter writer, MavenResource resource) {
+		writeResource(writer, resource, "testResource");
+	}
+
+	private void writeResource(IndentingWriter writer, MavenResource resource, String resourceName) {
+		writeElement(writer, resourceName, () -> {
+			writeSingleElement(writer, "directory", resource.getDirectory());
+			writeSingleElement(writer, "targetPath", resource.getTargetPath());
+			if (resource.isFiltering()) {
+				writeSingleElement(writer, "filtering", "true");
+			}
+			if (!resource.getIncludes().isEmpty()) {
+				writeElement(writer, "includes",
+						() -> writeCollection(writer, resource.getIncludes(), this::writeResourceInclude));
+			}
+			if (!resource.getExcludes().isEmpty()) {
+				writeElement(writer, "excludes",
+						() -> writeCollection(writer, resource.getExcludes(), this::writeResourceExclude));
+			}
+		});
+	}
+
+	private void writeResourceInclude(IndentingWriter writer, String include) {
+		writeSingleElement(writer, "include", include);
+	}
+
+	private void writeResourceExclude(IndentingWriter writer, String exclude) {
+		writeSingleElement(writer, "exclude", exclude);
 	}
 
 	private void writePlugins(IndentingWriter writer, MavenBuild build) {

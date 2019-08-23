@@ -29,6 +29,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MavenBuildTests {
 
 	@Test
+	void mavenResourcesEmptyByDefault() {
+		MavenBuild build = new MavenBuild();
+		assertThat(build.resources().isEmpty()).isTrue();
+		assertThat(build.testResources().isEmpty()).isTrue();
+	}
+
+	@Test
+	void mavenResourcesCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.resources().add("src/main/custom", (resource) -> resource.filtering(true));
+		assertThat(build.resources().values()).hasOnlyOneElementSatisfying((resource) -> {
+			assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
+			assertThat(resource.isFiltering()).isTrue();
+		});
+		assertThat(build.testResources().isEmpty()).isTrue();
+	}
+
+	@Test
+	void mavenTestResourcesCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.testResources().add("src/test/custom", (resource) -> resource.excludes("**/*.gen"));
+		assertThat(build.resources().isEmpty()).isTrue();
+		assertThat(build.testResources().values()).hasOnlyOneElementSatisfying((resource) -> {
+			assertThat(resource.getDirectory()).isEqualTo("src/test/custom");
+			assertThat(resource.getExcludes()).containsExactly("**/*.gen");
+		});
+	}
+
+	@Test
 	void mavenPluginCanBeConfigured() {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin",

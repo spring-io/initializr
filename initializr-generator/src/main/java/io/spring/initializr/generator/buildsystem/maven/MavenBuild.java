@@ -27,6 +27,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
  * Maven build for a project.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public class MavenBuild extends Build {
 
@@ -41,6 +42,10 @@ public class MavenBuild extends Build {
 	private String testSourceDirectory;
 
 	private final Map<String, String> properties = new TreeMap<>();
+
+	private final MavenResourceContainer resources = new MavenResourceContainer();
+
+	private final MavenResourceContainer testResources = new MavenResourceContainer();
 
 	private MavenPluginContainer plugins = new MavenPluginContainer();
 
@@ -101,6 +106,14 @@ public class MavenBuild extends Build {
 
 	public void setTestSourceDirectory(String testSourceDirectory) {
 		this.testSourceDirectory = testSourceDirectory;
+	}
+
+	public MavenResourceContainer resources() {
+		return this.resources;
+	}
+
+	public MavenResourceContainer testResources() {
+		return this.testResources;
 	}
 
 	public MavenPluginContainer plugins() {
