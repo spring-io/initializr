@@ -71,8 +71,8 @@ public class MavenPluginContainer {
 
 	/**
 	 * Add a {@link MavenPlugin}with the specified {@code groupId} and {@code artifactId}
-	 * and {@link Consumer} to customize the object. If the plugin has already been *
-	 * added, the consumer can be used to further tune the existing plugin configuration.
+	 * and {@link Consumer} to customize the object. If the plugin has already been added,
+	 * the consumer can be used to further tune the existing plugin configuration.
 	 * @param groupId the groupId of the plugin
 	 * @param artifactId the artifactId of the plugin
 	 * @param plugin a {@link Consumer} to customize the {@link MavenPlugin}
