@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 
 /**
  * Strategy for resolving a Kotlin version from a platform version.
@@ -32,6 +32,6 @@ public interface KotlinVersionResolver {
 	 * @param description the description of the project being generated
 	 * @return the corresponding Kotlin version
 	 */
-	String resolveKotlinVersion(ResolvedProjectDescription description);
+	String resolveKotlinVersion(ProjectDescription description);
 
 }

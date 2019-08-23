@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 
 /**
  * Strategy for resolving a dependency management plugin version from a platform version.
@@ -33,6 +33,6 @@ public interface DependencyManagementPluginVersionResolver {
 	 * @return the corresponding version for the {@code io.spring.dependency-management}
 	 * plugin
 	 */
-	String resolveDependencyManagementPluginVersion(ResolvedProjectDescription description);
+	String resolveDependencyManagementPluginVersion(ProjectDescription description);
 
 }

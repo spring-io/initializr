@@ -23,8 +23,8 @@ import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.language.groovy.GroovySourceCode;
 import io.spring.initializr.generator.language.groovy.GroovySourceCodeWriter;
 import io.spring.initializr.generator.language.groovy.GroovyTypeDeclaration;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.MainCompilationUnitCustomizer;
 import io.spring.initializr.generator.spring.code.MainSourceCodeCustomizer;
@@ -48,11 +48,11 @@ import org.springframework.context.annotation.Import;
 @Import(GroovyProjectGenerationDefaultContributorsConfiguration.class)
 public class GroovyProjectGenerationConfiguration {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public GroovyProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
+	public GroovyProjectGenerationConfiguration(ProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;

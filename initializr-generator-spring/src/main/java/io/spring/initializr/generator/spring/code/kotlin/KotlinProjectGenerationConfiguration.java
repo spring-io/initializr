@@ -23,8 +23,8 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinSourceCode;
 import io.spring.initializr.generator.language.kotlin.KotlinSourceCodeWriter;
 import io.spring.initializr.generator.language.kotlin.KotlinTypeDeclaration;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.MainCompilationUnitCustomizer;
 import io.spring.initializr.generator.spring.code.MainSourceCodeCustomizer;
@@ -50,11 +50,11 @@ import org.springframework.context.annotation.Import;
 @Import(KotlinProjectGenerationDefaultContributorsConfiguration.class)
 public class KotlinProjectGenerationConfiguration {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
+	public KotlinProjectGenerationConfiguration(ProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;

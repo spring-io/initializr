@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
 
@@ -33,7 +33,7 @@ public class HelpDocumentProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	public RequestedDependenciesHelpDocumentCustomizer dependenciesHelpDocumentCustomizer(
-			ResolvedProjectDescription description, InitializrMetadata metadata) {
+			ProjectDescription description, InitializrMetadata metadata) {
 		return new RequestedDependenciesHelpDocumentCustomizer(description, metadata);
 	}
 

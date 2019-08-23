@@ -26,7 +26,7 @@ import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.TypeDeclaration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
 
@@ -43,7 +43,7 @@ import org.springframework.beans.factory.ObjectProvider;
 public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
 		implements ProjectContributor {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final Supplier<S> sourceFactory;
 
@@ -53,7 +53,7 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 
 	private final ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers;
 
-	public TestSourceCodeProjectContributor(ResolvedProjectDescription projectDescription, Supplier<S> sourceFactory,
+	public TestSourceCodeProjectContributor(ProjectDescription projectDescription, Supplier<S> sourceFactory,
 			SourceCodeWriter<S> sourceWriter,
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {

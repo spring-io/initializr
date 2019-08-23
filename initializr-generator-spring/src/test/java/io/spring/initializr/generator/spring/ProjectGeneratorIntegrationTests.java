@@ -20,7 +20,7 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.project.ProjectGenerator;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -52,7 +52,7 @@ class ProjectGeneratorIntegrationTests {
 
 	@Test
 	void customBaseDirectoryIsUsedWhenGeneratingProject() {
-		ProjectDescription description = initProjectDescription();
+		MutableProjectDescription description = initProjectDescription();
 		description.setBuildSystem(new MavenBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage());
@@ -68,8 +68,8 @@ class ProjectGeneratorIntegrationTests {
 				"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java");
 	}
 
-	private ProjectDescription initProjectDescription() {
-		ProjectDescription description = new ProjectDescription();
+	private MutableProjectDescription initProjectDescription() {
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setApplicationName("DemoApplication");
 		return description;
 	}

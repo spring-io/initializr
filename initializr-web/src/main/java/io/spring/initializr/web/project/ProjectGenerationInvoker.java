@@ -32,7 +32,6 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ProjectGenerationException;
 import io.spring.initializr.generator.project.ProjectGenerator;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -91,7 +90,7 @@ public class ProjectGenerationInvoker {
 		return (context) -> {
 			Path projectDir = new DefaultProjectAssetGenerator().generate(context);
 			publishProjectGeneratedEvent(request, context);
-			return new ProjectGenerationResult(context.getBean(ResolvedProjectDescription.class), projectDir);
+			return new ProjectGenerationResult(context.getBean(ProjectDescription.class), projectDir);
 		};
 	}
 
@@ -161,7 +160,7 @@ public class ProjectGenerationInvoker {
 	}
 
 	private byte[] generateBuild(ProjectGenerationContext context) throws IOException {
-		ResolvedProjectDescription projectDescription = context.getBean(ResolvedProjectDescription.class);
+		ProjectDescription projectDescription = context.getBean(ProjectDescription.class);
 		StringWriter out = new StringWriter();
 		BuildWriter buildWriter = context.getBeanProvider(BuildWriter.class).getIfAvailable();
 		if (buildWriter != null) {
@@ -179,7 +178,7 @@ public class ProjectGenerationInvoker {
 		context.setParent(this.parentApplicationContext);
 		context.registerBean(InitializrMetadata.class, () -> metadata);
 		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
-				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
+				context.getBean(ProjectDescription.class).getPlatformVersion()));
 	}
 
 	private void publishProjectGeneratedEvent(ProjectRequest request, ProjectGenerationContext context) {

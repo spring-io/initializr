@@ -21,8 +21,8 @@ import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -66,9 +66,9 @@ public class SourceCodeProjectGenerationConfiguration {
 	@ConditionalOnPackaging(WarPackaging.ID)
 	static class WarPackagingConfiguration {
 
-		private final ResolvedProjectDescription projectDescription;
+		private final ProjectDescription projectDescription;
 
-		WarPackagingConfiguration(ResolvedProjectDescription projectDescription) {
+		WarPackagingConfiguration(ProjectDescription projectDescription) {
 			this.projectDescription = projectDescription;
 		}
 

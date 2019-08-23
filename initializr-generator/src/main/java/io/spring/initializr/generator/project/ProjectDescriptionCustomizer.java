@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface ProjectDescriptionCustomizer extends Ordered {
 
-	void customize(ProjectDescription description);
+	void customize(MutableProjectDescription description);
 
 	@Override
 	default int getOrder() {

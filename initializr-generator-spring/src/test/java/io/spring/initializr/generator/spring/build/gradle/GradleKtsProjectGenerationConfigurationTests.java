@@ -26,7 +26,7 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleBuildWriter;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
@@ -73,7 +73,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("supportedPlatformVersions")
 	void buildWriterIsContributed(String platformVersion) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		BuildWriter buildWriter = this.projectTester.generate(description,
@@ -91,7 +91,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 	@MethodSource("gradleWrapperParameters")
 	void gradleWrapperIsContributedWhenGeneratingGradleKtsProject(String platformVersion,
 			String expectedGradleVersion) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -103,7 +103,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void buildDotGradleDotKtsIsContributedWhenGeneratingGradleKtsProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
@@ -121,7 +121,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void dependencyManagementPluginFallbacksToMetadataIfNotPresent() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		ProjectStructure project = this.projectTester.generate(description);
@@ -131,7 +131,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void dependencyManagementPluginVersionResolverIsUsedIfPresent() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		ProjectStructure project = this.projectTester
@@ -143,7 +143,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		description.setPackaging(new WarPackaging());
@@ -153,7 +153,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void junitPlatformIsConfiguredWithCompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -163,7 +163,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	@Test
 	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);

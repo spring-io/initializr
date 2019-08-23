@@ -18,7 +18,7 @@ package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
@@ -32,11 +32,11 @@ import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
  */
 public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final InitializrMetadata metadata;
 
-	public DefaultMavenBuildCustomizer(ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
+	public DefaultMavenBuildCustomizer(ProjectDescription projectDescription, InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;
 	}

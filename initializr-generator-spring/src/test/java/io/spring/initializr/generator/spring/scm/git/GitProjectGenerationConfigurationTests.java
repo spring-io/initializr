@@ -23,7 +23,7 @@ import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
@@ -44,7 +44,7 @@ class GitProjectGenerationConfigurationTests {
 
 	@Test
 	void gitIgnoreIsContributedToProject(@TempDir Path directory) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
 		Path projectDirectory = this.projectTester.withDirectory(directory).generate(description, (context) -> {
 			GitIgnoreContributor contributor = context.getBean(GitIgnoreContributor.class);
@@ -56,7 +56,7 @@ class GitProjectGenerationConfigurationTests {
 
 	@Test
 	void gitIgnore() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
 		assertThat(generateGitIgnore(description)).contains("### STS ###", "### IntelliJ IDEA ###", "### NetBeans ###",
 				"### VS Code ###");
@@ -64,7 +64,7 @@ class GitProjectGenerationConfigurationTests {
 
 	@Test
 	void gitIgnoreGradle() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(generateGitIgnore(description)).contains(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar",
@@ -74,7 +74,7 @@ class GitProjectGenerationConfigurationTests {
 
 	@Test
 	void gitIgnoreMaven() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new MavenBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(generateGitIgnore(description))
@@ -82,7 +82,7 @@ class GitProjectGenerationConfigurationTests {
 				.doesNotContain(".gradle", "!gradle/wrapper/gradle-wrapper.jar", "/out/");
 	}
 
-	private List<String> generateGitIgnore(ProjectDescription description) {
+	private List<String> generateGitIgnore(MutableProjectDescription description) {
 		return this.projectTester.generate(description, (context) -> {
 			GitIgnore gitIgnore = context.getBean(GitIgnore.class);
 			StringWriter out = new StringWriter();

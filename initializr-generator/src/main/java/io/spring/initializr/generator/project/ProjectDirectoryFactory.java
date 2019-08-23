@@ -28,12 +28,11 @@ import java.nio.file.Path;
 public interface ProjectDirectoryFactory {
 
 	/**
-	 * Create a dedicated project directory for the specified
-	 * {@link ResolvedProjectDescription}.
+	 * Create a dedicated project directory for the specified {@link ProjectDescription}.
 	 * @param description the description of a project to generate
 	 * @return a dedicated existing directory
 	 * @throws IOException if creating the directory failed
 	 */
-	Path createProjectDirectory(ResolvedProjectDescription description) throws IOException;
+	Path createProjectDirectory(ProjectDescription description) throws IOException;
 
 }

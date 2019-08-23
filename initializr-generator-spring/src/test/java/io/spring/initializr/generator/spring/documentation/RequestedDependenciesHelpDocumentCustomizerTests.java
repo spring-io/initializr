@@ -20,8 +20,7 @@ import java.util.Arrays;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.BulletedSection;
-import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -135,14 +134,13 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	}
 
 	private HelpDocument customizeHelp(String... requestedDependencies) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		for (String requestedDependency : requestedDependencies) {
 			description.addDependency(requestedDependency, null);
 		}
 		InitializrMetadata metadata = this.metadataBuilder.build();
 		HelpDocument document = new HelpDocument(new MustacheTemplateRenderer("classpath:/templates"));
-		new RequestedDependenciesHelpDocumentCustomizer(new ResolvedProjectDescription(description), metadata)
-				.customize(document);
+		new RequestedDependenciesHelpDocumentCustomizer(description, metadata).customize(document);
 		return document;
 	}
 

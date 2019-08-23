@@ -20,8 +20,7 @@ import io.spring.initializr.generator.buildsystem.BomContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenParent;
 import io.spring.initializr.generator.language.java.JavaLanguage;
-import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionProperty;
@@ -41,7 +40,7 @@ class DefaultMavenBuildCustomizerTests {
 	@Test
 	void customizeSetNameAndDescription() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		description.setName("my-demo");
 		description.setDescription("Demonstration project");
 		MavenBuild build = customizeBuild(metadata, description);
@@ -63,7 +62,7 @@ class DefaultMavenBuildCustomizerTests {
 	@Test
 	void customizeSetJavaVersion() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		description.setLanguage(new JavaLanguage("11"));
 		MavenBuild build = customizeBuild(metadata, description);
 		assertThat(build.getProperties()).contains(entry("java.version", "11"));
@@ -103,22 +102,21 @@ class DefaultMavenBuildCustomizerTests {
 		assertThat(boms.items()).hasSize(0);
 	}
 
-	private ProjectDescription initializeDescription() {
-		ProjectDescription description = new ProjectDescription();
+	private MutableProjectDescription initializeDescription() {
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.0"));
 		description.setLanguage(new JavaLanguage());
 		return description;
 	}
 
 	private MavenBuild customizeBuild(InitializrMetadata metadata) {
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		return customizeBuild(metadata, description);
 	}
 
-	private MavenBuild customizeBuild(InitializrMetadata metadata, ProjectDescription description) {
+	private MavenBuild customizeBuild(InitializrMetadata metadata, MutableProjectDescription description) {
 		MavenBuild build = new MavenBuild();
-		ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(description);
-		DefaultMavenBuildCustomizer customizer = new DefaultMavenBuildCustomizer(resolvedProjectDescription, metadata);
+		DefaultMavenBuildCustomizer customizer = new DefaultMavenBuildCustomizer(description, metadata);
 		customizer.customize(build);
 		return build;
 	}

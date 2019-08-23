@@ -47,7 +47,8 @@ public class ProjectGenerator {
 	}
 
 	/**
-	 * Generate project assets using the specified {@link ProjectAssetGenerator}.
+	 * Generate project assets using the specified {@link ProjectAssetGenerator}. Invokes
+	 * known {@link ProjectDescriptionCustomizer} if applicable prior to asset generation.
 	 * @param description the description of the project to generate
 	 * @param projectAssetGenerator the {@link ProjectAssetGenerator} to invoke
 	 * @param <T> the type that gathers the project assets
@@ -57,7 +58,7 @@ public class ProjectGenerator {
 	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator)
 			throws ProjectGenerationException {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, resolve(description, context));
+			context.registerBean(ProjectDescription.class, resolve(description, context));
 			context.register(CoreConfiguration.class);
 			this.projectGenerationContext.accept(context);
 			context.refresh();
@@ -70,12 +71,13 @@ public class ProjectGenerator {
 		}
 	}
 
-	private Supplier<ResolvedProjectDescription> resolve(ProjectDescription description,
-			ProjectGenerationContext context) {
+	private Supplier<ProjectDescription> resolve(ProjectDescription description, ProjectGenerationContext context) {
 		return () -> {
-			context.getBeanProvider(ProjectDescriptionCustomizer.class).orderedStream()
-					.forEach((customizer) -> customizer.customize(description));
-			return new ResolvedProjectDescription(description);
+			if (description instanceof MutableProjectDescription) {
+				context.getBeanProvider(ProjectDescriptionCustomizer.class).orderedStream()
+						.forEach((customizer) -> customizer.customize((MutableProjectDescription) description));
+			}
+			return description;
 		};
 	}
 

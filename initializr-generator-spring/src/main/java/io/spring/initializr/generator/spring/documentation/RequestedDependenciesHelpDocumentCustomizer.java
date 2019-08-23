@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.spring.initializr.generator.io.text.BulletedSection;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
@@ -38,11 +38,11 @@ import org.springframework.util.ObjectUtils;
  */
 public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final InitializrMetadata metadata;
 
-	public RequestedDependenciesHelpDocumentCustomizer(ResolvedProjectDescription projectDescription,
+	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription projectDescription,
 			InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;

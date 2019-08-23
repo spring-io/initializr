@@ -25,7 +25,7 @@ import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerator;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -62,8 +62,8 @@ class ProjectGeneratorSetupExampleTests {
 		assertThat(helloFile).exists().isRegularFile().hasContent("Test");
 	}
 
-	private ProjectDescription createProjectDescription() {
-		ProjectDescription description = new ProjectDescription();
+	private MutableProjectDescription createProjectDescription() {
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setGroupId("com.example");
 		description.setArtifactId("demo");
 		description.setApplicationName("DemoApplication");

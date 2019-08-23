@@ -24,11 +24,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
@@ -47,13 +47,15 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 	}
 
 	private ProjectAssetTester(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer,
+			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		super(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
 	@Override
 	protected ProjectAssetTester newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer,
+			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		return new ProjectAssetTester(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
@@ -69,11 +71,10 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 	 * @return the project asset
 	 * @see #withConfiguration(Class[])
 	 */
-	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
+	public <T> T generate(MutableProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
 		return invokeProjectGeneration(description, (contextInitializer) -> {
 			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(description);
-				context.registerBean(ResolvedProjectDescription.class, () -> resolvedProjectDescription);
+				context.registerBean(ProjectDescription.class, () -> description);
 				contextInitializer.accept(context);
 				context.refresh();
 				return projectAssetGenerator.generate(context);
@@ -88,14 +89,14 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 	 * @return the {@link ProjectStructure} of the generated project
 	 * @see #withConfiguration(Class[])
 	 */
-	public ProjectStructure generate(ProjectDescription description) {
+	public ProjectStructure generate(MutableProjectDescription description) {
 		return generate(description, runAllAvailableContributors());
 	}
 
 	private ProjectAssetGenerator<ProjectStructure> runAllAvailableContributors() {
 		return (context) -> {
 			Path projectDirectory = context.getBean(ProjectDirectoryFactory.class)
-					.createProjectDirectory(context.getBean(ResolvedProjectDescription.class));
+					.createProjectDirectory(context.getBean(ProjectDescription.class));
 			List<ProjectContributor> projectContributors = context.getBeanProvider(ProjectContributor.class)
 					.orderedStream().collect(Collectors.toList());
 			for (ProjectContributor projectContributor : projectContributors) {

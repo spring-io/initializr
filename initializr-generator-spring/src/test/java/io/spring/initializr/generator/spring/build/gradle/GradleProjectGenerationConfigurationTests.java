@@ -27,7 +27,7 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleBuildWriter;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
@@ -73,7 +73,7 @@ class GradleProjectGenerationConfigurationTests {
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("supportedPlatformVersions")
 	void buildWriterIsContributed(String platformVersion) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		BuildWriter buildWriter = this.projectTester.generate(description,
@@ -91,7 +91,7 @@ class GradleProjectGenerationConfigurationTests {
 	@ParameterizedTest(name = "Spring Boot {0}")
 	@MethodSource("gradleWrapperParameters")
 	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion, String expectedGradleVersion) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -103,7 +103,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void buildDotGradleIsContributedWhenGeneratingGradleProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
@@ -121,7 +121,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		description.setPackaging(new WarPackaging());
@@ -131,7 +131,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void junitPlatformIsConfiguredWithCompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -140,7 +140,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -151,7 +151,7 @@ class GradleProjectGenerationConfigurationTests {
 	@Test
 	@Deprecated
 	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -163,7 +163,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void testStarterExcludesVintageEngineWithCompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M5"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -174,7 +174,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	@Test
 	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -190,7 +190,7 @@ class GradleProjectGenerationConfigurationTests {
 	@MethodSource("annotationProcessorScopeBuildParameters")
 	void gradleAnnotationProcessorScopeCustomizerIsContributedIfNecessary(String platformVersion,
 			boolean contributorExpected) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		Map<String, GradleAnnotationProcessorScopeBuildCustomizer> generate = this.projectTester.generate(description,

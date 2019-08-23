@@ -17,7 +17,7 @@
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.generator.language.java.JavaLanguage;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
@@ -52,7 +52,7 @@ class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrCont
 		ProjectDescriptionCustomizer secondPostProcessor() {
 			return new ProjectDescriptionCustomizer() {
 				@Override
-				public void customize(ProjectDescription description) {
+				public void customize(MutableProjectDescription description) {
 					description.setLanguage(new JavaLanguage("1.7"));
 				}
 
@@ -67,7 +67,7 @@ class ProjectGenerationDescriptionCustomizerTests extends AbstractInitializrCont
 		ProjectDescriptionCustomizer firstPostProcessor() {
 			return new ProjectDescriptionCustomizer() {
 				@Override
-				public void customize(ProjectDescription description) {
+				public void customize(MutableProjectDescription description) {
 					description.setLanguage(new JavaLanguage("1.2"));
 					description.setPlatformVersion(Version.parse("2.2.3.RELEASE"));
 				}

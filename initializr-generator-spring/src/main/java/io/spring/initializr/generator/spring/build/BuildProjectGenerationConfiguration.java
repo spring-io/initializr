@@ -23,8 +23,8 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.build.maven.DefaultMavenBuildCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
 
@@ -72,8 +72,8 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(
-			ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
+	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription projectDescription,
+			InitializrMetadata metadata) {
 		return new DefaultMavenBuildCustomizer(projectDescription, metadata);
 	}
 
@@ -85,18 +85,17 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	public DependencyManagementBuildCustomizer dependencyManagementBuildCustomizer(
-			ResolvedProjectDescription projectDescription, InitializrMetadata metadata) {
+			ProjectDescription projectDescription, InitializrMetadata metadata) {
 		return new DependencyManagementBuildCustomizer(projectDescription, metadata);
 	}
 
 	@Bean
-	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ResolvedProjectDescription projectDescription) {
+	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ProjectDescription projectDescription) {
 		return new SimpleBuildCustomizer(projectDescription);
 	}
 
 	@Bean
-	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(
-			ResolvedProjectDescription description) {
+	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(ProjectDescription description) {
 		return new SpringBootVersionRepositoriesBuildCustomizer(description.getPlatformVersion());
 	}
 

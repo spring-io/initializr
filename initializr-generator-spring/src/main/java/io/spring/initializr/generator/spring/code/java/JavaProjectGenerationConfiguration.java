@@ -23,8 +23,8 @@ import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.java.JavaSourceCode;
 import io.spring.initializr.generator.language.java.JavaSourceCodeWriter;
 import io.spring.initializr.generator.language.java.JavaTypeDeclaration;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.MainCompilationUnitCustomizer;
 import io.spring.initializr.generator.spring.code.MainSourceCodeCustomizer;
@@ -48,11 +48,11 @@ import org.springframework.context.annotation.Import;
 @Import(JavaProjectGenerationDefaultContributorsConfiguration.class)
 public class JavaProjectGenerationConfiguration {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public JavaProjectGenerationConfiguration(ResolvedProjectDescription projectDescription,
+	public JavaProjectGenerationConfiguration(ProjectDescription projectDescription,
 			IndentingWriterFactory indentingWriterFactory) {
 		this.projectDescription = projectDescription;
 		this.indentingWriterFactory = indentingWriterFactory;

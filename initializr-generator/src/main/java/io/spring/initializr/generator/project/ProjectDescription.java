@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator.project;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -30,145 +28,86 @@ import io.spring.initializr.generator.version.Version;
  * Description of a project to generate.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
-public class ProjectDescription {
-
-	private Version platformVersion;
-
-	private BuildSystem buildSystem;
-
-	private Packaging packaging;
-
-	private Language language;
-
-	private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
-
-	private String groupId;
-
-	private String artifactId;
-
-	private String version;
-
-	private String name;
-
-	private String description;
-
-	private String applicationName;
-
-	private String packageName;
-
-	private String baseDirectory;
+public interface ProjectDescription {
 
 	/**
-	 * Resolve the state of this instance to a {@link ResolvedProjectDescription}.
-	 * @return an immutable description.
+	 * Return a immutable mapping of requested {@link Dependency dependencies}.
+	 * @return the requested dependencies
 	 */
-	public ResolvedProjectDescription resolve() {
-		return new ResolvedProjectDescription(this);
-	}
+	Map<String, Dependency> getRequestedDependencies();
 
-	public Version getPlatformVersion() {
-		return this.platformVersion;
-	}
+	/**
+	 * Return the requested platform {@link Version}.
+	 * @return the requested platform version or {@code null}
+	 */
+	Version getPlatformVersion();
 
-	public void setPlatformVersion(Version platformVersion) {
-		this.platformVersion = platformVersion;
-	}
+	/**
+	 * Return the {@link BuildSystem} to use.
+	 * @return the build system or {@code null}
+	 */
+	BuildSystem getBuildSystem();
 
-	public BuildSystem getBuildSystem() {
-		return this.buildSystem;
-	}
+	/**
+	 * Return the build {@link Packaging} to use.
+	 * @return the build packaging or {@code null}
+	 */
+	Packaging getPackaging();
 
-	public void setBuildSystem(BuildSystem buildSystem) {
-		this.buildSystem = buildSystem;
-	}
+	/**
+	 * Return the primary {@link Language} of the project.
+	 * @return the primary language or {@code null}
+	 */
+	Language getLanguage();
 
-	public Packaging getPackaging() {
-		return this.packaging;
-	}
+	/**
+	 * Return the build {@code groupId}.
+	 * @return the groupId or {@code null}
+	 */
+	String getGroupId();
 
-	public void setPackaging(Packaging packaging) {
-		this.packaging = packaging;
-	}
+	/**
+	 * Return the build {@code artifactId}.
+	 * @return the artifactId or {@code null}
+	 */
+	String getArtifactId();
 
-	public Language getLanguage() {
-		return this.language;
-	}
+	/**
+	 * Return the version of the project.
+	 * @return the version of {@code null}
+	 */
+	String getVersion();
 
-	public void setLanguage(Language language) {
-		this.language = language;
-	}
+	/**
+	 * Return a simple name for the project.
+	 * @return the name of the project or {@code null}
+	 */
+	String getName();
 
-	public Dependency addDependency(String id, Dependency dependency) {
-		return this.requestedDependencies.put(id, dependency);
-	}
+	/**
+	 * Return a human readable description of the project.
+	 * @return the description of the project or {@code null}
+	 */
+	String getDescription();
 
-	public Map<String, Dependency> getRequestedDependencies() {
-		return Collections.unmodifiableMap(this.requestedDependencies);
-	}
+	/**
+	 * Return the name of the application as a standard Java identifier.
+	 * @return the name of the application or {@code null}
+	 */
+	String getApplicationName();
 
-	public String getGroupId() {
-		return this.groupId;
-	}
+	/**
+	 * Return the root package name of the project.
+	 * @return the package name or {@code null}
+	 */
+	String getPackageName();
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
-
-	public String getArtifactId() {
-		return this.artifactId;
-	}
-
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
-
-	public String getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getApplicationName() {
-		return this.applicationName;
-	}
-
-	public void setApplicationName(String applicationName) {
-		this.applicationName = applicationName;
-	}
-
-	public String getPackageName() {
-		return this.packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	public String getBaseDirectory() {
-		return this.baseDirectory;
-	}
-
-	public void setBaseDirectory(String baseDirectory) {
-		this.baseDirectory = baseDirectory;
-	}
+	/**
+	 * Return the base directory of the project or {@code null} to use the root directory.
+	 * @return the base directory
+	 */
+	String getBaseDirectory();
 
 }

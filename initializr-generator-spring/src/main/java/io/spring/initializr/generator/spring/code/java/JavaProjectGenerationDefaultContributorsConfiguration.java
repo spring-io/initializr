@@ -28,7 +28,7 @@ import io.spring.initializr.generator.language.java.JavaMethodInvocation;
 import io.spring.initializr.generator.language.java.JavaReturnStatement;
 import io.spring.initializr.generator.language.java.JavaTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
@@ -89,7 +89,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<JavaTypeDeclaration> javaServletInitializerCustomizer(
-				ResolvedProjectDescription projectDescription) {
+				ProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				typeDeclaration.modifiers(Modifier.PUBLIC);
 				JavaMethodDeclaration configure = JavaMethodDeclaration.method("configure")

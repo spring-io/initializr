@@ -20,8 +20,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.language.java.JavaLanguage;
-import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ class SimpleBuildCustomizerTests {
 
 	@Test
 	void customizeProjectCoordinates() {
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		description.setGroupId("com.example.acme");
 		description.setArtifactId("my-test-project");
 		MavenBuild build = customizeBuild(description);
@@ -47,7 +46,7 @@ class SimpleBuildCustomizerTests {
 
 	@Test
 	void customizeVersion() {
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		description.setVersion("1.5.6.RELEASE");
 		MavenBuild build = customizeBuild(description);
 		assertThat(build.getVersion()).isEqualTo("1.5.6.RELEASE");
@@ -55,7 +54,7 @@ class SimpleBuildCustomizerTests {
 
 	@Test
 	void customizeWithNoDependency() {
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		MavenBuild build = customizeBuild(description);
 		assertThat(build.dependencies().ids()).isEmpty();
 		assertThat(build.dependencies().items()).isEmpty();
@@ -63,7 +62,7 @@ class SimpleBuildCustomizerTests {
 
 	@Test
 	void customizeDependencies() {
-		ProjectDescription description = initializeDescription();
+		MutableProjectDescription description = initializeDescription();
 		Dependency one = Dependency.withCoordinates("com.example", "one").scope(DependencyScope.COMPILE).build();
 		Dependency two = Dependency.withCoordinates("com.example.acme", "two").scope(DependencyScope.COMPILE).build();
 		description.addDependency("two", two);
@@ -73,17 +72,16 @@ class SimpleBuildCustomizerTests {
 		assertThat(build.dependencies().items()).containsExactly(two, one);
 	}
 
-	private ProjectDescription initializeDescription() {
-		ProjectDescription description = new ProjectDescription();
+	private MutableProjectDescription initializeDescription() {
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.0"));
 		description.setLanguage(new JavaLanguage());
 		return description;
 	}
 
-	private MavenBuild customizeBuild(ProjectDescription description) {
+	private MavenBuild customizeBuild(MutableProjectDescription description) {
 		MavenBuild build = new MavenBuild();
-		ResolvedProjectDescription resolvedProjectDescription = new ResolvedProjectDescription(description);
-		SimpleBuildCustomizer customizer = new SimpleBuildCustomizer(resolvedProjectDescription);
+		SimpleBuildCustomizer customizer = new SimpleBuildCustomizer(description);
 		customizer.customize(build);
 		return build;
 	}

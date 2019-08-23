@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DefaultMetadataElement;
@@ -50,7 +51,7 @@ public class ProjectRequestToDescriptionConverter {
 		String springBootVersion = getSpringBootVersion(request, metadata);
 		List<Dependency> resolvedDependencies = getResolvedDependencies(request, springBootVersion, metadata);
 		validateDependencyRange(springBootVersion, resolvedDependencies);
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setApplicationName(getApplicationName(request, metadata));
 		description.setArtifactId(getArtifactId(request, metadata));
 		description.setBaseDirectory(getBaseDirectory(request.getBaseDir(), request.getArtifactId()));

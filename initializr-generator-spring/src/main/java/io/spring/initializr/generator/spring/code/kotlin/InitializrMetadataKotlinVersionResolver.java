@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
@@ -34,7 +34,7 @@ public class InitializrMetadataKotlinVersionResolver implements KotlinVersionRes
 	}
 
 	@Override
-	public String resolveKotlinVersion(ResolvedProjectDescription description) {
+	public String resolveKotlinVersion(ProjectDescription description) {
 		return this.metadata.getConfiguration().getEnv().getKotlin()
 				.resolveKotlinVersion(description.getPlatformVersion());
 	}

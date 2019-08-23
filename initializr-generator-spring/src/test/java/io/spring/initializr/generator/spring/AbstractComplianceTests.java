@@ -24,9 +24,9 @@ import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -60,21 +60,22 @@ public abstract class AbstractComplianceTests {
 	}
 
 	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
 				.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata);
 	}
 
 	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<ProjectDescription> descriptionCustomizer, Consumer<ProjectGenerationContext> contextCustomizer) {
+			Consumer<MutableProjectDescription> descriptionCustomizer,
+			Consumer<ProjectGenerationContext> contextCustomizer) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
 				.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, contextCustomizer);
 	}
 
 	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<ProjectDescription> descriptionCustomizer, InitializrMetadata metadata) {
+			Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata) {
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata,
 				(projectGenerationContext) -> {
 				});
@@ -82,7 +83,7 @@ public abstract class AbstractComplianceTests {
 	}
 
 	private ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<ProjectDescription> descriptionCustomizer, InitializrMetadata metadata,
+			Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata,
 			Consumer<ProjectGenerationContext> contextCustomizer) {
 		ProjectGeneratorTester projectTester = new ProjectGeneratorTester().withDirectory(this.tempDir)
 				.withDescriptionCustomizer(
@@ -90,19 +91,19 @@ public abstract class AbstractComplianceTests {
 				.withDescriptionCustomizer(descriptionCustomizer)
 				.withContextInitializer((context) -> setupProjectGenerationContext(metadata, context))
 				.withContextInitializer(contextCustomizer);
-		return projectTester.generate(new ProjectDescription());
+		return projectTester.generate(new MutableProjectDescription());
 	}
 
 	private void setupProjectGenerationContext(InitializrMetadata metadata, ProjectGenerationContext context) {
 		context.registerBean(InitializrMetadata.class, () -> metadata);
 		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
-				context.getBean(ResolvedProjectDescription.class).getPlatformVersion()));
+				context.getBean(ProjectDescription.class).getPlatformVersion()));
 		context.registerBean(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
 	}
 
 	private void setupProjectDescription(Language language, String version, BuildSystem buildSystem,
-			ProjectDescription description) {
+			MutableProjectDescription description) {
 		description.setLanguage(language);
 		description.setBuildSystem(buildSystem);
 		description.setPlatformVersion(Version.parse(version));

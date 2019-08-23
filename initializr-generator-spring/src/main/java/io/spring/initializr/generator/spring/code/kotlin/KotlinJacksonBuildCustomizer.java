@@ -19,7 +19,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -37,9 +37,9 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
-	private final ResolvedProjectDescription description;
+	private final ProjectDescription description;
 
-	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ResolvedProjectDescription description) {
+	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
 		this.description = description;
 	}

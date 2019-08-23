@@ -17,7 +17,7 @@
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
 /**
@@ -34,11 +34,11 @@ public final class SpringBootPluginBuildCustomizer implements BuildCustomizer<Gr
 	 */
 	public static final int ORDER = -100;
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final DependencyManagementPluginVersionResolver versionResolver;
 
-	public SpringBootPluginBuildCustomizer(ResolvedProjectDescription projectDescription,
+	public SpringBootPluginBuildCustomizer(ProjectDescription projectDescription,
 			DependencyManagementPluginVersionResolver versionResolver) {
 		this.projectDescription = projectDescription;
 		this.versionResolver = versionResolver;

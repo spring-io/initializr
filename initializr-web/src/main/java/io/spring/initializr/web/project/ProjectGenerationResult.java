@@ -18,7 +18,7 @@ package io.spring.initializr.web.project;
 
 import java.nio.file.Path;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 
 /**
  * Result of project generation.
@@ -27,28 +27,27 @@ import io.spring.initializr.generator.project.ResolvedProjectDescription;
  */
 public class ProjectGenerationResult {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final Path rootDirectory;
 
-	ProjectGenerationResult(ResolvedProjectDescription projectDescription, Path rootDirectory) {
+	ProjectGenerationResult(ProjectDescription projectDescription, Path rootDirectory) {
 		this.projectDescription = projectDescription;
 		this.rootDirectory = rootDirectory;
 	}
 
 	/**
-	 * Return the {@link ResolvedProjectDescription} that was used to generate the
-	 * project.
+	 * Return the {@link ProjectDescription} that was used to generate the project.
 	 * @return the project description
 	 */
-	public ResolvedProjectDescription getProjectDescription() {
+	public ProjectDescription getProjectDescription() {
 		return this.projectDescription;
 	}
 
 	/**
 	 * Return the root directory.
 	 * @return the root directory
-	 * @see ResolvedProjectDescription#getBaseDirectory()
+	 * @see ProjectDescription#getBaseDirectory()
 	 */
 	public Path getRootDirectory() {
 		return this.rootDirectory;

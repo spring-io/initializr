@@ -28,7 +28,7 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  * A default {@link ProjectAssetGenerator} implementation that generates a directory
  * structure with all available {@link ProjectContributor project contributors}. Uses a
  * {@link ProjectDirectoryFactory} to determine the root directory to use based on a
- * {@link ResolvedProjectDescription}.
+ * {@link ProjectDescription}.
  *
  * @author Stephane Nicoll
  */
@@ -54,9 +54,9 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 
 	@Override
 	public Path generate(ProjectGenerationContext context) throws IOException {
-		ResolvedProjectDescription resolvedProjectDescription = context.getBean(ResolvedProjectDescription.class);
-		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(resolvedProjectDescription);
-		Path projectDirectory = initializerProjectDirectory(projectRoot, resolvedProjectDescription);
+		ProjectDescription projectDescription = context.getBean(ProjectDescription.class);
+		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(projectDescription);
+		Path projectDirectory = initializerProjectDirectory(projectRoot, projectDescription);
 		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class).orderedStream()
 				.collect(Collectors.toList());
 		for (ProjectContributor contributor : contributors) {
@@ -70,13 +70,13 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 				: context.getBean(ProjectDirectoryFactory.class);
 	}
 
-	private Path initializerProjectDirectory(Path rootDir, ResolvedProjectDescription description) throws IOException {
+	private Path initializerProjectDirectory(Path rootDir, ProjectDescription description) throws IOException {
 		Path projectDirectory = resolveProjectDirectory(rootDir, description);
 		Files.createDirectories(projectDirectory);
 		return projectDirectory;
 	}
 
-	private Path resolveProjectDirectory(Path rootDir, ResolvedProjectDescription description) {
+	private Path resolveProjectDirectory(Path rootDir, ProjectDescription description) {
 		if (description.getBaseDirectory() != null) {
 			return rootDir.resolve(description.getBaseDirectory());
 		}

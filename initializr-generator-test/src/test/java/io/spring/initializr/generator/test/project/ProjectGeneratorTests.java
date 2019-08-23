@@ -21,10 +21,10 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.project.ProjectGenerator;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
@@ -48,14 +48,14 @@ class ProjectGeneratorTests {
 
 	@Test
 	void generateInvokedProcessor() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new MavenBuildSystem());
 		Version platformVersion = Version.parse("2.1.0.RELEASE");
 		description.setPackageName("com.example.test");
-		ResolvedProjectDescription resolvedProjectDescription = this.projectTester.generate(description,
-				(projectGenerationContext) -> projectGenerationContext.getBean(ResolvedProjectDescription.class));
-		assertThat(resolvedProjectDescription.getPlatformVersion()).isEqualTo(platformVersion);
-		assertThat(resolvedProjectDescription.getPackageName()).isEqualTo("com.example.test");
+		ProjectDescription ProjectDescription = this.projectTester.generate(description,
+				(projectGenerationContext) -> projectGenerationContext.getBean(ProjectDescription.class));
+		assertThat(ProjectDescription.getPlatformVersion()).isEqualTo(platformVersion);
+		assertThat(ProjectDescription.getPackageName()).isEqualTo("com.example.test");
 	}
 
 	@Test
@@ -69,14 +69,14 @@ class ProjectGeneratorTests {
 						description.setGroupId("com.acme");
 					}));
 		});
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setGroupId("com.example.demo");
 		description.setName("Original");
 
-		ResolvedProjectDescription resolvedProjectDescription = tester.generate(description,
-				(projectGenerationContext) -> projectGenerationContext.getBean(ResolvedProjectDescription.class));
-		assertThat(resolvedProjectDescription.getGroupId()).isEqualTo("com.acme");
-		assertThat(resolvedProjectDescription.getName()).isEqualTo("Test");
+		ProjectDescription ProjectDescription = tester.generate(description,
+				(projectGenerationContext) -> projectGenerationContext.getBean(ProjectDescription.class));
+		assertThat(ProjectDescription.getGroupId()).isEqualTo("com.acme");
+		assertThat(ProjectDescription.getName()).isEqualTo("Test");
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class ProjectGeneratorTests {
 						Files.createFile(subDir.resolve("Test.src"));
 					});
 				});
-		ProjectStructure project = tester.generate(new ProjectDescription());
+		ProjectStructure project = tester.generate(new MutableProjectDescription());
 		assertThat(project).filePaths().containsOnly("test.text", "src/main/test/Test.src");
 	}
 
@@ -99,15 +99,15 @@ class ProjectGeneratorTests {
 
 		private final Integer order;
 
-		private final Consumer<ProjectDescription> projectDescription;
+		private final Consumer<MutableProjectDescription> projectDescription;
 
-		TestProjectDescriptionCustomizer(Integer order, Consumer<ProjectDescription> projectDescription) {
+		TestProjectDescriptionCustomizer(Integer order, Consumer<MutableProjectDescription> projectDescription) {
 			this.order = order;
 			this.projectDescription = projectDescription;
 		}
 
 		@Override
-		public void customize(ProjectDescription description) {
+		public void customize(MutableProjectDescription description) {
 			this.projectDescription.accept(description);
 		}
 

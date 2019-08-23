@@ -17,7 +17,7 @@
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
 class OnBuildSystemCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ResolvedProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
 		MultiValueMap<String, Object> attributes = metadata
 				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());

@@ -22,7 +22,7 @@ import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
@@ -57,7 +57,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void buildWriterIsContributed() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		BuildWriter buildWriter = this.projectTester.generate(description,
 				(context) -> context.getBean(BuildWriter.class));
@@ -66,7 +66,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void mavenWrapperIsContributedWhenGeneratingMavenProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/MavenWrapperDownloader.java",
@@ -75,7 +75,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void mavenPomIsContributedWhenGeneratingMavenProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).filePaths().contains("pom.xml");
@@ -83,7 +83,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void warPackagingIsUsedWhenBuildingProjectThatUsesWarPackaging() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setPackaging(new WarPackaging());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -93,7 +93,7 @@ class MavenProjectGenerationConfigurationTests {
 	@Test
 	@Deprecated
 	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M4"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -107,7 +107,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void testStarterExcludesVintageEngineWithCompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.M5"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
@@ -119,7 +119,7 @@ class MavenProjectGenerationConfigurationTests {
 
 	@Test
 	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);

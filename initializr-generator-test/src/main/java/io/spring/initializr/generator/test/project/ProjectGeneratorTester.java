@@ -26,8 +26,8 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
-import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ProjectGenerator;
 
@@ -39,7 +39,8 @@ import io.spring.initializr.generator.project.ProjectGenerator;
 public class ProjectGeneratorTester extends AbstractProjectGenerationTester<ProjectGeneratorTester> {
 
 	private ProjectGeneratorTester(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer,
+			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		super(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
@@ -56,11 +57,12 @@ public class ProjectGeneratorTester extends AbstractProjectGenerationTester<Proj
 
 	@Override
 	protected ProjectGeneratorTester newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer, Consumer<ProjectDescription> descriptionCustomizer) {
+			Consumer<ProjectGenerationContext> contextInitializer,
+			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		return new ProjectGeneratorTester(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
-	public ProjectStructure generate(ProjectDescription description) {
+	public ProjectStructure generate(MutableProjectDescription description) {
 		return invokeProjectGeneration(description, (contextInitializer) -> {
 			Path directory = new ProjectGenerator(contextInitializer).generate(description,
 					new DefaultProjectAssetGenerator());
@@ -68,7 +70,7 @@ public class ProjectGeneratorTester extends AbstractProjectGenerationTester<Proj
 		});
 	}
 
-	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
+	public <T> T generate(MutableProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
 		return invokeProjectGeneration(description, (contextInitializer) -> new ProjectGenerator(contextInitializer)
 				.generate(description, projectAssetGenerator));
 	}

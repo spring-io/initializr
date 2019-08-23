@@ -39,13 +39,13 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithExplicitFactoryDoesNotLookupBean(@TempDir Path tempDir) throws IOException {
-		ResolvedProjectDescription description = new ProjectDescription().resolve();
+		ProjectDescription description = new MutableProjectDescription();
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
 		given(factory.createProjectDirectory(description)).willReturn(expected);
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, () -> description);
+			context.registerBean(ProjectDescription.class, () -> description);
 			context.refresh();
 			Path rootDir = new DefaultProjectAssetGenerator(factory).generate(context);
 			assertThat(rootDir).isSameAs(expected);
@@ -56,13 +56,13 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithoutExplicitFactoryLookupsBean(@TempDir Path tempDir) throws IOException {
-		ResolvedProjectDescription description = new ProjectDescription().resolve();
+		ProjectDescription description = new MutableProjectDescription();
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
 		given(factory.createProjectDirectory(description)).willReturn(expected);
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, () -> description);
+			context.registerBean(ProjectDescription.class, () -> description);
 			context.registerBean(ProjectDirectoryFactory.class, () -> factory);
 			context.refresh();
 			Path rootDir = new DefaultProjectAssetGenerator().generate(context);
@@ -74,10 +74,10 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithoutExplicitFactoryFailIfBeanIsNotPresent() {
-		ResolvedProjectDescription description = new ProjectDescription().resolve();
+		ProjectDescription description = new MutableProjectDescription();
 		assertThatThrownBy(() -> {
 			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				context.registerBean(ResolvedProjectDescription.class, () -> description);
+				context.registerBean(ProjectDescription.class, () -> description);
 				context.refresh();
 				new DefaultProjectAssetGenerator().generate(context);
 			}
@@ -87,15 +87,14 @@ class DefaultProjectAssetGeneratorTests {
 
 	@Test
 	void generationWithBaseDirCreatesBaseDirStructure(@TempDir Path tempDir) throws IOException {
-		ProjectDescription projectDescription = new ProjectDescription();
-		projectDescription.setBaseDirectory("my-project");
-		ResolvedProjectDescription description = projectDescription.resolve();
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBaseDirectory("my-project");
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path expected = tempDir.resolve("does-not-exist");
 		assertThat(expected).doesNotExist();
 		given(factory.createProjectDirectory(description)).willReturn(expected);
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, () -> description);
+			context.registerBean(ProjectDescription.class, () -> description);
 			context.refresh();
 			Path rootDir = new DefaultProjectAssetGenerator(factory).generate(context);
 			assertThat(rootDir).isSameAs(expected);

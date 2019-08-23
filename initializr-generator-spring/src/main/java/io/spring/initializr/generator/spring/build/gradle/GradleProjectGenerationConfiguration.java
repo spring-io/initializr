@@ -34,8 +34,8 @@ import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -78,7 +78,7 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ResolvedProjectDescription projectDescription) {
+	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ProjectDescription projectDescription) {
 		return (build) -> build.setSourceCompatibility(projectDescription.getLanguage().jvmVersion());
 	}
 
@@ -101,7 +101,7 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
-	BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription,
+	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
 		return new SpringBootPluginBuildCustomizer(projectDescription, versionResolver
 				.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
@@ -145,7 +145,7 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription) {
 			return (build) -> {
 				build.buildscript(
 						(buildscript) -> buildscript.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
@@ -206,7 +206,7 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ResolvedProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription) {
 			return (build) -> build.plugins().add("org.springframework.boot",
 					(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
 		}

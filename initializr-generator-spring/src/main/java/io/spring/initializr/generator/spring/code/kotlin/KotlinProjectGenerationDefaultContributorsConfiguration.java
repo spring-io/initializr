@@ -33,7 +33,7 @@ import io.spring.initializr.generator.language.kotlin.KotlinReifiedFunctionInvoc
 import io.spring.initializr.generator.language.kotlin.KotlinReturnStatement;
 import io.spring.initializr.generator.language.kotlin.KotlinTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainCompilationUnitCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
@@ -74,7 +74,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	BuildCustomizer<Build> kotlinDependenciesConfigurer(ResolvedProjectDescription projectDescription) {
+	BuildCustomizer<Build> kotlinDependenciesConfigurer(ProjectDescription projectDescription) {
 		return new KotlinDependenciesConfigurer(projectDescription.getPlatformVersion());
 	}
 
@@ -106,7 +106,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
-				ResolvedProjectDescription projectDescription) {
+				ProjectDescription projectDescription) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
@@ -131,7 +131,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
-				ResolvedProjectDescription projectDescription) {
+				ProjectDescription projectDescription) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
@@ -150,7 +150,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
-				ResolvedProjectDescription projectDescription) {
+				ProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
 						.modifiers(KotlinModifier.OVERRIDE)

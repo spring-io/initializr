@@ -18,7 +18,7 @@ package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
@@ -74,9 +74,9 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	private void customizeBuild(Build build, InitializrMetadata metadata) {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.RELEASE"));
-		new DependencyManagementBuildCustomizer(projectDescription.resolve(), metadata).customize(build);
+		new DependencyManagementBuildCustomizer(projectDescription, metadata).customize(build);
 	}
 
 }

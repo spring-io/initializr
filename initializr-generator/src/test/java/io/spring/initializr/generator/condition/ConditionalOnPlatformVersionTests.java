@@ -18,9 +18,9 @@ package io.spring.initializr.generator.condition;
 
 import java.util.Map;
 
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
 
@@ -38,14 +38,14 @@ class ConditionalOnPlatformVersionTests {
 
 	@Test
 	void outcomeWithMatchingRange() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.2.0.RELEASE"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).containsOnlyKeys("first");
 	}
 
 	@Test
 	void outcomeWithMatchingOpenRange() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.1.RELEASE"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
 				.containsOnlyKeys("second");
@@ -53,7 +53,7 @@ class ConditionalOnPlatformVersionTests {
 
 	@Test
 	void outcomeWithMatchingStartOfOpenRange() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.M1"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
 				.containsOnlyKeys("second");
@@ -61,20 +61,20 @@ class ConditionalOnPlatformVersionTests {
 
 	@Test
 	void outcomeWithNoMatch() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("0.1.0"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithNoAvailablePlatformVersion() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithSeveralRangesAndMatchingVersion() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
 				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second", "firstOrSecond");
@@ -82,15 +82,16 @@ class ConditionalOnPlatformVersionTests {
 
 	@Test
 	void outcomeWithSeveralRangesAndNonMatchingVersion() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("2.0.0.M2"));
 		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
 				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second");
 	}
 
-	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
+	private Map<String, String> candidatesFor(MutableProjectDescription projectDescription,
+			Class<?>... extraConfigurations) {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			context.registerBean(ProjectDescription.class, () -> projectDescription);
 			context.register(PlatformVersionTestConfiguration.class);
 			context.register(extraConfigurations);
 			context.refresh();

@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
@@ -34,7 +34,7 @@ public class InitializrDependencyManagementPluginVersionResolver implements Depe
 	}
 
 	@Override
-	public String resolveDependencyManagementPluginVersion(ResolvedProjectDescription description) {
+	public String resolveDependencyManagementPluginVersion(ProjectDescription description) {
 		return this.metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion();
 	}
 

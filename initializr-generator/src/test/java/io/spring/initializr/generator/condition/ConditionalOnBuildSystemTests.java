@@ -20,9 +20,9 @@ import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -39,29 +39,30 @@ class ConditionalOnBuildSystemTests {
 
 	@Test
 	void outcomeWithMavenBuildSystem() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setBuildSystem(new MavenBuildSystem());
 		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("maven");
 	}
 
 	@Test
 	void outcomeWithGradleBuildSystem() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setBuildSystem(new GradleBuildSystem());
 		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle");
 	}
 
 	@Test
 	void conditionalOnGradleWithKotlinDialectMatchesWhenGradleBuildSystemUsesKotlinDialect() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setBuildSystem(new GradleBuildSystem("kotlin"));
 		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle",
 				"gradleKotlin");
 	}
 
-	private Map<String, String> candidatesFor(ProjectDescription projectDescription, Class<?>... extraConfigurations) {
+	private Map<String, String> candidatesFor(MutableProjectDescription projectDescription,
+			Class<?>... extraConfigurations) {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			context.registerBean(ProjectDescription.class, () -> projectDescription);
 			context.register(extraConfigurations);
 			context.refresh();
 			return context.getBeansOfType(String.class);

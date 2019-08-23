@@ -32,7 +32,7 @@ import io.spring.initializr.generator.language.groovy.GroovyMethodInvocation;
 import io.spring.initializr.generator.language.groovy.GroovyReturnStatement;
 import io.spring.initializr.generator.language.groovy.GroovyTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
@@ -95,7 +95,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
-				ResolvedProjectDescription projectDescription) {
+				ProjectDescription projectDescription) {
 			return (typeDeclaration) -> {
 				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
 						.modifiers(Modifier.PROTECTED)

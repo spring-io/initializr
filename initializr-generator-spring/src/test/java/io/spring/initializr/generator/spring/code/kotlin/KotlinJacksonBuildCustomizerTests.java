@@ -21,7 +21,7 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
@@ -44,7 +44,7 @@ class KotlinJacksonBuildCustomizerTests {
 	void customizeWhenJsonFacetPresentShouldAddJacksonKotlinModule() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("json"));
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setLanguage(new KotlinLanguage());
 		MavenBuild build = getCustomizedBuild(dependency, description);
 		io.spring.initializr.generator.buildsystem.Dependency jacksonKotlin = build.dependencies()
@@ -57,7 +57,7 @@ class KotlinJacksonBuildCustomizerTests {
 	void jacksonModuleKotlinIsNotAddedWithoutKotlin() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("json"));
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setLanguage(new JavaLanguage());
 		MavenBuild build = getCustomizedBuild(dependency, description);
 		io.spring.initializr.generator.buildsystem.Dependency jacksonKotlin = build.dependencies()
@@ -68,7 +68,7 @@ class KotlinJacksonBuildCustomizerTests {
 	@Test
 	void jacksonModuleKotlinIsNotAddedWithoutJsonFacet() {
 		Dependency dependency = Dependency.withId("foo");
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setLanguage(new KotlinLanguage());
 		MavenBuild build = getCustomizedBuild(dependency, description);
 		io.spring.initializr.generator.buildsystem.Dependency jacksonKotlin = build.dependencies()
@@ -76,10 +76,10 @@ class KotlinJacksonBuildCustomizerTests {
 		assertThat(jacksonKotlin).isNull();
 	}
 
-	private MavenBuild getCustomizedBuild(Dependency dependency, ProjectDescription description) {
+	private MavenBuild getCustomizedBuild(Dependency dependency, MutableProjectDescription description) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", dependency).build();
-		KotlinJacksonBuildCustomizer customizer = new KotlinJacksonBuildCustomizer(metadata, description.resolve());
+		KotlinJacksonBuildCustomizer customizer = new KotlinJacksonBuildCustomizer(metadata, description);
 		MavenBuild build = new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);

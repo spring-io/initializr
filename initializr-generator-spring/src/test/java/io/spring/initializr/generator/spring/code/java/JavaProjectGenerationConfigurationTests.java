@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -57,14 +57,14 @@ class JavaProjectGenerationConfigurationTests {
 
 	@Test
 	void mainClassIsContributed() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java");
 	}
 
 	@Test
 	void testClassIsContributedWithJUnit4() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("src/test/java/com/example/demo/DemoApplicationTests.java").containsExactly(
@@ -77,7 +77,7 @@ class JavaProjectGenerationConfigurationTests {
 
 	@Test
 	void testClassIsContributedWithJUnit5() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("src/test/java/com/example/demo/DemoApplicationTests.java").containsExactly(
@@ -88,7 +88,7 @@ class JavaProjectGenerationConfigurationTests {
 
 	@Test
 	void servletInitializerIsContributedWhenGeneratingProjectThatUsesWarPackaging() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("MyDemoApplication");
 		ProjectStructure project = this.projectTester.generate(description);
@@ -102,7 +102,7 @@ class JavaProjectGenerationConfigurationTests {
 
 	@Test
 	void customPackageNameIsUsedWhenGeneratingProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPackageName("com.example.foo");
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).containsFiles("src/main/java/com/example/foo/DemoApplication.java",
@@ -111,7 +111,7 @@ class JavaProjectGenerationConfigurationTests {
 
 	@Test
 	void customApplicationNameIsUsedWhenGeneratingProject() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setApplicationName("MyApplication");
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).containsFiles("src/main/java/com/example/demo/MyApplication.java",

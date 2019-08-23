@@ -20,9 +20,9 @@ import java.util.function.Consumer;
 
 import io.spring.initializr.generator.packaging.jar.JarPackaging;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithJarPackaging() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPackaging(new JarPackaging());
 		assertCondition(projectDescription, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
@@ -49,7 +49,7 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithWarPackaging() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPackaging(new WarPackaging());
 		assertCondition(projectDescription, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
@@ -59,13 +59,14 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithNoAvailablePackaging() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private void assertCondition(ProjectDescription projectDescription, Consumer<ProjectGenerationContext> context) {
+	private void assertCondition(MutableProjectDescription projectDescription,
+			Consumer<ProjectGenerationContext> context) {
 		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			projectContext.registerBean(ProjectDescription.class, () -> projectDescription);
 			projectContext.register(PackagingTestConfiguration.class);
 			projectContext.refresh();
 			context.accept(projectContext);

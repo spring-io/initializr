@@ -19,7 +19,7 @@ import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.Packaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class SourceCodeProjectGenerationConfigurationTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void addsACustomizerThatAppliesSpringBootApplicationAnnotationOnMainClass() {
-		TypeDeclaration declaration = this.projectTester.generate(new ProjectDescription(), (context) -> {
+		TypeDeclaration declaration = this.projectTester.generate(new MutableProjectDescription(), (context) -> {
 			TypeDeclaration type = new TypeDeclaration("Test");
 			MainApplicationTypeCustomizer<TypeDeclaration> bean = context.getBean(MainApplicationTypeCustomizer.class);
 			bean.customize(type);
@@ -76,7 +76,7 @@ class SourceCodeProjectGenerationConfigurationTests {
 
 	@SuppressWarnings("unchecked")
 	private TypeDeclaration generateTestTypeDeclaration(String version) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(version));
 		return this.projectTester.generate(description, (context) -> {
 			TypeDeclaration type = new TypeDeclaration("Test");
@@ -98,7 +98,7 @@ class SourceCodeProjectGenerationConfigurationTests {
 
 	@SuppressWarnings("unchecked")
 	private void runWarTest(String version, String className) {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPackaging(Packaging.forId("war"));
 		description.setPackageName("com.foo");
 		description.setPlatformVersion(Version.parse(version));

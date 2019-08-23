@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.Build;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
@@ -39,12 +39,11 @@ import org.springframework.core.Ordered;
  */
 public class DependencyManagementBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final ResolvedProjectDescription projectDescription;
+	private final ProjectDescription projectDescription;
 
 	private final InitializrMetadata metadata;
 
-	public DependencyManagementBuildCustomizer(ResolvedProjectDescription projectDescription,
-			InitializrMetadata metadata) {
+	public DependencyManagementBuildCustomizer(ProjectDescription projectDescription, InitializrMetadata metadata) {
 		this.projectDescription = projectDescription;
 		this.metadata = metadata;
 	}

@@ -33,7 +33,7 @@ import java.util.function.Function;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
@@ -306,7 +306,7 @@ public class MainController extends AbstractInitializrController {
 		}
 	}
 
-	private static String getWrapperScript(ResolvedProjectDescription description) {
+	private static String getWrapperScript(ProjectDescription description) {
 		BuildSystem buildSystem = description.getBuildSystem();
 		String script = buildSystem.id().equals(MavenBuildSystem.ID) ? "mvnw" : "gradlew";
 		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;

@@ -19,9 +19,9 @@ package io.spring.initializr.generator.condition;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
-import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ class ConditionalOnRequestedDependencyTests {
 
 	@Test
 	void outcomeWithMatchingDependency() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.addDependency("web", mock(Dependency.class));
 		assertCondition(projectDescription, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
@@ -49,14 +49,15 @@ class ConditionalOnRequestedDependencyTests {
 
 	@Test
 	void outcomeWithNoMatch() {
-		ProjectDescription projectDescription = new ProjectDescription();
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.addDependency("another", mock(Dependency.class));
 		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private void assertCondition(ProjectDescription projectDescription, Consumer<ProjectGenerationContext> context) {
+	private void assertCondition(MutableProjectDescription projectDescription,
+			Consumer<ProjectGenerationContext> context) {
 		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ResolvedProjectDescription.class, projectDescription::resolve);
+			projectContext.registerBean(ProjectDescription.class, () -> projectDescription);
 			projectContext.register(RequestedDependencyTestConfiguration.class);
 			projectContext.refresh();
 			context.accept(projectContext);

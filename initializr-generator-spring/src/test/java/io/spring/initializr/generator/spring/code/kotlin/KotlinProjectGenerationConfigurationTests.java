@@ -23,7 +23,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
@@ -69,7 +69,7 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void kotlinVersionFallbacksToMetadataIfNotPresent() {
-		KotlinProjectSettings settings = this.projectTester.generate(new ProjectDescription(),
+		KotlinProjectSettings settings = this.projectTester.generate(new MutableProjectDescription(),
 				(context) -> context.getBean(KotlinProjectSettings.class));
 		assertThat(settings.getVersion()).isEqualTo("1.1.1");
 	}
@@ -78,19 +78,19 @@ class KotlinProjectGenerationConfigurationTests {
 	void kotlinVersionResolverIsUsedIfPresent() {
 		KotlinProjectSettings settings = this.projectTester
 				.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("0.9.12"))
-				.generate(new ProjectDescription(), (context) -> context.getBean(KotlinProjectSettings.class));
+				.generate(new MutableProjectDescription(), (context) -> context.getBean(KotlinProjectSettings.class));
 		assertThat(settings.getVersion()).isEqualTo("0.9.12");
 	}
 
 	@Test
 	void mainClassIsContributedWhenGeneratingProject() {
-		ProjectStructure project = this.projectTester.generate(new ProjectDescription());
+		ProjectStructure project = this.projectTester.generate(new MutableProjectDescription());
 		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt");
 	}
 
 	@Test
 	void testClassIsContributedWithJunit4() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt").containsExactly(
@@ -103,7 +103,7 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void testClassIsContributedWithJunit5() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt").containsExactly(
@@ -114,7 +114,7 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void servletInitializerIsContributedWhenGeneratingProjectThatUsesWarPackaging() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("KotlinDemoApplication");
 		ProjectStructure project = this.projectTester.generate(description);
@@ -128,7 +128,7 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void jacksonKotlinModuleShouldBeAddedWhenJsonFacetPresent() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo").build());
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("pom.xml").contains("        <dependency>",

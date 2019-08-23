@@ -19,7 +19,7 @@ package io.spring.initializr.generator.spring.documentation;
 import java.nio.file.Path;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
-import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
@@ -54,7 +54,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 
 	@Test
 	void helpDocumentIsNotContributedWithoutLinks() {
-		ProjectStructure project = this.projectTester.generate(new ProjectDescription());
+		ProjectStructure project = this.projectTester.generate(new MutableProjectDescription());
 		assertThat(project).filePaths().isEmpty();
 	}
 
@@ -64,7 +64,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to", "How-to example"));
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		description.addDependency("example", null);
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).filePaths().containsOnly("HELP.md");
@@ -72,7 +72,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 
 	@Test
 	void helpDocumentIsAddedToGitIgnore() {
-		ProjectDescription description = new ProjectDescription();
+		MutableProjectDescription description = new MutableProjectDescription();
 		GitIgnoreCustomizer gitIgnoreCustomizer = this.projectTester.generate(description,
 				(context) -> context.getBean(GitIgnoreCustomizer.class));
 		assertThat(gitIgnoreCustomizer).isInstanceOf(HelpDocumentGitIgnoreCustomizer.class);
