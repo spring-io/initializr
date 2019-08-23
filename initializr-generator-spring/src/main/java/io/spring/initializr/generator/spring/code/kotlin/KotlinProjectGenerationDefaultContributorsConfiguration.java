@@ -38,6 +38,7 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainCompilationUnitCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,6 +76,19 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@Bean
 	BuildCustomizer<Build> kotlinDependenciesConfigurer(ResolvedProjectDescription projectDescription) {
 		return new KotlinDependenciesConfigurer(projectDescription.getPlatformVersion());
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
+			KotlinProjectSettings settings) {
+		return new KotlinJpaGradleBuildCustomizer(metadata, settings);
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
+	KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
+		return new KotlinJpaMavenBuildCustomizer(metadata);
 	}
 
 	/**

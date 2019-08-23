@@ -20,20 +20,12 @@ import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
-import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
-import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
-import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
-import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.build.maven.DefaultMavenBuildCustomizer;
-import io.spring.initializr.generator.spring.code.kotlin.KotlinJpaGradleBuildCustomizer;
-import io.spring.initializr.generator.spring.code.kotlin.KotlinJpaMavenBuildCustomizer;
-import io.spring.initializr.generator.spring.code.kotlin.KotlinProjectSettings;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.context.annotation.Bean;
@@ -89,21 +81,6 @@ public class BuildProjectGenerationConfiguration {
 	@ConditionalOnPackaging(WarPackaging.ID)
 	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
 		return new WarPackagingWebStarterBuildCustomizer(metadata);
-	}
-
-	@Bean
-	@ConditionalOnLanguage(KotlinLanguage.ID)
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	public KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
-			KotlinProjectSettings settings) {
-		return new KotlinJpaGradleBuildCustomizer(metadata, settings);
-	}
-
-	@Bean
-	@ConditionalOnLanguage(KotlinLanguage.ID)
-	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-	public KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
-		return new KotlinJpaMavenBuildCustomizer(metadata);
 	}
 
 	@Bean
