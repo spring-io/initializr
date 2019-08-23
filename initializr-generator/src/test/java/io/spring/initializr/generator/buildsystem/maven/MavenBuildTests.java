@@ -16,13 +16,9 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
-import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link MavenBuild}.
@@ -31,6 +27,35 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuild.Resource;
  * @author Olga Maciaszek-Sharma
  */
 class MavenBuildTests {
+
+	@Test
+	void mavenResourcesEmptyByDefault() {
+		MavenBuild build = new MavenBuild();
+		assertThat(build.resources().isEmpty()).isTrue();
+		assertThat(build.testResources().isEmpty()).isTrue();
+	}
+
+	@Test
+	void mavenResourcesCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.resources().add("src/main/custom", (resource) -> resource.filtering(true));
+		assertThat(build.resources().values()).hasOnlyOneElementSatisfying((resource) -> {
+			assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
+			assertThat(resource.isFiltering()).isTrue();
+		});
+		assertThat(build.testResources().isEmpty()).isTrue();
+	}
+
+	@Test
+	void mavenTestResourcesCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.testResources().add("src/test/custom", (resource) -> resource.excludes("**/*.gen"));
+		assertThat(build.resources().isEmpty()).isTrue();
+		assertThat(build.testResources().values()).hasOnlyOneElementSatisfying((resource) -> {
+			assertThat(resource.getDirectory()).isEqualTo("src/test/custom");
+			assertThat(resource.getExcludes()).containsExactly("**/*.gen");
+		});
+	}
 
 	@Test
 	void mavenPluginCanBeConfigured() {
@@ -112,54 +137,6 @@ class MavenBuildTests {
 		build.plugins().add("com.example", "test-plugin", MavenPlugin::extensions);
 		assertThat(build.plugins().values())
 				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
-	}
-
-	@Test
-	void mavenResourcesCanBeLoaded() {
-
-		MavenBuild build = new MavenBuild();
-
-		build.resource("src/main/resources", (resource) -> {
-			resource.include("**/*.yml");
-			resource.filtering(true);
-			resource.targetPath("targetPath");
-			resource.excludes("**/*.properties");
-		});
-
-		Resource resource = build.getResources().get(0);
-
-		assertThat(resource.getIncludes().get(0)).isEqualTo("**/*.yml");
-		assertThat(resource.getExcludes().get(0)).isEqualTo("**/*.properties");
-		assertThat(resource.isFiltering()).isTrue();
-		assertThat(resource.getTargetPath()).isEqualTo("targetPath");
-		assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
-
-	}
-
-	@Test
-	void mavenResourcesFilteringFalseByDefault() {
-
-		MavenBuild build = new MavenBuild();
-
-		build.resource("src/main/resources", (resource) -> {
-		});
-
-		Resource resource = build.getResources().get(0);
-
-		assertThat(resource.isFiltering()).isFalse();
-
-	}
-
-	@Test
-	void mavenResourcesNotLoadedByDefault() {
-
-		MavenBuild build = new MavenBuild();
-		build.plugin("com.example", "test-plugin");
-
-		List<Resource> resources = build.getResources();
-
-		assertThat(resources).isEmpty();
-
 	}
 
 }

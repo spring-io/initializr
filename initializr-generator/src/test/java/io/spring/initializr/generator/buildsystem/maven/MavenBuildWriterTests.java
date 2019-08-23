@@ -345,6 +345,38 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithResources() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.resources().add("src/main/custom", (resource) -> resource.includes("**/*.properties"));
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/build/resources/resource/directory").isEqualTo("src/main/custom");
+			assertThat(pom).textAtPath("/project/build/resources/resource/targetPath").isNullOrEmpty();
+			assertThat(pom).textAtPath("/project/build/resources/resource/filtering").isNullOrEmpty();
+			assertThat(pom).textAtPath("/project/build/resources/resource/includes/include")
+					.isEqualTo("**/*.properties");
+			assertThat(pom).textAtPath("/project/build/resources/resource/excludes").isNullOrEmpty();
+			assertThat(pom).textAtPath("/project/build/testResources").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithTestResources() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.testResources().add("src/test/custom",
+				(resource) -> resource.excludes("**/*.gen").filtering(true).targetPath("test"));
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/build/resources").isNullOrEmpty();
+			assertThat(pom).textAtPath("/project/build/testResources/testResource/directory")
+					.isEqualTo("src/test/custom");
+			assertThat(pom).textAtPath("/project/build/testResources/testResource/targetPath").isEqualTo("test");
+			assertThat(pom).textAtPath("/project/build/testResources/testResource/filtering").isEqualTo("true");
+			assertThat(pom).textAtPath("/project/build/testResources/testResource/includes").isNullOrEmpty();
+			assertThat(pom).textAtPath("/project/build/testResources/testResource/excludes/exclude")
+					.isEqualTo("**/*.gen");
+		});
+	}
+
+	@Test
 	void pomWithPlugin() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.setGroup("com.example.demo");
@@ -442,6 +474,14 @@ class MavenBuildWriterTests {
 			assertThat(plugin).textAtPath("artifactId").isEqualTo("demo-plugin");
 			assertThat(plugin).textAtPath("extensions").isEqualTo("true");
 		});
+	}
+
+	@Test
+	void pomWithEmptyBuild() throws Exception {
+		MavenBuild build = new MavenBuild();
+		build.setGroup("com.example.demo");
+		build.setArtifact("demo");
+		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/build/").isNullOrEmpty());
 	}
 
 	@Test
@@ -544,22 +584,6 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.setVersion("1.2.4.RELEASE");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
-	}
-
-	@Test
-	void pomWithResources() throws Exception {
-
-		MavenBuild build = new MavenBuild();
-
-		build.resource("src/main/resources", (resource) -> resource.include("**/*.properties"));
-
-		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/build/resources/resource/includes/include")
-					.isEqualTo("**/*.properties");
-
-			assertThat(pom).textAtPath("/project/build/resources/resource/directory").isEqualTo("src/main/resources");
-		});
-
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) throws Exception {

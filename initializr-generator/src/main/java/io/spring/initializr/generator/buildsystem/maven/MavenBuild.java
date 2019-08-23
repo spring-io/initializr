@@ -16,13 +16,9 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
@@ -31,6 +27,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
  * Maven build for a project.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public class MavenBuild extends Build {
 
@@ -46,9 +43,11 @@ public class MavenBuild extends Build {
 
 	private final Map<String, String> properties = new TreeMap<>();
 
-	private MavenPluginContainer plugins = new MavenPluginContainer();
+	private final MavenResourceContainer resources = new MavenResourceContainer();
 
-	private final Map<String, ResourceBuilder> resources = new LinkedHashMap<>();
+	private final MavenResourceContainer testResources = new MavenResourceContainer();
+
+	private MavenPluginContainer plugins = new MavenPluginContainer();
 
 	private String packaging;
 
@@ -109,6 +108,14 @@ public class MavenBuild extends Build {
 		this.testSourceDirectory = testSourceDirectory;
 	}
 
+	public MavenResourceContainer resources() {
+		return this.resources;
+	}
+
+	public MavenResourceContainer testResources() {
+		return this.testResources;
+	}
+
 	public MavenPluginContainer plugins() {
 		return this.plugins;
 	}
@@ -119,112 +126,6 @@ public class MavenBuild extends Build {
 
 	public String getPackaging() {
 		return this.packaging;
-	}
-
-	public void resource(String directory, Consumer<ResourceBuilder> customizer) {
-		customizer.accept(this.resources.computeIfAbsent(directory, (key) -> new ResourceBuilder(directory)));
-	}
-
-	public List<Resource> getResources() {
-		return this.resources.values().stream().map(ResourceBuilder::build).collect(Collectors.toList());
-	}
-
-	/**
-	 *
-	 * Builder to create a {@link Resource}.
-	 *
-	 *
-	 */
-	public static final class ResourceBuilder {
-
-		private String directory;
-
-		private String targetPath;
-
-		private boolean filtering;
-
-		private List<String> includes = new ArrayList<>();
-
-		private List<String> excludes = new ArrayList<>();
-
-		public ResourceBuilder(String directory) {
-			this.directory = directory;
-		}
-
-		Resource build() {
-			return new Resource(this.directory, this.targetPath, this.filtering, this.includes, this.excludes);
-		}
-
-		public ResourceBuilder include(String... includes) {
-			this.includes = Arrays.asList(includes);
-			return this;
-		}
-
-		public ResourceBuilder targetPath(String targetPath) {
-			this.targetPath = targetPath;
-			return this;
-		}
-
-		public ResourceBuilder filtering(Boolean filtering) {
-			this.filtering = filtering;
-			return this;
-		}
-
-		public ResourceBuilder excludes(String... excludes) {
-			this.excludes = Arrays.asList(excludes);
-			return this;
-		}
-
-	}
-
-	/**
-	 *
-	 * An {@code <resource>} of a {@link MavenBuild}.
-	 *
-	 *
-	 */
-	public static final class Resource {
-
-		private String directory;
-
-		private String targetPath;
-
-		private boolean filtering;
-
-		private List<String> includes = new ArrayList<>();
-
-		private List<String> excludes = new ArrayList<>();
-
-		public Resource(String directory, String targetPath, boolean filtering, List<String> includes,
-				List<String> excludes) {
-			super();
-			this.directory = directory;
-			this.targetPath = targetPath;
-			this.filtering = filtering;
-			this.includes = includes;
-			this.excludes = excludes;
-		}
-
-		public String getDirectory() {
-			return this.directory;
-		}
-
-		public List<String> getIncludes() {
-			return this.includes;
-		}
-
-		public String getTargetPath() {
-			return this.targetPath;
-		}
-
-		public boolean isFiltering() {
-			return this.filtering;
-		}
-
-		public List<String> getExcludes() {
-			return this.excludes;
-		}
-
 	}
 
 }
