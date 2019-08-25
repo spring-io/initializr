@@ -66,7 +66,7 @@ public class ProjectGenerationInvoker {
 
 	/**
 	 * Invokes the project generation API that generates the entire project structure for
-	 * the specified {@link WebProjectRequest}.
+	 * the specified {@link ProjectRequest}.
 	 * @param request the project request
 	 * @return the {@link ProjectGenerationResult}
 	 */
@@ -97,7 +97,7 @@ public class ProjectGenerationInvoker {
 	/**
 	 * Invokes the project generation API that knows how to just write the build file.
 	 * Returns a directory containing the project for the specified
-	 * {@link WebProjectRequest}.
+	 * {@link ProjectRequest}.
 	 * @param request the project request
 	 * @return the generated build content
 	 */
