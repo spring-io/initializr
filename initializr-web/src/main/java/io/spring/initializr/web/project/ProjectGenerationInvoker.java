@@ -73,10 +73,10 @@ public class ProjectGenerationInvoker {
 	public ProjectGenerationResult invokeProjectStructureGeneration(ProjectRequest request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription projectDescription = this.converter.convert(request, metadata);
+			ProjectDescription description = this.converter.convert(request, metadata);
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
-			ProjectGenerationResult result = projectGenerator.generate(projectDescription, generateProject(request));
+			ProjectGenerationResult result = projectGenerator.generate(description, generateProject(request));
 			addTempFile(result.getRootDirectory(), result.getRootDirectory());
 			return result;
 		}
@@ -104,10 +104,10 @@ public class ProjectGenerationInvoker {
 	public byte[] invokeBuildGeneration(ProjectRequest request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription projectDescription = this.converter.convert(request, metadata);
+			ProjectDescription description = this.converter.convert(request, metadata);
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
-			return projectGenerator.generate(projectDescription, generateBuild(request));
+			return projectGenerator.generate(description, generateBuild(request));
 		}
 		catch (ProjectGenerationException ex) {
 			publishProjectFailedEvent(request, metadata, ex);
@@ -160,7 +160,7 @@ public class ProjectGenerationInvoker {
 	}
 
 	private byte[] generateBuild(ProjectGenerationContext context) throws IOException {
-		ProjectDescription projectDescription = context.getBean(ProjectDescription.class);
+		ProjectDescription description = context.getBean(ProjectDescription.class);
 		StringWriter out = new StringWriter();
 		BuildWriter buildWriter = context.getBeanProvider(BuildWriter.class).getIfAvailable();
 		if (buildWriter != null) {
@@ -168,8 +168,7 @@ public class ProjectGenerationInvoker {
 			return out.toString().getBytes();
 		}
 		else {
-			throw new IllegalStateException(
-					"No BuildWriter implementation found for " + projectDescription.getLanguage());
+			throw new IllegalStateException("No BuildWriter implementation found for " + description.getLanguage());
 		}
 	}
 

@@ -32,24 +32,24 @@ import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
  */
 public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final InitializrMetadata metadata;
 
-	public DefaultMavenBuildCustomizer(ProjectDescription projectDescription, InitializrMetadata metadata) {
-		this.projectDescription = projectDescription;
+	public DefaultMavenBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+		this.description = description;
 		this.metadata = metadata;
 	}
 
 	@Override
 	public void customize(MavenBuild build) {
-		build.setName(this.projectDescription.getName());
-		build.setDescription(this.projectDescription.getDescription());
-		build.setProperty("java.version", this.projectDescription.getLanguage().jvmVersion());
+		build.setName(this.description.getName());
+		build.setDescription(this.description.getDescription());
+		build.setProperty("java.version", this.description.getLanguage().jvmVersion());
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
-		String springBootVersion = this.projectDescription.getPlatformVersion().toString();
+		String springBootVersion = this.description.getPlatformVersion().toString();
 		ParentPom parentPom = maven.resolveParentPom(springBootVersion);
 		if (parentPom.isIncludeSpringBootBom()) {
 			String versionProperty = "spring-boot.version";

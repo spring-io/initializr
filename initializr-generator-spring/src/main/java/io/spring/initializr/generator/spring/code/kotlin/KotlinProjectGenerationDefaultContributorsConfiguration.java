@@ -74,8 +74,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	BuildCustomizer<Build> kotlinDependenciesConfigurer(ProjectDescription projectDescription) {
-		return new KotlinDependenciesConfigurer(projectDescription.getPlatformVersion());
+	BuildCustomizer<Build> kotlinDependenciesConfigurer(ProjectDescription description) {
+		return new KotlinDependenciesConfigurer(description.getPlatformVersion());
 	}
 
 	@Bean
@@ -106,12 +106,12 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
-				ProjectDescription projectDescription) {
+				ProjectDescription description) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
 									new KotlinFunctionInvocation("org.springframework.boot.SpringApplication", "run",
-											projectDescription.getApplicationName() + "::class.java", "*args"))));
+											description.getApplicationName() + "::class.java", "*args"))));
 		}
 
 	}
@@ -131,12 +131,12 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
-				ProjectDescription projectDescription) {
+				ProjectDescription description) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
 					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
 							.body(new KotlinExpressionStatement(
 									new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication",
-											projectDescription.getApplicationName(), "*args"))));
+											description.getApplicationName(), "*args"))));
 		}
 
 	}
@@ -150,7 +150,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
-				ProjectDescription projectDescription) {
+				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
 						.modifiers(KotlinModifier.OVERRIDE)
@@ -158,7 +158,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
 						.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
-								projectDescription.getApplicationName() + "::class.java")));
+								description.getApplicationName() + "::class.java")));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};
 		}

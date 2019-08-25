@@ -44,7 +44,7 @@ import org.springframework.beans.factory.ObjectProvider;
 public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
 		implements ProjectContributor {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final Supplier<S> sourceFactory;
 
@@ -56,11 +56,11 @@ public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 
 	private final ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers;
 
-	public MainSourceCodeProjectContributor(ProjectDescription projectDescription, Supplier<S> sourceFactory,
+	public MainSourceCodeProjectContributor(ProjectDescription description, Supplier<S> sourceFactory,
 			SourceCodeWriter<S> sourceWriter, ObjectProvider<MainApplicationTypeCustomizer<?>> mainTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.sourceFactory = sourceFactory;
 		this.sourceWriter = sourceWriter;
 		this.mainTypeCustomizers = mainTypeCustomizers;
@@ -71,14 +71,15 @@ public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
 		S sourceCode = this.sourceFactory.get();
-		String applicationName = this.projectDescription.getApplicationName();
-		C compilationUnit = sourceCode.createCompilationUnit(this.projectDescription.getPackageName(), applicationName);
+		String applicationName = this.description.getApplicationName();
+		C compilationUnit = sourceCode.createCompilationUnit(this.description.getPackageName(), applicationName);
 		T mainApplicationType = compilationUnit.createTypeDeclaration(applicationName);
 		customizeMainApplicationType(mainApplicationType);
 		customizeMainCompilationUnit(compilationUnit);
 		customizeMainSourceCode(sourceCode);
-		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getMainSource(projectRoot,
-				this.projectDescription.getLanguage()), sourceCode);
+		this.sourceWriter.writeTo(
+				this.description.getBuildSystem().getMainSource(projectRoot, this.description.getLanguage()),
+				sourceCode);
 	}
 
 	@SuppressWarnings("unchecked")

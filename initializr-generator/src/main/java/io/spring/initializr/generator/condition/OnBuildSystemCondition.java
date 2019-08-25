@@ -33,13 +33,13 @@ import org.springframework.util.StringUtils;
 class OnBuildSystemCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
 		MultiValueMap<String, Object> attributes = metadata
 				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
 		String buildSystemId = (String) attributes.getFirst("value");
 		String dialect = (String) attributes.getFirst("dialect");
-		BuildSystem buildSystem = projectDescription.getBuildSystem();
+		BuildSystem buildSystem = description.getBuildSystem();
 		if (buildSystem.id().equals(buildSystemId)) {
 			if (StringUtils.hasText(dialect)) {
 				return dialect.equals(buildSystem.dialect());

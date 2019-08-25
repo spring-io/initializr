@@ -89,7 +89,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<JavaTypeDeclaration> javaServletInitializerCustomizer(
-				ProjectDescription projectDescription) {
+				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				typeDeclaration.modifiers(Modifier.PUBLIC);
 				JavaMethodDeclaration configure = JavaMethodDeclaration.method("configure")
@@ -98,7 +98,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
 						.body(new JavaReturnStatement(new JavaMethodInvocation("application", "sources",
-								projectDescription.getApplicationName() + ".class")));
+								description.getApplicationName() + ".class")));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

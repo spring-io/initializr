@@ -27,12 +27,12 @@ import io.spring.initializr.generator.project.ProjectDescription;
  */
 public class ProjectGenerationResult {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final Path rootDirectory;
 
-	ProjectGenerationResult(ProjectDescription projectDescription, Path rootDirectory) {
-		this.projectDescription = projectDescription;
+	ProjectGenerationResult(ProjectDescription description, Path rootDirectory) {
+		this.description = description;
 		this.rootDirectory = rootDirectory;
 	}
 
@@ -41,7 +41,7 @@ public class ProjectGenerationResult {
 	 * @return the project description
 	 */
 	public ProjectDescription getProjectDescription() {
-		return this.projectDescription;
+		return this.description;
 	}
 
 	/**

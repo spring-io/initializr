@@ -30,11 +30,11 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class OnRequestedDependencyCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
 		String id = (String) metadata.getAnnotationAttributes(ConditionalOnRequestedDependency.class.getName())
 				.get("value");
-		return projectDescription.getRequestedDependencies().containsKey(id);
+		return description.getRequestedDependencies().containsKey(id);
 	}
 
 }

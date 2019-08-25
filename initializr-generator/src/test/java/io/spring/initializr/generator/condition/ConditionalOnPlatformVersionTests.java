@@ -38,60 +38,57 @@ class ConditionalOnPlatformVersionTests {
 
 	@Test
 	void outcomeWithMatchingRange() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("1.2.0.RELEASE"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).containsOnlyKeys("first");
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("1.2.0.RELEASE"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class)).containsOnlyKeys("first");
 	}
 
 	@Test
 	void outcomeWithMatchingOpenRange() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("2.0.1.RELEASE"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-				.containsOnlyKeys("second");
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.0.1.RELEASE"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class)).containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithMatchingStartOfOpenRange() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("2.0.0.M1"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class))
-				.containsOnlyKeys("second");
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.0.0.M1"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class)).containsOnlyKeys("second");
 	}
 
 	@Test
 	void outcomeWithNoMatch() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("0.1.0"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("0.1.0"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithNoAvailablePlatformVersion() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class)).isEmpty();
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class)).isEmpty();
 	}
 
 	@Test
 	void outcomeWithSeveralRangesAndMatchingVersion() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class,
 				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second", "firstOrSecond");
 	}
 
 	@Test
 	void outcomeWithSeveralRangesAndNonMatchingVersion() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("2.0.0.M2"));
-		assertThat(candidatesFor(projectDescription, PlatformVersionTestConfiguration.class,
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.0.0.M2"));
+		assertThat(candidatesFor(description, PlatformVersionTestConfiguration.class,
 				OneOrTwoPlatformVersionTestConfiguration.class)).containsOnlyKeys("second");
 	}
 
-	private Map<String, String> candidatesFor(MutableProjectDescription projectDescription,
-			Class<?>... extraConfigurations) {
+	private Map<String, String> candidatesFor(MutableProjectDescription description, Class<?>... extraConfigurations) {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ProjectDescription.class, () -> projectDescription);
+			context.registerBean(ProjectDescription.class, () -> description);
 			context.register(PlatformVersionTestConfiguration.class);
 			context.register(extraConfigurations);
 			context.refresh();

@@ -39,30 +39,29 @@ class ConditionalOnBuildSystemTests {
 
 	@Test
 	void outcomeWithMavenBuildSystem() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setBuildSystem(new MavenBuildSystem());
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("maven");
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new MavenBuildSystem());
+		assertThat(candidatesFor(description, BuildSystemTestConfiguration.class)).containsOnlyKeys("maven");
 	}
 
 	@Test
 	void outcomeWithGradleBuildSystem() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setBuildSystem(new GradleBuildSystem());
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle");
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new GradleBuildSystem());
+		assertThat(candidatesFor(description, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle");
 	}
 
 	@Test
 	void conditionalOnGradleWithKotlinDialectMatchesWhenGradleBuildSystemUsesKotlinDialect() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setBuildSystem(new GradleBuildSystem("kotlin"));
-		assertThat(candidatesFor(projectDescription, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle",
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new GradleBuildSystem("kotlin"));
+		assertThat(candidatesFor(description, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle",
 				"gradleKotlin");
 	}
 
-	private Map<String, String> candidatesFor(MutableProjectDescription projectDescription,
-			Class<?>... extraConfigurations) {
+	private Map<String, String> candidatesFor(MutableProjectDescription description, Class<?>... extraConfigurations) {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-			context.registerBean(ProjectDescription.class, () -> projectDescription);
+			context.registerBean(ProjectDescription.class, () -> description);
 			context.register(extraConfigurations);
 			context.refresh();
 			return context.getBeansOfType(String.class);

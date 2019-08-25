@@ -43,7 +43,7 @@ import org.springframework.beans.factory.ObjectProvider;
 public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
 		implements ProjectContributor {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final Supplier<S> sourceFactory;
 
@@ -53,11 +53,11 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 
 	private final ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers;
 
-	public TestSourceCodeProjectContributor(ProjectDescription projectDescription, Supplier<S> sourceFactory,
+	public TestSourceCodeProjectContributor(ProjectDescription description, Supplier<S> sourceFactory,
 			SourceCodeWriter<S> sourceWriter,
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.sourceFactory = sourceFactory;
 		this.sourceWriter = sourceWriter;
 		this.testApplicationTypeCustomizers = testApplicationTypeCustomizers;
@@ -67,13 +67,14 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
 		S sourceCode = this.sourceFactory.get();
-		String testName = this.projectDescription.getApplicationName() + "Tests";
-		C compilationUnit = sourceCode.createCompilationUnit(this.projectDescription.getPackageName(), testName);
+		String testName = this.description.getApplicationName() + "Tests";
+		C compilationUnit = sourceCode.createCompilationUnit(this.description.getPackageName(), testName);
 		T testApplicationType = compilationUnit.createTypeDeclaration(testName);
 		customizeTestApplicationType(testApplicationType);
 		customizeTestSourceCode(sourceCode);
-		this.sourceWriter.writeTo(this.projectDescription.getBuildSystem().getTestSource(projectRoot,
-				this.projectDescription.getLanguage()), sourceCode);
+		this.sourceWriter.writeTo(
+				this.description.getBuildSystem().getTestSource(projectRoot, this.description.getLanguage()),
+				sourceCode);
 	}
 
 	@SuppressWarnings("unchecked")

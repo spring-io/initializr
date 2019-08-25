@@ -54,9 +54,9 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 
 	@Override
 	public Path generate(ProjectGenerationContext context) throws IOException {
-		ProjectDescription projectDescription = context.getBean(ProjectDescription.class);
-		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(projectDescription);
-		Path projectDirectory = initializerProjectDirectory(projectRoot, projectDescription);
+		ProjectDescription description = context.getBean(ProjectDescription.class);
+		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(description);
+		Path projectDirectory = initializerProjectDirectory(projectRoot, description);
 		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class).orderedStream()
 				.collect(Collectors.toList());
 		for (ProjectContributor contributor : contributors) {

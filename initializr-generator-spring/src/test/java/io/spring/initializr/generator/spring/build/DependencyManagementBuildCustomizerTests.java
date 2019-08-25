@@ -74,9 +74,9 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	private void customizeBuild(Build build, InitializrMetadata metadata) {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPlatformVersion(Version.parse("2.0.0.RELEASE"));
-		new DependencyManagementBuildCustomizer(projectDescription, metadata).customize(build);
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.0.0.RELEASE"));
+		new DependencyManagementBuildCustomizer(description, metadata).customize(build);
 	}
 
 }

@@ -48,13 +48,13 @@ import org.springframework.context.annotation.Import;
 @Import(GroovyProjectGenerationDefaultContributorsConfiguration.class)
 public class GroovyProjectGenerationConfiguration {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public GroovyProjectGenerationConfiguration(ProjectDescription projectDescription,
+	public GroovyProjectGenerationConfiguration(ProjectDescription description,
 			IndentingWriterFactory indentingWriterFactory) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -63,7 +63,7 @@ public class GroovyProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription, GroovySourceCode::new,
+		return new MainSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
 				new GroovySourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
 				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
@@ -72,7 +72,7 @@ public class GroovyProjectGenerationConfiguration {
 	public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription, GroovySourceCode::new,
+		return new TestSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
 				new GroovySourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
 				testSourceCodeCustomizers);
 	}

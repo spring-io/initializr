@@ -31,11 +31,11 @@ public abstract class ProjectGenerationCondition implements Condition {
 
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ProjectDescription projectDescription = context.getBeanFactory().getBean(ProjectDescription.class);
-		return matches(projectDescription, context, metadata);
+		ProjectDescription description = context.getBeanFactory().getBean(ProjectDescription.class);
+		return matches(description, context, metadata);
 	}
 
-	protected abstract boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected abstract boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata);
 
 }

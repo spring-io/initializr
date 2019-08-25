@@ -78,8 +78,8 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ProjectDescription projectDescription) {
-		return (build) -> build.setSourceCompatibility(projectDescription.getLanguage().jvmVersion());
+	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ProjectDescription description) {
+		return (build) -> build.setSourceCompatibility(description.getLanguage().jvmVersion());
 	}
 
 	@Bean
@@ -101,9 +101,9 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPlatformVersion("2.0.0.M1")
-	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription,
+	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
-		return new SpringBootPluginBuildCustomizer(projectDescription, versionResolver
+		return new SpringBootPluginBuildCustomizer(description, versionResolver
 				.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
 	}
 
@@ -145,11 +145,10 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description) {
 			return (build) -> {
-				build.buildscript(
-						(buildscript) -> buildscript.dependency("org.springframework.boot:spring-boot-gradle-plugin:"
-								+ projectDescription.getPlatformVersion()));
+				build.buildscript((buildscript) -> buildscript.dependency(
+						"org.springframework.boot:spring-boot-gradle-plugin:" + description.getPlatformVersion()));
 				build.plugins().apply("org.springframework.boot");
 			};
 		}
@@ -206,9 +205,9 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription projectDescription) {
+		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description) {
 			return (build) -> build.plugins().add("org.springframework.boot",
-					(plugin) -> plugin.setVersion(projectDescription.getPlatformVersion().toString()));
+					(plugin) -> plugin.setVersion(description.getPlatformVersion().toString()));
 		}
 
 		@Bean

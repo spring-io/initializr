@@ -43,9 +43,9 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.1.0.M1");
 
 	@Override
-	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
-		String gradleGeneration = determineGradleGeneration(projectDescription.getPlatformVersion());
+		String gradleGeneration = determineGradleGeneration(description.getPlatformVersion());
 		if (gradleGeneration == null) {
 			return false;
 		}

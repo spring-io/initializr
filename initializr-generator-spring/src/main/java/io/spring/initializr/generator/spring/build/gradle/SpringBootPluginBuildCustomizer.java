@@ -34,22 +34,22 @@ public final class SpringBootPluginBuildCustomizer implements BuildCustomizer<Gr
 	 */
 	public static final int ORDER = -100;
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final DependencyManagementPluginVersionResolver versionResolver;
 
-	public SpringBootPluginBuildCustomizer(ProjectDescription projectDescription,
+	public SpringBootPluginBuildCustomizer(ProjectDescription description,
 			DependencyManagementPluginVersionResolver versionResolver) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.versionResolver = versionResolver;
 	}
 
 	@Override
 	public void customize(GradleBuild build) {
 		build.plugins().add("org.springframework.boot",
-				(plugin) -> plugin.setVersion(this.projectDescription.getPlatformVersion().toString()));
+				(plugin) -> plugin.setVersion(this.description.getPlatformVersion().toString()));
 		build.plugins().add("io.spring.dependency-management", (plugin) -> plugin
-				.setVersion(this.versionResolver.resolveDependencyManagementPluginVersion(this.projectDescription)));
+				.setVersion(this.versionResolver.resolveDependencyManagementPluginVersion(this.description)));
 	}
 
 	@Override

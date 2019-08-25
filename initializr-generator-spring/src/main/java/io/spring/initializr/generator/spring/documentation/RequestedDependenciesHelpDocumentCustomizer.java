@@ -38,19 +38,18 @@ import org.springframework.util.ObjectUtils;
  */
 public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final InitializrMetadata metadata;
 
-	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription projectDescription,
-			InitializrMetadata metadata) {
-		this.projectDescription = projectDescription;
+	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+		this.description = description;
 		this.metadata = metadata;
 	}
 
 	@Override
 	public void customize(HelpDocument document) {
-		this.projectDescription.getRequestedDependencies().forEach((id, dependency) -> {
+		this.description.getRequestedDependencies().forEach((id, dependency) -> {
 			Dependency dependencyMetadata = this.metadata.getDependencies().get(id);
 			if (dependencyMetadata != null) {
 				handleDependency(document, dependencyMetadata);

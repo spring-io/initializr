@@ -48,13 +48,13 @@ import org.springframework.context.annotation.Import;
 @Import(JavaProjectGenerationDefaultContributorsConfiguration.class)
 public class JavaProjectGenerationConfiguration {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public JavaProjectGenerationConfiguration(ProjectDescription projectDescription,
+	public JavaProjectGenerationConfiguration(ProjectDescription description,
 			IndentingWriterFactory indentingWriterFactory) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -63,7 +63,7 @@ public class JavaProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription, JavaSourceCode::new,
+		return new MainSourceCodeProjectContributor<>(this.description, JavaSourceCode::new,
 				new JavaSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
 				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
@@ -72,7 +72,7 @@ public class JavaProjectGenerationConfiguration {
 	public TestSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> testJavaSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription, JavaSourceCode::new,
+		return new TestSourceCodeProjectContributor<>(this.description, JavaSourceCode::new,
 				new JavaSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
 				testSourceCodeCustomizers);
 	}

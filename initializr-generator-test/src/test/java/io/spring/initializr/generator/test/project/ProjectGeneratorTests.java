@@ -52,10 +52,10 @@ class ProjectGeneratorTests {
 		description.setBuildSystem(new MavenBuildSystem());
 		Version platformVersion = Version.parse("2.1.0.RELEASE");
 		description.setPackageName("com.example.test");
-		ProjectDescription ProjectDescription = this.projectTester.generate(description,
+		ProjectDescription customizedDescription = this.projectTester.generate(description,
 				(projectGenerationContext) -> projectGenerationContext.getBean(ProjectDescription.class));
-		assertThat(ProjectDescription.getPlatformVersion()).isEqualTo(platformVersion);
-		assertThat(ProjectDescription.getPackageName()).isEqualTo("com.example.test");
+		assertThat(customizedDescription.getPlatformVersion()).isEqualTo(platformVersion);
+		assertThat(customizedDescription.getPackageName()).isEqualTo("com.example.test");
 	}
 
 	@Test
@@ -73,10 +73,10 @@ class ProjectGeneratorTests {
 		description.setGroupId("com.example.demo");
 		description.setName("Original");
 
-		ProjectDescription ProjectDescription = tester.generate(description,
+		ProjectDescription customizedDescription = tester.generate(description,
 				(projectGenerationContext) -> projectGenerationContext.getBean(ProjectDescription.class));
-		assertThat(ProjectDescription.getGroupId()).isEqualTo("com.acme");
-		assertThat(ProjectDescription.getName()).isEqualTo("Test");
+		assertThat(customizedDescription.getGroupId()).isEqualTo("com.acme");
+		assertThat(customizedDescription.getName()).isEqualTo("Test");
 	}
 
 	@Test

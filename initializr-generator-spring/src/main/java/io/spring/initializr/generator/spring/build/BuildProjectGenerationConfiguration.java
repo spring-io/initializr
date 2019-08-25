@@ -72,9 +72,9 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription projectDescription,
+	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description,
 			InitializrMetadata metadata) {
-		return new DefaultMavenBuildCustomizer(projectDescription, metadata);
+		return new DefaultMavenBuildCustomizer(description, metadata);
 	}
 
 	@Bean
@@ -84,14 +84,14 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public DependencyManagementBuildCustomizer dependencyManagementBuildCustomizer(
-			ProjectDescription projectDescription, InitializrMetadata metadata) {
-		return new DependencyManagementBuildCustomizer(projectDescription, metadata);
+	public DependencyManagementBuildCustomizer dependencyManagementBuildCustomizer(ProjectDescription description,
+			InitializrMetadata metadata) {
+		return new DependencyManagementBuildCustomizer(description, metadata);
 	}
 
 	@Bean
-	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ProjectDescription projectDescription) {
-		return new SimpleBuildCustomizer(projectDescription);
+	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ProjectDescription description) {
+		return new SimpleBuildCustomizer(description);
 	}
 
 	@Bean

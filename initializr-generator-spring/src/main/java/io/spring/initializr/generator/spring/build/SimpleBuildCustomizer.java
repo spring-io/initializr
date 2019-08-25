@@ -30,18 +30,18 @@ import org.springframework.core.Ordered;
  */
 public class SimpleBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
-	public SimpleBuildCustomizer(ProjectDescription projectDescription) {
-		this.projectDescription = projectDescription;
+	public SimpleBuildCustomizer(ProjectDescription description) {
+		this.description = description;
 	}
 
 	@Override
 	public void customize(Build build) {
-		build.setGroup(this.projectDescription.getGroupId());
-		build.setArtifact(this.projectDescription.getArtifactId());
-		build.setVersion(this.projectDescription.getVersion());
-		this.projectDescription.getRequestedDependencies()
+		build.setGroup(this.description.getGroupId());
+		build.setArtifact(this.description.getArtifactId());
+		build.setVersion(this.description.getVersion());
+		this.description.getRequestedDependencies()
 				.forEach((id, dependency) -> build.dependencies().add(id, dependency));
 	}
 

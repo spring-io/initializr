@@ -39,9 +39,9 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithJarPackaging() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPackaging(new JarPackaging());
-		assertCondition(projectDescription, (context) -> {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPackaging(new JarPackaging());
+		assertCondition(description, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
 			assertThat(context.getBean(String.class)).isEqualTo("testJar");
 		});
@@ -49,9 +49,9 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithWarPackaging() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setPackaging(new WarPackaging());
-		assertCondition(projectDescription, (context) -> {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPackaging(new WarPackaging());
+		assertCondition(description, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
 			assertThat(context.getBean(String.class)).isEqualTo("testWar");
 		});
@@ -59,14 +59,13 @@ class ConditionalOnPackagingTests {
 
 	@Test
 	void outcomeWithNoAvailablePackaging() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private void assertCondition(MutableProjectDescription projectDescription,
-			Consumer<ProjectGenerationContext> context) {
+	private void assertCondition(MutableProjectDescription description, Consumer<ProjectGenerationContext> context) {
 		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ProjectDescription.class, () -> projectDescription);
+			projectContext.registerBean(ProjectDescription.class, () -> description);
 			projectContext.register(PackagingTestConfiguration.class);
 			projectContext.refresh();
 			context.accept(projectContext);

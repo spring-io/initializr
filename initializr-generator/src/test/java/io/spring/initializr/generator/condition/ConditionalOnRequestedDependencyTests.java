@@ -39,9 +39,9 @@ class ConditionalOnRequestedDependencyTests {
 
 	@Test
 	void outcomeWithMatchingDependency() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.addDependency("web", mock(Dependency.class));
-		assertCondition(projectDescription, (context) -> {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.addDependency("web", mock(Dependency.class));
+		assertCondition(description, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
 			assertThat(context.getBean(String.class)).isEqualTo("webDependency");
 		});
@@ -49,15 +49,14 @@ class ConditionalOnRequestedDependencyTests {
 
 	@Test
 	void outcomeWithNoMatch() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.addDependency("another", mock(Dependency.class));
-		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.addDependency("another", mock(Dependency.class));
+		assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private void assertCondition(MutableProjectDescription projectDescription,
-			Consumer<ProjectGenerationContext> context) {
+	private void assertCondition(MutableProjectDescription description, Consumer<ProjectGenerationContext> context) {
 		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ProjectDescription.class, () -> projectDescription);
+			projectContext.registerBean(ProjectDescription.class, () -> description);
 			projectContext.register(RequestedDependencyTestConfiguration.class);
 			projectContext.refresh();
 			context.accept(projectContext);

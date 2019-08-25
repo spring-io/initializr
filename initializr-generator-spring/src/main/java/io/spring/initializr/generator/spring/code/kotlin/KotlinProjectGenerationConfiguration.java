@@ -50,13 +50,13 @@ import org.springframework.context.annotation.Import;
 @Import(KotlinProjectGenerationDefaultContributorsConfiguration.class)
 public class KotlinProjectGenerationConfiguration {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinProjectGenerationConfiguration(ProjectDescription projectDescription,
+	public KotlinProjectGenerationConfiguration(ProjectDescription description,
 			IndentingWriterFactory indentingWriterFactory) {
-		this.projectDescription = projectDescription;
+		this.description = description;
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -65,7 +65,7 @@ public class KotlinProjectGenerationConfiguration {
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.projectDescription, KotlinSourceCode::new,
+		return new MainSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
 				new KotlinSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
 				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
@@ -74,7 +74,7 @@ public class KotlinProjectGenerationConfiguration {
 	public TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.projectDescription, KotlinSourceCode::new,
+		return new TestSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
 				new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
 				testSourceCodeCustomizers);
 	}
@@ -84,13 +84,13 @@ public class KotlinProjectGenerationConfiguration {
 			InitializrMetadata metadata) {
 		String kotlinVersion = kotlinVersionResolver
 				.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
-				.resolveKotlinVersion(this.projectDescription);
+				.resolveKotlinVersion(this.description);
 		return new SimpleKotlinProjectSettings(kotlinVersion);
 	}
 
 	@Bean
 	public KotlinJacksonBuildCustomizer kotlinJacksonBuildCustomizer(InitializrMetadata metadata) {
-		return new KotlinJacksonBuildCustomizer(metadata, this.projectDescription);
+		return new KotlinJacksonBuildCustomizer(metadata, this.description);
 	}
 
 }

@@ -39,12 +39,12 @@ import org.springframework.core.Ordered;
  */
 public class DependencyManagementBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final ProjectDescription projectDescription;
+	private final ProjectDescription description;
 
 	private final InitializrMetadata metadata;
 
-	public DependencyManagementBuildCustomizer(ProjectDescription projectDescription, InitializrMetadata metadata) {
-		this.projectDescription = projectDescription;
+	public DependencyManagementBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+		this.description = description;
 		this.metadata = metadata;
 	}
 
@@ -63,7 +63,7 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		Map<String, Repository> repositories = new LinkedHashMap<>();
 		mapDependencies(build).forEach((dependency) -> {
 			if (dependency.getBom() != null) {
-				resolveBom(resolvedBoms, dependency.getBom(), this.projectDescription.getPlatformVersion());
+				resolveBom(resolvedBoms, dependency.getBom(), this.description.getPlatformVersion());
 			}
 			if (dependency.getRepository() != null) {
 				String repositoryId = dependency.getRepository();

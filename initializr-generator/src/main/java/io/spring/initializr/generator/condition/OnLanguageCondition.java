@@ -31,15 +31,15 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class OnLanguageCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
-		if (projectDescription.getLanguage() == null) {
+		if (description.getLanguage() == null) {
 			return false;
 		}
 		String languageId = (String) metadata.getAllAnnotationAttributes(ConditionalOnLanguage.class.getName())
 				.getFirst("value");
 		Language language = Language.forId(languageId, null);
-		return projectDescription.getLanguage().id().equals(language.id());
+		return description.getLanguage().id().equals(language.id());
 	}
 
 }

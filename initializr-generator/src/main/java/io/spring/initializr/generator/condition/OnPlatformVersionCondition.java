@@ -35,9 +35,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class OnPlatformVersionCondition extends ProjectGenerationCondition {
 
 	@Override
-	protected boolean matches(ProjectDescription projectDescription, ConditionContext context,
+	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
-		Version platformVersion = projectDescription.getPlatformVersion();
+		Version platformVersion = description.getPlatformVersion();
 		if (platformVersion == null) {
 			return false;
 		}

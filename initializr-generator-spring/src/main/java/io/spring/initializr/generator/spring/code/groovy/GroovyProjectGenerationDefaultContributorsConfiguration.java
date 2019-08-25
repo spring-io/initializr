@@ -95,7 +95,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 		@Bean
 		ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
-				ProjectDescription projectDescription) {
+				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
 						.modifiers(Modifier.PROTECTED)
@@ -103,7 +103,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
 						.body(new GroovyReturnStatement(new GroovyMethodInvocation("application", "sources",
-								projectDescription.getApplicationName())));
+								description.getApplicationName())));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

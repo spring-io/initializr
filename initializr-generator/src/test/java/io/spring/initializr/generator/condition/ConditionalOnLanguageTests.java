@@ -40,9 +40,9 @@ class ConditionalOnLanguageTests {
 
 	@Test
 	void outcomeWithJavaLanguage() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setLanguage(new JavaLanguage());
-		assertCondition(projectDescription, (context) -> {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage());
+		assertCondition(description, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
 			assertThat(context.getBean(String.class)).isEqualTo("testJava");
 		});
@@ -50,9 +50,9 @@ class ConditionalOnLanguageTests {
 
 	@Test
 	void outcomeWithGroovyBuildSystem() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setLanguage(new GroovyLanguage());
-		assertCondition(projectDescription, (context) -> {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new GroovyLanguage());
+		assertCondition(description, (context) -> {
 			assertThat(context.getBeansOfType(String.class)).hasSize(1);
 			assertThat(context.getBean(String.class)).isEqualTo("testGroovy");
 		});
@@ -60,21 +60,20 @@ class ConditionalOnLanguageTests {
 
 	@Test
 	void outcomeWithNoMatch() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		projectDescription.setLanguage(new KotlinLanguage());
-		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new KotlinLanguage());
+		assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
 	@Test
 	void outcomeWithNoAvailableLanguage() {
-		MutableProjectDescription projectDescription = new MutableProjectDescription();
-		assertCondition(projectDescription, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
 	}
 
-	private void assertCondition(MutableProjectDescription projectDescription,
-			Consumer<ProjectGenerationContext> context) {
+	private void assertCondition(MutableProjectDescription description, Consumer<ProjectGenerationContext> context) {
 		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ProjectDescription.class, () -> projectDescription);
+			projectContext.registerBean(ProjectDescription.class, () -> description);
 			projectContext.register(LanguageTestConfiguration.class);
 			projectContext.refresh();
 			context.accept(projectContext);

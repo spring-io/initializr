@@ -66,17 +66,17 @@ public class SourceCodeProjectGenerationConfiguration {
 	@ConditionalOnPackaging(WarPackaging.ID)
 	static class WarPackagingConfiguration {
 
-		private final ProjectDescription projectDescription;
+		private final ProjectDescription description;
 
-		WarPackagingConfiguration(ProjectDescription projectDescription) {
-			this.projectDescription = projectDescription;
+		WarPackagingConfiguration(ProjectDescription description) {
+			this.description = description;
 		}
 
 		@Bean
 		@ConditionalOnPlatformVersion("[1.5.0.M1, 2.0.0.M1)")
 		ServletInitializerContributor boot15ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(this.projectDescription.getPackageName(),
+			return new ServletInitializerContributor(this.description.getPackageName(),
 					"org.springframework.boot.web.support.SpringBootServletInitializer", servletInitializerCustomizers);
 		}
 
@@ -84,7 +84,7 @@ public class SourceCodeProjectGenerationConfiguration {
 		@ConditionalOnPlatformVersion("2.0.0.M1")
 		ServletInitializerContributor boot20ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(this.projectDescription.getPackageName(),
+			return new ServletInitializerContributor(this.description.getPackageName(),
 					"org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
 					servletInitializerCustomizers);
 		}
