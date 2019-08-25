@@ -57,8 +57,8 @@ class JvmModuleAssertTests {
 		createFile(root, "src/main/java/com/example/Test.other");
 		assertThatExceptionOfType(AssertionError.class)
 				.isThrownBy(() -> assertThat(forJavaProject(root)).hasMainSource("com.example", "Test"))
-				.withMessageContaining("Test").withMessageContaining("com.example").withMessageContaining("Test.java")
-				.withMessageContaining("com.example").withMessageContaining("src/main/java/com/example/Test.java");
+				.withMessageContaining(
+						String.format("Source '%s' not found in package '%s'", "Test.java", "com.example"));
 	}
 
 	@Test
@@ -66,8 +66,8 @@ class JvmModuleAssertTests {
 		createFile(root, "src/main/groovy/com/example/Test.java");
 		assertThatExceptionOfType(AssertionError.class)
 				.isThrownBy(() -> assertThat(forJavaProject(root)).hasMainSource("com.example", "Test"))
-				.withMessageContaining("Test.java").withMessageContaining("com.example")
-				.withMessageContaining("src/main/java/com/example/Test.java");
+				.withMessageContaining(
+						String.format("Source '%s' not found in package '%s'", "Test.java", "com.example"));
 	}
 
 	@Test
@@ -111,8 +111,8 @@ class JvmModuleAssertTests {
 		createFile(root, "src/test/java/com/example/Test.other");
 		assertThatExceptionOfType(AssertionError.class)
 				.isThrownBy(() -> assertThat(forJavaProject(root)).hasTestSource("com.example", "Test"))
-				.withMessageContaining("Test").withMessageContaining("com.example").withMessageContaining("Test.java")
-				.withMessageContaining("com.example").withMessageContaining("src/test/java/com/example/Test.java");
+				.withMessageContaining(
+						String.format("Source '%s' not found in package '%s'", "Test.java", "com.example"));
 	}
 
 	@Test
@@ -120,8 +120,8 @@ class JvmModuleAssertTests {
 		createFile(root, "src/test/groovy/com/example/Test.java");
 		assertThatExceptionOfType(AssertionError.class)
 				.isThrownBy(() -> assertThat(forJavaProject(root)).hasTestSource("com.example", "Test"))
-				.withMessageContaining("Test.java").withMessageContaining("com.example")
-				.withMessageContaining("src/test/java/com/example/Test.java");
+				.withMessageContaining(
+						String.format("Source '%s' not found in package '%s'", "Test.java", "com.example"));
 	}
 
 	@Test
