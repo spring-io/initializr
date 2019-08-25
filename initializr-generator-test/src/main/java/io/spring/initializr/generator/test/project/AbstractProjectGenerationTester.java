@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
@@ -70,11 +68,6 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 	public SELF withDirectory(Path directory) {
 		return withBean(ProjectDirectoryFactory.class,
 				() -> (description) -> Files.createTempDirectory(directory, "project-"));
-	}
-
-	public SELF withIndentingWriterFactory() {
-		return withBean(IndentingWriterFactory.class,
-				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
 	}
 
 	public SELF withContextInitializer(Consumer<ProjectGenerationContext> context) {

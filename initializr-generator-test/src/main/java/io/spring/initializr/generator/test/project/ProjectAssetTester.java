@@ -24,6 +24,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -33,8 +35,8 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
  * A tester for project asset that does not detect available {@link ProjectContributor
- * contributors}. By default, no contributor is available and can be added using a
- * {@link #withConfiguration(Class[]) configuration class} or a
+ * contributors} and does not register any bean to the context. Contributors can be added
+ * using a {@link #withConfiguration(Class[]) configuration class} or a
  * {@link #withContextInitializer(Consumer) customization of the project generation
  * context}.
  *
@@ -57,6 +59,11 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 			Consumer<ProjectGenerationContext> contextInitializer,
 			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		return new ProjectAssetTester(beanDefinitions, contextInitializer, descriptionCustomizer);
+	}
+
+	public ProjectAssetTester withIndentingWriterFactory() {
+		return withBean(IndentingWriterFactory.class,
+				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
 	}
 
 	public ProjectAssetTester withConfiguration(Class<?>... configurationClasses) {
