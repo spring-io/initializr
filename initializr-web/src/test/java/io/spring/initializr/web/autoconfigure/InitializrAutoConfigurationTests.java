@@ -19,7 +19,10 @@ package io.spring.initializr.web.autoconfigure;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-import io.spring.initializr.web.project.MainController;
+import io.spring.initializr.web.controller.CommandLineMetadataController;
+import io.spring.initializr.web.controller.ProjectGenerationController;
+import io.spring.initializr.web.controller.ProjectMetadataController;
+import io.spring.initializr.web.controller.SpringCliDistributionController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
@@ -131,7 +134,10 @@ class InitializrAutoConfigurationTests {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
 			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
 			assertThat(context).hasSingleBean(ProjectRequestToDescriptionConverter.class);
-			assertThat(context).hasSingleBean(MainController.class);
+			assertThat(context).hasSingleBean(ProjectGenerationController.class);
+			assertThat(context).hasSingleBean(ProjectMetadataController.class);
+			assertThat(context).hasSingleBean(CommandLineMetadataController.class);
+			assertThat(context).hasSingleBean(SpringCliDistributionController.class);
 		});
 	}
 
@@ -139,7 +145,10 @@ class InitializrAutoConfigurationTests {
 	void webConfigurationConditionalOnWebApplication() {
 		this.contextRunner.run((context) -> {
 			assertThat(context).doesNotHaveBean(InitializrWebConfig.class);
-			assertThat(context).doesNotHaveBean(MainController.class);
+			assertThat(context).doesNotHaveBean(ProjectGenerationController.class);
+			assertThat(context).doesNotHaveBean(ProjectMetadataController.class);
+			assertThat(context).doesNotHaveBean(CommandLineMetadataController.class);
+			assertThat(context).doesNotHaveBean(SpringCliDistributionController.class);
 		});
 	}
 

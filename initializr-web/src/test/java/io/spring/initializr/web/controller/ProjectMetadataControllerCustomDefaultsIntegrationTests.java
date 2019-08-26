@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
@@ -28,6 +28,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +38,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Integration tests for {@link ProjectMetadataController} on a real http server.
+ *
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-class MainControllerServiceMetadataIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
+class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Autowired
 	private InitializrMetadataProvider metadataProvider;
@@ -82,6 +85,28 @@ class MainControllerServiceMetadataIntegrationTests extends AbstractFullStackIni
 	void metadataClientEndpoint() {
 		ResponseEntity<String> response = execute("/metadata/client", String.class, null, "application/json");
 		validateCurrentMetadata(response);
+	}
+
+	@Test
+	void noBootVersion() throws JSONException {
+		ResponseEntity<String> response = execute("/dependencies", String.class, null, "application/json");
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
+		validateDependenciesOutput("2.1.4", response.getBody());
+	}
+
+	@Test
+	void filteredDependencies() throws JSONException {
+		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.2.1.RELEASE", String.class, null,
+				"application/json");
+		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
+		validateDependenciesOutput("2.2.1", response.getBody());
+	}
+
+	protected void validateDependenciesOutput(String version, String actual) throws JSONException {
+		JSONObject expected = readJsonFrom("metadata/dependencies/test-dependencies-" + version + ".json");
+		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
 	}
 
 }

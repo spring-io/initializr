@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
@@ -23,10 +23,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
+ * Integration tests for {@link ProjectGenerationController} on a real http server.
+ *
  * @author HaiTao Zhang
  */
 @ActiveProfiles("test-default")
-public class MainControllerArchiveIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
+public class ProjectGenerationControllerArchiveIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
 	void baseDirectorySeparatedBySpace() {

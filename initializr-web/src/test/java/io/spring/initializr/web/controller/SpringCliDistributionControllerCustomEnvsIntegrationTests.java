@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import java.net.URI;
 
-import io.spring.initializr.generator.test.project.ProjectStructure;
-import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
@@ -30,12 +28,13 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration tests with custom environment.
+ * Integration tests for {@link SpringCliDistributionController} with custom defaults.
  *
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
-class MainControllerEnvIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+public class SpringCliDistributionControllerCustomEnvsIntegrationTests
+		extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void downloadCliWithCustomRepository() throws Exception {
@@ -43,19 +42,6 @@ class MainControllerEnvIntegrationTests extends AbstractInitializrControllerInte
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin.zip";
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
-	}
-
-	@Test
-	void generateProjectWithInvalidName() {
-		ProjectStructure project = downloadZip("/starter.zip?style=data-jpa&name=Invalid");
-		assertThat(project).containsFiles("src/main/java/com/example/demo/FooBarApplication.java",
-				"src/test/java/com/example/demo/FooBarApplicationTests.java");
-		assertThat(project).doesNotContainFiles("src/main/java/com/example/demo/DemoApplication.java",
-				"src/test/java/com/example/demo/DemoApplicationTests.java");
-		assertDoesNotHaveWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(2)
-				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 }

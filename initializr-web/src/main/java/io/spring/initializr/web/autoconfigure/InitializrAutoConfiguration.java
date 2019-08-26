@@ -33,7 +33,10 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
-import io.spring.initializr.web.project.MainController;
+import io.spring.initializr.web.controller.CommandLineMetadataController;
+import io.spring.initializr.web.controller.ProjectGenerationController;
+import io.spring.initializr.web.controller.ProjectMetadataController;
+import io.spring.initializr.web.controller.SpringCliDistributionController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
@@ -139,11 +142,29 @@ public class InitializrAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean
-		MainController initializrMainController(InitializrMetadataProvider metadataProvider,
-				TemplateRenderer templateRenderer, DependencyMetadataProvider dependencyMetadataProvider,
+		ProjectGenerationController projectGenerationController(InitializrMetadataProvider metadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
-			return new MainController(metadataProvider, templateRenderer, dependencyMetadataProvider,
-					projectGenerationInvoker);
+			return new ProjectGenerationController(metadataProvider, projectGenerationInvoker);
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		ProjectMetadataController projectMetadataController(InitializrMetadataProvider metadataProvider,
+				DependencyMetadataProvider dependencyMetadataProvider) {
+			return new ProjectMetadataController(metadataProvider, dependencyMetadataProvider);
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		CommandLineMetadataController commandLineMetadataController(InitializrMetadataProvider metadataProvider,
+				TemplateRenderer templateRenderer) {
+			return new CommandLineMetadataController(metadataProvider, templateRenderer);
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		SpringCliDistributionController cliDistributionController(InitializrMetadataProvider metadataProvider) {
+			return new SpringCliDistributionController(metadataProvider);
 		}
 
 		@Bean

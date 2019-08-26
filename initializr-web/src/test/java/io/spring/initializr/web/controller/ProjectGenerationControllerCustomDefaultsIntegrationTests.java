@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
@@ -23,10 +23,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
+ * Integration tests for {@link ProjectGenerationController} that uses custom defaults.
+ *
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-defaults" })
-class MainControllerDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class ProjectGenerationControllerCustomDefaultsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	// see defaults customization
 

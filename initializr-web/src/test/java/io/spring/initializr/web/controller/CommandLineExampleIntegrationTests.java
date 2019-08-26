@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
 import io.spring.initializr.generator.test.project.ProjectStructure;

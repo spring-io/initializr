@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
@@ -24,23 +24,13 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
- * Integration tests with {@code forceSsl} enabled.
+ * Integration tests for {@link ProjectMetadataController} with {@code forceSsl} enabled.
  *
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-ssl" })
-class MainControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
-
-	@Test
-	void forceSsl() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
-		assertThat(body).as("Must force https").contains("https://start.spring.io/");
-		assertThat(body).as("Must force https").doesNotContain("http://");
-	}
+class ProjectMetadataControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void forceSslInMetadata() {

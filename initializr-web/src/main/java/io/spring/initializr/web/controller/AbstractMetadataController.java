@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -31,28 +28,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author Stephane Nicoll
  */
-public abstract class AbstractInitializrController {
+public abstract class AbstractMetadataController {
 
 	protected final InitializrMetadataProvider metadataProvider;
 
 	private Boolean forceSsl;
 
-	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider) {
+	protected AbstractMetadataController(InitializrMetadataProvider metadataProvider) {
 		this.metadataProvider = metadataProvider;
-	}
-
-	public boolean isForceSsl() {
-		if (this.forceSsl == null) {
-			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
-		}
-		return this.forceSsl;
-
-	}
-
-	@ExceptionHandler
-	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex)
-			throws IOException {
-		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
 	/**
@@ -66,6 +49,20 @@ public abstract class AbstractInitializrController {
 			builder.scheme("https");
 		}
 		return builder.build().toString();
+	}
+
+	protected String createUniqueId(String content) {
+		StringBuilder builder = new StringBuilder();
+		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);
+		return builder.toString();
+	}
+
+	private boolean isForceSsl() {
+		if (this.forceSsl == null) {
+			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
+		}
+		return this.forceSsl;
+
 	}
 
 }
