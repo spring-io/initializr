@@ -1,0 +1,1 @@
+io.spring.initializr.generator.project.ProjectGenerationConfiguration=io.spring.initializr.web.controller.custom.CustomProjectContributor

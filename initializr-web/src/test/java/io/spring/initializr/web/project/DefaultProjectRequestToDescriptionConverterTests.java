@@ -32,17 +32,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
- * Tests for {@link ProjectRequestToDescriptionConverter}.
+ * Tests for {@link DefaultProjectRequestToDescriptionConverter}.
  *
  * @author Madhura Bhave
  * @author Stephane Nicoll
  * @author HaiTao Zhang
  */
-class ProjectRequestToDescriptionConverterTests {
+class DefaultProjectRequestToDescriptionConverterTests {
 
 	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 
-	private final ProjectRequestToDescriptionConverter converter = new ProjectRequestToDescriptionConverter();
+	private final DefaultProjectRequestToDescriptionConverter converter = new DefaultProjectRequestToDescriptionConverter();
 
 	@Test
 	void convertWhenTypeIsInvalidShouldThrowException() {

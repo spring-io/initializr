@@ -34,9 +34,11 @@ import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InitializrProperties;
 import io.spring.initializr.web.controller.CommandLineMetadataController;
+import io.spring.initializr.web.controller.DefaultProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectMetadataController;
 import io.spring.initializr.web.controller.SpringCliDistributionController;
+import io.spring.initializr.web.project.DefaultProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
@@ -144,7 +146,7 @@ public class InitializrAutoConfiguration {
 		@ConditionalOnMissingBean
 		ProjectGenerationController projectGenerationController(InitializrMetadataProvider metadataProvider,
 				ProjectGenerationInvoker projectGenerationInvoker) {
-			return new ProjectGenerationController(metadataProvider, projectGenerationInvoker);
+			return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
 		}
 
 		@Bean
@@ -171,14 +173,9 @@ public class InitializrAutoConfiguration {
 		@ConditionalOnMissingBean
 		ProjectGenerationInvoker projectGenerationInvoker(ApplicationContext applicationContext,
 				ApplicationEventPublisher eventPublisher,
-				ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter) {
-			return new ProjectGenerationInvoker(applicationContext, eventPublisher,
-					projectRequestToDescriptionConverter);
-		}
-
-		@Bean
-		ProjectRequestToDescriptionConverter projectRequestToDescriptionConverter() {
-			return new ProjectRequestToDescriptionConverter();
+				ObjectProvider<ProjectRequestToDescriptionConverter> projectRequestToDescriptionConverter) {
+			return new ProjectGenerationInvoker(applicationContext, eventPublisher, projectRequestToDescriptionConverter
+					.getIfAvailable(DefaultProjectRequestToDescriptionConverter::new));
 		}
 
 		@Bean

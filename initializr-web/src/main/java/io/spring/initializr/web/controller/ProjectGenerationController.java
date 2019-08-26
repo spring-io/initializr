@@ -33,12 +33,12 @@ import javax.servlet.http.HttpServletResponse;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectGenerationResult;
 import io.spring.initializr.web.project.ProjectRequest;
-import io.spring.initializr.web.project.WebProjectRequest;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -61,12 +61,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * {@link Controller} that provides endpoints for project generation.
+ * Base {@link Controller} that provides endpoints for project generation.
  *
+ * @param <R> the {@link ProjectRequest} type to use to bind request parameters
  * @author Stephane Nicoll
  */
 @Controller
-public class ProjectGenerationController {
+public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	private static final Log logger = LogFactory.getLog(ProjectGenerationController.class);
 
@@ -80,12 +81,17 @@ public class ProjectGenerationController {
 		this.projectGenerationInvoker = projectGenerationInvoker;
 	}
 
+	/**
+	 * Create an initialized {@link ProjectRequest} instance to use to bind the parameters
+	 * of a project generation request.
+	 * @param headers the headers of the request
+	 * @return a new {@link ProjectRequest} instance
+	 */
 	@ModelAttribute
-	public ProjectRequest projectRequest(@RequestHeader Map<String, String> headers) {
-		WebProjectRequest request = new WebProjectRequest();
-		request.getParameters().putAll(headers);
-		request.initialize(this.metadataProvider.get());
-		return request;
+	public abstract R projectRequest(@RequestHeader Map<String, String> headers);
+
+	protected InitializrMetadata getMetadata() {
+		return this.metadataProvider.get();
 	}
 
 	@ExceptionHandler
@@ -96,7 +102,7 @@ public class ProjectGenerationController {
 
 	@RequestMapping(path = { "/pom", "/pom.xml" })
 	@ResponseBody
-	public ResponseEntity<byte[]> pom(ProjectRequest request) {
+	public ResponseEntity<byte[]> pom(R request) {
 		request.setType("maven-build");
 		byte[] mavenPom = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
@@ -104,7 +110,7 @@ public class ProjectGenerationController {
 
 	@RequestMapping(path = { "/build", "/build.gradle" })
 	@ResponseBody
-	public ResponseEntity<byte[]> gradle(ProjectRequest request) {
+	public ResponseEntity<byte[]> gradle(R request) {
 		request.setType("gradle-build");
 		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(gradleBuild, "application/octet-stream", "build.gradle");
@@ -112,7 +118,7 @@ public class ProjectGenerationController {
 
 	@RequestMapping("/starter.zip")
 	@ResponseBody
-	public ResponseEntity<byte[]> springZip(ProjectRequest request) throws IOException {
+	public ResponseEntity<byte[]> springZip(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
 				ZipArchiveEntry::setUnixMode);
@@ -121,7 +127,7 @@ public class ProjectGenerationController {
 
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
 	@ResponseBody
-	public ResponseEntity<byte[]> springTgz(ProjectRequest request) throws IOException {
+	public ResponseEntity<byte[]> springTgz(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
 				TarArchiveEntry::setMode);
@@ -180,7 +186,7 @@ public class ProjectGenerationController {
 		return UnixStat.FILE_FLAG | (entryName.equals(wrapperScript) ? 0755 : UnixStat.DEFAULT_FILE_PERM);
 	}
 
-	private String generateFileName(ProjectRequest request, String extension) {
+	private String generateFileName(R request, String extension) {
 		String candidate = (StringUtils.hasText(request.getArtifactId()) ? request.getArtifactId()
 				: this.metadataProvider.get().getArtifactId().getContent());
 		String tmp = candidate.replaceAll(" ", "_");

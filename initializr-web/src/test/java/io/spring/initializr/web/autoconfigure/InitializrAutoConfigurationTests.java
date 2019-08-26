@@ -28,15 +28,12 @@ import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
@@ -57,9 +54,11 @@ import static org.mockito.Mockito.mock;
  */
 class InitializrAutoConfigurationTests {
 
+	private static final AutoConfigurations BASIC_AUTO_CONFIGURATIONS = AutoConfigurations
+			.of(RestTemplateAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
+
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
-					JacksonAutoConfiguration.class, InitializrAutoConfiguration.class));
+			.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 
 	@Test
 	void autoConfigRegistersTemplateRenderer() {
@@ -127,18 +126,26 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void webConfiguration() {
 		WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner()
-				.withConfiguration(AutoConfigurations.of(RestTemplateAutoConfiguration.class,
-						JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
-						WebMvcAutoConfiguration.class, InitializrAutoConfiguration.class));
+				.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 		webContextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
 			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
-			assertThat(context).hasSingleBean(ProjectRequestToDescriptionConverter.class);
 			assertThat(context).hasSingleBean(ProjectGenerationController.class);
 			assertThat(context).hasSingleBean(ProjectMetadataController.class);
 			assertThat(context).hasSingleBean(CommandLineMetadataController.class);
 			assertThat(context).hasSingleBean(SpringCliDistributionController.class);
 		});
+	}
+
+	@Test
+	void autoConfigWithCustomProjectRequestConverter() {
+		new WebApplicationContextRunner().withConfiguration(BASIC_AUTO_CONFIGURATIONS)
+				.withUserConfiguration(CustomProjectRequestToDescriptionConverter.class).run((context) -> {
+					assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
+					assertThat(context.getBean(ProjectGenerationInvoker.class)).hasFieldOrPropertyWithValue(
+							"requestConverter", context.getBean("testProjectRequestToDescriptionConverter"));
+				});
+
 	}
 
 	@Test
@@ -180,7 +187,7 @@ class InitializrAutoConfigurationTests {
 
 		@Bean
 		TemplateRenderer testTemplateRenderer() {
-			return Mockito.mock(TemplateRenderer.class);
+			return mock(TemplateRenderer.class);
 		}
 
 	}
@@ -190,7 +197,7 @@ class InitializrAutoConfigurationTests {
 
 		@Bean
 		InitializrMetadataUpdateStrategy testInitializrMetadataUpdateStrategy() {
-			return Mockito.mock(InitializrMetadataUpdateStrategy.class);
+			return mock(InitializrMetadataUpdateStrategy.class);
 		}
 
 	}
@@ -200,7 +207,7 @@ class InitializrAutoConfigurationTests {
 
 		@Bean
 		InitializrMetadataProvider testInitializrMetadataProvider() {
-			return Mockito.mock(InitializrMetadataProvider.class);
+			return mock(InitializrMetadataProvider.class);
 		}
 
 	}
@@ -210,7 +217,17 @@ class InitializrAutoConfigurationTests {
 
 		@Bean
 		DependencyMetadataProvider testDependencyMetadataProvider() {
-			return Mockito.mock(DependencyMetadataProvider.class);
+			return mock(DependencyMetadataProvider.class);
+		}
+
+	}
+
+	@Configuration
+	static class CustomProjectRequestToDescriptionConverter {
+
+		@Bean
+		ProjectRequestToDescriptionConverter testProjectRequestToDescriptionConverter() {
+			return mock(ProjectRequestToDescriptionConverter.class);
 		}
 
 	}

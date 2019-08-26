@@ -53,15 +53,15 @@ public class ProjectGenerationInvoker {
 
 	private final ApplicationEventPublisher eventPublisher;
 
-	private final ProjectRequestToDescriptionConverter converter;
+	private final ProjectRequestToDescriptionConverter requestConverter;
 
 	private transient Map<Path, List<Path>> temporaryFiles = new LinkedHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
-			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter converter) {
+			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter requestConverter) {
 		this.parentApplicationContext = parentApplicationContext;
 		this.eventPublisher = eventPublisher;
-		this.converter = converter;
+		this.requestConverter = requestConverter;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ProjectGenerationInvoker {
 	public ProjectGenerationResult invokeProjectStructureGeneration(ProjectRequest request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription description = this.converter.convert(request, metadata);
+			ProjectDescription description = this.requestConverter.convert(request, metadata);
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 			ProjectGenerationResult result = projectGenerator.generate(description, generateProject(request));
@@ -104,7 +104,7 @@ public class ProjectGenerationInvoker {
 	public byte[] invokeBuildGeneration(ProjectRequest request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
-			ProjectDescription description = this.converter.convert(request, metadata);
+			ProjectDescription description = this.requestConverter.convert(request, metadata);
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 			return projectGenerator.generate(description, generateBuild(request));

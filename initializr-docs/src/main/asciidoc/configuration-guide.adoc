@@ -1069,3 +1069,32 @@ expiration settings accordingly.
 |Cache templates that are used to generate projects.
 
 |===
+
+
+
+[[create-instance-advanced-config-custom-project-request]]
+=== Bind to custom project request
+Only attributes that are defined in the metadata can be bound to a `ProjectRequest` and
+ultimately made available in `ProjectDescription`. A custom instance may chose however to
+provide additional attributes. Please note that those attributes won't be supported by
+official clients (i.e. IDEs).
+
+The first step is to define a custom `ProjectRequest` with your additional attributes and
+create a custom `ProjectGenerationController` that binds to it:
+
+[source,java,indent=0,subs="verbatim,quotes,attributes"]
+----
+include::{code-examples}/doc/generator/project/CustomProjectGenerationController.java[tag=code]
+----
+
+If you inherit from `WebProjectRequest`, defaults can be automatically applied from the
+metadata as shown above but you may also chose to ignore that. If you define a `@Bean`
+for that controller, the auto-configuration will back-off and use yours instead.
+
+The next step is to make sure that those additional attributes are made available in the
+`ProjectGenerationContext`. The idiomatic way of doing this is to create your own
+interface that extends from `ProjectDescription` and expose your custom attributes. To
+make sure your view of `ProjectGeneration` is made available in the
+`ProjectGenerationContext`, a custom `ProjectRequestToDescriptionConverter` should be
+defined. When such a bean exists in the context it replaces the default that the
+auto-configuration provides.

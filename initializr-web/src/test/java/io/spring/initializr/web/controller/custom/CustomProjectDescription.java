@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.project;
+package io.spring.initializr.web.controller.custom;
 
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
-import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
- * Convert a {@link ProjectRequest} to a {@link ProjectDescription}.
+ * A custom {@link ProjectDescription} to convey the additional flags to contributors.
  *
  * @author Stephane Nicoll
  */
-@FunctionalInterface
-public interface ProjectRequestToDescriptionConverter {
+class CustomProjectDescription extends MutableProjectDescription {
 
-	/**
-	 * Validate and convert the specified {@link ProjectRequest} to a
-	 * {@link ProjectDescription} used as the source of project generation.
-	 * @param request the request to convert
-	 * @param metadata the metadata instance to use
-	 * @return a validated {@link ProjectDescription} to use to generate a project that
-	 * matches the specified {@code request}
-	 */
-	ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata);
+	private boolean customFlag;
+
+	boolean isCustomFlag() {
+		return this.customFlag;
+	}
+
+	void setCustomFlag(boolean customFlag) {
+		this.customFlag = customFlag;
+	}
 
 }
