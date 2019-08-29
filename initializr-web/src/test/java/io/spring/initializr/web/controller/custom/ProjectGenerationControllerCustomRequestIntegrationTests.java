@@ -25,10 +25,10 @@ import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.controller.custom.ProjectGenerationControllerCustomRequestIntegrationTests.CustomProjectGenerationConfiguration;
 import io.spring.initializr.web.project.DefaultProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
-import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -73,25 +73,22 @@ public class ProjectGenerationControllerCustomRequestIntegrationTests
 
 		@Bean
 		CustomProjectGenerationController customProjectGenerationController(InitializrMetadataProvider metadataProvider,
-				ProjectGenerationInvoker projectGenerationInvoker) {
+				ApplicationContext applicationContext) {
+			ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
+					applicationContext, new CustomProjectRequestToDescriptionConverter());
 			return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
-		}
-
-		@Bean
-		ProjectRequestToDescriptionConverter customProjectRequestToDescriptionConverter() {
-			return new CustomProjectRequestToDescriptionConverter();
 		}
 
 	}
 
-	static class CustomProjectRequestToDescriptionConverter implements ProjectRequestToDescriptionConverter {
+	static class CustomProjectRequestToDescriptionConverter
+			implements ProjectRequestToDescriptionConverter<CustomProjectRequest> {
 
 		@Override
-		public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
-			CustomProjectRequest customRequest = (CustomProjectRequest) request;
+		public ProjectDescription convert(CustomProjectRequest request, InitializrMetadata metadata) {
 			CustomProjectDescription description = new CustomProjectDescription();
 			new DefaultProjectRequestToDescriptionConverter().convert(request, description, metadata);
-			description.setCustomFlag(customRequest.isCustomFlag());
+			description.setCustomFlag(request.isCustomFlag());
 			// Override attributes for test purposes
 			description.setPackageName("org.example.custom");
 			description.setApplicationName("CustomApp");

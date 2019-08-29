@@ -73,10 +73,10 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	private final InitializrMetadataProvider metadataProvider;
 
-	private final ProjectGenerationInvoker projectGenerationInvoker;
+	private final ProjectGenerationInvoker<R> projectGenerationInvoker;
 
 	public ProjectGenerationController(InitializrMetadataProvider metadataProvider,
-			ProjectGenerationInvoker projectGenerationInvoker) {
+			ProjectGenerationInvoker<R> projectGenerationInvoker) {
 		this.metadataProvider = metadataProvider;
 		this.projectGenerationInvoker = projectGenerationInvoker;
 	}

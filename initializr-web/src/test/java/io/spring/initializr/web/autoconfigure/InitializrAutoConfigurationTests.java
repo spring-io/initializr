@@ -23,8 +23,6 @@ import io.spring.initializr.web.controller.CommandLineMetadataController;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectMetadataController;
 import io.spring.initializr.web.controller.SpringCliDistributionController;
-import io.spring.initializr.web.project.ProjectGenerationInvoker;
-import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.junit.jupiter.api.Test;
@@ -129,7 +127,6 @@ class InitializrAutoConfigurationTests {
 				.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 		webContextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
-			assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
 			assertThat(context).hasSingleBean(ProjectGenerationController.class);
 			assertThat(context).hasSingleBean(ProjectMetadataController.class);
 			assertThat(context).hasSingleBean(CommandLineMetadataController.class);
@@ -138,12 +135,12 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	void autoConfigWithCustomProjectRequestConverter() {
+	void autoConfigWithCustomProjectGenerationController() {
 		new WebApplicationContextRunner().withConfiguration(BASIC_AUTO_CONFIGURATIONS)
-				.withUserConfiguration(CustomProjectRequestToDescriptionConverter.class).run((context) -> {
-					assertThat(context).hasSingleBean(ProjectGenerationInvoker.class);
-					assertThat(context.getBean(ProjectGenerationInvoker.class)).hasFieldOrPropertyWithValue(
-							"requestConverter", context.getBean("testProjectRequestToDescriptionConverter"));
+				.withUserConfiguration(CustomProjectGenerationController.class).run((context) -> {
+					assertThat(context).hasSingleBean(ProjectGenerationController.class);
+					assertThat(context.getBean(ProjectGenerationController.class))
+							.isSameAs(context.getBean("testProjectGenerationController"));
 				});
 
 	}
@@ -223,11 +220,11 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Configuration
-	static class CustomProjectRequestToDescriptionConverter {
+	static class CustomProjectGenerationController {
 
 		@Bean
-		ProjectRequestToDescriptionConverter testProjectRequestToDescriptionConverter() {
-			return mock(ProjectRequestToDescriptionConverter.class);
+		ProjectGenerationController<?> testProjectGenerationController() {
+			return mock(ProjectGenerationController.class);
 		}
 
 	}

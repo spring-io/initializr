@@ -40,7 +40,7 @@ import io.spring.initializr.web.controller.ProjectMetadataController;
 import io.spring.initializr.web.controller.SpringCliDistributionController;
 import io.spring.initializr.web.project.DefaultProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
-import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
+import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
@@ -61,7 +61,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.support.NoOpCache;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -145,7 +144,9 @@ public class InitializrAutoConfiguration {
 		@Bean
 		@ConditionalOnMissingBean
 		ProjectGenerationController projectGenerationController(InitializrMetadataProvider metadataProvider,
-				ProjectGenerationInvoker projectGenerationInvoker) {
+				ApplicationContext applicationContext) {
+			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
+					applicationContext, new DefaultProjectRequestToDescriptionConverter());
 			return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
 		}
 
@@ -167,15 +168,6 @@ public class InitializrAutoConfiguration {
 		@ConditionalOnMissingBean
 		SpringCliDistributionController cliDistributionController(InitializrMetadataProvider metadataProvider) {
 			return new SpringCliDistributionController(metadataProvider);
-		}
-
-		@Bean
-		@ConditionalOnMissingBean
-		ProjectGenerationInvoker projectGenerationInvoker(ApplicationContext applicationContext,
-				ApplicationEventPublisher eventPublisher,
-				ObjectProvider<ProjectRequestToDescriptionConverter> projectRequestToDescriptionConverter) {
-			return new ProjectGenerationInvoker(applicationContext, eventPublisher, projectRequestToDescriptionConverter
-					.getIfAvailable(DefaultProjectRequestToDescriptionConverter::new));
 		}
 
 		@Bean

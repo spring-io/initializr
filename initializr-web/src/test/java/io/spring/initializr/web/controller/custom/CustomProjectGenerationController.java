@@ -31,7 +31,7 @@ import io.spring.initializr.web.project.ProjectGenerationInvoker;
 class CustomProjectGenerationController extends ProjectGenerationController<CustomProjectRequest> {
 
 	CustomProjectGenerationController(InitializrMetadataProvider metadataProvider,
-			ProjectGenerationInvoker projectGenerationInvoker) {
+			ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker) {
 		super(metadataProvider, projectGenerationInvoker);
 	}
 

@@ -1088,13 +1088,19 @@ include::{code-examples}/doc/generator/project/CustomProjectGenerationController
 ----
 
 If you inherit from `WebProjectRequest`, defaults can be automatically applied from the
-metadata as shown above but you may also chose to ignore that. If you define a `@Bean`
-for that controller, the auto-configuration will back-off and use yours instead.
+metadata as shown above but you may also chose to ignore that.
 
 The next step is to make sure that those additional attributes are made available in the
 `ProjectGenerationContext`. The idiomatic way of doing this is to create your own
 interface that extends from `ProjectDescription` and expose your custom attributes. To
-make sure your view of `ProjectGeneration` is made available in the
+make sure your view of `ProjectDescription` is made available in the
 `ProjectGenerationContext`, a custom `ProjectRequestToDescriptionConverter` should be
-defined. When such a bean exists in the context it replaces the default that the
-auto-configuration provides.
+defined and could reuse `DefaultProjectRequestToDescriptionConverter` to apply general
+rules for standard fields.
+
+Finally, you should wire up everything:
+
+[source,java,indent=0,subs="verbatim,quotes,attributes"]
+----
+include::{code-examples}/doc/generator/project/CustomProjectGenerationConfigurationExample.java[tag=code]
+----

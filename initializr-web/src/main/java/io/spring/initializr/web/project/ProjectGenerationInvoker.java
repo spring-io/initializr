@@ -45,20 +45,26 @@ import org.springframework.util.FileSystemUtils;
  * Invokes the project generation API. This is an intermediate layer that can consume a
  * {@link ProjectRequest} and trigger project generation based on the request.
  *
+ * @param <R> the concrete {@link ProjectRequest} type
  * @author Madhura Bhave
  */
-public class ProjectGenerationInvoker {
+public class ProjectGenerationInvoker<R extends ProjectRequest> {
 
 	private final ApplicationContext parentApplicationContext;
 
 	private final ApplicationEventPublisher eventPublisher;
 
-	private final ProjectRequestToDescriptionConverter requestConverter;
+	private final ProjectRequestToDescriptionConverter<R> requestConverter;
 
 	private transient Map<Path, List<Path>> temporaryFiles = new LinkedHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
-			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter requestConverter) {
+			ProjectRequestToDescriptionConverter<R> requestConverter) {
+		this(parentApplicationContext, parentApplicationContext, requestConverter);
+	}
+
+	protected ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
+			ApplicationEventPublisher eventPublisher, ProjectRequestToDescriptionConverter<R> requestConverter) {
 		this.parentApplicationContext = parentApplicationContext;
 		this.eventPublisher = eventPublisher;
 		this.requestConverter = requestConverter;
@@ -70,7 +76,7 @@ public class ProjectGenerationInvoker {
 	 * @param request the project request
 	 * @return the {@link ProjectGenerationResult}
 	 */
-	public ProjectGenerationResult invokeProjectStructureGeneration(ProjectRequest request) {
+	public ProjectGenerationResult invokeProjectStructureGeneration(R request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
@@ -86,7 +92,7 @@ public class ProjectGenerationInvoker {
 		}
 	}
 
-	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(ProjectRequest request) {
+	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(R request) {
 		return (context) -> {
 			Path projectDir = new DefaultProjectAssetGenerator().generate(context);
 			publishProjectGeneratedEvent(request, context);
@@ -101,7 +107,7 @@ public class ProjectGenerationInvoker {
 	 * @param request the project request
 	 * @return the generated build content
 	 */
-	public byte[] invokeBuildGeneration(ProjectRequest request) {
+	public byte[] invokeBuildGeneration(R request) {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
@@ -115,7 +121,7 @@ public class ProjectGenerationInvoker {
 		}
 	}
 
-	private ProjectAssetGenerator<byte[]> generateBuild(ProjectRequest request) {
+	private ProjectAssetGenerator<byte[]> generateBuild(R request) {
 		return (context) -> {
 			byte[] content = generateBuild(context);
 			publishProjectGeneratedEvent(request, context);
@@ -180,13 +186,13 @@ public class ProjectGenerationInvoker {
 				context.getBean(ProjectDescription.class).getPlatformVersion()));
 	}
 
-	private void publishProjectGeneratedEvent(ProjectRequest request, ProjectGenerationContext context) {
+	private void publishProjectGeneratedEvent(R request, ProjectGenerationContext context) {
 		InitializrMetadata metadata = context.getBean(InitializrMetadata.class);
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, metadata);
 		this.eventPublisher.publishEvent(event);
 	}
 
-	private void publishProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
+	private void publishProjectFailedEvent(R request, InitializrMetadata metadata, Exception cause) {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, metadata, cause);
 		this.eventPublisher.publishEvent(event);
 	}

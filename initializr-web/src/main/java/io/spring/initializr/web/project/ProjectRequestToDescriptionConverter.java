@@ -22,10 +22,11 @@ import io.spring.initializr.metadata.InitializrMetadata;
 /**
  * Convert a {@link ProjectRequest} to a {@link ProjectDescription}.
  *
+ * @param <R> the concrete {@link ProjectRequest} type
  * @author Stephane Nicoll
  */
 @FunctionalInterface
-public interface ProjectRequestToDescriptionConverter {
+public interface ProjectRequestToDescriptionConverter<R extends ProjectRequest> {
 
 	/**
 	 * Validate and convert the specified {@link ProjectRequest} to a
@@ -35,6 +36,6 @@ public interface ProjectRequestToDescriptionConverter {
 	 * @return a validated {@link ProjectDescription} to use to generate a project that
 	 * matches the specified {@code request}
 	 */
-	ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata);
+	ProjectDescription convert(R request, InitializrMetadata metadata);
 
 }

@@ -42,7 +42,8 @@ import org.springframework.util.StringUtils;
  * @author Madhura Bhave
  * @author HaiTao Zhang
  */
-public class DefaultProjectRequestToDescriptionConverter implements ProjectRequestToDescriptionConverter {
+public class DefaultProjectRequestToDescriptionConverter
+		implements ProjectRequestToDescriptionConverter<ProjectRequest> {
 
 	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
 

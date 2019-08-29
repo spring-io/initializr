@@ -32,7 +32,7 @@ import io.spring.initializr.web.project.WebProjectRequest;
 public class DefaultProjectGenerationController extends ProjectGenerationController<ProjectRequest> {
 
 	public DefaultProjectGenerationController(InitializrMetadataProvider metadataProvider,
-			ProjectGenerationInvoker projectGenerationInvoker) {
+			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker) {
 		super(metadataProvider, projectGenerationInvoker);
 	}
 
