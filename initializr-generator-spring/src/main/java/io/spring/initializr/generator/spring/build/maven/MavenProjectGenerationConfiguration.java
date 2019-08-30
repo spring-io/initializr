@@ -72,7 +72,7 @@ public class MavenProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnPackaging(WarPackaging.ID)
 	public BuildCustomizer<MavenBuild> mavenWarPackagingConfigurer() {
-		return (build) -> build.setPackaging("war");
+		return (build) -> build.settings().packaging("war");
 	}
 
 }

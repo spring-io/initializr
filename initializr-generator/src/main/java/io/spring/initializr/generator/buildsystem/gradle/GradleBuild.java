@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
 
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -42,7 +43,7 @@ import org.springframework.util.StringUtils;
  */
 public class GradleBuild extends Build {
 
-	private String sourceCompatibility;
+	private final GradleBuildSettings.Builder settings = new Builder();
 
 	private final Map<String, String> ext = new TreeMap<>();
 
@@ -68,12 +69,14 @@ public class GradleBuild extends Build {
 		this(null);
 	}
 
-	public void setSourceCompatibility(String sourceCompatibility) {
-		this.sourceCompatibility = sourceCompatibility;
+	@Override
+	public GradleBuildSettings.Builder settings() {
+		return this.settings;
 	}
 
-	public String getSourceCompatibility() {
-		return this.sourceCompatibility;
+	@Override
+	public GradleBuildSettings getSettings() {
+		return this.settings.build();
 	}
 
 	public GradleBuild ext(String key, String value) {

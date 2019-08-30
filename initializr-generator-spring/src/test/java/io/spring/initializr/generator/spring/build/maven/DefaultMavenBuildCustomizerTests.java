@@ -44,8 +44,8 @@ class DefaultMavenBuildCustomizerTests {
 		description.setName("my-demo");
 		description.setDescription("Demonstration project");
 		MavenBuild build = customizeBuild(metadata, description);
-		assertThat(build.getName()).isEqualTo("my-demo");
-		assertThat(build.getDescription()).isEqualTo("Demonstration project");
+		assertThat(build.getSettings().getName()).isEqualTo("my-demo");
+		assertThat(build.getSettings().getDescription()).isEqualTo("Demonstration project");
 	}
 
 	@Test
@@ -72,7 +72,7 @@ class DefaultMavenBuildCustomizerTests {
 	void customizeWhenNoParentShouldUseSpringBootParent() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
-		MavenParent parent = build.getParent();
+		MavenParent parent = build.getSettings().getParent();
 		assertThat(parent.getGroupId()).isEqualTo("org.springframework.boot");
 		assertThat(parent.getArtifactId()).isEqualTo("spring-boot-starter-parent");
 		assertThat(parent.getVersion()).isEqualTo("2.0.0");
@@ -83,7 +83,7 @@ class DefaultMavenBuildCustomizerTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", true).build();
 		MavenBuild build = customizeBuild(metadata);
-		MavenParent parent = build.getParent();
+		MavenParent parent = build.getSettings().getParent();
 		assertThat(parent.getGroupId()).isEqualTo("com.foo");
 		assertThat(parent.getArtifactId()).isEqualTo("foo-parent");
 		assertThat(parent.getVersion()).isEqualTo("1.0.0-SNAPSHOT");

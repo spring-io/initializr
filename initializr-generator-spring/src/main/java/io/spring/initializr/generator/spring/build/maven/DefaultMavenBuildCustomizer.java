@@ -43,8 +43,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 
 	@Override
 	public void customize(MavenBuild build) {
-		build.setName(this.description.getName());
-		build.setDescription(this.description.getDescription());
+		build.settings().name(this.description.getName()).description(this.description.getDescription());
 		build.setProperty("java.version", this.description.getLanguage().jvmVersion());
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
@@ -64,7 +63,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 			build.setProperty("project.build.sourceEncoding", "UTF-8");
 			build.setProperty("project.reporting.outputEncoding", "UTF-8");
 		}
-		build.parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
+		build.settings().parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
 	}
 
 	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {

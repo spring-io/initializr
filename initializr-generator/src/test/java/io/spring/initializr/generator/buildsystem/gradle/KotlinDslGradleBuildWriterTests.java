@@ -42,8 +42,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithCoordinates() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setGroup("com.example");
-		build.setVersion("1.0.1-SNAPSHOT");
+		build.settings().group("com.example").version("1.0.1-SNAPSHOT");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).contains("group = \"com.example\"", "version = \"1.0.1-SNAPSHOT\"");
 	}
@@ -51,7 +50,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSourceCompatibility11() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setSourceCompatibility("11");
+		build.settings().sourceCompatibility("11");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).contains("java.sourceCompatibility = JavaVersion.VERSION_11");
 	}
@@ -59,7 +58,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSourceCompatibility1Dot8() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setSourceCompatibility("1.8");
+		build.settings().sourceCompatibility("1.8");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).contains("java.sourceCompatibility = JavaVersion.VERSION_1_8");
 	}
@@ -211,8 +210,6 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExt() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
 		build.ext("java.version", "\"1.8\"").ext("alpha", "file(\"build/example\")");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("extra[\"alpha\"] = file(\"build/example\")",
@@ -256,8 +253,6 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExtAndVersionProperties() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
 		build.addInternalVersionProperty("test-version", "1.0");
 		build.addExternalVersionProperty("alpha-version", "0.1");
 		build.ext("myProperty", "42");
@@ -432,7 +427,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithCustomVersion() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setVersion("1.2.4.RELEASE");
+		build.settings().version("1.2.4.RELEASE");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).contains("version = \"1.2.4.RELEASE\"");
 	}

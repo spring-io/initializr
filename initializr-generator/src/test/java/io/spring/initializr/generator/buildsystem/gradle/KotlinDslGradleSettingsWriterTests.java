@@ -78,7 +78,7 @@ class KotlinDslGradleSettingsWriterTests {
 	@Test
 	void artifactIdShouldBeUsedAsTheRootProjectName() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.setArtifact("my-application");
+		build.settings().artifact("my-application");
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("rootProject.name = \"my-application\"");
 	}

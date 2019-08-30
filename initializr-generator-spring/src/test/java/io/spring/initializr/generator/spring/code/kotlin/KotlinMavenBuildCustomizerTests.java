@@ -46,8 +46,8 @@ class KotlinMavenBuildCustomizerTests {
 	void buildSourceDirectoriesAreConfigured() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
-		assertThat(build.getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
+		assertThat(build.getSettings().getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
+		assertThat(build.getSettings().getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
 	}
 
 	@Test

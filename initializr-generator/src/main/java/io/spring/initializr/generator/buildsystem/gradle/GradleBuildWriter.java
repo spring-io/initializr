@@ -54,12 +54,13 @@ import io.spring.initializr.generator.version.VersionProperty;
 public abstract class GradleBuildWriter {
 
 	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+		GradleBuildSettings settings = build.getSettings();
 		writeImports(writer, build);
 		writeBuildscript(writer, build);
 		writePlugins(writer, build);
-		writeProperty(writer, "group", build.getGroup());
-		writeProperty(writer, "version", build.getVersion());
-		writeJavaSourceCompatibility(writer, build);
+		writeProperty(writer, "group", settings.getGroup());
+		writeProperty(writer, "version", settings.getVersion());
+		writeJavaSourceCompatibility(writer, settings);
 		writer.println();
 		writeConfigurations(writer, build);
 		writeRepositories(writer, build);
@@ -87,7 +88,7 @@ public abstract class GradleBuildWriter {
 				.map(StandardGradlePlugin.class::cast).collect(Collectors.toList());
 	}
 
-	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build);
+	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings);
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleBuild build);
 

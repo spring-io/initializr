@@ -40,8 +40,8 @@ class SimpleBuildCustomizerTests {
 		description.setGroupId("com.example.acme");
 		description.setArtifactId("my-test-project");
 		MavenBuild build = customizeBuild(description);
-		assertThat(build.getGroup()).isEqualTo("com.example.acme");
-		assertThat(build.getArtifact()).isEqualTo("my-test-project");
+		assertThat(build.getSettings().getGroup()).isEqualTo("com.example.acme");
+		assertThat(build.getSettings().getArtifact()).isEqualTo("my-test-project");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ class SimpleBuildCustomizerTests {
 		MutableProjectDescription description = initializeDescription();
 		description.setVersion("1.5.6.RELEASE");
 		MavenBuild build = customizeBuild(description);
-		assertThat(build.getVersion()).isEqualTo("1.5.6.RELEASE");
+		assertThat(build.getSettings().getVersion()).isEqualTo("1.5.6.RELEASE");
 	}
 
 	@Test

@@ -22,6 +22,7 @@ import java.util.TreeMap;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Builder;
 
 /**
  * Maven build for a project.
@@ -31,15 +32,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
  */
 public class MavenBuild extends Build {
 
-	private MavenParent parent;
-
-	private String name;
-
-	private String description;
-
-	private String sourceDirectory;
-
-	private String testSourceDirectory;
+	private final MavenBuildSettings.Builder settings = new Builder();
 
 	private final Map<String, String> properties = new TreeMap<>();
 
@@ -49,8 +42,6 @@ public class MavenBuild extends Build {
 
 	private MavenPluginContainer plugins = new MavenPluginContainer();
 
-	private String packaging;
-
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 	}
@@ -59,29 +50,14 @@ public class MavenBuild extends Build {
 		this(null);
 	}
 
-	public MavenParent parent(String groupId, String artifactId, String version) {
-		this.parent = new MavenParent(groupId, artifactId, version);
-		return this.parent;
+	@Override
+	public MavenBuildSettings.Builder settings() {
+		return this.settings;
 	}
 
-	public MavenParent getParent() {
-		return this.parent;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDescription() {
-		return this.description;
+	@Override
+	public MavenBuildSettings getSettings() {
+		return this.settings.build();
 	}
 
 	public void setProperty(String key, String value) {
@@ -90,22 +66,6 @@ public class MavenBuild extends Build {
 
 	public Map<String, String> getProperties() {
 		return Collections.unmodifiableMap(this.properties);
-	}
-
-	public String getSourceDirectory() {
-		return this.sourceDirectory;
-	}
-
-	public void setSourceDirectory(String sourceDirectory) {
-		this.sourceDirectory = sourceDirectory;
-	}
-
-	public String getTestSourceDirectory() {
-		return this.testSourceDirectory;
-	}
-
-	public void setTestSourceDirectory(String testSourceDirectory) {
-		this.testSourceDirectory = testSourceDirectory;
 	}
 
 	public MavenResourceContainer resources() {
@@ -118,14 +78,6 @@ public class MavenBuild extends Build {
 
 	public MavenPluginContainer plugins() {
 		return this.plugins;
-	}
-
-	public void setPackaging(String packaging) {
-		this.packaging = packaging;
-	}
-
-	public String getPackaging() {
-		return this.packaging;
 	}
 
 }

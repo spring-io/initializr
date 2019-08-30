@@ -53,8 +53,7 @@ class GradleBuildProjectContributorTests {
 	@Test
 	void groovyDslGradleBuildIsContributedToProject() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setGroup("com.example");
-		build.setVersion("1.0.0-SNAPSHOT");
+		build.settings().group("com.example").version("1.0.0-SNAPSHOT");
 		build.buildscript((buildscript) -> buildscript.ext("someVersion", "'1.2.3'"));
 		List<String> lines = generateBuild(
 				groovyDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
@@ -84,8 +83,7 @@ class GradleBuildProjectContributorTests {
 	@Test
 	void kotlinDslGradleBuildIsContributedToProject() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.setGroup("com.example");
-		build.setVersion("1.0.0-SNAPSHOT");
+		build.settings().group("com.example").version("1.0.0-SNAPSHOT");
 		List<String> lines = generateBuild(
 				kotlinDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings()));
 		assertThat(lines).containsSequence("group = \"com.example\"", "version = \"1.0.0-SNAPSHOT\"");

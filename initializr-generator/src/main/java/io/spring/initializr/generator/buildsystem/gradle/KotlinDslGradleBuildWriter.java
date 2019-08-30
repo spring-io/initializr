@@ -98,9 +98,9 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuild build) {
+	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
 		writer.println("java.sourceCompatibility = JavaVersion."
-				+ sourceCompatibilitiesToJavaVersion.get(build.getSourceCompatibility()));
+				+ sourceCompatibilitiesToJavaVersion.get(settings.getSourceCompatibility()));
 	}
 
 	@Override

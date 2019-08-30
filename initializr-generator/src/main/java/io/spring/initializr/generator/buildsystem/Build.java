@@ -30,12 +30,6 @@ import io.spring.initializr.generator.version.VersionProperty;
  */
 public abstract class Build {
 
-	private String group;
-
-	private String artifact;
-
-	private String version = "0.0.1-SNAPSHOT";
-
 	private final Map<VersionProperty, String> versionProperties = new TreeMap<>();
 
 	private final DependencyContainer dependencies;
@@ -63,36 +57,16 @@ public abstract class Build {
 	}
 
 	/**
-	 * Return the identifier of the group for the project.
-	 * @return the groupId
+	 * Return a builder to configure the general settings of this build.
+	 * @return a builder for {@link BuildSettings}.
 	 */
-	public String getGroup() {
-		return this.group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
-	}
+	public abstract BuildSettings.Builder<?> settings();
 
 	/**
-	 * Return the identifier of the project.
-	 * @return the artifactId
+	 * Return the settings of this build.
+	 * @return a {@link BuildSettings}
 	 */
-	public String getArtifact() {
-		return this.artifact;
-	}
-
-	public void setArtifact(String artifact) {
-		this.artifact = artifact;
-	}
-
-	public String getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
+	public abstract BuildSettings getSettings();
 
 	public void addVersionProperty(VersionProperty versionProperty, String version) {
 		this.versionProperties.put(versionProperty, version);

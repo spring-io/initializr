@@ -49,11 +49,12 @@ import io.spring.initializr.generator.version.VersionReference;
 public class MavenBuildWriter {
 
 	public void writeTo(IndentingWriter writer, MavenBuild build) throws IOException {
+		MavenBuildSettings settings = build.getSettings();
 		writeProject(writer, () -> {
 			writeParent(writer, build);
-			writeProjectCoordinates(writer, build);
-			writePackaging(writer, build);
-			writeProjectName(writer, build);
+			writeProjectCoordinates(writer, settings);
+			writePackaging(writer, settings);
+			writeProjectName(writer, settings);
 			writeProperties(writer, build);
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
@@ -77,7 +78,7 @@ public class MavenBuildWriter {
 	}
 
 	private void writeParent(IndentingWriter writer, MavenBuild build) {
-		MavenParent parent = build.getParent();
+		MavenParent parent = build.getSettings().getParent();
 		if (parent == null) {
 			return;
 		}
@@ -91,22 +92,22 @@ public class MavenBuildWriter {
 		writer.println("</parent>");
 	}
 
-	private void writeProjectCoordinates(IndentingWriter writer, MavenBuild build) {
-		writeSingleElement(writer, "groupId", build.getGroup());
-		writeSingleElement(writer, "artifactId", build.getArtifact());
-		writeSingleElement(writer, "version", build.getVersion());
+	private void writeProjectCoordinates(IndentingWriter writer, MavenBuildSettings settings) {
+		writeSingleElement(writer, "groupId", settings.getGroup());
+		writeSingleElement(writer, "artifactId", settings.getArtifact());
+		writeSingleElement(writer, "version", settings.getVersion());
 	}
 
-	private void writePackaging(IndentingWriter writer, MavenBuild build) {
-		String packaging = build.getPackaging();
+	private void writePackaging(IndentingWriter writer, MavenBuildSettings settings) {
+		String packaging = settings.getPackaging();
 		if (!"jar".equals(packaging)) {
 			writeSingleElement(writer, "packaging", packaging);
 		}
 	}
 
-	private void writeProjectName(IndentingWriter writer, MavenBuild build) {
-		writeSingleElement(writer, "name", build.getName());
-		writeSingleElement(writer, "description", build.getDescription());
+	private void writeProjectName(IndentingWriter writer, MavenBuildSettings settings) {
+		writeSingleElement(writer, "name", settings.getName());
+		writeSingleElement(writer, "description", settings.getDescription());
 	}
 
 	private void writeProperties(IndentingWriter writer, MavenBuild build) {
@@ -240,14 +241,15 @@ public class MavenBuildWriter {
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
-		if (build.getSourceDirectory() == null && build.getTestSourceDirectory() == null && build.resources().isEmpty()
-				&& build.testResources().isEmpty() && build.plugins().isEmpty()) {
+		MavenBuildSettings settings = build.getSettings();
+		if (settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
+				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "build", () -> {
-			writeSingleElement(writer, "sourceDirectory", build.getSourceDirectory());
-			writeSingleElement(writer, "testSourceDirectory", build.getTestSourceDirectory());
+			writeSingleElement(writer, "sourceDirectory", settings.getSourceDirectory());
+			writeSingleElement(writer, "testSourceDirectory", settings.getTestSourceDirectory());
 			writeResources(writer, build);
 			writePlugins(writer, build);
 

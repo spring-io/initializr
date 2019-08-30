@@ -38,9 +38,8 @@ public class SimpleBuildCustomizer implements BuildCustomizer<Build> {
 
 	@Override
 	public void customize(Build build) {
-		build.setGroup(this.description.getGroupId());
-		build.setArtifact(this.description.getArtifactId());
-		build.setVersion(this.description.getVersion());
+		build.settings().group(this.description.getGroupId()).artifact(this.description.getArtifactId())
+				.version(this.description.getVersion());
 		this.description.getRequestedDependencies()
 				.forEach((id, dependency) -> build.dependencies().add(id, dependency));
 	}

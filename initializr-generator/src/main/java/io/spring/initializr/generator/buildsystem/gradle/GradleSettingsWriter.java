@@ -33,7 +33,7 @@ public abstract class GradleSettingsWriter {
 
 	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
 		writePluginManagement(writer, build);
-		writer.println("rootProject.name = " + wrapWithQuotes(build.getArtifact()));
+		writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {

@@ -40,9 +40,7 @@ class MavenBuildWriterTests {
 	@Test
 	void basicPom() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
-		build.setVersion("1.0.1-SNAPSHOT");
+		build.settings().coordinates("com.example.demo", "demo").version("1.0.1-SNAPSHOT");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/modelVersion").isEqualTo("4.0.0");
 			assertThat(pom).textAtPath("/project/groupId").isEqualTo("com.example.demo");
@@ -54,10 +52,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithNameAndDescription() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
-		build.setName("demo project");
-		build.setDescription("A demo project");
+		build.settings().coordinates("com.example.demo", "demo").name("demo project").description("A demo project");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/modelVersion").isEqualTo("4.0.0");
 			assertThat(pom).textAtPath("/project/groupId").isEqualTo("com.example.demo");
@@ -71,9 +66,8 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithParent() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
-		build.parent("org.springframework.boot", "spring-boot-starter-parent", "2.1.0.RELEASE");
+		build.settings().coordinates("com.example.demo", "demo").parent("org.springframework.boot",
+				"spring-boot-starter-parent", "2.1.0.RELEASE");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/parent/groupId").isEqualTo("org.springframework.boot");
 			assertThat(pom).textAtPath("/project/parent/artifactId").isEqualTo("spring-boot-starter-parent");
@@ -84,17 +78,14 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPackaging() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
-		build.setPackaging("war");
+		build.settings().coordinates("com.example.demo", "demo").packaging("war");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/packaging").isEqualTo("war"));
 	}
 
 	@Test
 	void pomWithProperties() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.setProperty("java.version", "1.8");
 		build.setProperty("alpha", "a");
 		generatePom(build, (pom) -> {
@@ -119,8 +110,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithAnnotationProcessorDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("annotation-processor", "org.springframework.boot",
 				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
 		generatePom(build, (pom) -> {
@@ -136,8 +126,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithCompileOnlyDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("foo-bar", "org.springframework.boot", "spring-boot-foo-bar",
 				DependencyScope.COMPILE_ONLY);
 		generatePom(build, (pom) -> {
@@ -153,8 +142,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithCompileDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
@@ -169,8 +157,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithNoScopeDependencyDefaultsToCompile() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
@@ -185,8 +172,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithRuntimeDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("hikari", "com.zaxxer", "HikariCP", DependencyScope.RUNTIME);
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
@@ -201,8 +187,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithProvidedRuntimeDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
 				DependencyScope.PROVIDED_RUNTIME);
 		generatePom(build, (pom) -> {
@@ -218,8 +203,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithTestCompileDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
 				DependencyScope.TEST_COMPILE);
 		generatePom(build, (pom) -> {
@@ -235,8 +219,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithTestRuntimeDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
 				DependencyScope.TEST_RUNTIME);
 		generatePom(build, (pom) -> {
@@ -252,8 +235,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithExclusions() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("test",
 				Dependency.withCoordinates("com.example", "test").scope(DependencyScope.COMPILE).exclusions(
 						new Exclusion("com.example.legacy", "legacy-one"),
@@ -278,8 +260,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithOptionalDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("annotation-processor",
 				MavenDependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
 						.scope(DependencyScope.COMPILE).optional(true));
@@ -296,8 +277,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithNonNullArtifactTypeDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
 				.scope(DependencyScope.COMPILE).type("tar.gz"));
 		generatePom(build, (pom) -> {
@@ -309,8 +289,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithBom() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.boms().add("test", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"));
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencyManagement/dependencies/dependency");
@@ -321,8 +300,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithOrderedBoms() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.boms().add("bom1", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"),
 				5);
 		build.boms().add("bom2", "com.example", "root-dependencies", VersionReference.ofProperty("root.version"), 2);
@@ -379,8 +357,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPlugin() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
@@ -394,8 +371,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPluginWithConfiguration() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin",
 				(plugin) -> plugin.configuration((configuration) -> {
 					configuration.configure("args", (args) -> args.add("arg", "-Xjsr305=strict"));
@@ -416,8 +392,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPluginWithExecution() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
 			plugin.setVersion("1.5.3");
 			plugin.execution("generateProject-docs", (execution) -> {
@@ -447,8 +422,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPluginWithDependency() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin",
 				(plugin) -> plugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}"));
 		generatePom(build, (pom) -> {
@@ -465,8 +439,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPluginWithExtensions() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("com.example.demo", "demo-plugin", MavenPlugin::extensions);
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
@@ -479,16 +452,14 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithEmptyBuild() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/build/").isNullOrEmpty());
 	}
 
 	@Test
 	void pomWithMavenCentral() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.repositories().add("maven-central");
 		generatePom(build, (pom) -> {
 			assertThat(pom).nodeAtPath("/project/repositories").isNull();
@@ -499,8 +470,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.repositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-milestones");
@@ -515,8 +485,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithPluginRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.pluginRepositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id")
@@ -533,8 +502,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithSnapshotRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.repositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-snapshots");
@@ -549,8 +517,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithSnapshotPluginRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
+		build.settings().coordinates("com.example.demo", "demo");
 		build.pluginRepositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id").isEqualTo("spring-snapshots");
@@ -567,10 +534,8 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithCustomSourceDirectories() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setGroup("com.example.demo");
-		build.setArtifact("demo");
-		build.setSourceDirectory("${project.basedir}/src/main/kotlin");
-		build.setTestSourceDirectory("${project.basedir}/src/test/kotlin");
+		build.settings().coordinates("com.example.demo", "demo").sourceDirectory("${project.basedir}/src/main/kotlin")
+				.testSourceDirectory("${project.basedir}/src/test/kotlin");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/build/sourceDirectory")
 					.isEqualTo("${project.basedir}/src/main/kotlin");
@@ -582,7 +547,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithCustomVersion() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.setVersion("1.2.4.RELEASE");
+		build.settings().version("1.2.4.RELEASE");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
 	}
 

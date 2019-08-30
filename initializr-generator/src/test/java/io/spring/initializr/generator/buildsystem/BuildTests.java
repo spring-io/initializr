@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import io.spring.initializr.generator.buildsystem.BuildSettings.Builder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -76,8 +77,29 @@ class BuildTests {
 
 	private static class TestBuild extends Build {
 
+		private final TestBuildSettingsBuilder settings = new TestBuildSettingsBuilder();
+
 		TestBuild(BuildItemResolver buildItemResolver) {
 			super(buildItemResolver);
+		}
+
+		@Override
+		public Builder<?> settings() {
+			return this.settings;
+		}
+
+		@Override
+		public BuildSettings getSettings() {
+			return this.settings.build();
+		}
+
+		private static class TestBuildSettingsBuilder extends BuildSettings.Builder<TestBuildSettingsBuilder> {
+
+			@Override
+			public BuildSettings build() {
+				return new BuildSettings(this);
+			}
+
 		}
 
 	}
