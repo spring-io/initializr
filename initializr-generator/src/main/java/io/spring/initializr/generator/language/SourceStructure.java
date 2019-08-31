@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Provide dedicated method for directories that hold sources.
+ * Provide dedicated methods for a structure that holds sources.
  *
  * @author Stephane Nicoll
  */
@@ -29,16 +29,19 @@ public class SourceStructure {
 
 	private final Path rootDirectory;
 
+	private final Language language;
+
 	private final Path sourcesDirectory;
 
-	public SourceStructure(Path rootDirectory, String sourcesDirectoryName) {
+	public SourceStructure(Path rootDirectory, Language language) {
 		this.rootDirectory = rootDirectory;
-		this.sourcesDirectory = rootDirectory.resolve(sourcesDirectoryName);
+		this.language = language;
+		this.sourcesDirectory = rootDirectory.resolve(language.id());
 	}
 
 	/**
-	 * Return the root {@link Path} of this structure. Can be used to access additional
-	 * resources.
+	 * Return the root {@link Path directory} of this structure. Can be used to access
+	 * additional resources.
 	 * @return the root directory
 	 */
 	public Path getRootDirectory() {
@@ -46,7 +49,7 @@ public class SourceStructure {
 	}
 
 	/**
-	 * Return the sources {@link Path} of this structure.
+	 * Return the sources {@link Path directory} of this structure.
 	 * @return the source code directory
 	 */
 	public Path getSourcesDirectory() {
@@ -54,15 +57,17 @@ public class SourceStructure {
 	}
 
 	/**
-	 * Resource a source file, creating its package structure if necessary.
+	 * Resolve a source file, creating its package structure if necessary. Does not create
+	 * the file itself.
 	 * @param packageName the name of the package
-	 * @param file the name of the file (including its extension)
-	 * @return the file to use to store a {@code CompilationUnit} with the specified
-	 * package name name
+	 * @param fileName the name of the file (without its extension)
+	 * @return the {@link Path file} to use to store a {@code CompilationUnit} with the
+	 * specified package and name
 	 * @throws IOException if an error occurred while trying to create the directory
 	 * structure
 	 */
-	public Path resolveSourceFile(String packageName, String file) throws IOException {
+	public Path resolveSourceFile(String packageName, String fileName) throws IOException {
+		String file = fileName + "." + this.language.sourceFileExtension();
 		return createPackage(this.sourcesDirectory, packageName).resolve(file);
 	}
 

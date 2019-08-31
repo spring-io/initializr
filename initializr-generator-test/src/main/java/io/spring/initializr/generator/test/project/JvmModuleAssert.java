@@ -27,8 +27,8 @@ import io.spring.initializr.generator.language.Language;
  */
 public class JvmModuleAssert extends AbstractJvmModuleAssert<JvmModuleAssert> {
 
-	public JvmModuleAssert(Path projectDirectory, Language language, String sourceFileExtension) {
-		super(projectDirectory, language, sourceFileExtension, JvmModuleAssert.class);
+	public JvmModuleAssert(Path projectDirectory, Language language) {
+		super(projectDirectory, language, JvmModuleAssert.class);
 	}
 
 }

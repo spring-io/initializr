@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import io.spring.initializr.generator.language.java.JavaLanguage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -32,9 +33,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class SourceStructureTests {
 
+	public static final JavaLanguage JAVA_LANGUAGE = new JavaLanguage();
+
 	@Test
 	void createPackage(@TempDir Path dir) throws IOException {
-		Path target = new SourceStructure(dir, "java").createPackage(dir, "com.example.test");
+		Path target = new SourceStructure(dir, JAVA_LANGUAGE).createPackage(dir, "com.example.test");
 		assertThat(target).exists().isDirectory().isEqualByComparingTo(dir.resolve("com/example/test"));
 	}
 
@@ -43,7 +46,7 @@ class SourceStructureTests {
 		Path target = dir.resolve("com/example");
 		Files.createDirectories(target);
 		assertThat(target).exists().isDirectory();
-		Path path = new SourceStructure(dir, "java").createPackage(dir, "com.example");
+		Path path = new SourceStructure(dir, JAVA_LANGUAGE).createPackage(dir, "com.example");
 		assertThat(path).isEqualByComparingTo(target);
 	}
 
@@ -52,7 +55,8 @@ class SourceStructureTests {
 		Path rootDir = dir.resolve("src/main/java/com/example");
 		assertThat(rootDir).doesNotExist();
 		Path target = rootDir.resolve("Test.java");
-		Path path = new SourceStructure(dir, "src/main/java").resolveSourceFile("com.example", "Test.java");
+		SourceStructure sourceStructure = new SourceStructure(dir.resolve("src/main"), JAVA_LANGUAGE);
+		Path path = sourceStructure.resolveSourceFile("com.example", "Test");
 		assertThat(path).doesNotExist().isEqualByComparingTo(target);
 		assertThat(rootDir).exists().isDirectory();
 	}
@@ -64,7 +68,8 @@ class SourceStructureTests {
 		assertThat(rootDir).exists().isDirectory();
 		Path target = rootDir.resolve("Test.java");
 		assertThat(target).doesNotExist();
-		Path path = new SourceStructure(dir, "src/main/java").resolveSourceFile("com.example", "Test.java");
+		SourceStructure sourceStructure = new SourceStructure(dir.resolve("src/main"), JAVA_LANGUAGE);
+		Path path = sourceStructure.resolveSourceFile("com.example", "Test");
 		assertThat(path).doesNotExist().isEqualByComparingTo(target);
 	}
 

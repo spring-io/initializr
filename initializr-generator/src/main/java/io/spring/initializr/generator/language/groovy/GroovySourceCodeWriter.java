@@ -95,8 +95,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	}
 
 	private void writeTo(SourceStructure structure, GroovyCompilationUnit compilationUnit) throws IOException {
-		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(),
-				compilationUnit.getName() + ".groovy");
+		Path output = structure.resolveSourceFile(compilationUnit.getPackageName(), compilationUnit.getName());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("groovy",
 				Files.newBufferedWriter(output))) {
 			writer.println("package " + compilationUnit.getPackageName());

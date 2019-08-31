@@ -137,7 +137,7 @@ class JvmModuleAssertTests {
 	}
 
 	private AssertProvider<AbstractJvmModuleAssert> forJavaProject(Path root) {
-		return () -> new JvmModuleAssert(root, JAVA_LANGUAGE, "java");
+		return () -> new JvmModuleAssert(root, JAVA_LANGUAGE);
 	}
 
 	private void createFile(Path root, String path) throws IOException {

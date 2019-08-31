@@ -37,7 +37,7 @@ public final class JavaLanguage extends AbstractLanguage {
 	}
 
 	public JavaLanguage(String jvmVersion) {
-		super(ID, jvmVersion);
+		super(ID, jvmVersion, "java");
 	}
 
 }

@@ -37,16 +37,15 @@ public abstract class AbstractModuleAssert<SELF extends AbstractModuleAssert<SEL
 
 	/**
 	 * Return a {@link JvmModuleAssert JVM module} assertion for the specified
-	 * {@link Language} and file source extension, to allow chaining of jvm
-	 * module-specific assertions from this call.
+	 * {@link Language}, to allow chaining of jvm module-specific assertions from this
+	 * call.
 	 * <p>
 	 * Does not validate that the module has source code for the specified language.
 	 * @param language the language of the module
-	 * @param sourceFileExtension the source file extension
 	 * @return a {@link JvmModuleAssert} for the specified language
 	 */
-	public JvmModuleAssert asJvmModule(Language language, String sourceFileExtension) {
-		return new JvmModuleAssert(this.actual, language, sourceFileExtension);
+	public JvmModuleAssert asJvmModule(Language language) {
+		return new JvmModuleAssert(this.actual, language);
 	}
 
 	/**

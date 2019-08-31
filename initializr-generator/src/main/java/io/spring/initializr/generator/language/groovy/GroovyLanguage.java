@@ -36,7 +36,7 @@ public final class GroovyLanguage extends AbstractLanguage {
 	}
 
 	public GroovyLanguage(String jvmVersion) {
-		super(ID, jvmVersion);
+		super(ID, jvmVersion, "groovy");
 	}
 
 }

@@ -32,9 +32,23 @@ public interface Language {
 	 */
 	String DEFAULT_JVM_VERSION = "1.8";
 
+	/**
+	 * Return the language identifier.
+	 * @return the language id
+	 */
 	String id();
 
+	/**
+	 * Return the JVM version level to use.
+	 * @return the JVM version or {@value DEFAULT_JVM_VERSION} if not set
+	 */
 	String jvmVersion();
+
+	/**
+	 * Return the file extension to use for source file of this language.
+	 * @return the source file extension
+	 */
+	String sourceFileExtension();
 
 	static Language forId(String id, String jvmVersion) {
 		return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader())

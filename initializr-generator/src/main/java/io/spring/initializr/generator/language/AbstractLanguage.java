@@ -27,9 +27,12 @@ public abstract class AbstractLanguage implements Language {
 
 	private final String jvmVersion;
 
-	protected AbstractLanguage(String id, String jvmVersion) {
+	private final String sourceFileExtension;
+
+	protected AbstractLanguage(String id, String jvmVersion, String sourceFileExtension) {
 		this.id = id;
 		this.jvmVersion = (jvmVersion != null) ? jvmVersion : DEFAULT_JVM_VERSION;
+		this.sourceFileExtension = sourceFileExtension;
 	}
 
 	@Override
@@ -40,6 +43,11 @@ public abstract class AbstractLanguage implements Language {
 	@Override
 	public String jvmVersion() {
 		return this.jvmVersion;
+	}
+
+	@Override
+	public String sourceFileExtension() {
+		return this.sourceFileExtension;
 	}
 
 	@Override

@@ -127,7 +127,7 @@ class ModuleAssertTests {
 	@Test
 	void asJavaProject(@TempDir Path dir) throws IOException {
 		createFiles(dir, "src/main/java/com/example/Test.java");
-		assertThat(forDirectory(dir)).asJvmModule(new JavaLanguage(), "java").hasMainPackage("com.example")
+		assertThat(forDirectory(dir)).asJvmModule(new JavaLanguage()).hasMainPackage("com.example")
 				.hasMainSource("com.example", "Test");
 	}
 

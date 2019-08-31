@@ -40,12 +40,11 @@ public abstract class AbstractJvmModuleAssert<SELF extends AbstractJvmModuleAsse
 
 	private final String sourceFileExtension;
 
-	protected AbstractJvmModuleAssert(Path projectDirectory, Language language, String sourceFileExtension,
-			Class<?> selfType) {
+	protected AbstractJvmModuleAssert(Path projectDirectory, Language language, Class<?> selfType) {
 		super(projectDirectory, selfType);
-		this.mainDirectory = new SourceStructure(projectDirectory.resolve("src/main/"), language.id());
-		this.testDirectory = new SourceStructure(projectDirectory.resolve("src/test/"), language.id());
-		this.sourceFileExtension = sourceFileExtension;
+		this.mainDirectory = new SourceStructure(projectDirectory.resolve("src/main/"), language);
+		this.testDirectory = new SourceStructure(projectDirectory.resolve("src/test/"), language);
+		this.sourceFileExtension = language.sourceFileExtension();
 	}
 
 	/**

@@ -36,7 +36,7 @@ public final class KotlinLanguage extends AbstractLanguage {
 	}
 
 	public KotlinLanguage(String jvmVersion) {
-		super(ID, jvmVersion);
+		super(ID, jvmVersion, "kt");
 	}
 
 }

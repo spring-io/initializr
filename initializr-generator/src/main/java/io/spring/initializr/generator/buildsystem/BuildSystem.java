@@ -53,7 +53,7 @@ public interface BuildSystem {
 	 * @return a {@link SourceStructure} for main assets
 	 */
 	default SourceStructure getMainSource(Path projectRoot, Language language) {
-		return new SourceStructure(projectRoot.resolve("src/main/"), language.id());
+		return new SourceStructure(projectRoot.resolve("src/main/"), language);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public interface BuildSystem {
 	 * @return a {@link SourceStructure} for test assets
 	 */
 	default SourceStructure getTestSource(Path projectRoot, Language language) {
-		return new SourceStructure(projectRoot.resolve("src/test/"), language.id());
+		return new SourceStructure(projectRoot.resolve("src/test/"), language);
 	}
 
 	static BuildSystem forId(String id) {

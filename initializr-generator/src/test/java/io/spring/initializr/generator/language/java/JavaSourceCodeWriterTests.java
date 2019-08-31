@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,8 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  * @author Matt Berteaux
  */
 class JavaSourceCodeWriterTests {
+
+	private static final Language LANGUAGE = new JavaLanguage();
 
 	@TempDir
 	Path directory;
@@ -286,7 +289,8 @@ class JavaSourceCodeWriterTests {
 	}
 
 	private Path writeSourceCode(JavaSourceCode sourceCode) throws IOException {
-		SourceStructure sourceStructure = new SourceStructure(this.directory, UUID.randomUUID().toString());
+		Path srcDirectory = this.directory.resolve(UUID.randomUUID().toString());
+		SourceStructure sourceStructure = new SourceStructure(srcDirectory, LANGUAGE);
 		this.writer.writeTo(sourceStructure, sourceCode);
 		return sourceStructure.getSourcesDirectory();
 	}
