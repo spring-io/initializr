@@ -29,14 +29,17 @@ public class SourceStructure {
 
 	private final Path rootDirectory;
 
-	private final Language language;
+	private final String sourceFileExtension;
 
 	private final Path sourcesDirectory;
 
+	private final Path resourcesDirectory;
+
 	public SourceStructure(Path rootDirectory, Language language) {
 		this.rootDirectory = rootDirectory;
-		this.language = language;
+		this.sourceFileExtension = language.sourceFileExtension();
 		this.sourcesDirectory = rootDirectory.resolve(language.id());
+		this.resourcesDirectory = rootDirectory.resolve("resources");
 	}
 
 	/**
@@ -50,42 +53,82 @@ public class SourceStructure {
 
 	/**
 	 * Return the sources {@link Path directory} of this structure.
-	 * @return the source code directory
+	 * @return the sources directory
 	 */
 	public Path getSourcesDirectory() {
 		return this.sourcesDirectory;
 	}
 
 	/**
-	 * Resolve a source file, creating its package structure if necessary. Does not create
-	 * the file itself.
+	 * Return the resources {@link Path directory} of this structure.
+	 * @return the resources directory
+	 */
+	public Path getResourcesDirectory() {
+		return this.resourcesDirectory;
+	}
+
+	/**
+	 * Resolve a source file.
+	 * @param packageName the name of the package
+	 * @param fileName the name of the file (without its extension)
+	 * @return the {@link Path file} to use to store a {@code CompilationUnit} with the
+	 * specified package and name
+	 * @see #getSourcesDirectory()
+	 */
+	public Path resolveSourceFile(String packageName, String fileName) {
+		String file = fileName + "." + this.sourceFileExtension;
+		return resolvePackage(this.sourcesDirectory, packageName).resolve(file);
+	}
+
+	/**
+	 * Create a source file, creating its package structure if necessary.
 	 * @param packageName the name of the package
 	 * @param fileName the name of the file (without its extension)
 	 * @return the {@link Path file} to use to store a {@code CompilationUnit} with the
 	 * specified package and name
 	 * @throws IOException if an error occurred while trying to create the directory
-	 * structure
+	 * structure or the file itself
+	 * @see #getSourcesDirectory()
 	 */
-	public Path resolveSourceFile(String packageName, String fileName) throws IOException {
-		String file = fileName + "." + this.language.sourceFileExtension();
-		return createPackage(this.sourcesDirectory, packageName).resolve(file);
+	public Path createSourceFile(String packageName, String fileName) throws IOException {
+		Path sourceFile = resolveSourceFile(packageName, fileName);
+		createFile(sourceFile);
+		return sourceFile;
 	}
 
 	/**
-	 * Create the specified package if necessary.
-	 * @param srcDirectory the source directory for the package
-	 * @param packageName the name of the package to create
-	 * @return the directory where source for this package should reside
-	 * @throws IOException if an error occurred while trying to create the directory
-	 * structure
+	 * Resolve a resource file defined in the specified package.
+	 * @param packageName the name of the package
+	 * @param file the name of the file (including its extension)
+	 * @return the {@link Path file} to use to store a resource with the specified package
+	 * @see #getResourcesDirectory()
 	 */
-	protected Path createPackage(Path srcDirectory, String packageName) throws IOException {
-		if (!Files.exists(srcDirectory)) {
-			Files.createDirectories(srcDirectory);
-		}
-		Path directory = srcDirectory.resolve(packageName.replace('.', '/'));
-		Files.createDirectories(directory);
-		return directory;
+	public Path resolveResourceFile(String packageName, String file) {
+		return resolvePackage(this.resourcesDirectory, packageName).resolve(file);
+	}
+
+	/**
+	 * Create a resource file, creating its package structure if necessary.
+	 * @param packageName the name of the package
+	 * @param file the name of the file (including its extension)
+	 * @return the {@link Path file} to use to store a resource with the specified package
+	 * @throws IOException if an error occurred while trying to create the directory
+	 * structure or the file itself
+	 * @see #getResourcesDirectory()
+	 */
+	public Path createResourceFile(String packageName, String file) throws IOException {
+		Path resourceFile = resolveResourceFile(packageName, file);
+		createFile(resourceFile);
+		return resourceFile;
+	}
+
+	private void createFile(Path file) throws IOException {
+		Files.createDirectories(file.getParent());
+		Files.createFile(file);
+	}
+
+	private static Path resolvePackage(Path directory, String packageName) {
+		return directory.resolve(packageName.replace('.', '/'));
 	}
 
 }
