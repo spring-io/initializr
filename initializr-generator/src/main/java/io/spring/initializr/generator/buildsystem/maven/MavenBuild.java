@@ -16,10 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Builder;
@@ -33,8 +29,6 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
 public class MavenBuild extends Build {
 
 	private final MavenBuildSettings.Builder settings = new Builder();
-
-	private final Map<String, String> properties = new TreeMap<>();
 
 	private final MavenResourceContainer resources = new MavenResourceContainer();
 
@@ -58,14 +52,6 @@ public class MavenBuild extends Build {
 	@Override
 	public MavenBuildSettings getSettings() {
 		return this.settings.build();
-	}
-
-	public void setProperty(String key, String value) {
-		this.properties.put(key, value);
-	}
-
-	public Map<String, String> getProperties() {
-		return Collections.unmodifiableMap(this.properties);
 	}
 
 	public MavenResourceContainer resources() {

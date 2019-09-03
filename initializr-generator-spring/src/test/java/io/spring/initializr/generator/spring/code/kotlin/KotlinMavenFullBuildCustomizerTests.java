@@ -21,9 +21,11 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuratio
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
+import io.spring.initializr.generator.version.VersionProperty;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 /**
  * Tests for {@link KotlinMavenFullBuildCustomizer}.
@@ -36,8 +38,8 @@ class KotlinMavenFullBuildCustomizerTests {
 	void kotlinVersionPropertyIsConfigured() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getProperties()).hasSize(1);
-		assertThat(build.getProperties()).containsEntry("kotlin.version", "1.2.70");
+		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
+				.containsOnly(entry("kotlin.version", "1.2.70"));
 	}
 
 	@Test

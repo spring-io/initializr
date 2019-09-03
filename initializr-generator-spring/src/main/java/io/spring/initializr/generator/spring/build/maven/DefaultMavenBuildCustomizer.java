@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -44,7 +45,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 	@Override
 	public void customize(MavenBuild build) {
 		build.settings().name(this.description.getName()).description(this.description.getDescription());
-		build.setProperty("java.version", this.description.getLanguage().jvmVersion());
+		build.properties().property("java.version", this.description.getLanguage().jvmVersion());
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
@@ -55,13 +56,13 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 			BillOfMaterials springBootBom = MetadataBuildItemMapper
 					.toBom(this.metadata.createSpringBootBom(springBootVersion, versionProperty));
 			if (!hasBom(build, springBootBom)) {
-				build.addInternalVersionProperty(versionProperty, springBootVersion);
+				build.properties().version(VersionProperty.of(versionProperty, true), springBootVersion);
 				build.boms().add("spring-boot", springBootBom);
 			}
 		}
 		if (!maven.isSpringBootStarterParent(parentPom)) {
-			build.setProperty("project.build.sourceEncoding", "UTF-8");
-			build.setProperty("project.reporting.outputEncoding", "UTF-8");
+			build.properties().property("project.build.sourceEncoding", "UTF-8")
+					.property("project.reporting.outputEncoding", "UTF-8");
 		}
 		build.settings().parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
 	}

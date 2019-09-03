@@ -16,12 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-
-import io.spring.initializr.generator.version.VersionProperty;
-
 /**
  * Build configuration for a project.
  *
@@ -30,7 +24,7 @@ import io.spring.initializr.generator.version.VersionProperty;
  */
 public abstract class Build {
 
-	private final Map<VersionProperty, String> versionProperties = new TreeMap<>();
+	private final PropertyContainer properties;
 
 	private final DependencyContainer dependencies;
 
@@ -42,6 +36,7 @@ public abstract class Build {
 
 	protected Build(BuildItemResolver buildItemResolver) {
 		BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
+		this.properties = new PropertyContainer();
 		this.dependencies = new DependencyContainer(resolver::resolveDependency);
 		this.boms = new BomContainer(resolver::resolveBom);
 		this.repositories = new MavenRepositoryContainer(resolver::resolveRepository);
@@ -68,20 +63,12 @@ public abstract class Build {
 	 */
 	public abstract BuildSettings getSettings();
 
-	public void addVersionProperty(VersionProperty versionProperty, String version) {
-		this.versionProperties.put(versionProperty, version);
-	}
-
-	public void addExternalVersionProperty(String propertyName, String version) {
-		addVersionProperty(VersionProperty.of(propertyName, false), version);
-	}
-
-	public void addInternalVersionProperty(String propertyName, String version) {
-		addVersionProperty(VersionProperty.of(propertyName, true), version);
-	}
-
-	public Map<VersionProperty, String> getVersionProperties() {
-		return Collections.unmodifiableMap(this.versionProperties);
+	/**
+	 * Return the {@link PropertyContainer properties container} of this build.
+	 * @return the properties container of this build.
+	 */
+	public PropertyContainer properties() {
+		return this.properties;
 	}
 
 	public DependencyContainer dependencies() {

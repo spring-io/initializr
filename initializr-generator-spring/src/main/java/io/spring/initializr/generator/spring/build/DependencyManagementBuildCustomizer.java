@@ -77,7 +77,7 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		resolvedBoms.forEach((key, bom) -> {
 			build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
 			if (bom.getVersionProperty() != null) {
-				build.addVersionProperty(bom.getVersionProperty(), bom.getVersion());
+				build.properties().version(bom.getVersionProperty(), bom.getVersion());
 			}
 		});
 		repositories.keySet().forEach((id) -> build.repositories().add(id));

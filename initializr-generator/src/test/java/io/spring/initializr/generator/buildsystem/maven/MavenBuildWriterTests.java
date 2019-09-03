@@ -86,8 +86,7 @@ class MavenBuildWriterTests {
 	void pomWithProperties() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.setProperty("java.version", "1.8");
-		build.setProperty("alpha", "a");
+		build.properties().property("java.version", "1.8").property("alpha", "a");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/properties/java.version").isEqualTo("1.8");
 			assertThat(pom).textAtPath("/project/properties/alpha").isEqualTo("a");
@@ -97,9 +96,8 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithVersionProperties() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.addVersionProperty(VersionProperty.of("version.property"), "1.2.3");
-		build.addInternalVersionProperty("internal.property", "4.5.6");
-		build.addExternalVersionProperty("external.property", "7.8.9");
+		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
+				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/properties/version.property").isEqualTo("1.2.3");
 			assertThat(pom).textAtPath("/project/properties/internal.property").isEqualTo("4.5.6");

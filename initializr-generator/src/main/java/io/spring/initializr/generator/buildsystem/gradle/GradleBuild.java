@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -44,8 +43,6 @@ import org.springframework.util.StringUtils;
 public class GradleBuild extends Build {
 
 	private final GradleBuildSettings.Builder settings = new Builder();
-
-	private final Map<String, String> ext = new TreeMap<>();
 
 	private final GradlePluginContainer plugins = new GradlePluginContainer();
 
@@ -77,15 +74,6 @@ public class GradleBuild extends Build {
 	@Override
 	public GradleBuildSettings getSettings() {
 		return this.settings.build();
-	}
-
-	public GradleBuild ext(String key, String value) {
-		this.ext.put(key, value);
-		return this;
-	}
-
-	public Map<String, String> getExt() {
-		return Collections.unmodifiableMap(this.ext);
 	}
 
 	public GradlePluginContainer plugins() {

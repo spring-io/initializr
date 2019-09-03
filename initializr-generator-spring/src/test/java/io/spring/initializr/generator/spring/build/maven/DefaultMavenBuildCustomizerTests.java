@@ -65,7 +65,7 @@ class DefaultMavenBuildCustomizerTests {
 		MutableProjectDescription description = initializeDescription();
 		description.setLanguage(new JavaLanguage("11"));
 		MavenBuild build = customizeBuild(metadata, description);
-		assertThat(build.getProperties()).contains(entry("java.version", "11"));
+		assertThat(build.properties().values()).contains(entry("java.version", "11"));
 	}
 
 	@Test
@@ -90,7 +90,8 @@ class DefaultMavenBuildCustomizerTests {
 		BomContainer boms = build.boms();
 		assertThat(boms.items()).hasSize(1);
 		assertThat(boms.ids()).contains("spring-boot");
-		assertThat(build.getVersionProperties().get(VersionProperty.of("spring-boot.version"))).isEqualTo("2.0.0");
+		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
+				.contains(entry("spring-boot.version", "2.0.0"));
 	}
 
 	@Test

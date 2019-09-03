@@ -205,7 +205,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExt() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.ext("java.version", "'1.8'").ext("alpha", "file(\"build/example\")");
+		build.properties().property("java.version", "'1.8'").property("alpha", "file(\"build/example\")");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("    set('alpha', file(\"build/example\"))",
 				"    set('java.version', '1.8')");
@@ -214,12 +214,11 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithVersionProperties() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.addVersionProperty(VersionProperty.of("version.property"), "1.2.3");
-		build.addInternalVersionProperty("internal.property", "4.5.6");
-		build.addExternalVersionProperty("external.property", "7.8.9");
+		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
+				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("ext {", "    set('external.property', \"7.8.9\")",
-				"    set('internalProperty', \"4.5.6\")", "    set('versionProperty', \"1.2.3\")", "}");
+				"    set('internalProperty', \"4.5.6\")", "    set('version.property', \"1.2.3\")", "}");
 	}
 
 	@Test
@@ -248,9 +247,8 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExtAndVersionProperties() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.addInternalVersionProperty("test-version", "1.0");
-		build.addExternalVersionProperty("alpha-version", "0.1");
-		build.ext("myProperty", "'42'");
+		build.properties().version(VersionProperty.of("test-version"), "1.0").version("alpha-version", "0.1")
+				.property("myProperty", "'42'");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("    set('myProperty', '42')", "    set('alpha-version', \"0.1\")",
 				"    set('testVersion', \"1.0\")");

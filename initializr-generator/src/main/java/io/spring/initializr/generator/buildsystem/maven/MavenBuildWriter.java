@@ -33,10 +33,12 @@ import io.spring.initializr.generator.buildsystem.DependencyComparator;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
 /**
@@ -55,7 +57,7 @@ public class MavenBuildWriter {
 			writeProjectCoordinates(writer, settings);
 			writePackaging(writer, settings);
 			writeProjectName(writer, settings);
-			writeProperties(writer, build);
+			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
 			writeBuild(writer, build);
@@ -110,15 +112,15 @@ public class MavenBuildWriter {
 		writeSingleElement(writer, "description", settings.getDescription());
 	}
 
-	private void writeProperties(IndentingWriter writer, MavenBuild build) {
-		if (build.getProperties().isEmpty() && build.getVersionProperties().isEmpty()) {
+	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
+		if (properties.isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "properties", () -> {
-			build.getProperties().forEach((key, value) -> writeSingleElement(writer, key, value));
-			build.getVersionProperties()
-					.forEach((key, value) -> writeSingleElement(writer, key.toStandardFormat(), value));
+			properties.values().forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
+			properties.versions((VersionProperty::toStandardFormat))
+					.forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
 		});
 	}
 

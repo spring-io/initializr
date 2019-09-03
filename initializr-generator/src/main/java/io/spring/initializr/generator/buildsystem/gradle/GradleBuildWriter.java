@@ -24,8 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -37,6 +37,7 @@ import io.spring.initializr.generator.buildsystem.DependencyComparator;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
@@ -64,7 +65,7 @@ public abstract class GradleBuildWriter {
 		writer.println();
 		writeConfigurations(writer, build);
 		writeRepositories(writer, build);
-		writeProperties(writer, build);
+		writeProperties(writer, build.properties());
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
 		writeTasksWithTypeCustomizations(writer, build);
@@ -102,20 +103,21 @@ public abstract class GradleBuildWriter {
 
 	protected abstract String repositoryAsString(MavenRepository repository);
 
-	private void writeProperties(IndentingWriter writer, GradleBuild build) {
-		if (build.getExt().isEmpty() && build.getVersionProperties().isEmpty()) {
+	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
+		if (properties.isEmpty()) {
 			return;
 		}
-		Map<String, String> allProperties = new LinkedHashMap<>(build.getExt());
-		build.getVersionProperties().entrySet()
-				.forEach((entry) -> allProperties.put(getVersionPropertyKey(entry), "\"" + entry.getValue() + "\""));
+		Map<String, String> allProperties = new LinkedHashMap<>(properties.values().collect(Collectors
+				.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, TreeMap::new)));
+		properties.versions(this::getVersionPropertyKey)
+				.forEach((entry) -> allProperties.put(entry.getKey(), "\"" + entry.getValue() + "\""));
 		writeExtraProperties(writer, allProperties);
 	}
 
 	protected abstract void writeExtraProperties(IndentingWriter writer, Map<String, String> allProperties);
 
-	private String getVersionPropertyKey(Entry<VersionProperty, String> entry) {
-		return entry.getKey().isInternal() ? entry.getKey().toCamelCaseFormat() : entry.getKey().toStandardFormat();
+	private String getVersionPropertyKey(VersionProperty versionProperty) {
+		return versionProperty.isInternal() ? versionProperty.toCamelCaseFormat() : versionProperty.toStandardFormat();
 	}
 
 	private void writeDependencies(IndentingWriter writer, GradleBuild build) {

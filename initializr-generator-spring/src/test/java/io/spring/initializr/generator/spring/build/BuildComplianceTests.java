@@ -182,11 +182,9 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		ProjectStructure project = generateProject(java, build, "2.1.1.RELEASE",
 				(description) -> description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB)),
 				(projectGenerationContext) -> projectGenerationContext.registerBean(BuildCustomizer.class,
-						() -> (projectBuild) -> {
-							projectBuild.addVersionProperty(VersionProperty.of("spring-foo.version", false),
-									"0.1.0.RELEASE");
-							projectBuild.addVersionProperty(VersionProperty.of("spring-bar.version"), "0.2.0.RELEASE");
-						}));
+						() -> (projectBuild) -> projectBuild.properties()
+								.version(VersionProperty.of("spring-foo.version", false), "0.1.0.RELEASE")
+								.version(VersionProperty.of("spring-bar.version"), "0.2.0.RELEASE")));
 		assertThat(project).textFile(fileName).hasSameContentAs(
 				new ClassPathResource("project/" + build + "/version-override-" + getAssertFileName(fileName)));
 	}
