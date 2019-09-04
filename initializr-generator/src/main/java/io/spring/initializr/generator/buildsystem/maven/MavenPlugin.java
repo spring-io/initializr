@@ -36,24 +36,25 @@ public class MavenPlugin {
 
 	private final String artifactId;
 
-	private String version;
+	private final String version;
 
-	private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
+	private final boolean extensions;
 
-	private final List<Dependency> dependencies = new ArrayList<>();
+	private final List<Execution> executions;
 
-	private ConfigurationCustomization configurationCustomization = null;
+	private final List<Dependency> dependencies;
 
-	private boolean extensions;
+	private final Configuration configuration;
 
-	public MavenPlugin(String groupId, String artifactId) {
-		this(groupId, artifactId, null);
-	}
-
-	public MavenPlugin(String groupId, String artifactId, String version) {
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
+	protected MavenPlugin(Builder builder) {
+		this.groupId = builder.groupId;
+		this.artifactId = builder.artifactId;
+		this.version = builder.version;
+		this.extensions = builder.extensions;
+		this.executions = Collections.unmodifiableList(
+				builder.executions.values().stream().map(ExecutionBuilder::build).collect(Collectors.toList()));
+		this.dependencies = Collections.unmodifiableList(new ArrayList<>(builder.dependencies));
+		this.configuration = (builder.configurationBuilder == null) ? null : builder.configurationBuilder.build();
 	}
 
 	public String getGroupId() {
@@ -68,50 +69,82 @@ public class MavenPlugin {
 		return this.version;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public void configuration(Consumer<ConfigurationCustomization> consumer) {
-		if (this.configurationCustomization == null) {
-			this.configurationCustomization = new ConfigurationCustomization();
-		}
-		consumer.accept(this.configurationCustomization);
-	}
-
-	public void execution(String id, Consumer<ExecutionBuilder> customizer) {
-		customizer.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
-	}
-
-	public List<Execution> getExecutions() {
-		return this.executions.values().stream().map(ExecutionBuilder::build).collect(Collectors.toList());
-	}
-
-	public void dependency(String groupId, String artifactId, String version) {
-		this.dependencies.add(new Dependency(groupId, artifactId, version));
-	}
-
-	public List<Dependency> getDependencies() {
-		return Collections.unmodifiableList(this.dependencies);
-	}
-
-	public Configuration getConfiguration() {
-		return (this.configurationCustomization == null) ? null : this.configurationCustomization.build();
-	}
-
 	public boolean isExtensions() {
 		return this.extensions;
 	}
 
-	/**
-	 * Enables loading plugin extensions.
-	 */
-	public void extensions() {
-		this.extensions = true;
+	public List<Execution> getExecutions() {
+		return this.executions;
+	}
+
+	public List<Dependency> getDependencies() {
+		return this.dependencies;
+	}
+
+	public Configuration getConfiguration() {
+		return this.configuration;
 	}
 
 	/**
-	 * Builder for creation an {@link Execution}.
+	 * Builder for a {@link MavenPlugin}.
+	 */
+	public static class Builder {
+
+		private final String groupId;
+
+		private final String artifactId;
+
+		private String version;
+
+		private boolean extensions;
+
+		private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
+
+		private final List<Dependency> dependencies = new ArrayList<>();
+
+		private ConfigurationBuilder configurationBuilder;
+
+		public Builder(String groupId, String artifactId) {
+			this.groupId = groupId;
+			this.artifactId = artifactId;
+		}
+
+		public Builder version(String version) {
+			this.version = version;
+			return this;
+		}
+
+		public Builder extensions() {
+			this.extensions = true;
+			return this;
+		}
+
+		public Builder configuration(Consumer<ConfigurationBuilder> consumer) {
+			if (this.configurationBuilder == null) {
+				this.configurationBuilder = new ConfigurationBuilder();
+			}
+			consumer.accept(this.configurationBuilder);
+			return this;
+		}
+
+		public Builder execution(String id, Consumer<ExecutionBuilder> customizer) {
+			customizer.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
+			return this;
+		}
+
+		public Builder dependency(String groupId, String artifactId, String version) {
+			this.dependencies.add(new Dependency(groupId, artifactId, version));
+			return this;
+		}
+
+		public MavenPlugin build() {
+			return new MavenPlugin(this);
+		}
+
+	}
+
+	/**
+	 * Builder for an {@link Execution}.
 	 */
 	public static class ExecutionBuilder {
 
@@ -121,7 +154,7 @@ public class MavenPlugin {
 
 		private List<String> goals = new ArrayList<>();
 
-		private ConfigurationCustomization configurationCustomization = null;
+		private ConfigurationBuilder configurationCustomization = null;
 
 		public ExecutionBuilder(String id) {
 			this.id = id;
@@ -142,9 +175,9 @@ public class MavenPlugin {
 			return this;
 		}
 
-		public void configuration(Consumer<ConfigurationCustomization> consumer) {
+		public void configuration(Consumer<ConfigurationBuilder> consumer) {
 			if (this.configurationCustomization == null) {
-				this.configurationCustomization = new ConfigurationCustomization();
+				this.configurationCustomization = new ConfigurationBuilder();
 			}
 			consumer.accept(this.configurationCustomization);
 		}
@@ -152,9 +185,9 @@ public class MavenPlugin {
 	}
 
 	/**
-	 * Customization of a {@link Configuration}.
+	 * Builder for a {@link Configuration}.
 	 */
-	public static class ConfigurationCustomization {
+	public static class ConfigurationBuilder {
 
 		private final List<Setting> settings = new ArrayList<>();
 
@@ -164,7 +197,7 @@ public class MavenPlugin {
 		 * @param value the single value of the parameter
 		 * @return this for method chaining
 		 */
-		public ConfigurationCustomization add(String name, String value) {
+		public ConfigurationBuilder add(String name, String value) {
 			this.settings.add(new Setting(name, value));
 			return this;
 		}
@@ -177,18 +210,18 @@ public class MavenPlugin {
 		 * @throws IllegalArgumentException if a parameter with the same name is
 		 * registered with a single value
 		 */
-		public ConfigurationCustomization configure(String name, Consumer<ConfigurationCustomization> consumer) {
+		public ConfigurationBuilder configure(String name, Consumer<ConfigurationBuilder> consumer) {
 			Object value = this.settings.stream().filter((candidate) -> candidate.getName().equals(name)).findFirst()
 					.orElseGet(() -> {
-						Setting nestedSetting = new Setting(name, new ConfigurationCustomization());
+						Setting nestedSetting = new Setting(name, new ConfigurationBuilder());
 						this.settings.add(nestedSetting);
 						return nestedSetting;
 					}).getValue();
-			if (!(value instanceof ConfigurationCustomization)) {
+			if (!(value instanceof ConfigurationBuilder)) {
 				throw new IllegalArgumentException(String.format(
 						"Could not customize parameter '%s', a single value %s is already registered", name, value));
 			}
-			ConfigurationCustomization nestedConfiguration = (ConfigurationCustomization) value;
+			ConfigurationBuilder nestedConfiguration = (ConfigurationBuilder) value;
 			consumer.accept(nestedConfiguration);
 			return this;
 		}
@@ -199,8 +232,8 @@ public class MavenPlugin {
 		}
 
 		private Setting resolve(String key, Object value) {
-			if (value instanceof ConfigurationCustomization) {
-				List<Setting> values = ((ConfigurationCustomization) value).settings.stream()
+			if (value instanceof ConfigurationBuilder) {
+				List<Setting> values = ((ConfigurationBuilder) value).settings.stream()
 						.map((entry) -> resolve(entry.getName(), entry.getValue())).collect(Collectors.toList());
 				return new Setting(key, values);
 			}
@@ -219,11 +252,11 @@ public class MavenPlugin {
 		private final List<Setting> settings;
 
 		private Configuration(List<Setting> settings) {
-			this.settings = settings;
+			this.settings = Collections.unmodifiableList(settings);
 		}
 
 		public List<Setting> getSettings() {
-			return Collections.unmodifiableList(this.settings);
+			return this.settings;
 		}
 
 	}
@@ -268,7 +301,7 @@ public class MavenPlugin {
 		private Execution(String id, String phase, List<String> goals, Configuration configuration) {
 			this.id = id;
 			this.phase = phase;
-			this.goals = goals;
+			this.goals = Collections.unmodifiableList(goals);
 			this.configuration = configuration;
 		}
 

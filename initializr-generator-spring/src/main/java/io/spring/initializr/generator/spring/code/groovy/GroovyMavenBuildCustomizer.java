@@ -29,7 +29,7 @@ class GroovyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 	@Override
 	public void customize(MavenBuild build) {
 		build.plugins().add("org.codehaus.gmavenplus", "gmavenplus-plugin", (groovyMavenPlugin) -> {
-			groovyMavenPlugin.setVersion("1.6.3");
+			groovyMavenPlugin.version("1.6.3");
 			groovyMavenPlugin.execution(null,
 					(execution) -> execution.goal("addSources").goal("addTestSources").goal("generateStubs")
 							.goal("compile").goal("generateTestStubs").goal("compileTests").goal("removeStubs")

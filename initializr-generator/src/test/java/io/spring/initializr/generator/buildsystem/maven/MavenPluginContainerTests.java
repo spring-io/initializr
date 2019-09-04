@@ -42,10 +42,8 @@ public class MavenPluginContainerTests {
 	@Test
 	void addPluginWithConsumer() {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
-		pluginContainer.add("com.example", "test-plugin", (plugin) -> {
-			plugin.setVersion("1.0");
-			plugin.execution("first", (first) -> first.goal("run-this"));
-		});
+		pluginContainer.add("com.example", "test-plugin",
+				(plugin) -> plugin.version("1.0").execution("first", (first) -> first.goal("run-this")));
 		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
@@ -59,14 +57,8 @@ public class MavenPluginContainerTests {
 	@Test
 	void addPluginSeveralTimeReuseConfiguration() {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
-		pluginContainer.add("com.example", "test-plugin", (plugin) -> {
-			assertThat(plugin.getVersion()).isNull();
-			plugin.setVersion("1.0");
-		});
-		pluginContainer.add("com.example", "test-plugin", (plugin) -> {
-			assertThat(plugin.getVersion()).isEqualTo("1.0");
-			plugin.setVersion("2.0");
-		});
+		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("1.0"));
+		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("2.0"));
 		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");

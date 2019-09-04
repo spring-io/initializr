@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Builder;
+
 /**
  * A container for {@link MavenPlugin}s.
  *
@@ -28,7 +30,7 @@ import java.util.stream.Stream;
  */
 public class MavenPluginContainer {
 
-	private final Map<String, MavenPlugin> plugins = new LinkedHashMap<>();
+	private final Map<String, MavenPlugin.Builder> plugins = new LinkedHashMap<>();
 
 	/**
 	 * Specify if this container is empty.
@@ -55,7 +57,7 @@ public class MavenPluginContainer {
 	 * @return a stream of {@link MavenPlugin}s
 	 */
 	public Stream<MavenPlugin> values() {
-		return this.plugins.values().stream();
+		return this.plugins.values().stream().map(Builder::build);
 	}
 
 	/**
@@ -70,21 +72,20 @@ public class MavenPluginContainer {
 	}
 
 	/**
-	 * Add a {@link MavenPlugin}with the specified {@code groupId} and {@code artifactId}
-	 * and {@link Consumer} to customize the object. If the plugin has already been added,
+	 * Add a {@link MavenPlugin} with the specified {@code groupId} and {@code artifactId}
+	 * and {@link Consumer} to customize the plugin. If the plugin has already been added,
 	 * the consumer can be used to further tune the existing plugin configuration.
 	 * @param groupId the groupId of the plugin
 	 * @param artifactId the artifactId of the plugin
 	 * @param plugin a {@link Consumer} to customize the {@link MavenPlugin}
 	 */
-	public void add(String groupId, String artifactId, Consumer<MavenPlugin> plugin) {
-		MavenPlugin mavenPlugin = addPlugin(groupId, artifactId);
-		plugin.accept(mavenPlugin);
+	public void add(String groupId, String artifactId, Consumer<MavenPlugin.Builder> plugin) {
+		plugin.accept(addPlugin(groupId, artifactId));
 	}
 
-	private MavenPlugin addPlugin(String groupId, String artifactId) {
+	private MavenPlugin.Builder addPlugin(String groupId, String artifactId) {
 		return this.plugins.computeIfAbsent(pluginKey(groupId, artifactId),
-				(pluginId) -> new MavenPlugin(groupId, artifactId));
+				(pluginId) -> new MavenPlugin.Builder(groupId, artifactId));
 	}
 
 	/**

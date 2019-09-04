@@ -39,7 +39,7 @@ class KotlinMavenFullBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		build.settings().sourceDirectory("${project.basedir}/src/main/kotlin")
 				.testSourceDirectory("${project.basedir}/src/test/kotlin");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinMavenPlugin) -> {
-			kotlinMavenPlugin.setVersion("${kotlin.version}");
+			kotlinMavenPlugin.version("${kotlin.version}");
 			kotlinMavenPlugin.configuration((configuration) -> {
 				configuration.configure("args",
 						(args) -> this.settings.getCompilerArgs().forEach((arg) -> args.add("arg", arg)));

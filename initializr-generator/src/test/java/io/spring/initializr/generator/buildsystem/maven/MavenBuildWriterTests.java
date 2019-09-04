@@ -392,7 +392,7 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
-			plugin.setVersion("1.5.3");
+			plugin.version("1.5.3");
 			plugin.execution("generateProject-docs", (execution) -> {
 				execution.goal("process-asciidoc");
 				execution.phase("generateProject-resources");
@@ -438,7 +438,7 @@ class MavenBuildWriterTests {
 	void pomWithPluginWithExtensions() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.plugins().add("com.example.demo", "demo-plugin", MavenPlugin::extensions);
+		build.plugins().add("com.example.demo", "demo-plugin", MavenPlugin.Builder::extensions);
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");

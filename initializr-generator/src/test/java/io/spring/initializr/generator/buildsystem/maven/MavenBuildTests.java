@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Builder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,7 +77,7 @@ class MavenBuildTests {
 	void mavenPluginVersionCanBeAmended() {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin");
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.setVersion("1.0.0"));
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
 		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
@@ -88,8 +89,8 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginVersionCanBeAmendedWithCustomizer() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.setVersion("1.0.0"));
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.setVersion(null));
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version(null));
 		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
@@ -100,7 +101,7 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginVersionIsNotLostOnAmend() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.setVersion("1.0.0"));
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
 		build.plugins().add("com.example", "test-plugin");
 		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
@@ -134,7 +135,7 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginExtensionsCanBeLoaded() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", MavenPlugin::extensions);
+		build.plugins().add("com.example", "test-plugin", Builder::extensions);
 		assertThat(build.plugins().values())
 				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}

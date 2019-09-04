@@ -18,6 +18,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Builder;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import org.junit.jupiter.api.Test;
 
@@ -33,9 +34,9 @@ class MavenPluginTests {
 
 	@Test
 	void configurationParameterCanBeCustomized() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.add("enabled", "false").add("skip", "true"));
-		plugin.configuration((configuration) -> configuration.add("another", "test"));
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.add("enabled", "false").add("skip", "true"))
+				.configuration((configuration) -> configuration.add("another", "test")).build();
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
 				"skip", "another");
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("false",
@@ -44,9 +45,9 @@ class MavenPluginTests {
 
 	@Test
 	void configurationParameterCanBeAdded() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.add("enabled", "true"));
-		plugin.configuration((configuration) -> configuration.add("skip", "false"));
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.add("enabled", "true"))
+				.configuration((configuration) -> configuration.add("skip", "false")).build();
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
 				"skip");
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("true",
@@ -56,9 +57,10 @@ class MavenPluginTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void configurationParameterWithNestedValuesCanBeCustomized() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "one")));
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "two")));
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "one")))
+				.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "two")))
+				.build();
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
@@ -71,11 +73,15 @@ class MavenPluginTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void configurationParameterWithSeveralLevelOfNestedValuesCanBeCustomized() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.configure("items",
-				(items) -> items.configure("item", (subItems) -> subItems.add("subItem", "one"))));
-		plugin.configuration((configuration) -> configuration.configure("items", (items) -> items.configure("item",
-				(subItems) -> subItems.add("subItem", "two").add("subItem", "three"))));
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.configure("items",
+						(items) -> items.configure("item", (subItems) -> subItems.add("subItem", "one"))))
+				.configuration(
+						(configuration) -> configuration
+								.configure("items",
+										(items) -> items.configure("item",
+												(subItems) -> subItems.add("subItem", "two").add("subItem", "three"))))
+				.build();
 		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
 		Setting setting = plugin.getConfiguration().getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
@@ -92,43 +98,46 @@ class MavenPluginTests {
 
 	@Test
 	void configurationParameterWithSingleValueCannotBeSwitchedToNestedValue() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.configuration((configuration) -> configuration.add("test", "value"));
+		MavenPlugin.Builder builder = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.add("test", "value"));
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> plugin
+				.isThrownBy(() -> builder
 						.configuration((customizer) -> customizer.configure("test", (test) -> test.add("one", "true"))))
 				.withMessageContaining("test").withMessageContaining("value");
 	}
 
 	@Test
 	void executionPhasesCanBeOverridden() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.execution("test", (test) -> test.phase("compile"));
-		plugin.execution("test", (test) -> test.phase("process-resources"));
+		MavenPlugin plugin = plugin("com.example", "test-plugin").execution("test", (test) -> test.phase("compile"))
+				.execution("test", (test) -> test.phase("process-resources")).build();
 		assertThat(plugin.getExecutions()).hasSize(1);
 		assertThat(plugin.getExecutions().get(0).getPhase()).isEqualTo("process-resources");
 	}
 
 	@Test
 	void executionGoalsCanBeAmended() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.execution("test", (test) -> test.goal("first"));
-		plugin.execution("test", (test) -> test.goal("second"));
+		MavenPlugin plugin = plugin("com.example", "test-plugin").execution("test", (test) -> test.goal("first"))
+				.execution("test", (test) -> test.goal("second")).build();
 		assertThat(plugin.getExecutions()).hasSize(1);
 		assertThat(plugin.getExecutions().get(0).getGoals()).containsExactly("first", "second");
 	}
 
 	@Test
 	void executionConfigurationCanBeOverridden() {
-		MavenPlugin plugin = new MavenPlugin("com.example", "test-plugin");
-		plugin.execution("test",
-				(test) -> test.configuration((testConfiguration) -> testConfiguration.add("enabled", "true")));
-		plugin.execution("test",
-				(test) -> test.configuration((testConfiguration) -> testConfiguration.add("another", "test")));
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.execution("test",
+						(test) -> test.configuration((testConfiguration) -> testConfiguration.add("enabled", "true")))
+				.execution("test",
+						(test) -> test.configuration((testConfiguration) -> testConfiguration.add("another", "test")))
+				.build();
 		assertThat(plugin.getExecutions()).hasSize(1);
 		List<Setting> settings = plugin.getExecutions().get(0).getConfiguration().getSettings();
 		assertThat(settings.stream().map(Setting::getName)).containsExactly("enabled", "another");
 		assertThat(settings.stream().map(Setting::getValue)).containsExactly("true", "test");
+	}
+
+	private MavenPlugin.Builder plugin(String groupId, String artifactId) {
+		return new Builder(groupId, artifactId);
 	}
 
 }
