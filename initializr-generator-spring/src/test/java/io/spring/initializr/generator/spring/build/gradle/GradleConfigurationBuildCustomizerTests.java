@@ -35,7 +35,7 @@ class GradleConfigurationBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
-		assertThat(build.getConfigurations()).containsOnly("providedRuntime");
+		assertThat(build.configurations().names()).containsOnly("providedRuntime");
 	}
 
 	@Test
@@ -45,7 +45,7 @@ class GradleConfigurationBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
-		assertThat(build.getConfigurationCustomizations()).isEmpty();
+		assertThat(build.configurations().customizations()).isEmpty();
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class GradleConfigurationBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("another", "com.example", "another", DependencyScope.RUNTIME);
 		customize(build);
-		assertThat(build.getConfigurationCustomizations()).isEmpty();
+		assertThat(build.configurations().customizations()).isEmpty();
 	}
 
 	private void customize(GradleBuild build) {

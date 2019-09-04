@@ -16,23 +16,11 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
-
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Gradle build configuration for a project.
@@ -46,17 +34,11 @@ public class GradleBuild extends Build {
 
 	private final GradlePluginContainer plugins = new GradlePluginContainer();
 
-	private final List<String> configurations = new ArrayList<>();
+	private final GradleConfigurationContainer configurations = new GradleConfigurationContainer();
 
-	private final Map<String, ConfigurationCustomization> configurationCustomizations = new LinkedHashMap<>();
+	private final GradleTaskContainer tasks = new GradleTaskContainer();
 
-	private final Map<String, TaskCustomization> taskCustomizations = new LinkedHashMap<>();
-
-	private final Set<String> importedTypes = new HashSet<>();
-
-	private final Map<String, TaskCustomization> tasksWithTypeCustomizations = new LinkedHashMap<>();
-
-	private final Buildscript buildscript = new Buildscript();
+	private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
 
 	public GradleBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
@@ -80,168 +62,20 @@ public class GradleBuild extends Build {
 		return this.plugins;
 	}
 
-	public void buildscript(Consumer<Buildscript> customizer) {
-		customizer.accept(this.buildscript);
+	public GradleConfigurationContainer configurations() {
+		return this.configurations;
 	}
 
-	public Buildscript getBuildscript() {
-		return this.buildscript;
+	public GradleTaskContainer tasks() {
+		return this.tasks;
 	}
 
-	public void customizeConfiguration(String configurationName, Consumer<ConfigurationCustomization> customizer) {
-		customizer.accept(this.configurationCustomizations.computeIfAbsent(configurationName,
-				(name) -> new ConfigurationCustomization()));
+	public void buildscript(Consumer<GradleBuildscript.Builder> buildscript) {
+		buildscript.accept(this.buildscript);
 	}
 
-	public void addConfiguration(String configurationName) {
-		this.configurations.add(configurationName);
-	}
-
-	public Map<String, ConfigurationCustomization> getConfigurationCustomizations() {
-		return Collections.unmodifiableMap(this.configurationCustomizations);
-	}
-
-	public List<String> getConfigurations() {
-		return Collections.unmodifiableList(this.configurations);
-	}
-
-	public Set<String> getImportedTypes() {
-		return Collections.unmodifiableSet(this.importedTypes);
-	}
-
-	/**
-	 * Customize tasks matching a given type.
-	 * @param typeName the name of type. Can use the short form for well-known types such
-	 * as {@code JavaCompile}, use a fully qualified name if an import is required
-	 * @param customizer a callback to customize tasks matching that type
-	 */
-	public void customizeTasksWithType(String typeName, Consumer<TaskCustomization> customizer) {
-		String packageName = ClassUtils.getPackageName(typeName);
-		if (!StringUtils.isEmpty(packageName)) {
-			this.importedTypes.add(typeName);
-		}
-		String shortName = ClassUtils.getShortName(typeName);
-		customizer
-				.accept(this.tasksWithTypeCustomizations.computeIfAbsent(shortName, (name) -> new TaskCustomization()));
-	}
-
-	public Map<String, TaskCustomization> getTasksWithTypeCustomizations() {
-		return Collections.unmodifiableMap(this.tasksWithTypeCustomizations);
-	}
-
-	public void customizeTask(String taskName, Consumer<TaskCustomization> customizer) {
-		customizer.accept(this.taskCustomizations.computeIfAbsent(taskName, (name) -> new TaskCustomization()));
-	}
-
-	public Map<String, TaskCustomization> getTaskCustomizations() {
-		return Collections.unmodifiableMap(this.taskCustomizations);
-	}
-
-	/**
-	 * The {@code buildscript} block in the {@code build.gradle} file.
-	 */
-	public static class Buildscript {
-
-		private final List<String> dependencies = new ArrayList<>();
-
-		private final Map<String, String> ext = new LinkedHashMap<>();
-
-		public Buildscript dependency(String coordinates) {
-			this.dependencies.add(coordinates);
-			return this;
-		}
-
-		public Buildscript ext(String key, String value) {
-			this.ext.put(key, value);
-			return this;
-		}
-
-		public List<String> getDependencies() {
-			return Collections.unmodifiableList(this.dependencies);
-		}
-
-		public Map<String, String> getExt() {
-			return Collections.unmodifiableMap(this.ext);
-		}
-
-	}
-
-	/**
-	 * Customization of a configuration in a Gradle build.
-	 */
-	public static class ConfigurationCustomization {
-
-		private final Set<String> extendsFrom = new LinkedHashSet<>();
-
-		public void extendsFrom(String configurationName) {
-			this.extendsFrom.add(configurationName);
-		}
-
-		public Set<String> getExtendsFrom() {
-			return Collections.unmodifiableSet(this.extendsFrom);
-		}
-
-	}
-
-	/**
-	 * Customization of a task in a Gradle build.
-	 */
-	public static class TaskCustomization {
-
-		private final List<Invocation> invocations = new ArrayList<>();
-
-		private final Map<String, String> assignments = new LinkedHashMap<>();
-
-		private final Map<String, TaskCustomization> nested = new LinkedHashMap<>();
-
-		public void nested(String property, Consumer<TaskCustomization> customizer) {
-			customizer.accept(this.nested.computeIfAbsent(property, (name) -> new TaskCustomization()));
-		}
-
-		public Map<String, TaskCustomization> getNested() {
-			return this.nested;
-		}
-
-		public void invoke(String target, String... arguments) {
-			this.invocations.add(new Invocation(target, Arrays.asList(arguments)));
-		}
-
-		public List<Invocation> getInvocations() {
-			return Collections.unmodifiableList(this.invocations);
-		}
-
-		public void set(String target, String value) {
-			this.assignments.put(target, value);
-		}
-
-		public Map<String, String> getAssignments() {
-			return Collections.unmodifiableMap(this.assignments);
-		}
-
-		/**
-		 * An invocation of a method that customizes a task.
-		 */
-		public static class Invocation {
-
-			private final String target;
-
-			private final List<String> arguments;
-
-			Invocation(String target, List<String> arguments) {
-				this.target = target;
-				this.arguments = arguments;
-			}
-
-			public String getTarget() {
-				return this.target;
-			}
-
-			public List<String> getArguments() {
-				return this.arguments;
-			}
-
-		}
-
+	public GradleBuildscript getBuildscript() {
+		return this.buildscript.build();
 	}
 
 }

@@ -18,7 +18,6 @@ package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,9 +35,10 @@ class GradleAnnotationProcessorScopeBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("ap", "com.example", "model-generator", DependencyScope.ANNOTATION_PROCESSOR);
 		customize(build);
-		assertThat(build.getConfigurationCustomizations()).containsOnlyKeys("compileOnly");
-		ConfigurationCustomization compileOnly = build.getConfigurationCustomizations().get("compileOnly");
-		assertThat(compileOnly.getExtendsFrom()).containsOnly("annotationProcessor");
+		assertThat(build.configurations().customizations()).hasOnlyOneElementSatisfying((configuration) -> {
+			assertThat(configuration.getName()).isEqualTo("compileOnly");
+			assertThat(configuration.getExtendsFrom()).containsOnly("annotationProcessor");
+		});
 	}
 
 	@Test
@@ -47,7 +47,7 @@ class GradleAnnotationProcessorScopeBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("another", "com.example", "another", DependencyScope.RUNTIME);
 		customize(build);
-		assertThat(build.getConfigurationCustomizations()).isEmpty();
+		assertThat(build.configurations().isEmpty()).isTrue();
 	}
 
 	private void customize(GradleBuild build) {

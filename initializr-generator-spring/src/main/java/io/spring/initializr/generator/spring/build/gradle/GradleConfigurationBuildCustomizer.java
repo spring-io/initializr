@@ -35,7 +35,7 @@ public class GradleConfigurationBuildCustomizer implements BuildCustomizer<Gradl
 				.anyMatch((dependency) -> DependencyScope.PROVIDED_RUNTIME.equals(dependency.getScope()));
 		boolean war = build.plugins().values().anyMatch((plugin) -> plugin.getId().equals("war"));
 		if (providedRuntimeUsed && !war) {
-			build.addConfiguration("providedRuntime");
+			build.configurations().add("providedRuntime");
 		}
 	}
 

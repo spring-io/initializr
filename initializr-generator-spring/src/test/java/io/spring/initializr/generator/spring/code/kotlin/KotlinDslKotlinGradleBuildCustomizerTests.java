@@ -17,7 +17,7 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
+import io.spring.initializr.generator.buildsystem.gradle.GradleTask;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
@@ -43,21 +43,22 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 	void kotlinCompilationTasksAreCustomized() {
 		GradleBuild build = new GradleBuild();
 		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getImportedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
-		assertThat(build.getTasksWithTypeCustomizations()).hasSize(1);
-		assertThat(build.getTasksWithTypeCustomizations()).containsKeys("KotlinCompile");
-		assertKotlinOptions(build.getTasksWithTypeCustomizations().get("KotlinCompile"));
+		assertThat(build.tasks().importedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+		assertThat(build.tasks().values()).hasOnlyOneElementSatisfying((task) -> {
+			assertThat(task.getName()).isEqualTo("KotlinCompile");
+			assertKotlinOptions(task);
+		});
 	}
 
-	private void assertKotlinOptions(TaskCustomization compileTask) {
-		assertThat(compileTask.getAssignments()).isEmpty();
+	private void assertKotlinOptions(GradleTask compileTask) {
+		assertThat(compileTask.getAttributes()).isEmpty();
 		assertThat(compileTask.getInvocations()).isEmpty();
 		assertThat(compileTask.getNested()).hasSize(1);
-		TaskCustomization kotlinOptions = compileTask.getNested().get("kotlinOptions");
+		GradleTask kotlinOptions = compileTask.getNested().get("kotlinOptions");
 		assertThat(kotlinOptions.getInvocations()).hasSize(0);
 		assertThat(kotlinOptions.getNested()).hasSize(0);
-		assertThat(kotlinOptions.getAssignments()).hasSize(2);
-		assertThat(kotlinOptions.getAssignments()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
+		assertThat(kotlinOptions.getAttributes()).hasSize(2);
+		assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
 				.containsEntry("jvmTarget", "\"1.8\"");
 	}
 

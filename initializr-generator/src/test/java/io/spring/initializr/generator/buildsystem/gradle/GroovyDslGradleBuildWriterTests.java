@@ -139,11 +139,11 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
+		build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
 				(task) -> task.nested("kotlinOptions",
-						(kotlinOptions) -> kotlinOptions.set("freeCompilerArgs", "['-Xjsr305=strict']")));
-		build.customizeTasksWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-				(task) -> task.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions.set("jvmTarget", "'1.8'")));
+						(kotlinOptions) -> kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']")));
+		build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile", (task) -> task
+				.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions.attribute("jvmTarget", "'1.8'")));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsOnlyOnce("import org.jetbrains.kotlin.gradle.tasks.KotlinCompile").containsSequence(
 				"tasks.withType(KotlinCompile) {", "    kotlinOptions {",
@@ -153,7 +153,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskWithTypesAndShortTypes() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTasksWithType("JavaCompile", (javaCompile) -> javaCompile.set("options.fork", "true"));
+		build.tasks().customizeWithType("JavaCompile", (javaCompile) -> javaCompile.attribute("options.fork", "true"));
 		assertThat(generateBuild(build)).doesNotContain("import JavaCompile")
 				.containsSequence("tasks.withType(JavaCompile) {", "    options.fork = true", "}");
 	}
@@ -161,7 +161,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskCustomizedWithInvocations() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTask("asciidoctor", (task) -> {
+		build.tasks().customize("asciidoctor", (task) -> {
 			task.invoke("inputs.dir", "snippetsDir");
 			task.invoke("dependsOn", "test");
 		});
@@ -172,7 +172,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskCustomizedWithInvocationAndNoArgument() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTask("test", (task) -> task.invoke("myMethod"));
+		build.tasks().customize("test", (task) -> task.invoke("myMethod"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("test {", "    myMethod()", "}");
 	}
@@ -180,9 +180,9 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskCustomizedWithAssignments() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTask("compileKotlin", (task) -> {
-			task.set("kotlinOptions.freeCompilerArgs", "['-Xjsr305=strict']");
-			task.set("kotlinOptions.jvmTarget", "'1.8'");
+		build.tasks().customize("compileKotlin", (task) -> {
+			task.attribute("kotlinOptions.freeCompilerArgs", "['-Xjsr305=strict']");
+			task.attribute("kotlinOptions.jvmTarget", "'1.8'");
 		});
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("compileKotlin {",
@@ -192,10 +192,10 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskCustomizedWithNestedCustomization() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.customizeTask("compileKotlin",
+		build.tasks().customize("compileKotlin",
 				(compileKotlin) -> compileKotlin.nested("kotlinOptions", (kotlinOptions) -> {
-					kotlinOptions.set("freeCompilerArgs", "['-Xjsr305=strict']");
-					kotlinOptions.set("jvmTarget", "'1.8'");
+					kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']");
+					kotlinOptions.attribute("jvmTarget", "'1.8'");
 				}));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("compileKotlin {", "    kotlinOptions {",
@@ -257,7 +257,7 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithConfiguration() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.addConfiguration("developmentOnly");
+		build.configurations().add("developmentOnly");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("configurations {", "    developmentOnly", "}");
 	}
@@ -265,8 +265,9 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithConfigurationCustomization() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
-		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("testCompile"));
+		build.configurations().customize("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
+		build.configurations().customize("developmentOnly",
+				(configuration) -> configuration.extendsFrom("testCompile"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("configurations {", "    developmentOnly {",
 				"        extendsFrom compile, testCompile", "    }", "}");
@@ -275,8 +276,8 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithConfigurationCustomizations() throws Exception {
 		GradleBuild build = new GradleBuild();
-		build.customizeConfiguration("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
-		build.customizeConfiguration("testOnly", (configuration) -> configuration.extendsFrom("testCompile"));
+		build.configurations().customize("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
+		build.configurations().customize("testOnly", (configuration) -> configuration.extendsFrom("testCompile"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("configurations {", "    developmentOnly {", "        extendsFrom compile",
 				"    }", "    testOnly {", "        extendsFrom testCompile", "    }", "}");

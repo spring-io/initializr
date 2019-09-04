@@ -213,7 +213,7 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.customizeTask("test", (test) -> test.invoke("useJUnitPlatform"));
+			return (build) -> build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 		@Bean
@@ -246,7 +246,7 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.customizeTasksWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
+			return (build) -> build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
 		}
 
 		@Bean

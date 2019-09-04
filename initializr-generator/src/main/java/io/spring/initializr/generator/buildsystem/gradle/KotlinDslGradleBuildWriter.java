@@ -27,8 +27,6 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -103,22 +101,6 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 				+ sourceCompatibilitiesToJavaVersion.get(settings.getSourceCompatibility()));
 	}
 
-	@Override
-	protected void writeConfiguration(IndentingWriter writer, String configurationName,
-			ConfigurationCustomization configurationCustomization, List<String> customConfigurations) {
-		if (configurationCustomization.getExtendsFrom().isEmpty()) {
-			writer.println(configurationName);
-		}
-		else {
-			writer.println(configurationName + " {");
-			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
-					configurationCustomization.getExtendsFrom().stream()
-							.map((name) -> configurationReference(name, customConfigurations))
-							.collect(Collectors.joining(", ")))));
-			writer.println("}");
-		}
-	}
-
 	private String configurationReference(String configurationName, Collection<String> customConfigurations) {
 		if (customConfigurations.contains(configurationName)) {
 			return configurationName;
@@ -135,20 +117,33 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeConfigurations(IndentingWriter writer, GradleBuild build) {
-		Map<String, ConfigurationCustomization> configurationCustomizations = build.getConfigurationCustomizations();
-		List<String> configurations = build.getConfigurations();
-		for (String configuration : configurations) {
-			writer.println("val " + configuration + " by configurations.creating");
-		}
-		if (configurationCustomizations.isEmpty()) {
+	protected void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations) {
+		configurations.names()
+				.forEach((configuration) -> writer.println("val " + configuration + " by configurations.creating"));
+		if (!configurations.customizations().findFirst().isPresent()) {
 			return;
 		}
 		writer.println("configurations {");
-		writer.indented(() -> configurationCustomizations
-				.forEach((name, customization) -> writeConfiguration(writer, name, customization, configurations)));
+		List<String> customConfigurations = configurations.names().collect(Collectors.toList());
+		writer.indented(() -> configurations.customizations()
+				.forEach((configuration) -> writeConfiguration(writer, configuration, customConfigurations)));
 		writer.println("}");
 		writer.println("");
+	}
+
+	protected void writeConfiguration(IndentingWriter writer, GradleConfiguration configuration,
+			List<String> customConfigurations) {
+		if (configuration.getExtendsFrom().isEmpty()) {
+			writer.println(configuration.getName());
+		}
+		else {
+			writer.println(configuration.getName() + " {");
+			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
+					configuration.getExtendsFrom().stream()
+							.map((name) -> configurationReference(name, customConfigurations))
+							.collect(Collectors.joining(", ")))));
+			writer.println("}");
+		}
 	}
 
 	@Override
@@ -202,31 +197,23 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeTasksWithTypeCustomizations(IndentingWriter writer, GradleBuild build) {
-		Map<String, TaskCustomization> tasksWithTypeCustomizations = build.getTasksWithTypeCustomizations();
-
-		tasksWithTypeCustomizations.forEach((typeName, customization) -> {
+	protected void writeTasks(IndentingWriter writer, GradleTaskContainer tasks) {
+		tasks.values().filter((candidate) -> candidate.getType() != null).forEach((task) -> {
 			writer.println();
-			writer.println("tasks.withType<" + typeName + "> {");
-			writer.indented(() -> writeTaskCustomization(writer, customization));
+			writer.println("tasks.withType<" + task.getName() + "> {");
+			writer.indented(() -> writeTaskCustomization(writer, task));
+			writer.println("}");
+		});
+		tasks.values().filter((candidate) -> candidate.getType() == null).forEach((task) -> {
+			writer.println();
+			writer.println("tasks." + task.getName() + " {");
+			writer.indented(() -> writeTaskCustomization(writer, task));
 			writer.println("}");
 		});
 	}
 
 	@Override
-	protected void writeTaskCustomizations(IndentingWriter writer, GradleBuild build) {
-		Map<String, TaskCustomization> taskCustomizations = build.getTaskCustomizations();
-
-		taskCustomizations.forEach((name, customization) -> {
-			writer.println();
-			writer.println("tasks." + name + " {");
-			writer.indented(() -> writeTaskCustomization(writer, customization));
-			writer.println("}");
-		});
-	}
-
-	@Override
-	protected String invocationAsString(TaskCustomization.Invocation invocation) {
+	protected String invocationAsString(GradleTask.Invocation invocation) {
 		return invocation.getTarget() + "(" + String.join(", ", invocation.getArguments()) + ")";
 	}
 

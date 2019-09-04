@@ -38,8 +38,6 @@ import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.ConfigurationCustomization;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild.TaskCustomization;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 
@@ -56,26 +54,27 @@ public abstract class GradleBuildWriter {
 
 	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
 		GradleBuildSettings settings = build.getSettings();
-		writeImports(writer, build);
+		writeImports(writer, build.tasks());
 		writeBuildscript(writer, build);
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
 		writeProperty(writer, "version", settings.getVersion());
 		writeJavaSourceCompatibility(writer, settings);
 		writer.println();
-		writeConfigurations(writer, build);
+		writeConfigurations(writer, build.configurations());
 		writeRepositories(writer, build);
 		writeProperties(writer, build.properties());
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
-		writeTasksWithTypeCustomizations(writer, build);
-		writeTaskCustomizations(writer, build);
+		writeTasks(writer, build.tasks());
+		// writeTasksWithTypeCustomizations(writer, build);
+		// writeTaskCustomizations(writer, build);
 	}
 
-	private void writeImports(IndentingWriter writer, GradleBuild build) {
-		build.getImportedTypes().stream().sorted()
-				.forEachOrdered((importedType) -> writer.println("import " + importedType));
-		if (!build.getImportedTypes().isEmpty()) {
+	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks) {
+		List<String> imports = tasks.importedTypes().sorted().collect(Collectors.toList());
+		imports.forEach((importedType) -> writer.println("import " + importedType));
+		if (!imports.isEmpty()) {
 			writer.println();
 		}
 	}
@@ -91,10 +90,7 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings);
 
-	protected abstract void writeConfigurations(IndentingWriter writer, GradleBuild build);
-
-	protected abstract void writeConfiguration(IndentingWriter writer, String configurationName,
-			ConfigurationCustomization configurationCustomization, List<String> customConfigurations);
+	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
 
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "repositories", build.repositories().items().collect(Collectors.toList()),
@@ -190,21 +186,19 @@ public abstract class GradleBuildWriter {
 
 	protected abstract String bomAsString(BillOfMaterials bom);
 
-	protected abstract void writeTasksWithTypeCustomizations(IndentingWriter writer, GradleBuild build);
+	protected abstract void writeTasks(IndentingWriter writer, GradleTaskContainer tasks);
 
-	protected abstract void writeTaskCustomizations(IndentingWriter writer, GradleBuild build);
-
-	protected final void writeTaskCustomization(IndentingWriter writer, TaskCustomization customization) {
-		writeCollection(writer, customization.getInvocations(), this::invocationAsString);
-		writeMap(writer, customization.getAssignments(), (key, value) -> key + " = " + value);
-		customization.getNested().forEach((property, nestedCustomization) -> {
+	protected final void writeTaskCustomization(IndentingWriter writer, GradleTask task) {
+		writeCollection(writer, task.getInvocations(), this::invocationAsString);
+		writeMap(writer, task.getAttributes(), (key, value) -> key + " = " + value);
+		task.getNested().forEach((property, nestedCustomization) -> {
 			writer.println(property + " {");
 			writer.indented(() -> writeTaskCustomization(writer, nestedCustomization));
 			writer.println("}");
 		});
 	}
 
-	protected abstract String invocationAsString(TaskCustomization.Invocation invocation);
+	protected abstract String invocationAsString(GradleTask.Invocation invocation);
 
 	protected final <T> void writeNestedCollection(IndentingWriter writer, String name, Collection<T> collection,
 			Function<T, String> itemToStringConverter) {
