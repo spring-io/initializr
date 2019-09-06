@@ -85,6 +85,17 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
 	}
 
+	/**
+	 * Return the {@link CacheControl} response headers to use for the specified
+	 * {@link InitializrMetadata metadata}. If no cache should be applied
+	 * {@link CacheControl#empty()} can be used.
+	 * @param metadata the metadata about to be exposed
+	 * @return the {@code Cache-Control} headers to use
+	 */
+	protected CacheControl determineCacheControlFor(InitializrMetadata metadata) {
+		return CacheControl.maxAge(2, TimeUnit.HOURS);
+	}
+
 	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version, String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
 		Version v = (bootVersion != null) ? Version.parse(bootVersion)
@@ -92,7 +103,7 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
 		return ResponseEntity.ok().contentType(version.getMediaType()).eTag(createUniqueId(content))
-				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
+				.cacheControl(determineCacheControlFor(metadata)).body(content);
 	}
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
@@ -101,9 +112,10 @@ public class ProjectMetadataController extends AbstractMetadataController {
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version, MediaType contentType) {
 		String appUrl = generateAppUrl();
-		String content = getJsonMapper(version).write(this.metadataProvider.get(), appUrl);
+		InitializrMetadata metadata = this.metadataProvider.get();
+		String content = getJsonMapper(version).write(metadata, appUrl);
 		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content)).varyBy("Accept")
-				.cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
+				.cacheControl(determineCacheControlFor(metadata)).body(content);
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
