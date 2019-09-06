@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
-import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
@@ -51,7 +50,6 @@ public class ProjectGeneratorTester extends AbstractProjectGenerationTester<Proj
 	private static Map<Class<?>, Supplier<?>> defaultBeans() {
 		Map<Class<?>, Supplier<?>> beans = new HashMap<>();
 		beans.put(IndentingWriterFactory.class, () -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
-		beans.put(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"));
 		return beans;
 	}
 

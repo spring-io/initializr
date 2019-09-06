@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 /**
- * Configuration for contributions specific to the help documentation of a project.
+ * Configuration for contributions specific to the help documentation of a project. If no
+ * {@link MustacheTemplateRenderer} exists, a default one on {@code classpath:/templates}
+ * is provided.
  *
  * @author Stephane Nicoll
  */
@@ -33,9 +35,10 @@ import org.springframework.context.annotation.Import;
 public class HelpDocumentProjectGenerationConfiguration {
 
 	@Bean
-	public HelpDocument helpDocument(MustacheTemplateRenderer templateRenderer,
+	public HelpDocument helpDocument(ObjectProvider<MustacheTemplateRenderer> templateRenderer,
 			ObjectProvider<HelpDocumentCustomizer> helpDocumentCustomizers) {
-		HelpDocument helpDocument = new HelpDocument(templateRenderer);
+		HelpDocument helpDocument = new HelpDocument(
+				templateRenderer.getIfAvailable(() -> new MustacheTemplateRenderer("classpath:/templates")));
 		helpDocumentCustomizers.orderedStream().forEach((customizer) -> customizer.customize(helpDocument));
 		return helpDocument;
 	}
