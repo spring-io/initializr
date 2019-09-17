@@ -32,7 +32,6 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
@@ -65,7 +64,7 @@ class SpringBootMetadataReaderTests {
 			assertThat(it.getName()).as("Name must be set").isNotNull();
 			if (it.isDefault()) {
 				if (defaultFound.get()) {
-					fail("One default version was already found " + it.getId());
+					throw new AssertionError("One default version was already found " + it.getId());
 				}
 				defaultFound.set(true);
 			}

@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for stats processing.
@@ -142,13 +142,9 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 	@Test
 	void invalidProjectSillHasStats() {
-		try {
-			downloadArchive("/starter.zip?type=invalid-type");
-			fail("Should have failed to generate project with invalid type");
-		}
-		catch (HttpClientErrorException ex) {
-			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-		}
+		assertThatExceptionOfType(HttpClientErrorException.class)
+				.isThrownBy(() -> downloadArchive("/starter.zip?type=invalid-type"))
+				.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 

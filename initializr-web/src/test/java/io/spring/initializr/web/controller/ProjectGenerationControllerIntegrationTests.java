@@ -31,7 +31,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link ProjectGenerationController}.
@@ -148,27 +147,22 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void missingDependencyProperException() {
-		try {
-			downloadArchive("/starter.zip?dependencies=foo:bar");
-			fail("Should have failed");
-		}
-		catch (HttpClientErrorException ex) {
-			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertStandardErrorBody(ex.getResponseBodyAsString(),
-					"Unknown dependency 'foo:bar' check project metadata");
-		}
+		assertThatExceptionOfType(HttpClientErrorException.class)
+				.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo:bar")).satisfies((ex) -> {
+					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertStandardErrorBody(ex.getResponseBodyAsString(),
+							"Unknown dependency 'foo:bar' check project metadata");
+				});
 	}
 
 	@Test
 	void invalidDependencyProperException() {
-		try {
-			downloadArchive("/starter.zip?dependencies=foo");
-			fail("Should have failed");
-		}
-		catch (HttpClientErrorException ex) {
-			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertStandardErrorBody(ex.getResponseBodyAsString(), "Unknown dependency 'foo' check project metadata");
-		}
+		assertThatExceptionOfType(HttpClientErrorException.class)
+				.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo")).satisfies((ex) -> {
+					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertStandardErrorBody(ex.getResponseBodyAsString(),
+							"Unknown dependency 'foo' check project metadata");
+				});
 	}
 
 	@Test
