@@ -102,7 +102,7 @@ class SourceCodeProjectGenerationConfigurationTests {
 		description.setPackaging(Packaging.forId("war"));
 		description.setPackageName("com.foo");
 		description.setPlatformVersion(Version.parse(version));
-		this.projectTester.generate(description, (context) -> {
+		this.projectTester.configure(description, (context) -> {
 			ServletInitializerContributor bean = context.getBean(ServletInitializerContributor.class);
 			SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode = mock(SourceCode.class);
 			CompilationUnit<TypeDeclaration> compilationUnit = mock(CompilationUnit.class);
@@ -112,7 +112,6 @@ class SourceCodeProjectGenerationConfigurationTests {
 			bean.customize(sourceCode);
 			verify(sourceCode).createCompilationUnit("com.foo", "ServletInitializer");
 			verify(typeDeclaration).extend(className);
-			return null;
 		});
 	}
 

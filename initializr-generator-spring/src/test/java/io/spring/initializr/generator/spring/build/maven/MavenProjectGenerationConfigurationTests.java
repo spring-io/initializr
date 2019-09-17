@@ -59,9 +59,8 @@ class MavenProjectGenerationConfigurationTests {
 	void buildWriterIsContributed() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		BuildWriter buildWriter = this.projectTester.generate(description,
-				(context) -> context.getBean(BuildWriter.class));
-		assertThat(buildWriter).isInstanceOf(MavenBuildProjectContributor.class);
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(BuildWriter.class)
+				.getBean(BuildWriter.class).isInstanceOf(MavenBuildProjectContributor.class));
 	}
 
 	@Test

@@ -69,17 +69,16 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void kotlinVersionFallbacksToMetadataIfNotPresent() {
-		KotlinProjectSettings settings = this.projectTester.generate(new MutableProjectDescription(),
-				(context) -> context.getBean(KotlinProjectSettings.class));
-		assertThat(settings.getVersion()).isEqualTo("1.1.1");
+		this.projectTester.configure(new MutableProjectDescription(),
+				(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion()).isEqualTo("1.1.1"));
 	}
 
 	@Test
 	void kotlinVersionResolverIsUsedIfPresent() {
-		KotlinProjectSettings settings = this.projectTester
-				.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("0.9.12"))
-				.generate(new MutableProjectDescription(), (context) -> context.getBean(KotlinProjectSettings.class));
-		assertThat(settings.getVersion()).isEqualTo("0.9.12");
+		this.projectTester.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("0.9.12"))
+				.configure(new MutableProjectDescription(),
+						(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion())
+								.isEqualTo("0.9.12"));
 	}
 
 	@Test

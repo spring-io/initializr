@@ -76,11 +76,12 @@ class GradleKtsProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
-		BuildWriter buildWriter = this.projectTester.generate(description,
-				(context) -> context.getBean(BuildWriter.class));
-		assertThat(buildWriter).isInstanceOf(GradleBuildProjectContributor.class);
-		assertThat(ReflectionTestUtils.getField(buildWriter, "buildWriter"))
-				.isInstanceOf(KotlinDslGradleBuildWriter.class);
+		this.projectTester.configure(description, (context) -> {
+			assertThat(context).hasSingleBean(BuildWriter.class).getBean(BuildWriter.class)
+					.isInstanceOf(GradleBuildProjectContributor.class);
+			assertThat(ReflectionTestUtils.getField(context.getBean(BuildWriter.class), "buildWriter"))
+					.isInstanceOf(KotlinDslGradleBuildWriter.class);
+		});
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {

@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator.spring.build.gradle;
 
-import java.util.Map;
-
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
@@ -42,79 +40,61 @@ public class ConditionalOnGradleVersionTests {
 	void outcomeWithSpringBoot15() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		String bean = outcomeFor(description);
-		assertThat(bean).isEqualTo("testGradle3");
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle3"));
 	}
 
 	@Test
 	void outcomeWithSpringBoot20() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		String bean = outcomeFor(description);
-		assertThat(bean).isEqualTo("testGradle4");
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle4"));
 	}
 
 	@Test
 	void outcomeWithSpringBoot21() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
-		String bean = outcomeFor(description);
-		assertThat(bean).isEqualTo("testGradle5");
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle5"));
 	}
 
 	@Test
 	void outcomeWithNoMatch() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
-		this.projectTester.generate(description, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		this.projectTester.configure(description, (context) -> assertThat(context).doesNotHaveBean(String.class));
 	}
 
 	@Test
 	void outcomeWithNoAvailableSpringBootVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		this.projectTester.generate(description, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).isEmpty();
-			return null;
-		});
+		this.projectTester.configure(description, (context) -> assertThat(context).doesNotHaveBean(String.class));
 	}
 
 	@Test
 	void outcomeWithSpringBoot15AndMultipleGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		Map<String, String> candidates = candidatesFor(description, Gradle3Or4TestConfiguration.class);
-		assertThat(candidates).containsOnlyKeys("gradle3", "gradle3AndLater");
+		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle3", "gradle3AndLater"));
 	}
 
 	@Test
 	void outcomeWithSpringBoot20AndMultipleGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		Map<String, String> candidates = candidatesFor(description, Gradle3Or4TestConfiguration.class);
-		assertThat(candidates).containsOnlyKeys("gradle4", "gradle3AndLater");
+		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle4", "gradle3AndLater"));
 	}
 
 	@Test
 	void outcomeWithSpringBoot21AndMultipleNonMatchingGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
-		Map<String, String> candidates = candidatesFor(description, Gradle3Or4TestConfiguration.class);
-		assertThat(candidates).containsOnlyKeys("gradle5");
-	}
-
-	private String outcomeFor(MutableProjectDescription description) {
-		return this.projectTester.generate(description, (projectGenerationContext) -> {
-			assertThat(projectGenerationContext.getBeansOfType(String.class)).hasSize(1);
-			return projectGenerationContext.getBean(String.class);
-		});
-	}
-
-	private Map<String, String> candidatesFor(MutableProjectDescription description, Class<?>... extraConfigurations) {
-		return this.projectTester.withConfiguration(extraConfigurations).generate(description,
-				(context) -> context.getBeansOfType(String.class));
+		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle5"));
 	}
 
 	@Configuration

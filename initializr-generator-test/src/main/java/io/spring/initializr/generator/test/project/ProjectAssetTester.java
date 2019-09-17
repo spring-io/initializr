@@ -33,12 +33,20 @@ import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
+import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.boot.test.context.runner.ContextConsumer;
+
 /**
  * A tester for project asset that does not detect available {@link ProjectContributor
  * contributors} and does not register any bean to the context. Contributors can be added
  * using a {@link #withConfiguration(Class[]) configuration class} or a
  * {@link #withContextInitializer(Consumer) customization of the project generation
  * context}.
+ * <p>
+ * Alternatively, the context can be queried the same way {@link ApplicationContextRunner}
+ * works by {@link #configure(MutableProjectDescription, ContextConsumer) configuring} the
+ * context.
  *
  * @author Stephane Nicoll
  */
@@ -68,6 +76,25 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 
 	public ProjectAssetTester withConfiguration(Class<?>... configurationClasses) {
 		return withContextInitializer((context) -> context.register(configurationClasses));
+	}
+
+	/**
+	 * Configure a {@link ProjectGenerationContext} using the specified
+	 * {@code description} and use the {@link ContextConsumer} to assert the context.
+	 * @param description the description of the project to configure
+	 * @param consumer the consumer of the created {@link ProjectGenerationContext}
+	 * @see ApplicationContextRunner#run(ContextConsumer)
+	 */
+	public void configure(MutableProjectDescription description,
+			ContextConsumer<AssertableApplicationContext> consumer) {
+		invokeProjectGeneration(description, (contextInitializer) -> {
+			new ApplicationContextRunner(ProjectGenerationContext::new).withInitializer((ctx) -> {
+				ProjectGenerationContext projectGenerationContext = (ProjectGenerationContext) ctx;
+				projectGenerationContext.registerBean(ProjectDescription.class, () -> description);
+				contextInitializer.accept(projectGenerationContext);
+			}).run(consumer);
+			return null;
+		});
 	}
 
 	/**

@@ -73,9 +73,9 @@ class HelpDocumentProjectGenerationConfigurationTests {
 	@Test
 	void helpDocumentIsAddedToGitIgnore() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		GitIgnoreCustomizer gitIgnoreCustomizer = this.projectTester.generate(description,
-				(context) -> context.getBean(GitIgnoreCustomizer.class));
-		assertThat(gitIgnoreCustomizer).isInstanceOf(HelpDocumentGitIgnoreCustomizer.class);
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(GitIgnoreCustomizer.class)
+						.getBean(GitIgnoreCustomizer.class).isInstanceOf(HelpDocumentGitIgnoreCustomizer.class));
 	}
 
 }

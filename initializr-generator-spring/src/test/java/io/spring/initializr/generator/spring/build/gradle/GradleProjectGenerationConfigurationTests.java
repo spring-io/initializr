@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildWriter;
@@ -76,11 +75,12 @@ class GradleProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
-		BuildWriter buildWriter = this.projectTester.generate(description,
-				(context) -> context.getBean(BuildWriter.class));
-		assertThat(buildWriter).isInstanceOf(GradleBuildProjectContributor.class);
-		assertThat(ReflectionTestUtils.getField(buildWriter, "buildWriter"))
-				.isInstanceOf(GroovyDslGradleBuildWriter.class);
+		this.projectTester.configure(description, (context) -> {
+			assertThat(context).hasSingleBean(BuildWriter.class).getBean(BuildWriter.class)
+					.isInstanceOf(GradleBuildProjectContributor.class);
+			assertThat(ReflectionTestUtils.getField(context.getBean(BuildWriter.class), "buildWriter"))
+					.isInstanceOf(GroovyDslGradleBuildWriter.class);
+		});
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
@@ -193,9 +193,8 @@ class GradleProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
-		Map<String, GradleAnnotationProcessorScopeBuildCustomizer> generate = this.projectTester.generate(description,
-				(context) -> context.getBeansOfType(GradleAnnotationProcessorScopeBuildCustomizer.class));
-		assertThat(generate).hasSize((contributorExpected) ? 1 : 0);
+		this.projectTester.configure(description, (context) -> assertThat(context)
+				.getBeans(GradleAnnotationProcessorScopeBuildCustomizer.class).hasSize((contributorExpected) ? 1 : 0));
 	}
 
 }
