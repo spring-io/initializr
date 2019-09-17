@@ -58,6 +58,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -81,13 +82,21 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		this.projectGenerationInvoker = projectGenerationInvoker;
 	}
 
+	@ModelAttribute
+	R projectRequest(@RequestHeader Map<String, String> headers,
+			@RequestParam(name = "style", required = false) String style) {
+		if (style != null) {
+			throw new InvalidProjectRequestException("Dependencies must be specified using 'dependencies'");
+		}
+		return projectRequest(headers);
+	}
+
 	/**
 	 * Create an initialized {@link ProjectRequest} instance to use to bind the parameters
 	 * of a project generation request.
 	 * @param headers the headers of the request
 	 * @return a new {@link ProjectRequest} instance
 	 */
-	@ModelAttribute
 	public abstract R projectRequest(@RequestHeader Map<String, String> headers);
 
 	protected InitializrMetadata getMetadata() {

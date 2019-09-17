@@ -30,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -102,7 +103,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	}
 
 	@Test
-	void dependenciesIsAnAliasOfStyle() {
+	void dependencies() {
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&dependencies=jpa");
 		assertDefaultProject(project);
 		assertHasWebResources(project);
@@ -113,7 +114,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	}
 
 	@Test
-	void dependenciesIsAnAliasOfStyleCommaSeparated() {
+	void dependenciesCommaSeparated() {
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web,jpa");
 		assertDefaultProject(project);
 		assertHasWebResources(project);
@@ -168,6 +169,35 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			assertStandardErrorBody(ex.getResponseBodyAsString(), "Unknown dependency 'foo' check project metadata");
 		}
+	}
+
+	@Test
+	void styleWithProjectZip() {
+		assertUsingStyleIsFailingForUrl("/starter.zip?dependencies=web&style=should-not-use");
+	}
+
+	@Test
+	void styleWithProjectTgz() {
+		assertUsingStyleIsFailingForUrl("/starter.tgz?dependencies=web&style=should-not-use");
+	}
+
+	@Test
+	void styleWithMavenBuild() {
+		assertUsingStyleIsFailingForUrl("/pom.xml?dependencies=web&style=should-not-use");
+	}
+
+	@Test
+	void styleWithGradleBuild() {
+		assertUsingStyleIsFailingForUrl("/build.gradle?dependencies=web&style=should-not-use");
+	}
+
+	private void assertUsingStyleIsFailingForUrl(String url) {
+		assertThatExceptionOfType(HttpClientErrorException.class)
+				.isThrownBy(() -> getRestTemplate().getForEntity(createUrl(url), byte[].class)).satisfies((ex) -> {
+					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertStandardErrorBody(ex.getResponseBodyAsString(),
+							"Dependencies must be specified using 'dependencies'");
+				});
 	}
 
 	@Test
