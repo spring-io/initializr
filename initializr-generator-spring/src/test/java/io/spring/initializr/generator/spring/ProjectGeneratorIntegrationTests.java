@@ -60,7 +60,7 @@ class ProjectGeneratorIntegrationTests {
 		description.setBaseDirectory("test/demo-app");
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).filePaths().containsOnly("test/demo-app/.gitignore", "test/demo-app/pom.xml",
-				"test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
+				"test/demo-app/mvnw", "test/demo-app/mvnw.cmd", "test/demo-app/Dockerfile",
 				"test/demo-app/.mvn/wrapper/MavenWrapperDownloader.java",
 				"test/demo-app/.mvn/wrapper/maven-wrapper.properties", "test/demo-app/.mvn/wrapper/maven-wrapper.jar",
 				"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
