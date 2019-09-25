@@ -128,7 +128,7 @@ class KotlinProjectGenerationConfigurationTests {
 	@Test
 	void jacksonKotlinModuleShouldBeAddedWhenJsonFacetPresent() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo").build());
+		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("pom.xml").contains("        <dependency>",
 				"            <groupId>com.fasterxml.jackson.module</groupId>",

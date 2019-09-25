@@ -28,6 +28,7 @@ import io.spring.initializr.metadata.Link;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link RequestedDependenciesHelpDocumentCustomizer}.
@@ -136,7 +137,8 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	private HelpDocument customizeHelp(String... requestedDependencies) {
 		MutableProjectDescription description = new MutableProjectDescription();
 		for (String requestedDependency : requestedDependencies) {
-			description.addDependency(requestedDependency, null);
+			description.addDependency(requestedDependency,
+					mock(io.spring.initializr.generator.buildsystem.Dependency.class));
 		}
 		InitializrMetadata metadata = this.metadataBuilder.build();
 		HelpDocument document = new HelpDocument(new MustacheTemplateRenderer("classpath:/templates"));

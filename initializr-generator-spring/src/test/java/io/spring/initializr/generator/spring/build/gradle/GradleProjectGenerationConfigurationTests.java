@@ -107,7 +107,7 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
-				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE).build());
+				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("build.gradle").containsExactly("plugins {",
 				"    id 'org.springframework.boot' version '2.1.0.RELEASE'",

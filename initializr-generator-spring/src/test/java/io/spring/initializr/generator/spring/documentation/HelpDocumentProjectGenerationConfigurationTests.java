@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link HelpDocumentProjectGenerationConfiguration}.
@@ -65,7 +66,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("example", null);
+		description.addDependency("example", mock(io.spring.initializr.generator.buildsystem.Dependency.class));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).filePaths().containsOnly("HELP.md");
 	}

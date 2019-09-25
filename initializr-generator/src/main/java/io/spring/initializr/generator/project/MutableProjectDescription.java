@@ -97,6 +97,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.requestedDependencies.put(id, dependency);
 	}
 
+	public Dependency addDependency(String id, Dependency.Builder<?> builder) {
+		return addDependency(id, builder.build());
+	}
+
 	public Map<String, Dependency> getRequestedDependencies() {
 		return Collections.unmodifiableMap(this.requestedDependencies);
 	}
