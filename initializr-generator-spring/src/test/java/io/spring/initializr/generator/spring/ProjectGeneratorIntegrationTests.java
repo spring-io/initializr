@@ -46,8 +46,8 @@ class ProjectGeneratorIntegrationTests {
 
 	@BeforeEach
 	void setup(@TempDir Path directory) {
-		this.projectTester = new ProjectGeneratorTester().withDirectory(directory).withBean(InitializrMetadata.class,
-				() -> InitializrMetadataTestBuilder.withDefaults().build());
+		this.projectTester = new ProjectGeneratorTester().withDirectory(directory).withIndentingWriterFactory()
+				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build());
 	}
 
 	@Test

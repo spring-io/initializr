@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
@@ -43,12 +42,6 @@ class ProjectGeneratorTesterTests {
 		Map<String, ProjectContributor> contributors = new ProjectGeneratorTester().generate(
 				new MutableProjectDescription(), (context) -> context.getBeansOfType(ProjectContributor.class));
 		assertThat(contributors).isEmpty();
-	}
-
-	@Test
-	void testerHasIndentingWriterFactoryByDefault() {
-		new ProjectGeneratorTester().generate(new MutableProjectDescription(),
-				(context) -> assertThat(context.getBeansOfType(IndentingWriterFactory.class)).hasSize(1));
 	}
 
 	@Test

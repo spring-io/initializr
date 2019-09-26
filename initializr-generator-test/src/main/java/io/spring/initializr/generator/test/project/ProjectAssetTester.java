@@ -17,15 +17,12 @@
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -40,20 +37,21 @@ import org.springframework.boot.test.context.runner.ContextConsumer;
 /**
  * A tester for project asset that does not detect available {@link ProjectContributor
  * contributors} and does not register any bean to the context. Contributors can be added
- * using a {@link #withConfiguration(Class[]) configuration class} or a
- * {@link #withContextInitializer(Consumer) customization of the project generation
+ * using {@linkplain #withBean(Class, Supplier) bean registration}, a
+ * {@linkplain #withConfiguration(Class[]) configuration class} or via the
+ * {@linkplain #withContextInitializer(Consumer) customization of the project generation
  * context}.
  * <p>
  * Alternatively, the context can be queried the same way {@link ApplicationContextRunner}
- * works by {@link #configure(MutableProjectDescription, ContextConsumer) configuring} the
- * context.
+ * works by {@linkplain #configure(MutableProjectDescription, ContextConsumer)
+ * configuring} the context.
  *
  * @author Stephane Nicoll
  */
 public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectAssetTester> {
 
 	public ProjectAssetTester() {
-		super(Collections.emptyMap());
+		super();
 	}
 
 	private ProjectAssetTester(Map<Class<?>, Supplier<?>> beanDefinitions,
@@ -67,15 +65,6 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 			Consumer<ProjectGenerationContext> contextInitializer,
 			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		return new ProjectAssetTester(beanDefinitions, contextInitializer, descriptionCustomizer);
-	}
-
-	public ProjectAssetTester withIndentingWriterFactory() {
-		return withBean(IndentingWriterFactory.class,
-				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
-	}
-
-	public ProjectAssetTester withConfiguration(Class<?>... configurationClasses) {
-		return withContextInitializer((context) -> context.register(configurationClasses));
 	}
 
 	/**

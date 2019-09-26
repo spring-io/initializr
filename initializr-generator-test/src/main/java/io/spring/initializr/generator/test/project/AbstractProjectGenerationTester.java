@@ -19,11 +19,14 @@ package io.spring.initializr.generator.test.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
@@ -43,16 +46,38 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 
 	private final Consumer<MutableProjectDescription> descriptionCustomizer;
 
-	protected AbstractProjectGenerationTester(Map<Class<?>, Supplier<?>> beanDefinitions) {
-		this(beanDefinitions, defaultContextInitializer(), defaultDescriptionCustomizer());
-	}
-
 	protected AbstractProjectGenerationTester(Map<Class<?>, Supplier<?>> beanDefinitions,
 			Consumer<ProjectGenerationContext> contextInitializer,
 			Consumer<MutableProjectDescription> descriptionCustomizer) {
 		this.beanDefinitions = new LinkedHashMap<>(beanDefinitions);
 		this.descriptionCustomizer = descriptionCustomizer;
 		this.contextInitializer = contextInitializer;
+	}
+
+	protected AbstractProjectGenerationTester() {
+		this(Collections.emptyMap(), emptyContextInitializer(), defaultDescriptionCustomizer());
+	}
+
+	private static Consumer<ProjectGenerationContext> emptyContextInitializer() {
+		return (context) -> {
+		};
+	}
+
+	private static Consumer<MutableProjectDescription> defaultDescriptionCustomizer() {
+		return (projectDescription) -> {
+			if (projectDescription.getGroupId() == null) {
+				projectDescription.setGroupId("com.example");
+			}
+			if (projectDescription.getArtifactId() == null) {
+				projectDescription.setArtifactId("demo");
+			}
+			if (projectDescription.getVersion() == null) {
+				projectDescription.setVersion("0.0.1-SNAPSHOT");
+			}
+			if (projectDescription.getApplicationName() == null) {
+				projectDescription.setApplicationName("DemoApplication");
+			}
+		};
 	}
 
 	protected abstract SELF newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
@@ -70,6 +95,15 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 				() -> (description) -> Files.createTempDirectory(directory, "project-"));
 	}
 
+	public SELF withIndentingWriterFactory() {
+		return withBean(IndentingWriterFactory.class,
+				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
+	}
+
+	public SELF withConfiguration(Class<?>... configurationClasses) {
+		return withContextInitializer((context) -> context.register(configurationClasses));
+	}
+
 	public SELF withContextInitializer(Consumer<ProjectGenerationContext> context) {
 		return newInstance(this.beanDefinitions, this.contextInitializer.andThen(context), this.descriptionCustomizer);
 	}
@@ -77,28 +111,6 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 	public SELF withDescriptionCustomizer(Consumer<MutableProjectDescription> description) {
 		return newInstance(this.beanDefinitions, this.contextInitializer,
 				this.descriptionCustomizer.andThen(description));
-	}
-
-	protected static Consumer<ProjectGenerationContext> defaultContextInitializer() {
-		return (context) -> {
-		};
-	}
-
-	protected static Consumer<MutableProjectDescription> defaultDescriptionCustomizer() {
-		return (projectDescription) -> {
-			if (projectDescription.getGroupId() == null) {
-				projectDescription.setGroupId("com.example");
-			}
-			if (projectDescription.getArtifactId() == null) {
-				projectDescription.setArtifactId("demo");
-			}
-			if (projectDescription.getVersion() == null) {
-				projectDescription.setVersion("0.0.1-SNAPSHOT");
-			}
-			if (projectDescription.getApplicationName() == null) {
-				projectDescription.setApplicationName("DemoApplication");
-			}
-		};
 	}
 
 	protected <T> T invokeProjectGeneration(MutableProjectDescription description,
