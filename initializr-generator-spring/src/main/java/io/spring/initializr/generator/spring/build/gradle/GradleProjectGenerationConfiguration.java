@@ -100,7 +100,7 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("2.0.0.M1")
+	@ConditionalOnGradleVersion({ "4", "5" })
 	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
 		return new SpringBootPluginBuildCustomizer(description, versionResolver
@@ -202,12 +202,6 @@ public class GradleProjectGenerationConfiguration {
 				IndentingWriterFactory indentingWriterFactory) {
 			return new SettingsGradleProjectContributor(build, indentingWriterFactory,
 					new GroovyDslGradleSettingsWriter(), "settings.gradle");
-		}
-
-		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description) {
-			return (build) -> build.plugins().add("org.springframework.boot",
-					(plugin) -> plugin.setVersion(description.getPlatformVersion().toString()));
 		}
 
 		@Bean
