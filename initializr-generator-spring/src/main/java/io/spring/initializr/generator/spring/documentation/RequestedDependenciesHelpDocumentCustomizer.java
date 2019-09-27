@@ -42,9 +42,12 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 
 	private final InitializrMetadata metadata;
 
+	private final String defaultPlatformVersion;
+
 	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata) {
 		this.description = description;
 		this.metadata = metadata;
+		this.defaultPlatformVersion = metadata.getBootVersions().getDefault().getId();
 	}
 
 	@Override
@@ -82,7 +85,8 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 				String description = (link.getDescription() != null) ? link.getDescription()
 						: defaultDescription.apply(links);
 				if (description != null) {
-					section.get().addItem(new GettingStartedSection.Link(link.getHref(), description));
+					String url = link.getHref().replace("{bootVersion}", this.defaultPlatformVersion);
+					section.get().addItem(new GettingStartedSection.Link(url, description));
 				}
 			}
 		});

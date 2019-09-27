@@ -42,11 +42,12 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithReferenceDocLink() {
 		Dependency dependency = createDependency("example",
-				Link.create("reference", "https://example.com/doc", "Reference doc example"));
+				Link.create("reference", "https://example.com/{bootVersion}/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/doc", "Reference doc example");
+		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/2.1.1.RELEASE/doc",
+				"Reference doc example");
 	}
 
 	@Test
@@ -72,11 +73,12 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithGuideLink() {
 		Dependency dependency = createDependency("example",
-				Link.create("guide", "https://example.com/how-to", "How-to example"));
+				Link.create("guide", "https://example.com/{bootVersion}/how-to", "How-to example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		assertSingleLink(document.gettingStarted().guides(), "https://example.com/how-to", "How-to example");
+		assertSingleLink(document.gettingStarted().guides(), "https://example.com/2.1.1.RELEASE/how-to",
+				"How-to example");
 	}
 
 	@Test
@@ -102,11 +104,12 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	@Test
 	void dependencyWithAdditionalLink() {
 		Dependency dependency = createDependency("example",
-				Link.create("something", "https://example.com/test", "Test App"));
+				Link.create("something", "https://example.com/{bootVersion}/test", "Test App"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
-		assertSingleLink(document.gettingStarted().additionalLinks(), "https://example.com/test", "Test App");
+		assertSingleLink(document.gettingStarted().additionalLinks(), "https://example.com/2.1.1.RELEASE/test",
+				"Test App");
 	}
 
 	@Test
