@@ -80,18 +80,17 @@ public class ProjectGenerator {
 	 * Generate project assets using the specified {@link ProjectAssetGenerator} for the
 	 * specified {@link ProjectDescription}.
 	 * <p>
-	 * Create a dedicated {@link ProjectGenerationContext} with the following
-	 * characteristics:
+	 * Create a dedicated {@link ProjectGenerationContext} using the supplied
+	 * {@link #ProjectGenerator(Consumer, Supplier) contextFactory} and then apply the
+	 * following:
 	 * <ul>
-	 * <li>{@linkplain ProjectGenerationContext#setAllowBeanDefinitionOverriding(boolean)
-	 * Bean overriding} disabled by default.</li>
 	 * <li>Register a {@link ProjectDescription} bean based on the given
 	 * {@code description} post-processed by available
 	 * {@link ProjectDescriptionCustomizer} beans.</li>
 	 * <li>Process all registered {@link ProjectGenerationConfiguration} classes.</li>
+	 * <li>Apply the {@link #ProjectGenerator(Consumer, Supplier) contextConsumer} to
+	 * further customize the context before it is refreshed.</li>
 	 * </ul>
-	 * Before the context is refreshed, it can be further customized using the customizer
-	 * registered {@linkplain #ProjectGenerator(Consumer) on this instance}.
 	 * @param description the description of the project to generate
 	 * @param projectAssetGenerator the {@link ProjectAssetGenerator} to invoke
 	 * @param <T> the type that gathers the project assets
