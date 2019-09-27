@@ -27,10 +27,9 @@ import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerator;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -48,8 +47,7 @@ class ProjectGeneratorSetupExampleTests {
 	@Test
 	void generateSimpleProjectStructure(@TempDir Path tempDir) {
 		StaticApplicationContext context = new StaticApplicationContext();
-		context.registerBean(InitializrMetadata.class,
-				() -> InitializrMetadataBuilder.fromInitializrProperties(new InitializrProperties()).build());
+		context.registerBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build());
 		context.registerBean(IndentingWriterFactory.class, IndentingWriterFactory::withDefaultSettings);
 		context.registerBean(MustacheTemplateRenderer.class,
 				() -> new MustacheTemplateRenderer("classpath:/templates"));
