@@ -17,13 +17,17 @@
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
+import org.springframework.beans.factory.support.BeanDefinitionOverrideException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
@@ -110,6 +114,28 @@ public class ProjectGeneratorTests {
 		given(assetGenerator.generate(any())).willThrow(exception);
 		assertThatThrownBy(() -> generator.generate(new MutableProjectDescription(), assetGenerator))
 				.isInstanceOf(ProjectGenerationException.class).hasCause(exception);
+	}
+
+	@Test
+	void generateDoesNotAllowBeanDefinitionOverridingByDefault() {
+		ProjectGenerator generator = new ProjectGenerator((context) -> {
+			context.registerBean("testBean", String.class, () -> "test");
+			context.registerBean("testBean", String.class, () -> "duplicate");
+		});
+		ProjectAssetGenerator<?> assetGenerator = mock(ProjectAssetGenerator.class);
+		assertThatThrownBy(() -> generator.generate(new MutableProjectDescription(), assetGenerator))
+				.isInstanceOf(BeanDefinitionOverrideException.class).hasMessageContaining("testBean");
+	}
+
+	@Test
+	void generateCanBeConfiguredToAllowBeanDefinitionOverriding() {
+		ProjectGenerator generator = new ProjectGenerator((context) -> {
+			context.registerBean("testBean", String.class, () -> "test");
+			context.registerBean("testBean", String.class, () -> "duplicate");
+		}, ProjectGenerationContext::new);
+		Map<String, String> candidates = generator.generate(new MutableProjectDescription(),
+				(context) -> context.getBeansOfType(String.class));
+		assertThat(candidates).containsOnly(entry("testBean", "duplicate"));
 	}
 
 	@SuppressWarnings("unchecked")
