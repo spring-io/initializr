@@ -29,7 +29,11 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * Main entry point for project generation.
+ * Main entry point for project generation that processes a {@link ProjectDescription} by
+ * creating a dedicated {@link ProjectGenerationContext} with all available
+ * {@link ProjectGenerationConfiguration} classes. Once the context has been started for a
+ * particular {@link ProjectDescription}, a {@link ProjectAssetGenerator} can query it and
+ * generate an appropriate asset (for instance, a project structure on disk).
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
@@ -124,8 +128,8 @@ public class ProjectGenerator {
 	}
 
 	/**
-	 * Configuration used to bootstrap the application context used for project
-	 * generation.
+	 * {@link Configuration} class that registers all available
+	 * {@link ProjectGenerationConfiguration} classes.
 	 */
 	@Configuration
 	@Import(ProjectGenerationImportSelector.class)
