@@ -54,10 +54,22 @@ public class Dependency {
 		this.exclusions = new LinkedHashSet<>(builder.exclusions);
 	}
 
+	/**
+	 * Initialize a new dependency {@link Builder} with the specified coordinates.
+	 * @param groupId the group ID of the dependency
+	 * @param artifactId the artifact ID of the dependency
+	 * @return a new builder
+	 */
 	public static Builder<?> withCoordinates(String groupId, String artifactId) {
 		return new Builder(groupId, artifactId);
 	}
 
+	/**
+	 * Initialize a new dependency {@link Builder} with the state of the specified
+	 * {@link Dependency}.
+	 * @param dependency the dependency to use to initialize the builder
+	 * @return a new builder initialized with the same state as the {@code dependency}
+	 */
 	public static Builder<?> from(Dependency dependency) {
 		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
 	}
@@ -183,6 +195,10 @@ public class Dependency {
 			return self();
 		}
 
+		/**
+		 * Build a {@link Dependency} with the current state of this builder.
+		 * @return a {@link Dependency}
+		 */
 		public Dependency build() {
 			return new Dependency(this);
 		}

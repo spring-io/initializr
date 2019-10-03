@@ -75,16 +75,31 @@ public class BuildSettings {
 		protected Builder() {
 		}
 
+		/**
+		 * Set the group ID of the project.
+		 * @param group the group ID
+		 * @return this for method chaining
+		 */
 		public B group(String group) {
 			this.group = group;
 			return self();
 		}
 
+		/**
+		 * Set the artifact ID of the project.
+		 * @param artifact the artifact ID
+		 * @return this for method chaining
+		 */
 		public B artifact(String artifact) {
 			this.artifact = artifact;
 			return self();
 		}
 
+		/**
+		 * Set the version of the project.
+		 * @param version the version
+		 * @return this for method chaining
+		 */
 		public B version(String version) {
 			this.version = version;
 			return self();
@@ -95,6 +110,10 @@ public class BuildSettings {
 			return (B) this;
 		}
 
+		/**
+		 * Build a {@link BuildSettings} with the current state of this builder.
+		 * @return a {@link BuildSettings}
+		 */
 		public BuildSettings build() {
 			return new BuildSettings(this);
 		}

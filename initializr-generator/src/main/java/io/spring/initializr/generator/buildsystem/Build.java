@@ -64,25 +64,46 @@ public abstract class Build {
 	public abstract BuildSettings getSettings();
 
 	/**
-	 * Return the {@link PropertyContainer properties container} of this build.
-	 * @return the properties container of this build.
+	 * Return the {@linkplain PropertyContainer property container} to use to configure
+	 * properties.
+	 * @return the {@link PropertyContainer}
 	 */
 	public PropertyContainer properties() {
 		return this.properties;
 	}
 
+	/**
+	 * Return the {@linkplain DependencyContainer dependency container} to use to
+	 * configure dependencies.
+	 * @return the {@link DependencyContainer}
+	 */
 	public DependencyContainer dependencies() {
 		return this.dependencies;
 	}
 
+	/**
+	 * Return the {@linkplain BomContainer bom container} to use to configure Bill of
+	 * Materials.
+	 * @return the {@link BomContainer}
+	 */
 	public BomContainer boms() {
 		return this.boms;
 	}
 
+	/**
+	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+	 * configure repositories.
+	 * @return the {@link MavenRepositoryContainer} for repositories
+	 */
 	public MavenRepositoryContainer repositories() {
 		return this.repositories;
 	}
 
+	/**
+	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+	 * configure plugin repositories.
+	 * @return the {@link MavenRepositoryContainer} for plugin repositories
+	 */
 	public MavenRepositoryContainer pluginRepositories() {
 		return this.pluginRepositories;
 	}
