@@ -78,8 +78,8 @@ public final class MetadataBuildItemMapper {
 		}
 		VersionReference version = (bom.getVersionProperty() != null)
 				? VersionReference.ofProperty(bom.getVersionProperty()) : VersionReference.ofValue(bom.getVersion());
-		return new io.spring.initializr.generator.buildsystem.BillOfMaterials(bom.getGroupId(), bom.getArtifactId(),
-				version, bom.getOrder());
+		return io.spring.initializr.generator.buildsystem.BillOfMaterials
+				.withCoordinates(bom.getGroupId(), bom.getArtifactId()).version(version).order(bom.getOrder()).build();
 	}
 
 	/**

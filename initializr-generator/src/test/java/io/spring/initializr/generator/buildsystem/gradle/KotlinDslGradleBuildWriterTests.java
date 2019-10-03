@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
@@ -405,7 +406,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithBom() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("test", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"));
+		build.boms().add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+				.version(VersionReference.ofValue("1.0.0.RELEASE")));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencyManagement {", "    imports {",
 				"        mavenBom(\"com.example:my-project-dependencies:1.0.0.RELEASE\")", "    }", "}");
@@ -414,9 +416,10 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithOrderedBoms() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("bom1", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"),
-				5);
-		build.boms().add("bom2", "com.example", "root-dependencies", VersionReference.ofProperty("root.version"), 2);
+		build.boms().add("bom1", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+				.version(VersionReference.ofValue("1.0.0.RELEASE")).order(5));
+		build.boms().add("bom2", BillOfMaterials.withCoordinates("com.example", "root-dependencies")
+				.version(VersionReference.ofProperty("root.version")).order(2));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencyManagement {", "    imports {",
 				"        mavenBom(\"com.example:my-project-dependencies:1.0.0.RELEASE\")",

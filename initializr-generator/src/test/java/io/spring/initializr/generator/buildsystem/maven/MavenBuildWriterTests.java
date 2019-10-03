@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.io.StringWriter;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
@@ -288,7 +289,8 @@ class MavenBuildWriterTests {
 	void pomWithBom() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.boms().add("test", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"));
+		build.boms().add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+				.version(VersionReference.ofValue("1.0.0.RELEASE")));
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/dependencyManagement/dependencies/dependency");
 			assertBom(dependency, "com.example", "my-project-dependencies", "1.0.0.RELEASE");
@@ -299,9 +301,10 @@ class MavenBuildWriterTests {
 	void pomWithOrderedBoms() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.boms().add("bom1", "com.example", "my-project-dependencies", VersionReference.ofValue("1.0.0.RELEASE"),
-				5);
-		build.boms().add("bom2", "com.example", "root-dependencies", VersionReference.ofProperty("root.version"), 2);
+		build.boms().add("bom1", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+				.version(VersionReference.ofValue("1.0.0.RELEASE")).order(5));
+		build.boms().add("bom2", BillOfMaterials.withCoordinates("com.example", "root-dependencies")
+				.version(VersionReference.ofProperty("root.version")).order(2));
 		generatePom(build, (pom) -> {
 			NodeAssert dependencies = pom.nodeAtPath("/project/dependencyManagement/dependencies");
 			NodeAssert firstBom = assertThat(dependencies).nodeAtPath("dependency[1]");

@@ -19,8 +19,6 @@ package io.spring.initializr.generator.buildsystem;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
-import io.spring.initializr.generator.version.VersionReference;
-
 /**
  * A {@link BuildItemContainer} implementation for boms.
  *
@@ -34,27 +32,12 @@ public class BomContainer extends BuildItemContainer<String, BillOfMaterials> {
 
 	/**
 	 * Register a {@link BillOfMaterials} with the specified {@code id} and a
-	 * {@link Integer#MAX_VALUE} order.
+	 * {@linkplain BillOfMaterials.Builder state}.
 	 * @param id the id of the bom
-	 * @param groupId the groupId
-	 * @param artifactId the artifactId
-	 * @param version the {@link VersionReference}
+	 * @param builder the state of the bom
 	 */
-	public void add(String id, String groupId, String artifactId, VersionReference version) {
-		add(id, new BillOfMaterials(groupId, artifactId, version));
-	}
-
-	/**
-	 * Register a {@link BillOfMaterials} with the specified {@code id} and a custom
-	 * order.
-	 * @param id the id of the bom
-	 * @param groupId the groupId
-	 * @param artifactId the artifactId
-	 * @param version the {@link VersionReference}
-	 * @param order the order of the bom
-	 */
-	public void add(String id, String groupId, String artifactId, VersionReference version, int order) {
-		add(id, new BillOfMaterials(groupId, artifactId, version, order));
+	public void add(String id, BillOfMaterials.Builder builder) {
+		add(id, builder.build());
 	}
 
 }
