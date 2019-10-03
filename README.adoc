@@ -10,8 +10,8 @@ implementations for several common concepts:
 
 * Basic language generation for Java, Kotlin and Groovy.
 * Build system abstraction with implementations for Apache Maven and Gradle.
-* Git integration.
-* Various low-level hook-points for custom resources generations.
+* `.gitignore` support.
+* Several hook-points for custom resources generations.
 
 The various options for the projects are expressed in a metadata model that allows you to
 configure the list of dependencies, supported JVM and platform versions, etc.
@@ -45,10 +45,11 @@ project.
 * `initializr-generator`: core project generation library.
 * `initializr-generator-spring`: optional module defining the conventions for a typical
 Spring Boot project. Can be reused or replaced by your own conventions.
+* `initializr-generator-test`: test infrastructure for project generation.
 * `initializr-metadata`: metadata infrastructure for various aspects of the project.
 * `initializr-service-sample`: showcases a basic custom instance.
-* `initializr-version-resolver`: optional module to extract version numbers for an
-arbitrary BOM.
+* `initializr-version-resolver`: optional module to extract version numbers from an
+arbitrary POM.
 * `initializr-web`: web endpoints for third party clients.
 
 == Supported interfaces
@@ -161,10 +162,6 @@ so when it is added to a project, it will trigger the necessary auto-configurati
 deploy the service.
 
 The `initializr-service-sample` showcases a basic custom instance with dedicated metadata.
-
-NOTE: Spring Initializr is not available on Maven central yet so you will have to either
-build it <<build,from source>> if you want the latest state or use the latest release
-that is available on https://repo.spring.io/release.
 
 If you want to run our instance at https://start.spring.io, refer to
 https://github.com/spring-io/start.spring.io#run-app[run the default instance locally].
