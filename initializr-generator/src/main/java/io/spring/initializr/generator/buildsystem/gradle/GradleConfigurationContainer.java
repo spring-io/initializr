@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import io.spring.initializr.generator.buildsystem.gradle.GradleConfiguration.Builder;
 
 /**
- * A container for custom configuration and {@link GradleConfiguration configuration
+ * A container for custom configuration and {@linkplain GradleConfiguration configuration
  * customizations}.
  *
  * @author Stephane Nicoll

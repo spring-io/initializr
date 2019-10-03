@@ -68,11 +68,21 @@ public class GradleBuildscript {
 			return this;
 		}
 
-		public Builder ext(String key, String value) {
-			this.ext.put(key, value);
+		/**
+		 * Set a {@code ext} property.
+		 * @param name the name of the property
+		 * @param value the value of the property
+		 * @return this for method chaining
+		 */
+		public Builder ext(String name, String value) {
+			this.ext.put(name, value);
 			return this;
 		}
 
+		/**
+		 * Build a {@link GradleBuildscript} with the current state of this builder.
+		 * @return a {@link GradleBuildscript}
+		 */
 		public GradleBuildscript build() {
 			return new GradleBuildscript(this);
 		}

@@ -120,18 +120,39 @@ public class GradleTask {
 			this(name, null);
 		}
 
+		/**
+		 * Add a task attribute.
+		 * @param target the name of the attribute
+		 * @param value the value
+		 */
 		public void attribute(String target, String value) {
 			this.attributes.put(target, value);
 		}
 
+		/**
+		 * Invoke a task method.
+		 * @param target the name of the method
+		 * @param arguments the arguments
+		 */
 		public void invoke(String target, String... arguments) {
 			this.invocations.add(new Invocation(target, Arrays.asList(arguments)));
 		}
 
+		/**
+		 * Customize a nested task for the specified property. If such nested task has
+		 * already been added, the consumer can be used to further tune the existing task
+		 * configuration.
+		 * @param property a task property
+		 * @param customizer a {@link Consumer} to customize the nested task
+		 */
 		public void nested(String property, Consumer<Builder> customizer) {
 			customizer.accept(this.nested.computeIfAbsent(property, (name) -> new Builder(property)));
 		}
 
+		/**
+		 * Build a {@link GradleTask} with the current state of this builder.
+		 * @return a {@link GradleTask}
+		 */
 		public GradleTask build() {
 			return new GradleTask(this);
 		}
@@ -152,10 +173,18 @@ public class GradleTask {
 			this.arguments = arguments;
 		}
 
+		/**
+		 * Return the name of the method.
+		 * @return the method name
+		 */
 		public String getTarget() {
 			return this.target;
 		}
 
+		/**
+		 * Return the arguments (can be empty).
+		 * @return the method arguments
+		 */
 		public List<String> getArguments() {
 			return this.arguments;
 		}

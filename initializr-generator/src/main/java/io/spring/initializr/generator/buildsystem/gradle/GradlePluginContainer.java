@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * A container for {@link GradlePlugin}s.
+ * A container for {@linkplain GradlePlugin gradle plugins}.
  *
  * @author HaiTao Zhang
  */

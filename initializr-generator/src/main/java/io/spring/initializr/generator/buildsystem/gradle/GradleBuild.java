@@ -23,7 +23,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
 
 /**
- * Gradle build configuration for a project.
+ * Gradle-specific {@linkplain Build build configuration}.
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
@@ -40,10 +40,17 @@ public class GradleBuild extends Build {
 
 	private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
 
+	/**
+	 * Create a new Gradle build using the specified {@link BuildItemResolver}.
+	 * @param buildItemResolver the build item resolved to use
+	 */
 	public GradleBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 	}
 
+	/**
+	 * Create a new Gradle build without a build item resolver.
+	 */
 	public GradleBuild() {
 		this(null);
 	}
@@ -58,22 +65,44 @@ public class GradleBuild extends Build {
 		return this.settings.build();
 	}
 
+	/**
+	 * Return the {@link GradlePluginContainer plugin container} to use to configure
+	 * plugins.
+	 * @return the {@link GradlePluginContainer}
+	 */
 	public GradlePluginContainer plugins() {
 		return this.plugins;
 	}
 
+	/**
+	 * Return the {@link GradleConfigurationContainer configuration container} to use for
+	 * configuration customizations.
+	 * @return the {@link GradleConfigurationContainer}
+	 */
 	public GradleConfigurationContainer configurations() {
 		return this.configurations;
 	}
 
+	/**
+	 * Return the {@link GradleTaskContainer task container} to use to configure tasks.
+	 * @return the {@link GradleTaskContainer}
+	 */
 	public GradleTaskContainer tasks() {
 		return this.tasks;
 	}
 
+	/**
+	 * Customize the {@code buildscript} of the build using the specified consumer.
+	 * @param buildscript a consumer of the current buildscript
+	 */
 	public void buildscript(Consumer<GradleBuildscript.Builder> buildscript) {
 		buildscript.accept(this.buildscript);
 	}
 
+	/**
+	 * Return the {@link GradleBuildscript buildscript} of this build.
+	 * @return the buildscript to use
+	 */
 	public GradleBuildscript getBuildscript() {
 		return this.buildscript.build();
 	}

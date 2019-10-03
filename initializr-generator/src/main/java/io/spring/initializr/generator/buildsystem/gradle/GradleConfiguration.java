@@ -21,7 +21,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Custom {@code gradle} configuration.
+ * A custom Gradle configuration that can be associated to a {@linkplain GradleBuild
+ * build}.
  *
  * @author Stephane Nicoll
  */
@@ -45,8 +46,8 @@ public class GradleConfiguration {
 	}
 
 	/**
-	 * Return the names that this configuration should extend from.
-	 * @return the names that this configuration should extend from
+	 * Return the configuration names that this configuration should extend from.
+	 * @return the configuration names that this configuration should extend from
 	 */
 	public Set<String> getExtendsFrom() {
 		return this.extendsFrom;
@@ -58,15 +59,26 @@ public class GradleConfiguration {
 
 		private Set<String> extendsFrom = new LinkedHashSet<>();
 
-		public Builder(String name) {
+		protected Builder(String name) {
 			this.name = name;
 		}
 
+		/**
+		 * Add a configuration name that this configuration should extend from. Does
+		 * nothing if such configuration is already present.
+		 * @param configurationName the name of a configuration this configuration should
+		 * extend from
+		 * @return this for method chaining
+		 */
 		public Builder extendsFrom(String configurationName) {
 			this.extendsFrom.add(configurationName);
 			return this;
 		}
 
+		/**
+		 * Build a {@link GradleConfiguration} with the current state of this builder.
+		 * @return a {@link GradleConfiguration}
+		 */
 		public GradleConfiguration build() {
 			return new GradleConfiguration(this);
 		}

@@ -29,7 +29,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * A container for {@link GradleTask Gradle tasks}.
+ * A container for {@linkplain GradleTask Gradle tasks}.
  *
  * @author Stephane Nicoll
  */

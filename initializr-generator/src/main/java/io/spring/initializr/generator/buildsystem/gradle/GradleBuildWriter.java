@@ -52,6 +52,13 @@ import io.spring.initializr.generator.version.VersionProperty;
  */
 public abstract class GradleBuildWriter {
 
+	/**
+	 * Write a {@linkplain GradleBuild build.gradle} using the specified
+	 * {@linkplain IndentingWriter writer}.
+	 * @param writer the writer to use
+	 * @param build the gradle build to write
+	 * @throws IOException if the writer fails to write the build
+	 */
 	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
 		GradleBuildSettings settings = build.getSettings();
 		writeImports(writer, build.tasks());
@@ -67,8 +74,6 @@ public abstract class GradleBuildWriter {
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
 		writeTasks(writer, build.tasks());
-		// writeTasksWithTypeCustomizations(writer, build);
-		// writeTaskCustomizations(writer, build);
 	}
 
 	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks) {

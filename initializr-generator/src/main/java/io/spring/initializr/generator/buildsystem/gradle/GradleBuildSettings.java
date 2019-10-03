@@ -19,7 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import io.spring.initializr.generator.buildsystem.BuildSettings;
 
 /**
- * Gradle {@link BuildSettings}.
+ * Gradle-specific {@linkplain BuildSettings build settings}.
  *
  * @author Stephane Nicoll
  */
@@ -47,11 +47,20 @@ public class GradleBuildSettings extends BuildSettings {
 
 		private String sourceCompatibility;
 
+		/**
+		 * Set the java version compatibility to use when compiling Java source.
+		 * @param sourceCompatibility java version compatibility
+		 * @return this for method chaining
+		 */
 		public Builder sourceCompatibility(String sourceCompatibility) {
 			this.sourceCompatibility = sourceCompatibility;
 			return self();
 		}
 
+		/**
+		 * Build a {@link GradleBuildSettings} with the current state of this builder.
+		 * @return a {@link GradleBuildSettings}
+		 */
 		public GradleBuildSettings build() {
 			return new GradleBuildSettings(this);
 		}
