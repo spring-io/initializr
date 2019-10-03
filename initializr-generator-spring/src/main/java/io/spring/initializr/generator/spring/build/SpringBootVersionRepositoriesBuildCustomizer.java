@@ -28,6 +28,13 @@ import io.spring.initializr.generator.version.Version;
  */
 class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Build> {
 
+	private static final MavenRepository SPRING_MILESTONES = MavenRepository
+			.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones").build();
+
+	private static final MavenRepository SPRING_SNAPSHOTS = MavenRepository
+			.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").name("Spring Snapshots")
+			.snapshotsEnabled(true).build();
+
 	private final Version springBootVersion;
 
 	SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
@@ -47,17 +54,13 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 	}
 
 	private void addSnapshotRepository(Build build) {
-		MavenRepository snapshotRepository = new MavenRepository("spring-snapshots", "Spring Snapshots",
-				"https://repo.spring.io/snapshot", true);
-		build.repositories().add(snapshotRepository);
-		build.pluginRepositories().add(snapshotRepository);
+		build.repositories().add(SPRING_SNAPSHOTS);
+		build.pluginRepositories().add(SPRING_SNAPSHOTS);
 	}
 
 	private void addMilestoneRepository(Build build) {
-		MavenRepository milestoneRepository = new MavenRepository("spring-milestones", "Spring Milestones",
-				"https://repo.spring.io/milestone");
-		build.repositories().add(milestoneRepository);
-		build.pluginRepositories().add(milestoneRepository);
+		build.repositories().add(SPRING_MILESTONES);
+		build.pluginRepositories().add(SPRING_MILESTONES);
 	}
 
 }

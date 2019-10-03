@@ -20,7 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.function.Function;
 
 /**
- * A {@link BuildItemContainer} implementation for repositories.
+ * A {@link BuildItemContainer} implementation for {@link MavenRepository maven
+ * repositories}.
  *
  * @author Stephane Nicoll
  */
@@ -39,25 +40,12 @@ public class MavenRepositoryContainer extends BuildItemContainer<String, MavenRe
 	}
 
 	/**
-	 * Register a {@link MavenRepository repository} with snapshots disabled.
-	 * @param id the id of the repository
-	 * @param name the repository name
-	 * @param url the repository url
+	 * Register a {@link MavenRepository repository} with the specified
+	 * {@linkplain MavenRepository.Builder state}.
+	 * @param builder the state of the repository
 	 */
-	public void add(String id, String name, String url) {
-		add(id, name, url, false);
-	}
-
-	/**
-	 * Register a {@link MavenRepository repository} and specify whether snapshots are
-	 * enabled.
-	 * @param id the id of the repository
-	 * @param name the repository name
-	 * @param url the repository url
-	 * @param snapshotsEnabled whether snapshots are enabled
-	 */
-	public void add(String id, String name, String url, boolean snapshotsEnabled) {
-		add(id, new MavenRepository(id, name, url, snapshotsEnabled));
+	public void add(MavenRepository.Builder builder) {
+		add(builder.build());
 	}
 
 }

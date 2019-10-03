@@ -25,6 +25,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
+import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -125,7 +126,7 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
+		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("repositories {",
 				"    maven { url = uri(\"https://repo.spring.io/milestone\") }", "}");
@@ -134,7 +135,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSnapshotRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
+		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
+				.snapshotsEnabled(true));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("repositories {",
 				"    maven { url = uri(\"https://repo.spring.io/snapshot\") }", "}");
@@ -143,7 +145,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithPluginRepository() throws IOException {
 		GradleBuild build = new GradleBuild();
-		build.pluginRepositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
+		build.pluginRepositories()
+				.add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		List<String> lines = generateBuild(build);
 		assertThat(lines).doesNotContain("repositories {");
 	}

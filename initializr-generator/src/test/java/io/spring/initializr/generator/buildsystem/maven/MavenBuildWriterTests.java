@@ -23,6 +23,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
+import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -472,7 +473,8 @@ class MavenBuildWriterTests {
 	void pomWithRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.repositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
+		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone")
+				.name("Spring Milestones"));
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-milestones");
 			assertThat(pom).textAtPath("/project/repositories/repository/name").isEqualTo("Spring Milestones");
@@ -487,7 +489,8 @@ class MavenBuildWriterTests {
 	void pomWithPluginRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.pluginRepositories().add("spring-milestones", "Spring Milestones", "https://repo.spring.io/milestone");
+		build.pluginRepositories().add(MavenRepository
+				.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones"));
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id")
 					.isEqualTo("spring-milestones");
@@ -504,7 +507,8 @@ class MavenBuildWriterTests {
 	void pomWithSnapshotRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.repositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
+		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
+				.name("Spring Snapshots").snapshotsEnabled(true));
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-snapshots");
 			assertThat(pom).textAtPath("/project/repositories/repository/name").isEqualTo("Spring Snapshots");
@@ -519,7 +523,9 @@ class MavenBuildWriterTests {
 	void pomWithSnapshotPluginRepository() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.pluginRepositories().add("spring-snapshots", "Spring Snapshots", "https://repo.spring.io/snapshot", true);
+		build.pluginRepositories()
+				.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
+						.name("Spring Snapshots").snapshotsEnabled(true));
 		generatePom(build, (pom) -> {
 			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id").isEqualTo("spring-snapshots");
 			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/name")

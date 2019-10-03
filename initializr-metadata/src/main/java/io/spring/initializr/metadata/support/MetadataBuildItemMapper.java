@@ -93,8 +93,9 @@ public final class MetadataBuildItemMapper {
 		if (repository == null) {
 			return null;
 		}
-		return new io.spring.initializr.generator.buildsystem.MavenRepository(id, repository.getName(),
-				repository.getUrl().toExternalForm(), repository.isSnapshotsEnabled());
+		return io.spring.initializr.generator.buildsystem.MavenRepository
+				.withIdAndUrl(id, repository.getUrl().toExternalForm()).name(repository.getName())
+				.snapshotsEnabled(repository.isSnapshotsEnabled()).build();
 	}
 
 }
