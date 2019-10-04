@@ -22,8 +22,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import io.spring.initializr.generator.condition.ProjectGenerationCondition;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +40,6 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * should not be processed by the main {@link ApplicationContext} so make sure regular
  * classpath scanning is not enabled for packages where such configuration classes reside.
  *
- * @see ProjectGenerationCondition
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  */
