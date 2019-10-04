@@ -22,12 +22,29 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.spring.initializr.generator.condition.ProjectGenerationCondition;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
  * Specialization of {@link Configuration} for configuration of project generation.
+ * <p>
+ * Project generation configuration classes are regular Spring {@link Configuration}
+ * beans. They are located using the {@link SpringFactoriesLoader} mechanism (keyed
+ * against this class). Project generation beans can be {@link Conditional @Conditional}
+ * beans, usually based on the state of the {@link ProjectDescription} for which the
+ * {@link ProjectGenerationContext} was created.
+ * <p>
+ * {@link ProjectGenerationConfiguration @ProjectGenerationConfiguration}-annotated types
+ * should not be processed by the main {@link ApplicationContext} so make sure regular
+ * classpath scanning is not enabled for packages where such configuration classes reside.
  *
+ * @see ProjectGenerationCondition
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

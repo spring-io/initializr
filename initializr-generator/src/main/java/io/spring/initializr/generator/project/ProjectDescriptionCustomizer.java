@@ -28,6 +28,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface ProjectDescriptionCustomizer extends Ordered {
 
+	/**
+	 * Customize the {@linkplain MutableProjectDescription project description}.
+	 * @param description the project description to customize
+	 */
 	void customize(MutableProjectDescription description);
 
 	@Override
