@@ -66,7 +66,7 @@ public class GradleBuild extends Build {
 	}
 
 	/**
-	 * Return the {@link GradlePluginContainer plugin container} to use to configure
+	 * Return the {@linkplain GradlePluginContainer plugin container} to use to configure
 	 * plugins.
 	 * @return the {@link GradlePluginContainer}
 	 */
@@ -75,8 +75,8 @@ public class GradleBuild extends Build {
 	}
 
 	/**
-	 * Return the {@link GradleConfigurationContainer configuration container} to use for
-	 * configuration customizations.
+	 * Return the {@linkplain GradleConfigurationContainer configuration container} to use
+	 * for configuration customizations.
 	 * @return the {@link GradleConfigurationContainer}
 	 */
 	public GradleConfigurationContainer configurations() {
@@ -84,7 +84,8 @@ public class GradleBuild extends Build {
 	}
 
 	/**
-	 * Return the {@link GradleTaskContainer task container} to use to configure tasks.
+	 * Return the {@linkplain GradleTaskContainer task container} to use to configure
+	 * tasks.
 	 * @return the {@link GradleTaskContainer}
 	 */
 	public GradleTaskContainer tasks() {
