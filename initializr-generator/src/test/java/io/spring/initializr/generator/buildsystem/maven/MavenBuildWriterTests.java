@@ -442,7 +442,7 @@ class MavenBuildWriterTests {
 	void pomWithPluginWithExtensions() throws Exception {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
-		build.plugins().add("com.example.demo", "demo-plugin", MavenPlugin.Builder::extensions);
+		build.plugins().add("com.example.demo", "demo-plugin", (plugin) -> plugin.extensions(true));
 		generatePom(build, (pom) -> {
 			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
 			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");

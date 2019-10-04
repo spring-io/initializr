@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Builder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -135,7 +134,7 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginExtensionsCanBeLoaded() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", Builder::extensions);
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.extensions(true));
 		assertThat(build.plugins().values())
 				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}

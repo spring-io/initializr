@@ -19,7 +19,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import io.spring.initializr.generator.buildsystem.Dependency;
 
 /**
- * A {@link Dependency} with specific settings for the Maven build system.
+ * Maven-specific {@link Dependency}.
  *
  * @author Stephane Nicoll
  */
@@ -32,14 +32,30 @@ public class MavenDependency extends Dependency {
 		this.optional = builder.optional;
 	}
 
+	/**
+	 * Initialize a new dependency {@link Builder} with the specified coordinates.
+	 * @param groupId the group ID of the dependency
+	 * @param artifactId the artifact ID of the dependency
+	 * @return a new builder
+	 */
 	public static Builder withCoordinates(String groupId, String artifactId) {
 		return new Builder(groupId, artifactId);
 	}
 
+	/**
+	 * Initialize a new dependency {@link Builder} with the state of the specified
+	 * {@link Dependency}.
+	 * @param dependency the dependency to use to initialize the builder
+	 * @return a new builder initialized with the same state as the {@code dependency}
+	 */
 	public static Builder from(Dependency dependency) {
 		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
 	}
 
+	/**
+	 * Return whether this dependency is {@code optional}.
+	 * @return {@code true} if the dependency is optional
+	 */
 	public boolean isOptional() {
 		return this.optional;
 	}
@@ -57,6 +73,11 @@ public class MavenDependency extends Dependency {
 			super(groupId, artifactId);
 		}
 
+		/**
+		 * Specify if the dependency is {@code optional}.
+		 * @param optional whether the dependency is optional
+		 * @return this for method chaining
+		 */
 		public Builder optional(boolean optional) {
 			this.optional = optional;
 			return self();

@@ -18,10 +18,11 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Builder;
 
 /**
- * Maven build for a project.
+ * Maven-specific {@linkplain Build build configuration}.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
@@ -54,14 +55,29 @@ public class MavenBuild extends Build {
 		return this.settings.build();
 	}
 
+	/**
+	 * Return the {@linkplain MavenResource resource container} to use to configure main
+	 * resources.
+	 * @return the {@link MavenRepositoryContainer} for main resources
+	 */
 	public MavenResourceContainer resources() {
 		return this.resources;
 	}
 
+	/**
+	 * Return the {@linkplain MavenResource resource container} to use to configure test
+	 * resources.
+	 * @return the {@link MavenRepositoryContainer} for test resources
+	 */
 	public MavenResourceContainer testResources() {
 		return this.testResources;
 	}
 
+	/**
+	 * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
+	 * plugins.
+	 * @return the {@link MavenPluginContainer}
+	 */
 	public MavenPluginContainer plugins() {
 		return this.plugins;
 	}

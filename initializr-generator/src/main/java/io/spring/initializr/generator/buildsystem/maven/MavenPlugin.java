@@ -57,30 +57,59 @@ public class MavenPlugin {
 		this.configuration = (builder.configurationBuilder == null) ? null : builder.configurationBuilder.build();
 	}
 
+	/**
+	 * Return the group ID of the plugin.
+	 * @return the group ID
+	 */
 	public String getGroupId() {
 		return this.groupId;
 	}
 
+	/**
+	 * Return the artifact ID of the plugin.
+	 * @return the artifact ID
+	 */
 	public String getArtifactId() {
 		return this.artifactId;
 	}
 
+	/**
+	 * Return the version of the plugin or {@code null} if the version of the plugin is
+	 * managed.
+	 * @return the version or {@code null}
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * Return whether to load extensions of this plugin.
+	 * @return {@code true} to load extensions
+	 */
 	public boolean isExtensions() {
 		return this.extensions;
 	}
 
+	/**
+	 * Return the {@linkplain Execution executions} of the plugin.
+	 * @return the executions
+	 */
 	public List<Execution> getExecutions() {
 		return this.executions;
 	}
 
+	/**
+	 * Return the {@linkplain Dependency dependencies} of the plugin.
+	 * @return the dependencies
+	 */
 	public List<Dependency> getDependencies() {
 		return this.dependencies;
 	}
 
+	/**
+	 * Return the {@linkplain Configuration configuration} of the plugin.
+	 * @return the configuration
+	 */
 	public Configuration getConfiguration() {
 		return this.configuration;
 	}
@@ -104,39 +133,74 @@ public class MavenPlugin {
 
 		private ConfigurationBuilder configurationBuilder;
 
-		public Builder(String groupId, String artifactId) {
+		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;
 		}
 
+		/**
+		 * Set the version of the plugin or {@code null} if the version is managed by the
+		 * project.
+		 * @param version the version of the plugin or {@code null}
+		 * @return this for method chaining
+		 */
 		public Builder version(String version) {
 			this.version = version;
 			return this;
 		}
 
-		public Builder extensions() {
-			this.extensions = true;
+		/**
+		 * Set whether to load extensions of this plugin.
+		 * @param extensions whether to load extensions
+		 * @return this for method chaining
+		 */
+		public Builder extensions(boolean extensions) {
+			this.extensions = extensions;
 			return this;
 		}
 
-		public Builder configuration(Consumer<ConfigurationBuilder> consumer) {
+		/**
+		 * Customize the {@code configuration} of the plugin using the specified consumer.
+		 * @param configuration a consumer of the current configuration
+		 * @return this for method chaining
+		 */
+		public Builder configuration(Consumer<ConfigurationBuilder> configuration) {
 			if (this.configurationBuilder == null) {
 				this.configurationBuilder = new ConfigurationBuilder();
 			}
-			consumer.accept(this.configurationBuilder);
+			configuration.accept(this.configurationBuilder);
 			return this;
 		}
 
-		public Builder execution(String id, Consumer<ExecutionBuilder> customizer) {
-			customizer.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
+		/**
+		 * Add an {@code execution} with the specified id and {@link Consumer} to
+		 * customize the object. If the execution has already been¬ added, the consumer
+		 * can be used to further tune the existing plugin execution
+		 * @param id the id of the execution
+		 * @param execution a {@link Consumer} to customize the {@link Execution}
+		 * @return this for method chaining
+		 */
+		public Builder execution(String id, Consumer<ExecutionBuilder> execution) {
+			execution.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
 			return this;
 		}
 
+		/**
+		 * Add a plugin dependency.
+		 * @param groupId the group ID of the dependency
+		 * @param artifactId the artifact ID of the dependency
+		 * @param version the version of the dependency
+		 * @return this for method chaining
+		 */
 		public Builder dependency(String groupId, String artifactId, String version) {
 			this.dependencies.add(new Dependency(groupId, artifactId, version));
 			return this;
 		}
 
+		/**
+		 * Build a {@link MavenPlugin} with the current state of this builder.
+		 * @return a {@link MavenBuild}
+		 */
 		public MavenPlugin build() {
 			return new MavenPlugin(this);
 		}
@@ -165,21 +229,38 @@ public class MavenPlugin {
 					(this.configurationCustomization == null) ? null : this.configurationCustomization.build());
 		}
 
+		/**
+		 * Set the {@code phase} of the build lifecycle that goals will execute in.
+		 * @param phase the phase to use
+		 * @return this for method chaining
+		 */
 		public ExecutionBuilder phase(String phase) {
 			this.phase = phase;
 			return this;
 		}
 
+		/**
+		 * Add a goal to invoke for this execution.
+		 * @param goal the goal to invoke
+		 * @return this for method chaining
+		 */
 		public ExecutionBuilder goal(String goal) {
 			this.goals.add(goal);
 			return this;
 		}
 
-		public void configuration(Consumer<ConfigurationBuilder> consumer) {
+		/**
+		 * Customize the {@code configuration} of the execution using the specified
+		 * consumer.
+		 * @param configuration a consumer of the current configuration
+		 * @return this for method chaining
+		 */
+		public ExecutionBuilder configuration(Consumer<ConfigurationBuilder> configuration) {
 			if (this.configurationCustomization == null) {
 				this.configurationCustomization = new ConfigurationBuilder();
 			}
-			consumer.accept(this.configurationCustomization);
+			configuration.accept(this.configurationCustomization);
+			return this;
 		}
 
 	}
@@ -226,6 +307,10 @@ public class MavenPlugin {
 			return this;
 		}
 
+		/**
+		 * Build a {@link Configuration} with the current state of this builder.
+		 * @return a {@link Configuration}
+		 */
 		Configuration build() {
 			return new Configuration(this.settings.stream().map((entry) -> resolve(entry.getName(), entry.getValue()))
 					.collect(Collectors.toList()));
@@ -255,6 +340,10 @@ public class MavenPlugin {
 			this.settings = Collections.unmodifiableList(settings);
 		}
 
+		/**
+		 * Return the {@linkplain Setting settings} of the configuration.
+		 * @return the settings
+		 */
 		public List<Setting> getSettings() {
 			return this.settings;
 		}
@@ -275,10 +364,18 @@ public class MavenPlugin {
 			this.value = value;
 		}
 
+		/**
+		 * Return the name of the configuration item.
+		 * @return the name
+		 */
 		public String getName() {
 			return this.name;
 		}
 
+		/**
+		 * Return the value. Can be a nested {@link Configuration}.
+		 * @return a simple value or a nested configuration
+		 */
 		public Object getValue() {
 			return this.value;
 		}
@@ -305,18 +402,34 @@ public class MavenPlugin {
 			this.configuration = configuration;
 		}
 
+		/**
+		 * Return the id of the execution.
+		 * @return the execution id
+		 */
 		public String getId() {
 			return this.id;
 		}
 
+		/**
+		 * Return the {@code phase} of the build lifecycle that goals will execute in.
+		 * @return the execution phase
+		 */
 		public String getPhase() {
 			return this.phase;
 		}
 
+		/**
+		 * Return the plugin gaols that this execution should invoke.
+		 * @return the execution goals
+		 */
 		public List<String> getGoals() {
 			return this.goals;
 		}
 
+		/**
+		 * Return the {@linkplain Configuration configuration} of the execution.
+		 * @return the configuration
+		 */
 		public Configuration getConfiguration() {
 			return this.configuration;
 		}
@@ -340,14 +453,26 @@ public class MavenPlugin {
 			this.version = version;
 		}
 
+		/**
+		 * Return the group ID of the plugin dependency.
+		 * @return the group ID
+		 */
 		public String getGroupId() {
 			return this.groupId;
 		}
 
+		/**
+		 * Return the artifact ID of the plugin dependency.
+		 * @return the artifact ID
+		 */
 		public String getArtifactId() {
 			return this.artifactId;
 		}
 
+		/**
+		 * Return the version of the plugin dependency.
+		 * @return the version
+		 */
 		public String getVersion() {
 			return this.version;
 		}

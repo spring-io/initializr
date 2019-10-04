@@ -42,7 +42,7 @@ import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
 /**
- * A {@link MavenBuild} writer.
+ * A {@link MavenBuild} writer for {@code pom.xml}.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
@@ -50,6 +50,13 @@ import io.spring.initializr.generator.version.VersionReference;
  */
 public class MavenBuildWriter {
 
+	/**
+	 * Write a {@linkplain MavenBuild pom.xml} using the specified
+	 * {@linkplain IndentingWriter writer}.
+	 * @param writer the writer to use
+	 * @param build the maven build to write
+	 * @throws IOException if the writer fails to write the build
+	 */
 	public void writeTo(IndentingWriter writer, MavenBuild build) throws IOException {
 		MavenBuildSettings settings = build.getSettings();
 		writeProject(writer, () -> {

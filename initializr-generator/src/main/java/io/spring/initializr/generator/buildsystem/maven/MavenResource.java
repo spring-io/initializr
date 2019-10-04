@@ -64,7 +64,7 @@ public class MavenResource {
 	}
 
 	/**
-	 * Specify if filtering is enabled when copying resources.
+	 * Return whether filtering is enabled when copying resources.
 	 * @return {@code true} if filtering is enabled
 	 */
 	public boolean isFiltering() {
@@ -109,26 +109,53 @@ public class MavenResource {
 			this.directory = directory;
 		}
 
+		/**
+		 * Set the directory structure to place the set of resources from a build or
+		 * {@code null} to use the root directory.
+		 * @param targetPath the target path
+		 * @return this for method chaining
+		 */
 		public Builder targetPath(String targetPath) {
 			this.targetPath = targetPath;
 			return this;
 		}
 
+		/**
+		 * Specify if filtering is enabled when copying resources.
+		 * @param filtering {@code true} to enable resource filtering
+		 * @return this for method chaining
+		 */
 		public Builder filtering(Boolean filtering) {
 			this.filtering = filtering;
 			return this;
 		}
 
+		/**
+		 * Set the files patterns to use to include files. In conflicts between
+		 * {@code include} and {@code exclude}, {@code exclude} wins.
+		 * @param includes the include patterns
+		 * @return this for method chaining
+		 */
 		public Builder includes(String... includes) {
 			this.includes = Arrays.asList(includes);
 			return this;
 		}
 
+		/**
+		 * Set the files patterns to use to exclude files. In conflicts between
+		 * {@code include} and {@code exclude}, {@code exclude} wins.
+		 * @param excludes the exclude patterns
+		 * @return this for method chaining
+		 */
 		public Builder excludes(String... excludes) {
 			this.excludes = Arrays.asList(excludes);
 			return this;
 		}
 
+		/**
+		 * Build a {@link MavenResource} with the current state of this builder.
+		 * @return a {@link MavenResource}
+		 */
 		public MavenResource build() {
 			return new MavenResource(this);
 		}

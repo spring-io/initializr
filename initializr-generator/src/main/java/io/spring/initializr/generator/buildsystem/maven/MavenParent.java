@@ -35,14 +35,26 @@ public class MavenParent {
 		this.version = version;
 	}
 
+	/**
+	 * Return the group ID of the parent.
+	 * @return the group ID
+	 */
 	public String getGroupId() {
 		return this.groupId;
 	}
 
+	/**
+	 * Return the artifact ID of the parent.
+	 * @return the artifact ID
+	 */
 	public String getArtifactId() {
 		return this.artifactId;
 	}
 
+	/**
+	 * Return the version of the parent.
+	 * @return the version
+	 */
 	public String getVersion() {
 		return this.version;
 	}

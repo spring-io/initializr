@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings;
+import io.spring.initializr.generator.packaging.Packaging;
 
 /**
  * Maven {@link BuildSettings}.
@@ -121,35 +122,78 @@ public class MavenBuildSettings extends BuildSettings {
 		public Builder() {
 		}
 
+		/**
+		 * Set the coordinates of the project.
+		 * @param groupId the group ID of the project
+		 * @param artifactId the artifact ID of the project
+		 * @return this for method chaining
+		 */
 		public Builder coordinates(String groupId, String artifactId) {
 			return group(groupId).artifact(artifactId);
 		}
 
+		/**
+		 * Set the coordinates of the parent.
+		 * @param groupId the groupID of the parent
+		 * @param artifactId the artifactID of the parent
+		 * @param version the version of the parent
+		 * @return this for method chaining
+		 */
 		public Builder parent(String groupId, String artifactId, String version) {
 			this.parent = new MavenParent(groupId, artifactId, version);
 			return self();
 		}
 
+		/**
+		 * Set the packaging of the project.
+		 * @param packaging the packaging
+		 * @return this for method chaining
+		 * @see Packaging
+		 */
 		public Builder packaging(String packaging) {
 			this.packaging = packaging;
 			return self();
 		}
 
+		/**
+		 * Set the name of the project.
+		 * @param name the name of the project
+		 * @return this for method chaining
+		 */
 		public Builder name(String name) {
 			this.name = name;
 			return self();
 		}
 
+		/**
+		 * Set a human readable description of the project.
+		 * @param description the description of the project
+		 * @return this for method chaining
+		 */
 		public Builder description(String description) {
 			this.description = description;
 			return self();
 		}
 
+		/**
+		 * Set the the location of main source code. Can use Maven properties such as
+		 * {@code ${basedir}}.
+		 * @param sourceDirectory the location of main source code or {@code null} to use
+		 * the default
+		 * @return this for method chaining
+		 */
 		public Builder sourceDirectory(String sourceDirectory) {
 			this.sourceDirectory = sourceDirectory;
 			return self();
 		}
 
+		/**
+		 * Set the the location of test source code. Can use Maven properties such as
+		 * {@code ${basedir}}.
+		 * @param testSourceDirectory the location of test source code or {@code null} to
+		 * use the default
+		 * @return this for method chaining
+		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
 			return self();
