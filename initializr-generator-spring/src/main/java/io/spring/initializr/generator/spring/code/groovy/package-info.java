@@ -15,6 +15,6 @@
  */
 
 /**
- * Grovy code contributors.
+ * Groovy code contributors.
  */
 package io.spring.initializr.generator.spring.code.groovy;

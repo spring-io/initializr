@@ -41,8 +41,8 @@ public abstract class AbstractProjectAssert<SELF extends AbstractProjectAssert<S
 
 	private ListAssert<String> filesAssert;
 
-	protected AbstractProjectAssert(Path projcetDirectory, Class<?> selfType) {
-		super(projcetDirectory, selfType);
+	protected AbstractProjectAssert(Path projectDirectory, Class<?> selfType) {
+		super(projectDirectory, selfType);
 	}
 
 	/**
