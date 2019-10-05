@@ -20,8 +20,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:https://github.com/spring-io/initializr</connection>
-		<url>https://github.com/spring-io/initializr</url>
+		<url>${git.url}</url>
+		<connection>${git.connection}</connection>
+		<developerConnection>${git.developerConnection}</developerConnection>
 	</scm>
 	<developers>
 		<developer>
@@ -39,6 +40,9 @@
 	<properties>
 		<revision>0.8.0.BUILD-SNAPSHOT</revision>
 		<disable.checks>false</disable.checks>
+		<git.url>https://github.com/spring-io/initializr</git.url>
+		<git.connection>scm:git:https://github.com/spring-io/initializr</git.connection>
+		<git.developerConnection>scm:git:ssh://git@github.com/spring-io/initializr.git</git.developerConnection>
 		<main.basedir>${basedir}</main.basedir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

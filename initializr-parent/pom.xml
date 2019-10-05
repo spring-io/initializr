@@ -23,6 +23,11 @@
 		<spring-boot.version>2.1.9.RELEASE</spring-boot.version>
 		<spring-cloud-contract.version>2.1.1.RELEASE</spring-cloud-contract.version>
 	</properties>
+	<scm>
+		<url>${git.url}</url>
+		<connection>${git.connection}</connection>
+		<developerConnection>${git.developerConnection}</developerConnection>
+	</scm>
 
 	<dependencyManagement>
 		<dependencies>

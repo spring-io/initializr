@@ -16,6 +16,11 @@
 		<maven.test.skip>true</maven.test.skip>
 		<spring-doc-resources.version>0.1.0.RELEASE</spring-doc-resources.version>
 	</properties>
+	<scm>
+		<url>${git.url}</url>
+		<connection>${git.connection}</connection>
+		<developerConnection>${git.developerConnection}</developerConnection>
+	</scm>
 
 	<dependencies>
 		<dependency>
