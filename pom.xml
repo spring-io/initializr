@@ -7,7 +7,7 @@
 	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<name>Spring Initializr</name>
-	<description>A web-based quickstart generator for Spring projects</description>
+	<description>JVM-based project generator</description>
 	<url>https://github.com/spring-io/initializr</url>
 	<organization>
 		<name>Pivotal Software, Inc.</name>
