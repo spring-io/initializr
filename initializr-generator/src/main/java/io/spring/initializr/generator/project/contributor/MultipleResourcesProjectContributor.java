@@ -42,6 +42,12 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 
 	private final Predicate<String> executable;
 
+	/**
+	 * Create a new instance with the {@code rootResource} to use to locate resources to
+	 * copy to the project structure.
+	 * @param rootResource the root resource path
+	 * @see PathMatchingResourcePatternResolver#getResources(String)
+	 */
 	public MultipleResourcesProjectContributor(String rootResource) {
 		this(rootResource, (filename) -> false);
 	}

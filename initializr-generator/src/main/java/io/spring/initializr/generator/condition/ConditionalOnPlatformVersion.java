@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.spring.initializr.generator.version.VersionRange;
+
 import org.springframework.context.annotation.Conditional;
 
 /**
@@ -38,8 +40,8 @@ import org.springframework.context.annotation.Conditional;
 public @interface ConditionalOnPlatformVersion {
 
 	/**
-	 * The version ranges to check. The condition matches when at least one range matches
-	 * the platform version.
+	 * The {@linkplain VersionRange version ranges} to check. The condition matches when
+	 * at least one range matches the platform version.
 	 * @return the version ranges to check
 	 */
 	String[] value();

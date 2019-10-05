@@ -31,7 +31,7 @@ public class SimpleIndentStrategy implements Function<Integer, String> {
 
 	/**
 	 * Create a new instance with the indent style to apply.
-	 * @param indent the indent to apply for a single level
+	 * @param indent the indent to apply for each indent level
 	 */
 	public SimpleIndentStrategy(String indent) {
 		Assert.notNull(indent, "Indent must be provided");

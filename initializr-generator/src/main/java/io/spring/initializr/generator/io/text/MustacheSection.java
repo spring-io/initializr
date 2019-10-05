@@ -36,6 +36,13 @@ public class MustacheSection implements Section {
 
 	private final Map<String, Object> model;
 
+	/**
+	 * Create a new instance.
+	 * @param templateRenderer the {@link MustacheTemplateRenderer template renderer} to
+	 * use
+	 * @param templateName the name of the template
+	 * @param model the initial model
+	 */
 	public MustacheSection(MustacheTemplateRenderer templateRenderer, String templateName, Map<String, Object> model) {
 		this.templateRenderer = templateRenderer;
 		this.templateName = templateName;

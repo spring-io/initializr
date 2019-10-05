@@ -36,18 +36,26 @@ public class SingleResourceProjectContributor implements ProjectContributor {
 
 	private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
-	private final String filename;
+	private final String relativePath;
 
 	private final String resourcePattern;
 
-	public SingleResourceProjectContributor(String filename, String resourcePattern) {
-		this.filename = filename;
+	/**
+	 * Create a new instance.
+	 * @param relativePath the {@linkplain Path#resolve(String) relative path} in the
+	 * generated structure.
+	 * @param resourcePattern the pattern to use to locate the resource to copy to the
+	 * project structure
+	 * @see PathMatchingResourcePatternResolver#getResource(String)
+	 */
+	public SingleResourceProjectContributor(String relativePath, String resourcePattern) {
+		this.relativePath = relativePath;
 		this.resourcePattern = resourcePattern;
 	}
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		Path output = projectRoot.resolve(this.filename);
+		Path output = projectRoot.resolve(this.relativePath);
 		if (!Files.exists(output)) {
 			Files.createDirectories(output.getParent());
 			Files.createFile(output);

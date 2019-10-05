@@ -53,7 +53,8 @@ public final class IndentingWriterFactory {
 	}
 
 	/**
-	 * Create an {@link IndentingWriterFactory} with default settings.
+	 * Create an {@link IndentingWriterFactory} with a default indentation strategy of 4
+	 * spaces.
 	 * @return an {@link IndentingWriterFactory} with default settings
 	 */
 	public static IndentingWriterFactory withDefaultSettings() {
@@ -99,7 +100,7 @@ public final class IndentingWriterFactory {
 		 * Register an indenting strategy for the specified content.
 		 * @param contentId the identifier of the content to configure
 		 * @param indentingStrategy the indent strategy for that particular content
-		 * @return this builder
+		 * @return this for method chaining
 		 * @see #createIndentingWriter(String, Writer)
 		 */
 		public Builder indentingStrategy(String contentId, Function<Integer, String> indentingStrategy) {

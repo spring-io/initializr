@@ -27,7 +27,8 @@ import java.util.Map;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 
 /**
- * {@link Section} for list of items using a {@link TemplateRenderer}.
+ * {@link Section} for list of items using a {@link TemplateRenderer}. The template is
+ * rendered with the registered items set in the model with a configurable item name.
  *
  * @param <T> the type of the item in the bullets
  * @author Madhura Bhave
@@ -42,25 +43,49 @@ public class BulletedSection<T> implements Section {
 
 	private List<T> items = new ArrayList<>();
 
+	/**
+	 * Create a new instance adding items in the model with the {@code items} key.
+	 * @param templateRenderer the {@linkplain TemplateRenderer template renderer} to use
+	 * @param templateName the name of the template
+	 */
 	public BulletedSection(TemplateRenderer templateRenderer, String templateName) {
 		this(templateRenderer, templateName, "items");
 	}
 
+	/**
+	 * Create a new instance.
+	 * @param templateRenderer the {@linkplain TemplateRenderer template renderer} to use
+	 * @param templateName the name of the template
+	 * @param itemName the key of the items in the model
+	 */
 	public BulletedSection(TemplateRenderer templateRenderer, String templateName, String itemName) {
 		this.templateRenderer = templateRenderer;
 		this.templateName = templateName;
 		this.itemName = itemName;
 	}
 
+	/**
+	 * Add an item to the list.
+	 * @param item the item to add
+	 * @return this for method chaining
+	 */
 	public BulletedSection addItem(T item) {
 		this.items.add(item);
 		return this;
 	}
 
+	/**
+	 * Specify whether this section is empty.
+	 * @return {@code true} if no item is registered
+	 */
 	public boolean isEmpty() {
 		return this.items.isEmpty();
 	}
 
+	/**
+	 * Return an immutable list of the registered items.
+	 * @return the registered items
+	 */
 	public List<T> getItems() {
 		return Collections.unmodifiableList(this.items);
 	}

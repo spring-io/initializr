@@ -37,24 +37,47 @@ public class IndentingWriter extends Writer {
 
 	private boolean prependIndent = false;
 
+	/**
+	 * Create a new instance with the specified {@linkplain Writer writer} using a default
+	 * indent strategy of 4 spaces.
+	 * @param out the writer to use
+	 */
 	public IndentingWriter(Writer out) {
 		this(out, new SimpleIndentStrategy("    "));
 	}
 
+	/**
+	 * Create a new instance with the specified {@linkplain Writer writer} and indent
+	 * strategy.
+	 * @param out the writer to use
+	 * @param indentStrategy a function that provides the ident to use based on a
+	 * indentation level
+	 */
 	public IndentingWriter(Writer out, Function<Integer, String> indentStrategy) {
 		this.out = out;
 		this.indentStrategy = indentStrategy;
 	}
 
+	/**
+	 * Write the specified text.
+	 * @param string the content to write
+	 */
 	public void print(String string) {
 		write(string.toCharArray(), 0, string.length());
 	}
 
+	/**
+	 * Write the specified text and append a new line.
+	 * @param string the content to write
+	 */
 	public void println(String string) {
 		write(string.toCharArray(), 0, string.length());
 		println();
 	}
 
+	/**
+	 * Write a new line.
+	 */
 	public void println() {
 		String separator = System.lineSeparator();
 		try {
@@ -66,17 +89,28 @@ public class IndentingWriter extends Writer {
 		this.prependIndent = true;
 	}
 
+	/**
+	 * Increase the indentation level and execute the {@link Runnable}. Decrease the
+	 * indentation level on completion.
+	 * @param runnable the code to execute withing an extra indentation level
+	 */
 	public void indented(Runnable runnable) {
 		indent();
 		runnable.run();
 		outdent();
 	}
 
+	/**
+	 * Increase the indentation level.
+	 */
 	private void indent() {
 		this.level++;
 		refreshIndent();
 	}
 
+	/**
+	 * Decrease the indentation level.
+	 */
 	private void outdent() {
 		this.level--;
 		refreshIndent();

@@ -23,7 +23,8 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
- * Base class for all project generation {@link Condition Conditions}.
+ * Base class for project generation {@link Condition Conditions} that rely on the state
+ * of the {@link ProjectDescription}.
  *
  * @author Andy Wilkinson
  */

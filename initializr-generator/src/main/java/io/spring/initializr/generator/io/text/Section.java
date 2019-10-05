@@ -27,6 +27,11 @@ import java.io.PrintWriter;
  */
 public interface Section {
 
+	/**
+	 * Write the content of the section to the specified {@link PrintWriter writer}.
+	 * @param writer the writer to use
+	 * @throws IOException if writing the section failed
+	 */
 	void write(PrintWriter writer) throws IOException;
 
 }

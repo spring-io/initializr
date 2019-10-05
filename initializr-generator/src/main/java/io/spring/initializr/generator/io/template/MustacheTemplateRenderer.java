@@ -34,7 +34,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
 /**
- * A {@link TemplateRenderer} using Mustache.
+ * A {@link TemplateRenderer} using Mustache with a configurable resource prefix.
+ * Templates should have an {@code mustache} extension.
  *
  * @author Stephane Nicoll
  */
@@ -46,6 +47,13 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 
 	private final Cache templateCache;
 
+	/**
+	 * Create a new instance with the resource prefix and the {@link Cache} to use.
+	 * @param resourcePrefix the resource prefix to apply to locate a template based on
+	 * its name
+	 * @param templateCache the cache to use for compiled templates (can be {@code null}
+	 * to not use caching)
+	 */
 	public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
 		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix : resourcePrefix + "/");
 		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix)).escapeHTML(false);
@@ -53,6 +61,12 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 		this.templateCache = templateCache;
 	}
 
+	/**
+	 * Create a new instance with the resource prefix to use.
+	 * @param resourcePrefix the resource prefix to apply to locate a template based on
+	 * its name
+	 * @see #MustacheTemplateRenderer(String, Cache)
+	 */
 	public MustacheTemplateRenderer(String resourcePrefix) {
 		this(resourcePrefix, null);
 	}
