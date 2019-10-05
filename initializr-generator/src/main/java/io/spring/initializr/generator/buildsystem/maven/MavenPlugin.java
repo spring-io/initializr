@@ -216,7 +216,7 @@ public class MavenPlugin {
 
 		private String phase;
 
-		private List<String> goals = new ArrayList<>();
+		private final List<String> goals = new ArrayList<>();
 
 		private ConfigurationBuilder configurationCustomization = null;
 

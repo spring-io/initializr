@@ -57,7 +57,7 @@ public class GradleConfiguration {
 
 		private final String name;
 
-		private Set<String> extendsFrom = new LinkedHashSet<>();
+		private final Set<String> extendsFrom = new LinkedHashSet<>();
 
 		protected Builder(String name) {
 			this.name = name;

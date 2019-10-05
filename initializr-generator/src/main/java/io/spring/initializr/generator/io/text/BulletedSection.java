@@ -41,7 +41,7 @@ public class BulletedSection<T> implements Section {
 
 	private final String itemName;
 
-	private List<T> items = new ArrayList<>();
+	private final List<T> items = new ArrayList<>();
 
 	/**
 	 * Create a new instance adding items in the model with the {@code items} key.

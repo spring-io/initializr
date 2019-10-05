@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.io.template;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -80,7 +79,7 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 	}
 
 	@Override
-	public String render(String templateName, Map<String, ?> model) throws IOException {
+	public String render(String templateName, Map<String, ?> model) {
 		Template template = getTemplate(templateName);
 		return template.execute(model);
 	}

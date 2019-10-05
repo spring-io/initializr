@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.io.text;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -50,7 +49,7 @@ public class MustacheSection implements Section {
 	}
 
 	@Override
-	public void write(PrintWriter writer) throws IOException {
+	public void write(PrintWriter writer) {
 		writer.println(this.templateRenderer.render(this.templateName, resolveModel(this.model)));
 	}
 

@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -57,9 +56,8 @@ public abstract class GradleBuildWriter {
 	 * {@linkplain IndentingWriter writer}.
 	 * @param writer the writer to use
 	 * @param build the gradle build to write
-	 * @throws IOException if the writer fails to write the build
 	 */
-	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+	public final void writeTo(IndentingWriter writer, GradleBuild build) {
 		GradleBuildSettings settings = build.getSettings();
 		writeImports(writer, build.tasks());
 		writeBuildscript(writer, build);

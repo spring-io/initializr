@@ -35,7 +35,7 @@ public class MavenBuild extends Build {
 
 	private final MavenResourceContainer testResources = new MavenResourceContainer();
 
-	private MavenPluginContainer plugins = new MavenPluginContainer();
+	private final MavenPluginContainer plugins = new MavenPluginContainer();
 
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);

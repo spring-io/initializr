@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class Gradle3BuildWriterTests {
 
 	@Test
-	void gradleBuildWithAnnotationProcessorDependency() throws IOException {
+	void gradleBuildWithAnnotationProcessorDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("annotation-processor", "org.springframework.boot",
 				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
@@ -47,7 +46,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCompileDependency() throws IOException {
+	void gradleBuildWithCompileDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);
 		List<String> lines = generateBuild(build);
@@ -56,7 +55,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithNoScopeDependencyDefaultsToCompile() throws IOException {
+	void gradleBuildWithNoScopeDependencyDefaultsToCompile() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
 		List<String> lines = generateBuild(build);
@@ -65,7 +64,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithRuntimeDependency() throws IOException {
+	void gradleBuildWithRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")
 				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME));
@@ -74,7 +73,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithProvidedRuntimeDependency() throws IOException {
+	void gradleBuildWithProvidedRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
 				DependencyScope.PROVIDED_RUNTIME);
@@ -84,7 +83,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTestCompileDependency() throws IOException {
+	void gradleBuildWithTestCompileDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
 				DependencyScope.TEST_COMPILE);
@@ -94,7 +93,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCompileOnlyDependency() throws IOException {
+	void gradleBuildWithCompileOnlyDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-foobar",
 				DependencyScope.COMPILE_ONLY);
@@ -104,7 +103,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTestRuntimeDependency() throws IOException {
+	void gradleBuildWithTestRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
 				DependencyScope.TEST_RUNTIME);
@@ -114,7 +113,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
+	void gradleBuildWithNonNullArtifactTypeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
 				.scope(DependencyScope.COMPILE).type("tar.gz"));
@@ -124,7 +123,7 @@ class Gradle3BuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
+	void gradleBuildWithCustomDependencyConfiguration() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test",
 				GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
@@ -134,7 +133,7 @@ class Gradle3BuildWriterTests {
 				"    myRuntime 'org.springframework.boot:spring-boot-starter-foobar'", "}");
 	}
 
-	private List<String> generateBuild(GradleBuild build) throws IOException {
+	private List<String> generateBuild(GradleBuild build) {
 		Gradle3BuildWriter writer = new Gradle3BuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);

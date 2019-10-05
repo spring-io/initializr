@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.IOException;
-
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 
@@ -36,9 +34,8 @@ public abstract class GradleSettingsWriter {
 	 * {@linkplain IndentingWriter writer}.
 	 * @param writer the writer to use
 	 * @param build the gradle build to write
-	 * @throws IOException if the writer fails to write the build
 	 */
-	public final void writeTo(IndentingWriter writer, GradleBuild build) throws IOException {
+	public final void writeTo(IndentingWriter writer, GradleBuild build) {
 		writePluginManagement(writer, build);
 		writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
 	}

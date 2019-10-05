@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 class KotlinDslGradleBuildWriterTests {
 
 	@Test
-	void gradleBuildWithCoordinates() throws IOException {
+	void gradleBuildWithCoordinates() {
 		GradleBuild build = new GradleBuild();
 		build.settings().group("com.example").version("1.0.1-SNAPSHOT");
 		List<String> lines = generateBuild(build);
@@ -50,7 +49,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithSourceCompatibility11() throws IOException {
+	void gradleBuildWithSourceCompatibility11() {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility("11");
 		List<String> lines = generateBuild(build);
@@ -58,7 +57,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithSourceCompatibility1Dot8() throws IOException {
+	void gradleBuildWithSourceCompatibility1Dot8() {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility("1.8");
 		List<String> lines = generateBuild(build);
@@ -81,7 +80,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithBuiltinPlugin() throws IOException {
+	void gradleBuildWithBuiltinPlugin() {
 		GradleBuild build = new GradleBuild();
 		build.plugins().add("java");
 		build.plugins().add("war");
@@ -90,7 +89,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithKotlinPluginAndVersion() throws IOException {
+	void gradleBuildWithKotlinPluginAndVersion() {
 		GradleBuild build = new GradleBuild();
 		build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion("1.3.21"));
 		build.plugins().add("org.jetbrains.kotlin.plugin.spring", (plugin) -> plugin.setVersion("1.3.21"));
@@ -100,7 +99,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithPluginAndVersion() throws IOException {
+	void gradleBuildWithPluginAndVersion() {
 		GradleBuild build = new GradleBuild();
 		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("2.1.0.RELEASE"));
 		List<String> lines = generateBuild(build);
@@ -116,7 +115,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithMavenCentralRepository() throws IOException {
+	void gradleBuildWithMavenCentralRepository() {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
 		List<String> lines = generateBuild(build);
@@ -124,7 +123,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithRepository() throws IOException {
+	void gradleBuildWithRepository() {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		List<String> lines = generateBuild(build);
@@ -133,7 +132,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithSnapshotRepository() throws IOException {
+	void gradleBuildWithSnapshotRepository() {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
 				.snapshotsEnabled(true));
@@ -143,7 +142,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithPluginRepository() throws IOException {
+	void gradleBuildWithPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories()
 				.add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
@@ -152,7 +151,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments() throws IOException {
+	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments() {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
 				(task) -> task.nested("kotlinOptions",
@@ -166,7 +165,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTaskWithTypesAndShortTypes() throws IOException {
+	void gradleBuildWithTaskWithTypesAndShortTypes() {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customizeWithType("JavaCompile", (javaCompile) -> javaCompile.attribute("options.fork", "true"));
 		assertThat(generateBuild(build)).doesNotContain("import JavaCompile")
@@ -174,7 +173,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTaskCustomizedWithInvocations() throws IOException {
+	void gradleBuildWithTaskCustomizedWithInvocations() {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customize("asciidoctor", (task) -> {
 			task.invoke("inputs.dir", "snippetsDir");
@@ -186,7 +185,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTaskCustomizedWithAssignments() throws IOException {
+	void gradleBuildWithTaskCustomizedWithAssignments() {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customize("compileKotlin", (task) -> {
 			task.attribute("kotlinOptions.freeCompilerArgs", "listOf(\"-Xjsr305=strict\")");
@@ -199,7 +198,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTaskCustomizedWithNestedCustomization() throws IOException {
+	void gradleBuildWithTaskCustomizedWithNestedCustomization() {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customize("compileKotlin",
 				(compileKotlin) -> compileKotlin.nested("kotlinOptions", (kotlinOptions) -> {
@@ -212,7 +211,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithExt() throws Exception {
+	void gradleBuildWithExt() {
 		GradleBuild build = new GradleBuild();
 		build.properties().property("java.version", "\"1.8\"").property("alpha", "file(\"build/example\")");
 		List<String> lines = generateBuild(build);
@@ -221,7 +220,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithVersionProperties() throws IOException {
+	void gradleBuildWithVersionProperties() {
 		GradleBuild build = new GradleBuild();
 		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
 				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
@@ -231,7 +230,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithVersionedDependency() throws IOException {
+	void gradleBuildWithVersionedDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("kotlin-stdlib",
 				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -242,7 +241,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithExternalVersionedDependency() throws IOException {
+	void gradleBuildWithExternalVersionedDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("acme",
 				Dependency.withCoordinates("com.example", "acme")
@@ -254,7 +253,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithExtAndVersionProperties() throws Exception {
+	void gradleBuildWithExtAndVersionProperties() {
 		GradleBuild build = new GradleBuild();
 		build.properties().version(VersionProperty.of("test-version", true), "1.0").version("alpha-version", "0.1")
 				.property("myProperty", "42");
@@ -264,7 +263,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithConfiguration() throws Exception {
+	void gradleBuildWithConfiguration() {
 		GradleBuild build = new GradleBuild();
 		build.configurations().add("developmentOnly");
 		List<String> lines = generateBuild(build);
@@ -272,7 +271,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithConfigurationCustomization() throws Exception {
+	void gradleBuildWithConfigurationCustomization() {
 		GradleBuild build = new GradleBuild();
 		build.configurations().add("custom");
 		build.configurations().customize("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom"));
@@ -283,7 +282,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithConfigurationCustomizations() throws Exception {
+	void gradleBuildWithConfigurationCustomizations() {
 		GradleBuild build = new GradleBuild();
 		build.configurations().add("custom");
 		build.configurations().customize("runtimeClasspath", (configuration) -> configuration.extendsFrom("custom"));
@@ -296,7 +295,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithAnnotationProcessorDependency() throws IOException {
+	void gradleBuildWithAnnotationProcessorDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("annotation-processor", "org.springframework.boot",
 				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
@@ -306,7 +305,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCompileDependency() throws IOException {
+	void gradleBuildWithCompileDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);
 		List<String> lines = generateBuild(build);
@@ -315,7 +314,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithNoScopeDependencyDefaultsToCompile() throws IOException {
+	void gradleBuildWithNoScopeDependencyDefaultsToCompile() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
 		List<String> lines = generateBuild(build);
@@ -324,7 +323,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithRuntimeDependency() throws IOException {
+	void gradleBuildWithRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")
 				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME));
@@ -333,7 +332,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithProvidedRuntimeDependency() throws IOException {
+	void gradleBuildWithProvidedRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
 				DependencyScope.PROVIDED_RUNTIME);
@@ -343,7 +342,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTestCompileDependency() throws IOException {
+	void gradleBuildWithTestCompileDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
 				DependencyScope.TEST_COMPILE);
@@ -353,7 +352,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCompileOnlyDependency() throws IOException {
+	void gradleBuildWithCompileOnlyDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-foobar",
 				DependencyScope.COMPILE_ONLY);
@@ -363,7 +362,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithTestRuntimeDependency() throws IOException {
+	void gradleBuildWithTestRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
 				DependencyScope.TEST_RUNTIME);
@@ -373,7 +372,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithExclusions() throws IOException {
+	void gradleBuildWithExclusions() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test",
 				Dependency.withCoordinates("com.example", "test").scope(DependencyScope.COMPILE).exclusions(
@@ -386,7 +385,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCustomDependencyConfiguration() throws IOException {
+	void gradleBuildWithCustomDependencyConfiguration() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test",
 				GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
@@ -397,7 +396,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithNonNullArtifactTypeDependency() throws IOException {
+	void gradleBuildWithNonNullArtifactTypeDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
 				.scope(DependencyScope.COMPILE).type("tar.gz"));
@@ -407,7 +406,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithBom() throws IOException {
+	void gradleBuildWithBom() {
 		GradleBuild build = new GradleBuild();
 		build.boms().add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
 				.version(VersionReference.ofValue("1.0.0.RELEASE")));
@@ -417,7 +416,7 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithOrderedBoms() throws IOException {
+	void gradleBuildWithOrderedBoms() {
 		GradleBuild build = new GradleBuild();
 		build.boms().add("bom1", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
 				.version(VersionReference.ofValue("1.0.0.RELEASE")).order(5));
@@ -430,14 +429,14 @@ class KotlinDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithCustomVersion() throws IOException {
+	void gradleBuildWithCustomVersion() {
 		GradleBuild build = new GradleBuild();
 		build.settings().version("1.2.4.RELEASE");
 		List<String> lines = generateBuild(build);
 		assertThat(lines).contains("version = \"1.2.4.RELEASE\"");
 	}
 
-	private List<String> generateBuild(GradleBuild build) throws IOException {
+	private List<String> generateBuild(GradleBuild build) {
 		GradleBuildWriter writer = new KotlinDslGradleBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);

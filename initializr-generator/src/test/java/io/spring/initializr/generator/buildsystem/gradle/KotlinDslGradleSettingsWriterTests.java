@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class KotlinDslGradleSettingsWriterTests {
 
 	@Test
-	void gradleBuildWithMavenCentralPluginRepository() throws IOException {
+	void gradleBuildWithMavenCentralPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		List<String> lines = generateSettings(build);
@@ -44,14 +43,14 @@ class KotlinDslGradleSettingsWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithoutPluginRepository() throws IOException {
+	void gradleBuildWithoutPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		List<String> lines = generateSettings(build);
 		assertThat(lines).doesNotContain("pluginManagement");
 	}
 
 	@Test
-	void gradleBuildWithPluginRepository() throws IOException {
+	void gradleBuildWithPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add(MavenRepository
 				.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones"));
@@ -65,7 +64,7 @@ class KotlinDslGradleSettingsWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithSnapshotPluginRepository() throws IOException {
+	void gradleBuildWithSnapshotPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories()
 				.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
@@ -80,14 +79,14 @@ class KotlinDslGradleSettingsWriterTests {
 	}
 
 	@Test
-	void artifactIdShouldBeUsedAsTheRootProjectName() throws Exception {
+	void artifactIdShouldBeUsedAsTheRootProjectName() {
 		GradleBuild build = new GradleBuild();
 		build.settings().artifact("my-application");
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("rootProject.name = \"my-application\"");
 	}
 
-	private List<String> generateSettings(GradleBuild build) throws IOException {
+	private List<String> generateSettings(GradleBuild build) {
 		GradleSettingsWriter writer = new KotlinDslGradleSettingsWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), build);

@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -55,9 +54,8 @@ public class MavenBuildWriter {
 	 * {@linkplain IndentingWriter writer}.
 	 * @param writer the writer to use
 	 * @param build the maven build to write
-	 * @throws IOException if the writer fails to write the build
 	 */
-	public void writeTo(IndentingWriter writer, MavenBuild build) throws IOException {
+	public void writeTo(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
 		writeProject(writer, () -> {
 			writeParent(writer, build);

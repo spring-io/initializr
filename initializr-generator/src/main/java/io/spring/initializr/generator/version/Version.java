@@ -297,15 +297,15 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		private static int compareQualifier(Qualifier first, Qualifier second) {
-			Integer firstIndex = getQualifierIndex(first.qualifier);
-			Integer secondIndex = getQualifierIndex(second.qualifier);
+			int firstIndex = getQualifierIndex(first.qualifier);
+			int secondIndex = getQualifierIndex(second.qualifier);
 
 			// Unknown qualifier, alphabetic ordering
 			if (firstIndex == -1 && secondIndex == -1) {
 				return first.qualifier.compareTo(second.qualifier);
 			}
 			else {
-				return firstIndex.compareTo(secondIndex);
+				return Integer.compare(firstIndex, secondIndex);
 			}
 		}
 
