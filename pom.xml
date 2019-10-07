@@ -38,7 +38,7 @@
 	</developers>
 
 	<properties>
-		<revision>0.8.1.BUILD-SNAPSHOT</revision>
+		<revision>0.8.0.BUILD-SNAPSHOT</revision>
 		<disable.checks>false</disable.checks>
 		<git.url>https://github.com/spring-io/initializr</git.url>
 		<git.connection>scm:git:https://github.com/spring-io/initializr</git.connection>
