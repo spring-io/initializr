@@ -27,8 +27,10 @@ particular, the
 {service}/blob/master/start-site/src/main/resources/application.yml[configuration of our
 instance]. Such configuration is also described in details in the documentation.
 
-NOTE: Check the https://github.com/spring-io/initializr/milestones[milestones page] for an
-overview of the changes.
+NOTE: While Spring Initializr is now available on Maven Central, it is still in a pre 1.0
+state and major refactoring are still possible. Check the
+https://github.com/spring-io/initializr/milestones[milestones page] for an overview of the
+changes.
 
 == Installation and Getting Started
 The reference documentation is available in {docs}/html/[HTML format].
