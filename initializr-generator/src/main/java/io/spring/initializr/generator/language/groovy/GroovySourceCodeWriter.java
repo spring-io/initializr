@@ -179,7 +179,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 
 	private String formatValues(List<String> values, Function<String, String> formatter) {
 		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? "{ " + result + " }" : result;
+		return (values.size() > 1) ? "[ " + result + " ]" : result;
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
