@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Tests for {@link ProjectGenerator}.
@@ -103,7 +103,7 @@ public class ProjectGeneratorTests {
 		ProjectDescription descriptionFromContext = generator.generate(description,
 				(context) -> context.getBean(ProjectDescription.class));
 		assertThat(descriptionFromContext).isSameAs(description);
-		verifyZeroInteractions(customizer);
+		verifyNoInteractions(customizer);
 	}
 
 	@Test

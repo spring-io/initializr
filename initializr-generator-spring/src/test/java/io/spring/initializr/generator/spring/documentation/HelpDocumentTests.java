@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Tests for {@link HelpDocument}.
@@ -41,7 +41,7 @@ class HelpDocumentTests {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		PrintWriter out = mock(PrintWriter.class);
 		document.write(out);
-		verifyZeroInteractions(out);
+		verifyNoInteractions(out);
 	}
 
 	@Test

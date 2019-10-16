@@ -66,7 +66,7 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 
 	private ObjectNode dependenciesLink(String appUrl) {
 		String uri = (appUrl != null) ? appUrl + "/dependencies" : "/dependencies";
-		UriTemplate uriTemplate = new UriTemplate(uri, this.dependenciesVariables);
+		UriTemplate uriTemplate = UriTemplate.of(uri, this.dependenciesVariables);
 		ObjectNode result = nodeFactory().objectNode();
 		result.put("href", uriTemplate.toString());
 		result.put("templated", true);
