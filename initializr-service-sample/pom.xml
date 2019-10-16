@@ -28,11 +28,11 @@
 
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-web</artifactId>
+			<artifactId>initializr-generator-spring</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator-spring</artifactId>
+			<artifactId>initializr-web</artifactId>
 		</dependency>
 
 		<dependency>
