@@ -16,9 +16,14 @@
 
 package io.spring.initializr.metadata;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,8 +31,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link InitializrConfiguration}.
  *
  * @author Stephane Nicoll
+ * @author Chris Bono
  */
 class InitializrConfigurationTests {
+
+	// Taken from https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.9
+	private static final String[] RESERVED_KEYWORDS = { "abstract", "assert", "boolean", "break", "byte", "case",
+			"catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends",
+			"false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int",
+			"interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return",
+			"short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient",
+			"try", "true", "void", "volatile", "while" };
 
 	private final InitializrConfiguration properties = new InitializrConfiguration();
 
@@ -169,6 +183,37 @@ class InitializrConfigurationTests {
 	@Test
 	void generatePackageNameInvalidPackageName() {
 		assertThat(this.properties.cleanPackageName("org.springframework", "com.example")).isEqualTo("com.example");
+	}
+
+	@ParameterizedTest
+	@MethodSource("reservedKeywords")
+	void generatePackageNameReservedKeywordsMiddleOfPackageName(final String keyword) {
+		final String badPackageName = String.format("com.%s.foo", keyword);
+		assertThat(this.properties.cleanPackageName(badPackageName, "com.example")).isEqualTo("com.example");
+	}
+
+	@ParameterizedTest
+	@MethodSource("reservedKeywords")
+	void generatePackageNameReservedKeywordsStartOfPackageName(final String keyword) {
+		final String badPackageName = String.format("%s.com.foo", keyword);
+		assertThat(this.properties.cleanPackageName(badPackageName, "com.example")).isEqualTo("com.example");
+	}
+
+	@ParameterizedTest
+	@MethodSource("reservedKeywords")
+	void generatePackageNameReservedKeywordsEndOfPackageName(final String keyword) {
+		final String badPackageName = String.format("com.foo.%s", keyword);
+		assertThat(this.properties.cleanPackageName(badPackageName, "com.example")).isEqualTo("com.example");
+	}
+
+	@ParameterizedTest
+	@MethodSource("reservedKeywords")
+	void generatePackageNameReservedKeywordsEntirePackageName(final String keyword) {
+		assertThat(this.properties.cleanPackageName(keyword, "com.example")).isEqualTo("com.example");
+	}
+
+	private static Stream<String> reservedKeywords() {
+		return Arrays.stream(RESERVED_KEYWORDS);
 	}
 
 	@Test
