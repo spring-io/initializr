@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.lang.model.SourceVersion;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spring.initializr.generator.version.InvalidVersionException;
 import io.spring.initializr.generator.version.Version;
@@ -38,6 +40,7 @@ import org.springframework.util.StringUtils;
  * Various configuration options used by the service.
  *
  * @author Stephane Nicoll
+ * @author Chris Bono
  */
 public class InitializrConfiguration {
 
@@ -113,6 +116,9 @@ public class InitializrConfiguration {
 		if (hasInvalidChar(candidate.replace(".", "")) || this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
 		}
+		if (hasReservedKeyword(candidate)) {
+			return defaultPackageName;
+		}
 		else {
 			return candidate;
 		}
@@ -153,6 +159,10 @@ public class InitializrConfiguration {
 			}
 		}
 		return false;
+	}
+
+	private static boolean hasReservedKeyword(final String packageName) {
+		return Arrays.stream(packageName.split("\\.")).anyMatch(SourceVersion::isKeyword);
 	}
 
 	/**

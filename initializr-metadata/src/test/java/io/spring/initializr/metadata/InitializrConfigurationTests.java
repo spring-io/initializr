@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link InitializrConfiguration}.
  *
  * @author Stephane Nicoll
+ * @author Chris Bono
  */
 class InitializrConfigurationTests {
 
@@ -169,6 +170,26 @@ class InitializrConfigurationTests {
 	@Test
 	void generatePackageNameInvalidPackageName() {
 		assertThat(this.properties.cleanPackageName("org.springframework", "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generatePackageNameReservedKeywordsMiddleOfPackageName() {
+		assertThat(this.properties.cleanPackageName("com.return.foo", "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generatePackageNameReservedKeywordsStartOfPackageName() {
+		assertThat(this.properties.cleanPackageName("false.com.foo", "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generatePackageNameReservedKeywordsEndOfPackageName() {
+		assertThat(this.properties.cleanPackageName("com.foo.null", "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generatePackageNameReservedKeywordsEntirePackageName() {
+		assertThat(this.properties.cleanPackageName("public", "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
