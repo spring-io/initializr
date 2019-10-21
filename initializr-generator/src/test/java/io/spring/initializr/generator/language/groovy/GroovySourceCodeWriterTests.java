@@ -243,7 +243,7 @@ class GroovySourceCodeWriterTests {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
 				(builder) -> builder.attribute("target", Class.class, "com.example.One", "com.example.Two")));
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "import com.example.Two",
-				"import org.springframework.test.TestApplication", "", "@TestApplication(target = { One, Two })",
+				"import org.springframework.test.TestApplication", "", "@TestApplication(target = [ One, Two ])",
 				"class Test {", "", "}");
 	}
 
