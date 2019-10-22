@@ -110,4 +110,15 @@ public interface ProjectDescription {
 	 */
 	String getBaseDirectory();
 
+	/**
+	 * ProjectDescription implementations should implement this to create a copy of
+	 * themselves. However, the default implementation throws
+	 * UnsupportedOperationException.
+	 * @return never
+	 * @throws UnsupportedOperationException always
+	 */
+	default ProjectDescription createCopy() {
+		throw new UnsupportedOperationException();
+	}
+
 }
