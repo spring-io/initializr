@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.project.diff.DefaultProjectDescriptionDiffFactory;
+import io.spring.initializr.generator.project.diff.ProjectDescriptionDiff;
+import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
@@ -51,6 +54,17 @@ public class ProjectGeneratorTests {
 			return context.getBean(ProjectDescription.class);
 		});
 		assertThat(description).isSameAs(beanDescription);
+	}
+
+	@Test
+	void generateRegisterProjectDescriptionDiff() {
+		ProjectGenerator generator = new ProjectGenerator((context) -> context
+				.registerBean(ProjectDescriptionDiffFactory.class, () -> new DefaultProjectDescriptionDiffFactory()));
+		MutableProjectDescription description = new MutableProjectDescription();
+		generator.generate(description, (context) -> {
+			assertThat(context.getBeansOfType(ProjectDescriptionDiff.class)).hasSize(1);
+			return context.getBean(ProjectDescriptionDiff.class);
+		});
 	}
 
 	@Test

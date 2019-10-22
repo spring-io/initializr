@@ -61,6 +61,33 @@ public class MutableProjectDescription implements ProjectDescription {
 
 	private String baseDirectory;
 
+	public MutableProjectDescription() {
+		super();
+	}
+
+	protected MutableProjectDescription(final MutableProjectDescription source) {
+		super();
+		setPlatformVersion(source.getPlatformVersion());
+		setBuildSystem(source.getBuildSystem());
+		setPackaging(source.getPackaging());
+		setLanguage(source.getLanguage());
+		source.getRequestedDependencies().forEach(this::addDependency);
+		setGroupId(source.getGroupId());
+		setArtifactId(source.getArtifactId());
+		setVersion(source.getVersion());
+		setName(source.getName());
+		setDescription(source.getDescription());
+		setApplicationName(source.getApplicationName());
+		setPackageName(source.getPackageName());
+		setBaseDirectory(source.getBaseDirectory());
+	}
+
+	@Override
+	public MutableProjectDescription createCopy() {
+		return new MutableProjectDescription(this);
+	}
+
+	@Override
 	public Version getPlatformVersion() {
 		return this.platformVersion;
 	}
@@ -69,6 +96,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.platformVersion = platformVersion;
 	}
 
+	@Override
 	public BuildSystem getBuildSystem() {
 		return this.buildSystem;
 	}
@@ -77,6 +105,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.buildSystem = buildSystem;
 	}
 
+	@Override
 	public Packaging getPackaging() {
 		return this.packaging;
 	}
@@ -85,6 +114,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.packaging = packaging;
 	}
 
+	@Override
 	public Language getLanguage() {
 		return this.language;
 	}
@@ -101,10 +131,12 @@ public class MutableProjectDescription implements ProjectDescription {
 		return addDependency(id, builder.build());
 	}
 
+	@Override
 	public Map<String, Dependency> getRequestedDependencies() {
 		return Collections.unmodifiableMap(this.requestedDependencies);
 	}
 
+	@Override
 	public String getGroupId() {
 		return this.groupId;
 	}
@@ -113,6 +145,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.groupId = groupId;
 	}
 
+	@Override
 	public String getArtifactId() {
 		return this.artifactId;
 	}
@@ -121,6 +154,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.artifactId = artifactId;
 	}
 
+	@Override
 	public String getVersion() {
 		return this.version;
 	}
@@ -129,6 +163,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.version = version;
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -137,6 +172,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.name = name;
 	}
 
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
@@ -145,6 +181,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.description = description;
 	}
 
+	@Override
 	public String getApplicationName() {
 		return this.applicationName;
 	}
@@ -153,6 +190,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.applicationName = applicationName;
 	}
 
+	@Override
 	public String getPackageName() {
 		if (StringUtils.hasText(this.packageName)) {
 			return this.packageName;
@@ -167,6 +205,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.packageName = packageName;
 	}
 
+	@Override
 	public String getBaseDirectory() {
 		return this.baseDirectory;
 	}

@@ -79,6 +79,11 @@ public class ProjectGenerationControllerCustomRequestIntegrationTests
 			return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
 		}
 
+		@Bean
+		CustomProjectDescriptionDiffFactory customProjectDescriptionDiffFactory() {
+			return new CustomProjectDescriptionDiffFactory();
+		}
+
 	}
 
 	static class CustomProjectRequestToDescriptionConverter

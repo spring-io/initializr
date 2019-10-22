@@ -28,6 +28,20 @@ class CustomProjectDescription extends MutableProjectDescription {
 
 	private boolean customFlag;
 
+	CustomProjectDescription() {
+		super();
+	}
+
+	CustomProjectDescription(final CustomProjectDescription source) {
+		super(source);
+		setCustomFlag(source.isCustomFlag());
+	}
+
+	@Override
+	public CustomProjectDescription createCopy() {
+		return new CustomProjectDescription(this);
+	}
+
 	boolean isCustomFlag() {
 		return this.customFlag;
 	}
