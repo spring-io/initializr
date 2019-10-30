@@ -65,6 +65,7 @@ public class MavenBuildWriter {
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
+			writeProfiles(writer, build);
 			writeBuild(writer, build);
 			writeRepositories(writer, build);
 		});
@@ -227,6 +228,31 @@ public class MavenBuildWriter {
 		writer.println();
 		writeElement(writer, "dependencyManagement",
 				() -> writeElement(writer, "dependencies", () -> writeCollection(writer, boms, this::writeBom)));
+	}
+
+	private void writeProfiles(IndentingWriter writer, MavenBuild build) {
+		MavenProfileContainer profilesContainer = build.profiles();
+		if (profilesContainer.isEmpty()) {
+			return;
+		}
+		Stream<MavenProfile> profiles = profilesContainer.values();
+		writer.println();
+		writeElement(writer, "profiles", () -> {
+			profiles.forEach((mavenProfile) -> {
+				String id = mavenProfile.getId();
+				boolean isActiveByDefault = mavenProfile.isActiveByDefault();
+				List<MavenProfile.Property> properties = mavenProfile.getProperties();
+				writeElement(writer, "profile", () -> {
+					writeSingleElement(writer, "id", id);
+					if (properties != null && properties.size() > 0) {
+						writeElement(writer, "properties", () -> properties.forEach(
+								(property) -> writeSingleElement(writer, property.getName(), property.getValue())));
+					}
+					writeElement(writer, "activation",
+							() -> writeSingleElement(writer, "activeByDefault", "" + isActiveByDefault));
+				});
+			});
+		});
 	}
 
 	private void writeBom(IndentingWriter writer, BillOfMaterials bom) {

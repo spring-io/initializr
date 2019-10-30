@@ -29,13 +29,15 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
  */
 public class MavenBuild extends Build {
 
-	private final MavenBuildSettings.Builder settings = new Builder();
+	private final Builder settings = new Builder();
 
 	private final MavenResourceContainer resources = new MavenResourceContainer();
 
 	private final MavenResourceContainer testResources = new MavenResourceContainer();
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
+
+	private final MavenProfileContainer profiles = new MavenProfileContainer();
 
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
@@ -46,7 +48,7 @@ public class MavenBuild extends Build {
 	}
 
 	@Override
-	public MavenBuildSettings.Builder settings() {
+	public Builder settings() {
 		return this.settings;
 	}
 
@@ -80,6 +82,10 @@ public class MavenBuild extends Build {
 	 */
 	public MavenPluginContainer plugins() {
 		return this.plugins;
+	}
+
+	public MavenProfileContainer profiles() {
+		return this.profiles;
 	}
 
 }

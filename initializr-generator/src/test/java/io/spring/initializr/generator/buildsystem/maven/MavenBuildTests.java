@@ -33,6 +33,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		assertThat(build.resources().isEmpty()).isTrue();
 		assertThat(build.testResources().isEmpty()).isTrue();
+		assertThat(build.profiles().isEmpty()).isTrue();
 	}
 
 	@Test

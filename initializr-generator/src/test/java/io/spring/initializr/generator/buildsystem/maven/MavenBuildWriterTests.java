@@ -558,6 +558,37 @@ class MavenBuildWriterTests {
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
 	}
 
+	@Test
+	void pomWithProfile() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.profiles().add("dev", true, (profileBuilder) -> profileBuilder
+				.cofiguration((propertiesBuilder) -> propertiesBuilder.add("prop1", "value1")));
+		generatePom(build, (pom) -> {
+			NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+			assertThat(profile).textAtPath("id").isEqualTo("dev");
+			NodeAssert prop1 = pom.nodeAtPath("/project/profiles/profile/properties");
+			assertThat(prop1).textAtPath("prop1").isEqualTo("value1");
+			NodeAssert activation = pom.nodeAtPath("/project/profiles/profile/activation");
+			assertThat(activation).textAtPath("activeByDefault");
+		});
+	}
+
+	@Test
+	void pomWithProfileNoProperty() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.profiles().add("dev", true);
+		generatePom(build, (pom) -> {
+			NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+			assertThat(profile).textAtPath("id").isEqualTo("dev");
+			NodeAssert activation = pom.nodeAtPath("/project/profiles/profile/activation");
+			assertThat(activation).textAtPath("activeByDefault");
+			NodeAssert prop1 = pom.nodeAtPath("/project/profiles/profile/properties");
+			assertThat(prop1).isNull();
+		});
+	}
+
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();

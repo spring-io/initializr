@@ -47,3 +47,5 @@ initializr:
       default: false
   group-id:
     value: org.acme
+server:
+  port: 8081
