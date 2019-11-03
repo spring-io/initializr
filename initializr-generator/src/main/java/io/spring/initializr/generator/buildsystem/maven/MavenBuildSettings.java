@@ -16,6 +16,10 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.spring.initializr.generator.buildsystem.BuildSettings;
 import io.spring.initializr.generator.packaging.Packaging;
 
@@ -23,6 +27,7 @@ import io.spring.initializr.generator.packaging.Packaging;
  * Maven {@link BuildSettings}.
  *
  * @author Stephane Nicoll
+ * @author Jafer Khan Shamshad
  */
 public class MavenBuildSettings extends BuildSettings {
 
@@ -34,6 +39,10 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final String description;
 
+	private final List<MavenLicense> licenses;
+
+	private final List<MavenDeveloper> developers;
+
 	private final String sourceDirectory;
 
 	private final String testSourceDirectory;
@@ -44,6 +53,8 @@ public class MavenBuildSettings extends BuildSettings {
 		this.packaging = builder.packaging;
 		this.name = builder.name;
 		this.description = builder.description;
+		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
+		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
 	}
@@ -83,6 +94,22 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the {@linkplain MavenLicense licenses} associated with the project.
+	 * @return the licenses of the project or {@code null}
+	 */
+	public List<MavenLicense> getLicenses() {
+		return this.licenses;
+	}
+
+	/**
+	 * Return the {@linkplain MavenDeveloper developers} associated with the project.
+	 * @return the developers of the project or {@code null}
+	 */
+	public List<MavenDeveloper> getDevelopers() {
+		return this.developers;
+	}
+
+	/**
 	 * Return the location of main source code. Can use Maven properties such as
 	 * {@code ${basedir}}.
 	 * @return the location of main source code or {@code null} to use the default
@@ -114,6 +141,10 @@ public class MavenBuildSettings extends BuildSettings {
 		private String name;
 
 		private String description;
+
+		private List<MavenLicense> licenses = new ArrayList<>();
+
+		private List<MavenDeveloper> developers = new ArrayList<>();
 
 		private String sourceDirectory;
 
@@ -162,6 +193,26 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder name(String name) {
 			this.name = name;
+			return self();
+		}
+
+		/**
+		 * Set the licenses of the project.
+		 * @param licenses the licenses associated with the project
+		 * @return this for method chaining
+		 */
+		public Builder licenses(List<MavenLicense> licenses) {
+			this.licenses = licenses;
+			return self();
+		}
+
+		/**
+		 * Set the developers of the project.
+		 * @param developers the developers associated with the project
+		 * @return this for method chaining
+		 */
+		public Builder developers(List<MavenDeveloper> developers) {
+			this.developers = developers;
 			return self();
 		}
 
