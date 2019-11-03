@@ -275,6 +275,17 @@ class DependencyTests {
 	}
 
 	@Test
+	void resolveMatchingWithMappingRespectsDefault() {
+		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
+		dependency.setDefault(true);
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", false));
+		dependency.resolve();
+		Dependency resolved = dependency.resolve(Version.parse("1.1.5.RELEASE"));
+		assertThat(resolved.isDefault()).isTrue();
+	}
+
+	@Test
 	void resolveVersionWithX() {
 		Dependency dependency1 = Dependency.withId("foo1", "com.acme", "foo1", "0.3.0.RELEASE");
 		dependency1.setCompatibilityRange("1.2.x.RELEASE");
@@ -306,6 +317,7 @@ class DependencyTests {
 		assertThat(dependency.getArtifactId()).isEqualTo(expectedArtifactId);
 		assertThat(dependency.getVersion()).isEqualTo(expectedVersion);
 		assertThat(dependency.isStarter()).isEqualTo(expectedStarter);
+		assertThat(dependency.isDefault()).isFalse();
 	}
 
 }

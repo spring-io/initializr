@@ -5,6 +5,15 @@ initializr:
         - name: Web
           id: web
           description: Servlet web application with Spring MVC and Tomcat
+          default: false
+        - name: Spring Reactive Web
+          id: webflux
+          description: Build reactive web applications with Spring WebFlux and Netty.
+          weight: 90
+          facets:
+          - json
+          - reactive
+          default: true
   types:
     - name: Maven Project
       id: maven-project

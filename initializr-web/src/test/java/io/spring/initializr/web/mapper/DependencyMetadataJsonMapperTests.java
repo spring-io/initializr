@@ -43,6 +43,7 @@ class DependencyMetadataJsonMapperTests {
 		Dependency d = Dependency.withId("foo", "org.foo", "foo");
 		d.setRepository("my-repo");
 		d.setBom("my-bom");
+		d.setDefault(true);
 		Repository repository = new Repository();
 		repository.setName("foo-repo");
 		repository.setUrl(new URL("https://example.com/foo"));
@@ -51,9 +52,12 @@ class DependencyMetadataJsonMapperTests {
 				Collections.singletonMap(d.getId(), d), Collections.singletonMap("repo-id", repository),
 				Collections.singletonMap("bom-id", bom));
 		JSONObject content = new JSONObject(this.mapper.write(metadata));
-		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("bom")).isEqualTo("my-bom");
-		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("repository"))
-				.isEqualTo("my-repo");
+		JSONObject serializedDependency = content.getJSONObject("dependencies").getJSONObject("foo");
+		assertThat(serializedDependency.getString("artifactId")).isEqualTo("foo");
+		assertThat(serializedDependency.getString("groupId")).isEqualTo("org.foo");
+		assertThat(serializedDependency.getString("scope")).isEqualTo("compile");
+		assertThat(serializedDependency.getString("repository")).isEqualTo("my-repo");
+		assertThat(serializedDependency.getString("default")).isEqualTo("true");
 		assertThat(content.getJSONObject("repositories").getJSONObject("repo-id").getString("name"))
 				.isEqualTo("foo-repo");
 		assertThat(content.getJSONObject("boms").getJSONObject("bom-id").getString("artifactId")).isEqualTo("foo-bom");

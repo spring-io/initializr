@@ -61,6 +61,47 @@ class DependenciesCapabilityTests {
 	}
 
 	@Test
+	void getDefaultWithNoDefaults() {
+		Dependency dependency = Dependency.withId("first");
+		dependency.setDefault(false);
+		Dependency dependency2 = Dependency.withId("second");
+		dependency2.setDefault(false);
+		DependenciesCapability capability = createDependenciesCapability("foo", dependency, dependency2);
+		capability.validate();
+		assertThat(capability.getDefault()).isEmpty();
+	}
+
+	@Test
+	void getDefaultWithOneDefault() {
+		Dependency dependency = Dependency.withId("first");
+		dependency.setDefault(false);
+		Dependency dependency2 = Dependency.withId("second");
+		dependency2.setDefault(true);
+		DependenciesCapability capability = createDependenciesCapability("foo", dependency, dependency2);
+		capability.validate();
+		assertThat(capability.getDefault()).extracting(DefaultMetadataElement::getId).containsExactly("second");
+	}
+
+	@Test
+	void getDefaultWithMultipleDepGroupEachWithDefault() {
+		Dependency dependency1 = Dependency.withId("first");
+		dependency1.setDefault(false);
+		Dependency dependency2 = Dependency.withId("second");
+		dependency2.setDefault(true);
+		Dependency dependency3 = Dependency.withId("third");
+		dependency3.setDefault(false);
+		Dependency dependency4 = Dependency.withId("fourth");
+		dependency4.setDefault(true);
+		DependenciesCapability capability = new DependenciesCapability();
+		DependencyGroup group1 = createDependencyGroup("group1", dependency1, dependency2);
+		capability.getContent().add(group1);
+		DependencyGroup group2 = createDependencyGroup("group2", dependency3, dependency4);
+		capability.getContent().add(group2);
+		capability.validate();
+		assertThat(capability.getDefault()).extracting(DefaultMetadataElement::getId).containsExactlyInAnyOrder("second", "fourth");
+	}
+
+	@Test
 	void aliasClashWithAnotherDependency() {
 		Dependency dependency = Dependency.withId("first");
 		dependency.getAliases().add("alias1");

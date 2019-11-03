@@ -33,7 +33,8 @@ import io.spring.initializr.generator.version.VersionParser;
  *
  * @author Stephane Nicoll
  */
-public class DependenciesCapability extends ServiceCapability<List<DependencyGroup>> {
+public class DependenciesCapability extends ServiceCapability<List<DependencyGroup>>
+		implements Defaultable<List<DefaultMetadataElement>> {
 
 	final List<DependencyGroup> content = new ArrayList<>();
 
@@ -86,6 +87,20 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 			}
 		});
 		index();
+	}
+
+	/**
+	 * Return a default element for each of dependency that is specified as default.
+	 *
+	 * @return list of default elements - one for each dependency that is specified as default.
+	 */
+	@Override
+	public List<DefaultMetadataElement> getDefault() {
+		return getContent().stream()
+				.flatMap((dependencyGroup) -> dependencyGroup.getContent().stream())
+				.filter(Dependency::isDefault)
+				.map((dep) -> new DefaultMetadataElement(dep.getId(), dep.getName(), true))
+				.collect(Collectors.toList());
 	}
 
 	private void index() {

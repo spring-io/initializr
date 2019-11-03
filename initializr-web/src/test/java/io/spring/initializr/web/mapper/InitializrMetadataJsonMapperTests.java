@@ -38,6 +38,39 @@ class InitializrMetadataJsonMapperTests {
 	private final InitializrMetadataJsonMapper jsonMapper = new InitializrMetadataV21JsonMapper();
 
 	@Test
+	void basicInfo() throws IOException {
+		Dependency d1 = Dependency.withId("one");
+		d1.setDefault(false);
+		Dependency d2 = Dependency.withId("two");
+		d2.setDefault(true);
+		Dependency d3 = Dependency.withId("three");
+		d3.setDefault(false);
+		Dependency d4 = Dependency.withId("four");
+		d4.setDefault(true);
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
+				.addType("foo", true, "/foo.zip", "none", "test")
+				.addDependencyGroup("group1", d1, d2)
+				.addDependencyGroup("group2", d3, d4)
+				.build();
+		String json = this.jsonMapper.write(metadata, null);
+		JsonNode result = objectMapper.readTree(json);
+		JsonNode group1Node = result.get("dependencies").get("values").get(0);
+		assertThat(group1Node.get("name").textValue()).isEqualTo("group1");
+		validateNode(group1Node.get("values").get(0), d1);
+		validateNode(group1Node.get("values").get(1), d2);
+		JsonNode group2Node = result.get("dependencies").get("values").get(1);
+		assertThat(group2Node.get("name").textValue()).isEqualTo("group2");
+		validateNode(group2Node.get("values").get(0), d3);
+		validateNode(group2Node.get("values").get(1), d4);
+	}
+
+	private void validateNode(JsonNode node, Dependency expectedDependency) {
+		assertThat(node.get("id").textValue()).isEqualTo(expectedDependency.getId());
+		assertThat(node.get("name").textValue()).isEqualTo(expectedDependency.getName());
+		assertThat(node.get("default").booleanValue()).isEqualTo(expectedDependency.isDefault());
+	}
+
+	@Test
 	void withNoAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 				.addType("foo", true, "/foo.zip", "none", "test").addDependencyGroup("foo", "one", "two").build();
@@ -58,6 +91,7 @@ class InitializrMetadataJsonMapperTests {
 				.isEqualTo("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
 						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
 	}
+
 
 	@Test
 	void linksRendered() {

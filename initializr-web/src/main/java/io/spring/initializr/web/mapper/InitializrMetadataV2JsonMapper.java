@@ -175,7 +175,9 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	protected ObjectNode mapDependency(Dependency dependency) {
 		if (dependency.getCompatibilityRange() == null) {
 			// only map the dependency if no compatibilityRange is set
-			return mapValue(dependency);
+			ObjectNode result = mapValue(dependency);
+			result.put("default", dependency.isDefault());
+			return result;
 		}
 		return null;
 	}

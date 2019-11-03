@@ -101,6 +101,20 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
+	/*
+	@Test
+	void defaultDependencyProject() {
+		ProjectStructure project = downloadZip("/starter.zip");
+		assertDefaultProject(project);
+		assertDoesNotHaveWebResources(project);
+		assertThat(project).mavenBuild().hasDependenciesSize(2)
+				// the root dep is added if none is specified
+				//.hasDependency(Dependency.createSpringBootStarter("", "", ""))
+				.hasDependency(Dependency.createSpringBootStarter(""))
+				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+	}
+	*/
+
 	@Test
 	void dependencies() {
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&dependencies=jpa");

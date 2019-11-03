@@ -28,6 +28,10 @@ public class DefaultMetadataElement extends MetadataElement {
 	public DefaultMetadataElement() {
 	}
 
+	public DefaultMetadataElement(DefaultMetadataElement other) {
+		this(other.getId(), other.getName(), other.isDefault());
+	}
+
 	public DefaultMetadataElement(String id, String name, boolean defaultValue) {
 		super(id, name);
 		this.defaultValue = defaultValue;

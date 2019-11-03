@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Dependency extends MetadataElement implements Describable {
+public class Dependency extends DefaultMetadataElement implements Describable {
 
 	/**
 	 * Compile Scope.

@@ -55,6 +55,8 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 	@Override
 	protected ObjectNode mapDependency(Dependency dependency) {
 		ObjectNode content = mapValue(dependency);
+		content.put("default", dependency.isDefault());
+
 		if (dependency.getCompatibilityRange() != null) {
 			content.put("versionRange", dependency.getCompatibilityRange());
 		}

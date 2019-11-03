@@ -16,6 +16,7 @@
 
 package io.spring.initializr.metadata;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,7 +254,15 @@ public class InitializrMetadata {
 		defaults.put("name", this.name.getContent());
 		defaults.put("description", this.description.getContent());
 		defaults.put("packageName", this.packageName.getContent());
+		defaults.put("dependencies", defaultDependencyIds(this.getDependencies()));
 		return defaults;
+	}
+
+	private static List<String> defaultDependencyIds(DependenciesCapability dependenciesCapability) {
+		List<DefaultMetadataElement> defaultValues = dependenciesCapability.getDefault();
+		return (defaultValues != null)
+				? defaultValues.stream().map(DefaultMetadataElement::getId).collect(Collectors.toList())
+				: new ArrayList<>();
 	}
 
 	private static String defaultId(Defaultable<? extends DefaultMetadataElement> element) {
