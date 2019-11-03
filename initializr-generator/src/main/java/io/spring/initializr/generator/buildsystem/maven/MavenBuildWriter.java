@@ -62,6 +62,8 @@ public class MavenBuildWriter {
 			writeProjectCoordinates(writer, settings);
 			writePackaging(writer, settings);
 			writeProjectName(writer, settings);
+			writeLicenses(writer, settings);
+			writeDevelopers(writer, settings);
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
@@ -126,6 +128,22 @@ public class MavenBuildWriter {
 			properties.values().forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
 			properties.versions((VersionProperty::toStandardFormat))
 					.forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
+		});
+	}
+
+	private void writeDevelopers(IndentingWriter writer, MavenBuildSettings settings) {
+		writeElement(writer, "developers", () -> {
+			if (settings.getDevelopers() == null) {
+				writer.println("<developer />");
+			}
+		});
+	}
+
+	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
+		writeElement(writer, "licenses", () -> {
+			if (settings.getLicenses() == null) {
+				writer.println("<license />");
+			}
 		});
 	}
 
