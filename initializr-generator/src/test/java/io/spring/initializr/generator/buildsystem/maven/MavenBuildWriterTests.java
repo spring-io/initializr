@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Joachim Pasquali
  */
 class MavenBuildWriterTests {
 
