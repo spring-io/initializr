@@ -50,6 +50,7 @@ import io.spring.initializr.generator.version.VersionReference;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Joachim Pasquali
  */
 public class MavenBuildWriter {
 
