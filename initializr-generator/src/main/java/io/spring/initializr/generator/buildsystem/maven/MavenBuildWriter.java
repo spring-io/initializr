@@ -33,6 +33,10 @@ import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.RepositoryPolicy;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
@@ -57,6 +61,7 @@ public class MavenBuildWriter {
 	 */
 	public void writeTo(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
+		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
 		writeProject(writer, () -> {
 			writeParent(writer, build);
 			writeProjectCoordinates(writer, settings);
@@ -67,6 +72,7 @@ public class MavenBuildWriter {
 			writeDependencyManagement(writer, build);
 			writeBuild(writer, build);
 			writeRepositories(writer, build);
+			writeDistributionManagement(writer, distributionManagement);
 		});
 	}
 
@@ -409,12 +415,74 @@ public class MavenBuildWriter {
 				})));
 	}
 
+	private void writeDistributionManagement(IndentingWriter writer,
+			MavenDistributionManagement distributionManagement) {
+		if (!distributionManagement.isEmpty()) {
+			writeElement(writer, "distributionManagement", () -> {
+				writeSingleElement(writer, "downloadUrl", distributionManagement.getDownloadUrl());
+				this.writeDeploymentRepository(writer, "repository", distributionManagement.getRepository());
+				this.writeDeploymentRepository(writer, "snapshotRepository",
+						distributionManagement.getSnapshotRepository());
+				if (!distributionManagement.getRelocation().isEmpty()) {
+					Relocation relocation = distributionManagement.getRelocation();
+					writeElement(writer, "relocation", () -> {
+						writeSingleElement(writer, "groupId", relocation.getGroupId());
+						writeSingleElement(writer, "artifactId", relocation.getArtifactId());
+						writeSingleElement(writer, "version", relocation.getVersion());
+						writeSingleElement(writer, "message", relocation.getMessage());
+					});
+				}
+				if (!distributionManagement.getSite().isEmpty()) {
+					Site site = distributionManagement.getSite();
+					writeElementWithAttributes(writer, "site", () -> {
+						writeSingleElement(writer, "id", site.getId());
+						writeSingleElement(writer, "name", site.getName());
+						writeSingleElement(writer, "url", site.getUrl());
+					}, new Pair("child.site.url.inherit.append.path",
+							site.getChildSiteUrlInheritAppendPath().toString()));
+				}
+			});
+		}
+	}
+
+	private void writeDeploymentRepository(IndentingWriter writer, String name, DeploymentRepository repository) {
+		if (!repository.isEmpty()) {
+			writeElement(writer, name, () -> {
+				writeSingleElement(writer, "id", repository.getId());
+				writeSingleElement(writer, "name", repository.getName());
+				writeSingleElement(writer, "url", repository.getUrl());
+				writeSingleElement(writer, "layout", repository.getLayout());
+				writeSingleElement(writer, "uniqueVersion", repository.getUniqueVersion().toString());
+				this.writeRepositoryPolicy(writer, "releases", repository.getReleases());
+				this.writeRepositoryPolicy(writer, "snapshots", repository.getSnapshots());
+			});
+		}
+	}
+
+	private void writeRepositoryPolicy(IndentingWriter writer, String name, RepositoryPolicy policy) {
+		if (!policy.isEmpty()) {
+			writeElement(writer, name, () -> {
+				writeSingleElement(writer, "enabled", policy.isEnabled().toString());
+				writeSingleElement(writer, "updatePolicy", policy.getUpdatePolicy());
+				writeSingleElement(writer, "checksumPolicy", policy.getChecksumPolicy());
+			});
+		}
+	}
+
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {
 		if (text != null) {
 			writer.print(String.format("<%s>", name));
 			writer.print(text);
 			writer.println(String.format("</%s>", name));
 		}
+	}
+
+	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent, Pair... pair) {
+		writer.print(String.format("<%s", name));
+		Arrays.asList(pair).forEach((p) -> writer.print(String.format(" %s=\"%s\"", p.getKey(), p.getValue())));
+		writer.println(">");
+		writer.indented(withContent);
+		writer.println(String.format("</%s>", name));
 	}
 
 	private void writeElement(IndentingWriter writer, String name, Runnable withContent) {
@@ -428,6 +496,32 @@ public class MavenBuildWriter {
 		if (!collection.isEmpty()) {
 			collection.forEach((item) -> itemWriter.accept(writer, item));
 		}
+	}
+
+	/**
+	 * Simple key value class.
+	 *
+	 * @author Joachim Pasquali
+	 */
+	private static class Pair {
+
+		private final String key;
+
+		private final String value;
+
+		Pair(String key, String value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		String getKey() {
+			return this.key;
+		}
+
+		String getValue() {
+			return this.value;
+		}
+
 	}
 
 }
