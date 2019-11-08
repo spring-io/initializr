@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
  * @author Jafer Khan Shamshad
+ * @author Joachim Pasquali
  */
 class MavenBuildWriterTests {
 
@@ -655,6 +656,78 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().version("1.2.4.RELEASE");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
+	}
+
+	@Test
+	void pomWithDistributionManagement() {
+		MavenBuild build = new MavenBuild();
+
+		build.distributionManagement().downloadUrl("downloadUrl")
+				.relocation((relocation) -> relocation.groupId("groupId").artifactId("my.artifact").version("version")
+						.message("message"))
+				.repository((repository) -> repository.id("id").layout("layout").name("name")
+						.releases((releases) -> releases.checksumPolicy("checksumPolicy").updatePolicy("updatePolicy"))
+						.snapshots(
+								(snapshots) -> snapshots.checksumPolicy("checksumPolicy").updatePolicy("updatePolicy"))
+						.url("url"))
+				.site((site) -> site.id("id").name("name").url("url").childSiteUrlInheritAppendPath(Boolean.TRUE))
+				.snapshotRepository((snapshotRepository) -> snapshotRepository.id("id").layout("layout").name("name")
+						.releases((releases) -> releases.checksumPolicy("checksumPolicy").updatePolicy("updatePolicy"))
+						.snapshots(
+								(snapshots) -> snapshots.checksumPolicy("checksumPolicy").updatePolicy("updatePolicy"))
+						.url("url"));
+
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/distributionManagement/downloadUrl").isEqualTo("downloadUrl");
+			assertThat(pom).textAtPath("/project/distributionManagement/relocation/groupId").isEqualTo("groupId");
+			assertThat(pom).textAtPath("/project/distributionManagement/relocation/artifactId")
+					.isEqualTo("my.artifact");
+			assertThat(pom).textAtPath("/project/distributionManagement/relocation/version").isEqualTo("version");
+			assertThat(pom).textAtPath("/project/distributionManagement/relocation/message").isEqualTo("message");
+
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/id").isEqualTo("id");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/layout").isEqualTo("layout");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/name").isEqualTo("name");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/url").isEqualTo("url");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/releases/checksumPolicy")
+					.isEqualTo("checksumPolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/releases/updatePolicy")
+					.isEqualTo("updatePolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/snapshots/checksumPolicy")
+					.isEqualTo("checksumPolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/repository/snapshots/updatePolicy")
+					.isEqualTo("updatePolicy");
+
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/id").isEqualTo("id");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/layout").isEqualTo("layout");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/name").isEqualTo("name");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/url").isEqualTo("url");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/releases/checksumPolicy")
+					.isEqualTo("checksumPolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/releases/updatePolicy")
+					.isEqualTo("updatePolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/snapshots/checksumPolicy")
+					.isEqualTo("checksumPolicy");
+			assertThat(pom).textAtPath("/project/distributionManagement/snapshotRepository/snapshots/updatePolicy")
+					.isEqualTo("updatePolicy");
+
+			assertThat(pom).textAtPath("/project/distributionManagement/site/id").isEqualTo("id");
+			assertThat(pom).textAtPath("/project/distributionManagement/site/name").isEqualTo("name");
+			assertThat(pom).textAtPath("/project/distributionManagement/site/url").isEqualTo("url");
+			assertThat(pom).nodeAtPath("/project/distributionManagement/site").matches((node) -> node.getAttributes()
+					.getNamedItem("child.site.url.inherit.append.path").getTextContent().equals("true"));
+		});
+	}
+
+	@Test
+	void pomWithDistributionManagementWithNullAttributeValue() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().site((site) -> site.id("id").childSiteUrlInheritAppendPath(null));
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/distributionManagement/site/id").isEqualTo("id");
+			assertThat(pom).nodeAtPath("/project/distributionManagement/site")
+					.matches((node) -> node.getAttributes().getNamedItem("child.site.url.inherit.append.path") == null);
+		});
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
