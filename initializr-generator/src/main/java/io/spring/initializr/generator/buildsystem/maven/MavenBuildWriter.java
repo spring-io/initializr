@@ -168,6 +168,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
 			writeSingleElement(writer, "version", determineVersion(dependency.getVersion()));
 			writeSingleElement(writer, "scope", scopeForType(dependency.getScope()));
+			writeSingleElement(writer, "classifier", dependency.getClassifier());
 			if (isOptional(dependency)) {
 				writeSingleElement(writer, "optional", Boolean.toString(true));
 			}
