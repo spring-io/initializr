@@ -327,9 +327,9 @@ public class Dependency extends MetadataElement implements Describable {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	
+
 	public String getClassifier() {
-		return classifier;
+		return this.classifier;
 	}
 
 	public void setClassifier(String classifier) {
@@ -556,7 +556,7 @@ public class Dependency extends MetadataElement implements Describable {
 		}
 
 		public String getClassifier() {
-			return classifier;
+			return this.classifier;
 		}
 
 		public void setClassifier(String classifier) {
