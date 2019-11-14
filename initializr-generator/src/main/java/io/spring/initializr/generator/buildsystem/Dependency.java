@@ -42,6 +42,8 @@ public class Dependency {
 	private final DependencyScope scope;
 
 	private final String type;
+	
+	private final String classifier;
 
 	private final Set<Exclusion> exclusions;
 
@@ -50,6 +52,7 @@ public class Dependency {
 		this.artifactId = builder.artifactId;
 		this.version = builder.version;
 		this.scope = builder.scope;
+		this.classifier = builder.classifier;
 		this.type = builder.type;
 		this.exclusions = new LinkedHashSet<>(builder.exclusions);
 	}
@@ -115,6 +118,15 @@ public class Dependency {
 	public String getType() {
 		return this.type;
 	}
+	
+
+	/**
+	 * The classifier of this dependency. Can be {@code null}
+	 * @return the classifier or {@code null}
+	 */
+	public String getClassifier() {
+		return classifier;
+	}
 
 	/**
 	 * The {@link Exclusion exclusions} to apply.
@@ -139,6 +151,8 @@ public class Dependency {
 		private VersionReference version;
 
 		private DependencyScope scope;
+		
+		private String classifier;
 
 		private String type;
 
@@ -174,6 +188,11 @@ public class Dependency {
 			return self();
 		}
 
+		public B classifier(String classifier) {
+			this.classifier = classifier;
+			return self();
+		}
+		
 		public B exclusions(Exclusion... exclusions) {
 			this.exclusions = new LinkedHashSet<>(Arrays.asList(exclusions));
 			return self();
