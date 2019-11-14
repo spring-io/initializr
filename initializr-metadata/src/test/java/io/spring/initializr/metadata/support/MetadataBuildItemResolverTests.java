@@ -45,7 +45,7 @@ class MetadataBuildItemResolverTests {
 	void resoleDependencyWithMatchingEntry() {
 		InitializrMetadata metadata = new InitializrMetadata();
 		DependencyGroup group = DependencyGroup.create("test");
-		group.getContent().add(Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime"));
+		group.getContent().add(Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime", "classifier"));
 		metadata.getDependencies().getContent().add(group);
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
@@ -53,6 +53,7 @@ class MetadataBuildItemResolverTests {
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
 		assertThat(dependency.getArtifactId()).isEqualTo("test");
 		assertThat(dependency.getVersion()).hasToString("1.0.0");
+		assertThat(dependency.getClassifier()).hasToString("classifier");
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
 	}
 

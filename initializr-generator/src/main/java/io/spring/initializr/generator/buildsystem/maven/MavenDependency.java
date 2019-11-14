@@ -49,7 +49,8 @@ public class MavenDependency extends Dependency {
 	 * @return a new builder initialized with the same state as the {@code dependency}
 	 */
 	public static Builder from(Dependency dependency) {
-		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
+		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency)
+				.classifier(dependency.getClassifier());
 	}
 
 	/**

@@ -224,6 +224,20 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithClassifierDependency() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.dependencies().add("foo-bar", Dependency
+				.withCoordinates("org.springframework.boot", "spring-boot-foo-bar").classifier("myClassifier"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("spring-boot-foo-bar");
+			assertThat(dependency).textAtPath("classifier").isEqualTo("myClassifier");
+		});
+	}
+
+	@Test
 	void pomWithCompileOnlyDependency() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");

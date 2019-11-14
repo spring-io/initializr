@@ -46,7 +46,8 @@ public final class MetadataBuildItemMapper {
 				? VersionReference.ofValue(dependency.getVersion()) : null;
 		return io.spring.initializr.generator.buildsystem.Dependency
 				.withCoordinates(dependency.getGroupId(), dependency.getArtifactId()).version(versionReference)
-				.scope(toDependencyScope(dependency.getScope())).type(dependency.getType()).build();
+				.scope(toDependencyScope(dependency.getScope())).type(dependency.getType())
+				.classifier(dependency.getClassifier()).build();
 	}
 
 	private static DependencyScope toDependencyScope(String scope) {

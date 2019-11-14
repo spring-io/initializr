@@ -89,6 +89,8 @@ public class Dependency extends MetadataElement implements Describable {
 
 	private String type;
 
+	private String classifier;
+
 	private List<Mapping> mappings = new ArrayList<>();
 
 	private String scope = SCOPE_COMPILE;
@@ -143,6 +145,7 @@ public class Dependency extends MetadataElement implements Describable {
 		this.starter = dependency.starter;
 		this.keywords.addAll(dependency.keywords);
 		this.links.addAll(dependency.links);
+		this.classifier = dependency.classifier;
 	}
 
 	public void setScope(String scope) {
@@ -325,6 +328,14 @@ public class Dependency extends MetadataElement implements Describable {
 		this.version = version;
 	}
 
+	public String getClassifier() {
+		return this.classifier;
+	}
+
+	public void setClassifier(String classifier) {
+		this.classifier = classifier;
+	}
+
 	/**
 	 * Return the type, can be {@code null} to indicate that the default type should be
 	 * used (i.e. {@code jar}).
@@ -458,12 +469,18 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope) {
+		return withId(id, groupId, artifactId, version, scope, null);
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope,
+			String classifier) {
 		Dependency dependency = new Dependency();
 		dependency.setId(id);
 		dependency.groupId = groupId;
 		dependency.artifactId = artifactId;
 		dependency.version = version;
 		dependency.scope = (scope != null) ? scope : SCOPE_COMPILE;
+		dependency.classifier = classifier;
 		return dependency;
 	}
 
@@ -510,6 +527,8 @@ public class Dependency extends MetadataElement implements Describable {
 		 */
 		private String version;
 
+		private String classifier;
+
 		/**
 		 * The starter setting to use for the mapping or {@code null} to use the default.
 		 */
@@ -540,6 +559,14 @@ public class Dependency extends MetadataElement implements Describable {
 
 		public void setVersion(String version) {
 			this.version = version;
+		}
+
+		public String getClassifier() {
+			return this.classifier;
+		}
+
+		public void setClassifier(String classifier) {
+			this.classifier = classifier;
 		}
 
 		public Boolean getStarter() {

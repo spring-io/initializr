@@ -135,11 +135,13 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		String quoteStyle = determineQuoteStyle(dependency.getVersion());
 		String version = determineVersion(dependency.getVersion());
 		String type = dependency.getType();
+		String classifier = dependency.getClassifier();
 		boolean hasExclusions = !dependency.getExclusions().isEmpty();
 		writer.print(configurationForDependency(dependency));
 		writer.print((hasExclusions) ? "(" : " ");
 		writer.print(quoteStyle + dependency.getGroupId() + ":" + dependency.getArtifactId()
-				+ ((version != null) ? ":" + version : "") + ((type != null) ? "@" + type : "") + quoteStyle);
+				+ ((version != null) ? ":" + version : "") + ((classifier != null) ? ":" + classifier : "")
+				+ ((type != null) ? "@" + type : "") + quoteStyle);
 		if (hasExclusions) {
 			writer.println(") {");
 			writer.indented(
