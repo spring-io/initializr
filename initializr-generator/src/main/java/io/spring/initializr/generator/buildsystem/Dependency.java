@@ -42,7 +42,7 @@ public class Dependency {
 	private final DependencyScope scope;
 
 	private final String type;
-	
+
 	private final String classifier;
 
 	private final Set<Exclusion> exclusions;
@@ -118,14 +118,13 @@ public class Dependency {
 	public String getType() {
 		return this.type;
 	}
-	
 
 	/**
 	 * The classifier of this dependency. Can be {@code null}
 	 * @return the classifier or {@code null}
 	 */
 	public String getClassifier() {
-		return classifier;
+		return this.classifier;
 	}
 
 	/**
@@ -151,7 +150,7 @@ public class Dependency {
 		private VersionReference version;
 
 		private DependencyScope scope;
-		
+
 		private String classifier;
 
 		private String type;
@@ -192,7 +191,7 @@ public class Dependency {
 			this.classifier = classifier;
 			return self();
 		}
-		
+
 		public B exclusions(Exclusion... exclusions) {
 			this.exclusions = new LinkedHashSet<>(Arrays.asList(exclusions));
 			return self();
