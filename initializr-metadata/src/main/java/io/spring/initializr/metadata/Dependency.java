@@ -469,12 +469,18 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope) {
+		return withId(id, groupId, artifactId, version, scope, null);
+	}
+
+	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope,
+			String classifier) {
 		Dependency dependency = new Dependency();
 		dependency.setId(id);
 		dependency.groupId = groupId;
 		dependency.artifactId = artifactId;
 		dependency.version = version;
 		dependency.scope = (scope != null) ? scope : SCOPE_COMPILE;
+		dependency.classifier = classifier;
 		return dependency;
 	}
 
