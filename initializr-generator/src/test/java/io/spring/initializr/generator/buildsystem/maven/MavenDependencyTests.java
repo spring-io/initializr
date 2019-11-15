@@ -33,7 +33,8 @@ class MavenDependencyTests {
 	@Test
 	void initializeFromStandardDependency() {
 		Dependency original = Dependency.withCoordinates("com.example", "test")
-				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME).type("zip").build();
+				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME).type("zip")
+				.classifier("classifier").build();
 		MavenDependency dependency = MavenDependency.from(original).build();
 		assertThat(original).isNotSameAs(dependency);
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
@@ -41,6 +42,7 @@ class MavenDependencyTests {
 		assertThat(dependency.getVersion()).isEqualTo(VersionReference.ofValue("1.0.0"));
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
 		assertThat(dependency.getType()).isEqualTo("zip");
+		assertThat(dependency.getClassifier()).isEqualTo("classifier");
 		assertThat(dependency.isOptional()).isFalse();
 	}
 
@@ -48,7 +50,7 @@ class MavenDependencyTests {
 	void initializeFromMavenDependency() {
 		Dependency original = MavenDependency.withCoordinates("com.example", "test")
 				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME).type("zip").optional(true)
-				.build();
+				.classifier("classifier").build();
 		MavenDependency dependency = MavenDependency.from(original).build();
 		assertThat(original).isNotSameAs(dependency);
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
@@ -56,7 +58,18 @@ class MavenDependencyTests {
 		assertThat(dependency.getVersion()).isEqualTo(VersionReference.ofValue("1.0.0"));
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
 		assertThat(dependency.getType()).isEqualTo("zip");
+		assertThat(dependency.getClassifier()).isEqualTo("classifier");
 		assertThat(dependency.isOptional()).isTrue();
+	}
+
+	@Test
+	void cloneUsingFromMethodOfMavenDependency() {
+		Dependency original = Dependency.withCoordinates("com.example", "test").classifier("classifier").build();
+		Dependency dependency = MavenDependency.from(original).build();
+		assertThat(original).isNotSameAs(dependency);
+		assertThat(dependency.getGroupId()).isEqualTo("com.example");
+		assertThat(dependency.getArtifactId()).isEqualTo("test");
+		assertThat(dependency.getClassifier()).isEqualTo("classifier");
 	}
 
 }

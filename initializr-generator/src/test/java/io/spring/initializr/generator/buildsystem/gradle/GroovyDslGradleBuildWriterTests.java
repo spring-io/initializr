@@ -306,6 +306,16 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithClassifierDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("root",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter").classifier("classifier"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    implementation 'org.springframework.boot:spring-boot-starter:classifier'", "}");
+	}
+
+	@Test
 	void gradleBuildWithNoScopeDependencyDefaultsToCompile() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
@@ -395,6 +405,16 @@ class GroovyDslGradleBuildWriterTests {
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter@tar.gz'", "}");
+	}
+
+	@Test
+	void gradleBuildWithNonNullArtifactTypeAndClassifierDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
+				.scope(DependencyScope.COMPILE).type("tar.gz").classifier("classifier"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {",
+				"    implementation 'org.springframework.boot:spring-boot-starter:classifier@tar.gz'", "}");
 	}
 
 	@Test
