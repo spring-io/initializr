@@ -397,7 +397,7 @@ public class MavenDistributionManagement {
 		}
 
 		public Boolean getChildSiteUrlInheritAppendPath() {
-			return Optional.ofNullable(this.childSiteUrlInheritAppendPath).orElse(Boolean.TRUE);
+			return this.childSiteUrlInheritAppendPath;
 		}
 
 	}

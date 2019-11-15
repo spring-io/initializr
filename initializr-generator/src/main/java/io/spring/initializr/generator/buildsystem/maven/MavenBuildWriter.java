@@ -19,7 +19,9 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -435,12 +437,14 @@ public class MavenBuildWriter {
 				}
 				if (!distributionManagement.getSite().isEmpty()) {
 					Site site = distributionManagement.getSite();
+					Map<String, String> attributeMap = new HashMap<>();
+					addIfNotNull(attributeMap, "child.site.url.inherit.append.path",
+							site.getChildSiteUrlInheritAppendPath());
 					writeElementWithAttributes(writer, "site", () -> {
 						writeSingleElement(writer, "id", site.getId());
 						writeSingleElement(writer, "name", site.getName());
 						writeSingleElement(writer, "url", site.getUrl());
-					}, new Pair("child.site.url.inherit.append.path",
-							site.getChildSiteUrlInheritAppendPath().toString()));
+					}, attributeMap);
 				}
 			});
 		}
@@ -470,6 +474,12 @@ public class MavenBuildWriter {
 		}
 	}
 
+	private void addIfNotNull(Map<String, String> attributeMap, String name, Object value) {
+		if (value != null) {
+			attributeMap.put(name, value.toString());
+		}
+	}
+
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {
 		if (text != null) {
 			writer.print(String.format("<%s>", name));
@@ -478,9 +488,11 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent, Pair... pair) {
+	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent,
+			Map<String, String> attributeMap) {
 		writer.print(String.format("<%s", name));
-		Arrays.asList(pair).forEach((p) -> writer.print(String.format(" %s=\"%s\"", p.getKey(), p.getValue())));
+		attributeMap.entrySet()
+				.forEach((entry) -> writer.print(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue())));
 		writer.println(">");
 		writer.indented(withContent);
 		writer.println(String.format("</%s>", name));
@@ -497,32 +509,6 @@ public class MavenBuildWriter {
 		if (!collection.isEmpty()) {
 			collection.forEach((item) -> itemWriter.accept(writer, item));
 		}
-	}
-
-	/**
-	 * Simple key value class.
-	 *
-	 * @author Joachim Pasquali
-	 */
-	private static class Pair {
-
-		private final String key;
-
-		private final String value;
-
-		Pair(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		String getKey() {
-			return this.key;
-		}
-
-		String getValue() {
-			return this.value;
-		}
-
 	}
 
 }

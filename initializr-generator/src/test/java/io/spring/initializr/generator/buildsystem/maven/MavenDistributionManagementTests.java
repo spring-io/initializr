@@ -106,9 +106,9 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void testSiteWithDefaultAttribute() {
+	void testSiteWithNullAttribute() {
 		MavenDistributionManagement result = builder().site((site) -> site.id("id")).build();
-		assertThat(result.getSite().getChildSiteUrlInheritAppendPath()).isTrue();
+		assertThat(result.getSite().getChildSiteUrlInheritAppendPath()).isNull();
 	}
 
 	private MavenDistributionManagement.Builder builder() {
