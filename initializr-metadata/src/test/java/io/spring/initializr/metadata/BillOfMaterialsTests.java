@@ -124,6 +124,15 @@ class BillOfMaterialsTests {
 	}
 
 	@Test
+	void noRangeAvailableSafe() {
+		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
+		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
+		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
+		bom.validate();
+		assertThat(bom.resolveSafe(Version.parse("1.4.1.RELEASE"))).isEmpty();
+	}
+
+	@Test
 	void resolveRangeWithVariablePatch() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		bom.getMappings().add(Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));

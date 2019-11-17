@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
+import io.spring.initializr.web.controller.InvalidMetadataRequestException;
 
 import org.springframework.cache.annotation.Cacheable;
 
@@ -57,8 +58,12 @@ public class DefaultDependencyMetadataProvider implements DependencyMetadataProv
 		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
 		for (Dependency dependency : dependencies.values()) {
 			if (dependency.getBom() != null) {
-				boms.put(dependency.getBom(),
-						metadata.getConfiguration().getEnv().getBoms().get(dependency.getBom()).resolve(bootVersion));
+				BillOfMaterials bom = metadata.getConfiguration().getEnv().getBoms().get(dependency.getBom())
+						.resolveSafe(bootVersion)
+						.orElseThrow(() -> new InvalidMetadataRequestException(String.format(
+								"Dependency '%s' points to Bom '%s' that is not compatible with requested platform version '%s'.",
+								dependency.getId(), dependency.getBom(), bootVersion)));
+				boms.put(dependency.getBom(), bom);
 			}
 		}
 		// Each resolved bom may require additional repositories

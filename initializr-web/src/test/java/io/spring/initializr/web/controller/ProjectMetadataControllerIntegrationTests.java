@@ -61,6 +61,18 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	}
 
 	@Test
+	void metadataWithInvalidBootVersion() {
+		try {
+			execute("/dependencies?bootVersion=1.5.17.RELEASE", String.class, "application/vnd.initializr.v2.1+json",
+					"application/json");
+		}
+		catch (HttpClientErrorException ex) {
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			assertThat(ex.getResponseBodyAsString().contains("1.5.17.RELEASE"));
+		}
+	}
+
+	@Test
 	void metadataWithCurrentAcceptHeader() {
 		getRequests().setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
 				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]");

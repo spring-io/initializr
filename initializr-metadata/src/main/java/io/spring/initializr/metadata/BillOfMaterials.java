@@ -19,6 +19,7 @@ package io.spring.initializr.metadata;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -185,10 +186,25 @@ public class BillOfMaterials {
 	 * additional BOMs to use, if any.
 	 * @param bootVersion the Spring Boot version
 	 * @return the bill of materials
+	 * @throws IllegalStateException if bom has mappings, none of which match the
+	 * requested version
 	 */
 	public BillOfMaterials resolve(Version bootVersion) {
+		return this.resolveSafe(bootVersion).orElseThrow(() -> new IllegalStateException(
+				"No suitable mapping was found for " + this + " and version " + bootVersion));
+	}
+
+	/**
+	 * Resolve this instance according to the specified Spring Boot {@link Version}.
+	 * Return a {@link BillOfMaterials} instance that holds the version, repositories and
+	 * additional BOMs to use, if any.
+	 * @param bootVersion the Spring Boot version
+	 * @return the bill of materials or empty if bom has mappings, none of which match the
+	 * requested version
+	 */
+	public Optional<BillOfMaterials> resolveSafe(Version bootVersion) {
 		if (this.mappings.isEmpty()) {
-			return this;
+			return Optional.of(this);
 		}
 
 		for (Mapping mapping : this.mappings) {
@@ -202,10 +218,10 @@ public class BillOfMaterials {
 						.addAll(!mapping.repositories.isEmpty() ? mapping.repositories : this.repositories);
 				resolvedBom.additionalBoms
 						.addAll(!mapping.additionalBoms.isEmpty() ? mapping.additionalBoms : this.additionalBoms);
-				return resolvedBom;
+				return Optional.of(resolvedBom);
 			}
 		}
-		throw new IllegalStateException("No suitable mapping was found for " + this + " and version " + bootVersion);
+		return Optional.empty();
 	}
 
 	@Override
