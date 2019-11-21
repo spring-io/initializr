@@ -618,7 +618,17 @@ class MavenBuildWriterTests {
 			assertThat(pom).nodeAtPath("/project/distributionManagement/site").matches((node) -> node.getAttributes()
 					.getNamedItem("child.site.url.inherit.append.path").getTextContent().equals("true"));
 		});
+	}
 
+	@Test
+	void pomWithDistributionManagementWithNullAttributeValue() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().site((site) -> site.id("id").childSiteUrlInheritAppendPath(null));
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/distributionManagement/site/id").isEqualTo("id");
+			assertThat(pom).nodeAtPath("/project/distributionManagement/site")
+					.matches((node) -> node.getAttributes().getNamedItem("child.site.url.inherit.append.path") == null);
+		});
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {

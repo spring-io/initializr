@@ -18,8 +18,8 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -437,14 +437,12 @@ public class MavenBuildWriter {
 				}
 				if (!distributionManagement.getSite().isEmpty()) {
 					Site site = distributionManagement.getSite();
-					Map<String, String> attributeMap = new HashMap<>();
-					addIfNotNull(attributeMap, "child.site.url.inherit.append.path",
-							site.getChildSiteUrlInheritAppendPath());
 					writeElementWithAttributes(writer, "site", () -> {
 						writeSingleElement(writer, "id", site.getId());
 						writeSingleElement(writer, "name", site.getName());
 						writeSingleElement(writer, "url", site.getUrl());
-					}, attributeMap);
+					}, Collections.singletonMap("child.site.url.inherit.append.path",
+							site.getChildSiteUrlInheritAppendPath()));
 				}
 			});
 		}
@@ -474,12 +472,6 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void addIfNotNull(Map<String, String> attributeMap, String name, Object value) {
-		if (value != null) {
-			attributeMap.put(name, value.toString());
-		}
-	}
-
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {
 		if (text != null) {
 			writer.print(String.format("<%s>", name));
@@ -489,10 +481,10 @@ public class MavenBuildWriter {
 	}
 
 	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent,
-			Map<String, String> attributeMap) {
+			Map<String, Object> attributeMap) {
 		writer.print(String.format("<%s", name));
-		attributeMap.entrySet()
-				.forEach((entry) -> writer.print(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue())));
+		attributeMap.entrySet().stream().filter((entry) -> entry.getValue() != null).forEach(
+				(entry) -> writer.print(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue().toString())));
 		writer.println(">");
 		writer.indented(withContent);
 		writer.println(String.format("</%s>", name));
