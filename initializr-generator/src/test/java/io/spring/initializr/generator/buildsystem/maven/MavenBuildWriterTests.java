@@ -552,6 +552,14 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithFinalName() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").finalName("theArtifact.jar");
+		generatePom(build,
+				(pom) -> assertThat(pom).textAtPath("/project/build/finalName").isEqualTo("theArtifact.jar"));
+	}
+
+	@Test
 	void pomWithCustomVersion() {
 		MavenBuild build = new MavenBuild();
 		build.settings().version("1.2.4.RELEASE");
