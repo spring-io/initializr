@@ -51,6 +51,8 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final String testSourceDirectory;
 
+	private final String finalName;
+
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
 		this.parent = builder.parent;
@@ -62,6 +64,7 @@ public class MavenBuildSettings extends BuildSettings {
 		this.scm = builder.scm.build();
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
+		this.finalName = builder.finalName;
 	}
 
 	/**
@@ -141,6 +144,14 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the final name of the compiled artifact.
+	 * @return the final name
+	 */
+	public String getFinalName() {
+		return this.finalName;
+	}
+
+	/**
 	 * Builder for a Maven dependency.
 	 *
 	 * @see MavenDependency#withCoordinates(String, String)
@@ -164,6 +175,8 @@ public class MavenBuildSettings extends BuildSettings {
 		private String sourceDirectory;
 
 		private String testSourceDirectory;
+
+		private String finalName;
 
 		public Builder() {
 		}
@@ -272,6 +285,16 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
+			return self();
+		}
+
+		/**
+		 * Set the finalName of the artifact as a child tag in the &lt;build&gt; tag.
+		 * @param finalName the final name of the artifact after compiling
+		 * @return this for method chaining
+		 */
+		public Builder finalName(String finalName) {
+			this.finalName = finalName;
 			return self();
 		}
 
