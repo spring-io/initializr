@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Joachim Pasquali
  */
-public class MavenDistributionManagementTests {
+class MavenDistributionManagementTests {
 
 	private static final String TEST_URL = "testURL";
 
 	@Test
-	void emptyTest() {
+	void emptyDistributionManagement() {
 		MavenDistributionManagement result = builder().build();
 		assertThat(result.isEmpty()).isTrue();
 		assertThat(result.getRelocation().isEmpty()).isTrue();
@@ -40,13 +40,13 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void downloadUrlTest() {
+	void addDownloadUrl() {
 		MavenDistributionManagement result = builder().downloadUrl(TEST_URL).build();
 		assertThat(result.getDownloadUrl()).isEqualTo(TEST_URL);
 	}
 
 	@Test
-	void relocationTest() {
+	void addRelocation() {
 		MavenDistributionManagement result = builder().relocation((relocation) -> relocation.artifactId("artifactId")
 				.groupId("groupId").version("version").message("message")).build();
 		assertThat(result.getRelocation().getArtifactId()).isEqualTo("artifactId");
@@ -56,7 +56,7 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void repositoryTest() {
+	void addRepository() {
 		MavenDistributionManagement result = builder().repository((repository) -> repository.id("id").layout("layout")
 				.name("name")
 				.releases((releases) -> releases.checksumPolicy("checksumPolicy").enabled(Boolean.FALSE)
@@ -79,7 +79,7 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void snapshotRepoTest() {
+	void addSnapshotRepository() {
 		MavenDistributionManagement result = builder().snapshotRepository((repository) -> repository.id("id")
 				.layout("layout").name("name").releases((releases) -> releases.checksumPolicy("checksumPolicy")
 						.enabled(Boolean.TRUE).updatePolicy("updatePolicy"))
@@ -95,7 +95,7 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void testSite() {
+	void addSite() {
 		MavenDistributionManagement result = builder()
 				.site((site) -> site.id("id").name("name").url("url").childSiteUrlInheritAppendPath(Boolean.FALSE))
 				.build();
@@ -106,7 +106,7 @@ public class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void testSiteWithNullAttribute() {
+	void addSiteWithNullAttribute() {
 		MavenDistributionManagement result = builder().site((site) -> site.id("id")).build();
 		assertThat(result.getSite().getChildSiteUrlInheritAppendPath()).isNull();
 	}

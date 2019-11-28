@@ -64,7 +64,6 @@ public class MavenBuildWriter {
 	 */
 	public void writeTo(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
-		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
 		writeProject(writer, () -> {
 			writeParent(writer, build);
 			writeProjectCoordinates(writer, settings);
@@ -75,7 +74,7 @@ public class MavenBuildWriter {
 			writeDependencyManagement(writer, build);
 			writeBuild(writer, build);
 			writeRepositories(writer, build);
-			writeDistributionManagement(writer, distributionManagement);
+			writeDistributionManagement(writer, build);
 		});
 	}
 
@@ -418,8 +417,8 @@ public class MavenBuildWriter {
 				})));
 	}
 
-	private void writeDistributionManagement(IndentingWriter writer,
-			MavenDistributionManagement distributionManagement) {
+	private void writeDistributionManagement(IndentingWriter writer, MavenBuild build) {
+		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
 		if (!distributionManagement.isEmpty()) {
 			writeElement(writer, "distributionManagement", () -> {
 				writeSingleElement(writer, "downloadUrl", distributionManagement.getDownloadUrl());

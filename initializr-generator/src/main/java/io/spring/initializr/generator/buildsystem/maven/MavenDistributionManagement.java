@@ -20,7 +20,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * Maven DistributionManagement.
+ * Maven DistributionManagement as defined in the Maven XSD: <a href=
+ * "https://maven.apache.org/xsd/maven-4.0.0.xsd">https://maven.apache.org/xsd/maven-4.0.0.xsd</a>.
+ * For further documentation see
+ * <a href="https://maven.apache.org/pom.html#Distribution_Management">
+ * https://maven.apache.org/pom.html#Distribution_Management </a>
  *
  * @author Joachim Pasquali
  */
