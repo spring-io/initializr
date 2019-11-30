@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -136,9 +137,28 @@ public class MavenBuildWriter {
 		if (settings.getDevelopers().isEmpty()) {
 			return;
 		}
+		writeElement(writer, "developers",
+				() -> writeCollection(writer, settings.getDevelopers(), this::writeDeveloper));
+	}
 
-		writeElement(writer, "developers", () -> {
-
+	private void writeDeveloper(IndentingWriter writer, MavenDeveloper developer) {
+		writeElement(writer, "developer", () -> {
+			writeSingleElement(writer, "id", developer.getId());
+			writeSingleElement(writer, "name", developer.getName());
+			writeSingleElement(writer, "email", developer.getEmail());
+			writeSingleElement(writer, "url", developer.getUrl());
+			writeSingleElement(writer, "organization", developer.getOrganization());
+			writeSingleElement(writer, "organizationUrl", developer.getOrganizationUrl());
+			List<String> roles = developer.getRoles();
+			if (!roles.isEmpty()) {
+				writeElement(writer, "roles", () -> roles.forEach((role) -> writeSingleElement(writer, "role", role)));
+			}
+			writeSingleElement(writer, "timezone", developer.getTimezone());
+			Map<String, String> properties = developer.getProperties();
+			if (!properties.isEmpty()) {
+				writeElement(writer, "properties",
+						() -> properties.forEach((key, value) -> writeSingleElement(writer, key, value)));
+			}
 		});
 	}
 
@@ -146,9 +166,15 @@ public class MavenBuildWriter {
 		if (settings.getLicenses().isEmpty()) {
 			return;
 		}
+		writeElement(writer, "licenses", () -> writeCollection(writer, settings.getLicenses(), this::writeLicense));
+	}
 
-		writeElement(writer, "licenses", () -> {
-
+	private void writeLicense(IndentingWriter writer, MavenLicense license) {
+		writeElement(writer, "license", () -> {
+			writeSingleElement(writer, "name", license.getName());
+			writeSingleElement(writer, "url", license.getUrl());
+			writeSingleElement(writer, "distribution", license.getDistribution());
+			writeSingleElement(writer, "comments", license.getComments());
 		});
 	}
 

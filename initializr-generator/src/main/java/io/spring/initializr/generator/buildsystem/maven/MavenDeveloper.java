@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +54,9 @@ public class MavenDeveloper {
 		this.url = builder.url;
 		this.organization = builder.organization;
 		this.organizationUrl = builder.organizationUrl;
-		this.roles = builder.roles;
+		this.roles = Collections.unmodifiableList(new ArrayList<>(builder.roles));
 		this.timezone = builder.timezone;
-		this.properties = builder.properties;
+		this.properties = Collections.unmodifiableMap(new LinkedHashMap<>(builder.properties));
 	}
 
 	/**

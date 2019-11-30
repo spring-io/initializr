@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Jafer Khan Shamshad
  */
 class MavenBuildWriterTests {
 
@@ -104,6 +106,121 @@ class MavenBuildWriterTests {
 			assertThat(pom).textAtPath("/project/properties/version.property").isEqualTo("1.2.3");
 			assertThat(pom).textAtPath("/project/properties/internal.property").isEqualTo("4.5.6");
 			assertThat(pom).textAtPath("/project/properties/external.property").isEqualTo("7.8.9");
+		});
+	}
+
+	@Test
+	void pomWithNoLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/licenses")).isNull());
+	}
+
+	@Test
+	void pomWithLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.licenses(Collections.singletonList(new MavenLicense.Builder().name("Apache License, Version 2.0")
+						.url("https://www.apache.org/licenses/LICENSE-2.0").distribution("repo")
+						.comments("A business-friendly OSS license").build()));
+		generatePom(build, (pom) -> {
+			NodeAssert licenses = pom.nodeAtPath("/project/licenses");
+			assertThat(licenses).isNotNull();
+			NodeAssert license = licenses.nodeAtPath("license");
+			assertThat(license).isNotNull();
+			assertThat(license).textAtPath("name").isEqualTo("Apache License, Version 2.0");
+			assertThat(license).textAtPath("url").isEqualTo("https://www.apache.org/licenses/LICENSE-2.0");
+			assertThat(license).textAtPath("distribution").isEqualTo("repo");
+			assertThat(license).textAtPath("comments").isEqualTo("A business-friendly OSS license");
+		});
+	}
+
+	@Test
+	void pomWithNoDeveloper() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/developers")).isNull());
+	}
+
+	@Test
+	void pomWithDeveloper() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
+						.name("Jafer Khan Shamshad").email("jaferkhan@example.com")
+						.url("http://www.example.com/jaferkhan").organization("ACME")
+						.organizationUrl("http://www.example.com").timezone("Asia/Karachi").build()))
+				.build();
+		generatePom(build, (pom) -> {
+			NodeAssert developers = pom.nodeAtPath("/project/developers");
+			assertThat(developers).isNotNull();
+			NodeAssert developer = developers.nodeAtPath("developer");
+			assertThat(developer).isNotNull();
+			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
+			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
+			assertThat(developer).textAtPath("email").isEqualTo("jaferkhan@example.com");
+			assertThat(developer).textAtPath("url").isEqualTo("http://www.example.com/jaferkhan");
+			assertThat(developer).textAtPath("organization").isEqualTo("ACME");
+			assertThat(developer).textAtPath("organizationUrl").isEqualTo("http://www.example.com");
+			assertThat(developer.nodeAtPath("roles")).isNull();
+			assertThat(developer).textAtPath("timezone").isEqualTo("Asia/Karachi");
+			assertThat(developer.nodeAtPath("properties")).isNull();
+		});
+	}
+
+	@Test
+	void pomWithDeveloperWithRoles() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
+						.name("Jafer Khan Shamshad").role("developer").role("tester").build()))
+				.build();
+		generatePom(build, (pom) -> {
+			NodeAssert developers = pom.nodeAtPath("/project/developers");
+			assertThat(developers).isNotNull();
+			NodeAssert developer = developers.nodeAtPath("developer");
+			assertThat(developer).isNotNull();
+			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
+			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
+			assertThat(developer).textAtPath("email").isNullOrEmpty();
+			assertThat(developer).textAtPath("url").isNullOrEmpty();
+			assertThat(developer).textAtPath("organization").isNullOrEmpty();
+			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
+			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
+			assertThat(developer.nodeAtPath("properties")).isNull();
+			NodeAssert roles = developer.nodeAtPath("roles");
+			assertThat(roles).isNotNull();
+			roles.nodesAtPath("role").hasSize(2);
+			assertThat(roles).textAtPath("role[1]").isEqualTo("developer");
+			assertThat(roles).textAtPath("role[2]").isEqualTo("tester");
+		});
+	}
+
+	@Test
+	void pomWithDeveloperWithProperties() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
+						.name("Jafer Khan Shamshad").property("hometown", "Mardan").property("ethnicity", "Pukhtun")
+						.property("religion", "Islam").build()))
+				.build();
+		generatePom(build, (pom) -> {
+			NodeAssert developers = pom.nodeAtPath("/project/developers");
+			assertThat(developers).isNotNull();
+			NodeAssert developer = developers.nodeAtPath("developer");
+			assertThat(developer).isNotNull();
+			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
+			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
+			assertThat(developer).textAtPath("email").isNullOrEmpty();
+			assertThat(developer).textAtPath("url").isNullOrEmpty();
+			assertThat(developer).textAtPath("organization").isNullOrEmpty();
+			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
+			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
+			NodeAssert properties = developer.nodeAtPath("properties");
+			assertThat(properties).isNotNull();
+			assertThat(properties).textAtPath("hometown").isEqualTo("Mardan");
+			assertThat(properties).textAtPath("ethnicity").isEqualTo("Pukhtun");
+			assertThat(properties).textAtPath("religion").isEqualTo("Islam");
 		});
 	}
 
