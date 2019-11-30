@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings;
@@ -25,6 +27,7 @@ import io.spring.initializr.generator.packaging.Packaging;
  * Maven {@link BuildSettings}.
  *
  * @author Stephane Nicoll
+ * @author Jafer Khan Shamshad
  */
 public class MavenBuildSettings extends BuildSettings {
 
@@ -50,8 +53,8 @@ public class MavenBuildSettings extends BuildSettings {
 		this.packaging = builder.packaging;
 		this.name = builder.name;
 		this.description = builder.description;
-		this.licenses = builder.licenses;
-		this.developers = builder.developers;
+		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
+		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
 	}
@@ -139,9 +142,9 @@ public class MavenBuildSettings extends BuildSettings {
 
 		private String description;
 
-		private List<MavenLicense> licenses;
+		private List<MavenLicense> licenses = new ArrayList<>();
 
-		private List<MavenDeveloper> developers;
+		private List<MavenDeveloper> developers = new ArrayList<>();
 
 		private String sourceDirectory;
 

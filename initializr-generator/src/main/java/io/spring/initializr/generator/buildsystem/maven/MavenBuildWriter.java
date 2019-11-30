@@ -46,6 +46,7 @@ import io.spring.initializr.generator.version.VersionReference;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Jafer Khan Shamshad
  */
 public class MavenBuildWriter {
 
@@ -132,18 +133,22 @@ public class MavenBuildWriter {
 	}
 
 	private void writeDevelopers(IndentingWriter writer, MavenBuildSettings settings) {
+		if (settings.getDevelopers().isEmpty()) {
+			return;
+		}
+
 		writeElement(writer, "developers", () -> {
-			if (settings.getDevelopers() == null) {
-				writer.println("<developer />");
-			}
+
 		});
 	}
 
 	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
+		if (settings.getLicenses().isEmpty()) {
+			return;
+		}
+
 		writeElement(writer, "licenses", () -> {
-			if (settings.getLicenses() == null) {
-				writer.println("<license />");
-			}
+
 		});
 	}
 

@@ -14,12 +14,6 @@
 	<packaging>war</packaging>
 	<name>demo</name>
 	<description>Demo project for Spring Boot</description>
-	<licenses>
-		<license />
-	</licenses>
-	<developers>
-		<developer />
-	</developers>
 
 	<properties>
 		<java.version>1.8</java.version>
