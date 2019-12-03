@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.entry;
  *
  * @author Jafer Khan Shamshad
  */
-public class MavenDeveloperTests {
+class MavenDeveloperTests {
 
 	@Test
 	void developerWithIdOnly() {

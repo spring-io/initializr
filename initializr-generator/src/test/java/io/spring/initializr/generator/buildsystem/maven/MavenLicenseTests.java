@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Jafer Khan Shamshad
  */
-public class MavenLicenseTests {
+class MavenLicenseTests {
 
 	@Test
 	void licenseWithNameOnly() {
