@@ -10,7 +10,7 @@ sent to the service. A good structure for a user agent is `clientId/clientVersio
 
 
 
-== Content
+== The Content
 Any third party client can retrieve the capabilities of the service by issuing a
 `GET` on the root URL using the following `Accept` header:
 `application/vnd.initializr.v2.1+json`. Please note that the metadata may evolve in a
