@@ -405,12 +405,6 @@ public class MavenBuildWriter {
 				.collect(Collectors.toList());
 	}
 
-	private void writeRepositories(IndentingWriter writer, String containerName, String childName,
-			List<MavenRepository> repositories) {
-		writeElement(writer, containerName,
-				() -> repositories.forEach((repository) -> writeRepository(writer, repository, childName)));
-	}
-
 	private void writeRepository(IndentingWriter writer, MavenRepository repository) {
 		writeRepository(writer, repository, "repository");
 	}
