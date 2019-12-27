@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.project.diff;
-
-import io.spring.initializr.generator.project.ProjectDescription;
+package io.spring.initializr.generator.project;
 
 /**
  * A default {@link ProjectDescriptionDiffFactory} implementation that creates default
@@ -24,10 +22,10 @@ import io.spring.initializr.generator.project.ProjectDescription;
  *
  * @author Chris Bono
  */
-public class DefaultProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory<ProjectDescription> {
+public class DefaultProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory {
 
 	@Override
-	public ProjectDescriptionDiff create(final ProjectDescription description) {
+	public ProjectDescriptionDiff create(ProjectDescription description) {
 		return new ProjectDescriptionDiff(description);
 	}
 

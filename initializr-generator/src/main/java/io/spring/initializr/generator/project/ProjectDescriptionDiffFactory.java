@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.web.controller.custom;
-
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiff;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
+package io.spring.initializr.generator.project;
 
 /**
- * A custom {@link ProjectDescriptionDiffFactory} implementation that creates custom
- * {@link CustomProjectDescriptionDiff} instances.
+ * A factory for {@link ProjectDescriptionDiff}.
  *
- * @author cbono
+ * @author Chris Bono
  */
-public class CustomProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory<CustomProjectDescription> {
+public interface ProjectDescriptionDiffFactory {
 
-	@Override
-	public ProjectDescriptionDiff create(final CustomProjectDescription description) {
-		return new CustomProjectDescriptionDiff(description);
-	}
+	/**
+	 * Create a {@link ProjectDescriptionDiff} for the specified
+	 * {@link ProjectDescription}. Any change on the specified {@code description} is
+	 * tracked by the returned instance.
+	 * @param description the project description to use as the source of the diff
+	 * @return a diff instance using the current state of the specified description as its
+	 * source
+	 */
+	ProjectDescriptionDiff create(ProjectDescription description);
 
 }

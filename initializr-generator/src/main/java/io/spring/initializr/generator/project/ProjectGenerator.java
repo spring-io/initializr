@@ -21,10 +21,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import io.spring.initializr.generator.project.diff.DefaultProjectDescriptionDiffFactory;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiff;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportSelector;
@@ -123,20 +119,13 @@ public class ProjectGenerator {
 
 	private Supplier<ProjectDescription> resolve(ProjectDescription description, ProjectGenerationContext context) {
 		return () -> {
-
 			if (description instanceof MutableProjectDescription) {
-
-				final MutableProjectDescription mutableProjectDesc = (MutableProjectDescription) description;
-
-				// Find the diff factory and use it to create and register a diff bean
-				final ProjectDescriptionDiffFactory diffFactory = context
-						.getBeanProvider(ProjectDescriptionDiffFactory.class)
-						.getIfAvailable(() -> new DefaultProjectDescriptionDiffFactory());
-				final ProjectDescriptionDiff diff = diffFactory.create(mutableProjectDesc);
-				context.registerBean(ProjectDescriptionDiff.class, () -> diff);
-
+				MutableProjectDescription mutableDescription = (MutableProjectDescription) description;
+				ProjectDescriptionDiffFactory diffFactory = context.getBeanProvider(ProjectDescriptionDiffFactory.class)
+						.getIfAvailable(DefaultProjectDescriptionDiffFactory::new);
+				context.registerBean(ProjectDescriptionDiff.class, () -> diffFactory.create(mutableDescription));
 				context.getBeanProvider(ProjectDescriptionCustomizer.class).orderedStream()
-						.forEach((customizer) -> customizer.customize(mutableProjectDesc));
+						.forEach((customizer) -> customizer.customize(mutableDescription));
 			}
 			return description;
 		};

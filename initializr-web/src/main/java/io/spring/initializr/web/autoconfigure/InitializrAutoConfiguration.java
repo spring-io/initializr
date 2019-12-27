@@ -28,8 +28,6 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
-import io.spring.initializr.generator.project.diff.DefaultProjectDescriptionDiffFactory;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
@@ -129,12 +127,6 @@ public class InitializrAutoConfiguration {
 	@ConditionalOnMissingBean
 	public DependencyMetadataProvider dependencyMetadataProvider() {
 		return new DefaultDependencyMetadataProvider();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	ProjectDescriptionDiffFactory projectDescriptionDiffFactory() {
-		return new DefaultProjectDescriptionDiffFactory();
 	}
 
 	/**

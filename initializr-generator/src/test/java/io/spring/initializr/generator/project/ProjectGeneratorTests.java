@@ -20,9 +20,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import io.spring.initializr.generator.project.diff.DefaultProjectDescriptionDiffFactory;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiff;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
@@ -35,6 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
@@ -57,14 +55,30 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateRegisterProjectDescriptionDiff() {
-		ProjectGenerator generator = new ProjectGenerator((context) -> context
-				.registerBean(ProjectDescriptionDiffFactory.class, () -> new DefaultProjectDescriptionDiffFactory()));
+	void generateProvideDefaultProjectDescriptionDiff() {
+		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr());
 		MutableProjectDescription description = new MutableProjectDescription();
-		generator.generate(description, (context) -> {
+		ProjectDescriptionDiff diff = generator.generate(description, (context) -> {
 			assertThat(context.getBeansOfType(ProjectDescriptionDiff.class)).hasSize(1);
 			return context.getBean(ProjectDescriptionDiff.class);
 		});
+		assertThat(diff).isInstanceOf(ProjectDescriptionDiff.class);
+	}
+
+	@Test
+	void generateUseAvailableProjectDescriptionDiffFactory() {
+		ProjectDescriptionDiff diff = mock(ProjectDescriptionDiff.class);
+		ProjectDescriptionDiffFactory diffFactory = mock(ProjectDescriptionDiffFactory.class);
+		MutableProjectDescription description = new MutableProjectDescription();
+		given(diffFactory.create(description)).willReturn(diff);
+		ProjectGenerator generator = new ProjectGenerator(
+				(context) -> context.registerBean(ProjectDescriptionDiffFactory.class, () -> diffFactory));
+		ProjectDescriptionDiff actualDiff = generator.generate(description, (context) -> {
+			assertThat(context.getBeansOfType(ProjectDescriptionDiff.class)).hasSize(1);
+			return context.getBean(ProjectDescriptionDiff.class);
+		});
+		assertThat(actualDiff).isSameAs(diff);
+		verify(diffFactory).create(description);
 	}
 
 	@Test

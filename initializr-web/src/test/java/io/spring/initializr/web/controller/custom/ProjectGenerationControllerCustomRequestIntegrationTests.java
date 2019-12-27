@@ -16,7 +16,10 @@
 
 package io.spring.initializr.web.controller.custom;
 
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
+import io.spring.initializr.generator.project.ProjectDescriptionDiffFactory;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -33,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.Assert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,8 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ActiveProfiles("test-default")
 @Import(CustomProjectGenerationConfiguration.class)
-public class ProjectGenerationControllerCustomRequestIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class ProjectGenerationControllerCustomRequestIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void createProjectWithCustomFlagEnabled() {
@@ -80,6 +83,11 @@ public class ProjectGenerationControllerCustomRequestIntegrationTests
 		}
 
 		@Bean
+		CustomProjectDescriptionCustomizer customProjectDescriptionCustomizer() {
+			return new CustomProjectDescriptionCustomizer();
+		}
+
+		@Bean
 		CustomProjectDescriptionDiffFactory customProjectDescriptionDiffFactory() {
 			return new CustomProjectDescriptionDiffFactory();
 		}
@@ -96,8 +104,26 @@ public class ProjectGenerationControllerCustomRequestIntegrationTests
 			description.setCustomFlag(request.isCustomFlag());
 			// Override attributes for test purposes
 			description.setPackageName("org.example.custom");
-			description.setApplicationName("CustomApp");
 			return description;
+		}
+
+	}
+
+	static class CustomProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {
+
+		@Override
+		public void customize(MutableProjectDescription description) {
+			description.setApplicationName("CustomApp");
+		}
+
+	}
+
+	static class CustomProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory {
+
+		@Override
+		public CustomProjectDescriptionDiff create(ProjectDescription description) {
+			Assert.isInstanceOf(CustomProjectDescription.class, description);
+			return new CustomProjectDescriptionDiff((CustomProjectDescription) description);
 		}
 
 	}

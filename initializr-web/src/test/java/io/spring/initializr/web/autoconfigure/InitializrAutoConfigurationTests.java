@@ -17,7 +17,6 @@
 package io.spring.initializr.web.autoconfigure;
 
 import io.spring.initializr.generator.io.template.TemplateRenderer;
-import io.spring.initializr.generator.project.diff.ProjectDescriptionDiffFactory;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.controller.CommandLineMetadataController;
@@ -62,11 +61,6 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void autoConfigRegistersTemplateRenderer() {
 		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(TemplateRenderer.class));
-	}
-
-	@Test
-	void autoConfigRegistersDiffFactory() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(ProjectDescriptionDiffFactory.class));
 	}
 
 	@Test

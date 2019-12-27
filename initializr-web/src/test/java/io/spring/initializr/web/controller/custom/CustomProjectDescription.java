@@ -29,12 +29,11 @@ class CustomProjectDescription extends MutableProjectDescription {
 	private boolean customFlag;
 
 	CustomProjectDescription() {
-		super();
 	}
 
-	CustomProjectDescription(final CustomProjectDescription source) {
+	CustomProjectDescription(CustomProjectDescription source) {
 		super(source);
-		setCustomFlag(source.isCustomFlag());
+		this.customFlag = source.isCustomFlag();
 	}
 
 	@Override

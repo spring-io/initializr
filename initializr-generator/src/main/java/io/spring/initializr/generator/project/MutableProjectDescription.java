@@ -62,24 +62,26 @@ public class MutableProjectDescription implements ProjectDescription {
 	private String baseDirectory;
 
 	public MutableProjectDescription() {
-		super();
 	}
 
-	protected MutableProjectDescription(final MutableProjectDescription source) {
-		super();
-		setPlatformVersion(source.getPlatformVersion());
-		setBuildSystem(source.getBuildSystem());
-		setPackaging(source.getPackaging());
-		setLanguage(source.getLanguage());
-		source.getRequestedDependencies().forEach(this::addDependency);
-		setGroupId(source.getGroupId());
-		setArtifactId(source.getArtifactId());
-		setVersion(source.getVersion());
-		setName(source.getName());
-		setDescription(source.getDescription());
-		setApplicationName(source.getApplicationName());
-		setPackageName(source.getPackageName());
-		setBaseDirectory(source.getBaseDirectory());
+	/**
+	 * Create a new instance with the state of the specified {@code source}.
+	 * @param source the source description to initialize this instance with
+	 */
+	protected MutableProjectDescription(MutableProjectDescription source) {
+		this.platformVersion = source.getPlatformVersion();
+		this.buildSystem = source.getBuildSystem();
+		this.packaging = source.getPackaging();
+		this.language = source.getLanguage();
+		this.requestedDependencies.putAll(source.getRequestedDependencies());
+		this.groupId = source.getGroupId();
+		this.artifactId = source.getArtifactId();
+		this.version = source.getVersion();
+		this.name = source.getName();
+		this.description = source.getDescription();
+		this.applicationName = source.getApplicationName();
+		this.packageName = source.getPackageName();
+		this.baseDirectory = source.getBaseDirectory();
 	}
 
 	@Override

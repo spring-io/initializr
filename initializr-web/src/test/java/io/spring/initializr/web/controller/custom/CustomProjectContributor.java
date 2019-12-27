@@ -44,7 +44,6 @@ class CustomProjectContributor implements ProjectContributor {
 				&& ((CustomProjectDescription) this.description).isCustomFlag()) {
 			Files.createFile(projectRoot.resolve("custom.txt"));
 		}
-
 	}
 
 }
