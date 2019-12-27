@@ -16,13 +16,17 @@
 
 package io.spring.initializr.web.controller;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpServletResponse;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InvalidInitializrMetadataException;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
@@ -30,9 +34,11 @@ import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -83,6 +89,12 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	@RequestMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
+	}
+
+	@ExceptionHandler
+	public void invalidMetadataRequest(HttpServletResponse response, InvalidInitializrMetadataException ex)
+			throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
 	/**
