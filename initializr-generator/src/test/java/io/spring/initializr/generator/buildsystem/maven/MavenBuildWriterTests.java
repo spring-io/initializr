@@ -24,6 +24,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenLicense.Distribution;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Jafer Khan Shamshad
  */
 class MavenBuildWriterTests {
 
@@ -82,6 +84,103 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").packaging("war");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/packaging").isEqualTo("war"));
+	}
+
+	@Test
+	void pomWithNoLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/licenses")).isNull());
+	}
+
+	@Test
+	void pomWithBasicLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").licenses(new MavenLicense.Builder()
+				.name("Apache License, Version 2.0").url("https://www.apache.org/licenses/LICENSE-2.0").build());
+		generatePom(build, (pom) -> {
+			NodeAssert license = pom.nodeAtPath("/project/licenses/license");
+			assertThat(license).textAtPath("name").isEqualTo("Apache License, Version 2.0");
+			assertThat(license).textAtPath("url").isEqualTo("https://www.apache.org/licenses/LICENSE-2.0");
+			assertThat(license).textAtPath("distribution").isNullOrEmpty();
+			assertThat(license).textAtPath("comments").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithFullLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.licenses(new MavenLicense.Builder().name("Apache License, Version 2.0")
+						.url("https://www.apache.org/licenses/LICENSE-2.0").distribution(Distribution.REPO)
+						.comments("A business-friendly OSS license").build());
+		generatePom(build, (pom) -> {
+			NodeAssert licenses = pom.nodeAtPath("/project/licenses");
+			assertThat(licenses).isNotNull();
+			NodeAssert license = licenses.nodeAtPath("license");
+			assertThat(license).isNotNull();
+			assertThat(license).textAtPath("name").isEqualTo("Apache License, Version 2.0");
+			assertThat(license).textAtPath("url").isEqualTo("https://www.apache.org/licenses/LICENSE-2.0");
+			assertThat(license).textAtPath("distribution").isEqualTo("repo");
+			assertThat(license).textAtPath("comments").isEqualTo("A business-friendly OSS license");
+		});
+	}
+
+	@Test
+	void pomWithNoDeveloper() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/developers")).isNull());
+	}
+
+	@Test
+	void pomWithBasicDeveloper() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").developers(
+				new MavenDeveloper.Builder().id("jsmith").name("John Smith").email("jsmith@example.com").build())
+				.build();
+		generatePom(build, (pom) -> {
+			NodeAssert developer = pom.nodeAtPath("/project/developers/developer");
+			assertThat(developer).textAtPath("id").isEqualTo("jsmith");
+			assertThat(developer).textAtPath("name").isEqualTo("John Smith");
+			assertThat(developer).textAtPath("email").isEqualTo("jsmith@example.com");
+			assertThat(developer).textAtPath("url").isNullOrEmpty();
+			assertThat(developer).textAtPath("organization").isNullOrEmpty();
+			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
+			assertThat(developer.nodeAtPath("roles")).isNull();
+			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
+			assertThat(developer.nodeAtPath("properties")).isNull();
+		});
+	}
+
+	@Test
+	void pomWithFullDeveloper() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo")
+				.developers(new MavenDeveloper.Builder().id("jsmith").name("John Smith").email("jsmith@example.com")
+						.url("https://example.com/jsmith").organization("Acme Corp")
+						.organizationUrl("https://example.com").timezone("Asia/Karachi").role("developer")
+						.role("tester").property("prop1", "test1").property("prop2", "test2").build());
+		generatePom(build, (pom) -> {
+			NodeAssert developers = pom.nodeAtPath("/project/developers");
+			assertThat(developers).isNotNull();
+			NodeAssert developer = developers.nodeAtPath("developer");
+			assertThat(developer).isNotNull();
+			assertThat(developer).textAtPath("id").isEqualTo("jsmith");
+			assertThat(developer).textAtPath("name").isEqualTo("John Smith");
+			assertThat(developer).textAtPath("email").isEqualTo("jsmith@example.com");
+			assertThat(developer).textAtPath("url").isEqualTo("https://example.com/jsmith");
+			assertThat(developer).textAtPath("organization").isEqualTo("Acme Corp");
+			assertThat(developer).textAtPath("organizationUrl").isEqualTo("https://example.com");
+			assertThat(developer).textAtPath("timezone").isEqualTo("Asia/Karachi");
+			NodeAssert roles = developer.nodeAtPath("roles");
+			roles.nodesAtPath("role").hasSize(2);
+			assertThat(roles).textAtPath("role[1]").isEqualTo("developer");
+			assertThat(roles).textAtPath("role[2]").isEqualTo("tester");
+			NodeAssert properties = developer.nodeAtPath("properties");
+			assertThat(properties).textAtPath("prop1").isEqualTo("test1");
+			assertThat(properties).textAtPath("prop2").isEqualTo("test2");
+		});
 	}
 
 	@Test

@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -46,6 +48,7 @@ import io.spring.initializr.generator.version.VersionReference;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Jafer Khan Shamshad
  */
 public class MavenBuildWriter {
 
@@ -62,6 +65,8 @@ public class MavenBuildWriter {
 			writeProjectCoordinates(writer, settings);
 			writePackaging(writer, settings);
 			writeProjectName(writer, settings);
+			writeLicenses(writer, settings);
+			writeDevelopers(writer, settings);
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
@@ -126,6 +131,54 @@ public class MavenBuildWriter {
 			properties.values().forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
 			properties.versions((VersionProperty::toStandardFormat))
 					.forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
+		});
+	}
+
+	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
+		if (settings.getLicenses().isEmpty()) {
+			return;
+		}
+		writeElement(writer, "licenses", () -> writeCollection(writer, settings.getLicenses(), this::writeLicense));
+	}
+
+	private void writeLicense(IndentingWriter writer, MavenLicense license) {
+		writeElement(writer, "license", () -> {
+			writeSingleElement(writer, "name", license.getName());
+			writeSingleElement(writer, "url", license.getUrl());
+			if (license.getDistribution() != null) {
+				writeSingleElement(writer, "distribution",
+						license.getDistribution().name().toLowerCase(Locale.ENGLISH));
+			}
+			writeSingleElement(writer, "comments", license.getComments());
+		});
+	}
+
+	private void writeDevelopers(IndentingWriter writer, MavenBuildSettings settings) {
+		if (settings.getDevelopers().isEmpty()) {
+			return;
+		}
+		writeElement(writer, "developers",
+				() -> writeCollection(writer, settings.getDevelopers(), this::writeDeveloper));
+	}
+
+	private void writeDeveloper(IndentingWriter writer, MavenDeveloper developer) {
+		writeElement(writer, "developer", () -> {
+			writeSingleElement(writer, "id", developer.getId());
+			writeSingleElement(writer, "name", developer.getName());
+			writeSingleElement(writer, "email", developer.getEmail());
+			writeSingleElement(writer, "url", developer.getUrl());
+			writeSingleElement(writer, "organization", developer.getOrganization());
+			writeSingleElement(writer, "organizationUrl", developer.getOrganizationUrl());
+			List<String> roles = developer.getRoles();
+			if (!roles.isEmpty()) {
+				writeElement(writer, "roles", () -> roles.forEach((role) -> writeSingleElement(writer, "role", role)));
+			}
+			writeSingleElement(writer, "timezone", developer.getTimezone());
+			Map<String, String> properties = developer.getProperties();
+			if (!properties.isEmpty()) {
+				writeElement(writer, "properties",
+						() -> properties.forEach((key, value) -> writeSingleElement(writer, key, value)));
+			}
 		});
 	}
 
