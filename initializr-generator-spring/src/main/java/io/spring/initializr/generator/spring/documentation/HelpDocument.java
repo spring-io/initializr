@@ -18,12 +18,14 @@ package io.spring.initializr.generator.spring.documentation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.io.text.MustacheSection;
 import io.spring.initializr.generator.io.text.Section;
 
@@ -38,6 +40,8 @@ public class HelpDocument {
 
 	private final MustacheTemplateRenderer templateRenderer;
 
+	private final BulletedSection<String> warnings;
+
 	private final GettingStartedSection gettingStarted;
 
 	private final PreDefinedSection nextSteps;
@@ -46,8 +50,18 @@ public class HelpDocument {
 
 	public HelpDocument(MustacheTemplateRenderer templateRenderer) {
 		this.templateRenderer = templateRenderer;
+		this.warnings = new BulletedSection<>(templateRenderer, "documentation/warnings");
 		this.gettingStarted = new GettingStartedSection(templateRenderer);
 		this.nextSteps = new PreDefinedSection("Next Steps");
+	}
+
+	/**
+	 * Return a section that can be used to inform the user that something happened when
+	 * building this project.
+	 * @return a warnings section rendered as bullet points
+	 */
+	public BulletedSection<String> getWarnings() {
+		return this.warnings;
 	}
 
 	public GettingStartedSection gettingStarted() {
@@ -78,16 +92,19 @@ public class HelpDocument {
 	}
 
 	public void write(PrintWriter writer) throws IOException {
-		LinkedList<Section> allSections = new LinkedList<>(this.sections);
-		allSections.addFirst(this.gettingStarted);
-		allSections.addLast(this.nextSteps);
+		List<Section> allSections = new ArrayList<>();
+		allSections.add(this.warnings);
+		allSections.add(this.gettingStarted);
+		allSections.addAll(this.sections);
+		allSections.add(this.nextSteps);
 		for (Section section : allSections) {
 			section.write(writer);
 		}
 	}
 
 	public boolean isEmpty() {
-		return gettingStarted().isEmpty() && this.sections.isEmpty() && nextSteps().isEmpty();
+		return getWarnings().isEmpty() && gettingStarted().isEmpty() && this.sections.isEmpty()
+				&& nextSteps().isEmpty();
 	}
 
 }
