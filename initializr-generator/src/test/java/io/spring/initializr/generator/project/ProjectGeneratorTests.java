@@ -32,6 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
@@ -51,6 +52,33 @@ public class ProjectGeneratorTests {
 			return context.getBean(ProjectDescription.class);
 		});
 		assertThat(description).isSameAs(beanDescription);
+	}
+
+	@Test
+	void generateProvideDefaultProjectDescriptionDiff() {
+		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr());
+		MutableProjectDescription description = new MutableProjectDescription();
+		ProjectDescriptionDiff diff = generator.generate(description, (context) -> {
+			assertThat(context.getBeansOfType(ProjectDescriptionDiff.class)).hasSize(1);
+			return context.getBean(ProjectDescriptionDiff.class);
+		});
+		assertThat(diff).isInstanceOf(ProjectDescriptionDiff.class);
+	}
+
+	@Test
+	void generateUseAvailableProjectDescriptionDiffFactory() {
+		ProjectDescriptionDiff diff = mock(ProjectDescriptionDiff.class);
+		ProjectDescriptionDiffFactory diffFactory = mock(ProjectDescriptionDiffFactory.class);
+		MutableProjectDescription description = new MutableProjectDescription();
+		given(diffFactory.create(description)).willReturn(diff);
+		ProjectGenerator generator = new ProjectGenerator(
+				(context) -> context.registerBean(ProjectDescriptionDiffFactory.class, () -> diffFactory));
+		ProjectDescriptionDiff actualDiff = generator.generate(description, (context) -> {
+			assertThat(context.getBeansOfType(ProjectDescriptionDiff.class)).hasSize(1);
+			return context.getBean(ProjectDescriptionDiff.class);
+		});
+		assertThat(actualDiff).isSameAs(diff);
+		verify(diffFactory).create(description);
 	}
 
 	@Test

@@ -33,6 +33,15 @@ import io.spring.initializr.generator.version.Version;
 public interface ProjectDescription {
 
 	/**
+	 * Create a full copy of this description so that any additional changes made on this
+	 * instance are not reflected on the returned copy.
+	 * @return a clone of this instance
+	 */
+	default ProjectDescription createCopy() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Return a immutable mapping of requested {@link Dependency dependencies}.
 	 * @return the requested dependencies
 	 */
