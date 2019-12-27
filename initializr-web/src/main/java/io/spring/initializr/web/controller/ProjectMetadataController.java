@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InvalidInitializrMetadataException;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
@@ -91,7 +92,7 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	}
 
 	@ExceptionHandler
-	public void invalidMetadaRequest(HttpServletResponse response, InvalidMetadataRequestException ex)
+	public void invalidMetadataRequest(HttpServletResponse response, InvalidInitializrMetadataException ex)
 			throws IOException {
 		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}

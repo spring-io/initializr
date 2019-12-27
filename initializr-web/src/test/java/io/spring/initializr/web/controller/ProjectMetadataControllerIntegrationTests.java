@@ -61,7 +61,7 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	}
 
 	@Test
-	void metadataWithInvalidBootVersion() {
+	void metadataWithInvalidPlatformVersion() {
 		try {
 			execute("/dependencies?bootVersion=1.5.17.RELEASE", String.class, "application/vnd.initializr.v2.1+json",
 					"application/json");

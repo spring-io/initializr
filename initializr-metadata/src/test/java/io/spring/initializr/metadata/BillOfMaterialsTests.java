@@ -24,7 +24,7 @@ import io.spring.initializr.metadata.BillOfMaterials.Mapping;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Stephane Nicoll
@@ -119,17 +119,8 @@ class BillOfMaterialsTests {
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
 		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
 		bom.validate();
-		assertThatIllegalStateException().isThrownBy(() -> bom.resolve(Version.parse("1.4.1.RELEASE")))
-				.withMessageContaining("1.4.1.RELEASE");
-	}
-
-	@Test
-	void noRangeAvailableSafe() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
-		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
-		bom.getMappings().add(Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
-		bom.validate();
-		assertThat(bom.resolveSafe(Version.parse("1.4.1.RELEASE"))).isEmpty();
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+				.isThrownBy(() -> bom.resolve(Version.parse("1.4.1.RELEASE"))).withMessageContaining("1.4.1.RELEASE");
 	}
 
 	@Test

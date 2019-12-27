@@ -23,11 +23,9 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.web.controller.InvalidMetadataRequestException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Stephane Nicoll
@@ -74,21 +72,6 @@ class DefaultDependencyMetadataProviderTests {
 		assertThat(anotherDependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.biz");
 		assertThat(anotherDependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("third");
 		assertThat(anotherDependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.2.0.RELEASE");
-	}
-
-	@Test
-	void resolveBomInvalidBootVersion() {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setRepository("repo-foo");
-		first.setBom("bom-foo");
-		BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
-		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "2.0.0.RELEASE", "repo-foo"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom)
-				.addRepository("repo-foo", "foo", "http://localhost", false).addDependencyGroup("test", first).build();
-		assertThatExceptionOfType(InvalidMetadataRequestException.class)
-				.isThrownBy(() -> this.provider.get(metadata, Version.parse("1.1.5.RELEASE")))
-				.withMessageContainingAll(first.getId(), first.getBom(), "1.1.5.RELEASE");
 	}
 
 	@Test
