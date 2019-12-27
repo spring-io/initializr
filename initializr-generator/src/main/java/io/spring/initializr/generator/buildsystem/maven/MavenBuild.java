@@ -57,10 +57,20 @@ public class MavenBuild extends Build {
 		return this.settings.build();
 	}
 
+	/**
+	 * Return a builder to configure the {@linkplain MavenDistributionManagement
+	 * distribution management} of this build.
+	 * @return a builder for {@link MavenDistributionManagement}
+	 */
 	public MavenDistributionManagement.Builder distributionManagement() {
 		return this.distributionManagement;
 	}
 
+	/**
+	 * Return the {@linkplain MavenDistributionManagement distribution management} of this
+	 * build.
+	 * @return the {@link MavenDistributionManagement}
+	 */
 	public MavenDistributionManagement getDistributionManagement() {
 		return this.distributionManagement.build();
 	}

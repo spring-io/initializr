@@ -18,7 +18,6 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +37,6 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
-import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.RepositoryPolicy;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
@@ -434,32 +432,31 @@ public class MavenBuildWriter {
 
 	private void writeDistributionManagement(IndentingWriter writer, MavenBuild build) {
 		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
-		if (!distributionManagement.isEmpty()) {
-			writeElement(writer, "distributionManagement", () -> {
-				writeSingleElement(writer, "downloadUrl", distributionManagement.getDownloadUrl());
-				this.writeDeploymentRepository(writer, "repository", distributionManagement.getRepository());
-				this.writeDeploymentRepository(writer, "snapshotRepository",
-						distributionManagement.getSnapshotRepository());
-				if (!distributionManagement.getRelocation().isEmpty()) {
-					Relocation relocation = distributionManagement.getRelocation();
-					writeElement(writer, "relocation", () -> {
-						writeSingleElement(writer, "groupId", relocation.getGroupId());
-						writeSingleElement(writer, "artifactId", relocation.getArtifactId());
-						writeSingleElement(writer, "version", relocation.getVersion());
-						writeSingleElement(writer, "message", relocation.getMessage());
-					});
-				}
-				if (!distributionManagement.getSite().isEmpty()) {
-					Site site = distributionManagement.getSite();
-					writeElementWithAttributes(writer, "site", () -> {
-						writeSingleElement(writer, "id", site.getId());
-						writeSingleElement(writer, "name", site.getName());
-						writeSingleElement(writer, "url", site.getUrl());
-					}, Collections.singletonMap("child.site.url.inherit.append.path",
-							site.getChildSiteUrlInheritAppendPath()));
-				}
-			});
+		if (distributionManagement.isEmpty()) {
+			return;
 		}
+		writeElement(writer, "distributionManagement", () -> {
+			writeSingleElement(writer, "downloadUrl", distributionManagement.getDownloadUrl());
+			writeDeploymentRepository(writer, "repository", distributionManagement.getRepository());
+			writeDeploymentRepository(writer, "snapshotRepository", distributionManagement.getSnapshotRepository());
+			Site site = distributionManagement.getSite();
+			if (!site.isEmpty()) {
+				writeElement(writer, "site", () -> {
+					writeSingleElement(writer, "id", site.getId());
+					writeSingleElement(writer, "name", site.getName());
+					writeSingleElement(writer, "url", site.getUrl());
+				});
+			}
+			Relocation relocation = distributionManagement.getRelocation();
+			if (!relocation.isEmpty()) {
+				writeElement(writer, "relocation", () -> {
+					writeSingleElement(writer, "groupId", relocation.getGroupId());
+					writeSingleElement(writer, "artifactId", relocation.getArtifactId());
+					writeSingleElement(writer, "version", relocation.getVersion());
+					writeSingleElement(writer, "message", relocation.getMessage());
+				});
+			}
+		});
 	}
 
 	private void writeDeploymentRepository(IndentingWriter writer, String name, DeploymentRepository repository) {
@@ -469,19 +466,9 @@ public class MavenBuildWriter {
 				writeSingleElement(writer, "name", repository.getName());
 				writeSingleElement(writer, "url", repository.getUrl());
 				writeSingleElement(writer, "layout", repository.getLayout());
-				writeSingleElement(writer, "uniqueVersion", repository.getUniqueVersion().toString());
-				this.writeRepositoryPolicy(writer, "releases", repository.getReleases());
-				this.writeRepositoryPolicy(writer, "snapshots", repository.getSnapshots());
-			});
-		}
-	}
-
-	private void writeRepositoryPolicy(IndentingWriter writer, String name, RepositoryPolicy policy) {
-		if (!policy.isEmpty()) {
-			writeElement(writer, name, () -> {
-				writeSingleElement(writer, "enabled", policy.isEnabled().toString());
-				writeSingleElement(writer, "updatePolicy", policy.getUpdatePolicy());
-				writeSingleElement(writer, "checksumPolicy", policy.getChecksumPolicy());
+				if (repository.getUniqueVersion() != null) {
+					writeSingleElement(writer, "uniqueVersion", Boolean.toString(repository.getUniqueVersion()));
+				}
 			});
 		}
 	}
@@ -492,16 +479,6 @@ public class MavenBuildWriter {
 			writer.print(text);
 			writer.println(String.format("</%s>", name));
 		}
-	}
-
-	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent,
-			Map<String, Object> attributeMap) {
-		writer.print(String.format("<%s", name));
-		attributeMap.entrySet().stream().filter((entry) -> entry.getValue() != null).forEach(
-				(entry) -> writer.print(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue().toString())));
-		writer.println(">");
-		writer.indented(withContent);
-		writer.println(String.format("</%s>", name));
 	}
 
 	private void writeElement(IndentingWriter writer, String name, Runnable withContent) {

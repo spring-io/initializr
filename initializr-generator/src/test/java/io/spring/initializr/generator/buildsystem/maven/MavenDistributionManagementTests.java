@@ -16,21 +16,22 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link MavenDistributionManagement}
+ * Tests for {@link MavenDistributionManagement}.
  *
  * @author Joachim Pasquali
+ * @author Stephane Nicoll
  */
 class MavenDistributionManagementTests {
 
-	private static final String TEST_URL = "testURL";
-
 	@Test
-	void emptyDistributionManagement() {
+	void distributionManagementEmpty() {
 		MavenDistributionManagement result = builder().build();
 		assertThat(result.isEmpty()).isTrue();
 		assertThat(result.getRelocation().isEmpty()).isTrue();
@@ -40,75 +41,59 @@ class MavenDistributionManagementTests {
 	}
 
 	@Test
-	void addDownloadUrl() {
-		MavenDistributionManagement result = builder().downloadUrl(TEST_URL).build();
-		assertThat(result.getDownloadUrl()).isEqualTo(TEST_URL);
+	void distributionManagementWithDownloadUrl() {
+		MavenDistributionManagement mdm = builder().downloadUrl("https://example.com/download").build();
+		assertThat(mdm.getDownloadUrl()).isEqualTo("https://example.com/download");
 	}
 
 	@Test
-	void addRelocation() {
-		MavenDistributionManagement result = builder().relocation((relocation) -> relocation.artifactId("artifactId")
-				.groupId("groupId").version("version").message("message")).build();
-		assertThat(result.getRelocation().getArtifactId()).isEqualTo("artifactId");
-		assertThat(result.getRelocation().getGroupId()).isEqualTo("groupId");
-		assertThat(result.getRelocation().getVersion()).isEqualTo("version");
-		assertThat(result.getRelocation().getMessage()).isEqualTo("message");
+	void distributionManagementWithRepository() {
+		MavenDistributionManagement mdm = builder()
+				.repository((repository) -> repository.id("released-repo").name("released repo")
+						.url("https://upload.example.com/releases"))
+				.repository((repository) -> repository.layout("default")).build();
+		DeploymentRepository repository = mdm.getRepository();
+		assertThat(repository.getId()).isEqualTo("released-repo");
+		assertThat(repository.getName()).isEqualTo("released repo");
+		assertThat(repository.getUrl()).isEqualTo("https://upload.example.com/releases");
+		assertThat(repository.getLayout()).isEqualTo("default");
+		assertThat(repository.getUniqueVersion()).isNull();
 	}
 
 	@Test
-	void addRepository() {
-		MavenDistributionManagement result = builder().repository((repository) -> repository.id("id").layout("layout")
-				.name("name")
-				.releases((releases) -> releases.checksumPolicy("checksumPolicy").enabled(Boolean.FALSE)
-						.updatePolicy("updatePolicy"))
-				.snapshots((snapshots) -> snapshots.checksumPolicy("checksumPolicy").updatePolicy("updatePolicy"))
-				.uniqueVersion(Boolean.FALSE).url("url")).build();
-		assertThat(result.getRepository().getId()).isEqualTo("id");
-		assertThat(result.getRepository().getUrl()).isEqualTo("url");
-		assertThat(result.getRepository().getUniqueVersion()).isFalse();
-		assertThat(result.getRepository().getLayout()).isEqualTo("layout");
-		assertThat(result.getRepository().getName()).isEqualTo("name");
-		assertThat(result.getRepository().getReleases().isEnabled()).isFalse();
-		assertThat(result.getRepository().getReleases().getChecksumPolicy()).isEqualTo("checksumPolicy");
-		assertThat(result.getRepository().getReleases().getUpdatePolicy()).isEqualTo("updatePolicy");
-
-		assertThat(result.getRepository().getSnapshots().getChecksumPolicy()).isEqualTo("checksumPolicy");
-		assertThat(result.getRepository().getSnapshots().getUpdatePolicy()).isEqualTo("updatePolicy");
-		assertThat(result.getRepository().getSnapshots().isEnabled()).isTrue();
-
+	void distributionManagementWithSnapshotRepository() {
+		MavenDistributionManagement mdm = builder()
+				.snapshotRepository((repository) -> repository.id("snapshot-repo").name("snapshot repo")
+						.url("scp://upload.example.com/snapshots"))
+				.snapshotRepository((repository) -> repository.uniqueVersion(true)).build();
+		DeploymentRepository snapshotRepository = mdm.getSnapshotRepository();
+		assertThat(snapshotRepository.getId()).isEqualTo("snapshot-repo");
+		assertThat(snapshotRepository.getName()).isEqualTo("snapshot repo");
+		assertThat(snapshotRepository.getUrl()).isEqualTo("scp://upload.example.com/snapshots");
+		assertThat(snapshotRepository.getLayout()).isNull();
+		assertThat(snapshotRepository.getUniqueVersion()).isTrue();
 	}
 
 	@Test
-	void addSnapshotRepository() {
-		MavenDistributionManagement result = builder().snapshotRepository((repository) -> repository.id("id")
-				.layout("layout").name("name").releases((releases) -> releases.checksumPolicy("checksumPolicy")
-						.enabled(Boolean.TRUE).updatePolicy("updatePolicy"))
-				.uniqueVersion(Boolean.FALSE).url("url")).build();
-		assertThat(result.getSnapshotRepository().getId()).isEqualTo("id");
-		assertThat(result.getSnapshotRepository().getLayout()).isEqualTo("layout");
-		assertThat(result.getSnapshotRepository().getName()).isEqualTo("name");
-		assertThat(result.getSnapshotRepository().getReleases().getChecksumPolicy()).isEqualTo("checksumPolicy");
-		assertThat(result.getSnapshotRepository().getReleases().getUpdatePolicy()).isEqualTo("updatePolicy");
-
-		assertThat(result.getSnapshotRepository().getSnapshots().isEmpty()).isTrue();
-
+	void distributionManagementWithSite() {
+		MavenDistributionManagement mdm = builder().site((site) -> site.id("website").name("web site"))
+				.site((site) -> site.url("scp://www.example.com/www/docs/project")).build();
+		Site site = mdm.getSite();
+		assertThat(site.getId()).isEqualTo("website");
+		assertThat(site.getName()).isEqualTo("web site");
+		assertThat(site.getUrl()).isEqualTo("scp://www.example.com/www/docs/project");
 	}
 
 	@Test
-	void addSite() {
-		MavenDistributionManagement result = builder()
-				.site((site) -> site.id("id").name("name").url("url").childSiteUrlInheritAppendPath(Boolean.FALSE))
-				.build();
-		assertThat(result.getSite().getId()).isEqualTo("id");
-		assertThat(result.getSite().getName()).isEqualTo("name");
-		assertThat(result.getSite().getUrl()).isEqualTo("url");
-		assertThat(result.getSite().getChildSiteUrlInheritAppendPath()).isFalse();
-	}
-
-	@Test
-	void addSiteWithNullAttribute() {
-		MavenDistributionManagement result = builder().site((site) -> site.id("id")).build();
-		assertThat(result.getSite().getChildSiteUrlInheritAppendPath()).isNull();
+	void distributionManagementWithRelocation() {
+		MavenDistributionManagement mdm = builder()
+				.relocation(
+						(relocation) -> relocation.groupId("com.example.new").artifactId("project").version("1.0.0"))
+				.relocation((relocation) -> relocation.message("Moved to com.example.new")).build();
+		assertThat(mdm.getRelocation().getGroupId()).isEqualTo("com.example.new");
+		assertThat(mdm.getRelocation().getArtifactId()).isEqualTo("project");
+		assertThat(mdm.getRelocation().getVersion()).isEqualTo("1.0.0");
+		assertThat(mdm.getRelocation().getMessage()).isEqualTo("Moved to com.example.new");
 	}
 
 	private MavenDistributionManagement.Builder builder() {
