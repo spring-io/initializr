@@ -20,6 +20,7 @@ package io.spring.initializr.generator.buildsystem.maven;
  * A {@code <license>} in a Maven pom.
  *
  * @author Jafer Khan Shamshad
+ * @author Stephane Nicoll
  */
 public class MavenLicense {
 
@@ -27,11 +28,11 @@ public class MavenLicense {
 
 	private final String url;
 
-	private final String distribution;
+	private final Distribution distribution;
 
 	private final String comments;
 
-	public MavenLicense(Builder builder) {
+	MavenLicense(Builder builder) {
 		this.name = builder.name;
 		this.url = builder.url;
 		this.distribution = builder.distribution;
@@ -58,7 +59,7 @@ public class MavenLicense {
 	 * Return the distribution mechanism of the project associated with the license.
 	 * @return the distribution mechanism
 	 */
-	public String getDistribution() {
+	public Distribution getDistribution() {
 		return this.distribution;
 	}
 
@@ -79,7 +80,7 @@ public class MavenLicense {
 
 		private String url;
 
-		private String distribution;
+		private Distribution distribution;
 
 		private String comments;
 
@@ -108,7 +109,7 @@ public class MavenLicense {
 		 * @param distribution the distribution mechanism of the project or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder distribution(String distribution) {
+		public Builder distribution(Distribution distribution) {
 			this.distribution = distribution;
 			return this;
 		}
@@ -126,6 +127,23 @@ public class MavenLicense {
 		public MavenLicense build() {
 			return new MavenLicense(this);
 		}
+
+	}
+
+	/**
+	 * Describes how the project may be legally distributed.
+	 */
+	public enum Distribution {
+
+		/**
+		 * May be downloaded from a Maven repository.
+		 */
+		REPO,
+
+		/**
+		 * Must be manually installed.
+		 */
+		MANUAL
 
 	}
 

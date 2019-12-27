@@ -47,7 +47,7 @@ public class MavenDeveloper {
 
 	private final Map<String, String> properties;
 
-	public MavenDeveloper(Builder builder) {
+	MavenDeveloper(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.email = builder.email;
@@ -76,8 +76,8 @@ public class MavenDeveloper {
 	}
 
 	/**
-	 * Return the e-mail address of the developer.
-	 * @return the e-mail address
+	 * Return the email address of the developer.
+	 * @return the email address
 	 */
 	public String getEmail() {
 		return this.email;
@@ -175,8 +175,8 @@ public class MavenDeveloper {
 		}
 
 		/**
-		 * Set the e-mail address of the developer.
-		 * @param email the e-mail address of the developer or {@code null}
+		 * Set the email address of the developer.
+		 * @param email the email address of the developer or {@code null}
 		 * @return this for method chaining
 		 */
 		public Builder email(String email) {

@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 /**
- * Tests for {@link MavenDeveloper}
+ * Tests for {@link MavenDeveloper}.
  *
  * @author Jafer Khan Shamshad
  */
@@ -30,8 +30,8 @@ class MavenDeveloperTests {
 
 	@Test
 	void developerWithIdOnly() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
+		MavenDeveloper developer = new MavenDeveloper.Builder().id("jsmith").build();
+		assertThat(developer.getId()).isEqualTo("jsmith");
 		assertThat(developer.getName()).isNull();
 		assertThat(developer.getEmail()).isNull();
 		assertThat(developer.getUrl()).isNull();
@@ -43,120 +43,21 @@ class MavenDeveloperTests {
 	}
 
 	@Test
-	void developerWithName() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isNull();
-		assertThat(developer.getUrl()).isNull();
-		assertThat(developer.getOrganization()).isNull();
-		assertThat(developer.getOrganizationUrl()).isNull();
-		assertThat(developer.getRoles()).hasSize(0);
-		assertThat(developer.getTimezone()).isNull();
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithEmail() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isNull();
-		assertThat(developer.getOrganization()).isNull();
-		assertThat(developer.getOrganizationUrl()).isNull();
-		assertThat(developer.getRoles()).hasSize(0);
-		assertThat(developer.getTimezone()).isNull();
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithUrl() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").url("http://www.example.com/jaferkhan").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jaferkhan");
-		assertThat(developer.getOrganization()).isNull();
-		assertThat(developer.getOrganizationUrl()).isNull();
-		assertThat(developer.getRoles()).hasSize(0);
-		assertThat(developer.getTimezone()).isNull();
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithOrganization() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").url("http://www.example.com/jaferkhan").organization("ACME")
-				.organizationUrl("http://www.example.com").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jaferkhan");
-		assertThat(developer.getOrganization()).isEqualTo("ACME");
-		assertThat(developer.getOrganizationUrl()).isEqualTo("http://www.example.com");
-		assertThat(developer.getRoles()).hasSize(0);
-		assertThat(developer.getTimezone()).isNull();
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithRoles() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").url("http://www.example.com/jaferkhan").organization("ACME")
-				.organizationUrl("http://www.example.com").role("developer").role("tester").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jaferkhan");
-		assertThat(developer.getOrganization()).isEqualTo("ACME");
-		assertThat(developer.getOrganizationUrl()).isEqualTo("http://www.example.com");
-		assertThat(developer.getRoles()).hasSize(2);
-		assertThat(developer.getRoles().isEmpty()).isFalse();
-		assertThat(developer.getRoles()).containsExactly("developer", "tester");
-		assertThat(developer.getTimezone()).isNull();
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithTimezone() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").url("http://www.example.com/jaferkhan").organization("ACME")
+	void developerWithFullDetails() {
+		MavenDeveloper developer = new MavenDeveloper.Builder().id("jsmith").name("John Smith")
+				.email("john@example.com").url("http://www.example.com/jsmith").organization("Acme Corp")
 				.organizationUrl("http://www.example.com").role("developer").role("tester").timezone("Asia/Karachi")
-				.build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jaferkhan");
-		assertThat(developer.getOrganization()).isEqualTo("ACME");
+				.property("prop1", "test1").property("prop2", "test2").property("prop3", "test3").build();
+		assertThat(developer.getId()).isEqualTo("jsmith");
+		assertThat(developer.getName()).isEqualTo("John Smith");
+		assertThat(developer.getEmail()).isEqualTo("john@example.com");
+		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jsmith");
+		assertThat(developer.getOrganization()).isEqualTo("Acme Corp");
 		assertThat(developer.getOrganizationUrl()).isEqualTo("http://www.example.com");
-		assertThat(developer.getRoles()).hasSize(2);
 		assertThat(developer.getRoles()).containsExactly("developer", "tester");
 		assertThat(developer.getTimezone()).isEqualTo("Asia/Karachi");
-		assertThat(developer.getProperties()).hasSize(0);
-	}
-
-	@Test
-	void developerWithProperties() {
-		MavenDeveloper developer = new MavenDeveloper.Builder().id("jaferkhan").name("Jafer Khan Shamshad")
-				.email("jaferkhan@example.com").url("http://www.example.com/jaferkhan").organization("ACME")
-				.organizationUrl("http://www.example.com").role("developer").role("tester").timezone("Asia/Karachi")
-				.property("hometown", "Mardan").property("ethnicity", "Pukhtun").property("religion", "Islam").build();
-		assertThat(developer.getId()).isEqualTo("jaferkhan");
-		assertThat(developer.getName()).isEqualTo("Jafer Khan Shamshad");
-		assertThat(developer.getEmail()).isEqualTo("jaferkhan@example.com");
-		assertThat(developer.getUrl()).isEqualTo("http://www.example.com/jaferkhan");
-		assertThat(developer.getOrganization()).isEqualTo("ACME");
-		assertThat(developer.getOrganizationUrl()).isEqualTo("http://www.example.com");
-		assertThat(developer.getRoles()).hasSize(2);
-		assertThat(developer.getRoles().isEmpty()).isFalse();
-		assertThat(developer.getRoles()).containsExactly("developer", "tester");
-		assertThat(developer.getTimezone()).isEqualTo("Asia/Karachi");
-		assertThat(developer.getProperties()).hasSize(3);
-		assertThat(developer.getProperties()).containsExactly(entry("hometown", "Mardan"),
-				entry("ethnicity", "Pukhtun"), entry("religion", "Islam"));
+		assertThat(developer.getProperties()).containsExactly(entry("prop1", "test1"), entry("prop2", "test2"),
+				entry("prop3", "test3"));
 	}
 
 }

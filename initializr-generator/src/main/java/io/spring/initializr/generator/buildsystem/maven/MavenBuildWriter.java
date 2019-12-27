@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -133,6 +134,25 @@ public class MavenBuildWriter {
 		});
 	}
 
+	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
+		if (settings.getLicenses().isEmpty()) {
+			return;
+		}
+		writeElement(writer, "licenses", () -> writeCollection(writer, settings.getLicenses(), this::writeLicense));
+	}
+
+	private void writeLicense(IndentingWriter writer, MavenLicense license) {
+		writeElement(writer, "license", () -> {
+			writeSingleElement(writer, "name", license.getName());
+			writeSingleElement(writer, "url", license.getUrl());
+			if (license.getDistribution() != null) {
+				writeSingleElement(writer, "distribution",
+						license.getDistribution().name().toLowerCase(Locale.ENGLISH));
+			}
+			writeSingleElement(writer, "comments", license.getComments());
+		});
+	}
+
 	private void writeDevelopers(IndentingWriter writer, MavenBuildSettings settings) {
 		if (settings.getDevelopers().isEmpty()) {
 			return;
@@ -159,22 +179,6 @@ public class MavenBuildWriter {
 				writeElement(writer, "properties",
 						() -> properties.forEach((key, value) -> writeSingleElement(writer, key, value)));
 			}
-		});
-	}
-
-	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
-		if (settings.getLicenses().isEmpty()) {
-			return;
-		}
-		writeElement(writer, "licenses", () -> writeCollection(writer, settings.getLicenses(), this::writeLicense));
-	}
-
-	private void writeLicense(IndentingWriter writer, MavenLicense license) {
-		writeElement(writer, "license", () -> {
-			writeSingleElement(writer, "name", license.getName());
-			writeSingleElement(writer, "url", license.getUrl());
-			writeSingleElement(writer, "distribution", license.getDistribution());
-			writeSingleElement(writer, "comments", license.getComments());
 		});
 	}
 

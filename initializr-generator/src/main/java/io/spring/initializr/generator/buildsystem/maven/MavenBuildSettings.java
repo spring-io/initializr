@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class MavenBuildSettings extends BuildSettings {
 
 	/**
 	 * Return the {@linkplain MavenLicense licenses} associated with the project.
-	 * @return the licenses of the project or {@code null}
+	 * @return the licenses of the project
 	 */
 	public List<MavenLicense> getLicenses() {
 		return this.licenses;
@@ -103,7 +104,7 @@ public class MavenBuildSettings extends BuildSettings {
 
 	/**
 	 * Return the {@linkplain MavenDeveloper developers} associated with the project.
-	 * @return the developers of the project or {@code null}
+	 * @return the developers of the project
 	 */
 	public List<MavenDeveloper> getDevelopers() {
 		return this.developers;
@@ -201,8 +202,8 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param licenses the licenses associated with the project
 		 * @return this for method chaining
 		 */
-		public Builder licenses(List<MavenLicense> licenses) {
-			this.licenses = licenses;
+		public Builder licenses(MavenLicense... licenses) {
+			this.licenses = (licenses != null) ? Arrays.asList(licenses) : new ArrayList<>();
 			return self();
 		}
 
@@ -211,8 +212,8 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param developers the developers associated with the project
 		 * @return this for method chaining
 		 */
-		public Builder developers(List<MavenDeveloper> developers) {
-			this.developers = developers;
+		public Builder developers(MavenDeveloper... developers) {
+			this.developers = (developers != null) ? Arrays.asList(developers) : new ArrayList<>();
 			return self();
 		}
 

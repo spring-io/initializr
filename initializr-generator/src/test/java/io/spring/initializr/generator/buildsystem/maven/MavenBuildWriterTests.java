@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -25,6 +24,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenLicense.Distribution;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -87,29 +87,6 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithProperties() {
-		MavenBuild build = new MavenBuild();
-		build.settings().coordinates("com.example.demo", "demo");
-		build.properties().property("java.version", "1.8").property("alpha", "a");
-		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/properties/java.version").isEqualTo("1.8");
-			assertThat(pom).textAtPath("/project/properties/alpha").isEqualTo("a");
-		});
-	}
-
-	@Test
-	void pomWithVersionProperties() {
-		MavenBuild build = new MavenBuild();
-		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
-				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
-		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/properties/version.property").isEqualTo("1.2.3");
-			assertThat(pom).textAtPath("/project/properties/internal.property").isEqualTo("4.5.6");
-			assertThat(pom).textAtPath("/project/properties/external.property").isEqualTo("7.8.9");
-		});
-	}
-
-	@Test
 	void pomWithNoLicense() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").build();
@@ -117,12 +94,26 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithLicense() {
+	void pomWithBasicLicense() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").licenses(new MavenLicense.Builder()
+				.name("Apache License, Version 2.0").url("https://www.apache.org/licenses/LICENSE-2.0").build());
+		generatePom(build, (pom) -> {
+			NodeAssert license = pom.nodeAtPath("/project/licenses/license");
+			assertThat(license).textAtPath("name").isEqualTo("Apache License, Version 2.0");
+			assertThat(license).textAtPath("url").isEqualTo("https://www.apache.org/licenses/LICENSE-2.0");
+			assertThat(license).textAtPath("distribution").isNullOrEmpty();
+			assertThat(license).textAtPath("comments").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithFullLicense() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo")
-				.licenses(Collections.singletonList(new MavenLicense.Builder().name("Apache License, Version 2.0")
-						.url("https://www.apache.org/licenses/LICENSE-2.0").distribution("repo")
-						.comments("A business-friendly OSS license").build()));
+				.licenses(new MavenLicense.Builder().name("Apache License, Version 2.0")
+						.url("https://www.apache.org/licenses/LICENSE-2.0").distribution(Distribution.REPO)
+						.comments("A business-friendly OSS license").build());
 		generatePom(build, (pom) -> {
 			NodeAssert licenses = pom.nodeAtPath("/project/licenses");
 			assertThat(licenses).isNotNull();
@@ -143,84 +134,75 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithDeveloper() {
+	void pomWithBasicDeveloper() {
 		MavenBuild build = new MavenBuild();
-		build.settings().coordinates("com.example.demo", "demo")
-				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
-						.name("Jafer Khan Shamshad").email("jaferkhan@example.com")
-						.url("http://www.example.com/jaferkhan").organization("ACME")
-						.organizationUrl("http://www.example.com").timezone("Asia/Karachi").build()))
+		build.settings().coordinates("com.example.demo", "demo").developers(
+				new MavenDeveloper.Builder().id("jsmith").name("John Smith").email("jsmith@example.com").build())
 				.build();
 		generatePom(build, (pom) -> {
-			NodeAssert developers = pom.nodeAtPath("/project/developers");
-			assertThat(developers).isNotNull();
-			NodeAssert developer = developers.nodeAtPath("developer");
-			assertThat(developer).isNotNull();
-			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
-			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
-			assertThat(developer).textAtPath("email").isEqualTo("jaferkhan@example.com");
-			assertThat(developer).textAtPath("url").isEqualTo("http://www.example.com/jaferkhan");
-			assertThat(developer).textAtPath("organization").isEqualTo("ACME");
-			assertThat(developer).textAtPath("organizationUrl").isEqualTo("http://www.example.com");
+			NodeAssert developer = pom.nodeAtPath("/project/developers/developer");
+			assertThat(developer).textAtPath("id").isEqualTo("jsmith");
+			assertThat(developer).textAtPath("name").isEqualTo("John Smith");
+			assertThat(developer).textAtPath("email").isEqualTo("jsmith@example.com");
+			assertThat(developer).textAtPath("url").isNullOrEmpty();
+			assertThat(developer).textAtPath("organization").isNullOrEmpty();
+			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
 			assertThat(developer.nodeAtPath("roles")).isNull();
-			assertThat(developer).textAtPath("timezone").isEqualTo("Asia/Karachi");
+			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
 			assertThat(developer.nodeAtPath("properties")).isNull();
 		});
 	}
 
 	@Test
-	void pomWithDeveloperWithRoles() {
+	void pomWithFullDeveloper() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo")
-				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
-						.name("Jafer Khan Shamshad").role("developer").role("tester").build()))
-				.build();
+				.developers(new MavenDeveloper.Builder().id("jsmith").name("John Smith").email("jsmith@example.com")
+						.url("https://example.com/jsmith").organization("Acme Corp")
+						.organizationUrl("https://example.com").timezone("Asia/Karachi").role("developer")
+						.role("tester").property("prop1", "test1").property("prop2", "test2").build());
 		generatePom(build, (pom) -> {
 			NodeAssert developers = pom.nodeAtPath("/project/developers");
 			assertThat(developers).isNotNull();
 			NodeAssert developer = developers.nodeAtPath("developer");
 			assertThat(developer).isNotNull();
-			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
-			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
-			assertThat(developer).textAtPath("email").isNullOrEmpty();
-			assertThat(developer).textAtPath("url").isNullOrEmpty();
-			assertThat(developer).textAtPath("organization").isNullOrEmpty();
-			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
-			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
-			assertThat(developer.nodeAtPath("properties")).isNull();
+			assertThat(developer).textAtPath("id").isEqualTo("jsmith");
+			assertThat(developer).textAtPath("name").isEqualTo("John Smith");
+			assertThat(developer).textAtPath("email").isEqualTo("jsmith@example.com");
+			assertThat(developer).textAtPath("url").isEqualTo("https://example.com/jsmith");
+			assertThat(developer).textAtPath("organization").isEqualTo("Acme Corp");
+			assertThat(developer).textAtPath("organizationUrl").isEqualTo("https://example.com");
+			assertThat(developer).textAtPath("timezone").isEqualTo("Asia/Karachi");
 			NodeAssert roles = developer.nodeAtPath("roles");
-			assertThat(roles).isNotNull();
 			roles.nodesAtPath("role").hasSize(2);
 			assertThat(roles).textAtPath("role[1]").isEqualTo("developer");
 			assertThat(roles).textAtPath("role[2]").isEqualTo("tester");
+			NodeAssert properties = developer.nodeAtPath("properties");
+			assertThat(properties).textAtPath("prop1").isEqualTo("test1");
+			assertThat(properties).textAtPath("prop2").isEqualTo("test2");
 		});
 	}
 
 	@Test
-	void pomWithDeveloperWithProperties() {
+	void pomWithProperties() {
 		MavenBuild build = new MavenBuild();
-		build.settings().coordinates("com.example.demo", "demo")
-				.developers(Collections.singletonList(new MavenDeveloper.Builder().id("jaferkhan")
-						.name("Jafer Khan Shamshad").property("hometown", "Mardan").property("ethnicity", "Pukhtun")
-						.property("religion", "Islam").build()))
-				.build();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.properties().property("java.version", "1.8").property("alpha", "a");
 		generatePom(build, (pom) -> {
-			NodeAssert developers = pom.nodeAtPath("/project/developers");
-			assertThat(developers).isNotNull();
-			NodeAssert developer = developers.nodeAtPath("developer");
-			assertThat(developer).isNotNull();
-			assertThat(developer).textAtPath("id").isEqualTo("jaferkhan");
-			assertThat(developer).textAtPath("name").isEqualTo("Jafer Khan Shamshad");
-			assertThat(developer).textAtPath("email").isNullOrEmpty();
-			assertThat(developer).textAtPath("url").isNullOrEmpty();
-			assertThat(developer).textAtPath("organization").isNullOrEmpty();
-			assertThat(developer).textAtPath("organizationUrl").isNullOrEmpty();
-			assertThat(developer).textAtPath("timezone").isNullOrEmpty();
-			NodeAssert properties = developer.nodeAtPath("properties");
-			assertThat(properties).isNotNull();
-			assertThat(properties).textAtPath("hometown").isEqualTo("Mardan");
-			assertThat(properties).textAtPath("ethnicity").isEqualTo("Pukhtun");
-			assertThat(properties).textAtPath("religion").isEqualTo("Islam");
+			assertThat(pom).textAtPath("/project/properties/java.version").isEqualTo("1.8");
+			assertThat(pom).textAtPath("/project/properties/alpha").isEqualTo("a");
+		});
+	}
+
+	@Test
+	void pomWithVersionProperties() {
+		MavenBuild build = new MavenBuild();
+		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
+				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/properties/version.property").isEqualTo("1.2.3");
+			assertThat(pom).textAtPath("/project/properties/internal.property").isEqualTo("4.5.6");
+			assertThat(pom).textAtPath("/project/properties/external.property").isEqualTo("7.8.9");
 		});
 	}
 
