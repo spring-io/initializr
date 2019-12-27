@@ -35,6 +35,9 @@ import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
+import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
@@ -51,6 +54,7 @@ import org.springframework.util.ObjectUtils;
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
  * @author Jafer Khan Shamshad
+ * @author Joachim Pasquali
  */
 public class MavenBuildWriter {
 
@@ -74,6 +78,7 @@ public class MavenBuildWriter {
 			writeDependencyManagement(writer, build);
 			writeBuild(writer, build);
 			writeRepositories(writer, build);
+			writeDistributionManagement(writer, build);
 		});
 	}
 
@@ -423,6 +428,49 @@ public class MavenBuildWriter {
 				writeElement(writer, "snapshots", () -> writeSingleElement(writer, "enabled", Boolean.toString(true)));
 			}
 		});
+	}
+
+	private void writeDistributionManagement(IndentingWriter writer, MavenBuild build) {
+		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
+		if (distributionManagement.isEmpty()) {
+			return;
+		}
+		writeElement(writer, "distributionManagement", () -> {
+			writeSingleElement(writer, "downloadUrl", distributionManagement.getDownloadUrl());
+			writeDeploymentRepository(writer, "repository", distributionManagement.getRepository());
+			writeDeploymentRepository(writer, "snapshotRepository", distributionManagement.getSnapshotRepository());
+			Site site = distributionManagement.getSite();
+			if (!site.isEmpty()) {
+				writeElement(writer, "site", () -> {
+					writeSingleElement(writer, "id", site.getId());
+					writeSingleElement(writer, "name", site.getName());
+					writeSingleElement(writer, "url", site.getUrl());
+				});
+			}
+			Relocation relocation = distributionManagement.getRelocation();
+			if (!relocation.isEmpty()) {
+				writeElement(writer, "relocation", () -> {
+					writeSingleElement(writer, "groupId", relocation.getGroupId());
+					writeSingleElement(writer, "artifactId", relocation.getArtifactId());
+					writeSingleElement(writer, "version", relocation.getVersion());
+					writeSingleElement(writer, "message", relocation.getMessage());
+				});
+			}
+		});
+	}
+
+	private void writeDeploymentRepository(IndentingWriter writer, String name, DeploymentRepository repository) {
+		if (!repository.isEmpty()) {
+			writeElement(writer, name, () -> {
+				writeSingleElement(writer, "id", repository.getId());
+				writeSingleElement(writer, "name", repository.getName());
+				writeSingleElement(writer, "url", repository.getUrl());
+				writeSingleElement(writer, "layout", repository.getLayout());
+				if (repository.getUniqueVersion() != null) {
+					writeSingleElement(writer, "uniqueVersion", Boolean.toString(repository.getUniqueVersion()));
+				}
+			});
+		}
 	}
 
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {

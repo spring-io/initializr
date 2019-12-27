@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
  * @author Jafer Khan Shamshad
+ * @author Joachim Pasquali
  */
 class MavenBuildWriterTests {
 
@@ -655,6 +656,102 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().version("1.2.4.RELEASE");
 		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/version").isEqualTo("1.2.4.RELEASE"));
+	}
+
+	@Test
+	void powWithDistributionManagementEmpty() {
+		MavenBuild build = new MavenBuild();
+		generatePom(build, (pom) -> assertThat(pom).nodeAtPath("/project/distributionManagement").isNull());
+	}
+
+	@Test
+	void powWithDistributionManagementDownloadUrl() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().downloadUrl("https://example.com/download");
+		generatePom(build, (pom) -> {
+			NodeAssert distributionManagement = pom.nodeAtPath("/project/distributionManagement");
+			assertThat(distributionManagement).textAtPath("downloadUrl").isEqualTo("https://example.com/download");
+			assertThat(distributionManagement).nodeAtPath("repository").isNull();
+			assertThat(distributionManagement).nodeAtPath("snapshotRepository").isNull();
+			assertThat(distributionManagement).nodeAtPath("site").isNull();
+			assertThat(distributionManagement).nodeAtPath("relocation").isNull();
+		});
+	}
+
+	@Test
+	void powWithDistributionManagementRepository() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().repository((repository) -> repository.id("released-repo").name("released repo")
+				.url("https://upload.example.com/releases"));
+		generatePom(build, (pom) -> {
+			NodeAssert distributionManagement = pom.nodeAtPath("/project/distributionManagement");
+			assertThat(distributionManagement).textAtPath("downloadUrl").isNullOrEmpty();
+			assertThat(distributionManagement).textAtPath("repository/id").isEqualTo("released-repo");
+			assertThat(distributionManagement).textAtPath("repository/name").isEqualTo("released repo");
+			assertThat(distributionManagement).textAtPath("repository/url")
+					.isEqualTo("https://upload.example.com/releases");
+			assertThat(distributionManagement).textAtPath("repository/layout").isNullOrEmpty();
+			assertThat(distributionManagement).textAtPath("repository/uniqueVersion").isNullOrEmpty();
+			assertThat(distributionManagement).nodeAtPath("snapshotRepository").isNull();
+			assertThat(distributionManagement).nodeAtPath("site").isNull();
+			assertThat(distributionManagement).nodeAtPath("relocation").isNull();
+		});
+	}
+
+	@Test
+	void powWithDistributionManagementSnapshotRepository() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().snapshotRepository((repository) -> repository.id("snapshot-repo")
+				.name("snapshot repo").url("scp://upload.example.com/snapshots").layout("legacy").uniqueVersion(true));
+		generatePom(build, (pom) -> {
+			NodeAssert distributionManagement = pom.nodeAtPath("/project/distributionManagement");
+			assertThat(distributionManagement).textAtPath("downloadUrl").isNullOrEmpty();
+			assertThat(distributionManagement).nodeAtPath("repository").isNull();
+			assertThat(distributionManagement).textAtPath("snapshotRepository/id").isEqualTo("snapshot-repo");
+			assertThat(distributionManagement).textAtPath("snapshotRepository/name").isEqualTo("snapshot repo");
+			assertThat(distributionManagement).textAtPath("snapshotRepository/url")
+					.isEqualTo("scp://upload.example.com/snapshots");
+			assertThat(distributionManagement).textAtPath("snapshotRepository/layout").isEqualTo("legacy");
+			assertThat(distributionManagement).textAtPath("snapshotRepository/uniqueVersion").isEqualTo("true");
+			assertThat(distributionManagement).nodeAtPath("site").isNull();
+			assertThat(distributionManagement).nodeAtPath("relocation").isNull();
+		});
+	}
+
+	@Test
+	void powWithDistributionManagementSite() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().site((site) -> site.id("website").name("web site"))
+				.site((site) -> site.url("scp://www.example.com/www/docs/project"));
+		generatePom(build, (pom) -> {
+			NodeAssert distributionManagement = pom.nodeAtPath("/project/distributionManagement");
+			assertThat(distributionManagement).textAtPath("downloadUrl").isNullOrEmpty();
+			assertThat(distributionManagement).nodeAtPath("repository").isNull();
+			assertThat(distributionManagement).nodeAtPath("snapshotRepository").isNull();
+			assertThat(distributionManagement).textAtPath("site/id").isEqualTo("website");
+			assertThat(distributionManagement).textAtPath("site/name").isEqualTo("web site");
+			assertThat(distributionManagement).textAtPath("site/url")
+					.isEqualTo("scp://www.example.com/www/docs/project");
+			assertThat(distributionManagement).nodeAtPath("relocation").isNull();
+		});
+	}
+
+	@Test
+	void powWithDistributionManagementRelocation() {
+		MavenBuild build = new MavenBuild();
+		build.distributionManagement().relocation((relocation) -> relocation.groupId("com.example.new")
+				.artifactId("project").version("1.0.0").message("moved"));
+		generatePom(build, (pom) -> {
+			NodeAssert distributionManagement = pom.nodeAtPath("/project/distributionManagement");
+			assertThat(distributionManagement).textAtPath("downloadUrl").isNullOrEmpty();
+			assertThat(distributionManagement).nodeAtPath("repository").isNull();
+			assertThat(distributionManagement).nodeAtPath("snapshotRepository").isNull();
+			assertThat(distributionManagement).nodeAtPath("site").isNull();
+			assertThat(distributionManagement).textAtPath("relocation/groupId").isEqualTo("com.example.new");
+			assertThat(distributionManagement).textAtPath("relocation/artifactId").isEqualTo("project");
+			assertThat(distributionManagement).textAtPath("relocation/version").isEqualTo("1.0.0");
+			assertThat(distributionManagement).textAtPath("relocation/message").isEqualTo("moved");
+		});
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
