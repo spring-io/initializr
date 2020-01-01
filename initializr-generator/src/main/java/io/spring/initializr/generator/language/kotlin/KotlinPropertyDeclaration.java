@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,12 +133,12 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		protected abstract T self();
 
 		@SuppressWarnings("unchecked")
-		public AccessorBuilder getter() {
+		public AccessorBuilder<T> getter() {
 			return new AccessorBuilder<>((T) this, (created) -> this.getter = created);
 		}
 
 		@SuppressWarnings("unchecked")
-		public AccessorBuilder setter() {
+		public AccessorBuilder<T> setter() {
 			return new AccessorBuilder<>((T) this, (created) -> this.setter = created);
 		}
 
