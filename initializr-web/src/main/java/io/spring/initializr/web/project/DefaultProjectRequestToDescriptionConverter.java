@@ -17,7 +17,6 @@
 package io.spring.initializr.web.project;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -32,8 +31,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
-import org.springframework.util.StringUtils;
-
 /**
  * A default {@link ProjectRequestToDescriptionConverter} implementation that uses the
  * {@link InitializrMetadata metadata} to set default values for missing attributes if
@@ -46,8 +43,6 @@ public class DefaultProjectRequestToDescriptionConverter
 		implements ProjectRequestToDescriptionConverter<ProjectRequest> {
 
 	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
-
-	private static final char[] VALID_MAVEN_SPECIAL_CHARACTERS = new char[] { '_', '-', '.' };
 
 	@Override
 	public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
@@ -70,85 +65,20 @@ public class DefaultProjectRequestToDescriptionConverter
 		List<Dependency> resolvedDependencies = getResolvedDependencies(request, springBootVersion, metadata);
 		validateDependencyRange(springBootVersion, resolvedDependencies);
 
-		description.setApplicationName(getApplicationName(request, metadata));
-		description.setArtifactId(getArtifactId(request, metadata));
-		description.setBaseDirectory(getBaseDirectory(request.getBaseDir(), request.getArtifactId()));
+		description.setApplicationName(request.getApplicationName());
+		description.setArtifactId(request.getArtifactId());
+		description.setBaseDirectory(request.getBaseDir());
 		description.setBuildSystem(getBuildSystem(request, metadata));
-		description
-				.setDescription(determineValue(request.getDescription(), () -> metadata.getDescription().getContent()));
-		description.setGroupId(getGroupId(request, metadata));
+		description.setDescription(request.getDescription());
+		description.setGroupId(request.getGroupId());
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
-		description.setName(getName(request, metadata));
-		description.setPackageName(getPackageName(request, metadata));
+		description.setName(request.getName());
+		description.setPackageName(request.getPackageName());
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(Version.parse(springBootVersion));
-		description.setVersion(determineValue(request.getVersion(), () -> metadata.getVersion().getContent()));
+		description.setVersion(request.getVersion());
 		resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 				MetadataBuildItemMapper.toDependency(dependency)));
-	}
-
-	private String determineValue(String candidate, Supplier<String> fallback) {
-		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
-	}
-
-	private String getBaseDirectory(String baseDir, String artifactId) {
-		if (baseDir != null && baseDir.equals(artifactId)) {
-			return cleanMavenCoordinate(baseDir, "-");
-		}
-		return baseDir;
-	}
-
-	private String getName(ProjectRequest request, InitializrMetadata metadata) {
-		String name = request.getName();
-		if (!StringUtils.hasText(name)) {
-			return metadata.getName().getContent();
-		}
-		if (name.equals(request.getArtifactId())) {
-			return cleanMavenCoordinate(name, "-");
-		}
-		return name;
-	}
-
-	private String getGroupId(ProjectRequest request, InitializrMetadata metadata) {
-		if (!StringUtils.hasText(request.getGroupId())) {
-			return metadata.getGroupId().getContent();
-		}
-		return cleanMavenCoordinate(request.getGroupId(), ".");
-	}
-
-	private String getArtifactId(ProjectRequest request, InitializrMetadata metadata) {
-		if (!StringUtils.hasText(request.getArtifactId())) {
-			return metadata.getArtifactId().getContent();
-		}
-		return cleanMavenCoordinate(request.getArtifactId(), "-");
-	}
-
-	private String cleanMavenCoordinate(String coordinate, String delimiter) {
-		String[] elements = coordinate.split("[^\\w\\-.]+");
-		if (elements.length == 1) {
-			return coordinate;
-		}
-		StringBuilder builder = new StringBuilder();
-		for (String element : elements) {
-			if (shouldAppendDelimiter(element, builder)) {
-				builder.append(delimiter);
-			}
-			builder.append(element);
-		}
-		return builder.toString();
-	}
-
-	private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
-		if (builder.length() == 0) {
-			return false;
-		}
-		for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {
-			int prevIndex = builder.length() - 1;
-			if (element.charAt(0) == c || builder.charAt(prevIndex) == c) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
@@ -221,18 +151,6 @@ public class DefaultProjectRequestToDescriptionConverter
 	private BuildSystem getBuildSystem(ProjectRequest request, InitializrMetadata metadata) {
 		Type typeFromMetadata = metadata.getTypes().get(request.getType());
 		return BuildSystem.forId(typeFromMetadata.getTags().get("build"));
-	}
-
-	private String getPackageName(ProjectRequest request, InitializrMetadata metadata) {
-		return metadata.getConfiguration().cleanPackageName(request.getPackageName(),
-				metadata.getPackageName().getContent());
-	}
-
-	private String getApplicationName(ProjectRequest request, InitializrMetadata metadata) {
-		if (!StringUtils.hasText(request.getApplicationName())) {
-			return metadata.getConfiguration().generateApplicationName(request.getName());
-		}
-		return request.getApplicationName();
 	}
 
 	private String getSpringBootVersion(ProjectRequest request, InitializrMetadata metadata) {
