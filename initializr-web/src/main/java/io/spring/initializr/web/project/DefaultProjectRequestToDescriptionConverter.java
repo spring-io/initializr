@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
+import io.spring.initializr.metadata.InitializrConfiguration.Env;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
@@ -41,8 +42,6 @@ import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
  */
 public class DefaultProjectRequestToDescriptionConverter
 		implements ProjectRequestToDescriptionConverter<ProjectRequest> {
-
-	private static final Version VERSION_1_5_0 = Version.parse("1.5.0.RELEASE");
 
 	@Override
 	public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
@@ -82,18 +81,19 @@ public class DefaultProjectRequestToDescriptionConverter
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
-		validateSpringBootVersion(request);
+		validateSpringBootVersion(request, metadata);
 		validateType(request.getType(), metadata);
 		validateLanguage(request.getLanguage(), metadata);
 		validatePackaging(request.getPackaging(), metadata);
 		validateDependencies(request, metadata);
 	}
 
-	private void validateSpringBootVersion(ProjectRequest request) {
+	private void validateSpringBootVersion(ProjectRequest request, InitializrMetadata metadata) {
 		Version bootVersion = Version.safeParse(request.getBootVersion());
-		if (bootVersion != null && bootVersion.compareTo(VERSION_1_5_0) < 0) {
-			throw new InvalidProjectRequestException(
-					"Invalid Spring Boot version " + bootVersion + " must be 1.5.0 or higher");
+		Env env = metadata.getConfiguration().getEnv();
+		if (bootVersion != null && !env.isCompatiblePlatformVersion(bootVersion)) {
+			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
+					+ "', Spring Boot compatibility range is " + env.determinePlatformCompatibilityRangeRequirement());
 		}
 	}
 

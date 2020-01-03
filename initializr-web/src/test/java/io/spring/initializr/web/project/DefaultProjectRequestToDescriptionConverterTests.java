@@ -66,12 +66,23 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertWhenSpringBootVersionInvalidShouldThrowException() {
+	void convertWhenPlatformCompatiblityRangeIsNotSetShouldNotThrowException() {
+		this.metadata = InitializrMetadataTestBuilder.withDefaults().setPlatformCompatibilityRange(null).build();
 		ProjectRequest request = createProjectRequest();
-		request.setBootVersion("1.2.3.M4");
+		request.setBootVersion("1.5.9.RELEASE");
+		assertThat(this.converter.convert(request, this.metadata).getPlatformVersion())
+				.isEqualTo(Version.parse("1.5.9.RELEASE"));
+	}
+
+	@Test
+	void convertWhenSpringBootVersionInvalidShouldThrowException() {
+		this.metadata = InitializrMetadataTestBuilder.withDefaults()
+				.setPlatformCompatibilityRange("[2.0.0.RELEASE,2.3.0.M1)").build();
+		ProjectRequest request = createProjectRequest();
+		request.setBootVersion("1.5.9.RELEASE");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Invalid Spring Boot version 1.2.3.M4 must be 1.5.0 or higher");
+				.isThrownBy(() -> this.converter.convert(request, this.metadata)).withMessage(
+						"Invalid Spring Boot version '1.5.9.RELEASE', Spring Boot compatibility range is >=2.0.0.RELEASE and <2.3.0.M1");
 	}
 
 	@Test

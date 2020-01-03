@@ -33,6 +33,7 @@
     "artifactRepository": "https://repo.spring.io/release/",
     "fallbackApplicationName": "Application",
     "forceSsl": false,
+    "platformCompatibilityRange": null,
     "gradle": {
       "dependencyManagementPluginVersion": "1.0.0.RELEASE"
     },
