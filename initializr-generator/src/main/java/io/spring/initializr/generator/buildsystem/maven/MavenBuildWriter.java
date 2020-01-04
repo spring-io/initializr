@@ -66,6 +66,7 @@ public class MavenBuildWriter {
 	 */
 	public void writeTo(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
+		Scm scm = build.getScm();
 		writeProject(writer, () -> {
 			writeParent(writer, build);
 			writeProjectCoordinates(writer, settings);
@@ -79,6 +80,7 @@ public class MavenBuildWriter {
 			writeBuild(writer, build);
 			writeRepositories(writer, build);
 			writeDistributionManagement(writer, build);
+			writeScm(writer, scm);
 		});
 	}
 
@@ -464,6 +466,17 @@ public class MavenBuildWriter {
 				if (repository.getUniqueVersion() != null) {
 					writeSingleElement(writer, "uniqueVersion", Boolean.toString(repository.getUniqueVersion()));
 				}
+			});
+		}
+	}
+
+	private void writeScm(IndentingWriter writer, Scm scm) {
+		if (!scm.isEmpty()) {
+			writeElement(writer, "scm", () -> {
+				writeSingleElement(writer, "connection", scm.getConnection());
+				writeSingleElement(writer, "developerConnection", scm.getDeveloperConnection());
+				writeSingleElement(writer, "tag", scm.getTag());
+				writeSingleElement(writer, "url", scm.getUrl());
 			});
 		}
 	}

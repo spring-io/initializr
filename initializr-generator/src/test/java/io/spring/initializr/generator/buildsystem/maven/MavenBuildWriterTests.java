@@ -767,6 +767,20 @@ class MavenBuildWriterTests {
 		});
 	}
 
+	@Test
+	void pomWithScm() {
+		MavenBuild build = new MavenBuild();
+		build.scm().connection("connection").developerConnection("developerConnection").tag("tag").url("url");
+
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/scm");
+			assertThat(dependency).textAtPath("connection").isEqualTo("connection");
+			assertThat(dependency).textAtPath("developerConnection").isEqualTo("developerConnection");
+			assertThat(dependency).textAtPath("tag").isEqualTo("tag");
+			assertThat(dependency).textAtPath("url").isEqualTo("url");
+		});
+	}
+
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();
