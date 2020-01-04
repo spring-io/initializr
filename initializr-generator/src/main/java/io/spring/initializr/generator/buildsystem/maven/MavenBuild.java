@@ -39,12 +39,22 @@ public class MavenBuild extends Build {
 
 	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
+	private final Scm.Builder scm = new Scm.Builder();
+
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 	}
 
 	public MavenBuild() {
 		this(null);
+	}
+
+	public Scm.Builder scm() {
+		return this.scm;
+	}
+
+	public Scm getScm() {
+		return this.scm.build();
 	}
 
 	@Override
