@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,6 +183,12 @@ public class InitializrMetadataTestBuilder {
 
 	public InitializrMetadataTestBuilder addBom(String id, BillOfMaterials bom) {
 		this.builder.withCustomizer((it) -> it.getConfiguration().getEnv().getBoms().put(id, bom));
+		return this;
+	}
+
+	public InitializrMetadataTestBuilder setPlatformCompatibilityRange(String platformCompatibilityRange) {
+		this.builder.withCustomizer(
+				(it) -> it.getConfiguration().getEnv().setPlatformCompatibilityRange(platformCompatibilityRange));
 		return this;
 	}
 

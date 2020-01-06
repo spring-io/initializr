@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -211,6 +211,16 @@ public class InitializrConfiguration {
 		private boolean forceSsl;
 
 		/**
+		 * Compatibility range of supported platform versions. Requesting metadata or
+		 * project generation with a platform version that does not match this range is
+		 * not supported.
+		 */
+		private String platformCompatibilityRange;
+
+		@JsonIgnore
+		private VersionRange compatibilityRange;
+
+		/**
 		 * The "BillOfMaterials" that are referenced in this instance, identified by an
 		 * arbitrary identifier that can be used in the dependencies definition.
 		 */
@@ -300,6 +310,14 @@ public class InitializrConfiguration {
 			this.forceSsl = forceSsl;
 		}
 
+		public String getPlatformCompatibilityRange() {
+			return this.platformCompatibilityRange;
+		}
+
+		public void setPlatformCompatibilityRange(String platformCompatibilityRange) {
+			this.platformCompatibilityRange = platformCompatibilityRange;
+		}
+
 		public String getArtifactRepository() {
 			return this.artifactRepository;
 		}
@@ -335,6 +353,14 @@ public class InitializrConfiguration {
 			this.maven.parent.validate();
 			this.boms.forEach((k, v) -> v.validate());
 			this.kotlin.validate();
+			updateCompatibilityRange(VersionParser.DEFAULT);
+		}
+
+		public void updateCompatibilityRange(VersionParser versionParser) {
+			this.getBoms().values().forEach((it) -> it.updateCompatibilityRange(versionParser));
+			this.getKotlin().updateCompatibilityRange(versionParser);
+			this.compatibilityRange = (this.platformCompatibilityRange != null)
+					? versionParser.parseRange(this.platformCompatibilityRange) : null;
 		}
 
 		public void merge(Env other) {
@@ -344,11 +370,27 @@ public class InitializrConfiguration {
 			this.fallbackApplicationName = other.fallbackApplicationName;
 			this.invalidApplicationNames = other.invalidApplicationNames;
 			this.forceSsl = other.forceSsl;
+			this.platformCompatibilityRange = other.platformCompatibilityRange;
+			this.compatibilityRange = other.compatibilityRange;
 			this.gradle.merge(other.gradle);
 			this.kotlin.merge(other.kotlin);
 			this.maven.merge(other.maven);
 			other.boms.forEach(this.boms::putIfAbsent);
 			other.repositories.forEach(this.repositories::putIfAbsent);
+		}
+
+		/**
+		 * Specify whether the specified {@linkplain Version platform version} is
+		 * supported.
+		 * @param platformVersion the platform version to check
+		 * @return {@code true} if this version is supported, {@code false} otherwise
+		 */
+		public boolean isCompatiblePlatformVersion(Version platformVersion) {
+			return (this.compatibilityRange == null || this.compatibilityRange.match(platformVersion));
+		}
+
+		public String determinePlatformCompatibilityRangeRequirement() {
+			return this.compatibilityRange.toString();
 		}
 
 		/**
@@ -421,18 +463,17 @@ public class InitializrConfiguration {
 			}
 
 			public void validate() {
-				VersionParser simpleParser = new VersionParser(Collections.emptyList());
 				this.mappings.forEach((m) -> {
 					if (m.compatibilityRange == null) {
 						throw new InvalidInitializrMetadataException(
 								"CompatibilityRange is mandatory, invalid version mapping for " + this);
 					}
-					m.range = simpleParser.parseRange(m.compatibilityRange);
 					if (m.version == null) {
 						throw new InvalidInitializrMetadataException(
 								"Version is mandatory, invalid version mapping for " + this);
 					}
 				});
+				updateCompatibilityRange(VersionParser.DEFAULT);
 			}
 
 			public void updateCompatibilityRange(VersionParser versionParser) {

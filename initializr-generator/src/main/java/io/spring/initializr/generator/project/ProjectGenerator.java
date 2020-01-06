@@ -120,8 +120,15 @@ public class ProjectGenerator {
 	private Supplier<ProjectDescription> resolve(ProjectDescription description, ProjectGenerationContext context) {
 		return () -> {
 			if (description instanceof MutableProjectDescription) {
+				MutableProjectDescription mutableDescription = (MutableProjectDescription) description;
+				ProjectDescriptionDiffFactory diffFactory = context.getBeanProvider(ProjectDescriptionDiffFactory.class)
+						.getIfAvailable(DefaultProjectDescriptionDiffFactory::new);
+				// Create the diff here so that it takes a copy of the description
+				// immediately
+				ProjectDescriptionDiff diff = diffFactory.create(mutableDescription);
+				context.registerBean(ProjectDescriptionDiff.class, () -> diff);
 				context.getBeanProvider(ProjectDescriptionCustomizer.class).orderedStream()
-						.forEach((customizer) -> customizer.customize((MutableProjectDescription) description));
+						.forEach((customizer) -> customizer.customize(mutableDescription));
 			}
 			return description;
 		};

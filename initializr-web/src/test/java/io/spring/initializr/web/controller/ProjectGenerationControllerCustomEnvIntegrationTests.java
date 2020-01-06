@@ -21,7 +21,9 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,6 +46,31 @@ class ProjectGenerationControllerCustomEnvIntegrationTests extends AbstractIniti
 		assertThat(project).mavenBuild().hasDependenciesSize(2)
 				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
 				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+	}
+
+	@Test
+	void generateProjectWithUnsupportedPlatformVersion() {
+		try {
+			execute("/starter.zip?bootVersion=1.5.12.RELEASE", byte[].class, null, (String[]) null);
+		}
+		catch (HttpClientErrorException ex) {
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			assertThat(ex.getMessage()).contains("Invalid Spring Boot version",
+					"Spring Boot compatibility range is >=2.0.0.RELEASE");
+		}
+	}
+
+	@Test
+	void getDependenciesMetadataWithUnsupportedPlatformVersion() {
+		try {
+			execute("/dependencies?bootVersion=1.5.12.RELEASE", String.class, "application/vnd.initializr.v2.1+json",
+					"application/json");
+		}
+		catch (HttpClientErrorException ex) {
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			assertThat(ex.getMessage()).contains("Invalid Spring Boot version",
+					"Spring Boot compatibility range is >=2.0.0.RELEASE");
+		}
 	}
 
 }

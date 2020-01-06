@@ -184,6 +184,8 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 		context.registerBean(InitializrMetadata.class, () -> metadata);
 		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
 				context.getBean(ProjectDescription.class).getPlatformVersion()));
+		context.registerBean(MetadataProjectDescriptionCustomizer.class,
+				() -> new MetadataProjectDescriptionCustomizer(metadata));
 	}
 
 	private void publishProjectGeneratedEvent(R request, ProjectGenerationContext context) {

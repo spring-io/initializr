@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.spring.initializr.metadata;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,7 +186,7 @@ public final class InitializrMetadataBuilder {
 
 		private static final Log logger = LogFactory.getLog(ResourceInitializrMetadataCustomizer.class);
 
-		private static final Charset UTF_8 = Charset.forName("UTF-8");
+		private static final Charset UTF_8 = StandardCharsets.UTF_8;
 
 		private final Resource resource;
 

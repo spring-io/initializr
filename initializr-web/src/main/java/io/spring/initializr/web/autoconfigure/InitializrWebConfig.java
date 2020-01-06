@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import io.spring.initializr.web.support.Agent.AgentId;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -61,7 +60,7 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 		private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
 		@Override
-		public List<MediaType> resolveMediaTypes(NativeWebRequest request) throws HttpMediaTypeNotAcceptableException {
+		public List<MediaType> resolveMediaTypes(NativeWebRequest request) {
 			String path = this.urlPathHelper
 					.getPathWithinApplication(request.getNativeRequest(HttpServletRequest.class));
 			if (!StringUtils.hasText(path) || !path.equals("/")) { // Only care about "/"

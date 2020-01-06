@@ -53,6 +53,16 @@ class HelpDocumentTests {
 	}
 
 	@Test
+	void renderWarnings() {
+		HelpDocument document = new HelpDocument(this.templateRenderer);
+		document.getWarnings().addItem("Invalid groupId '#invalid#'");
+		document.getWarnings().addItem("Invalid package name '#invalid#'");
+		String out = write(document);
+		assertThat(out).contains("# Read Me First", "The following was discovered as part of building this project:",
+				"", "* Invalid groupId '#invalid#'", "* Invalid package name '#invalid#'");
+	}
+
+	@Test
 	void renderLinks() {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted().addReferenceDocLink("https://example.com/doc", "Doc");

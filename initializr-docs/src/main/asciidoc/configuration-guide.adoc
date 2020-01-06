@@ -129,7 +129,9 @@ include::{code-examples}/doc/generator/project/SampleContributor.java[tag=code]
 ==== Project Generation Lifecycle
 When a `ProjectGenerator` is instructed to generate a project, the specified
 `ProjectDescription` can be customized using available `ProjectDescriptionCustomizer`
-beans and can be ordered using Spring's `Ordered` interface.
+beans and can be ordered using Spring's `Ordered` interface. A `ProjectDescriptionDiff`
+bean is available for extensions that wish to know if an attribute of the original
+`ProjectDescription` was modified.
 
 Once the description has been customized based on the available
 ``ProjectDescriptionCustomizer``s, the generator uses a `ProjectAssetGenerator` to

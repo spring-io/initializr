@@ -61,7 +61,7 @@ public class Dependency {
 	 * @return a new builder
 	 */
 	public static Builder<?> withCoordinates(String groupId, String artifactId) {
-		return new Builder(groupId, artifactId);
+		return new Builder<>(groupId, artifactId);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Dependency {
 	 * @return a new builder initialized with the same state as the {@code dependency}
 	 */
 	public static Builder<?> from(Dependency dependency) {
-		return new Builder(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
+		return new Builder<>(dependency.getGroupId(), dependency.getArtifactId()).initialize(dependency);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Dependency {
 	 * @param <B> builder type
 	 * @see Dependency#withCoordinates(String, String)
 	 */
-	public static class Builder<B extends Builder> {
+	public static class Builder<B extends Builder<B>> {
 
 		private String groupId;
 

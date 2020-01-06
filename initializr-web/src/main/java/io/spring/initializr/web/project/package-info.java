@@ -15,6 +15,6 @@
  */
 
 /**
- * Project generation handing.
+ * Project generation handling.
  */
 package io.spring.initializr.web.project;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,8 +76,7 @@ public class ProjectRequestDocumentFactory {
 		}
 
 		// Let's not rely on the resolved dependencies here
-		List<String> dependencies = new ArrayList<>();
-		dependencies.addAll(request.getDependencies());
+		List<String> dependencies = new ArrayList<>(request.getDependencies());
 		List<String> validDependencies = dependencies.stream()
 				.filter((id) -> metadata.getDependencies().get(id) != null).collect(Collectors.toList());
 		document.setDependencies(new DependencyInformation(validDependencies));

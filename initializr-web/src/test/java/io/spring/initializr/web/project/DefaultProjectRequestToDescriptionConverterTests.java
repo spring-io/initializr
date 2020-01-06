@@ -66,12 +66,23 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertWhenSpringBootVersionInvalidShouldThrowException() {
+	void convertWhenPlatformCompatiblityRangeIsNotSetShouldNotThrowException() {
+		this.metadata = InitializrMetadataTestBuilder.withDefaults().setPlatformCompatibilityRange(null).build();
 		ProjectRequest request = createProjectRequest();
-		request.setBootVersion("1.2.3.M4");
+		request.setBootVersion("1.5.9.RELEASE");
+		assertThat(this.converter.convert(request, this.metadata).getPlatformVersion())
+				.isEqualTo(Version.parse("1.5.9.RELEASE"));
+	}
+
+	@Test
+	void convertWhenSpringBootVersionInvalidShouldThrowException() {
+		this.metadata = InitializrMetadataTestBuilder.withDefaults()
+				.setPlatformCompatibilityRange("[2.0.0.RELEASE,2.3.0.M1)").build();
+		ProjectRequest request = createProjectRequest();
+		request.setBootVersion("1.5.9.RELEASE");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Invalid Spring Boot version 1.2.3.M4 must be 1.5.0 or higher");
+				.isThrownBy(() -> this.converter.convert(request, this.metadata)).withMessage(
+						"Invalid Spring Boot version '1.5.9.RELEASE', Spring Boot compatibility range is >=2.0.0.RELEASE and <2.3.0.M1");
 	}
 
 	@Test
@@ -123,13 +134,6 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldSetApplicationNameForProjectDescriptionUsingNameWhenAbsentFromRequest() {
-		ProjectRequest request = createProjectRequest();
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getApplicationName()).isEqualTo("DemoApplication");
-	}
-
-	@Test
 	void convertShouldSetGroupIdAndArtifactIdFromRequest() {
 		ProjectRequest request = createProjectRequest();
 		request.setArtifactId("foo");
@@ -145,14 +149,6 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		request.setVersion("1.0.2-SNAPSHOT");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getVersion()).isEqualTo("1.0.2-SNAPSHOT");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyVersion() {
-		ProjectRequest request = createProjectRequest();
-		request.setVersion("  ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getVersion()).isEqualTo("0.0.1-SNAPSHOT");
 	}
 
 	@Test
@@ -200,161 +196,12 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertShouldUseDefaultPlatformVersionFromMetadata() {
-		ProjectRequest request = createProjectRequest();
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getPlatformVersion()).isEqualTo(Version.parse("2.1.1.RELEASE"));
-	}
-
-	@Test
 	void convertShouldSetLanguageForProjectDescriptionFromRequest() {
 		ProjectRequest request = createProjectRequest();
 		request.setJavaVersion("1.8");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getLanguage().id()).isEqualTo("java");
 		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyGroup() {
-		ProjectRequest request = createProjectRequest();
-		request.setGroupId("  ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getGroupId()).isEqualTo("com.example");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyArtifact() {
-		ProjectRequest request = createProjectRequest();
-		request.setArtifactId("");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getArtifactId()).isEqualTo("demo");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyName() {
-		ProjectRequest request = createProjectRequest();
-		request.setName("    ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getName()).isEqualTo("demo");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyDescription() {
-		ProjectRequest request = createProjectRequest();
-		request.setDescription("    ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getDescription()).isEqualTo("Demo project for Spring Boot");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataOnEmptyPackageName() {
-		ProjectRequest request = createProjectRequest();
-		request.setPackageName(" ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataWhenGeneratingPackageNameWithEmptyGroup() {
-		ProjectRequest request = createProjectRequest();
-		request.setGroupId("  ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
-	}
-
-	@Test
-	void convertShouldUseDefaultFromMetadataWhenGeneratingPackageNameWithEmptyArtifact() {
-		ProjectRequest request = createProjectRequest();
-		request.setArtifactId("  ");
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getPackageName()).isEqualTo("com.example.demo");
-	}
-
-	@Test
-	void baseDirWhenNotSameAsArtifactIdShouldNotBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct ! ID @";
-		request.setArtifactId(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getBaseDirectory()).isEqualTo(request.getBaseDir());
-	}
-
-	@Test
-	void baseDirWhenSameAsArtifactIdShouldBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct ! ID @";
-		request.setArtifactId(artifactId);
-		request.setBaseDir(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getBaseDirectory()).isEqualTo("correct-ID");
-	}
-
-	@Test
-	void nameWhenNotSameAsArtifactIdShouldNotBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct ! ID @";
-		request.setArtifactId(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getName()).isEqualTo(request.getName());
-	}
-
-	@Test
-	void nameWhenSameAsArtifactIdShouldBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct ! ID @";
-		request.setArtifactId(artifactId);
-		request.setName(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getName()).isEqualTo("correct-ID");
-	}
-
-	@Test
-	void artifactIdWhenHasValidCharsOnlyShouldNotBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct_test";
-		request.setArtifactId(artifactId);
-		request.setBaseDir(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getArtifactId()).isEqualTo("correct_test");
-	}
-
-	@Test
-	void artifactIdWhenInvalidShouldBeCleanedWithHyphenDelimiter() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct ! ID @";
-		request.setArtifactId(artifactId);
-		request.setBaseDir(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getArtifactId()).isEqualTo("correct-ID");
-	}
-
-	@Test
-	void artifactIdWhenCleanedShouldNotContainHyphenBeforeOrAfterValidSpecialCharacter() {
-		ProjectRequest request = createProjectRequest();
-		String artifactId = "correct !_!ID @";
-		request.setArtifactId(artifactId);
-		request.setBaseDir(artifactId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getArtifactId()).isEqualTo("correct_ID");
-	}
-
-	@Test
-	void groupIdWhenInvalidShouldBeCleanedWithDotDelimiter() {
-		ProjectRequest request = createProjectRequest();
-		String groupId = "correct !  ID12 @";
-		request.setGroupId(groupId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getGroupId()).isEqualTo("correct.ID12");
-	}
-
-	@Test
-	void groupIdWhenHasValidCharactersOnlyShouldNotBeCleaned() {
-		ProjectRequest request = createProjectRequest();
-		String groupId = "correct_ID12";
-		request.setGroupId(groupId);
-		ProjectDescription description = this.converter.convert(request, this.metadata);
-		assertThat(description.getGroupId()).isEqualTo("correct_ID12");
 	}
 
 	private ProjectRequest createProjectRequest() {

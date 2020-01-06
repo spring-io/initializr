@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,31 @@
 
 package io.spring.initializr.web.controller;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpServletResponse;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
+import io.spring.initializr.metadata.InitializrConfiguration.Env;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.metadata.InvalidInitializrMetadataException;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
+import io.spring.initializr.web.project.InvalidProjectRequestException;
 
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -85,6 +93,18 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
 	}
 
+	@ExceptionHandler
+	public void invalidMetadataRequest(HttpServletResponse response, InvalidInitializrMetadataException ex)
+			throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+	}
+
+	@ExceptionHandler
+	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex)
+			throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+	}
+
 	/**
 	 * Return the {@link CacheControl} response headers to use for the specified
 	 * {@link InitializrMetadata metadata}. If no cache should be applied
@@ -100,6 +120,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		InitializrMetadata metadata = this.metadataProvider.get();
 		Version v = (bootVersion != null) ? Version.parse(bootVersion)
 				: Version.parse(metadata.getBootVersions().getDefault().getId());
+		Env env = metadata.getConfiguration().getEnv();
+		if (!env.isCompatiblePlatformVersion(v)) {
+			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
+					+ "', Spring Boot compatibility range is " + env.determinePlatformCompatibilityRangeRequirement());
+		}
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
 		return ResponseEntity.ok().contentType(version.getMediaType()).eTag(createUniqueId(content))

@@ -37,6 +37,8 @@ public class MavenBuild extends Build {
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
 
+	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
+
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 	}
@@ -53,6 +55,24 @@ public class MavenBuild extends Build {
 	@Override
 	public MavenBuildSettings getSettings() {
 		return this.settings.build();
+	}
+
+	/**
+	 * Return a builder to configure the {@linkplain MavenDistributionManagement
+	 * distribution management} of this build.
+	 * @return a builder for {@link MavenDistributionManagement}
+	 */
+	public MavenDistributionManagement.Builder distributionManagement() {
+		return this.distributionManagement;
+	}
+
+	/**
+	 * Return the {@linkplain MavenDistributionManagement distribution management} of this
+	 * build.
+	 * @return the {@link MavenDistributionManagement}
+	 */
+	public MavenDistributionManagement getDistributionManagement() {
+		return this.distributionManagement.build();
 	}
 
 	/**

@@ -185,12 +185,13 @@ public class BillOfMaterials {
 	 * additional BOMs to use, if any.
 	 * @param bootVersion the Spring Boot version
 	 * @return the bill of materials
+	 * @throws InvalidInitializrMetadataException if no suitable mapping is found for that
+	 * version
 	 */
 	public BillOfMaterials resolve(Version bootVersion) {
 		if (this.mappings.isEmpty()) {
 			return this;
 		}
-
 		for (Mapping mapping : this.mappings) {
 			if (mapping.range.match(bootVersion)) {
 				BillOfMaterials resolvedBom = new BillOfMaterials(
@@ -205,7 +206,8 @@ public class BillOfMaterials {
 				return resolvedBom;
 			}
 		}
-		throw new IllegalStateException("No suitable mapping was found for " + this + " and version " + bootVersion);
+		throw new InvalidInitializrMetadataException(
+				"No suitable mapping was found for " + this + " and version " + bootVersion);
 	}
 
 	@Override
