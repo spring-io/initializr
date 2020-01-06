@@ -54,18 +54,41 @@ public class Scm {
 				&& this.childScmUrlInheritAppendPath == null;
 	}
 
+	/** 
+	 * Return the source control management system URL that describes the 
+	 * repository and how to connect to the repository.
+	 * 
+	 * @return the source control management system URL
+	 */
 	public String getConnection() {
 		return this.connection;
 	}
 
+	/**
+	 * 
+	 * Just like <code>connection</code>, but for developers, i.e. this scm connection
+     * will not be read only.
+     * 
+     * @return the source control management system URL for developers
+	 */
 	public String getDeveloperConnection() {
 		return this.developerConnection;
 	}
 
+	/**
+	 * The tag of current code. By default, it's set to HEAD during development.
+	 * 
+	 * @return the tag of current code
+	 */
 	public String getTag() {
 		return Optional.ofNullable(this.tag).orElse("HEAD");
 	}
 
+	/**
+	 * The URL to the project's browsable SCM repository.
+     * 
+	 * @return the URL to the project's browsable SCM repository
+	 */
 	public String getUrl() {
 		return this.url;
 	}
@@ -98,21 +121,48 @@ public class Scm {
 
 		private Boolean childScmUrlInheritAppendPath;
 
+		
+		/** 
+		 * Specify the source control management system URL that describes the 
+		 * repository and how to connect to the repository.
+		 * 
+		 * @param the source control management system URL
+		 * @return this for method chaining
+		 */
 		public Builder connection(String connection) {
 			this.connection = connection;
 			return this;
 		}
 
+		/** 
+		 * Specify the source control management system URL for developers 
+		 * that describes the repository and how to connect to the repository.
+		 * 
+		 * @param the source control management system URL for developers
+		 * @return this for method chaining
+		 */
 		public Builder developerConnection(String developerConnection) {
 			this.developerConnection = developerConnection;
 			return this;
 		}
 
+		/**
+		 * Specify the tag of current code. By default, it's set to HEAD during development.
+		 * 
+		 * @param the tag of current code
+		 * @return this for method chaining
+		 */
 		public Builder tag(String tag) {
 			this.tag = tag;
 			return this;
 		}
 
+		/**
+		 * Specify the URL to the project's browsable SCM repository.
+	     * 
+		 * @param the URL to the project's browsable SCM repository
+		 * @return this for method chaining
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;
