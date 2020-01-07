@@ -757,8 +757,7 @@ class MavenBuildWriterTests {
 	@Test
 	void pomWithScm() {
 		MavenBuild build = new MavenBuild();
-		build.scm().connection("connection").developerConnection("developerConnection").tag("tag").url("url")
-				.childScmConnectionInheritAppendPath(Boolean.FALSE);
+		build.scm().connection("connection").developerConnection("developerConnection").tag("tag").url("url");
 
 		generatePom(build, (pom) -> {
 			NodeAssert dependency = pom.nodeAtPath("/project/scm");
@@ -766,9 +765,6 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("developerConnection").isEqualTo("developerConnection");
 			assertThat(dependency).textAtPath("tag").isEqualTo("tag");
 			assertThat(dependency).textAtPath("url").isEqualTo("url");
-			assertThat(pom).nodeAtPath("/project/scm").matches((node) -> node.getAttributes()
-					.getNamedItem("child.scm.connection.inherit.append.path").getTextContent().equals("false"));
-			assertThat(pom).nodeAtPath("/project/scm").matches((node) -> node.getAttributes().getLength() == 1);
 		});
 	}
 

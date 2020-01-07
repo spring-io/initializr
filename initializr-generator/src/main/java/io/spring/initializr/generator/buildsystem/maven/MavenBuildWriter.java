@@ -19,7 +19,6 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -472,17 +471,12 @@ public class MavenBuildWriter {
 
 	private void writeScm(IndentingWriter writer, Scm scm) {
 		if (!scm.isEmpty()) {
-			Map<String, Object> attributeMap = new HashMap<>();
-			attributeMap.put("child.scm.connection.inherit.append.path", scm.getChildScmConnectionInheritAppendPath());
-			attributeMap.put("child.scm.developerConnection.inherit.append.path",
-					scm.getChildScmDeveloperConnectionInheritAppendPath());
-			attributeMap.put("child.scm.url.inherit.append.path", scm.getChildScmUrlInheritAppendPath());
-			writeElementWithAttributes(writer, "scm", () -> {
+			writeElement(writer, "scm", () -> {
 				writeSingleElement(writer, "connection", scm.getConnection());
 				writeSingleElement(writer, "developerConnection", scm.getDeveloperConnection());
 				writeSingleElement(writer, "tag", scm.getTag());
 				writeSingleElement(writer, "url", scm.getUrl());
-			}, attributeMap);
+			});
 		}
 	}
 
@@ -517,16 +511,6 @@ public class MavenBuildWriter {
 		if (!collection.isEmpty()) {
 			collection.forEach((item) -> itemWriter.accept(writer, item));
 		}
-	}
-
-	private void writeElementWithAttributes(IndentingWriter writer, String name, Runnable withContent,
-			Map<String, Object> attributeMap) {
-		writer.print(String.format("<%s", name));
-		attributeMap.entrySet().stream().filter((entry) -> entry.getValue() != null).forEach(
-				(entry) -> writer.print(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue().toString())));
-		writer.println(">");
-		writer.indented(withContent);
-		writer.println(String.format("</%s>", name));
 	}
 
 }

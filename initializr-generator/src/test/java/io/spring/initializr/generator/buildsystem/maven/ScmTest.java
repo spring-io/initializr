@@ -41,20 +41,6 @@ public class ScmTest {
 		assertThat(scm.getDeveloperConnection()).isEqualTo("developerConnection");
 		assertThat(scm.getTag()).isEqualTo("tag");
 		assertThat(scm.getUrl()).isEqualTo("url");
-		assertThat(scm.getChildScmConnectionInheritAppendPath()).isNull();
-		assertThat(scm.getChildScmDeveloperConnectionInheritAppendPath()).isNull();
-		assertThat(scm.getChildScmUrlInheritAppendPath()).isNull();
-	}
-
-	@Test
-	void attributeFalseTest() {
-		Scm scm = this.builder().childScmConnectionInheritAppendPath(Boolean.FALSE)
-				.childScmDeveloperConnectionInheritAppendPath(Boolean.FALSE).childScmUrlInheritAppendPath(Boolean.FALSE)
-				.build();
-		assertThat(scm.getChildScmConnectionInheritAppendPath()).isFalse();
-		assertThat(scm.getChildScmDeveloperConnectionInheritAppendPath()).isFalse();
-		assertThat(scm.getChildScmUrlInheritAppendPath()).isFalse();
-
 	}
 
 	private Scm.Builder builder() {
