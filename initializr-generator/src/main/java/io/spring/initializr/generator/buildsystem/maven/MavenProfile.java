@@ -18,6 +18,8 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.Build;
 
+import java.util.function.Consumer;
+
 /**
  * Maven-specific {@linkplain Build build configuration}.
  *
@@ -27,23 +29,33 @@ public class MavenProfile{
 
 	private final String id;
 
-	public MavenProfile(Builder builder) {
+	private final MavenProfileActivation activation;
+
+	protected MavenProfile(Builder builder) {
 		this.id = builder.id;
+		this.activation = (builder.activationBuilder == null) ? null : builder.activationBuilder.build();
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * Builder for a {@link MavenPlugin}.
-	 */
 	public static class Builder {
 
 		private final String id;
 
-		public Builder(String id) {
+		private MavenProfileActivation.Builder activationBuilder;
+
+		protected Builder(String id) {
 			this.id = id;
+		}
+
+		public MavenProfile.Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
+			if (this.activationBuilder == null) {
+				this.activationBuilder = new MavenProfileActivation.Builder();
+			}
+			activation.accept(this.activationBuilder);
+			return this;
 		}
 
 		public MavenProfile build() {
