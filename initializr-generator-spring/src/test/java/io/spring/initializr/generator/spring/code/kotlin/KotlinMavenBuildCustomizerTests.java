@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration.Setting;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +60,7 @@ class KotlinMavenBuildCustomizerTests {
 			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			assertThat(kotlinPlugin.getVersion()).isNull();
-			Configuration configuration = kotlinPlugin.getConfiguration();
+			MavenConfiguration configuration = kotlinPlugin.getConfiguration();
 			assertThat(configuration).isNotNull();
 			assertThat(configuration.getSettings()).hasSize(2);
 			Setting args = configuration.getSettings().get(0);
@@ -87,7 +87,7 @@ class KotlinMavenBuildCustomizerTests {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
 		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
-			Configuration configuration = kotlinPlugin.getConfiguration();
+			MavenConfiguration configuration = kotlinPlugin.getConfiguration();
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");
 			assertThat(args.getValue()).asList().hasSize(2);

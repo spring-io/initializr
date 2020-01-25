@@ -39,8 +39,12 @@ public class MavenBuild extends Build {
 
 	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
+	private final MavenProfileContainer profiles;
+
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
+
+		this.profiles = new MavenProfileContainer(super.getResolver());
 	}
 
 	public MavenBuild() {
@@ -100,6 +104,10 @@ public class MavenBuild extends Build {
 	 */
 	public MavenPluginContainer plugins() {
 		return this.plugins;
+	}
+
+	public MavenProfileContainer profiles() {
+		return this.profiles;
 	}
 
 }

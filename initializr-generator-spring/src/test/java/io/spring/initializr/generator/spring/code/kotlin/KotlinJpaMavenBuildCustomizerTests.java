@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -45,7 +46,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
+			MavenConfiguration.Setting settings = plugin.getConfiguration().getSettings().get(0);
 			assertThat(settings.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
 					.hasFieldOrPropertyWithValue("value", "jpa");
 			assertThat(plugin.getDependencies()).hasSize(1);

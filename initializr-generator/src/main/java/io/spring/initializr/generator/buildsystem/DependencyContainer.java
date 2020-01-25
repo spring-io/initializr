@@ -26,7 +26,7 @@ import java.util.function.Function;
  */
 public class DependencyContainer extends BuildItemContainer<String, Dependency> {
 
-	DependencyContainer(Function<String, Dependency> itemResolver) {
+	public DependencyContainer(Function<String, Dependency> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 
