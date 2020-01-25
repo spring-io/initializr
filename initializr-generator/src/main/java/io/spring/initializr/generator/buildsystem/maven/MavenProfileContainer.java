@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -24,6 +26,12 @@ import java.util.stream.Stream;
 public class MavenProfileContainer {
 
     private final Map<String, MavenProfile.Builder> profiles = new LinkedHashMap<>();
+
+    private final BuildItemResolver buildItemResolver;
+
+    public MavenProfileContainer(BuildItemResolver buildItemResolver) {
+        this.buildItemResolver = buildItemResolver;
+    }
 
     /**
      * Specify if this container is empty.
@@ -86,7 +94,7 @@ public class MavenProfileContainer {
     private MavenProfile.Builder createProfileBuilder(String id) {
         MavenProfile.Builder profileBuilder = this.profiles.get(id);
         if (profileBuilder == null) {
-            MavenProfile.Builder builder = new MavenProfile.Builder(id);
+            MavenProfile.Builder builder = new MavenProfile.Builder(id, buildItemResolver);
             this.profiles.put(id, builder);
             return builder;
         }

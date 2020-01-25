@@ -27,7 +27,7 @@ import java.util.function.Function;
  */
 public class MavenRepositoryContainer extends BuildItemContainer<String, MavenRepository> {
 
-	MavenRepositoryContainer(Function<String, MavenRepository> itemResolver) {
+	public MavenRepositoryContainer(Function<String, MavenRepository> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 

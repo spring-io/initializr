@@ -16,50 +16,87 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Maven-specific {@linkplain Build build configuration}.
- *
- * @author Andy Wilkinson
- */
-public class MavenProfile{
+public class MavenProfile {
 
-	private final String id;
+    private final String id;
 
-	private final MavenProfileActivation activation;
+    private final MavenProfileActivation activation;
 
-	protected MavenProfile(Builder builder) {
-		this.id = builder.id;
-		this.activation = (builder.activationBuilder == null) ? null : builder.activationBuilder.build();
-	}
+    private final MavenProfileBuild build;
 
-	public String getId() {
-		return id;
-	}
+    private final List<String> modules;
 
-	public static class Builder {
+    private final MavenRepositoryContainer repositories;
 
-		private final String id;
+	private final MavenRepositoryContainer pluginRepositories;
 
-		private MavenProfileActivation.Builder activationBuilder;
+    protected MavenProfile(Builder builder) {
+        this.id = builder.id;
+        this.activation = (builder.activationBuilder == null) ? null : builder.activationBuilder.build();
+        this.build = (builder.buildBuilder == null) ? null : builder.buildBuilder.build();
+        this.modules = builder.modules;
+        this.repositories = builder.repositories;
+		this.pluginRepositories = builder.pluginRepositories;
+    }
 
-		protected Builder(String id) {
-			this.id = id;
-		}
+    public String getId() {
+        return id;
+    }
 
-		public MavenProfile.Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
-			if (this.activationBuilder == null) {
-				this.activationBuilder = new MavenProfileActivation.Builder();
-			}
-			activation.accept(this.activationBuilder);
+    public static class Builder {
+
+        private final String id;
+
+        private MavenProfileActivation.Builder activationBuilder = new MavenProfileActivation.Builder();
+
+        private MavenProfileBuild.Builder buildBuilder = new MavenProfileBuild.Builder();
+
+		private List<String> modules = new LinkedList<>();
+
+		private MavenRepositoryContainer repositories;
+
+		private MavenRepositoryContainer pluginRepositories;
+
+        protected Builder(String id, BuildItemResolver buildItemResolver) {
+            this.id = id;
+			this.repositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
+			this.pluginRepositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
+        }
+
+        public MavenProfile.Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
+            activation.accept(this.activationBuilder);
+            return this;
+        }
+
+        public MavenProfile.Builder build(Consumer<MavenProfileBuild.Builder> build) {
+            build.accept(this.buildBuilder);
+            return this;
+        }
+
+		public MavenProfile.Builder module(String module) {
+			this.modules.add(module);
 			return this;
 		}
 
-		public MavenProfile build() {
-			return new MavenProfile(this);
+		public MavenProfile.Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
+			repositories.accept(this.repositories);
+			return this;
 		}
-	}
+
+		public MavenProfile.Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
+			pluginRepositories.accept(this.pluginRepositories);
+			return this;
+		}
+
+        public MavenProfile build() {
+            return new MavenProfile(this);
+        }
+    }
 }

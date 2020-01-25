@@ -12,6 +12,6 @@ class MavenProfileTests {
     }
 
     private MavenProfile.Builder profile(String id) {
-        return new MavenProfile.Builder(id);
+        return new MavenProfile.Builder(id, buildItemResolver);
     }
 }

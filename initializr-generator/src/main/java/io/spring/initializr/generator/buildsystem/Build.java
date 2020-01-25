@@ -34,8 +34,10 @@ public abstract class Build {
 
 	private final MavenRepositoryContainer pluginRepositories;
 
+	protected final BuildItemResolver resolver;
+
 	protected Build(BuildItemResolver buildItemResolver) {
-		BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
+		this.resolver = determineBuildItemResolver(buildItemResolver);
 		this.properties = new PropertyContainer();
 		this.dependencies = new DependencyContainer(resolver::resolveDependency);
 		this.boms = new BomContainer(resolver::resolveBom);
