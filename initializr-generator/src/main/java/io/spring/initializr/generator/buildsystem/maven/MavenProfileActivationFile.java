@@ -5,12 +5,7 @@ public class MavenProfileActivationFile {
 
     private final String exists;
 
-    public MavenProfileActivationFile(String missing, String exists) {
-        this.missing = missing;
-        this.exists = exists;
-    }
-
-    public MavenProfileActivationFile(Builder builder) {
+    protected MavenProfileActivationFile(Builder builder) {
         this.missing = builder.missing;
         this.exists = builder.exists;
     }

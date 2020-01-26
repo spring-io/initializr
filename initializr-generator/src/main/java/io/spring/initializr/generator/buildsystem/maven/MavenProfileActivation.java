@@ -2,6 +2,8 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.function.Consumer;
 
+import static java.util.Optional.ofNullable;
+
 public class MavenProfileActivation {
     private final Boolean activeByDefault;
 
@@ -13,12 +15,18 @@ public class MavenProfileActivation {
 
     private final MavenProfileActivationFile file;
 
-    public MavenProfileActivation(Builder builder) {
+    protected MavenProfileActivation(Builder builder) {
         this.activeByDefault = builder.activeByDefault;
         this.jdk = builder.jdk;
-        this.os = (builder.osBuilder == null) ? null : builder.osBuilder.build();
-        this.property = (builder.propertyBuilder == null) ? null : builder.propertyBuilder.build();
-        this.file = (builder.fileBuilder == null) ? null : builder.fileBuilder.build();
+        this.os = ofNullable(builder.osBuilder)
+                .map(MavenProfileActivationOS.Builder::build)
+                .orElse(null);
+        this.property = ofNullable(builder.propertyBuilder)
+                .map(MavenProfileActivationProperty.Builder::build)
+                .orElse(null);
+        this.file = ofNullable(builder.fileBuilder)
+                .map(MavenProfileActivationFile.Builder::build)
+                .orElse(null);
     }
 
     public Boolean getActiveByDefault() {
@@ -29,10 +37,21 @@ public class MavenProfileActivation {
         return jdk;
     }
 
+    public MavenProfileActivationOS getOs() {
+        return os;
+    }
+
+    public MavenProfileActivationProperty getProperty() {
+        return property;
+    }
+
+    public MavenProfileActivationFile getFile() {
+        return file;
+    }
 
     public static class Builder {
 
-        private Boolean activeByDefault = false;
+        private Boolean activeByDefault;
 
         private String jdk;
 
@@ -42,7 +61,7 @@ public class MavenProfileActivation {
 
         private MavenProfileActivationFile.Builder fileBuilder;
 
-        public Builder() {
+        protected Builder() {
         }
 
         public MavenProfileActivation.Builder activeByDefault(boolean activeByDefault) {

@@ -1,10 +1,11 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.DependencyContainer;
-
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static java.util.Optional.ofNullable;
 
 public class MavenProfileBuild {
     private final String defaultGoal;
@@ -27,10 +28,14 @@ public class MavenProfileBuild {
         this.defaultGoal = builder.defaultGoal;
         this.directory = builder.directory;
         this.finalName = builder.finalName;
-        this.filters = builder.filters;
+        this.filters = ofNullable(builder.filters)
+                .map(Collections::unmodifiableList)
+                .orElse(null);
         this.resources = builder.resources;
         this.testResources = builder.testResources;
-        this.pluginManagement = (builder.pluginManagementBuilder == null) ? null : builder.pluginManagementBuilder.build();
+        this.pluginManagement = ofNullable(builder.pluginManagementBuilder)
+                .map(MavenPluginManagement.Builder::build)
+                .orElse(null);
         this.plugins = builder.plugins;
     }
 
@@ -74,20 +79,20 @@ public class MavenProfileBuild {
 
         private String finalName;
 
-        private List<String> filters = new LinkedList<>();
+        private List<String> filters;
 
-        private MavenResourceContainer resources = new MavenResourceContainer();
+        private MavenResourceContainer resources;
 
-        private MavenResourceContainer testResources = new MavenResourceContainer();
+        private MavenResourceContainer testResources;
 
-        private MavenPluginManagement.Builder pluginManagementBuilder = new MavenPluginManagement.Builder();
+        private MavenPluginManagement.Builder pluginManagementBuilder;
 
-        private MavenPluginContainer plugins = new MavenPluginContainer();
+        private MavenPluginContainer plugins;
 
         protected Builder() {
         }
 
-        public MavenProfileBuild.Builder activeByDefault(String defaultGoal) {
+        public MavenProfileBuild.Builder defaultGoal(String defaultGoal) {
             this.defaultGoal = defaultGoal;
             return this;
         }
@@ -103,26 +108,41 @@ public class MavenProfileBuild {
         }
 
         public MavenProfileBuild.Builder filter(String filter) {
+            if(this.filters == null){
+                this.filters = new LinkedList<>();
+            }
             this.filters.add(filter);
             return this;
         }
 
         public MavenProfileBuild.Builder resources(Consumer<MavenResourceContainer> resources) {
+            if(this.resources == null){
+                this.resources = new MavenResourceContainer();
+            }
             resources.accept(this.resources);
             return this;
         }
 
         public MavenProfileBuild.Builder testResources(Consumer<MavenResourceContainer> testResources) {
+            if(this.testResources == null){
+                this.testResources = new MavenResourceContainer();
+            }
             testResources.accept(this.testResources);
             return this;
         }
 
         public MavenProfileBuild.Builder pluginManagement(Consumer<MavenPluginManagement.Builder> pluginManagement) {
+            if(this.pluginManagementBuilder == null){
+                this.pluginManagementBuilder = new MavenPluginManagement.Builder();
+            }
             pluginManagement.accept(this.pluginManagementBuilder);
             return this;
         }
 
         public MavenProfileBuild.Builder plugins(Consumer<MavenPluginContainer> plugins) {
+            if(this.plugins == null){
+                this.plugins = new MavenPluginContainer();
+            }
             plugins.accept(this.plugins);
             return this;
         }

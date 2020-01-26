@@ -1,7 +1,5 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.function.Consumer;
-
 public class MavenProfileActivationOS {
     private final String name;
 

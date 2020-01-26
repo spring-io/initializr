@@ -3,7 +3,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.util.function.Consumer;
 
 public class MavenReporting {
-    private final boolean excludeDefaults;
+    private final Boolean excludeDefaults;
 
     private final String outputDirectory;
 
@@ -15,13 +15,25 @@ public class MavenReporting {
         this.reportPlugins = builder.reportPlugins;
     }
 
+    public Boolean isExcludeDefaults() {
+        return excludeDefaults;
+    }
+
+    public String getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    public MavenReportPluginContainer getReportPlugins() {
+        return reportPlugins;
+    }
+
     public static class Builder {
 
-        private boolean excludeDefaults;
+        private Boolean excludeDefaults;
 
         private String outputDirectory;
 
-        private MavenReportPluginContainer reportPlugins = new MavenReportPluginContainer();
+        private MavenReportPluginContainer reportPlugins;
 
         protected Builder() {
         }
@@ -37,6 +49,9 @@ public class MavenReporting {
         }
 
         public MavenReporting.Builder reportPlugins(Consumer<MavenReportPluginContainer> reportPlugins) {
+            if(this.reportPlugins == null){
+                this.reportPlugins = new MavenReportPluginContainer();
+            }
             reportPlugins.accept(this.reportPlugins);
             return this;
         }

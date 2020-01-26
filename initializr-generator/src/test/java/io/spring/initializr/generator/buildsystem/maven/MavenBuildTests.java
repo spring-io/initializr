@@ -139,4 +139,24 @@ class MavenBuildTests {
 				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}
 
+	@Test
+	void mavenProfilesCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.profiles().add("profile1", (profile) -> profile.activation(activation -> activation.activeByDefault(true)));
+		assertThat(build.profiles().values()).hasOnlyOneElementSatisfying((profile) -> {
+			assertThat(profile.getId()).isEqualTo("profile1");
+			assertThat(profile.getActivation()).isNotNull();
+			assertThat(profile.getActivation().getActiveByDefault()).isTrue();
+			assertThat(profile.getBuild()).isNull();
+			assertThat(profile.getModules()).isNull();
+			assertThat(profile.getRepositories()).isNull();
+			assertThat(profile.getPluginRepositories()).isNull();
+			assertThat(profile.getDependencies()).isNull();
+			assertThat(profile.getReporting()).isNull();
+			assertThat(profile.getDependencyManagement()).isNull();
+			assertThat(profile.getDistributionManagement()).isNull();
+			assertThat(profile.getProperties()).isNull();
+		});
+	}
+
 }

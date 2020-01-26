@@ -5,12 +5,7 @@ public class MavenProfileActivationProperty {
 
     private final String value;
 
-    public MavenProfileActivationProperty(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    public MavenProfileActivationProperty(Builder builder) {
+    protected MavenProfileActivationProperty(Builder builder) {
         this.name = builder.name;
         this.value = builder.value;
     }

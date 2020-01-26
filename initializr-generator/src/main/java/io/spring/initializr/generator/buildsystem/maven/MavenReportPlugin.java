@@ -74,12 +74,23 @@ public class MavenReportPlugin {
             return this;
         }
 
+        public MavenReportPlugin.Builder version(String version) {
+            this.version = version;
+            return this;
+        }
+
         public MavenReportPlugin.Builder configuration(Consumer<PropertyContainer> configuration) {
+            if(this.configuration == null){
+                this.configuration = new PropertyContainer();
+            }
             configuration.accept(this.configuration);
             return this;
         }
 
         public MavenReportPlugin.Builder reportSets(Consumer<MavenReportSetContainer> reportSets) {
+            if(this.reportSets == null){
+                this.reportSets = new MavenReportSetContainer();
+            }
             reportSets.accept(this.reportSets);
             return this;
         }

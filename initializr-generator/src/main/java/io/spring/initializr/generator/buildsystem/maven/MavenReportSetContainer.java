@@ -25,66 +25,28 @@ public class MavenReportSetContainer {
 
     private final Map<String, MavenReportSet.Builder> reportSets = new LinkedHashMap<>();
 
-    /**
-     * Specify if this container is empty.
-     *
-     * @return {@code true} if no {@link MavenProfile} is added
-     */
     public boolean isEmpty() {
         return this.reportSets.isEmpty();
     }
 
-    /**
-     * Returns a {@link Stream} of registered {@link MavenProfile}s.
-     *
-     * @return a stream of {@link MavenProfile}s
-     */
     public Stream<MavenReportSet> values() {
         return this.reportSets.values().stream().map(MavenReportSet.Builder::build);
     }
 
-    /**
-     * Add a {@link MavenProfile} with the specified {@code id} and
-     * {@code activateByDefault}.
-     *
-     * @param id the id of the profile
-     */
-    public void add(String id) {
+    public MavenReportSetContainer add(String id) {
         createReportSetBuilder(id);
+        return this;
     }
 
-    /**
-     * Specify if this container has a plugin with the specified {@code groupId} and
-     * {@code artifactId}.
-     *
-     * @param id the groupId of the plugin
-     * @return {@code true} if an item with the specified {@code groupId} and
-     * {@code artifactId} exists
-     */
     public boolean has(String id) {
         return this.reportSets.containsKey(id);
     }
 
-    /**
-     * Add a {@link MavenProfile} with the specified {@code id} and
-     * {@code activateByDefault} and {@link MavenProfile.Builder} to customize the
-     * profile. If the profile has already been added, the profileBuilder can be used to
-     * further tune the existing profile configuration.
-     *
-     * @param id             the id of the profile
-     * @param profileBuilder a {@link MavenProfile.Builder} to customize the
-     *                       {@link MavenProfile}
-     */
-    public void add(String id, Consumer<MavenReportSet.Builder> profileBuilder) {
+    public MavenReportSetContainer add(String id, Consumer<MavenReportSet.Builder> profileBuilder) {
         profileBuilder.accept(createReportSetBuilder(id));
+        return this;
     }
 
-    /**
-     * Remove the plugin with the specified {@code groupId} and {@code artifactId}.
-     *
-     * @param id the groupId of the plugin to remove
-     * @return {@code true} if such a plugin was registered, {@code false} otherwise
-     */
     public boolean remove(String id) {
         return this.reportSets.remove(id) != null;
     }
