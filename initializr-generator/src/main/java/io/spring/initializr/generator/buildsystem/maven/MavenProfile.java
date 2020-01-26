@@ -17,7 +17,9 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
+import io.spring.initializr.generator.buildsystem.PropertyContainer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +39,16 @@ public class MavenProfile {
 
 	private final MavenRepositoryContainer pluginRepositories;
 
+    private final DependencyContainer dependencies;
+
+    private final MavenReporting reporting;
+
+    private final DependencyContainer dependencyManagement;
+
+    private final MavenDistributionManagement distributionManagement;
+
+    private final PropertyContainer properties;
+
     protected MavenProfile(Builder builder) {
         this.id = builder.id;
         this.activation = (builder.activationBuilder == null) ? null : builder.activationBuilder.build();
@@ -44,6 +56,11 @@ public class MavenProfile {
         this.modules = builder.modules;
         this.repositories = builder.repositories;
 		this.pluginRepositories = builder.pluginRepositories;
+		this.dependencies = builder.dependencies;
+		this.reporting =  (builder.reportingBuilder == null) ? null : builder.reportingBuilder.build();
+		this.dependencyManagement = builder.dependencyManagement;
+        this.distributionManagement = (builder.distributionManagementBuilder == null) ? null : builder.distributionManagementBuilder.build();
+        this.properties = builder.properties;
     }
 
     public String getId() {
@@ -64,10 +81,22 @@ public class MavenProfile {
 
 		private MavenRepositoryContainer pluginRepositories;
 
+        private DependencyContainer dependencies;
+
+        private MavenReporting.Builder reportingBuilder = new MavenReporting.Builder();
+
+        private DependencyContainer dependencyManagement;
+
+        private MavenDistributionManagement.Builder distributionManagementBuilder = new MavenDistributionManagement.Builder();
+
+        private PropertyContainer properties = new PropertyContainer();
+
         protected Builder(String id, BuildItemResolver buildItemResolver) {
             this.id = id;
 			this.repositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
 			this.pluginRepositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
+			this.dependencies = new DependencyContainer(buildItemResolver::resolveDependency);
+            this.dependencyManagement = new DependencyContainer(buildItemResolver::resolveDependency);
         }
 
         public MavenProfile.Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
@@ -94,6 +123,31 @@ public class MavenProfile {
 			pluginRepositories.accept(this.pluginRepositories);
 			return this;
 		}
+
+        public MavenProfile.Builder reporting(Consumer<MavenReporting.Builder> reporting) {
+            reporting.accept(this.reportingBuilder);
+            return this;
+        }
+
+        public MavenProfile.Builder dependencies(Consumer<DependencyContainer> dependencies) {
+            dependencies.accept(this.dependencies);
+            return this;
+        }
+
+        public MavenProfile.Builder dependencyManagement(Consumer<DependencyContainer> dependencyManagement) {
+            dependencyManagement.accept(this.dependencyManagement);
+            return this;
+        }
+
+        public MavenProfile.Builder distributionManagement(Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
+            distributionManagementBuilder.accept(this.distributionManagementBuilder);
+            return this;
+        }
+
+        public MavenProfile.Builder properties(Consumer<PropertyContainer> properties) {
+            properties.accept(this.properties);
+            return this;
+        }
 
         public MavenProfile build() {
             return new MavenProfile(this);

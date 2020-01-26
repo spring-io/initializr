@@ -23,8 +23,6 @@ public class MavenProfileBuild {
 
     private final MavenPluginContainer plugins;
 
-    private final DependencyContainer dependencies;
-
     protected MavenProfileBuild(Builder builder) {
         this.defaultGoal = builder.defaultGoal;
         this.directory = builder.directory;
