@@ -26,7 +26,7 @@ import java.util.function.Function;
  */
 public class BomContainer extends BuildItemContainer<String, BillOfMaterials> {
 
-	BomContainer(Function<String, BillOfMaterials> itemResolver) {
+	public BomContainer(Function<String, BillOfMaterials> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 

@@ -27,14 +27,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.spring.initializr.generator.buildsystem.BillOfMaterials;
-import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.*;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
-import io.spring.initializr.generator.buildsystem.DependencyComparator;
-import io.spring.initializr.generator.buildsystem.DependencyContainer;
-import io.spring.initializr.generator.buildsystem.DependencyScope;
-import io.spring.initializr.generator.buildsystem.MavenRepository;
-import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
@@ -74,11 +68,12 @@ public class MavenBuildWriter {
 			writeCollectionElement(writer, "licenses", settings.getLicenses(), this::writeLicense);
 			writeCollectionElement(writer, "developers", settings.getDevelopers(), this::writeDeveloper);
 			writeProperties(writer, build.properties());
-			writeDependencies(writer, build);
-			writeDependencyManagement(writer, build);
+			writeDependencies(writer, build.dependencies());
+			writeDependencyManagement(writer, build.boms());
 			writeBuild(writer, build);
-			writeRepositories(writer, build);
-			writeDistributionManagement(writer, build);
+			writeProfiles(writer, build);
+			writeRepositories(writer, build.repositories(), build.pluginRepositories());
+			writeDistributionManagement(writer, build.getDistributionManagement());
 		});
 	}
 
@@ -174,11 +169,10 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDependencies(IndentingWriter writer, MavenBuild build) {
-		if (build.dependencies().isEmpty()) {
+	private void writeDependencies(IndentingWriter writer, DependencyContainer dependencies) {
+		if (dependencies.isEmpty()) {
 			return;
 		}
-		DependencyContainer dependencies = build.dependencies();
 		writer.println();
 		writeElement(writer, "dependencies", () -> {
 			Collection<Dependency> compiledDependencies = writeDependencies(writer, dependencies,
@@ -260,11 +254,11 @@ public class MavenBuildWriter {
 				|| dependency.getScope() == DependencyScope.COMPILE_ONLY);
 	}
 
-	private void writeDependencyManagement(IndentingWriter writer, MavenBuild build) {
-		if (build.boms().isEmpty()) {
+	private void writeDependencyManagement(IndentingWriter writer, BomContainer bomsContainer) {
+		if (bomsContainer.isEmpty()) {
 			return;
 		}
-		List<BillOfMaterials> boms = build.boms().items().sorted(Comparator.comparing(BillOfMaterials::getOrder))
+		List<BillOfMaterials> boms = bomsContainer.items().sorted(Comparator.comparing(BillOfMaterials::getOrder))
 				.collect(Collectors.toList());
 		writer.println();
 		writeElement(writer, "dependencyManagement",
@@ -389,9 +383,9 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeRepositories(IndentingWriter writer, MavenBuild build) {
-		List<MavenRepository> repositories = filterRepositories(build.repositories().items());
-		List<MavenRepository> pluginRepositories = filterRepositories(build.pluginRepositories().items());
+	private void writeRepositories(IndentingWriter writer, MavenRepositoryContainer buildRepositories, MavenRepositoryContainer buildPluginRepositories) {
+		List<MavenRepository> repositories = filterRepositories(buildRepositories.items());
+		List<MavenRepository> pluginRepositories = filterRepositories(buildPluginRepositories.items());
 		if (repositories.isEmpty() && pluginRepositories.isEmpty()) {
 			return;
 		}
@@ -424,8 +418,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDistributionManagement(IndentingWriter writer, MavenBuild build) {
-		MavenDistributionManagement distributionManagement = build.getDistributionManagement();
+	private void writeDistributionManagement(IndentingWriter writer, MavenDistributionManagement distributionManagement) {
 		if (distributionManagement.isEmpty()) {
 			return;
 		}
@@ -465,6 +458,46 @@ public class MavenBuildWriter {
 				}
 			});
 		}
+	}
+
+	private void writeProfiles(IndentingWriter writer, MavenBuild build) {
+		MavenProfileContainer profilesContainer = build.profiles();
+		if (profilesContainer.isEmpty()) {
+			return;
+		}
+		Stream<MavenProfile> profiles = profilesContainer.values();
+		writer.println();
+		writeElement(writer, "profiles", () -> {
+			profiles.forEach((profile) -> {
+				writeElement(writer, "profile", () -> {
+					writeSingleElement(writer, "id", profile.getId());
+					writeProfileActivation(writer, profile.getActivation());
+					writeProfileBuild(writer, profile.getBuild());
+					writeProfileModules(writer, profile.getModules());
+					writeRepositories(writer, profile.getRepositories(), profile.getPluginRepositories());
+					writeDependencies(writer, profile.getDependencies());
+					writeReporting(writer, profile.getReporting());
+					writeDependencyManagement(writer, profile.getDependencyManagement());
+					writeDistributionManagement(writer, profile.getDistributionManagement());
+					writeProperties(writer, profile.getProperties());
+				});
+			});
+		});
+	}
+
+	private void writeReporting(IndentingWriter writer, MavenReporting reporting) {
+
+	}
+
+	private void writeProfileModules(IndentingWriter writer, List<String> modules) {
+
+	}
+
+	private void writeProfileBuild(IndentingWriter writer, MavenProfileBuild build) {
+
+	}
+
+	private void writeProfileActivation(IndentingWriter writer, MavenProfileActivation activation) {
 	}
 
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {

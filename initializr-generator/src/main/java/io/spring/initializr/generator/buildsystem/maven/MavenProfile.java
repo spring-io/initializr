@@ -16,10 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.BuildItemResolver;
-import io.spring.initializr.generator.buildsystem.DependencyContainer;
-import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
-import io.spring.initializr.generator.buildsystem.PropertyContainer;
+import io.spring.initializr.generator.buildsystem.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +42,7 @@ public class MavenProfile {
 
     private final MavenReporting reporting;
 
-    private final DependencyContainer dependencyManagement;
+    private final BomContainer dependencyManagement;
 
     private final MavenDistributionManagement distributionManagement;
 
@@ -105,7 +102,7 @@ public class MavenProfile {
         return reporting;
     }
 
-    public DependencyContainer getDependencyManagement() {
+    public BomContainer getDependencyManagement() {
         return dependencyManagement;
     }
 
@@ -137,7 +134,7 @@ public class MavenProfile {
 
         private MavenReporting.Builder reportingBuilder;
 
-        private DependencyContainer dependencyManagement;
+        private BomContainer dependencyManagement;
 
         private MavenDistributionManagement.Builder distributionManagementBuilder;
 
@@ -204,9 +201,9 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder dependencyManagement(Consumer<DependencyContainer> dependencyManagement) {
+        public MavenProfile.Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
             if (this.dependencyManagement == null) {
-                this.dependencyManagement = new DependencyContainer(this.buildItemResolver::resolveDependency);
+                this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
             }
             dependencyManagement.accept(this.dependencyManagement);
             return this;
