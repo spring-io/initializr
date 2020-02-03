@@ -40,14 +40,14 @@ class MavenReportPluginContainerTests {
 	void addReportPluginWithConsumer() {
 		MavenReportPluginContainer reportPluginContainer = new MavenReportPluginContainer();
 		reportPluginContainer.add("com.example", "demo",
-				(reportPlugin) -> reportPlugin.configuration(conf -> conf.add("property1", "value1"))
+				(reportPlugin) -> reportPlugin.configuration((conf) -> conf.add("property1", "value1"))
 						.inherited("inherited1").version("version1")
-						.reportSets(reportSets -> reportSets.add("reportSet1").add("reportSet2")));
+						.reportSets((reportSets) -> reportSets.add("reportSet1").add("reportSet2")));
 
 		assertThat(reportPluginContainer.values()).hasOnlyOneElementSatisfying((reportPlugin) -> {
 			assertThat(reportPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(reportPlugin.getArtifactId()).isEqualTo("demo");
-			assertThat(reportPlugin.getConfiguration().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+			assertThat(reportPlugin.getConfiguration().getSettings()).hasOnlyOneElementSatisfying((settings) -> {
 				assertThat(settings.getName()).isEqualTo("property1");
 				assertThat(settings.getValue()).isEqualTo("value1");
 			});

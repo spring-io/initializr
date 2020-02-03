@@ -16,12 +16,15 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.*;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import io.spring.initializr.generator.buildsystem.BomContainer;
+import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.DependencyContainer;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 
 public class MavenProfile {
 

@@ -18,9 +18,9 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
 
 class MavenReportSetTests {
 
@@ -36,11 +36,11 @@ class MavenReportSetTests {
 	@Test
 	void reportSetWithFullData() {
 		MavenReportSet reportSet = new MavenReportSet.Builder("id")
-				.configuration(conf -> conf.add("property1", "value1")).inherited("inherited1").report("report1")
+				.configuration((conf) -> conf.add("property1", "value1")).inherited("inherited1").report("report1")
 				.report("report2").build();
 
 		assertThat(reportSet.getId()).isEqualTo("id");
-		assertThat(reportSet.getConfiguration().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+		assertThat(reportSet.getConfiguration().getSettings()).hasOnlyOneElementSatisfying((settings) -> {
 			assertThat(settings.getName()).isEqualTo("property1");
 			assertThat(settings.getValue()).isEqualTo("value1");
 		});

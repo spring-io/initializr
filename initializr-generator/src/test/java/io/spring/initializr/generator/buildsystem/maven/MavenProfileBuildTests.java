@@ -16,11 +16,11 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class MavenProfileBuildTests {
 
@@ -41,11 +41,11 @@ class MavenProfileBuildTests {
 	void profileBuildWithFullData() {
 		MavenProfileBuild profileBuild = new MavenProfileBuild.Builder().defaultGoal("goal1").directory("directory1")
 				.finalName("file1").filter("filter1").filter("filter2")
-				.resources(resources -> resources.add("resource1"))
-				.testResources(testResources -> testResources.add("testResources1"))
+				.resources((resources) -> resources.add("resource1"))
+				.testResources((testResources) -> testResources.add("testResources1"))
 				.pluginManagement(
-						pluginManagement -> pluginManagement.plugins(plugins -> plugins.add("com.example", "demo")))
-				.plugins(plugins -> plugins.add("com.example1", "demo1")).build();
+						(pluginManagement) -> pluginManagement.plugins((plugins) -> plugins.add("com.example", "demo")))
+				.plugins((plugins) -> plugins.add("com.example1", "demo1")).build();
 
 		assertThat(profileBuild.getDefaultGoal()).isEqualTo("goal1");
 		assertThat(profileBuild.getDirectory()).isEqualTo("directory1");

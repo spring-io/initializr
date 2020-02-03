@@ -35,8 +35,8 @@ class MavenProfileActivationTests {
 	@Test
 	void profileActivationWithFullData() {
 		MavenProfileActivation profileActivation = new MavenProfileActivation.Builder().jdk("jdk1")
-				.activeByDefault(true).os(os -> os.name("name1")).file(file -> file.exists("yes"))
-				.property(property -> property.name("name1")).build();
+				.activeByDefault(true).os((os) -> os.name("name1")).file((file) -> file.exists("yes"))
+				.property((property) -> property.name("name1")).build();
 
 		assertThat(profileActivation.getActiveByDefault()).isTrue();
 		assertThat(profileActivation.getJdk()).isEqualTo("jdk1");

@@ -27,8 +27,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.spring.initializr.generator.buildsystem.*;
+import io.spring.initializr.generator.buildsystem.BillOfMaterials;
+import io.spring.initializr.generator.buildsystem.BomContainer;
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
+import io.spring.initializr.generator.buildsystem.DependencyComparator;
+import io.spring.initializr.generator.buildsystem.DependencyContainer;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
+import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
+import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
@@ -475,10 +483,8 @@ public class MavenBuildWriter {
 					writeSingleElement(writer, "id", profile.getId());
 					writeProfileActivation(writer, profile.getActivation());
 					writeProfileBuild(writer, profile.getBuild());
-					writeCollectionElement(writer, "modules", profile.getModules(),
-							(IndentingWriter writerInner, String module) -> {
-								writeSingleElement(writerInner, "module", module);
-							});
+					writeCollectionElement(writer, "modules", profile.getModules(), (IndentingWriter writerInner,
+							String module) -> writeSingleElement(writerInner, "module", module));
 					writeRepositories(writer, profile.getRepositories(), profile.getPluginRepositories());
 					writeDependencies(writer, profile.getDependencies());
 					writeReporting(writer, profile.getReporting());
@@ -539,9 +545,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "directory", build.getDirectory());
 			writeSingleElement(writer, "fileName", build.getFinalName());
 			writeCollectionElement(writer, "filters", build.getFilters(),
-					(IndentingWriter writerInner, String filter) -> {
-						writeSingleElement(writerInner, "filter", filter);
-					});
+					(IndentingWriter writerInner, String filter) -> writeSingleElement(writerInner, "filter", filter));
 			writeResources(writer, build.getResources(), build.getTestResources());
 			writePluginManagement(writer, build.getPluginManagement());
 			writeCollectionElement(writer, "plugins", build.getPlugins().values(), this::writePlugin);
@@ -554,9 +558,8 @@ public class MavenBuildWriter {
 		}
 
 		writer.println();
-		writeElement(writer, "pluginManagement", () -> {
-			writeCollectionElement(writer, "plugins", pluginManagement.getPlugins().values(), this::writePlugin);
-		});
+		writeElement(writer, "pluginManagement", () -> writeCollectionElement(writer, "plugins",
+				pluginManagement.getPlugins().values(), this::writePlugin));
 	}
 
 	private void writeReporting(IndentingWriter writer, MavenReporting reporting) {
@@ -606,10 +609,8 @@ public class MavenBuildWriter {
 					writeSingleElement(writer, "id", reportSet.getId());
 					writeSingleElement(writer, "inherited", reportSet.getInherited());
 					writeConfiguration(writer, "configuration", reportSet.getConfiguration());
-					writeCollectionElement(writer, "reports", reportSet.getReports(),
-							(IndentingWriter writerInner, String report) -> {
-								writeSingleElement(writerInner, "report", report);
-							});
+					writeCollectionElement(writer, "reports", reportSet.getReports(), (IndentingWriter writerInner,
+							String report) -> writeSingleElement(writerInner, "report", report));
 				});
 			});
 		});

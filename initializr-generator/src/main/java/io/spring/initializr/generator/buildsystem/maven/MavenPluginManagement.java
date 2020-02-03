@@ -27,7 +27,7 @@ public class MavenPluginManagement {
 	}
 
 	public MavenPluginContainer getPlugins() {
-		return plugins;
+		return this.plugins;
 	}
 
 	public static class Builder {

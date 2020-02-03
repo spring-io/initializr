@@ -33,7 +33,7 @@ class MavenReportingTests {
 	@Test
 	void reportingWithFullData() {
 		MavenReporting reporting = new MavenReporting.Builder().excludeDefaults(true).outputDirectory("output")
-				.reportPlugins(reportPlugins -> reportPlugins.add("com.example", "demo").add("com.example", "demo2"))
+				.reportPlugins((reportPlugins) -> reportPlugins.add("com.example", "demo").add("com.example", "demo2"))
 				.build();
 
 		assertThat(reporting.isExcludeDefaults()).isTrue();

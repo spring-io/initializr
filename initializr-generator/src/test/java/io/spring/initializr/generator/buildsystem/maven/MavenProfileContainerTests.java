@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -26,6 +25,11 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.spring.initializr.generator.buildsystem.BillOfMaterials;
+import io.spring.initializr.generator.buildsystem.BuildItemResolver;
+import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.MavenRepository;
+
 @ExtendWith(MockitoExtension.class)
 class MavenProfileContainerTests {
 
@@ -34,7 +38,7 @@ class MavenProfileContainerTests {
 
 	@Test
 	void addProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.values()).hasOnlyOneElementSatisfying((profile) -> {
 			assertThat(profile.getId()).isEqualTo("profile1");
@@ -53,21 +57,21 @@ class MavenProfileContainerTests {
 
 	@Test
 	void addProfileWithConsumer() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
-		profileContainer.add("profile1",
-				(profile) -> profile.activation(activation -> activation.activeByDefault(true))
-						.build(build -> build.defaultGoal("goal1")).module("module1").module("module2")
-						.repositories(repositories -> repositories.add("repository1",
-								MavenRepository.withIdAndUrl("repository1", "url").build()))
-						.pluginRepositories(pluginRepositories -> pluginRepositories.add("pluginRepository1",
-								MavenRepository.withIdAndUrl("pluginRepository1", "url2").build()))
-						.dependencies(dependencies -> dependencies.add("dependency1",
-								Dependency.withCoordinates("com.example", "demo").build()))
-						.reporting(reporting -> reporting.outputDirectory("directory1"))
-						.dependencyManagement(dependencyManagement -> dependencyManagement.add("dependencyManagement1",
-								BillOfMaterials.withCoordinates("com.example1", "demo1").build()))
-						.distributionManagement(distributionManagement -> distributionManagement.downloadUrl("url"))
-						.properties(properties -> properties.add("name1", "value1")));
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
+		profileContainer.add("profile1", (profile) -> profile
+				.activation((activation) -> activation.activeByDefault(true))
+				.build((build) -> build.defaultGoal("goal1")).module("module1").module("module2")
+				.repositories((repositories) -> repositories.add("repository1",
+						MavenRepository.withIdAndUrl("repository1", "url").build()))
+				.pluginRepositories((pluginRepositories) -> pluginRepositories.add("pluginRepository1",
+						MavenRepository.withIdAndUrl("pluginRepository1", "url2").build()))
+				.dependencies((dependencies) -> dependencies.add("dependency1",
+						Dependency.withCoordinates("com.example", "demo").build()))
+				.reporting((reporting) -> reporting.outputDirectory("directory1"))
+				.dependencyManagement((dependencyManagement) -> dependencyManagement.add("dependencyManagement1",
+						BillOfMaterials.withCoordinates("com.example1", "demo1").build()))
+				.distributionManagement((distributionManagement) -> distributionManagement.downloadUrl("url"))
+				.properties((properties) -> properties.add("name1", "value1")));
 
 		assertThat(profileContainer.values()).hasOnlyOneElementSatisfying((profile) -> {
 			assertThat(profile.getId()).isEqualTo("profile1");
@@ -88,7 +92,7 @@ class MavenProfileContainerTests {
 			assertThat(profile.getDependencyManagement()).isNotNull();
 			assertThat(profile.getDependencyManagement().has("dependencyManagement1")).isTrue();
 			assertThat(profile.getProperties()).isNotNull();
-			assertThat(profile.getProperties().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+			assertThat(profile.getProperties().getSettings()).hasOnlyOneElementSatisfying((settings) -> {
 				assertThat(settings.getName()).isEqualTo("name1");
 				assertThat(settings.getValue()).isEqualTo("value1");
 			});
@@ -99,9 +103,9 @@ class MavenProfileContainerTests {
 	void addProfileSeveralTimeReuseConfiguration() {
 		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
 		profileContainer.add("profile1",
-				(profile) -> profile.activation(activation -> activation.activeByDefault(true)));
+				(profile) -> profile.activation((activation) -> activation.activeByDefault(true)));
 		profileContainer.add("profile1",
-				(profile) -> profile.activation(activation -> activation.activeByDefault(false)));
+				(profile) -> profile.activation((activation) -> activation.activeByDefault(false)));
 		assertThat(profileContainer.values()).hasOnlyOneElementSatisfying((profile) -> {
 			assertThat(profile.getId()).isEqualTo("profile1");
 			assertThat(profile.getActivation()).isNotNull();
@@ -120,34 +124,34 @@ class MavenProfileContainerTests {
 
 	@Test
 	void isEmptyWithEmptyContainer() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		assertThat(profileContainer.isEmpty()).isTrue();
 	}
 
 	@Test
 	void isEmptyWithRegisteredProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.isEmpty()).isFalse();
 	}
 
 	@Test
 	void hasProfileWithMatchingProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.has("profile1")).isTrue();
 	}
 
 	@Test
 	void hasProfileWithNonMatchingProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.has("profile2")).isFalse();
 	}
 
 	@Test
 	void removeWithMatchingProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.remove("profile1")).isTrue();
 		assertThat(profileContainer.isEmpty()).isTrue();
@@ -155,7 +159,7 @@ class MavenProfileContainerTests {
 
 	@Test
 	void removeWithNonMatchingProfile() {
-		MavenProfileContainer profileContainer = new MavenProfileContainer(buildItemResolver);
+		MavenProfileContainer profileContainer = new MavenProfileContainer(this.buildItemResolver);
 		profileContainer.add("profile1");
 		assertThat(profileContainer.remove("profile2")).isFalse();
 		assertThat(profileContainer.isEmpty()).isFalse();

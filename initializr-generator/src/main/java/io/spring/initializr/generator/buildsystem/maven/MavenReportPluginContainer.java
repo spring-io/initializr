@@ -16,12 +16,12 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.maven.MavenReportPlugin.Builder;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import io.spring.initializr.generator.buildsystem.maven.MavenReportPlugin.Builder;
 
 public class MavenReportPluginContainer {
 
