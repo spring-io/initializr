@@ -22,16 +22,17 @@ class MavenReportSetTests {
         MavenReportSet reportSet = new MavenReportSet
                 .Builder("id")
                 .configuration(conf -> conf
-                        .property("property1", "value1")
-                        .property("property2", "value2"))
+                        .add("property1", "value1"))
                 .inherited("inherited1")
                 .report("report1")
                 .report("report2")
                 .build();
 
         assertThat(reportSet.getId()).isEqualTo("id");
-        assertThat(reportSet.getConfiguration().has("property1")).isTrue();
-        assertThat(reportSet.getConfiguration().has("property2")).isTrue();
+        assertThat(reportSet.getConfiguration().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+            assertThat(settings.getName()).isEqualTo("property1");
+            assertThat(settings.getValue()).isEqualTo("value1");
+        });
         assertThat(reportSet.getInherited()).isEqualTo("inherited1");
         assertThat(reportSet.getReports()).isEqualTo(Arrays.asList("report1", "report2"));
     }

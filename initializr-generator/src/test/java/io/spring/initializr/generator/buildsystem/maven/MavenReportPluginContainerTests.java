@@ -25,8 +25,7 @@ class MavenReportPluginContainerTests {
         reportPluginContainer.add("com.example", "demo",
                 (reportPlugin) -> reportPlugin
                         .configuration(conf -> conf
-                                .property("property1", "value1")
-                                .property("property2", "value2"))
+                                .add("property1", "value1"))
                         .inherited("inherited1")
                         .version("version1")
                         .reportSets(reportSets -> reportSets
@@ -37,8 +36,10 @@ class MavenReportPluginContainerTests {
         assertThat(reportPluginContainer.values()).hasOnlyOneElementSatisfying((reportPlugin) -> {
             assertThat(reportPlugin.getGroupId()).isEqualTo("com.example");
             assertThat(reportPlugin.getArtifactId()).isEqualTo("demo");
-            assertThat(reportPlugin.getConfiguration().has("property1")).isTrue();
-            assertThat(reportPlugin.getConfiguration().has("property2")).isTrue();
+            assertThat(reportPlugin.getConfiguration().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+                assertThat(settings.getName()).isEqualTo("property1");
+                assertThat(settings.getValue()).isEqualTo("value1");
+            });
             assertThat(reportPlugin.getInherited()).isEqualTo("inherited1");
             assertThat(reportPlugin.getVersion()).isEqualTo("version1");
             assertThat(reportPlugin.getReportSets().has("reportSet1")).isTrue();

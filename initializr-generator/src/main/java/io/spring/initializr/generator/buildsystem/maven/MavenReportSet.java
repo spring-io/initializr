@@ -1,11 +1,8 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.PropertyContainer;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.Optional.ofNullable;
@@ -13,7 +10,7 @@ import static java.util.Optional.ofNullable;
 public class MavenReportSet {
     private final String id;
 
-    private final PropertyContainer configuration;
+    private final MavenConfiguration configuration;
 
     private final String inherited;
 
@@ -21,7 +18,9 @@ public class MavenReportSet {
 
     public MavenReportSet(Builder builder) {
         this.id = builder.id;
-        this.configuration = builder.configuration;
+        this.configuration = ofNullable(builder.configuration)
+                .map(MavenConfiguration.Builder::build)
+                .orElse(null);
         this.inherited = builder.inherited;
         this.reports = ofNullable(builder.reports)
                 .map(Collections::unmodifiableList)
@@ -32,7 +31,7 @@ public class MavenReportSet {
         return id;
     }
 
-    public PropertyContainer getConfiguration() {
+    public MavenConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -48,7 +47,7 @@ public class MavenReportSet {
 
         private final String id;
 
-        private PropertyContainer configuration;
+        private MavenConfiguration.Builder configuration;
 
         private String inherited;
 
@@ -58,9 +57,9 @@ public class MavenReportSet {
             this.id = id;
         }
 
-        public MavenReportSet.Builder configuration(Consumer<PropertyContainer> configuration) {
+        public MavenReportSet.Builder configuration(Consumer<MavenConfiguration.Builder> configuration) {
             if(this.configuration == null){
-                this.configuration = new PropertyContainer();
+                this.configuration = new MavenConfiguration.Builder();
             }
             configuration.accept(this.configuration);
             return this;

@@ -1,5 +1,6 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
@@ -46,9 +47,9 @@ class MavenProfileTests {
                 .pluginRepositories(pluginRepositories -> pluginRepositories.add("pluginRepository1", MavenRepository.withIdAndUrl("pluginRepository1", "url2").build()))
                 .dependencies(dependencies -> dependencies.add("dependency1", Dependency.withCoordinates("com.example", "demo").build()))
                 .reporting(reporting -> reporting.outputDirectory("directory1"))
-                .dependencyManagement(dependencyManagement -> dependencyManagement.add("dependencyManagement1", Dependency.withCoordinates("com.example1", "demo1").build()))
+                .dependencyManagement(dependencyManagement -> dependencyManagement.add("dependencyManagement1", BillOfMaterials.withCoordinates("com.example1", "demo1").build()))
                 .distributionManagement(distributionManagement -> distributionManagement.downloadUrl("url"))
-                .properties(properties -> properties.property("name1", "value1"))
+                .properties(properties -> properties.add("name1", "value1"))
                 .build();
 
         assertThat(profile.getId()).isEqualTo("profile1");
@@ -69,6 +70,9 @@ class MavenProfileTests {
         assertThat(profile.getDependencyManagement()).isNotNull();
         assertThat(profile.getDependencyManagement().has("dependencyManagement1")).isTrue();
         assertThat(profile.getProperties()).isNotNull();
-        assertThat(profile.getProperties().has("name1")).isTrue();
+        assertThat(profile.getProperties().getSettings()).hasOnlyOneElementSatisfying(settings -> {
+            assertThat(settings.getName()).isEqualTo("name1");
+            assertThat(settings.getValue()).isEqualTo("value1");
+        });
     }
 }

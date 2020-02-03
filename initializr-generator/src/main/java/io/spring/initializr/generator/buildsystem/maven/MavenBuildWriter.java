@@ -32,9 +32,8 @@ import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.DeploymentRepository;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Relocation;
 import io.spring.initializr.generator.buildsystem.maven.MavenDistributionManagement.Site;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration.Setting;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -340,17 +339,17 @@ public class MavenBuildWriter {
 			if (plugin.isExtensions()) {
 				writeSingleElement(writer, "extensions", "true");
 			}
-			writePluginConfiguration(writer, plugin.getConfiguration());
+			writeConfiguration(writer, "configuration", plugin.getConfiguration());
 			writeCollectionElement(writer, "executions", plugin.getExecutions(), this::writePluginExecution);
 			writeCollectionElement(writer, "dependencies", plugin.getDependencies(), this::writePluginDependency);
 		});
 	}
 
-	private void writePluginConfiguration(IndentingWriter writer, Configuration configuration) {
+	private void writeConfiguration(IndentingWriter writer, String tag, MavenConfiguration configuration) {
 		if (configuration == null || configuration.getSettings().isEmpty()) {
 			return;
 		}
-		writeCollectionElement(writer, "configuration", configuration.getSettings(), this::writeSetting);
+		writeCollectionElement(writer, tag, configuration.getSettings(), this::writeSetting);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -371,7 +370,7 @@ public class MavenBuildWriter {
 			if (!goals.isEmpty()) {
 				writeElement(writer, "goals", () -> goals.forEach((goal) -> writeSingleElement(writer, "goal", goal)));
 			}
-			writePluginConfiguration(writer, execution.getConfiguration());
+			writeConfiguration(writer, "configuration", execution.getConfiguration());
 		});
 	}
 
@@ -481,7 +480,7 @@ public class MavenBuildWriter {
 					writeReporting(writer, profile.getReporting());
 					writeDependencyManagement(writer, profile.getDependencyManagement());
 					writeDistributionManagement(writer, profile.getDistributionManagement());
-					writePluginConfiguration(writer, profile.getProperties());
+					writeConfiguration(writer, "properties", profile.getProperties());
 				});
 			});
 		});
@@ -583,7 +582,7 @@ public class MavenBuildWriter {
 					writeSingleElement(writer, "artifactId", plugin.getArtifactId());
 					writeSingleElement(writer, "version", plugin.getVersion());
 					writeSingleElement(writer, "inherited", plugin.getInherited());
-					writePluginConfiguration(writer, plugin.getConfiguration());
+					writeConfiguration(writer, "configuration", plugin.getConfiguration());
 					writeReportSets(writer, plugin.getReportSets());
 				});
 			});
@@ -602,7 +601,7 @@ public class MavenBuildWriter {
 				writeElement(writer, "reportSet", () -> {
 					writeSingleElement(writer, "id", reportSet.getId());
 					writeSingleElement(writer, "inherited", reportSet.getInherited());
-					writePluginConfiguration(writer, reportSet.getConfiguration());
+					writeConfiguration(writer, "configuration", reportSet.getConfiguration());
 					writeCollectionElement(writer, "reports", reportSet.getReports(), (IndentingWriter writerInner, String report) -> {
 						writeSingleElement(writerInner, "report", report);
 					});

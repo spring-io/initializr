@@ -17,7 +17,7 @@
 package io.spring.initializr.generator.spring.code.groovy;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ class GroovyMavenBuildCustomizerTests {
 			assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
 			assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
 			assertThat(groovyPlugin.getVersion()).isEqualTo("1.8.1");
-			Configuration configuration = groovyPlugin.getConfiguration();
+			MavenConfiguration configuration = groovyPlugin.getConfiguration();
 			assertThat(configuration).isNull();
 			assertThat(groovyPlugin.getExecutions()).hasSize(1);
 			Execution execution = groovyPlugin.getExecutions().get(0);

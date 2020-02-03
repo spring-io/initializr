@@ -19,7 +19,7 @@ package io.spring.initializr.generator.buildsystem.maven;
 import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Builder;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
+import io.spring.initializr.generator.buildsystem.maven.MavenConfiguration.Setting;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,9 +37,9 @@ class MavenPluginTests {
 		MavenPlugin plugin = plugin("com.example", "test-plugin")
 				.configuration((configuration) -> configuration.add("enabled", "false").add("skip", "true"))
 				.configuration((configuration) -> configuration.add("another", "test")).build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName)).containsExactly("enabled",
 				"skip", "another");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("false",
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue)).containsExactly("false",
 				"true", "test");
 	}
 
@@ -48,9 +48,9 @@ class MavenPluginTests {
 		MavenPlugin plugin = plugin("com.example", "test-plugin")
 				.configuration((configuration) -> configuration.add("enabled", "true"))
 				.configuration((configuration) -> configuration.add("skip", "false")).build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName)).containsExactly("enabled",
 				"skip");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("true",
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue)).containsExactly("true",
 				"false");
 	}
 
@@ -66,8 +66,8 @@ class MavenPluginTests {
 		assertThat(setting.getName()).isEqualTo("items");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> values = (List<Setting>) setting.getValue();
-		assertThat(values.stream().map(Setting::getName)).containsExactly("item", "item");
-		assertThat(values.stream().map(Setting::getValue)).containsExactly("one", "two");
+		assertThat(values.stream().map(MavenConfiguration.Setting::getName)).containsExactly("item", "item");
+		assertThat(values.stream().map(MavenConfiguration.Setting::getValue)).containsExactly("one", "two");
 	}
 
 	@Test
@@ -92,8 +92,8 @@ class MavenPluginTests {
 		assertThat(item.getName()).isEqualTo("item");
 		assertThat(item.getValue()).isInstanceOf(List.class);
 		List<Setting> subItems = (List<Setting>) item.getValue();
-		assertThat(subItems.stream().map(Setting::getName)).containsExactly("subItem", "subItem", "subItem");
-		assertThat(subItems.stream().map(Setting::getValue)).containsExactly("one", "two", "three");
+		assertThat(subItems.stream().map(MavenConfiguration.Setting::getName)).containsExactly("subItem", "subItem", "subItem");
+		assertThat(subItems.stream().map(MavenConfiguration.Setting::getValue)).containsExactly("one", "two", "three");
 	}
 
 	@Test
@@ -132,8 +132,8 @@ class MavenPluginTests {
 				.build();
 		assertThat(plugin.getExecutions()).hasSize(1);
 		List<Setting> settings = plugin.getExecutions().get(0).getConfiguration().getSettings();
-		assertThat(settings.stream().map(Setting::getName)).containsExactly("enabled", "another");
-		assertThat(settings.stream().map(Setting::getValue)).containsExactly("true", "test");
+		assertThat(settings.stream().map(MavenConfiguration.Setting::getName)).containsExactly("enabled", "another");
+		assertThat(settings.stream().map(MavenConfiguration.Setting::getValue)).containsExactly("true", "test");
 	}
 
 	private MavenPlugin.Builder plugin(String groupId, String artifactId) {

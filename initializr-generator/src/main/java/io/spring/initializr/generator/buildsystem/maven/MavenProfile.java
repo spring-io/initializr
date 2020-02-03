@@ -46,7 +46,7 @@ public class MavenProfile {
 
     private final MavenDistributionManagement distributionManagement;
 
-    private final PropertyContainer properties;
+    private final MavenConfiguration properties;
 
     protected MavenProfile(Builder builder) {
         this.id = builder.id;
@@ -67,7 +67,9 @@ public class MavenProfile {
         this.distributionManagement = ofNullable(builder.distributionManagementBuilder)
                 .map(MavenDistributionManagement.Builder::build)
                 .orElse(null);
-        this.properties = builder.properties;
+        this.properties = ofNullable(builder.properties)
+                .map(MavenConfiguration.Builder::build)
+                .orElse(null);
     }
 
     public String getId() {
@@ -110,7 +112,7 @@ public class MavenProfile {
         return distributionManagement;
     }
 
-    public PropertyContainer getProperties() {
+    public MavenConfiguration getProperties() {
         return properties;
     }
 
@@ -138,14 +140,14 @@ public class MavenProfile {
 
         private MavenDistributionManagement.Builder distributionManagementBuilder;
 
-        private PropertyContainer properties;
+        private MavenConfiguration.Builder properties;
 
         protected Builder(String id, BuildItemResolver buildItemResolver) {
             this.id = id;
             this.buildItemResolver = buildItemResolver;
         }
 
-        public MavenProfile.Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
+        public Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
             if (this.activationBuilder == null) {
                 this.activationBuilder = new MavenProfileActivation.Builder();
             }
@@ -153,7 +155,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder build(Consumer<MavenProfileBuild.Builder> build) {
+        public Builder build(Consumer<MavenProfileBuild.Builder> build) {
             if (this.buildBuilder == null) {
                 this.buildBuilder = new MavenProfileBuild.Builder();
             }
@@ -161,7 +163,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder module(String module) {
+        public Builder module(String module) {
             if (this.modules == null) {
                 this.modules = new LinkedList<>();
             }
@@ -169,7 +171,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
+        public Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
             if (this.repositories == null) {
                 this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
             }
@@ -177,7 +179,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
+        public Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
             if (this.pluginRepositories == null) {
                 this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
             }
@@ -185,7 +187,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder reporting(Consumer<MavenReporting.Builder> reporting) {
+        public Builder reporting(Consumer<MavenReporting.Builder> reporting) {
             if (this.reportingBuilder == null) {
                 this.reportingBuilder = new MavenReporting.Builder();
             }
@@ -193,7 +195,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder dependencies(Consumer<DependencyContainer> dependencies) {
+        public Builder dependencies(Consumer<DependencyContainer> dependencies) {
             if (this.dependencies == null) {
                 this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
             }
@@ -201,7 +203,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
+        public Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
             if (this.dependencyManagement == null) {
                 this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
             }
@@ -209,7 +211,7 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder distributionManagement(Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
+        public Builder distributionManagement(Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
             if (this.distributionManagementBuilder == null) {
                 this.distributionManagementBuilder = new MavenDistributionManagement.Builder();
             }
@@ -217,9 +219,9 @@ public class MavenProfile {
             return this;
         }
 
-        public MavenProfile.Builder properties(Consumer<PropertyContainer> properties) {
+        public Builder properties(Consumer<MavenConfiguration.Builder> properties) {
             if (this.properties == null) {
-                this.properties = new PropertyContainer();
+                this.properties = new MavenConfiguration.Builder();
             }
             properties.accept(this.properties);
             return this;

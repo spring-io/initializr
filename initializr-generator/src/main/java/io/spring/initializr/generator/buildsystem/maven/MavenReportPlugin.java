@@ -1,8 +1,8 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
-import io.spring.initializr.generator.buildsystem.PropertyContainer;
-
 import java.util.function.Consumer;
+
+import static java.util.Optional.ofNullable;
 
 public class MavenReportPlugin {
     private final String groupId;
@@ -13,7 +13,7 @@ public class MavenReportPlugin {
 
     private final String inherited;
 
-    private final PropertyContainer configuration;
+    private final MavenConfiguration configuration;
 
     private final MavenReportSetContainer reportSets;
 
@@ -22,7 +22,9 @@ public class MavenReportPlugin {
         this.artifactId = builder.artifactId;
         this.version = builder.version;
         this.inherited = builder.inherited;
-        this.configuration = builder.configuration;
+        this.configuration = ofNullable(builder.configuration)
+                .map(MavenConfiguration.Builder::build)
+                .orElse(null);
         this.reportSets = builder.reportSets;
     }
 
@@ -42,7 +44,7 @@ public class MavenReportPlugin {
         return inherited;
     }
 
-    public PropertyContainer getConfiguration() {
+    public MavenConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -60,7 +62,7 @@ public class MavenReportPlugin {
 
         private String inherited;
 
-        private PropertyContainer configuration;
+        private MavenConfiguration.Builder configuration;
 
         private MavenReportSetContainer reportSets;
 
@@ -79,9 +81,9 @@ public class MavenReportPlugin {
             return this;
         }
 
-        public MavenReportPlugin.Builder configuration(Consumer<PropertyContainer> configuration) {
+        public MavenReportPlugin.Builder configuration(Consumer<MavenConfiguration.Builder> configuration) {
             if(this.configuration == null){
-                this.configuration = new PropertyContainer();
+                this.configuration = new MavenConfiguration.Builder();
             }
             configuration.accept(this.configuration);
             return this;
