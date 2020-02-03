@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.buildsystem.maven;
 
 import org.junit.jupiter.api.Test;
@@ -5,23 +21,21 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MavenProfileActivationPropertyTests {
-    @Test
-    void profileActivationPropertyEmpty() {
-        MavenProfileActivationProperty profileActivationProperty = new MavenProfileActivationProperty.Builder()
-                .build();
-        assertThat(profileActivationProperty.getName()).isNull();
-        assertThat(profileActivationProperty.getValue()).isNull();
-    }
 
-    @Test
-    void profileActivationPropertyWithFullData() {
-        MavenProfileActivationProperty profileActivationProperty = new MavenProfileActivationProperty
-                .Builder()
-                .name("name1")
-                .value("value1")
-                .build();
+	@Test
+	void profileActivationPropertyEmpty() {
+		MavenProfileActivationProperty profileActivationProperty = new MavenProfileActivationProperty.Builder().build();
+		assertThat(profileActivationProperty.getName()).isNull();
+		assertThat(profileActivationProperty.getValue()).isNull();
+	}
 
-        assertThat(profileActivationProperty.getName()).isEqualTo("name1");
-        assertThat(profileActivationProperty.getValue()).isEqualTo("value1");
-    }
+	@Test
+	void profileActivationPropertyWithFullData() {
+		MavenProfileActivationProperty profileActivationProperty = new MavenProfileActivationProperty.Builder()
+				.name("name1").value("value1").build();
+
+		assertThat(profileActivationProperty.getName()).isEqualTo("name1");
+		assertThat(profileActivationProperty.getValue()).isEqualTo("value1");
+	}
+
 }

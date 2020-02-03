@@ -1,45 +1,64 @@
+/*
+ * Copyright 2012-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.buildsystem.maven;
 
 public class MavenProfileActivationFile {
-    private final String missing;
 
-    private final String exists;
+	private final String missing;
 
-    protected MavenProfileActivationFile(Builder builder) {
-        this.missing = builder.missing;
-        this.exists = builder.exists;
-    }
+	private final String exists;
 
-    public String getMissing() {
-        return missing;
-    }
+	protected MavenProfileActivationFile(Builder builder) {
+		this.missing = builder.missing;
+		this.exists = builder.exists;
+	}
 
-    public String getExists() {
-        return exists;
-    }
+	public String getMissing() {
+		return this.missing;
+	}
 
-    public static class Builder {
+	public String getExists() {
+		return this.exists;
+	}
 
-        private String missing;
+	public static class Builder {
 
-        private String exists;
+		private String missing;
 
-        protected Builder() {
+		private String exists;
 
-        }
+		protected Builder() {
 
-        public MavenProfileActivationFile.Builder missing(String missing) {
-            this.missing = missing;
-            return this;
-        }
+		}
 
-        public MavenProfileActivationFile.Builder exists(String exists) {
-            this.exists = exists;
-            return this;
-        }
+		public MavenProfileActivationFile.Builder missing(String missing) {
+			this.missing = missing;
+			return this;
+		}
 
-        public MavenProfileActivationFile build() {
-            return new MavenProfileActivationFile(this);
-        }
-    }
+		public MavenProfileActivationFile.Builder exists(String exists) {
+			this.exists = exists;
+			return this;
+		}
+
+		public MavenProfileActivationFile build() {
+			return new MavenProfileActivationFile(this);
+		}
+
+	}
+
 }

@@ -1,73 +1,92 @@
+/*
+ * Copyright 2012-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.buildsystem.maven;
 
 public class MavenProfileActivationOS {
-    private final String name;
 
-    private final String family;
+	private final String name;
 
-    private final String arch;
+	private final String family;
 
-    private final String version;
+	private final String arch;
 
-    public MavenProfileActivationOS(Builder builder) {
-        this.name = builder.name;
-        this.family = builder.family;
-        this.arch = builder.arch;
-        this.version = builder.version;
-    }
+	private final String version;
 
-    public String getName() {
-        return name;
-    }
+	public MavenProfileActivationOS(Builder builder) {
+		this.name = builder.name;
+		this.family = builder.family;
+		this.arch = builder.arch;
+		this.version = builder.version;
+	}
 
-    public String getFamily() {
-        return family;
-    }
+	public String getName() {
+		return this.name;
+	}
 
-    public String getArch() {
-        return arch;
-    }
+	public String getFamily() {
+		return this.family;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getArch() {
+		return this.arch;
+	}
 
-    public static class Builder {
+	public String getVersion() {
+		return this.version;
+	}
 
-        private String name;
+	public static class Builder {
 
-        private String family;
+		private String name;
 
-        private String arch;
+		private String family;
 
-        private String version;
+		private String arch;
 
-        protected Builder() {
+		private String version;
 
-        }
+		protected Builder() {
 
-        public MavenProfileActivationOS.Builder name(String name) {
-            this.name = name;
-            return this;
-        }
+		}
 
-        public MavenProfileActivationOS.Builder family(String family) {
-            this.family = family;
-            return this;
-        }
+		public MavenProfileActivationOS.Builder name(String name) {
+			this.name = name;
+			return this;
+		}
 
-        public MavenProfileActivationOS.Builder arch(String arch) {
-            this.arch = arch;
-            return this;
-        }
+		public MavenProfileActivationOS.Builder family(String family) {
+			this.family = family;
+			return this;
+		}
 
-        public MavenProfileActivationOS.Builder version(String version) {
-            this.version = version;
-            return this;
-        }
+		public MavenProfileActivationOS.Builder arch(String arch) {
+			this.arch = arch;
+			return this;
+		}
 
-        public MavenProfileActivationOS build() {
-            return new MavenProfileActivationOS(this);
-        }
-    }
+		public MavenProfileActivationOS.Builder version(String version) {
+			this.version = version;
+			return this;
+		}
+
+		public MavenProfileActivationOS build() {
+			return new MavenProfileActivationOS(this);
+		}
+
+	}
+
 }

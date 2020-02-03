@@ -298,7 +298,8 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeResources(IndentingWriter writer, MavenResourceContainer resources, MavenResourceContainer testResources) {
+	private void writeResources(IndentingWriter writer, MavenResourceContainer resources,
+			MavenResourceContainer testResources) {
 		writeCollectionElement(writer, "resources", resources.values(), this::writeResource);
 		writeCollectionElement(writer, "testResources", testResources.values(), this::writeTestResource);
 	}
@@ -382,7 +383,8 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeRepositories(IndentingWriter writer, MavenRepositoryContainer buildRepositories, MavenRepositoryContainer buildPluginRepositories) {
+	private void writeRepositories(IndentingWriter writer, MavenRepositoryContainer buildRepositories,
+			MavenRepositoryContainer buildPluginRepositories) {
 		List<MavenRepository> repositories = filterRepositories(buildRepositories.items());
 		List<MavenRepository> pluginRepositories = filterRepositories(buildPluginRepositories.items());
 		if (repositories.isEmpty() && pluginRepositories.isEmpty()) {
@@ -417,7 +419,8 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDistributionManagement(IndentingWriter writer, MavenDistributionManagement distributionManagement) {
+	private void writeDistributionManagement(IndentingWriter writer,
+			MavenDistributionManagement distributionManagement) {
 		if (distributionManagement.isEmpty()) {
 			return;
 		}
@@ -472,9 +475,10 @@ public class MavenBuildWriter {
 					writeSingleElement(writer, "id", profile.getId());
 					writeProfileActivation(writer, profile.getActivation());
 					writeProfileBuild(writer, profile.getBuild());
-					writeCollectionElement(writer, "modules", profile.getModules(), (IndentingWriter writerInner, String module) -> {
-						writeSingleElement(writerInner, "module", module);
-					});
+					writeCollectionElement(writer, "modules", profile.getModules(),
+							(IndentingWriter writerInner, String module) -> {
+								writeSingleElement(writerInner, "module", module);
+							});
 					writeRepositories(writer, profile.getRepositories(), profile.getPluginRepositories());
 					writeDependencies(writer, profile.getDependencies());
 					writeReporting(writer, profile.getReporting());
@@ -487,7 +491,7 @@ public class MavenBuildWriter {
 	}
 
 	private void writeProfileActivation(IndentingWriter writer, MavenProfileActivation activation) {
-		if(activation == null){
+		if (activation == null) {
 			return;
 		}
 
@@ -497,7 +501,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "jdk", activation.getJdk());
 
 			MavenProfileActivationOS so = activation.getOs();
-			if (so != null){
+			if (so != null) {
 				writeElement(writer, "so", () -> {
 					writeSingleElement(writer, "name", so.getName());
 					writeSingleElement(writer, "arch", so.getArch());
@@ -507,7 +511,7 @@ public class MavenBuildWriter {
 			}
 
 			MavenProfileActivationProperty property = activation.getProperty();
-			if (property != null){
+			if (property != null) {
 				writeElement(writer, "property", () -> {
 					writeSingleElement(writer, "name", property.getName());
 					writeSingleElement(writer, "value", property.getValue());
@@ -515,7 +519,7 @@ public class MavenBuildWriter {
 			}
 
 			MavenProfileActivationFile file = activation.getFile();
-			if (file != null){
+			if (file != null) {
 				writeElement(writer, "file", () -> {
 					writeSingleElement(writer, "exists", file.getExists());
 					writeSingleElement(writer, "missing", file.getMissing());
@@ -524,9 +528,8 @@ public class MavenBuildWriter {
 		});
 	}
 
-
 	private void writeProfileBuild(IndentingWriter writer, MavenProfileBuild build) {
-		if(build == null){
+		if (build == null) {
 			return;
 		}
 
@@ -535,9 +538,10 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "defaultGoal", build.getDefaultGoal());
 			writeSingleElement(writer, "directory", build.getDirectory());
 			writeSingleElement(writer, "fileName", build.getFinalName());
-			writeCollectionElement(writer, "filters", build.getFilters(), (IndentingWriter writerInner, String filter) -> {
-				writeSingleElement(writerInner, "filter", filter);
-			});
+			writeCollectionElement(writer, "filters", build.getFilters(),
+					(IndentingWriter writerInner, String filter) -> {
+						writeSingleElement(writerInner, "filter", filter);
+					});
 			writeResources(writer, build.getResources(), build.getTestResources());
 			writePluginManagement(writer, build.getPluginManagement());
 			writeCollectionElement(writer, "plugins", build.getPlugins().values(), this::writePlugin);
@@ -545,7 +549,7 @@ public class MavenBuildWriter {
 	}
 
 	private void writePluginManagement(IndentingWriter writer, MavenPluginManagement pluginManagement) {
-		if(pluginManagement == null){
+		if (pluginManagement == null) {
 			return;
 		}
 
@@ -556,7 +560,7 @@ public class MavenBuildWriter {
 	}
 
 	private void writeReporting(IndentingWriter writer, MavenReporting reporting) {
-		if(reporting == null){
+		if (reporting == null) {
 			return;
 		}
 
@@ -602,9 +606,10 @@ public class MavenBuildWriter {
 					writeSingleElement(writer, "id", reportSet.getId());
 					writeSingleElement(writer, "inherited", reportSet.getInherited());
 					writeConfiguration(writer, "configuration", reportSet.getConfiguration());
-					writeCollectionElement(writer, "reports", reportSet.getReports(), (IndentingWriter writerInner, String report) -> {
-						writeSingleElement(writerInner, "report", report);
-					});
+					writeCollectionElement(writer, "reports", reportSet.getReports(),
+							(IndentingWriter writerInner, String report) -> {
+								writeSingleElement(writerInner, "report", report);
+							});
 				});
 			});
 		});

@@ -37,10 +37,10 @@ class MavenPluginTests {
 		MavenPlugin plugin = plugin("com.example", "test-plugin")
 				.configuration((configuration) -> configuration.add("enabled", "false").add("skip", "true"))
 				.configuration((configuration) -> configuration.add("another", "test")).build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName)).containsExactly("enabled",
-				"skip", "another");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue)).containsExactly("false",
-				"true", "test");
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName))
+				.containsExactly("enabled", "skip", "another");
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue))
+				.containsExactly("false", "true", "test");
 	}
 
 	@Test
@@ -48,10 +48,10 @@ class MavenPluginTests {
 		MavenPlugin plugin = plugin("com.example", "test-plugin")
 				.configuration((configuration) -> configuration.add("enabled", "true"))
 				.configuration((configuration) -> configuration.add("skip", "false")).build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName)).containsExactly("enabled",
-				"skip");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue)).containsExactly("true",
-				"false");
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getName))
+				.containsExactly("enabled", "skip");
+		assertThat(plugin.getConfiguration().getSettings().stream().map(MavenConfiguration.Setting::getValue))
+				.containsExactly("true", "false");
 	}
 
 	@Test
@@ -92,7 +92,8 @@ class MavenPluginTests {
 		assertThat(item.getName()).isEqualTo("item");
 		assertThat(item.getValue()).isInstanceOf(List.class);
 		List<Setting> subItems = (List<Setting>) item.getValue();
-		assertThat(subItems.stream().map(MavenConfiguration.Setting::getName)).containsExactly("subItem", "subItem", "subItem");
+		assertThat(subItems.stream().map(MavenConfiguration.Setting::getName)).containsExactly("subItem", "subItem",
+				"subItem");
 		assertThat(subItems.stream().map(MavenConfiguration.Setting::getValue)).containsExactly("one", "two", "three");
 	}
 

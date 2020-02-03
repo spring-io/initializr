@@ -1,63 +1,82 @@
+/*
+ * Copyright 2012-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.function.Consumer;
 
 public class MavenReporting {
-    private final Boolean excludeDefaults;
 
-    private final String outputDirectory;
+	private final Boolean excludeDefaults;
 
-    private final MavenReportPluginContainer reportPlugins;
+	private final String outputDirectory;
 
-    protected MavenReporting(Builder builder) {
-        this.excludeDefaults = builder.excludeDefaults;
-        this.outputDirectory = builder.outputDirectory;
-        this.reportPlugins = builder.reportPlugins;
-    }
+	private final MavenReportPluginContainer reportPlugins;
 
-    public Boolean isExcludeDefaults() {
-        return excludeDefaults;
-    }
+	protected MavenReporting(Builder builder) {
+		this.excludeDefaults = builder.excludeDefaults;
+		this.outputDirectory = builder.outputDirectory;
+		this.reportPlugins = builder.reportPlugins;
+	}
 
-    public String getOutputDirectory() {
-        return outputDirectory;
-    }
+	public Boolean isExcludeDefaults() {
+		return this.excludeDefaults;
+	}
 
-    public MavenReportPluginContainer getReportPlugins() {
-        return reportPlugins;
-    }
+	public String getOutputDirectory() {
+		return this.outputDirectory;
+	}
 
-    public static class Builder {
+	public MavenReportPluginContainer getReportPlugins() {
+		return this.reportPlugins;
+	}
 
-        private Boolean excludeDefaults;
+	public static class Builder {
 
-        private String outputDirectory;
+		private Boolean excludeDefaults;
 
-        private MavenReportPluginContainer reportPlugins;
+		private String outputDirectory;
 
-        protected Builder() {
-        }
+		private MavenReportPluginContainer reportPlugins;
 
-        public MavenReporting.Builder excludeDefaults(boolean excludeDefaults) {
-            this.excludeDefaults = excludeDefaults;
-            return this;
-        }
+		protected Builder() {
+		}
 
-        public MavenReporting.Builder outputDirectory(String outputDirectory) {
-            this.outputDirectory = outputDirectory;
-            return this;
-        }
+		public MavenReporting.Builder excludeDefaults(boolean excludeDefaults) {
+			this.excludeDefaults = excludeDefaults;
+			return this;
+		}
 
-        public MavenReporting.Builder reportPlugins(Consumer<MavenReportPluginContainer> reportPlugins) {
-            if(this.reportPlugins == null){
-                this.reportPlugins = new MavenReportPluginContainer();
-            }
-            reportPlugins.accept(this.reportPlugins);
-            return this;
-        }
+		public MavenReporting.Builder outputDirectory(String outputDirectory) {
+			this.outputDirectory = outputDirectory;
+			return this;
+		}
 
-        public MavenReporting build() {
-            return new MavenReporting(this);
-        }
-    }
+		public MavenReporting.Builder reportPlugins(Consumer<MavenReportPluginContainer> reportPlugins) {
+			if (this.reportPlugins == null) {
+				this.reportPlugins = new MavenReportPluginContainer();
+			}
+			reportPlugins.accept(this.reportPlugins);
+			return this;
+		}
+
+		public MavenReporting build() {
+			return new MavenReporting(this);
+		}
+
+	}
+
 }

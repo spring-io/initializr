@@ -20,215 +20,209 @@ import io.spring.initializr.generator.buildsystem.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
-
-import static java.util.Optional.ofNullable;
 
 public class MavenProfile {
 
-    private final String id;
+	private final String id;
 
-    private final MavenProfileActivation activation;
+	private final MavenProfileActivation activation;
 
-    private final MavenProfileBuild build;
+	private final MavenProfileBuild build;
 
-    private final List<String> modules;
+	private final List<String> modules;
 
-    private final MavenRepositoryContainer repositories;
+	private final MavenRepositoryContainer repositories;
 
-    private final MavenRepositoryContainer pluginRepositories;
+	private final MavenRepositoryContainer pluginRepositories;
 
-    private final DependencyContainer dependencies;
+	private final DependencyContainer dependencies;
 
-    private final MavenReporting reporting;
+	private final MavenReporting reporting;
 
-    private final BomContainer dependencyManagement;
+	private final BomContainer dependencyManagement;
 
-    private final MavenDistributionManagement distributionManagement;
+	private final MavenDistributionManagement distributionManagement;
 
-    private final MavenConfiguration properties;
+	private final MavenConfiguration properties;
 
-    protected MavenProfile(Builder builder) {
-        this.id = builder.id;
-        this.activation = ofNullable(builder.activationBuilder)
-                .map(MavenProfileActivation.Builder::build)
-                .orElse(null);
-        this.build = ofNullable(builder.buildBuilder)
-                .map(MavenProfileBuild.Builder::build)
-                .orElse(null);
-        this.modules = builder.modules;
-        this.repositories = builder.repositories;
-        this.pluginRepositories = builder.pluginRepositories;
-        this.dependencies = builder.dependencies;
-        this.reporting = ofNullable(builder.reportingBuilder)
-                .map(MavenReporting.Builder::build)
-                .orElse(null);
-        this.dependencyManagement = builder.dependencyManagement;
-        this.distributionManagement = ofNullable(builder.distributionManagementBuilder)
-                .map(MavenDistributionManagement.Builder::build)
-                .orElse(null);
-        this.properties = ofNullable(builder.properties)
-                .map(MavenConfiguration.Builder::build)
-                .orElse(null);
-    }
+	protected MavenProfile(Builder builder) {
+		this.id = builder.id;
+		this.activation = Optional.ofNullable(builder.activationBuilder).map(MavenProfileActivation.Builder::build)
+				.orElse(null);
+		this.build = Optional.ofNullable(builder.buildBuilder).map(MavenProfileBuild.Builder::build).orElse(null);
+		this.modules = builder.modules;
+		this.repositories = builder.repositories;
+		this.pluginRepositories = builder.pluginRepositories;
+		this.dependencies = builder.dependencies;
+		this.reporting = Optional.ofNullable(builder.reportingBuilder).map(MavenReporting.Builder::build).orElse(null);
+		this.dependencyManagement = builder.dependencyManagement;
+		this.distributionManagement = Optional.ofNullable(builder.distributionManagementBuilder)
+				.map(MavenDistributionManagement.Builder::build).orElse(null);
+		this.properties = Optional.ofNullable(builder.properties).map(MavenConfiguration.Builder::build).orElse(null);
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return this.id;
+	}
 
-    public MavenProfileActivation getActivation() {
-        return activation;
-    }
+	public MavenProfileActivation getActivation() {
+		return this.activation;
+	}
 
-    public MavenProfileBuild getBuild() {
-        return build;
-    }
+	public MavenProfileBuild getBuild() {
+		return this.build;
+	}
 
-    public List<String> getModules() {
-        return modules;
-    }
+	public List<String> getModules() {
+		return this.modules;
+	}
 
-    public MavenRepositoryContainer getRepositories() {
-        return repositories;
-    }
+	public MavenRepositoryContainer getRepositories() {
+		return this.repositories;
+	}
 
-    public MavenRepositoryContainer getPluginRepositories() {
-        return pluginRepositories;
-    }
+	public MavenRepositoryContainer getPluginRepositories() {
+		return this.pluginRepositories;
+	}
 
-    public DependencyContainer getDependencies() {
-        return dependencies;
-    }
+	public DependencyContainer getDependencies() {
+		return this.dependencies;
+	}
 
-    public MavenReporting getReporting() {
-        return reporting;
-    }
+	public MavenReporting getReporting() {
+		return this.reporting;
+	}
 
-    public BomContainer getDependencyManagement() {
-        return dependencyManagement;
-    }
+	public BomContainer getDependencyManagement() {
+		return this.dependencyManagement;
+	}
 
-    public MavenDistributionManagement getDistributionManagement() {
-        return distributionManagement;
-    }
+	public MavenDistributionManagement getDistributionManagement() {
+		return this.distributionManagement;
+	}
 
-    public MavenConfiguration getProperties() {
-        return properties;
-    }
+	public MavenConfiguration getProperties() {
+		return this.properties;
+	}
 
-    public static class Builder {
+	public static class Builder {
 
-        private final String id;
+		private final String id;
 
-        private final BuildItemResolver buildItemResolver;
+		private final BuildItemResolver buildItemResolver;
 
-        private MavenProfileActivation.Builder activationBuilder;
+		private MavenProfileActivation.Builder activationBuilder;
 
-        private MavenProfileBuild.Builder buildBuilder;
+		private MavenProfileBuild.Builder buildBuilder;
 
-        private List<String> modules;
+		private List<String> modules;
 
-        private MavenRepositoryContainer repositories;
+		private MavenRepositoryContainer repositories;
 
-        private MavenRepositoryContainer pluginRepositories;
+		private MavenRepositoryContainer pluginRepositories;
 
-        private DependencyContainer dependencies;
+		private DependencyContainer dependencies;
 
-        private MavenReporting.Builder reportingBuilder;
+		private MavenReporting.Builder reportingBuilder;
 
-        private BomContainer dependencyManagement;
+		private BomContainer dependencyManagement;
 
-        private MavenDistributionManagement.Builder distributionManagementBuilder;
+		private MavenDistributionManagement.Builder distributionManagementBuilder;
 
-        private MavenConfiguration.Builder properties;
+		private MavenConfiguration.Builder properties;
 
-        protected Builder(String id, BuildItemResolver buildItemResolver) {
-            this.id = id;
-            this.buildItemResolver = buildItemResolver;
-        }
+		protected Builder(String id, BuildItemResolver buildItemResolver) {
+			this.id = id;
+			this.buildItemResolver = buildItemResolver;
+		}
 
-        public Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
-            if (this.activationBuilder == null) {
-                this.activationBuilder = new MavenProfileActivation.Builder();
-            }
-            activation.accept(this.activationBuilder);
-            return this;
-        }
+		public Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
+			if (this.activationBuilder == null) {
+				this.activationBuilder = new MavenProfileActivation.Builder();
+			}
+			activation.accept(this.activationBuilder);
+			return this;
+		}
 
-        public Builder build(Consumer<MavenProfileBuild.Builder> build) {
-            if (this.buildBuilder == null) {
-                this.buildBuilder = new MavenProfileBuild.Builder();
-            }
-            build.accept(this.buildBuilder);
-            return this;
-        }
+		public Builder build(Consumer<MavenProfileBuild.Builder> build) {
+			if (this.buildBuilder == null) {
+				this.buildBuilder = new MavenProfileBuild.Builder();
+			}
+			build.accept(this.buildBuilder);
+			return this;
+		}
 
-        public Builder module(String module) {
-            if (this.modules == null) {
-                this.modules = new LinkedList<>();
-            }
-            this.modules.add(module);
-            return this;
-        }
+		public Builder module(String module) {
+			if (this.modules == null) {
+				this.modules = new LinkedList<>();
+			}
+			this.modules.add(module);
+			return this;
+		}
 
-        public Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
-            if (this.repositories == null) {
-                this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-            }
-            repositories.accept(this.repositories);
-            return this;
-        }
+		public Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
+			if (this.repositories == null) {
+				this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
+			}
+			repositories.accept(this.repositories);
+			return this;
+		}
 
-        public Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
-            if (this.pluginRepositories == null) {
-                this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-            }
-            pluginRepositories.accept(this.pluginRepositories);
-            return this;
-        }
+		public Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
+			if (this.pluginRepositories == null) {
+				this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
+			}
+			pluginRepositories.accept(this.pluginRepositories);
+			return this;
+		}
 
-        public Builder reporting(Consumer<MavenReporting.Builder> reporting) {
-            if (this.reportingBuilder == null) {
-                this.reportingBuilder = new MavenReporting.Builder();
-            }
-            reporting.accept(this.reportingBuilder);
-            return this;
-        }
+		public Builder reporting(Consumer<MavenReporting.Builder> reporting) {
+			if (this.reportingBuilder == null) {
+				this.reportingBuilder = new MavenReporting.Builder();
+			}
+			reporting.accept(this.reportingBuilder);
+			return this;
+		}
 
-        public Builder dependencies(Consumer<DependencyContainer> dependencies) {
-            if (this.dependencies == null) {
-                this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
-            }
-            dependencies.accept(this.dependencies);
-            return this;
-        }
+		public Builder dependencies(Consumer<DependencyContainer> dependencies) {
+			if (this.dependencies == null) {
+				this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
+			}
+			dependencies.accept(this.dependencies);
+			return this;
+		}
 
-        public Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
-            if (this.dependencyManagement == null) {
-                this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
-            }
-            dependencyManagement.accept(this.dependencyManagement);
-            return this;
-        }
+		public Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
+			if (this.dependencyManagement == null) {
+				this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
+			}
+			dependencyManagement.accept(this.dependencyManagement);
+			return this;
+		}
 
-        public Builder distributionManagement(Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
-            if (this.distributionManagementBuilder == null) {
-                this.distributionManagementBuilder = new MavenDistributionManagement.Builder();
-            }
-            distributionManagementBuilder.accept(this.distributionManagementBuilder);
-            return this;
-        }
+		public Builder distributionManagement(
+				Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
+			if (this.distributionManagementBuilder == null) {
+				this.distributionManagementBuilder = new MavenDistributionManagement.Builder();
+			}
+			distributionManagementBuilder.accept(this.distributionManagementBuilder);
+			return this;
+		}
 
-        public Builder properties(Consumer<MavenConfiguration.Builder> properties) {
-            if (this.properties == null) {
-                this.properties = new MavenConfiguration.Builder();
-            }
-            properties.accept(this.properties);
-            return this;
-        }
+		public Builder properties(Consumer<MavenConfiguration.Builder> properties) {
+			if (this.properties == null) {
+				this.properties = new MavenConfiguration.Builder();
+			}
+			properties.accept(this.properties);
+			return this;
+		}
 
-        public MavenProfile build() {
-            return new MavenProfile(this);
-        }
-    }
+		public MavenProfile build() {
+			return new MavenProfile(this);
+		}
+
+	}
+
 }

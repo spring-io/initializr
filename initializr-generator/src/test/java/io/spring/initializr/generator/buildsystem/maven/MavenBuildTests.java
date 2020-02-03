@@ -142,7 +142,8 @@ class MavenBuildTests {
 	@Test
 	void mavenProfilesCanBeConfigured() {
 		MavenBuild build = new MavenBuild();
-		build.profiles().add("profile1", (profile) -> profile.activation(activation -> activation.activeByDefault(true)));
+		build.profiles().add("profile1",
+				(profile) -> profile.activation(activation -> activation.activeByDefault(true)));
 		assertThat(build.profiles().values()).hasOnlyOneElementSatisfying((profile) -> {
 			assertThat(profile.getId()).isEqualTo("profile1");
 			assertThat(profile.getActivation()).isNotNull();

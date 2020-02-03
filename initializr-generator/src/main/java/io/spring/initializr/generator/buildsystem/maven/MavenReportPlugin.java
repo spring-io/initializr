@@ -1,104 +1,121 @@
+/*
+ * Copyright 2012-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.buildsystem.maven;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
-import static java.util.Optional.ofNullable;
-
 public class MavenReportPlugin {
-    private final String groupId;
 
-    private final String artifactId;
+	private final String groupId;
 
-    private final String version;
+	private final String artifactId;
 
-    private final String inherited;
+	private final String version;
 
-    private final MavenConfiguration configuration;
+	private final String inherited;
 
-    private final MavenReportSetContainer reportSets;
+	private final MavenConfiguration configuration;
 
-    protected MavenReportPlugin(Builder builder) {
-        this.groupId = builder.groupId;
-        this.artifactId = builder.artifactId;
-        this.version = builder.version;
-        this.inherited = builder.inherited;
-        this.configuration = ofNullable(builder.configuration)
-                .map(MavenConfiguration.Builder::build)
-                .orElse(null);
-        this.reportSets = builder.reportSets;
-    }
+	private final MavenReportSetContainer reportSets;
 
-    public String getGroupId() {
-        return groupId;
-    }
+	protected MavenReportPlugin(Builder builder) {
+		this.groupId = builder.groupId;
+		this.artifactId = builder.artifactId;
+		this.version = builder.version;
+		this.inherited = builder.inherited;
+		this.configuration = Optional.ofNullable(builder.configuration).map(MavenConfiguration.Builder::build)
+				.orElse(null);
+		this.reportSets = builder.reportSets;
+	}
 
-    public String getArtifactId() {
-        return artifactId;
-    }
+	public String getGroupId() {
+		return this.groupId;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getArtifactId() {
+		return this.artifactId;
+	}
 
-    public String getInherited() {
-        return inherited;
-    }
+	public String getVersion() {
+		return this.version;
+	}
 
-    public MavenConfiguration getConfiguration() {
-        return configuration;
-    }
+	public String getInherited() {
+		return this.inherited;
+	}
 
-    public MavenReportSetContainer getReportSets() {
-        return reportSets;
-    }
+	public MavenConfiguration getConfiguration() {
+		return this.configuration;
+	}
 
-    public static class Builder {
+	public MavenReportSetContainer getReportSets() {
+		return this.reportSets;
+	}
 
-        private final String groupId;
+	public static class Builder {
 
-        private final String artifactId;
+		private final String groupId;
 
-        private String version;
+		private final String artifactId;
 
-        private String inherited;
+		private String version;
 
-        private MavenConfiguration.Builder configuration;
+		private String inherited;
 
-        private MavenReportSetContainer reportSets;
+		private MavenConfiguration.Builder configuration;
 
-        protected Builder(String groupId, String artifactId) {
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-        }
+		private MavenReportSetContainer reportSets;
 
-        public MavenReportPlugin.Builder inherited(String inherited) {
-            this.inherited = inherited;
-            return this;
-        }
+		protected Builder(String groupId, String artifactId) {
+			this.groupId = groupId;
+			this.artifactId = artifactId;
+		}
 
-        public MavenReportPlugin.Builder version(String version) {
-            this.version = version;
-            return this;
-        }
+		public MavenReportPlugin.Builder inherited(String inherited) {
+			this.inherited = inherited;
+			return this;
+		}
 
-        public MavenReportPlugin.Builder configuration(Consumer<MavenConfiguration.Builder> configuration) {
-            if(this.configuration == null){
-                this.configuration = new MavenConfiguration.Builder();
-            }
-            configuration.accept(this.configuration);
-            return this;
-        }
+		public MavenReportPlugin.Builder version(String version) {
+			this.version = version;
+			return this;
+		}
 
-        public MavenReportPlugin.Builder reportSets(Consumer<MavenReportSetContainer> reportSets) {
-            if(this.reportSets == null){
-                this.reportSets = new MavenReportSetContainer();
-            }
-            reportSets.accept(this.reportSets);
-            return this;
-        }
+		public MavenReportPlugin.Builder configuration(Consumer<MavenConfiguration.Builder> configuration) {
+			if (this.configuration == null) {
+				this.configuration = new MavenConfiguration.Builder();
+			}
+			configuration.accept(this.configuration);
+			return this;
+		}
 
-        public MavenReportPlugin build() {
-            return new MavenReportPlugin(this);
-        }
-    }
+		public MavenReportPlugin.Builder reportSets(Consumer<MavenReportSetContainer> reportSets) {
+			if (this.reportSets == null) {
+				this.reportSets = new MavenReportSetContainer();
+			}
+			reportSets.accept(this.reportSets);
+			return this;
+		}
+
+		public MavenReportPlugin build() {
+			return new MavenReportPlugin(this);
+		}
+
+	}
+
 }

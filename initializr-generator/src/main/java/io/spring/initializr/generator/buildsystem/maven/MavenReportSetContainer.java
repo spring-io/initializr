@@ -23,43 +23,44 @@ import java.util.stream.Stream;
 
 public class MavenReportSetContainer {
 
-    private final Map<String, MavenReportSet.Builder> reportSets = new LinkedHashMap<>();
+	private final Map<String, MavenReportSet.Builder> reportSets = new LinkedHashMap<>();
 
-    public boolean isEmpty() {
-        return this.reportSets.isEmpty();
-    }
+	public boolean isEmpty() {
+		return this.reportSets.isEmpty();
+	}
 
-    public Stream<MavenReportSet> values() {
-        return this.reportSets.values().stream().map(MavenReportSet.Builder::build);
-    }
+	public Stream<MavenReportSet> values() {
+		return this.reportSets.values().stream().map(MavenReportSet.Builder::build);
+	}
 
-    public MavenReportSetContainer add(String id) {
-        createReportSetBuilder(id);
-        return this;
-    }
+	public MavenReportSetContainer add(String id) {
+		createReportSetBuilder(id);
+		return this;
+	}
 
-    public boolean has(String id) {
-        return this.reportSets.containsKey(id);
-    }
+	public boolean has(String id) {
+		return this.reportSets.containsKey(id);
+	}
 
-    public MavenReportSetContainer add(String id, Consumer<MavenReportSet.Builder> profileBuilder) {
-        profileBuilder.accept(createReportSetBuilder(id));
-        return this;
-    }
+	public MavenReportSetContainer add(String id, Consumer<MavenReportSet.Builder> profileBuilder) {
+		profileBuilder.accept(createReportSetBuilder(id));
+		return this;
+	}
 
-    public boolean remove(String id) {
-        return this.reportSets.remove(id) != null;
-    }
+	public boolean remove(String id) {
+		return this.reportSets.remove(id) != null;
+	}
 
-    private MavenReportSet.Builder createReportSetBuilder(String id) {
-        MavenReportSet.Builder reportSetBuilder = this.reportSets.get(id);
-        if (reportSetBuilder == null) {
-            MavenReportSet.Builder builder = new MavenReportSet.Builder(id);
-            this.reportSets.put(id, builder);
-            return builder;
-        } else {
-            return reportSetBuilder;
-        }
-    }
+	private MavenReportSet.Builder createReportSetBuilder(String id) {
+		MavenReportSet.Builder reportSetBuilder = this.reportSets.get(id);
+		if (reportSetBuilder == null) {
+			MavenReportSet.Builder builder = new MavenReportSet.Builder(id);
+			this.reportSets.put(id, builder);
+			return builder;
+		}
+		else {
+			return reportSetBuilder;
+		}
+	}
 
 }
