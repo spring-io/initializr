@@ -34,7 +34,7 @@ public abstract class Build {
 
 	private final MavenRepositoryContainer pluginRepositories;
 
-	protected final BuildItemResolver resolver;
+	private final BuildItemResolver resolver;
 
 	protected Build(BuildItemResolver buildItemResolver) {
 		this.resolver = determineBuildItemResolver(buildItemResolver);
@@ -110,4 +110,7 @@ public abstract class Build {
 		return this.pluginRepositories;
 	}
 
+	public BuildItemResolver getResolver() {
+		return resolver;
+	}
 }

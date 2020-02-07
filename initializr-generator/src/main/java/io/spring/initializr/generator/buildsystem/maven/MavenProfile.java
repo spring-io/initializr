@@ -62,7 +62,7 @@ public class MavenProfile {
 		this.reporting = Optional.ofNullable(builder.reportingBuilder).map(MavenReporting.Builder::build).orElse(null);
 		this.dependencyManagement = builder.dependencyManagement;
 		this.distributionManagement = Optional.ofNullable(builder.distributionManagementBuilder)
-				.map(MavenDistributionManagement.Builder::build).orElse(null);
+				.map(MavenDistributionManagement.Builder::build).orElse(new MavenDistributionManagement.Builder().build());
 		this.properties = Optional.ofNullable(builder.properties).map(MavenConfiguration.Builder::build).orElse(null);
 	}
 
@@ -139,6 +139,10 @@ public class MavenProfile {
 		protected Builder(String id, BuildItemResolver buildItemResolver) {
 			this.id = id;
 			this.buildItemResolver = buildItemResolver;
+			this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
+			this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
+			this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
+			this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
 		}
 
 		public Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
@@ -166,17 +170,11 @@ public class MavenProfile {
 		}
 
 		public Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
-			if (this.repositories == null) {
-				this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-			}
 			repositories.accept(this.repositories);
 			return this;
 		}
 
 		public Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
-			if (this.pluginRepositories == null) {
-				this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-			}
 			pluginRepositories.accept(this.pluginRepositories);
 			return this;
 		}
@@ -190,17 +188,11 @@ public class MavenProfile {
 		}
 
 		public Builder dependencies(Consumer<DependencyContainer> dependencies) {
-			if (this.dependencies == null) {
-				this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
-			}
 			dependencies.accept(this.dependencies);
 			return this;
 		}
 
 		public Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
-			if (this.dependencyManagement == null) {
-				this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
-			}
 			dependencyManagement.accept(this.dependencyManagement);
 			return this;
 		}

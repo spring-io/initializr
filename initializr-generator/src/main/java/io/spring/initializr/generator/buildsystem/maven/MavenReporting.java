@@ -53,6 +53,7 @@ public class MavenReporting {
 		private MavenReportPluginContainer reportPlugins;
 
 		protected Builder() {
+			this.reportPlugins = new MavenReportPluginContainer();
 		}
 
 		public MavenReporting.Builder excludeDefaults(boolean excludeDefaults) {
@@ -66,9 +67,6 @@ public class MavenReporting {
 		}
 
 		public MavenReporting.Builder reportPlugins(Consumer<MavenReportPluginContainer> reportPlugins) {
-			if (this.reportPlugins == null) {
-				this.reportPlugins = new MavenReportPluginContainer();
-			}
 			reportPlugins.accept(this.reportPlugins);
 			return this;
 		}

@@ -45,12 +45,12 @@ class MavenProfileContainerTests {
 			assertThat(profile.getActivation()).isNull();
 			assertThat(profile.getBuild()).isNull();
 			assertThat(profile.getModules()).isNull();
-			assertThat(profile.getRepositories()).isNull();
-			assertThat(profile.getPluginRepositories()).isNull();
-			assertThat(profile.getDependencies()).isNull();
+			assertThat(profile.getRepositories().isEmpty()).isTrue();
+			assertThat(profile.getPluginRepositories().isEmpty()).isTrue();
+			assertThat(profile.getDependencies().isEmpty()).isTrue();
 			assertThat(profile.getReporting()).isNull();
-			assertThat(profile.getDependencyManagement()).isNull();
-			assertThat(profile.getDistributionManagement()).isNull();
+			assertThat(profile.getDependencyManagement().isEmpty()).isTrue();
+			assertThat(profile.getDistributionManagement().isEmpty()).isTrue();
 			assertThat(profile.getProperties()).isNull();
 		});
 	}
@@ -112,12 +112,12 @@ class MavenProfileContainerTests {
 			assertThat(profile.getActivation().getActiveByDefault()).isFalse();
 			assertThat(profile.getBuild()).isNull();
 			assertThat(profile.getModules()).isNull();
-			assertThat(profile.getRepositories()).isNull();
-			assertThat(profile.getPluginRepositories()).isNull();
-			assertThat(profile.getDependencies()).isNull();
+			assertThat(profile.getRepositories().isEmpty()).isTrue();
+			assertThat(profile.getPluginRepositories().isEmpty()).isTrue();
+			assertThat(profile.getDependencies().isEmpty()).isTrue();
 			assertThat(profile.getReporting()).isNull();
-			assertThat(profile.getDependencyManagement()).isNull();
-			assertThat(profile.getDistributionManagement()).isNull();
+			assertThat(profile.getDependencyManagement().isEmpty()).isTrue();
+			assertThat(profile.getDistributionManagement().isEmpty()).isTrue();
 			assertThat(profile.getProperties()).isNull();
 		});
 	}

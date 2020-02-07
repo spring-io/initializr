@@ -506,13 +506,13 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "activeByDefault", String.valueOf(activation.getActiveByDefault()));
 			writeSingleElement(writer, "jdk", activation.getJdk());
 
-			MavenProfileActivationOS so = activation.getOs();
-			if (so != null) {
-				writeElement(writer, "so", () -> {
-					writeSingleElement(writer, "name", so.getName());
-					writeSingleElement(writer, "arch", so.getArch());
-					writeSingleElement(writer, "family", so.getFamily());
-					writeSingleElement(writer, "version", so.getVersion());
+			MavenProfileActivationOS os = activation.getOs();
+			if (os != null) {
+				writeElement(writer, "os", () -> {
+					writeSingleElement(writer, "name", os.getName());
+					writeSingleElement(writer, "arch", os.getArch());
+					writeSingleElement(writer, "family", os.getFamily());
+					writeSingleElement(writer, "version", os.getVersion());
 				});
 			}
 

@@ -31,7 +31,7 @@ class MavenReportPluginTests {
 		assertThat(reportPlugin.getConfiguration()).isNull();
 		assertThat(reportPlugin.getInherited()).isNull();
 		assertThat(reportPlugin.getVersion()).isNull();
-		assertThat(reportPlugin.getReportSets()).isNull();
+		assertThat(reportPlugin.getReportSets().isEmpty()).isTrue();
 	}
 
 	@Test

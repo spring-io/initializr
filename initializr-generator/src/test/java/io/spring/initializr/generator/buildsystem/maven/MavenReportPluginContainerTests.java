@@ -32,7 +32,7 @@ class MavenReportPluginContainerTests {
 			assertThat(reportPlugin.getConfiguration()).isNull();
 			assertThat(reportPlugin.getInherited()).isNull();
 			assertThat(reportPlugin.getVersion()).isNull();
-			assertThat(reportPlugin.getReportSets()).isNull();
+			assertThat(reportPlugin.getReportSets().isEmpty()).isTrue();
 		});
 	}
 
@@ -69,7 +69,7 @@ class MavenReportPluginContainerTests {
 			assertThat(reportPlugin.getConfiguration()).isNull();
 			assertThat(reportPlugin.getInherited()).isEqualTo("inherited2");
 			assertThat(reportPlugin.getVersion()).isNull();
-			assertThat(reportPlugin.getReportSets()).isNull();
+			assertThat(reportPlugin.getReportSets().isEmpty()).isTrue();
 		});
 	}
 

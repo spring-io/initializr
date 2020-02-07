@@ -31,10 +31,10 @@ class MavenProfileBuildTests {
 		assertThat(profileBuild.getDirectory()).isNull();
 		assertThat(profileBuild.getFinalName()).isNull();
 		assertThat(profileBuild.getFilters()).isNull();
-		assertThat(profileBuild.getResources()).isNull();
-		assertThat(profileBuild.getTestResources()).isNull();
+		assertThat(profileBuild.getResources().isEmpty()).isTrue();
+		assertThat(profileBuild.getTestResources().isEmpty()).isTrue();
 		assertThat(profileBuild.getPluginManagement()).isNull();
-		assertThat(profileBuild.getPlugins()).isNull();
+		assertThat(profileBuild.getPlugins().isEmpty()).isTrue();
 	}
 
 	@Test

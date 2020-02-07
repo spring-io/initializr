@@ -84,6 +84,7 @@ public class MavenReportPlugin {
 		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;
+			this.reportSets = new MavenReportSetContainer();
 		}
 
 		public MavenReportPlugin.Builder inherited(String inherited) {
@@ -105,9 +106,6 @@ public class MavenReportPlugin {
 		}
 
 		public MavenReportPlugin.Builder reportSets(Consumer<MavenReportSetContainer> reportSets) {
-			if (this.reportSets == null) {
-				this.reportSets = new MavenReportSetContainer();
-			}
 			reportSets.accept(this.reportSets);
 			return this;
 		}

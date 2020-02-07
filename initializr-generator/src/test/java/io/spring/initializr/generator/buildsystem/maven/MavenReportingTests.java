@@ -27,7 +27,7 @@ class MavenReportingTests {
 		MavenReporting reporting = new MavenReporting.Builder().build();
 		assertThat(reporting.getOutputDirectory()).isNull();
 		assertThat(reporting.isExcludeDefaults()).isNull();
-		assertThat(reporting.getReportPlugins()).isNull();
+		assertThat(reporting.getReportPlugins().isEmpty()).isTrue();
 	}
 
 	@Test

@@ -44,7 +44,7 @@ public class MavenBuild extends Build {
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 
-		this.profiles = new MavenProfileContainer(buildItemResolver);
+		this.profiles = new MavenProfileContainer(super.getResolver());
 	}
 
 	public MavenBuild() {

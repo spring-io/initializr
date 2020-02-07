@@ -103,6 +103,9 @@ public class MavenProfileBuild {
 		private MavenPluginContainer plugins;
 
 		protected Builder() {
+			this.resources = new MavenResourceContainer();
+			this.testResources = new MavenResourceContainer();
+			this.plugins = new MavenPluginContainer();
 		}
 
 		public MavenProfileBuild.Builder defaultGoal(String defaultGoal) {
@@ -129,17 +132,11 @@ public class MavenProfileBuild {
 		}
 
 		public MavenProfileBuild.Builder resources(Consumer<MavenResourceContainer> resources) {
-			if (this.resources == null) {
-				this.resources = new MavenResourceContainer();
-			}
 			resources.accept(this.resources);
 			return this;
 		}
 
 		public MavenProfileBuild.Builder testResources(Consumer<MavenResourceContainer> testResources) {
-			if (this.testResources == null) {
-				this.testResources = new MavenResourceContainer();
-			}
 			testResources.accept(this.testResources);
 			return this;
 		}
@@ -153,9 +150,6 @@ public class MavenProfileBuild {
 		}
 
 		public MavenProfileBuild.Builder plugins(Consumer<MavenPluginContainer> plugins) {
-			if (this.plugins == null) {
-				this.plugins = new MavenPluginContainer();
-			}
 			plugins.accept(this.plugins);
 			return this;
 		}
