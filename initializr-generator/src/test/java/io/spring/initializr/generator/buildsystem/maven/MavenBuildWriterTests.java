@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
+import io.spring.initializr.generator.buildsystem.BomContainer;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
@@ -1162,6 +1163,154 @@ class MavenBuildWriterTests {
             assertThat(profile).nodeAtPath("dependencyManagement").isNull();
             assertThat(profile).nodeAtPath("distributionManagement").isNull();
             assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileReporting() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.reporting((reporting) -> reporting.excludeDefaults(true).outputDirectory("/here")));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            assertThat(profile).textAtPath("reporting/excludeDefaults")
+                    .isEqualTo("true");
+            assertThat(profile).textAtPath("reporting/outputDirectory")
+                    .isEqualTo("/here");
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("dependencyManagement").isNull();
+            assertThat(profile).nodeAtPath("distributionManagement").isNull();
+            assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileReportingPlugin() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.reporting((reporting) -> reporting
+                .reportPlugins((reportPlugins) -> reportPlugins
+                        .add("org.apache.maven.plugins", "maven-project-info-reports-plugin", (plugin) -> plugin
+                                .version("2.6")
+                                .inherited("true")
+                                .configuration((configuration) -> configuration
+                                        .add("config1", "value1"))))));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            NodeAssert plugin = profile.nodeAtPath("reporting/plugins/plugin");
+            assertThat(plugin).textAtPath("groupId").isEqualTo("org.apache.maven.plugins");
+            assertThat(plugin).textAtPath("artifactId").isEqualTo("maven-project-info-reports-plugin");
+            assertThat(plugin).textAtPath("version").isEqualTo("2.6");
+            assertThat(plugin).textAtPath("inherited").isEqualTo("true");
+            assertThat(plugin).textAtPath("configuration/config1").isEqualTo("value1");
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("dependencyManagement").isNull();
+            assertThat(profile).nodeAtPath("distributionManagement").isNull();
+            assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileReportingPluginReportSets() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.reporting((reporting) -> reporting
+                .reportPlugins((reportPlugins) -> reportPlugins
+                        .add("org.apache.maven.plugins", "maven-project-info-reports-plugin", (plugin) -> plugin
+                                .reportSets((reportSets -> reportSets
+                                        .add("reportSet1", (reportSet) -> reportSet
+                                                .inherited("true")
+                                                .report("reportA")
+                                                .configuration((configuration) -> configuration
+                                                        .add("config1", "value1")))))))));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            NodeAssert reportSet = profile.nodeAtPath("reporting/plugins/plugin/reportSets/reportSet");
+            assertThat(reportSet).textAtPath("id").isEqualTo("reportSet1");
+            assertThat(reportSet).textAtPath("inherited").isEqualTo("true");
+            assertThat(reportSet).textAtPath("reports/report").isEqualTo("reportA");
+            assertThat(reportSet).textAtPath("configuration/config1").isEqualTo("value1");
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("dependencyManagement").isNull();
+            assertThat(profile).nodeAtPath("distributionManagement").isNull();
+            assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileDependencyManagement() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.dependencyManagement((dependencyManagement) -> dependencyManagement.add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+                .version(VersionReference.ofValue("1.0.0.RELEASE")))));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            NodeAssert dependency = profile.nodeAtPath("dependencyManagement/dependencies/dependency");
+            assertBom(dependency, "com.example", "my-project-dependencies", "1.0.0.RELEASE");
+            assertThat(profile).nodeAtPath("reporting").isNull();
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("distributionManagement").isNull();
+            assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileDistributionManagement() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.distributionManagement((distribution) -> distribution.downloadUrl("https://example.com/download")));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            NodeAssert distributionManagement = profile.nodeAtPath("distributionManagement");
+            assertThat(distributionManagement).textAtPath("downloadUrl").isEqualTo("https://example.com/download");
+            assertThat(profile).nodeAtPath("reporting").isNull();
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("properties").isNull();
+        });
+    }
+
+    @Test
+    void powWithProfileProperties() {
+        MavenBuild build = new MavenBuild();
+        build.profiles().add("profile1", profile -> profile.properties((properties) -> properties.add("prop1", "prop2")));
+
+        generatePom(build, (pom) -> {
+            NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+            assertThat(profile).textAtPath("id").isEqualTo("profile1");
+            NodeAssert properties = profile.nodeAtPath("properties");
+            assertThat(properties).textAtPath("prop1").isEqualTo("prop2");
+            assertThat(profile).nodeAtPath("reporting").isNull();
+            assertThat(profile).nodeAtPath("repositories").isNull();
+            assertThat(profile).nodeAtPath("build").isNull();
+            assertThat(profile).nodeAtPath("activation").isNull();
+            assertThat(profile).nodeAtPath("modules").isNull();
+            assertThat(profile).nodeAtPath("pluginRepositories").isNull();
+            assertThat(profile).nodeAtPath("distributionManagement").isNull();
         });
     }
 
