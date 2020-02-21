@@ -62,7 +62,7 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 		Resource root = this.resolver.getResource(this.rootResource);
 		Resource[] resources = this.resolver.getResources(this.rootResource + "/**");
 		for (Resource resource : resources) {
-			if (resource.isReadable()) {
+			if (resource.isReadable() && resource.isFile()) {
 				String filename = extractFileName(root.getURI(), resource.getURI());
 				Path output = projectRoot.resolve(filename);
 				Files.createDirectories(output.getParent());
