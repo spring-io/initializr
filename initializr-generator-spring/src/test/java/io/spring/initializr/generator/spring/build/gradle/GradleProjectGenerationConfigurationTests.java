@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	static Stream<Arguments> gradleWrapperParameters() {
 		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"), Arguments.arguments("2.0.6.RELEASE", "4.10.3"),
-				Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.0.1"));
+				Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.2.2"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
