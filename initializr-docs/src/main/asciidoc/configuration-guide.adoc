@@ -86,7 +86,7 @@ to do something and makes the declaration more idiomatic. Consider the following
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	@ConditionalOnPackaging(WarPackaging.ID)
 	public BuildCustomizer<GradleBuild> warPluginContributor() {
-		return (build) -> build.addPlugin("war");
+		return (build) -> build.plugins().add("war");
 	}
 ----
 
