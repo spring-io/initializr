@@ -90,6 +90,7 @@ with that id is assumed.
 * A `version` if Spring Boot does not already provide a dependency management for
 that dependency.
 * A `scope` (can be `compile`, `runtime`, `provided` or `test`).
+* A `classifier` (if the dependency to use is classified, such as `test-jar`).
 * The reference to a `bom` or a `repository` that must be added to the project once
 that dependency is added.
 * A `compatibilityRange` used to determine the platform versions that are compatible

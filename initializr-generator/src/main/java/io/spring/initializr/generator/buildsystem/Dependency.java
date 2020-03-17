@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ public class Dependency {
 
 	private final DependencyScope scope;
 
-	private final String type;
-
 	private final String classifier;
+
+	private final String type;
 
 	private final Set<Exclusion> exclusions;
 
@@ -111,20 +111,20 @@ public class Dependency {
 	}
 
 	/**
+	 * The classifier of this dependency. Can be {@code null}
+	 * @return the classifier or {@code null}
+	 */
+	public String getClassifier() {
+		return this.classifier;
+	}
+
+	/**
 	 * The type of the dependency. Can be {@code null} to indicate that the default type
 	 * should be used (i.e. {@code jar}).
 	 * @return the type or {@code null}
 	 */
 	public String getType() {
 		return this.type;
-	}
-
-	/**
-	 * The classifier of this dependency. Can be {@code null}
-	 * @return the classifier or {@code null}
-	 */
-	public String getClassifier() {
-		return this.classifier;
 	}
 
 	/**
@@ -151,9 +151,9 @@ public class Dependency {
 
 		private DependencyScope scope;
 
-		private String classifier;
-
 		private String type;
+
+		private String classifier;
 
 		private Set<Exclusion> exclusions = new LinkedHashSet<>();
 
@@ -182,13 +182,13 @@ public class Dependency {
 			return self();
 		}
 
-		public B type(String type) {
-			this.type = type;
+		public B classifier(String classifier) {
+			this.classifier = classifier;
 			return self();
 		}
 
-		public B classifier(String classifier) {
-			this.classifier = classifier;
+		public B type(String type) {
+			this.type = type;
 			return self();
 		}
 
@@ -208,8 +208,8 @@ public class Dependency {
 		}
 
 		protected B initialize(Dependency dependency) {
-			version(dependency.getVersion()).scope(dependency.getScope()).type(dependency.getType())
-					.exclusions(dependency.getExclusions());
+			version(dependency.getVersion()).scope(dependency.getScope()).classifier(dependency.getClassifier())
+					.type(dependency.getType()).exclusions(dependency.getExclusions());
 			return self();
 		}
 

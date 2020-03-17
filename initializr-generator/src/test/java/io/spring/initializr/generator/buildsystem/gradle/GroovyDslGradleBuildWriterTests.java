@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -306,16 +306,6 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
-	void gradleBuildWithClassifierDependency() {
-		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root",
-				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter").classifier("classifier"));
-		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("dependencies {",
-				"    implementation 'org.springframework.boot:spring-boot-starter:classifier'", "}");
-	}
-
-	@Test
 	void gradleBuildWithNoScopeDependencyDefaultsToCompile() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
@@ -374,6 +364,14 @@ class GroovyDslGradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithClassifierDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("root", Dependency.withCoordinates("com.example", "acme").classifier("test-jar"));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("dependencies {", "    implementation 'com.example:acme:test-jar'", "}");
+	}
+
+	@Test
 	void gradleBuildWithExclusions() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("test",
@@ -410,11 +408,11 @@ class GroovyDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeAndClassifierDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
-				.scope(DependencyScope.COMPILE).type("tar.gz").classifier("classifier"));
+		build.dependencies().add("root", Dependency.withCoordinates("com.example", "acme")
+				.scope(DependencyScope.COMPILE).type("tar.gz").classifier("test-jar"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("dependencies {",
-				"    implementation 'org.springframework.boot:spring-boot-starter:classifier@tar.gz'", "}");
+		assertThat(lines).containsSequence("dependencies {", "    implementation 'com.example:acme:test-jar@tar.gz'",
+				"}");
 	}
 
 	@Test
