@@ -185,6 +185,27 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithNoScm() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/scm")).isNull());
+	}
+
+	@Test
+	void pomWithScm() {
+		MavenBuild build = new MavenBuild();
+		build.settings().scm(
+				(scm) -> scm.connection("connection").developerConnection("developerConnection").tag("tag").url("url"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/scm");
+			assertThat(dependency).textAtPath("connection").isEqualTo("connection");
+			assertThat(dependency).textAtPath("developerConnection").isEqualTo("developerConnection");
+			assertThat(dependency).textAtPath("tag").isEqualTo("tag");
+			assertThat(dependency).textAtPath("url").isEqualTo("url");
+		});
+	}
+
+	@Test
 	void pomWithProperties() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
@@ -764,20 +785,6 @@ class MavenBuildWriterTests {
 			assertThat(distributionManagement).textAtPath("relocation/artifactId").isEqualTo("project");
 			assertThat(distributionManagement).textAtPath("relocation/version").isEqualTo("1.0.0");
 			assertThat(distributionManagement).textAtPath("relocation/message").isEqualTo("moved");
-		});
-	}
-
-	@Test
-	void pomWithScm() {
-		MavenBuild build = new MavenBuild();
-		build.scm().connection("connection").developerConnection("developerConnection").tag("tag").url("url");
-
-		generatePom(build, (pom) -> {
-			NodeAssert dependency = pom.nodeAtPath("/project/scm");
-			assertThat(dependency).textAtPath("connection").isEqualTo("connection");
-			assertThat(dependency).textAtPath("developerConnection").isEqualTo("developerConnection");
-			assertThat(dependency).textAtPath("tag").isEqualTo("tag");
-			assertThat(dependency).textAtPath("url").isEqualTo("url");
 		});
 	}
 

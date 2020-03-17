@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,12 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.Optional;
-
 /**
- * Maven Scm.
+ * A version control section of a {@link MavenBuild}.
  *
  * @author Joachim Pasquali
  */
-public class Scm {
+public class MavenScm {
 
 	private final String connection;
 
@@ -33,7 +31,7 @@ public class Scm {
 
 	private final String url;
 
-	protected Scm(Builder builder) {
+	MavenScm(Builder builder) {
 		this.connection = builder.connection;
 		this.developerConnection = builder.developerConnection;
 		this.tag = builder.tag;
@@ -41,7 +39,7 @@ public class Scm {
 	}
 
 	public boolean isEmpty() {
-		return this.connection == null && this.developerConnection == null && this.tag == null;
+		return this.connection == null && this.developerConnection == null && this.tag == null && this.url == null;
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class Scm {
 	 * @return the tag of current code
 	 */
 	public String getTag() {
-		return Optional.ofNullable(this.tag).orElse("HEAD");
+		return this.tag;
 	}
 
 	/**
@@ -133,8 +131,8 @@ public class Scm {
 			return this;
 		}
 
-		public Scm build() {
-			return new Scm(this);
+		public MavenScm build() {
+			return new MavenScm(this);
 		}
 
 	}
