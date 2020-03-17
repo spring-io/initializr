@@ -73,6 +73,7 @@ public class MavenBuildWriter {
 			writeProjectName(writer, settings);
 			writeCollectionElement(writer, "licenses", settings.getLicenses(), this::writeLicense);
 			writeCollectionElement(writer, "developers", settings.getDevelopers(), this::writeDeveloper);
+			writeScm(writer, settings.getScm());
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
@@ -172,6 +173,17 @@ public class MavenBuildWriter {
 						() -> properties.forEach((key, value) -> writeSingleElement(writer, key, value)));
 			}
 		});
+	}
+
+	private void writeScm(IndentingWriter writer, MavenScm mavenScm) {
+		if (!mavenScm.isEmpty()) {
+			writeElement(writer, "scm", () -> {
+				writeSingleElement(writer, "connection", mavenScm.getConnection());
+				writeSingleElement(writer, "developerConnection", mavenScm.getDeveloperConnection());
+				writeSingleElement(writer, "tag", mavenScm.getTag());
+				writeSingleElement(writer, "url", mavenScm.getUrl());
+			});
+		}
 	}
 
 	private void writeDependencies(IndentingWriter writer, MavenBuild build) {
