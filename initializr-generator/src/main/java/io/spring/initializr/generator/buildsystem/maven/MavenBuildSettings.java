@@ -47,11 +47,11 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final MavenScm scm;
 
+	private final String finalName;
+
 	private final String sourceDirectory;
 
 	private final String testSourceDirectory;
-
-	private final String finalName;
 
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
@@ -62,9 +62,9 @@ public class MavenBuildSettings extends BuildSettings {
 		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
 		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
 		this.scm = builder.scm.build();
+		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
-		this.finalName = builder.finalName;
 	}
 
 	/**
@@ -126,6 +126,14 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the final name of the artifact.
+	 * @return the final name or {@code null} to use the default
+	 */
+	public String getFinalName() {
+		return this.finalName;
+	}
+
+	/**
 	 * Return the location of main source code. Can use Maven properties such as
 	 * {@code ${basedir}}.
 	 * @return the location of main source code or {@code null} to use the default
@@ -141,14 +149,6 @@ public class MavenBuildSettings extends BuildSettings {
 	 */
 	public String getTestSourceDirectory() {
 		return this.testSourceDirectory;
-	}
-
-	/**
-	 * Return the final name of the compiled artifact.
-	 * @return the final name
-	 */
-	public String getFinalName() {
-		return this.finalName;
 	}
 
 	/**
@@ -172,11 +172,11 @@ public class MavenBuildSettings extends BuildSettings {
 
 		private final MavenScm.Builder scm = new MavenScm.Builder();
 
+		private String finalName;
+
 		private String sourceDirectory;
 
 		private String testSourceDirectory;
-
-		private String finalName;
 
 		public Builder() {
 		}
@@ -265,6 +265,16 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
+		 * Set the name of the bundled project when it is finally built.
+		 * @param finalName the final name of the artifact
+		 * @return this for method chaining
+		 */
+		public Builder finalName(String finalName) {
+			this.finalName = finalName;
+			return self();
+		}
+
+		/**
 		 * Set the the location of main source code. Can use Maven properties such as
 		 * {@code ${basedir}}.
 		 * @param sourceDirectory the location of main source code or {@code null} to use
@@ -285,16 +295,6 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
-			return self();
-		}
-
-		/**
-		 * Set the finalName of the artifact as a child tag in the &lt;build&gt; tag.
-		 * @param finalName the final name of the artifact after compiling
-		 * @return this for method chaining
-		 */
-		public Builder finalName(String finalName) {
-			this.finalName = finalName;
 			return self();
 		}
 
