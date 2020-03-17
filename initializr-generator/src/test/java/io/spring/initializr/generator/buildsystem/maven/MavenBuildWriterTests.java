@@ -673,6 +673,20 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithNoFinalName() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/build/finalName")).isNull());
+	}
+
+	@Test
+	void pomWithFinalName() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").finalName("demo.jar");
+		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/build/finalName").isEqualTo("demo.jar"));
+	}
+
+	@Test
 	void pomWithCustomSourceDirectories() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").sourceDirectory("${project.basedir}/src/main/kotlin")
