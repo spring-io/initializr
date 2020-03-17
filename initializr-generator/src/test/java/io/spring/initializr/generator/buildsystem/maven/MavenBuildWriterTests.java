@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -329,6 +329,19 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("version").isNullOrEmpty();
 			assertThat(dependency).textAtPath("scope").isEqualTo("test");
 			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithClassifierDependency() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.dependencies().add("foo-bar", Dependency.withCoordinates("com.example", "acme").classifier("test-jar"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("com.example");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("acme");
+			assertThat(dependency).textAtPath("classifier").isEqualTo("test-jar");
 		});
 	}
 
