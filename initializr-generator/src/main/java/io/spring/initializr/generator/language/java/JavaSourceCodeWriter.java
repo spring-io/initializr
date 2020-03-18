@@ -48,6 +48,7 @@ import io.spring.initializr.generator.language.SourceStructure;
  *
  * @author Andy Wilkinson
  * @author Matt Berteaux
+ * @author Yifan Li
  */
 public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
@@ -115,6 +116,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				writer.print("class " + type.getName());
 				if (type.getExtends() != null) {
 					writer.print(" extends " + getUnqualifiedName(type.getExtends()));
+				}
+				List<String> impls = type.getImplements();
+				if (!impls.isEmpty()) {
+					writer.print(" implements "
+							+ impls.stream().map(this::getUnqualifiedName).collect(Collectors.joining(", ")));
 				}
 				writer.println(" {");
 				writer.println();
@@ -255,6 +261,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.add(typeDeclaration.getExtends());
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			imports.addAll(getRequiredImports(typeDeclaration.getImplements(), Collections::singletonList));
 			for (JavaFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
 				if (requiresImport(fieldDeclaration.getReturnType())) {
 					imports.add(fieldDeclaration.getReturnType());

@@ -26,10 +26,13 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  *
  * @author Andy Wilkinson
  * @author Matt Berteaux
+ * @author Yifan Li
  */
 public class JavaTypeDeclaration extends TypeDeclaration {
 
 	private int modifiers;
+
+	private final List<String> implementsInterfaceNames = new ArrayList<>();
 
 	private final List<JavaFieldDeclaration> fieldDeclarations = new ArrayList<>();
 
@@ -61,6 +64,14 @@ public class JavaTypeDeclaration extends TypeDeclaration {
 
 	public List<JavaMethodDeclaration> getMethodDeclarations() {
 		return this.methodDeclarations;
+	}
+
+	public void implement(String name) {
+		this.implementsInterfaceNames.add(name);
+	}
+
+	public List<String> getImplements() {
+		return this.implementsInterfaceNames;
 	}
 
 }

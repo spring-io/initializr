@@ -45,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Andy Wilkinson
  * @author Matt Berteaux
+ * @author Yifan Li
  */
 class JavaSourceCodeWriterTests {
 
@@ -103,6 +104,17 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.build.TestParent;", "",
 				"class Test extends TestParent {", "", "}");
+	}
+
+	@Test
+	void emptyTypeDeclarationWithImplementInterface() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.implement("java.io.Serializable");
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import java.io.Serializable;", "",
+				"class Test implements Serializable {", "", "}");
 	}
 
 	@Test
