@@ -707,13 +707,13 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementEmpty() {
+	void pomWithDistributionManagementEmpty() {
 		MavenBuild build = new MavenBuild();
 		generatePom(build, (pom) -> assertThat(pom).nodeAtPath("/project/distributionManagement").isNull());
 	}
 
 	@Test
-	void powWithDistributionManagementDownloadUrl() {
+	void pomWithDistributionManagementDownloadUrl() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().downloadUrl("https://example.com/download");
 		generatePom(build, (pom) -> {
@@ -727,7 +727,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementRepository() {
+	void pomWithDistributionManagementRepository() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().repository((repository) -> repository.id("released-repo").name("released repo")
 				.url("https://upload.example.com/releases"));
@@ -747,7 +747,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementSnapshotRepository() {
+	void pomWithDistributionManagementSnapshotRepository() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().snapshotRepository((repository) -> repository.id("snapshot-repo")
 				.name("snapshot repo").url("scp://upload.example.com/snapshots").layout("legacy").uniqueVersion(true));
@@ -767,7 +767,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementSite() {
+	void pomWithDistributionManagementSite() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().site((site) -> site.id("website").name("web site"))
 				.site((site) -> site.url("scp://www.example.com/www/docs/project"));
@@ -785,7 +785,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementRelocation() {
+	void pomWithDistributionManagementRelocation() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().relocation((relocation) -> relocation.groupId("com.example.new")
 				.artifactId("project").version("1.0.0").message("moved"));

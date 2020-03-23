@@ -44,6 +44,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
+import org.apache.commons.text.StringEscapeUtils;
 
 import org.springframework.util.ObjectUtils;
 
@@ -485,7 +486,7 @@ public class MavenBuildWriter {
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {
 		if (text != null) {
 			writer.print(String.format("<%s>", name));
-			writer.print(text);
+			writer.print(StringEscapeUtils.escapeXml10(text));
 			writer.println(String.format("</%s>", name));
 		}
 	}
