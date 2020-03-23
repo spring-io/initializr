@@ -486,7 +486,7 @@ public class MavenBuildWriter {
 	private void writeSingleElement(IndentingWriter writer, String name, String text) {
 		if (text != null) {
 			writer.print(String.format("<%s>", name));
-			writer.print(text);
+			writer.print(escapeString(text));
 			writer.println(String.format("</%s>", name));
 		}
 	}
@@ -514,6 +514,34 @@ public class MavenBuildWriter {
 		if (!collection.isEmpty()) {
 			collection.forEach((item) -> itemWriter.accept(writer, item));
 		}
+	}
+
+	private String escapeString(String inputString) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < inputString.length(); i++) {
+			char character = inputString.charAt(i);
+			switch (character) {
+			case '\'':
+				stringBuilder.append("&apos;");
+				break;
+			case '\"':
+				stringBuilder.append("&quot;");
+				break;
+			case '<':
+				stringBuilder.append("&lt;");
+				break;
+			case '>':
+				stringBuilder.append("&gt;");
+				break;
+			case '&':
+				stringBuilder.append("&amp;");
+				break;
+			default:
+				stringBuilder.append(character);
+			}
+		}
+
+		return stringBuilder.toString();
 	}
 
 }
