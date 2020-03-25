@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -247,6 +247,20 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 					return (actual != null && actual.getGroupId().equals(groupId)
 							&& actual.getArtifactId().equals(artifactId) && actual.getVersion().equals(version));
 				}, "matching bom"));
+		return this;
+	}
+
+	/**
+	 * Assert that {@code pom.xml} does not define the specified bom.
+	 * @param groupId the groupId of the bom
+	 * @param artifactId the artifactId of the bom
+	 * @return {@code this} assertion object
+	 */
+	public MavenBuildAssert doesNotHaveBom(String groupId, String artifactId) {
+		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency").noneMatch((candidate) -> {
+			BillOfMaterials actual = toBom(candidate);
+			return groupId.equals(actual.getGroupId()) && artifactId.equals(actual.getArtifactId());
+		});
 		return this;
 	}
 
