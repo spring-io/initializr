@@ -96,6 +96,7 @@ public final class Annotation {
 		private final Class<?> type;
 
 		private final List<String> values;
+
 		private final List<Annotation> nestedAnnotations;
 
 		private Attribute(String name, Class<?> type, String... values) {
@@ -108,7 +109,7 @@ public final class Annotation {
 		private Attribute(String name, Class<?> type, Annotation... values) {
 			this.name = name;
 			this.type = type;
-			this.values =  Collections.emptyList();
+			this.values = Collections.emptyList();
 			this.nestedAnnotations = Arrays.asList(values);
 		}
 
@@ -127,6 +128,7 @@ public final class Annotation {
 		public List<Annotation> getNestedAnnotations() {
 			return this.nestedAnnotations;
 		}
+
 	}
 
 }

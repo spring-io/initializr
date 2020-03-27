@@ -16,16 +16,6 @@
 
 package io.spring.initializr.generator.language.java;
 
-import io.spring.initializr.generator.condition.ConditionalOnLanguage;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.Language;
-import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.SourceStructure;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.springframework.util.StreamUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
@@ -36,6 +26,17 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import io.spring.initializr.generator.condition.ConditionalOnLanguage;
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.language.SourceStructure;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -261,11 +262,12 @@ class JavaSourceCodeWriterTests {
 
 	@Test
 	void annotationWithNestedAnnotationAttribute() throws IOException {
-		Annotation nested = Annotation.name("io.spring.initializr.generator.condition.ConditionalOnLanguage", (builder) ->
-				builder.attribute("value", String.class, "java"));
+		Annotation nested = Annotation.name("io.spring.initializr.generator.condition.ConditionalOnLanguage",
+				(builder) -> builder.attribute("value", String.class, "java"));
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
 				(builder) -> builder.attribute("nested", ConditionalOnLanguage.class, nested)));
-		assertThat(lines).containsExactly("package com.example;", "", "import io.spring.initializr.generator.condition.ConditionalOnLanguage;",
+		assertThat(lines).containsExactly("package com.example;", "",
+				"import io.spring.initializr.generator.condition.ConditionalOnLanguage;",
 				"import org.springframework.test.TestApplication;", "",
 				"@TestApplication(nested = @ConditionalOnLanguage(\"java\"))", "class Test {", "", "}");
 	}
@@ -307,6 +309,9 @@ class JavaSourceCodeWriterTests {
 	}
 
 	private @interface Nested {
+
 		String value();
+
 	}
+
 }
