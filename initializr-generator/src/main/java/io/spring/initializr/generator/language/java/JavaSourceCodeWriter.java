@@ -17,6 +17,8 @@
 package io.spring.initializr.generator.language.java;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -144,21 +146,26 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		writer.println(formatAnnotation(annotation));
+	}
+
+	private String formatAnnotation(Annotation annotation) {
+		StringWriter writer = new StringWriter();
+		writer.write("@" + getUnqualifiedName(annotation.getName()));
 		List<Annotation.Attribute> attributes = annotation.getAttributes();
 		if (!attributes.isEmpty()) {
-			writer.print("(");
+			writer.write("(");
 			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
+				writer.write(formatAnnotationAttribute(attributes.get(0)));
 			}
 			else {
-				writer.print(attributes.stream()
+				writer.write(attributes.stream()
 						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
 						.collect(Collectors.joining(", ")));
 			}
-			writer.print(")");
+			writer.write(")");
 		}
-		writer.println();
+		return writer.toString();
 	}
 
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
@@ -176,12 +183,20 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		if (attribute.getType().equals(String.class)) {
 			return formatValues(values, (value) -> String.format("\"%s\"", value));
 		}
+		if (attribute.getType().isAnnotation()) {
+			return formatAttributes(attribute.getNestedAnnotations(), this::formatAnnotation);
+		}
 		return formatValues(values, (value) -> String.format("%s", value));
 	}
 
 	private String formatValues(List<String> values, Function<String, String> formatter) {
 		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
 		return (values.size() > 1) ? "{ " + result + " }" : result;
+	}
+
+	private String formatAttributes(List<Annotation> annotations, Function<Annotation, String> formatter) {
+		String result = annotations.stream().map(formatter).collect(Collectors.joining(", "));
+		return (annotations.size() > 1) ? "{ " + result + " }" : result;
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
@@ -290,6 +305,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
 						.collect(Collectors.toList()));
 			}
+			if (attribute.getType().isAnnotation()) {
+				imports.add(attribute.getType().getCanonicalName());
+			}
+
 		});
 		return imports;
 	}

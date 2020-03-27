@@ -79,6 +79,11 @@ public final class Annotation {
 			return this;
 		}
 
+		public Builder attribute(String name, Class<?> type, Annotation... values) {
+			this.attributes.put(name, new Attribute(name, type, values));
+			return this;
+		}
+
 	}
 
 	/**
@@ -91,11 +96,20 @@ public final class Annotation {
 		private final Class<?> type;
 
 		private final List<String> values;
+		private final List<Annotation> nestedAnnotations;
 
 		private Attribute(String name, Class<?> type, String... values) {
 			this.name = name;
 			this.type = type;
 			this.values = Arrays.asList(values);
+			this.nestedAnnotations = Collections.emptyList();
+		}
+
+		private Attribute(String name, Class<?> type, Annotation... values) {
+			this.name = name;
+			this.type = type;
+			this.values =  Collections.emptyList();
+			this.nestedAnnotations = Arrays.asList(values);
 		}
 
 		public String getName() {
@@ -110,6 +124,9 @@ public final class Annotation {
 			return this.values;
 		}
 
+		public List<Annotation> getNestedAnnotations() {
+			return this.nestedAnnotations;
+		}
 	}
 
 }
