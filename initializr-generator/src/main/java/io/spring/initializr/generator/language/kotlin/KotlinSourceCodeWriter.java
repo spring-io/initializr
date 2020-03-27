@@ -16,28 +16,18 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
+import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.*;
+
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotatable;
-import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.SourceCode;
-import io.spring.initializr.generator.language.SourceCodeWriter;
-import io.spring.initializr.generator.language.SourceStructure;
 
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
@@ -201,26 +191,32 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
+		writer.print(formatAnnotation(annotation));
 		if (newLine) {
 			writer.println();
 		}
 		else {
 			writer.print(" ");
 		}
+	}
+
+	private String formatAnnotation(Annotation annotation) {
+		StringWriter writer = new StringWriter();
+		writer.write("@" + getUnqualifiedName(annotation.getName()));
+		List<Annotation.Attribute> attributes = annotation.getAttributes();
+		if (!attributes.isEmpty()) {
+			writer.write("(");
+			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
+				writer.write(formatAnnotationAttribute(attributes.get(0)));
+			}
+			else {
+				writer.write(attributes.stream()
+						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+						.collect(Collectors.joining(", ")));
+			}
+			writer.write(")");
+		}
+		return writer.toString();
 	}
 
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
@@ -238,6 +234,9 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		if (attribute.getType().equals(String.class)) {
 			return formatValues(values, (value) -> String.format("\"%s\"", value));
 		}
+		if (attribute.getType().isAnnotation()) {
+			return formatNestedAnnotation(attribute.getNestedAnnotations(), this::formatAnnotation);
+		}
 		return formatValues(values, (value) -> String.format("%s", value));
 	}
 
@@ -245,6 +244,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
 		return (values.size() > 1) ? "[" + result + "]" : result;
 	}
+
+	private String formatNestedAnnotation(List<Annotation> annotations, Function<Annotation, String> formatter) {
+		String result = annotations.stream().map(formatter).collect(Collectors.joining(", "));
+		return (annotations.size() > 1) ? "[" + result + "]" : result;
+	}
+
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
 		String modifiers = declaredModifiers.stream().filter((entry) -> !entry.equals(KotlinModifier.PUBLIC)).sorted()
@@ -334,6 +339,9 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			if (Enum.class.isAssignableFrom(attribute.getType())) {
 				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
 						.collect(Collectors.toList()));
+			}
+			if (attribute.getType().isAnnotation()) {
+				imports.add(attribute.getType().getCanonicalName());
 			}
 		});
 		return imports;

@@ -18,7 +18,6 @@ package io.spring.initializr.generator.language.java;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -184,7 +183,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			return formatValues(values, (value) -> String.format("\"%s\"", value));
 		}
 		if (attribute.getType().isAnnotation()) {
-			return formatAttributes(attribute.getNestedAnnotations(), this::formatAnnotation);
+			return formatNestedAnnotation(attribute.getNestedAnnotations(), this::formatAnnotation);
 		}
 		return formatValues(values, (value) -> String.format("%s", value));
 	}
@@ -194,7 +193,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		return (values.size() > 1) ? "{ " + result + " }" : result;
 	}
 
-	private String formatAttributes(List<Annotation> annotations, Function<Annotation, String> formatter) {
+	private String formatNestedAnnotation(List<Annotation> annotations, Function<Annotation, String> formatter) {
 		String result = annotations.stream().map(formatter).collect(Collectors.joining(", "));
 		return (annotations.size() > 1) ? "{ " + result + " }" : result;
 	}
@@ -308,7 +307,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			if (attribute.getType().isAnnotation()) {
 				imports.add(attribute.getType().getCanonicalName());
 			}
-
 		});
 		return imports;
 	}

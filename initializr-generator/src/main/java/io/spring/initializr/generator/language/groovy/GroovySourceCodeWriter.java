@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.language.groovy;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -142,21 +143,26 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	}
 
 	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
+		writer.println(formatAnnotation(annotation));
+	}
+
+	private String formatAnnotation(Annotation annotation) {
+		StringWriter writer = new StringWriter();
+		writer.write("@" + getUnqualifiedName(annotation.getName()));
 		List<Annotation.Attribute> attributes = annotation.getAttributes();
 		if (!attributes.isEmpty()) {
-			writer.print("(");
+			writer.write("(");
 			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
+				writer.write(formatAnnotationAttribute(attributes.get(0)));
 			}
 			else {
-				writer.print(attributes.stream()
+				writer.write(attributes.stream()
 						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
 						.collect(Collectors.joining(", ")));
 			}
-			writer.print(")");
+			writer.write(")");
 		}
-		writer.println();
+		return writer.toString();
 	}
 
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
@@ -174,12 +180,21 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		if (attribute.getType().equals(String.class)) {
 			return formatValues(values, (value) -> String.format("\"%s\"", value));
 		}
+		if (attribute.getType().isAnnotation()) {
+			return formatNestedAnnotation(attribute.getNestedAnnotations(), this::formatAnnotation);
+		}
+
 		return formatValues(values, (value) -> String.format("%s", value));
 	}
 
 	private String formatValues(List<String> values, Function<String, String> formatter) {
 		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
 		return (values.size() > 1) ? "[ " + result + " ]" : result;
+	}
+
+	private String formatNestedAnnotation(List<Annotation> annotations, Function<Annotation, String> formatter) {
+		String result = annotations.stream().map(formatter).collect(Collectors.joining(", "));
+		return (annotations.size() > 1) ? "[ " + result + " ]" : result;
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
@@ -286,6 +301,9 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			if (Enum.class.isAssignableFrom(attribute.getType())) {
 				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
 						.collect(Collectors.toList()));
+			}
+			if (attribute.getType().isAnnotation()) {
+				imports.add(attribute.getType().getCanonicalName());
 			}
 		});
 		return imports;

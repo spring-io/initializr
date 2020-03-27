@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Language;
@@ -314,6 +315,17 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.One",
 				"import java.time.temporal.ChronoUnit", "import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One::class, unit = ChronoUnit.NANOS)", "class Test");
+	}
+
+	@Test
+	void annotationWithNestedAnnotationAttribute() throws IOException {
+		Annotation nested = Annotation.name("io.spring.initializr.generator.condition.ConditionalOnLanguage", (builder) ->
+				builder.attribute("value", String.class, "kotlin"));
+		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
+				(builder) -> builder.attribute("nested", ConditionalOnLanguage.class, nested)));
+		assertThat(lines).containsExactly("package com.example", "", "import io.spring.initializr.generator.condition.ConditionalOnLanguage",
+				"import org.springframework.test.TestApplication", "",
+				"@TestApplication(nested = @ConditionalOnLanguage(\"kotlin\"))", "class Test");
 	}
 
 	private List<String> writeClassAnnotation(Annotation annotation) throws IOException {
