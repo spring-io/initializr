@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,10 +75,9 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void kotlinVersionResolverIsUsedIfPresent() {
-		this.projectTester.withBean(KotlinProjectSettings.class, () -> new SimpleKotlinProjectSettings("0.9.12"))
-				.configure(new MutableProjectDescription(),
-						(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion())
-								.isEqualTo("0.9.12"));
+		this.projectTester.withBean(KotlinVersionResolver.class, () -> (description) -> "0.9.12").configure(
+				new MutableProjectDescription(),
+				(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion()).isEqualTo("0.9.12"));
 	}
 
 	@Test
