@@ -20,6 +20,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
  * A {@link GradleBuild} writer for {@code settings.gradle.kts}.
  *
  * @author Jean-Baptiste Nizet
+ * @author Jafer Khan Shamshad
  */
 public class KotlinDslGradleSettingsWriter extends GradleSettingsWriter {
 
@@ -29,8 +30,12 @@ public class KotlinDslGradleSettingsWriter extends GradleSettingsWriter {
 	}
 
 	@Override
-	protected String urlAssignment(String url) {
-		return "url = uri(\"" + url + "\")";
+	protected String propertyAssignment(String name, String value) {
+		if (name.equalsIgnoreCase("url")) {
+			return name + " = uri(" + wrapWithQuotes(value) + ")";
+		}
+
+		return name + " = " + wrapWithQuotes(value);
 	}
 
 }

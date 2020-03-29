@@ -46,6 +46,7 @@ import io.spring.initializr.generator.version.VersionProperty;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
+ * @author Jafer Khan Shamshad
  * @see GroovyDslGradleBuildWriter
  * @see KotlinDslGradleBuildWriter
  */
@@ -96,11 +97,15 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
 
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "repositories", build.repositories().items().collect(Collectors.toList()),
-				this::repositoryAsString);
+		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
+		if (!repositories.isEmpty()) {
+			writer.println("repositories {");
+			writer.indented(() -> repositories.forEach((repository) -> writeRepository(writer, repository)));
+			writer.println("}");
+		}
 	}
 
-	protected abstract String repositoryAsString(MavenRepository repository);
+	protected abstract void writeRepository(IndentingWriter writer, MavenRepository repository);
 
 	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
 		if (properties.isEmpty()) {

@@ -25,6 +25,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryCredentials;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -37,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * Tests for {@link KotlinDslGradleBuildWriter}
  *
  * @author Jean-Baptiste Nizet
+ * @author Jafer Khan Shamshad
  */
 class KotlinDslGradleBuildWriterTests {
 
@@ -127,8 +129,19 @@ class KotlinDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("repositories {",
-				"    maven { url = uri(\"https://repo.spring.io/milestone\") }", "}");
+		assertThat(lines).containsSequence("repositories {", "    maven {",
+				"        url = uri(\"https://repo.spring.io/milestone\")", "    }", "}");
+	}
+
+	@Test
+	void gradleBuildWithRepositoryCredentials() {
+		GradleBuild build = new GradleBuild();
+		build.repositories().add(MavenRepository.withIdAndUrl("foo-repository", "https://example.com/foo")
+				.credentials(new MavenRepositoryCredentials("foo", "bar")));
+		List<String> lines = generateBuild(build);
+		assertThat(lines).containsSequence("repositories {", "    maven {",
+				"        url = uri(\"https://example.com/foo\")", "        credentials {",
+				"            username = \"foo\"", "            password = \"bar\"", "        }", "    }", "}");
 	}
 
 	@Test
@@ -137,8 +150,8 @@ class KotlinDslGradleBuildWriterTests {
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
 				.snapshotsEnabled(true));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("repositories {",
-				"    maven { url = uri(\"https://repo.spring.io/snapshot\") }", "}");
+		assertThat(lines).containsSequence("repositories {", "    maven {",
+				"        url = uri(\"https://repo.spring.io/snapshot\")", "    }", "}");
 	}
 
 	@Test

@@ -10,8 +10,12 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
-	maven { url = uri("https://example.com/foo") }
-	maven { url = uri("https://example.com/bar") }
+	maven {
+		url = uri("https://example.com/foo")
+	}
+	maven {
+		url = uri("https://example.com/bar")
+	}
 }
 
 dependencies {

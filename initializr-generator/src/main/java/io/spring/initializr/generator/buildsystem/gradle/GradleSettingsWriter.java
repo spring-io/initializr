@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryCredentials;
 import io.spring.initializr.generator.io.IndentingWriter;
 
 /**
@@ -24,6 +25,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @author Jafer Khan Shamshad
  * @see GroovyDslGradleSettingsWriter
  * @see KotlinDslGradleSettingsWriter
  */
@@ -55,7 +57,7 @@ public abstract class GradleSettingsWriter {
 	private void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writer.println("repositories {");
 		writer.indented(() -> {
-			build.pluginRepositories().items().map(this::repositoryAsString).forEach(writer::println);
+			build.pluginRepositories().items().forEach((repository) -> writeRepository(writer, repository));
 			writer.println("gradlePluginPortal()");
 		});
 		writer.println("}");
@@ -79,15 +81,31 @@ public abstract class GradleSettingsWriter {
 		writer.println("}");
 	}
 
-	private String repositoryAsString(MavenRepository repository) {
+	private void writeRepository(IndentingWriter writer, MavenRepository repository) {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
-			return "mavenCentral()";
+			writer.println("mavenCentral()");
+			return;
 		}
-		return "maven { " + urlAssignment(repository.getUrl()) + " }";
+
+		writer.println("maven {");
+		writer.indented(() -> {
+			writer.println(propertyAssignment("url", repository.getUrl()));
+
+			MavenRepositoryCredentials credentials = repository.getCredentials();
+			if (credentials != null) {
+				writer.println("credentials {");
+				writer.indented(() -> {
+					writer.println(propertyAssignment("username", credentials.getUsername()));
+					writer.println(propertyAssignment("password", credentials.getPassword()));
+				});
+				writer.println("}");
+			}
+		});
+		writer.println("}");
 	}
 
 	protected abstract String wrapWithQuotes(String value);
 
-	protected abstract String urlAssignment(String url);
+	protected abstract String propertyAssignment(String name, String value);
 
 }

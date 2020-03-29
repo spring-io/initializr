@@ -20,6 +20,7 @@ package io.spring.initializr.generator.buildsystem;
  * A Maven repository.
  *
  * @author Andy Wilkinson
+ * @author Jafer Khan Shamshad
  */
 public class MavenRepository {
 
@@ -37,11 +38,14 @@ public class MavenRepository {
 
 	private final boolean snapshotsEnabled;
 
+	private final MavenRepositoryCredentials credentials;
+
 	protected MavenRepository(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.url = builder.url;
 		this.snapshotsEnabled = builder.snapshotsEnabled;
+		this.credentials = builder.credentials;
 	}
 
 	/**
@@ -87,6 +91,14 @@ public class MavenRepository {
 		return this.snapshotsEnabled;
 	}
 
+	/**
+	 * Return the credentials required for accessing the repository.
+	 * @return the repository credentials
+	 */
+	public MavenRepositoryCredentials getCredentials() {
+		return this.credentials;
+	}
+
 	public static class Builder {
 
 		private String id;
@@ -96,6 +108,8 @@ public class MavenRepository {
 		private String url;
 
 		private boolean snapshotsEnabled;
+
+		private MavenRepositoryCredentials credentials;
 
 		public Builder(String id, String url) {
 			this.id = id;
@@ -140,6 +154,16 @@ public class MavenRepository {
 		 */
 		public Builder snapshotsEnabled(boolean snapshotsEnabled) {
 			this.snapshotsEnabled = snapshotsEnabled;
+			return this;
+		}
+
+		/**
+		 * Set the credentials required for accessing the repository.
+		 * @param credentials the credentials
+		 * @return this for method chaining
+		 */
+		public Builder credentials(MavenRepositoryCredentials credentials) {
+			this.credentials = credentials;
 			return this;
 		}
 

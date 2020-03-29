@@ -25,6 +25,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.MavenRepositoryCredentials;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -33,6 +34,7 @@ import io.spring.initializr.generator.version.VersionReference;
  * A {@link GradleBuild} writer for {@code build.gradle}.
  *
  * @author Jean-Baptiste Nizet
+ * @author Jafer Khan Shamshad
  */
 public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
@@ -92,11 +94,27 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected String repositoryAsString(MavenRepository repository) {
+	protected void writeRepository(IndentingWriter writer, MavenRepository repository) {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
-			return "mavenCentral()";
+			writer.println("mavenCentral()");
+			return;
 		}
-		return "maven { url '" + repository.getUrl() + "' }";
+
+		writer.println("maven {");
+		writer.indented(() -> {
+			writer.println("url '" + repository.getUrl() + "'");
+
+			MavenRepositoryCredentials credentials = repository.getCredentials();
+			if (credentials != null) {
+				writer.println("credentials {");
+				writer.indented(() -> {
+					writer.println("username '" + credentials.getUsername() + "'");
+					writer.println("password '" + credentials.getPassword() + "'");
+				});
+				writer.println("}");
+			}
+		});
+		writer.println("}");
 	}
 
 	@Override

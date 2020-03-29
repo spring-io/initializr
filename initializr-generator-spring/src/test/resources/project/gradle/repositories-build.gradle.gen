@@ -10,8 +10,12 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
-	maven { url 'https://example.com/foo' }
-	maven { url 'https://example.com/bar' }
+	maven {
+		url 'https://example.com/foo'
+	}
+	maven {
+		url 'https://example.com/bar'
+	}
 }
 
 dependencies {
