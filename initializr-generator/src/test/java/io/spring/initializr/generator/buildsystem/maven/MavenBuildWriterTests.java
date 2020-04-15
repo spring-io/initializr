@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,6 +185,27 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithNoScm() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/scm")).isNull());
+	}
+
+	@Test
+	void pomWithScm() {
+		MavenBuild build = new MavenBuild();
+		build.settings().scm(
+				(scm) -> scm.connection("connection").developerConnection("developerConnection").tag("tag").url("url"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/scm");
+			assertThat(dependency).textAtPath("connection").isEqualTo("connection");
+			assertThat(dependency).textAtPath("developerConnection").isEqualTo("developerConnection");
+			assertThat(dependency).textAtPath("tag").isEqualTo("tag");
+			assertThat(dependency).textAtPath("url").isEqualTo("url");
+		});
+	}
+
+	@Test
 	void pomWithProperties() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
@@ -329,6 +350,19 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("version").isNullOrEmpty();
 			assertThat(dependency).textAtPath("scope").isEqualTo("test");
 			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+		});
+	}
+
+	@Test
+	void pomWithClassifierDependency() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.dependencies().add("foo-bar", Dependency.withCoordinates("com.example", "acme").classifier("test-jar"));
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("com.example");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("acme");
+			assertThat(dependency).textAtPath("classifier").isEqualTo("test-jar");
 		});
 	}
 
@@ -639,6 +673,20 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithNoFinalName() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/build/finalName")).isNull());
+	}
+
+	@Test
+	void pomWithFinalName() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").finalName("demo.jar");
+		generatePom(build, (pom) -> assertThat(pom).textAtPath("/project/build/finalName").isEqualTo("demo.jar"));
+	}
+
+	@Test
 	void pomWithCustomSourceDirectories() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").sourceDirectory("${project.basedir}/src/main/kotlin")
@@ -659,13 +707,13 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementEmpty() {
+	void pomWithDistributionManagementEmpty() {
 		MavenBuild build = new MavenBuild();
 		generatePom(build, (pom) -> assertThat(pom).nodeAtPath("/project/distributionManagement").isNull());
 	}
 
 	@Test
-	void powWithDistributionManagementDownloadUrl() {
+	void pomWithDistributionManagementDownloadUrl() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().downloadUrl("https://example.com/download");
 		generatePom(build, (pom) -> {
@@ -679,7 +727,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementRepository() {
+	void pomWithDistributionManagementRepository() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().repository((repository) -> repository.id("released-repo").name("released repo")
 				.url("https://upload.example.com/releases"));
@@ -699,7 +747,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementSnapshotRepository() {
+	void pomWithDistributionManagementSnapshotRepository() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().snapshotRepository((repository) -> repository.id("snapshot-repo")
 				.name("snapshot repo").url("scp://upload.example.com/snapshots").layout("legacy").uniqueVersion(true));
@@ -719,7 +767,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementSite() {
+	void pomWithDistributionManagementSite() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().site((site) -> site.id("website").name("web site"))
 				.site((site) -> site.url("scp://www.example.com/www/docs/project"));
@@ -737,7 +785,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void powWithDistributionManagementRelocation() {
+	void pomWithDistributionManagementRelocation() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement().relocation((relocation) -> relocation.groupId("com.example.new")
 				.artifactId("project").version("1.0.0").message("moved"));

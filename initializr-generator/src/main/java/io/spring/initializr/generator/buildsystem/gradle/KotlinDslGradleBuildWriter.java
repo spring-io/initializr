@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,10 +149,11 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeDependency(IndentingWriter writer, Dependency dependency) {
 		String version = determineVersion(dependency.getVersion());
+		String classifier = dependency.getClassifier();
 		String type = dependency.getType();
 		writer.print(configurationForDependency(dependency) + "(\"" + dependency.getGroupId() + ":"
 				+ dependency.getArtifactId() + ((version != null) ? ":" + version : "")
-				+ ((type != null) ? "@" + type : "") + "\")");
+				+ ((classifier != null) ? ":" + classifier : "") + ((type != null) ? "@" + type : "") + "\")");
 		if (!dependency.getExclusions().isEmpty()) {
 			writer.println(" {");
 			writer.indented(

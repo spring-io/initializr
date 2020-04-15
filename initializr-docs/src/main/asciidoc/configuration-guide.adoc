@@ -82,12 +82,7 @@ to do something and makes the declaration more idiomatic. Consider the following
 
 [source,java,indent=0]
 ----
-	@Bean
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	@ConditionalOnPackaging(WarPackaging.ID)
-	public BuildCustomizer<GradleBuild> warPluginContributor() {
-		return (build) -> build.addPlugin("war");
-	}
+include::{code-examples}/doc/generator/project/ProjectCustomizationExamples.java[tag=war-plugin-contributor]
 ----
 
 This registers a component that can customize a Gradle build only if the project to

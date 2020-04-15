@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,7 @@ public class MavenBuildWriter {
 			writeProjectName(writer, settings);
 			writeCollectionElement(writer, "licenses", settings.getLicenses(), this::writeLicense);
 			writeCollectionElement(writer, "developers", settings.getDevelopers(), this::writeDeveloper);
+			writeScm(writer, settings.getScm());
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build);
 			writeDependencyManagement(writer, build);
@@ -174,6 +175,17 @@ public class MavenBuildWriter {
 		});
 	}
 
+	private void writeScm(IndentingWriter writer, MavenScm mavenScm) {
+		if (!mavenScm.isEmpty()) {
+			writeElement(writer, "scm", () -> {
+				writeSingleElement(writer, "connection", mavenScm.getConnection());
+				writeSingleElement(writer, "developerConnection", mavenScm.getDeveloperConnection());
+				writeSingleElement(writer, "tag", mavenScm.getTag());
+				writeSingleElement(writer, "url", mavenScm.getUrl());
+			});
+		}
+	}
+
 	private void writeDependencies(IndentingWriter writer, MavenBuild build) {
 		if (build.dependencies().isEmpty()) {
 			return;
@@ -213,6 +225,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
 			writeSingleElement(writer, "version", determineVersion(dependency.getVersion()));
 			writeSingleElement(writer, "scope", scopeForType(dependency.getScope()));
+			writeSingleElement(writer, "classifier", dependency.getClassifier());
 			if (isOptional(dependency)) {
 				writeSingleElement(writer, "optional", Boolean.toString(true));
 			}
@@ -291,12 +304,14 @@ public class MavenBuildWriter {
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
-		if (settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
-				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()) {
+		if (settings.getFinalName() == null && settings.getSourceDirectory() == null
+				&& settings.getTestSourceDirectory() == null && build.resources().isEmpty()
+				&& build.testResources().isEmpty() && build.plugins().isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "build", () -> {
+			writeSingleElement(writer, "finalName", settings.getFinalName());
 			writeSingleElement(writer, "sourceDirectory", settings.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", settings.getTestSourceDirectory());
 			writeResources(writer, build);

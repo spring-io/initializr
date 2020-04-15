@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings;
 import io.spring.initializr.generator.packaging.Packaging;
@@ -44,6 +45,10 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final List<MavenDeveloper> developers;
 
+	private final MavenScm scm;
+
+	private final String finalName;
+
 	private final String sourceDirectory;
 
 	private final String testSourceDirectory;
@@ -56,6 +61,8 @@ public class MavenBuildSettings extends BuildSettings {
 		this.description = builder.description;
 		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
 		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
+		this.scm = builder.scm.build();
+		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
 	}
@@ -111,6 +118,22 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the {@linkplain MavenScm version control} section of the project.
+	 * @return the version control of the project
+	 */
+	public MavenScm getScm() {
+		return this.scm;
+	}
+
+	/**
+	 * Return the final name of the artifact.
+	 * @return the final name or {@code null} to use the default
+	 */
+	public String getFinalName() {
+		return this.finalName;
+	}
+
+	/**
 	 * Return the location of main source code. Can use Maven properties such as
 	 * {@code ${basedir}}.
 	 * @return the location of main source code or {@code null} to use the default
@@ -146,6 +169,10 @@ public class MavenBuildSettings extends BuildSettings {
 		private List<MavenLicense> licenses = new ArrayList<>();
 
 		private List<MavenDeveloper> developers = new ArrayList<>();
+
+		private final MavenScm.Builder scm = new MavenScm.Builder();
+
+		private String finalName;
 
 		private String sourceDirectory;
 
@@ -198,6 +225,16 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
+		 * Set a human readable description of the project.
+		 * @param description the description of the project
+		 * @return this for method chaining
+		 */
+		public Builder description(String description) {
+			this.description = description;
+			return self();
+		}
+
+		/**
 		 * Set the licenses of the project.
 		 * @param licenses the licenses associated with the project
 		 * @return this for method chaining
@@ -218,12 +255,22 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
-		 * Set a human readable description of the project.
-		 * @param description the description of the project
+		 * Customize the {@code scm} section using the specified consumer.
+		 * @param scm a consumer of the current version control section
 		 * @return this for method chaining
 		 */
-		public Builder description(String description) {
-			this.description = description;
+		public Builder scm(Consumer<MavenScm.Builder> scm) {
+			scm.accept(this.scm);
+			return self();
+		}
+
+		/**
+		 * Set the name of the bundled project when it is finally built.
+		 * @param finalName the final name of the artifact
+		 * @return this for method chaining
+		 */
+		public Builder finalName(String finalName) {
+			this.finalName = finalName;
 			return self();
 		}
 
