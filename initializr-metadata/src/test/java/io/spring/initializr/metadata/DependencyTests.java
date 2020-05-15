@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ class DependencyTests {
 	@Test
 	void resolveInvalidMapping() {
 		Dependency dependency = Dependency.withId("web");
-		dependency.getMappings().add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE", null));
+		dependency.getMappings().add(Dependency.Mapping.create("foo-bar", null, null, "0.1.0.RELEASE", null, null));
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(dependency::resolve)
 				.withMessageContaining("foo-bar");
 	}
@@ -156,8 +156,8 @@ class DependencyTests {
 	@Test
 	void resolveVersionRequirement() {
 		Dependency dependency = Dependency.withId("web");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null, null));
 		dependency.resolve();
 		Dependency resolved = dependency.resolve(Version.parse("1.1.5.RELEASE"));
 		assertThat(resolved.getVersionRequirement()).isEqualTo(">=1.1.0.RELEASE and <1.2.0.RELEASE");
@@ -170,10 +170,10 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null));
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE", null));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null, null));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE", null, null));
 		dependency.resolve();
 
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.springframework.boot",
@@ -191,10 +191,10 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", "org.spring.boot", null, null, null));
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "starter-web", null, null));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", "org.spring.boot", null, null, null, null));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "starter-web", null, null, null));
 		dependency.resolve();
 
 		validateResolvedWebDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "org.spring.boot",
@@ -212,10 +212,10 @@ class DependencyTests {
 		dependency.getKeywords().addAll(Arrays.asList("foo", "bar"));
 		dependency.getAliases().add("the-web");
 		dependency.getFacets().add("web");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.1.x.RELEASE]", null, null, "0.1.0.RELEASE", null));
 		dependency.getMappings().add(
-				Dependency.Mapping.create("[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null, "0.2.0.RELEASE", null));
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.1.x.RELEASE]", null, null, "0.1.0.RELEASE", null, null));
+		dependency.getMappings().add(Dependency.Mapping.create("[1.1.x.BUILD-SNAPSHOT, 1.2.0.RELEASE)", null, null,
+				"0.2.0.RELEASE", null, null));
 		dependency.resolve();
 
 		dependency.updateCompatibilityRange(new VersionParser(
@@ -242,36 +242,57 @@ class DependencyTests {
 	@Test
 	void resolveMatchingWithCustomGroupId() {
 		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", null, null));
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", null));
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "bar", null, null));
+				.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, "bar", null, null, null));
 		dependency.resolve();
 		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
-				"1.0.0.RELEASE", true);
+				"1.0.0.RELEASE", true, null);
 		validateResolvedDependency(dependency.resolve(Version.parse("1.2.5.RELEASE")), "foo", "com.acme", "bar",
-				"0.3.0.RELEASE", true);
+				"0.3.0.RELEASE", true, null);
 	}
 
 	@Test
 	void resolveMatchingWithMappingThatDisablesStarter() {
 		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", false));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", false, null));
 		dependency.resolve();
 		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
-				"1.0.0.RELEASE", false);
+				"1.0.0.RELEASE", false, null);
 	}
 
 	@Test
 	void resolveMatchingWithMappingThatEnablesStarter() {
 		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
 		dependency.setStarter(false);
-		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", true));
+		dependency.getMappings().add(
+				Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "1.0.0.RELEASE", true, null));
 		dependency.resolve();
 		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
-				"1.0.0.RELEASE", true);
+				"1.0.0.RELEASE", true, null);
+	}
+
+	@Test
+	void resolveMatchingWithMappingWithCustomRepository() {
+		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
+		dependency.setRepository("basic-repository");
+		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null,
+				"1.0.0.RELEASE", null, "my-repository"));
+		dependency.resolve();
+		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
+				"1.0.0.RELEASE", true, "my-repository");
+	}
+
+	@Test
+	void resolveMatchingWithMappingWithRepository() {
+		Dependency dependency = Dependency.withId("foo", "com.acme", "foo", "0.3.0.RELEASE");
+		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null,
+				"1.0.0.RELEASE", true, "basic-repository"));
+		dependency.resolve();
+		validateResolvedDependency(dependency.resolve(Version.parse("1.1.5.RELEASE")), "foo", "com.acme", "foo",
+				"1.0.0.RELEASE", true, "basic-repository");
 	}
 
 	@Test
@@ -293,19 +314,20 @@ class DependencyTests {
 	private static void validateResolvedWebDependency(Dependency dependency, String expectedGroupId,
 			String expectedArtifactId, String expectedVersion, boolean expectedStarter) {
 		validateResolvedDependency(dependency, "web", expectedGroupId, expectedArtifactId, expectedVersion,
-				expectedStarter);
+				expectedStarter, null);
 		assertThat(dependency.getKeywords()).hasSize(2);
 		assertThat(dependency.getAliases()).hasSize(1);
 		assertThat(dependency.getFacets()).hasSize(1);
 	}
 
 	private static void validateResolvedDependency(Dependency dependency, String id, String expectedGroupId,
-			String expectedArtifactId, String expectedVersion, boolean expectedStarter) {
+			String expectedArtifactId, String expectedVersion, boolean expectedStarter, String expectedRepository) {
 		assertThat(dependency.getId()).isEqualTo(id);
 		assertThat(dependency.getGroupId()).isEqualTo(expectedGroupId);
 		assertThat(dependency.getArtifactId()).isEqualTo(expectedArtifactId);
 		assertThat(dependency.getVersion()).isEqualTo(expectedVersion);
 		assertThat(dependency.isStarter()).isEqualTo(expectedStarter);
+		assertThat(dependency.getRepository()).isEqualTo(expectedRepository);
 	}
 
 }
