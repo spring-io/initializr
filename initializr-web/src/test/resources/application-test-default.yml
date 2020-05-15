@@ -161,3 +161,6 @@ initializr:
       id: 1.5.17.RELEASE
       default: false
 
+server:
+  error:
+    include-message: always
