@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import org.springframework.util.StringUtils;
 
@@ -190,9 +192,15 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return this.major + "." + this.minor + "." + this.patch + ((this.qualifier != null)
-				? "." + this.qualifier.qualifier + ((this.qualifier.version != null) ? this.qualifier.version : "")
-				: "");
+		StringBuilder sb = new StringBuilder().append(this.major).append(".").append(this.minor).append(".")
+				.append(this.patch);
+		if (this.qualifier != null) {
+			sb.append(this.qualifier.getSeparator()).append(this.qualifier.getId());
+			if (this.qualifier.getVersion() != null) {
+				sb.append(this.qualifier.getVersion());
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -200,74 +208,56 @@ public final class Version implements Serializable, Comparable<Version> {
 	 */
 	public static class Qualifier implements Serializable {
 
-		public Qualifier(String qualifier) {
-			this.qualifier = qualifier;
+		private final String id;
+
+		private final Integer version;
+
+		private final String separator;
+
+		public Qualifier(String id) {
+			this(id, null, ".");
 		}
 
-		private String qualifier;
-
-		private Integer version;
-
-		public String getQualifier() {
-			return this.qualifier;
+		public Qualifier(String id, Integer version, String separator) {
+			this.id = id;
+			this.version = version;
+			this.separator = separator;
 		}
 
-		public void setQualifier(String qualifier) {
-			this.qualifier = qualifier;
+		public String getId() {
+			return this.id;
 		}
 
 		public Integer getVersion() {
 			return this.version;
 		}
 
-		public void setVersion(Integer version) {
-			this.version = version;
+		public String getSeparator() {
+			return this.separator;
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
+		public boolean equals(Object o) {
+			if (this == o) {
 				return true;
 			}
-			if (obj == null) {
+			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			Qualifier other = (Qualifier) obj;
-			if (this.qualifier == null) {
-				if (other.qualifier != null) {
-					return false;
-				}
-			}
-			else if (!this.qualifier.equals(other.qualifier)) {
-				return false;
-			}
-			if (this.version == null) {
-				if (other.version != null) {
-					return false;
-				}
-			}
-			else if (!this.version.equals(other.version)) {
-				return false;
-			}
-			return true;
+			Qualifier qualifier = (Qualifier) o;
+			return this.id.equals(qualifier.id) && Objects.equals(this.version, qualifier.version)
+					&& Objects.equals(this.separator, qualifier.separator);
 		}
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((this.qualifier == null) ? 0 : this.qualifier.hashCode());
-			result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-			return result;
+			return Objects.hash(this.id, this.version, this.separator);
 		}
 
 		@Override
 		public String toString() {
-			return "Qualifier [" + ((this.qualifier != null) ? "qualifier=" + this.qualifier + ", " : "")
-					+ ((this.version != null) ? "version=" + this.version : "") + "]";
+			return new StringJoiner(", ", Qualifier.class.getSimpleName() + "[", "]").add("id='" + this.id + "'")
+					.add("version=" + this.version).add("separator='" + this.separator + "'").toString();
 		}
 
 	}
@@ -275,11 +265,12 @@ public final class Version implements Serializable, Comparable<Version> {
 	private static class VersionQualifierComparator implements Comparator<Qualifier> {
 
 		static final String RELEASE = "RELEASE";
-		static final String SNAPSHOT = "BUILD-SNAPSHOT";
+		static final String BUILD_SNAPSHOT = "BUILD-SNAPSHOT";
+		static final String SNAPSHOT = "SNAPSHOT";
 		static final String MILESTONE = "M";
 		static final String RC = "RC";
 
-		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC, SNAPSHOT, RELEASE);
+		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC, BUILD_SNAPSHOT, SNAPSHOT, RELEASE);
 
 		@Override
 		public int compare(Qualifier o1, Qualifier o2) {
@@ -297,12 +288,12 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		private static int compareQualifier(Qualifier first, Qualifier second) {
-			int firstIndex = getQualifierIndex(first.qualifier);
-			int secondIndex = getQualifierIndex(second.qualifier);
+			int firstIndex = getQualifierIndex(first.getId());
+			int secondIndex = getQualifierIndex(second.getId());
 
 			// Unknown qualifier, alphabetic ordering
 			if (firstIndex == -1 && secondIndex == -1) {
-				return first.qualifier.compareTo(second.qualifier);
+				return first.getId().compareTo(second.getId());
 			}
 			else {
 				return Integer.compare(firstIndex, secondIndex);

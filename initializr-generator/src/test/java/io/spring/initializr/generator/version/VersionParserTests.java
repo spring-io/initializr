@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,33 @@ class VersionParserTests {
 	private VersionParser parser = new VersionParser(Collections.emptyList());
 
 	@Test
-	void noQualifierString() {
+	void versionWithNoQualifier() {
 		Version version = this.parser.parse("1.2.0");
 		assertThat(version.toString()).isEqualTo("1.2.0");
 	}
 
 	@Test
-	void withQualifierString() {
+	void versionWithQualifierAndDotSeparator() {
 		Version version = this.parser.parse("1.2.0.RELEASE");
 		assertThat(version.toString()).isEqualTo("1.2.0.RELEASE");
 	}
 
 	@Test
-	void withQualifierAndVersionString() {
+	void versionWithQualifierAndDashSeparator() {
+		Version version = this.parser.parse("1.2.0-SNAPSHOT");
+		assertThat(version.toString()).isEqualTo("1.2.0-SNAPSHOT");
+	}
+
+	@Test
+	void versionWithQualifierVersionAndDotSeparator() {
 		Version version = this.parser.parse("1.2.0.RC2");
 		assertThat(version.toString()).isEqualTo("1.2.0.RC2");
+	}
+
+	@Test
+	void versionWithQualifierVersionAndDashSeparator() {
+		Version version = this.parser.parse("1.2.0-M3");
+		assertThat(version.toString()).isEqualTo("1.2.0-M3");
 	}
 
 	@Test
