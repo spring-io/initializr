@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import io.spring.initializr.generator.language.Parameter;
  * Declaration of a method written in Java.
  *
  * @author Andy Wilkinson
+ * @author Guillaume Gerbaud
  */
 public final class JavaMethodDeclaration implements Annotatable {
 
@@ -38,16 +39,19 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	private final String returnType;
 
+	private final List<String> throwables;
+
 	private final int modifiers;
 
 	private final List<Parameter> parameters;
 
 	private final List<JavaStatement> statements;
 
-	private JavaMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
-			List<JavaStatement> statements) {
+	private JavaMethodDeclaration(String name, String returnType, List<String> throwables, int modifiers,
+			List<Parameter> parameters, List<JavaStatement> statements) {
 		this.name = name;
 		this.returnType = returnType;
+		this.throwables = throwables;
 		this.modifiers = modifiers;
 		this.parameters = parameters;
 		this.statements = statements;
@@ -63,6 +67,10 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	String getReturnType() {
 		return this.returnType;
+	}
+
+	public List<String> getThrowables() {
+		return this.throwables;
 	}
 
 	List<Parameter> getParameters() {
@@ -98,6 +106,8 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 		private String returnType = "void";
 
+		private List<String> throwables = new ArrayList<>();
+
 		private int modifiers;
 
 		private Builder(String name) {
@@ -114,14 +124,19 @@ public final class JavaMethodDeclaration implements Annotatable {
 			return this;
 		}
 
+		public Builder throwing(String... throwables) {
+			this.throwables = Arrays.asList(throwables);
+			return this;
+		}
+
 		public Builder parameters(Parameter... parameters) {
 			this.parameters = Arrays.asList(parameters);
 			return this;
 		}
 
 		public JavaMethodDeclaration body(JavaStatement... statements) {
-			return new JavaMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
-					Arrays.asList(statements));
+			return new JavaMethodDeclaration(this.name, this.returnType, this.throwables, this.modifiers,
+					this.parameters, Arrays.asList(statements));
 		}
 
 	}

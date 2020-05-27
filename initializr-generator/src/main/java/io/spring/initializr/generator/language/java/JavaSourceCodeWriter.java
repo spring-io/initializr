@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ import io.spring.initializr.generator.language.SourceStructure;
  *
  * @author Andy Wilkinson
  * @author Matt Berteaux
+ * @author Guillaume Gerbaud
  */
 public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
@@ -208,7 +209,14 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 					.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
 					.collect(Collectors.joining(", ")));
 		}
-		writer.println(") {");
+		writer.print(") ");
+		List<String> throwables = methodDeclaration.getThrowables();
+		if (!throwables.isEmpty()) {
+			writer.print("throws ");
+			writer.print(throwables.stream().map(this::getUnqualifiedName).collect(Collectors.joining(", ")));
+			writer.print(" ");
+		}
+		writer.println("{");
 		writer.indented(() -> {
 			List<JavaStatement> statements = methodDeclaration.getStatements();
 			for (JavaStatement statement : statements) {
@@ -241,11 +249,18 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		if (expression instanceof JavaMethodInvocation) {
 			writeMethodInvocation(writer, (JavaMethodInvocation) expression);
 		}
+		else if (expression instanceof JavaStringExpression) {
+			writeStringExpression(writer, (JavaStringExpression) expression);
+		}
 	}
 
 	private void writeMethodInvocation(IndentingWriter writer, JavaMethodInvocation methodInvocation) {
-		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
-				+ String.join(", ", methodInvocation.getArguments()) + ")");
+		writeExpression(writer, methodInvocation.getTarget());
+		writer.print("." + methodInvocation.getName() + "(" + String.join(", ", methodInvocation.getArguments()) + ")");
+	}
+
+	private void writeStringExpression(IndentingWriter writer, JavaStringExpression stringExpression) {
+		writer.print(getUnqualifiedName(stringExpression.getValue()));
 	}
 
 	private Set<String> determineImports(JavaCompilationUnit compilationUnit) {
@@ -268,11 +283,15 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
+				imports.addAll(methodDeclaration.getThrowables().stream().filter(this::requiresImport)
+						.collect(Collectors.toList()));
 				imports.addAll(getRequiredImports(
 						methodDeclaration.getStatements().stream().filter(JavaExpressionStatement.class::isInstance)
 								.map(JavaExpressionStatement.class::cast).map(JavaExpressionStatement::getExpression)
-								.filter(JavaMethodInvocation.class::isInstance).map(JavaMethodInvocation.class::cast),
-						(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
+								.filter(JavaMethodInvocation.class::isInstance).map(JavaMethodInvocation.class::cast)
+								.map(JavaMethodInvocation::getTarget).filter(JavaStringExpression.class::isInstance)
+								.map(JavaStringExpression.class::cast),
+						(javaStringExpression) -> Collections.singleton(javaStringExpression.getValue())));
 			}
 		}
 		Collections.sort(imports);

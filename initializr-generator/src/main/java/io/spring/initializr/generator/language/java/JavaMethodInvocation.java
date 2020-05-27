@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,27 @@ import java.util.List;
  * An invocation of a method.
  *
  * @author Andy Wilkinson
+ * @author Guillaume Gerbaud
  */
 public class JavaMethodInvocation extends JavaExpression {
 
-	private final String target;
+	private final JavaExpression target;
 
 	private final String name;
 
 	private final List<String> arguments;
 
-	public JavaMethodInvocation(String target, String name, String... arguments) {
+	public JavaMethodInvocation(JavaExpression target, String name, String... arguments) {
 		this.target = target;
 		this.name = name;
 		this.arguments = Arrays.asList(arguments);
 	}
 
-	public String getTarget() {
+	public JavaMethodInvocation(String target, String name, String... arguments) {
+		this(new JavaStringExpression(target), name, arguments);
+	}
+
+	public JavaExpression getTarget() {
 		return this.target;
 	}
 

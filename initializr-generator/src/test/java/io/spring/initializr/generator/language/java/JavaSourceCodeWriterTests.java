@@ -119,6 +119,38 @@ class JavaSourceCodeWriterTests {
 	}
 
 	@Test
+	void methodThrowingException() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(JavaMethodDeclaration.method("format").returning("java.lang.String")
+				.throwing("java.util.IllegalFormatException").modifiers(Modifier.PUBLIC)
+				.parameters(new Parameter("java.lang.String", "value"), new Parameter("java.lang.String", "format"),
+						new Parameter("java.lang.Object[]", "args"))
+				.body(new JavaReturnStatement(new JavaMethodInvocation("value", "format", "format", "args"))));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import java.util.IllegalFormatException;", "",
+				"class Test {", "",
+				"    public String format(String value, String format, Object[] args) throws IllegalFormatException {",
+				"        return value.format(format, args);", "    }", "", "}");
+	}
+
+	@Test
+	void methodWithChainedInvocation() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(
+				JavaMethodDeclaration.method("trim").returning("java.lang.String").modifiers(Modifier.PUBLIC)
+						.parameters(new Parameter("java.lang.String", "value")).body(new JavaReturnStatement(
+								new JavaMethodInvocation(new JavaMethodInvocation("value", "trim"), "toUpperCase"))));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
+				"    public String trim(String value) {", "        return value.trim().toUpperCase();", "    }", "",
+				"}");
+	}
+
+	@Test
 	void field() throws IOException {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
