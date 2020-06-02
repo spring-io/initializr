@@ -27,21 +27,37 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrConfiguration.Env;
+import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
+import org.springframework.util.Assert;
+
 /**
  * A default {@link ProjectRequestToDescriptionConverter} implementation that uses the
  * {@link InitializrMetadata metadata} to set default values for missing attributes if
- * necessary.
+ * necessary. Transparently transform the platform version if necessary using a
+ * {@link ProjectRequestPlatformVersionTransformer}.
  *
  * @author Madhura Bhave
  * @author HaiTao Zhang
+ * @author Stephane Nicoll
  */
 public class DefaultProjectRequestToDescriptionConverter
 		implements ProjectRequestToDescriptionConverter<ProjectRequest> {
+
+	private final ProjectRequestPlatformVersionTransformer platformVersionTransformer;
+
+	public DefaultProjectRequestToDescriptionConverter() {
+		this((version, metadata) -> version);
+	}
+
+	public DefaultProjectRequestToDescriptionConverter(
+			ProjectRequestPlatformVersionTransformer platformVersionTransformer) {
+		Assert.notNull(platformVersionTransformer, "PlatformVersionTransformer must not be null");
+		this.platformVersionTransformer = platformVersionTransformer;
+	}
 
 	@Override
 	public ProjectDescription convert(ProjectRequest request, InitializrMetadata metadata) {
@@ -60,9 +76,9 @@ public class DefaultProjectRequestToDescriptionConverter
 	 */
 	public void convert(ProjectRequest request, MutableProjectDescription description, InitializrMetadata metadata) {
 		validate(request, metadata);
-		String springBootVersion = getSpringBootVersion(request, metadata);
-		List<Dependency> resolvedDependencies = getResolvedDependencies(request, springBootVersion, metadata);
-		validateDependencyRange(springBootVersion, resolvedDependencies);
+		Version platformVersion = getPlatformVersion(request, metadata);
+		List<Dependency> resolvedDependencies = getResolvedDependencies(request, platformVersion, metadata);
+		validateDependencyRange(platformVersion, resolvedDependencies);
 
 		description.setApplicationName(request.getApplicationName());
 		description.setArtifactId(request.getArtifactId());
@@ -74,26 +90,26 @@ public class DefaultProjectRequestToDescriptionConverter
 		description.setName(request.getName());
 		description.setPackageName(request.getPackageName());
 		description.setPackaging(Packaging.forId(request.getPackaging()));
-		description.setPlatformVersion(Version.parse(springBootVersion));
+		description.setPlatformVersion(platformVersion);
 		description.setVersion(request.getVersion());
 		resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 				MetadataBuildItemMapper.toDependency(dependency)));
 	}
 
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
-		validateSpringBootVersion(request, metadata);
+		validatePlatformVersion(request, metadata);
 		validateType(request.getType(), metadata);
 		validateLanguage(request.getLanguage(), metadata);
 		validatePackaging(request.getPackaging(), metadata);
 		validateDependencies(request, metadata);
 	}
 
-	private void validateSpringBootVersion(ProjectRequest request, InitializrMetadata metadata) {
-		Version bootVersion = Version.safeParse(request.getBootVersion());
-		Env env = metadata.getConfiguration().getEnv();
-		if (bootVersion != null && !env.isCompatiblePlatformVersion(bootVersion)) {
-			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
-					+ "', Spring Boot compatibility range is " + env.determinePlatformCompatibilityRangeRequirement());
+	private void validatePlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
+		Version platformVersion = Version.safeParse(request.getBootVersion());
+		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
+		if (platformVersion != null && !platform.isCompatibleVersion(platformVersion)) {
+			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + platformVersion
+					+ "', Spring Boot compatibility range is " + platform.determineCompatibilityRangeRequirement());
 		}
 	}
 
@@ -139,11 +155,11 @@ public class DefaultProjectRequestToDescriptionConverter
 		});
 	}
 
-	private void validateDependencyRange(String springBootVersion, List<Dependency> resolvedDependencies) {
+	private void validateDependencyRange(Version platformVersion, List<Dependency> resolvedDependencies) {
 		resolvedDependencies.forEach((dep) -> {
-			if (!dep.match(Version.parse(springBootVersion))) {
-				throw new InvalidProjectRequestException("Dependency '" + dep.getId() + "' is not compatible "
-						+ "with Spring Boot " + springBootVersion);
+			if (!dep.match(platformVersion)) {
+				throw new InvalidProjectRequestException(
+						"Dependency '" + dep.getId() + "' is not compatible " + "with Spring Boot " + platformVersion);
 			}
 		});
 	}
@@ -153,18 +169,19 @@ public class DefaultProjectRequestToDescriptionConverter
 		return BuildSystem.forId(typeFromMetadata.getTags().get("build"));
 	}
 
-	private String getSpringBootVersion(ProjectRequest request, InitializrMetadata metadata) {
-		return (request.getBootVersion() != null) ? request.getBootVersion()
+	private Version getPlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
+		String versionText = (request.getBootVersion() != null) ? request.getBootVersion()
 				: metadata.getBootVersions().getDefault().getId();
+		Version version = Version.parse(versionText);
+		return this.platformVersionTransformer.transform(version, metadata);
 	}
 
-	private List<Dependency> getResolvedDependencies(ProjectRequest request, String springBootVersion,
+	private List<Dependency> getResolvedDependencies(ProjectRequest request, Version platformVersion,
 			InitializrMetadata metadata) {
 		List<String> depIds = request.getDependencies();
-		Version requestedVersion = Version.parse(springBootVersion);
 		return depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
-			return dependency.resolve(requestedVersion);
+			return dependency.resolve(platformVersion);
 		}).collect(Collectors.toList());
 	}
 

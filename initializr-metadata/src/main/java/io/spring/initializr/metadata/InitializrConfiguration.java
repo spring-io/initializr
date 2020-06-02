@@ -30,6 +30,7 @@ import javax.lang.model.SourceVersion;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spring.initializr.generator.version.InvalidVersionException;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
 
@@ -211,16 +212,6 @@ public class InitializrConfiguration {
 		private boolean forceSsl;
 
 		/**
-		 * Compatibility range of supported platform versions. Requesting metadata or
-		 * project generation with a platform version that does not match this range is
-		 * not supported.
-		 */
-		private String platformCompatibilityRange;
-
-		@JsonIgnore
-		private VersionRange compatibilityRange;
-
-		/**
 		 * The "BillOfMaterials" that are referenced in this instance, identified by an
 		 * arbitrary identifier that can be used in the dependencies definition.
 		 */
@@ -249,6 +240,12 @@ public class InitializrConfiguration {
 		 */
 		@NestedConfigurationProperty
 		private final Maven maven = new Maven();
+
+		/**
+		 * Platform-specific settings.
+		 */
+		@NestedConfigurationProperty
+		private final Platform platform = new Platform();
 
 		public Env() {
 			try {
@@ -310,14 +307,6 @@ public class InitializrConfiguration {
 			this.forceSsl = forceSsl;
 		}
 
-		public String getPlatformCompatibilityRange() {
-			return this.platformCompatibilityRange;
-		}
-
-		public void setPlatformCompatibilityRange(String platformCompatibilityRange) {
-			this.platformCompatibilityRange = platformCompatibilityRange;
-		}
-
 		public String getArtifactRepository() {
 			return this.artifactRepository;
 		}
@@ -342,6 +331,10 @@ public class InitializrConfiguration {
 			return this.maven;
 		}
 
+		public Platform getPlatform() {
+			return this.platform;
+		}
+
 		public void setArtifactRepository(String artifactRepository) {
 			if (!artifactRepository.endsWith("/")) {
 				artifactRepository = artifactRepository + "/";
@@ -359,8 +352,7 @@ public class InitializrConfiguration {
 		public void updateCompatibilityRange(VersionParser versionParser) {
 			this.getBoms().values().forEach((it) -> it.updateCompatibilityRange(versionParser));
 			this.getKotlin().updateCompatibilityRange(versionParser);
-			this.compatibilityRange = (this.platformCompatibilityRange != null)
-					? versionParser.parseRange(this.platformCompatibilityRange) : null;
+			this.getPlatform().updateCompatibilityRange(versionParser);
 		}
 
 		public void merge(Env other) {
@@ -370,27 +362,12 @@ public class InitializrConfiguration {
 			this.fallbackApplicationName = other.fallbackApplicationName;
 			this.invalidApplicationNames = other.invalidApplicationNames;
 			this.forceSsl = other.forceSsl;
-			this.platformCompatibilityRange = other.platformCompatibilityRange;
-			this.compatibilityRange = other.compatibilityRange;
 			this.gradle.merge(other.gradle);
 			this.kotlin.merge(other.kotlin);
 			this.maven.merge(other.maven);
+			this.platform.merge(other.platform);
 			other.boms.forEach(this.boms::putIfAbsent);
 			other.repositories.forEach(this.repositories::putIfAbsent);
-		}
-
-		/**
-		 * Specify whether the specified {@linkplain Version platform version} is
-		 * supported.
-		 * @param platformVersion the platform version to check
-		 * @return {@code true} if this version is supported, {@code false} otherwise
-		 */
-		public boolean isCompatiblePlatformVersion(Version platformVersion) {
-			return (this.compatibilityRange == null || this.compatibilityRange.match(platformVersion));
-		}
-
-		public String determinePlatformCompatibilityRangeRequirement() {
-			return this.compatibilityRange.toString();
 		}
 
 		/**
@@ -658,6 +635,114 @@ public class InitializrConfiguration {
 
 			}
 
+		}
+
+	}
+
+	/**
+	 * Platform-specific settings.
+	 */
+	public static class Platform {
+
+		/**
+		 * Compatibility range of supported platform versions. Requesting metadata or
+		 * project generation with a platform version that does not match this range is
+		 * not supported.
+		 */
+		private String compatibilityRange;
+
+		@JsonIgnore
+		private VersionRange range;
+
+		/**
+		 * Compatibility range of platform versions using the first version format.
+		 */
+		private String v1FormatCompatibilityRange;
+
+		@JsonIgnore
+		private VersionRange v1FormatRange;
+
+		/**
+		 * Compatibility range of platform versions using the second version format.
+		 */
+		private String v2FormatCompatibilityRange;
+
+		@JsonIgnore
+		private VersionRange v2FormatRange;
+
+		public void updateCompatibilityRange(VersionParser versionParser) {
+			this.range = (this.compatibilityRange != null) ? versionParser.parseRange(this.compatibilityRange) : null;
+			this.v1FormatRange = (this.v1FormatCompatibilityRange != null)
+					? versionParser.parseRange(this.v1FormatCompatibilityRange) : null;
+			this.v2FormatRange = (this.v2FormatCompatibilityRange != null)
+					? versionParser.parseRange(this.v2FormatCompatibilityRange) : null;
+		}
+
+		private void merge(Platform other) {
+			this.compatibilityRange = other.compatibilityRange;
+			this.range = other.range;
+			this.v1FormatCompatibilityRange = other.v1FormatCompatibilityRange;
+			this.v1FormatRange = other.v1FormatRange;
+			this.v2FormatCompatibilityRange = other.v2FormatCompatibilityRange;
+			this.v2FormatRange = other.v2FormatRange;
+		}
+
+		/**
+		 * Specify whether the specified {@linkplain Version platform version} is
+		 * supported.
+		 * @param platformVersion the platform version to check
+		 * @return {@code true} if this version is supported, {@code false} otherwise
+		 */
+		public boolean isCompatibleVersion(Version platformVersion) {
+			return (this.range == null || this.range.match(platformVersion));
+		}
+
+		public String determineCompatibilityRangeRequirement() {
+			return this.range.toString();
+		}
+
+		/**
+		 * Format the expected {@link Version platform version}.
+		 * @param platformVersion a platform version
+		 * @return a platform version in the suitable format
+		 */
+		public Version formatPlatformVersion(Version platformVersion) {
+			Format format = getExpectedVersionFormat(platformVersion);
+			return platformVersion.format(format);
+		}
+
+		private Format getExpectedVersionFormat(Version version) {
+			if (this.v2FormatRange != null && this.v2FormatRange.match(version)) {
+				return Format.V2;
+			}
+			if (this.v1FormatRange != null && this.v1FormatRange.match(version)) {
+				return Format.V1;
+			}
+			return version.getFormat();
+		}
+
+		public String getCompatibilityRange() {
+			return this.compatibilityRange;
+		}
+
+		public void setCompatibilityRange(String compatibilityRange) {
+			this.compatibilityRange = compatibilityRange;
+		}
+
+		public String getV1FormatCompatibilityRange() {
+			return this.v1FormatCompatibilityRange;
+		}
+
+		public void setV1FormatCompatibilityRange(String v1FormatCompatibilityRange) {
+			this.v1FormatCompatibilityRange = v1FormatCompatibilityRange;
+		}
+
+		public String getV2FormatCompatibilityRange() {
+			return this.v2FormatCompatibilityRange;
+		}
+
+		public void setV2FormatCompatibilityRange(String v2FormatCompatibilityRange) {
+			this.v2FormatCompatibilityRange = v2FormatCompatibilityRange;
 		}
 
 	}

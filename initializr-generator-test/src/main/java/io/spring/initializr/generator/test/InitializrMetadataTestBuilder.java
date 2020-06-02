@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyGroup;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
+import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.Repository;
@@ -188,7 +189,16 @@ public class InitializrMetadataTestBuilder {
 
 	public InitializrMetadataTestBuilder setPlatformCompatibilityRange(String platformCompatibilityRange) {
 		this.builder.withCustomizer(
-				(it) -> it.getConfiguration().getEnv().setPlatformCompatibilityRange(platformCompatibilityRange));
+				(it) -> it.getConfiguration().getEnv().getPlatform().setCompatibilityRange(platformCompatibilityRange));
+		return this;
+	}
+
+	public InitializrMetadataTestBuilder setPlatformVersionFormatCompatibilityRange(String v1Range, String v2Range) {
+		this.builder.withCustomizer((it) -> {
+			Platform platform = it.getConfiguration().getEnv().getPlatform();
+			platform.setV1FormatCompatibilityRange(v1Range);
+			platform.setV2FormatCompatibilityRange(v2Range);
+		});
 		return this;
 	}
 

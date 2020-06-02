@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests for {@link DefaultProjectRequestToDescriptionConverter}.
@@ -72,6 +75,19 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		request.setBootVersion("1.5.9.RELEASE");
 		assertThat(this.converter.convert(request, this.metadata).getPlatformVersion())
 				.isEqualTo(Version.parse("1.5.9.RELEASE"));
+	}
+
+	@Test
+	void convertShouldCallProjectRequestVersionTransformer() {
+		ProjectRequestPlatformVersionTransformer transformer = mock(ProjectRequestPlatformVersionTransformer.class);
+		Version v1Format = Version.parse("2.4.0.RELEASE");
+		given(transformer.transform(v1Format, this.metadata)).willReturn(Version.parse("2.4.0"));
+		ProjectRequest request = createProjectRequest();
+		request.setBootVersion("2.4.0.RELEASE");
+		ProjectDescription description = new DefaultProjectRequestToDescriptionConverter(transformer).convert(request,
+				this.metadata);
+		assertThat(description.getPlatformVersion()).hasToString("2.4.0");
+		verify(transformer).transform(v1Format, this.metadata);
 	}
 
 	@Test
