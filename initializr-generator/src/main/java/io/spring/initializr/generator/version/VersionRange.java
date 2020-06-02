@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.version;
 
+import io.spring.initializr.generator.version.Version.Format;
+
 import org.springframework.util.Assert;
 
 /**
@@ -27,9 +29,8 @@ import org.springframework.util.Assert;
  * <ul>
  * <li>"[1.2.0.RELEASE,1.3.0.RELEASE)" version 1.2.0 and any version after this, up to,
  * but not including, version 1.3.0.</li>
- * <li>"(2.0.0.RELEASE,3.2.0.RELEASE]" any version after 2.0.0 up to and including version
- * 3.2.0.</li>
- * <li>"1.4.5.RELEASE", version 1.4.5 and all later versions.</li>
+ * <li>"(2.0.0,3.2.0]" any version after 2.0.0 up to and including version 3.2.0.</li>
+ * <li>"2.5.0-M1", the first milestone of 2.5.0 and any version after that.</li>
  * </ul>
  *
  * @author Stephane Nicoll
@@ -81,6 +82,17 @@ public class VersionRange {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Format this version range to the specified {@link Format}.
+	 * @param format the version format to use
+	 * @return a version range whose boundaries are compliant with the specified format.
+	 */
+	public VersionRange format(Format format) {
+		Version lower = this.lowerVersion.format(format);
+		Version higher = (this.higherVersion != null) ? this.higherVersion.format(format) : null;
+		return new VersionRange(lower, this.lowerInclusive, higher, this.higherInclusive);
 	}
 
 	public Version getLowerVersion() {

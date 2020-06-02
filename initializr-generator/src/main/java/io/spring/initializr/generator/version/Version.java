@@ -23,19 +23,25 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.function.Function;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * Define the version number of a module. A typical version is represented as
- * {@code MAJOR.MINOR.PATCH.QUALIFIER} where the qualifier can have an extra version.
+ * Define a version. A typical version is represented as
+ * {@code MAJOR.MINOR.PATCH[QUALIFIER]} where the qualifier is optional and can have an
+ * extra version.
  * <p>
  * For example: {@code 1.2.0.RC1} is the first release candidate of 1.2.0 and
- * {@code 1.5.0.M4} is the fourth milestone of 1.5.0. The special {@code RELEASE}
- * qualifier indicates a final release (a.k.a. GA)
+ * {@code 1.5.0-M4} is the fourth milestone of 1.5.0. The special {@code RELEASE}
+ * qualifier indicates a final release (a.k.a. GA).
  * <p>
- * The main purpose of parsing a version is to compare it with another version, see
- * {@link Comparable}.
+ * Two formats are currently supported, {@link Format#V1} that uses a dot to separate the
+ * qualifier from the version itself and {@link Format#V2} that is SemVer compliant (and
+ * therefore uses a dash to separate the qualifier).
+ * <p>
+ * The main purpose of parsing a version is to compare it with another version.
  *
  * @author Stephane Nicoll
  */
@@ -54,11 +60,68 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	private final Qualifier qualifier;
 
+	private final Format format;
+
 	public Version(Integer major, Integer minor, Integer patch, Qualifier qualifier) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
 		this.qualifier = qualifier;
+		this.format = determineFormat(qualifier);
+	}
+
+	private static Format determineFormat(Qualifier qualifier) {
+		if (qualifier == null) {
+			return Format.V2;
+		}
+		return (qualifier.getSeparator().equals(".")) ? Format.V1 : Format.V2;
+	}
+
+	/**
+	 * Format this version to the specified {@link Format}.
+	 * @param format the format to use
+	 * @return a version compliant with the specified format.
+	 */
+	public Version format(Format format) {
+		Assert.notNull(format, () -> "Format must not be null");
+		if (this.format == format) {
+			return this;
+		}
+		if (format == Format.V1) {
+			Qualifier qualifier = formatQualifier(".", this::toV1Qualifier);
+			return new Version(this.major, this.minor, this.patch, qualifier);
+		}
+		Qualifier qualifier = formatQualifier("-", this::toV2Qualifier);
+		return new Version(this.major, this.minor, this.patch, qualifier);
+	}
+
+	private Qualifier formatQualifier(String newSeparator, Function<String, String> idTransformer) {
+		String originalQualifier = (this.qualifier != null) ? this.qualifier.getId() : null;
+		String newId = idTransformer.apply(originalQualifier);
+		if (newId != null) {
+			return new Qualifier(newId, (this.qualifier != null) ? this.qualifier.getVersion() : null, newSeparator);
+		}
+		return null;
+	}
+
+	private String toV1Qualifier(String id) {
+		if ("SNAPSHOT".equals(id)) {
+			return "BUILD-SNAPSHOT";
+		}
+		if (id == null) {
+			return "RELEASE";
+		}
+		return id;
+	}
+
+	private String toV2Qualifier(String id) {
+		if ("BUILD-SNAPSHOT".equals(id)) {
+			return "SNAPSHOT";
+		}
+		if ("RELEASE".equals(id)) {
+			return null;
+		}
+		return id;
 	}
 
 	public Integer getMajor() {
@@ -75,6 +138,10 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	public Qualifier getQualifier() {
 		return this.qualifier;
+	}
+
+	public Format getFormat() {
+		return this.format;
 	}
 
 	/**
@@ -259,6 +326,26 @@ public final class Version implements Serializable, Comparable<Version> {
 			return new StringJoiner(", ", Qualifier.class.getSimpleName() + "[", "]").add("id='" + this.id + "'")
 					.add("version=" + this.version).add("separator='" + this.separator + "'").toString();
 		}
+
+	}
+
+	/**
+	 * Define the supported version format.
+	 */
+	public enum Format {
+
+		/**
+		 * Original version format, i.e. {@code Major.Minor.Patch.Qualifier} using
+		 * {@code BUILD-SNAPSHOT} as the qualifier for snapshots and {@code RELEASE} for
+		 * GAs.
+		 */
+		V1,
+
+		/**
+		 * SemVer-compliant format, i.e. {@code Major.Minor.Patch-Qualifier} using
+		 * {@code SNAPSHOT} as the qualifier for snapshots and no qualifier for GAs.
+		 */
+		V2;
 
 	}
 
