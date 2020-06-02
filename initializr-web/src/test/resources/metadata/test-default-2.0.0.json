@@ -154,7 +154,7 @@
     "default": "2.1.4.RELEASE",
     "values": [
       {
-        "id": "2.2.0.BUILD-SNAPSHOT",
+        "id": "2.4.0.BUILD-SNAPSHOT",
         "name": "Latest SNAPSHOT"
       },
       {

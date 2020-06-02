@@ -90,7 +90,7 @@ initializr:
           id: org.acme:bur
           version: 2.1.0
           scope: test
-          compatibilityRange: "[2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)"
+          compatibilityRange: "[2.1.4.RELEASE,2.4.0-SNAPSHOT)"
         - name: My API
           id : my-api
           groupId: org.acme
@@ -152,7 +152,7 @@ initializr:
       default: false
   bootVersions:
     - name : Latest SNAPSHOT
-      id: 2.2.0.BUILD-SNAPSHOT
+      id: 2.4.0-SNAPSHOT
       default: false
     - name: 2.1.4
       id: 2.1.4.RELEASE

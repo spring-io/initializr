@@ -13,9 +13,15 @@ sent to the service. A good structure for a user agent is `clientId/clientVersio
 == Service Capabilities
 Any third party client can retrieve the capabilities of the service by issuing a
 `GET` on the root URL using the following `Accept` header:
-`application/vnd.initializr.v2.1+json`. Please note that the metadata may evolve in a
+`application/vnd.initializr.v2.2+json`. Please note that the metadata may evolve in a
 non backward compatible way in the future so adding this header ensures the service
 returns the metadata format you expect.
+
+The following versions are supported:
+
+* `v2` initial version, with support of V1 version format only
+* `v2.1` support compatibility range and dependencies links
+* `v2.2` (current) support for V1 and V2 version formats.
 
 This is an example output for a service running at `https://start.spring.io`:
 

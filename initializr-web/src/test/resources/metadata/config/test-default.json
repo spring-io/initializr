@@ -10,7 +10,7 @@
     "content": [
       {
         "default": false,
-        "id": "2.2.0.BUILD-SNAPSHOT",
+        "id": "2.4.0-SNAPSHOT",
         "name": "Latest SNAPSHOT"
       },
       {
@@ -230,7 +230,7 @@
             "name": "Bur",
             "scope": "test",
             "version": "2.1.0",
-            "compatibilityRange": "[2.1.4.RELEASE,2.2.0.BUILD-SNAPSHOT)"
+            "compatibilityRange": "[2.1.4.RELEASE,2.4.0-SNAPSHOT)"
           },
           {
             "starter": true,

@@ -31,6 +31,7 @@ import io.spring.initializr.metadata.InvalidInitializrMetadataException;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
+import io.spring.initializr.web.mapper.InitializrMetadataV22JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
@@ -75,6 +76,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
+	}
+
+	@RequestMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
+	public ResponseEntity<String> serviceCapabilitiesV22() {
+		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_2);
 	}
 
 	@RequestMapping(path = { "/", "/metadata/client" },
@@ -147,8 +153,10 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		switch (version) {
 		case V2:
 			return new InitializrMetadataV2JsonMapper();
-		default:
+		case V2_1:
 			return new InitializrMetadataV21JsonMapper();
+		default:
+			return new InitializrMetadataV22JsonMapper();
 		}
 	}
 

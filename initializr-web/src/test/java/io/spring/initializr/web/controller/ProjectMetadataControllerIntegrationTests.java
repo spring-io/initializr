@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	void metadataWithNoAcceptHeader() {
 		// rest template sets application/json by default
 		ResponseEntity<String> response = invokeHome(null, "*/*");
-		validateCurrentMetadata(response);
+		validateDefaultMetadata(response);
 	}
 
 	@Test
@@ -58,6 +58,18 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	void metadataWithV2AcceptHeader() {
 		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json");
 		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0", JSONCompareMode.STRICT);
+	}
+
+	@Test
+	void metadataWithV21AcceptHeader() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json");
+		validateMetadata(response, InitializrMetadataVersion.V2_1.getMediaType(), "2.1.0", JSONCompareMode.STRICT);
+	}
+
+	@Test
+	void metadataWithV22AcceptHeader() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json");
+		validateMetadata(response, InitializrMetadataVersion.V2_2.getMediaType(), "2.2.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
@@ -76,18 +88,18 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	void metadataWithCurrentAcceptHeader() {
 		getRequests().setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
 				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]");
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json");
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateMetadata(response.getBody(), "2.2.0");
 	}
 
 	@Test
 	void metadataWithSeveralAcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json",
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json",
 				"application/vnd.initializr.v2+json");
 		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateCurrentMetadata(response);
 	}
 
 	@Test
@@ -95,7 +107,7 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 		ResponseEntity<String> response = invokeHome(null, "application/hal+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, ProjectMetadataController.HAL_JSON_CONTENT_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateDefaultMetadata(response.getBody());
 	}
 
 	@Test
@@ -117,13 +129,13 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	@Test
 	void unknownAgentReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("foo/1.0", "*/*");
-		validateCurrentMetadata(response);
+		validateDefaultMetadata(response);
 	}
 
 	@Test
 	// Test that the current output is exactly what we expect
 	void validateCurrentProjectMetadata() {
-		validateCurrentMetadata(getMetadataJson());
+		validateDefaultMetadata(getMetadataJson());
 	}
 
 	private String getMetadataJson() {

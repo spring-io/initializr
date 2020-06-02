@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,16 @@
 package io.spring.initializr.web.mapper;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.Version.Format;
+import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.DependenciesCapability;
 import io.spring.initializr.metadata.Dependency;
@@ -79,7 +83,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		singleSelect(delegate, metadata.getPackagings());
 		singleSelect(delegate, metadata.getJavaVersions());
 		singleSelect(delegate, metadata.getLanguages());
-		singleSelect(delegate, metadata.getBootVersions());
+		singleSelect(delegate, metadata.getBootVersions(), this::mapVersionMetadata);
 		text(delegate, metadata.getGroupId());
 		text(delegate, metadata.getArtifactId());
 		text(delegate, metadata.getVersion());
@@ -133,6 +137,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	}
 
 	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability) {
+		singleSelect(parent, capability, this::mapValue);
+	}
+
+	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability,
+			Function<MetadataElement, ObjectNode> valueMapper) {
 		ObjectNode single = nodeFactory.objectNode();
 		single.put("type", capability.getType().getName());
 		DefaultMetadataElement defaultType = capability.getDefault();
@@ -140,7 +149,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 			single.put("default", defaultType.getId());
 		}
 		ArrayNode values = nodeFactory.arrayNode();
-		values.addAll(capability.getContent().stream().map(this::mapValue).collect(Collectors.toList()));
+		values.addAll(capability.getContent().stream().map(valueMapper).collect(Collectors.toList()));
 		single.set("values", values);
 		parent.set(capability.getId(), single);
 	}
@@ -187,6 +196,18 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		type.getTags().forEach(tags::put);
 		result.set("tags", tags);
 		return result;
+	}
+
+	private ObjectNode mapVersionMetadata(MetadataElement value) {
+		ObjectNode result = nodeFactory.objectNode();
+		result.put("id", formatVersion(value.getId()));
+		result.put("name", value.getName());
+		return result;
+	}
+
+	protected String formatVersion(String versionId) {
+		Version version = VersionParser.DEFAULT.safeParse(versionId);
+		return (version != null) ? version.format(Format.V1).toString() : versionId;
 	}
 
 	protected ObjectNode mapValue(MetadataElement value) {
