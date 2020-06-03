@@ -5,6 +5,7 @@ initializr:
     fallbackApplicationName: FooBarApplication
     invalidApplicationNames:
       - InvalidApplication
-    platform-compatibility-range: "2.0.0.RELEASE"
     kotlin:
       default-version: 1.0.0-beta-2423
+    platform:
+      compatibility-range: "2.0.0.RELEASE"

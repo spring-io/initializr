@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ package io.spring.initializr.generator.version;
 import java.util.Arrays;
 import java.util.Collections;
 
+import io.spring.initializr.generator.version.Version.Format;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Tests for {@link VersionRange}.
+ *
  * @author Stephane Nicoll
  */
 class VersionRangeTests {
@@ -146,6 +149,34 @@ class VersionRangeTests {
 		VersionRange range = new VersionParser(Collections.singletonList(Version.parse("1.5.6.RELEASE")))
 				.parseRange("(1.3.5.RELEASE,1.5.5.RELEASE)");
 		assertThat(range.toRangeString()).isEqualTo("(1.3.5.RELEASE,1.5.5.RELEASE)");
+	}
+
+	@Test
+	void formatLowerOnlyV1toV2() {
+		VersionRange range = parse("1.2.0.RELEASE").format(Format.V2);
+		assertThat(range.toRangeString()).isEqualTo("1.2.0");
+	}
+
+	@Test
+	void formatV1toV2() {
+		VersionRange range = parse("[1.2.0.RELEASE,1.3.0.M1)").format(Format.V2);
+		assertThat(range.toRangeString()).isEqualTo("[1.2.0,1.3.0-M1)");
+	}
+
+	@Test
+	void formatLowerOnlyV2toV1() {
+		VersionRange range = parse("1.2.0").format(Format.V1);
+		assertThat(range.toRangeString()).isEqualTo("1.2.0.RELEASE");
+	}
+
+	@Test
+	void formatV2toV1() {
+		VersionRange range = parse("[1.2.0,1.3.0-M1)").format(Format.V1);
+		assertThat(range.toRangeString()).isEqualTo("[1.2.0.RELEASE,1.3.0.M1)");
+	}
+
+	private static VersionRange parse(String text) {
+		return new VersionParser(Collections.emptyList()).parseRange(text);
 	}
 
 	private static Condition<String> match(String range) {

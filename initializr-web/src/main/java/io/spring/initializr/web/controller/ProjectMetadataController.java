@@ -24,13 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
-import io.spring.initializr.metadata.InitializrConfiguration.Env;
+import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InvalidInitializrMetadataException;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
+import io.spring.initializr.web.mapper.InitializrMetadataV22JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
@@ -77,6 +78,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
 	}
 
+	@RequestMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
+	public ResponseEntity<String> serviceCapabilitiesV22() {
+		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_2);
+	}
+
 	@RequestMapping(path = { "/", "/metadata/client" },
 			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
@@ -120,10 +126,10 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		InitializrMetadata metadata = this.metadataProvider.get();
 		Version v = (bootVersion != null) ? Version.parse(bootVersion)
 				: Version.parse(metadata.getBootVersions().getDefault().getId());
-		Env env = metadata.getConfiguration().getEnv();
-		if (!env.isCompatiblePlatformVersion(v)) {
+		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
+		if (!platform.isCompatibleVersion(v)) {
 			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
-					+ "', Spring Boot compatibility range is " + env.determinePlatformCompatibilityRangeRequirement());
+					+ "', Spring Boot compatibility range is " + platform.determineCompatibilityRangeRequirement());
 		}
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
@@ -147,8 +153,10 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		switch (version) {
 		case V2:
 			return new InitializrMetadataV2JsonMapper();
-		default:
+		case V2_1:
 			return new InitializrMetadataV21JsonMapper();
+		default:
+			return new InitializrMetadataV22JsonMapper();
 		}
 	}
 

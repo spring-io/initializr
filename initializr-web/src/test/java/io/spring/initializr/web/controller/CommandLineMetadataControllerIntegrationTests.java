@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ public class CommandLineMetadataControllerIntegrationTests extends AbstractIniti
 	// make sure curl can still receive metadata with json
 	void curlWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
+		validateDefaultMetadata(response.getBody());
 	}
 
 	@Test
@@ -65,8 +65,8 @@ public class CommandLineMetadataControllerIntegrationTests extends AbstractIniti
 	// make sure curl can still receive metadata with json
 	void httpieWithAcceptHeaderJson() {
 		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
+		validateDefaultMetadata(response.getBody());
 	}
 
 	@Test
@@ -84,8 +84,8 @@ public class CommandLineMetadataControllerIntegrationTests extends AbstractIniti
 	@Test
 	void springBootCliReceivesJsonByDefault() {
 		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
+		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
+		validateDefaultMetadata(response.getBody());
 	}
 
 	@Test
