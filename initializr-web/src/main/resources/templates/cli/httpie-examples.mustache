@@ -2,11 +2,11 @@ To create a default project:
 	$ http {{serviceUrl}}/starter.zip -d
 
 To create a web project using Java 11:
-	$ http {{serviceUrl}}/starter.zip dependencies==web \\
+	$ http {{serviceUrl}}/starter.zip dependencies==web \
 			javaVersion==11 -d
 
 To create a web/data-jpa gradle project unpacked:
-	$ http {{serviceUrl}}/starter.tgz dependencies==web,data-jpa \\
+	$ http {{serviceUrl}}/starter.tgz dependencies==web,data-jpa \
 		   type==gradle-project baseDir==my-dir | tar -xzvf -
 
 To generate a Maven POM with war packaging:
