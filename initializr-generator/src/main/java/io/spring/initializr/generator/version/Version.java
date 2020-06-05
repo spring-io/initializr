@@ -87,11 +87,8 @@ public final class Version implements Serializable, Comparable<Version> {
 		if (this.format == format) {
 			return this;
 		}
-		if (format == Format.V1) {
-			Qualifier qualifier = formatQualifier(".", this::toV1Qualifier);
-			return new Version(this.major, this.minor, this.patch, qualifier);
-		}
-		Qualifier qualifier = formatQualifier("-", this::toV2Qualifier);
+		Qualifier qualifier = (format == Format.V1) ? formatQualifier(".", this::toV1Qualifier)
+				: formatQualifier("-", this::toV2Qualifier);
 		return new Version(this.major, this.minor, this.patch, qualifier);
 	}
 
