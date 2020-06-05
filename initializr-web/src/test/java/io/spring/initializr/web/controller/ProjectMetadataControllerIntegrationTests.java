@@ -95,11 +95,26 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	}
 
 	@Test
-	void metadataWithSeveralAcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json",
-				"application/vnd.initializr.v2+json");
+	void metadataWithSeveralVersionsAndQualifier() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json;q=0.9",
+				"application/vnd.initializr.v2.2+json");
 		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response);
+	}
+
+	@Test
+	void metadataWithSeveralVersionAndPreferenceOnInvalidVersion() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v5.4+json",
+				"application/vnd.initializr.v2.2+json;q=0.9");
+		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
+		validateCurrentMetadata(response);
+	}
+
+	@Test
+	void metadataWithSeveralVersionAndPreferenceForOldVersion() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json",
+				"application/vnd.initializr.v2.2+json;q=0.9");
+		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
