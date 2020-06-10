@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,15 +43,15 @@ class GroovyDslKotlinGradleBuildCustomizerTests {
 	@Test
 	void kotlinCompilationTasksAreCustomized() {
 		GradleBuild build = new GradleBuild();
-		new GroovyDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		new GroovyDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "11")).customize(build);
 		assertThat(build.tasks().importedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
 		assertThat(build.tasks().values()).hasOnlyOneElementSatisfying((task) -> {
 			assertThat(task.getName()).isEqualTo("KotlinCompile");
-			assertKotlinOptions(task);
+			assertKotlinOptions(task, "11");
 		});
 	}
 
-	private void assertKotlinOptions(GradleTask compileTask) {
+	private void assertKotlinOptions(GradleTask compileTask, String jvmTarget) {
 		assertThat(compileTask.getAttributes()).isEmpty();
 		assertThat(compileTask.getInvocations()).isEmpty();
 		assertThat(compileTask.getNested()).hasSize(1);
@@ -60,7 +60,7 @@ class GroovyDslKotlinGradleBuildCustomizerTests {
 		assertThat(kotlinOptions.getNested()).hasSize(0);
 		assertThat(kotlinOptions.getAttributes()).hasSize(2);
 		assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "['-Xjsr305=strict']")
-				.containsEntry("jvmTarget", "'1.8'");
+				.containsEntry("jvmTarget", String.format("'%s'", jvmTarget));
 	}
 
 }

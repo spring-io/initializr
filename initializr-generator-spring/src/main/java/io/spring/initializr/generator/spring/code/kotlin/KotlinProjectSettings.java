@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,7 @@ public interface KotlinProjectSettings {
 	 * Return the {@code jvmTarget} to use.
 	 * @return the jvm target
 	 */
-	default String getJvmTarget() {
-		return "1.8";
-	}
+	String getJvmTarget();
 
 	/**
 	 * Return the compiler arguments.
