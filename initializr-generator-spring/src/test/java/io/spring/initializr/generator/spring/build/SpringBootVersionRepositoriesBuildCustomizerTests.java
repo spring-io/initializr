@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,23 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 	}
 
 	@Test
+	void addMavenCentralWhenUsingSemVerRelease() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0")).customize(build);
+		assertThat(build.repositories().items()).containsExactly(MavenRepository.MAVEN_CENTRAL);
+	}
+
+	@Test
 	void addMavenCentralAndMilestonesWhenUsingMilestone() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.M1")).customize(build);
+		assertMavenCentralAndMilestonesRepositories(build);
+	}
+
+	@Test
+	void addMavenCentralAndMilestonesWhenUsingSemVerMilestone() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0-M1")).customize(build);
 		assertMavenCentralAndMilestonesRepositories(build);
 	}
 
@@ -55,9 +69,23 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 	}
 
 	@Test
+	void addMavenCentralAndMilestonesWhenUsingSemVerReleaseCandidate() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0-RC1")).customize(build);
+		assertMavenCentralAndMilestonesRepositories(build);
+	}
+
+	@Test
 	void addMavenCentralAndNonReleaseWhenUsingSnapshot() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.BUILD-SNAPSHOT")).customize(build);
+		assertNonReleaseRepositories(build);
+	}
+
+	@Test
+	void addMavenCentralAndNonReleaseWhenUsingSemVerSnapshot() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0-SNAPSHOT")).customize(build);
 		assertNonReleaseRepositories(build);
 	}
 

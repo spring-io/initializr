@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class KotlinMavenFullBuildCustomizerTests {
 	@Test
 	void kotlinMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "1.6")).customize(build);
 		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((kotlinPlugin) -> {
 			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
@@ -73,7 +73,7 @@ class KotlinMavenFullBuildCustomizerTests {
 					.hasFieldOrPropertyWithValue("value", "spring");
 			Setting jvmTarget = configuration.getSettings().get(2);
 			assertThat(jvmTarget.getName()).isEqualTo("jvmTarget");
-			assertThat(jvmTarget.getValue()).isEqualTo("1.8");
+			assertThat(jvmTarget.getValue()).isEqualTo("1.6");
 			assertThat(kotlinPlugin.getExecutions()).hasSize(2);
 			Execution compile = kotlinPlugin.getExecutions().get(0);
 			assertThat(compile.getId()).isEqualTo("compile");

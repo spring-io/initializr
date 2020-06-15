@@ -14,37 +14,25 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.code.kotlin;
+package io.spring.initializr.web.project;
 
-import java.util.Collections;
-import java.util.List;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
- * Commons settings for Kotlin projects.
+ * Strategy interface to transform the platform version of a {@link ProjectRequest}.
  *
- * @author Andy Wilkinson
  * @author Stephane Nicoll
  */
-public interface KotlinProjectSettings {
+@FunctionalInterface
+public interface ProjectRequestPlatformVersionTransformer {
 
 	/**
-	 * Return the version of Kotlin to use.
-	 * @return the kotlin version
+	 * Transform the platform version of a {@link ProjectRequest} if necessary.
+	 * @param platformVersion the candidate platform version
+	 * @param metadata the metadata instance to use
+	 * @return the platform version to use
 	 */
-	String getVersion();
-
-	/**
-	 * Return the {@code jvmTarget} to use.
-	 * @return the jvm target
-	 */
-	String getJvmTarget();
-
-	/**
-	 * Return the compiler arguments.
-	 * @return the compiler arguments
-	 */
-	default List<String> getCompilerArgs() {
-		return Collections.singletonList("-Xjsr305=strict");
-	}
+	Version transform(Version platformVersion, InitializrMetadata metadata);
 
 }

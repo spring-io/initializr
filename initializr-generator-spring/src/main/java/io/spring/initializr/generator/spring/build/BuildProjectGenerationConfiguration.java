@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class BuildProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnPlatformVersion("[2.2.0.M3,2.2.0.M4]")
 	@Deprecated
-	public BuildCustomizer<Build> junitJupiterLegacyTestStarterContributor() {
+	public BuildCustomizer<Build> junit5LegacyTestStarterContributor() {
 		return (build) -> build.dependencies().add("test",
 				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
 						.scope(DependencyScope.TEST_COMPILE)
@@ -58,12 +58,20 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("2.2.0.M5")
-	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+	@ConditionalOnPlatformVersion("[2.2.0.M5,2.4.0-SNAPSHOT)")
+	public BuildCustomizer<Build> junit5TestStarterContributor() {
 		return (build) -> build.dependencies().add("test",
 				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
 						.scope(DependencyScope.TEST_COMPILE)
 						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine")));
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("2.4.0-M1")
+	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+		return (build) -> build.dependencies().add("test",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
+						.scope(DependencyScope.TEST_COMPILE));
 	}
 
 	@Bean

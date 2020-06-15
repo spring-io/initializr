@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class VersionParser {
 	public static final VersionParser DEFAULT = new VersionParser(Collections.emptyList());
 
 	private static final Pattern VERSION_REGEX = Pattern
-			.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:\\.([^0-9]+)(\\d+)?)?$");
+			.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:([.|-])([^0-9]+)(\\d+)?)?$");
 
 	private static final Pattern RANGE_REGEX = Pattern.compile("(\\(|\\[)(.*),(.*)(\\)|\\])");
 
@@ -71,20 +71,12 @@ public class VersionParser {
 		Matcher matcher = VERSION_REGEX.matcher(text.trim());
 		if (!matcher.matches()) {
 			throw new InvalidVersionException("Could not determine version based on '" + text + "': version format "
-					+ "is Major.Minor.Patch.Qualifier " + "(e.g. 1.0.5.RELEASE)");
+					+ "is Major.Minor.Patch and an optional Qualifier " + "(e.g. 1.0.5.RELEASE)");
 		}
 		Integer major = Integer.valueOf(matcher.group(1));
 		String minor = matcher.group(2);
 		String patch = matcher.group(3);
-		Qualifier qualifier = null;
-		String qualifierId = matcher.group(4);
-		if (StringUtils.hasText(qualifierId)) {
-			qualifier = new Version.Qualifier(qualifierId);
-			String o = matcher.group(5);
-			if (o != null) {
-				qualifier.setVersion(Integer.valueOf(o));
-			}
-		}
+		Qualifier qualifier = parseQualifier(matcher);
 		if ("x".equals(minor) || "x".equals(patch)) {
 			Integer minorInt = ("x".equals(minor) ? null : Integer.parseInt(minor));
 			Version latest = findLatestVersion(major, minorInt, qualifier);
@@ -97,6 +89,17 @@ public class VersionParser {
 		else {
 			return new Version(major, Integer.parseInt(minor), Integer.parseInt(patch), qualifier);
 		}
+	}
+
+	private Qualifier parseQualifier(Matcher matcher) {
+		String qualifierSeparator = matcher.group(4);
+		String qualifierId = matcher.group(5);
+		if (StringUtils.hasText(qualifierSeparator) && StringUtils.hasText(qualifierId)) {
+			String versionString = matcher.group(6);
+			return new Qualifier(qualifierId, (versionString != null) ? Integer.valueOf(versionString) : null,
+					qualifierSeparator);
+		}
+		return null;
 	}
 
 	/**

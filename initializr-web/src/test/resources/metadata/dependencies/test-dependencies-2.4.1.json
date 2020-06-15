@@ -1,5 +1,5 @@
 {
-  "bootVersion": "2.2.1.RELEASE",
+  "bootVersion": "2.4.1.RELEASE",
   "repositories": {
     "my-api-repo-2": {
       "name": "repo2",

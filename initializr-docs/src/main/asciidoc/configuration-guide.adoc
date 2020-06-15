@@ -542,21 +542,30 @@ it. The versions are *not* applied to the dependency itself, but rather used to 
 the dependency, or modify it, when different versions of Spring Boot are selected for the
 generated project.
 
-A typical version is composed of four parts: a major revision, a minor revision, a patch
-revision and a qualifier. Qualifiers are ordered as follows:
+A version is composed of four parts: a major revision, a minor revision, a patch
+revision and an optional qualifier. Spring Initializr supports two version formats:
+
+* `V1` is the original format where the qualifier is separated from the version by a dot.
+It also uses well-defined qualifiers for snapshots (`BUILD-SNAPSHOT`) and General
+Availability (`RELEASE`).
+* `V2` is an improved format that is SemVer compliant, and therefore uses a dash to
+separate the qualifier. There is no qualifier for GAs.
+
+Speaking of qualifiers, they are ordered as follows:
 
 * `M` for milestones (e.g. `2.0.0.M1` is the first milestone of the upcoming 2.0.0
 release): can be seen as "beta" release
-* `RC` for release candidates (e.g. `2.0.0.RC2` is the second release candidate of
+* `RC` for release candidates (e.g. `2.0.0-RC2` is the second release candidate of
 upcoming 2.0.0 release)
-* `RELEASE` for general availability (e.g. `2.0.0.RELEASE` is 2.0.0 proper)
 * `BUILD-SNAPSHOT` for development build (`2.1.0.BUILD-SNAPSHOT` represents the latest
-available development build of the upcoming 2.1.0 release).
+available development build of the upcoming 2.1.0 release). For the `V2` format, it is
+simply `SNAPSHOT`, i.e. `2.1.0-SNAPSHOT`.
+* `RELEASE` for general availability (e.g. `2.0.0.RELEASE` is 2.0.0 proper)
 
-TIP: snapshots are in a bit special in that scheme as they always represents the "latest
-state" of a release. `M1` represents the most oldest version for a given major, minor and
-patch revisions.
-
+TIP: snapshots are in a bit special in that scheme as they always represent the "latest
+state" of a release. `M1` represents the oldest version for a given major, minor and
+patch revisions, and it can therefore be safely used when referring to the "first" release
+in that line.
 
 A version range has a lower and an upper bound, and if the bound is inclusive it is
 denoted as a square bracket (`[` or `]`), otherwise it is exclusive and denoted by a
@@ -572,7 +581,7 @@ an hard-coded version. For instance, `1.4.x.BUILD-SNAPSHOT` is the latest snapsh
 of the 1.4.x line. For instance, if you want to restrict a dependency from `1.1.0.RELEASE`
 to the latest stable release of the 1.3.x line, you'd use `[1.1.0.RELEASE,1.3.x.RELEASE]`.
 
-Snapshots are naturally ordered higher than released versions, so if you are looking to
+Snapshots are naturally the most recent version of a given line, so if you are looking to
 match a dependency to only the latest snapshots of Spring Boot, you could use a version
 range of `1.5.x.BUILD-SNAPSHOT` (assuming 1.5 was the latest).
 
@@ -580,7 +589,8 @@ TIP: Remember to quote the values of a version range in YAML configuration files
 double quotes "").
 
 See below in the section on <<howto-link-boot-version,linking versions>> for more examples
-and idioms.
+and idioms. See also how the <<howto-platform-version-format,platform version format>> can
+be configured.
 
 
 
@@ -1014,6 +1024,30 @@ common settings in a group are the `groupId`, `compatibilityRange` and `bom`:
 
 These dependencies, by default, will be available only for Spring Boot versions 1.3 up to
 2.0 (excluded) and will bring in the `stuff-bom` BOM.
+
+
+
+[[howto-platform-version-format]]
+=== Configure platform version format
+Spring Initializr supports two formats: `V1` is the original format defined by metadata
+up to `2.1`. `V2` is the SemVer format provided alongside `V1` as of metadata `2.2`. In
+order to serve backward compatible content, the version range for each format should be
+configured so that translations can happen accordingly.
+
+Let's assume that an instance only supports `2.0.0` and later and the platform version is
+using the original format up to `2.4.0` (excluded). As of `2.4.0`, the improved, SemVer
+format is used. The following configures the instance to adapt version format
+automatically:
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  env:
+	    platform:
+	      compatibility-range: "2.0.0.RELEASE"
+	      v1-format-compatibility-range: "[2.0.0.RELEASE,2.4.0-M1)"
+	      v2-format-compatibility-range: "2.4.0-M1"
+----
 
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package io.spring.initializr.web.mapper;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.spring.initializr.generator.version.Version.Format;
+import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Type;
 
@@ -55,13 +57,17 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 	@Override
 	protected ObjectNode mapDependency(Dependency dependency) {
 		ObjectNode content = mapValue(dependency);
-		if (dependency.getCompatibilityRange() != null) {
-			content.put("versionRange", dependency.getCompatibilityRange());
+		if (dependency.getRange() != null) {
+			content.put("versionRange", formatVersionRange(dependency.getRange()));
 		}
 		if (dependency.getLinks() != null && !dependency.getLinks().isEmpty()) {
 			content.set("_links", LinkMapper.mapLinks(dependency.getLinks()));
 		}
 		return content;
+	}
+
+	protected String formatVersionRange(VersionRange versionRange) {
+		return versionRange.format(Format.V1).toRangeString();
 	}
 
 	private ObjectNode dependenciesLink(String appUrl) {

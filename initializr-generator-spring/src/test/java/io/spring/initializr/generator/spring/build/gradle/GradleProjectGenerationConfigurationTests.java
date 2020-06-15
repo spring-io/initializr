@@ -85,7 +85,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	static Stream<Arguments> gradleWrapperParameters() {
 		return Stream.of(Arguments.arguments("1.5.17.RELEASE", "3.5.1"), Arguments.arguments("2.0.6.RELEASE", "4.10.3"),
-				Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.3"));
+				Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.4.1"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -176,6 +176,24 @@ class GradleProjectGenerationConfigurationTests {
 	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");
+	}
+
+	@Test
+	void testStarterDoesNotExcludeVintageEngineWith24Snapshot() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.4.0-SNAPSHOT"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");
+	}
+
+	@Test
+	void testStarterDoesNotExcludeVintageEngineWith24Milestone() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.4.0-M1"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");

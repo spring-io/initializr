@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import io.spring.initializr.generator.language.Language;
+
 /**
  * Commons settings for Kotlin projects.
  *
@@ -25,13 +27,35 @@ public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 
 	private final String version;
 
+	private final String jvmTarget;
+
+	/**
+	 * Create an instance with the kotlin version to use.
+	 * @param version the kotlin version to use
+	 */
 	public SimpleKotlinProjectSettings(String version) {
+		this(version, Language.DEFAULT_JVM_VERSION);
+	}
+
+	/**
+	 * Create an instance with the kotlin version and the target version of the generated
+	 * JVM bytecode.
+	 * @param version the kotlin version to use
+	 * @param jvmTarget the target version of the generated JVM bytecode
+	 */
+	public SimpleKotlinProjectSettings(String version, String jvmTarget) {
 		this.version = version;
+		this.jvmTarget = jvmTarget;
 	}
 
 	@Override
 	public String getVersion() {
 		return this.version;
+	}
+
+	@Override
+	public String getJvmTarget() {
+		return this.jvmTarget;
 	}
 
 }

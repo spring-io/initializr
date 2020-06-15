@@ -2,11 +2,11 @@ To create a default demo.zip:
 	$ curl {{serviceUrl}}/starter.zip -o demo.zip
 
 To create a web project using Java 11:
-	$ curl {{serviceUrl}}/starter.zip -d dependencies=web \\
+	$ curl {{serviceUrl}}/starter.zip -d dependencies=web \
 			-d javaVersion=11 -o demo.zip
 
 To create a web/data-jpa gradle project unpacked:
-	$ curl {{serviceUrl}}/starter.tgz -d dependencies=web,data-jpa \\
+	$ curl {{serviceUrl}}/starter.tgz -d dependencies=web,data-jpa \
 		   -d type=gradle-project -d baseDir=my-dir | tar -xzvf -
 
 To generate a Maven POM with war packaging:

@@ -38,9 +38,11 @@ import io.spring.initializr.web.controller.DefaultProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectMetadataController;
 import io.spring.initializr.web.controller.SpringCliDistributionController;
+import io.spring.initializr.web.project.DefaultProjectRequestPlatformVersionTransformer;
 import io.spring.initializr.web.project.DefaultProjectRequestToDescriptionConverter;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequest;
+import io.spring.initializr.web.project.ProjectRequestPlatformVersionTransformer;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
@@ -144,9 +146,12 @@ public class InitializrAutoConfiguration {
 		@Bean
 		@ConditionalOnMissingBean
 		ProjectGenerationController<ProjectRequest> projectGenerationController(
-				InitializrMetadataProvider metadataProvider, ApplicationContext applicationContext) {
+				InitializrMetadataProvider metadataProvider,
+				ObjectProvider<ProjectRequestPlatformVersionTransformer> platformVersionTransformer,
+				ApplicationContext applicationContext) {
 			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
-					applicationContext, new DefaultProjectRequestToDescriptionConverter());
+					applicationContext, new DefaultProjectRequestToDescriptionConverter(platformVersionTransformer
+							.getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new)));
 			return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
 		}
 

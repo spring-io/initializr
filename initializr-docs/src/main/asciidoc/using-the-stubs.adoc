@@ -110,7 +110,7 @@ include::{test-examples}/stub/ClientApplicationTests.java[tag=test]
 
 Then you have a server that returns the stub of the JSON metadata
 (`metadataWithCurrentAcceptHeader.json`) when you send it a header
-`Accept:application/vnd.initializr.v2.1+json` (as recommended).
+`Accept:application/vnd.initializr.v2.2+json` (as recommended).
 
 
 
