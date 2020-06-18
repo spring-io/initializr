@@ -70,7 +70,7 @@ class DefaultInitializrMetadataUpdateStrategyTests {
 		assertThat(updatedMetadata.getBootVersions()).isNotNull();
 		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata.getBootVersions().getContent();
 		assertThat(updatedBootVersions).hasSize(5);
-		assertBootVersion(updatedBootVersions.get(0), "2.5.0-M1", false);
+		assertBootVersion(updatedBootVersions.get(0), "2.5.0 (M1)", false);
 		assertBootVersion(updatedBootVersions.get(1), "2.4.1 (SNAPSHOT)", false);
 		assertBootVersion(updatedBootVersions.get(2), "2.4.0", true);
 		assertBootVersion(updatedBootVersions.get(3), "2.3.8 (SNAPSHOT)", false);
@@ -91,7 +91,7 @@ class DefaultInitializrMetadataUpdateStrategyTests {
 		assertThat(updatedMetadata.getBootVersions()).isNotNull();
 		List<DefaultMetadataElement> updatedBootVersions = updatedMetadata.getBootVersions().getContent();
 		assertThat(updatedBootVersions).hasSize(5);
-		assertBootVersion(updatedBootVersions.get(0), "2.5.0-M1", true);
+		assertBootVersion(updatedBootVersions.get(0), "2.5.0 (M1)", true);
 		assertBootVersion(updatedBootVersions.get(1), "2.4.1 (SNAPSHOT)", false);
 		assertBootVersion(updatedBootVersions.get(2), "2.4.0", false);
 		assertBootVersion(updatedBootVersions.get(3), "2.3.8 (SNAPSHOT)", false);

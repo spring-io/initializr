@@ -57,11 +57,23 @@ class SpringBootMetadataReaderTests {
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
 		assertThat(versions).hasSize(5);
-		assertSpringBootVersion(versions.get(0), "2.5.0-M1", "2.5.0-M1", false);
+		assertSpringBootVersion(versions.get(0), "2.5.0-M1", "2.5.0 (M1)", false);
 		assertSpringBootVersion(versions.get(1), "2.4.1-SNAPSHOT", "2.4.1 (SNAPSHOT)", false);
 		assertSpringBootVersion(versions.get(2), "2.4.0", "2.4.0", true);
 		assertSpringBootVersion(versions.get(3), "2.3.8.BUILD-SNAPSHOT", "2.3.8 (SNAPSHOT)", false);
 		assertSpringBootVersion(versions.get(4), "2.3.7.RELEASE", "2.3.7", false);
+		this.server.verify();
+	}
+
+	@Test
+	void readAvailableVersionsWithInvalidVersion() throws IOException {
+		this.server.expect(requestTo("https://spring.io/project_metadata/spring-boot")).andRespond(withSuccess(
+				new ClassPathResource("metadata/sagan/spring-boot-invalid-version.json"), MediaType.APPLICATION_JSON));
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
+		assertThat(versions).hasSize(2);
+		assertSpringBootVersion(versions.get(0), "2.5.0-M1", "2.5.0 (M1)", false);
+		assertSpringBootVersion(versions.get(1), "2.4.0", "2.4.0", true);
 		this.server.verify();
 	}
 

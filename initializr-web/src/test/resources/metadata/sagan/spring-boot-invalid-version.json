@@ -1,0 +1,66 @@
+{
+  "id": "spring-boot",
+  "name": "Spring Boot",
+  "repoUrl": "https://github.com/spring-projects/spring-boot",
+  "siteUrl": "https://projects.spring.io/spring-boot",
+  "category": "active",
+  "stackOverflowTags": "spring-boot",
+  "projectReleases": [
+    {
+      "releaseStatus": "SNAPSHOT",
+      "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.5.0-M1/reference/htmlsingle/",
+      "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.5.0-M1/api/",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot",
+      "repository": {
+        "id": "spring-milestones",
+        "name": "Spring Milestones",
+        "url": "https://repo.spring.io/libs-milestone",
+        "snapshotsEnabled": false
+      },
+      "preRelease": true,
+      "generalAvailability": false,
+      "versionDisplayName": "2.5.0-M1",
+      "current": false,
+      "snapshot": false,
+      "version": "2.5.0-M1"
+    },
+    {
+      "releaseStatus": "SNAPSHOT",
+      "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.1-SNAPSHOT/reference/htmlsingle/",
+      "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.1-SNAPSHOT/api/",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot",
+      "repository": {
+        "id": "spring-snapshots",
+        "name": "Spring Snapshots",
+        "url": "https://repo.spring.io/libs-snapshot",
+        "snapshotsEnabled": true
+      },
+      "preRelease": false,
+      "generalAvailability": false,
+      "versionDisplayName": "2.4.1",
+      "current": false,
+      "snapshot": true,
+      "version": "Not a valid version"
+    },
+    {
+      "releaseStatus": "GENERAL_AVAILABILITY",
+      "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/reference/htmlsingle/",
+      "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/api/",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot",
+      "repository": null,
+      "preRelease": false,
+      "generalAvailability": true,
+      "versionDisplayName": "2.4.0",
+      "current": true,
+      "snapshot": false,
+      "version": "2.4.0"
+    }
+  ],
+  "aggregator": false,
+  "stackOverflowTagList": [
+    "spring-boot"
+  ]
+}
