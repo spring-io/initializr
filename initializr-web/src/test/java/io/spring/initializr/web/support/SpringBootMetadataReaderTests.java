@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package io.spring.initializr.web.support;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
@@ -57,19 +56,20 @@ class SpringBootMetadataReaderTests {
 				withSuccess(new ClassPathResource("metadata/sagan/spring-boot.json"), MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
-		assertThat(versions).as("spring boot versions should not be null").isNotNull();
-		AtomicBoolean defaultFound = new AtomicBoolean(false);
-		versions.forEach((it) -> {
-			assertThat(it.getId()).as("Id must be set").isNotNull();
-			assertThat(it.getName()).as("Name must be set").isNotNull();
-			if (it.isDefault()) {
-				if (defaultFound.get()) {
-					throw new AssertionError("One default version was already found " + it.getId());
-				}
-				defaultFound.set(true);
-			}
-		});
+		assertThat(versions).hasSize(5);
+		assertSpringBootVersion(versions.get(0), "2.5.0-M1", "2.5.0-M1", false);
+		assertSpringBootVersion(versions.get(1), "2.4.1-SNAPSHOT", "2.4.1 (SNAPSHOT)", false);
+		assertSpringBootVersion(versions.get(2), "2.4.0", "2.4.0", true);
+		assertSpringBootVersion(versions.get(3), "2.3.8.BUILD-SNAPSHOT", "2.3.8 (SNAPSHOT)", false);
+		assertSpringBootVersion(versions.get(4), "2.3.7.RELEASE", "2.3.7", false);
 		this.server.verify();
+	}
+
+	private void assertSpringBootVersion(DefaultMetadataElement actual, String id, String name,
+			boolean defaultVersion) {
+		assertThat(actual.getId()).isEqualTo(id);
+		assertThat(actual.getName()).isEqualTo(name);
+		assertThat(actual.isDefault()).isEqualTo(defaultVersion);
 	}
 
 }
