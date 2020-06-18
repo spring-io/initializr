@@ -17,8 +17,8 @@
 		<java.version>1.8</java.version>
 		<commons-compress.version>1.20</commons-compress.version>
 		<commons-text.version>1.8</commons-text.version>
-		<maven.version>3.6.1</maven.version>
 		<maven-resolver.version>1.4.2</maven-resolver.version>
+		<maven-resolver-provider.version>3.6.3</maven-resolver-provider.version>
 		<spring-boot.version>2.3.1.RELEASE</spring-boot.version>
 		<spring-cloud-contract.version>2.2.3.RELEASE</spring-cloud-contract.version>
 	</properties>
@@ -43,7 +43,7 @@
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-resolver-provider</artifactId>
-				<version>${maven.version}</version>
+				<version>${maven-resolver-provider.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven.resolver</groupId>
