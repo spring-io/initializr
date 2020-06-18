@@ -126,7 +126,7 @@ public class InitializrMetadataTestBuilder {
 			packaging.setId(id);
 			packaging.setName(id);
 			packaging.setDefault(defaultValue);
-			it.getPackagings().getContent().add(packaging);
+			it.getPackagings().addContent(packaging);
 		});
 		return this;
 	}
@@ -141,7 +141,7 @@ public class InitializrMetadataTestBuilder {
 			element.setId(version);
 			element.setName(version);
 			element.setDefault(defaultValue);
-			it.getJavaVersions().getContent().add(element);
+			it.getJavaVersions().addContent(element);
 		});
 		return this;
 	}
@@ -156,7 +156,7 @@ public class InitializrMetadataTestBuilder {
 			element.setId(id);
 			element.setName(id);
 			element.setDefault(defaultValue);
-			it.getLanguages().getContent().add(element);
+			it.getLanguages().addContent(element);
 		});
 		return this;
 	}
@@ -172,7 +172,7 @@ public class InitializrMetadataTestBuilder {
 			element.setId(id);
 			element.setName(id);
 			element.setDefault(defaultValue);
-			it.getBootVersions().getContent().add(element);
+			it.getBootVersions().addContent(element);
 		});
 		return this;
 	}

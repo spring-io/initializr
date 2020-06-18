@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,13 @@
 
 package io.spring.initializr.metadata;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,7 +35,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SingleSelectCapability extends ServiceCapability<List<DefaultMetadataElement>>
 		implements Defaultable<DefaultMetadataElement> {
 
-	private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<>();
+	private final List<DefaultMetadataElement> content = new ArrayList<>();
+
+	private final ReadWriteLock contentLock = new ReentrantReadWriteLock();
 
 	@JsonCreator
 	SingleSelectCapability(@JsonProperty("id") String id) {
@@ -43,7 +50,18 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 
 	@Override
 	public List<DefaultMetadataElement> getContent() {
-		return this.content;
+		return Collections.unmodifiableList(withReadableContent(ArrayList::new));
+	}
+
+	public void addContent(DefaultMetadataElement element) {
+		withWritableContent((content) -> content.add(element));
+	}
+
+	public void setContent(List<DefaultMetadataElement> newContent) {
+		withWritableContent((content) -> {
+			content.clear();
+			content.addAll(newContent);
+		});
 	}
 
 	/**
@@ -51,7 +69,8 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 	 */
 	@Override
 	public DefaultMetadataElement getDefault() {
-		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null);
+		return withReadableContent(
+				(content) -> content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null));
 	}
 
 	/**
@@ -60,16 +79,39 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 	 * @return the element or {@code null}
 	 */
 	public DefaultMetadataElement get(String id) {
-		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null);
+		return withReadableContent(
+				(content) -> content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null));
 	}
 
 	@Override
 	public void merge(List<DefaultMetadataElement> otherContent) {
-		otherContent.forEach((it) -> {
-			if (get(it.getId()) == null) {
-				this.content.add(it);
-			}
+		withWritableContent((content) -> {
+			otherContent.forEach((it) -> {
+				if (get(it.getId()) == null) {
+					this.content.add(it);
+				}
+			});
 		});
+	}
+
+	private <T> T withReadableContent(Function<List<DefaultMetadataElement>, T> consumer) {
+		this.contentLock.readLock().lock();
+		try {
+			return consumer.apply(this.content);
+		}
+		finally {
+			this.contentLock.readLock().unlock();
+		}
+	}
+
+	private void withWritableContent(Consumer<List<DefaultMetadataElement>> consumer) {
+		this.contentLock.writeLock().lock();
+		try {
+			consumer.accept(this.content);
+		}
+		finally {
+			this.contentLock.writeLock().unlock();
+		}
 	}
 
 }

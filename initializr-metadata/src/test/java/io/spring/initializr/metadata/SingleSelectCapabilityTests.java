@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package io.spring.initializr.metadata;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,17 +36,17 @@ class SingleSelectCapabilityTests {
 	@Test
 	void defaultNoDefault() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
-		capability.getContent().add(DefaultMetadataElement.create("foo", false));
-		capability.getContent().add(DefaultMetadataElement.create("bar", false));
+		capability.setContent(Arrays.asList(DefaultMetadataElement.create("foo", false),
+				DefaultMetadataElement.create("bar", false)));
 		assertThat(capability.getDefault()).isNull();
 	}
 
 	@Test
 	void defaultType() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
-		capability.getContent().add(DefaultMetadataElement.create("foo", false));
+		DefaultMetadataElement first = DefaultMetadataElement.create("foo", false);
 		DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
-		capability.getContent().add(second);
+		capability.setContent(Arrays.asList(first, second));
 		assertThat(capability.getDefault()).isEqualTo(second);
 	}
 
@@ -52,11 +54,11 @@ class SingleSelectCapabilityTests {
 	void mergeAddEntry() {
 		SingleSelectCapability capability = new SingleSelectCapability("test");
 		DefaultMetadataElement foo = DefaultMetadataElement.create("foo", false);
-		capability.getContent().add(foo);
+		capability.setContent(Arrays.asList(foo));
 
 		SingleSelectCapability anotherCapability = new SingleSelectCapability("test");
 		DefaultMetadataElement bar = DefaultMetadataElement.create("bar", false);
-		anotherCapability.getContent().add(bar);
+		anotherCapability.setContent(Arrays.asList(bar));
 
 		capability.merge(anotherCapability);
 		assertThat(capability.getContent()).hasSize(2);

@@ -200,8 +200,7 @@ public class InitializrMetadata {
 	 * @param versionsMetadata the Spring Boot boot versions metadata to use
 	 */
 	public void updateSpringBootVersions(List<DefaultMetadataElement> versionsMetadata) {
-		this.bootVersions.getContent().clear();
-		this.bootVersions.getContent().addAll(versionsMetadata);
+		this.bootVersions.setContent(versionsMetadata);
 		List<Version> bootVersions = this.bootVersions.getContent().stream().map((it) -> Version.parse(it.getId()))
 				.collect(Collectors.toList());
 		VersionParser parser = new VersionParser(bootVersions);
