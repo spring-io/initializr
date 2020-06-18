@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Base {@link Controller} that provides endpoints for project generation.
@@ -110,7 +109,6 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	@RequestMapping(path = { "/pom", "/pom.xml" })
-	@ResponseBody
 	public ResponseEntity<byte[]> pom(R request) {
 		request.setType("maven-build");
 		byte[] mavenPom = this.projectGenerationInvoker.invokeBuildGeneration(request);
@@ -118,7 +116,6 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	@RequestMapping(path = { "/build", "/build.gradle" })
-	@ResponseBody
 	public ResponseEntity<byte[]> gradle(R request) {
 		request.setType("gradle-build");
 		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
@@ -126,7 +123,6 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	@RequestMapping("/starter.zip")
-	@ResponseBody
 	public ResponseEntity<byte[]> springZip(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
@@ -135,7 +131,6 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
-	@ResponseBody
 	public ResponseEntity<byte[]> springTgz(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
