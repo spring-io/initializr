@@ -37,7 +37,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
-import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -54,7 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -365,12 +363,6 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	@EnableAutoConfiguration
 	public static class Config {
-
-		// Disable metadata fetching from spring.io
-		@Bean
-		public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy() {
-			return (metadata) -> metadata;
-		}
 
 	}
 

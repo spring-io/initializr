@@ -39,11 +39,11 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
- * Tests for {@link DefaultInitializrMetadataUpdateStrategy}.
+ * Tests for {@link SaganInitializrMetadataUpdateStrategy}.
  *
  * @author Stephane Nicoll
  */
-class DefaultInitializrMetadataUpdateStrategyTests {
+class SaganInitializrMetadataUpdateStrategyTests {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -62,8 +62,8 @@ class DefaultInitializrMetadataUpdateStrategyTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("0.0.9.RELEASE", true)
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
-		DefaultInitializrMetadataUpdateStrategy provider = new DefaultInitializrMetadataUpdateStrategy(
-				this.restTemplate, objectMapper);
+		SaganInitializrMetadataUpdateStrategy provider = new SaganInitializrMetadataUpdateStrategy(this.restTemplate,
+				objectMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(), "metadata/sagan/spring-boot.json");
 
 		InitializrMetadata updatedMetadata = provider.update(metadata);
@@ -82,8 +82,8 @@ class DefaultInitializrMetadataUpdateStrategyTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("0.0.9.RELEASE", true)
 				.addBootVersion("0.0.8.RELEASE", false).build();
 		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
-		DefaultInitializrMetadataUpdateStrategy provider = new DefaultInitializrMetadataUpdateStrategy(
-				this.restTemplate, objectMapper);
+		SaganInitializrMetadataUpdateStrategy provider = new SaganInitializrMetadataUpdateStrategy(this.restTemplate,
+				objectMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/sagan/spring-boot-no-default.json");
 

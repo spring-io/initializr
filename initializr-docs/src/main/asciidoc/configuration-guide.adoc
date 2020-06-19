@@ -359,33 +359,40 @@ defaults can be overridden as shown below:
 
 [[create-instance-boot-versions]]
 === Configuring available Spring Boot versions
-If you look at https://projects.spring.io/spring-boot[the project home page for Spring
-Boot], the latest versions are displayed. And you've probably noticed that they match the
-drop down list that you automatically get with a default instance of Spring Initializr.
-The reason for that is that Spring Initializr calls an API on https://spring.io to
-retrieve the latest versions automatically. This makes sure that you always get the latest
-available versions.
+You can configure the available Spring Boot versions the same way you configure other
+capabilities.
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  bootVersions:
+		- id: 2.4.0-SNAPSHOT
+          name: 2.4.0 (SNAPSHOT)
+		  default: false
+		- id: 2.3.3.BUILD-SNAPSHOT
+          name: 2.3.3 (SNAPSHOT)
+		  default: false
+		- id: 2.3.2.RELEASE
+          name: 2.3.2
+		  default: true
+----
+
+The configuration above provides three versions, with `2.3.2` being used by default. In
+practice though, you may want to upgrade the available Spring Boot versions without having
+to redeploy the application every time. Implementing your own
+`InitializrMetadataUpdateStrategy` bean allows you to update the metadata at runtime.
+
+If you look at https://spring.io/projects/spring-boot[the project home page for Spring
+Boot], the latest versions are displayed. `SaganInitializrMetadataUpdateStrategy` is an
+implementation of that strategy that fetches the latest Spring Boot versions and update
+the metadata to make sure a running instance always get the latest available versions.
 
 If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
 scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
 details, {spring-boot-reference}/#boot-features-restclient-customization[check the
 documentation].
 
-If you don't want the version to be upgraded automatically, you need to override the
-`InitializrMetadataUpdateStrategy` bean to provide your own strategy when the metadata has
-to be refreshed. For instance, you could swap to an implementation that always returns the
-contents of static `application.yml`:
-
-[source,java,indent=0]
-----
-	@Bean
-	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy() {
-		return (metadata) -> metadata;
-	}
-----
-
-The thing to remember is that, by default, you don't have to worry about upgrading your
-instance when a new Spring Boot version is released. However, you may need to
+NOTE: If you opt-in for `SaganInitializrMetadataUpdateStrategy`, you have to
 <<create-instance-advanced-config-caching,configure caching>> to avoid requesting that
 service too often.
 

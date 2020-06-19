@@ -22,7 +22,6 @@ import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
@@ -45,7 +44,6 @@ import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.ProjectRequestPlatformVersionTransformer;
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
-import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -58,7 +56,6 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.support.NoOpCache;
@@ -111,18 +108,12 @@ public class InitializrAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean
-	public InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy(RestTemplateBuilder restTemplateBuilder,
-			ObjectMapper objectMapper) {
-		return new DefaultInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
-	}
-
-	@Bean
 	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
 	public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties,
-			InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
+			ObjectProvider<InitializrMetadataUpdateStrategy> initializrMetadataUpdateStrategy) {
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata, initializrMetadataUpdateStrategy);
+		return new DefaultInitializrMetadataProvider(metadata,
+				initializrMetadataUpdateStrategy.getIfAvailable(() -> (current) -> current));
 	}
 
 	@Bean

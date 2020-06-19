@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
+import io.spring.initializr.metadata.InitializrConfiguration.Env;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,20 +29,21 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A {@link InitializrMetadataUpdateStrategy} that refreshes the metadata with the status
- * of the main spring.io site.
+ * A {@link InitializrMetadataUpdateStrategy} that refreshes the metadata with the latest
+ * state of the Spring Boot project.
  *
  * @author Stephane Nicoll
+ * @see Env#getSpringBootMetadataUrl()
  */
-public class DefaultInitializrMetadataUpdateStrategy implements InitializrMetadataUpdateStrategy {
+public class SaganInitializrMetadataUpdateStrategy implements InitializrMetadataUpdateStrategy {
 
-	private static final Log logger = LogFactory.getLog(DefaultInitializrMetadataUpdateStrategy.class);
+	private static final Log logger = LogFactory.getLog(SaganInitializrMetadataUpdateStrategy.class);
 
 	private final RestTemplate restTemplate;
 
 	private final ObjectMapper objectMapper;
 
-	public DefaultInitializrMetadataUpdateStrategy(RestTemplate restTemplate, ObjectMapper objectMapper) {
+	public SaganInitializrMetadataUpdateStrategy(RestTemplate restTemplate, ObjectMapper objectMapper) {
 		this.restTemplate = restTemplate;
 		this.objectMapper = objectMapper;
 	}

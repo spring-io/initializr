@@ -23,11 +23,10 @@ import io.spring.initializr.web.controller.CommandLineMetadataController;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.controller.ProjectMetadataController;
 import io.spring.initializr.web.controller.SpringCliDistributionController;
-import io.spring.initializr.web.support.DefaultInitializrMetadataUpdateStrategy;
+import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -35,11 +34,8 @@ import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfigu
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
-import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -55,7 +51,7 @@ class InitializrAutoConfigurationTests {
 	private static final AutoConfigurations BASIC_AUTO_CONFIGURATIONS = AutoConfigurations
 			.of(RestTemplateAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
 
-	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 
 	@Test
@@ -72,26 +68,23 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	void autoConfigRegistersInitializrMetadataUpdateStrategy() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(InitializrMetadataUpdateStrategy.class));
-	}
-
-	@Test
-	void autoConfigWhenInitializrMetadataUpdateStrategyPresentDoesNotRegisterInitializrMetadataUpdateStrategy() {
-		this.contextRunner.withUserConfiguration(CustomInitializrMetadataUpdateStrategyConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(InitializrMetadataUpdateStrategy.class);
-					assertThat(context).hasBean("testInitializrMetadataUpdateStrategy");
-				});
-	}
-
-	@Test
-	void autoConfigRegistersInitializrMetadataProvider() {
+	void metadataProviderWithNoMetadataUpdateStrategyRegistersDefault() {
 		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(InitializrMetadataProvider.class));
 	}
 
 	@Test
-	void autoConfigWhenInitializrMetadataProviderBeanPresentDoesNotRegisterInitializrMetadataProvider() {
+	void metadataProviderWithCustomInitializrMetadataUpdateStrategyIsRegistered() {
+		this.contextRunner.withUserConfiguration(CustomInitializrMetadataUpdateStrategyConfiguration.class)
+				.run((context) -> {
+					assertThat(context).hasSingleBean(DefaultInitializrMetadataProvider.class);
+					assertThat(context.getBean(DefaultInitializrMetadataProvider.class)).hasFieldOrPropertyWithValue(
+							"initializrMetadataUpdateStrategy",
+							context.getBean("testInitializrMetadataUpdateStrategy"));
+				});
+	}
+
+	@Test
+	void metadataProviderWithCustomInitializrMetadataProvider() {
 		this.contextRunner.withUserConfiguration(CustomInitializrMetadataProviderConfiguration.class).run((context) -> {
 			assertThat(context).hasSingleBean(InitializrMetadataProvider.class);
 			assertThat(context).hasBean("testInitializrMetadataProvider");
@@ -108,16 +101,6 @@ class InitializrAutoConfigurationTests {
 		this.contextRunner.withUserConfiguration(CustomDependencyMetadataProviderConfiguration.class).run((context) -> {
 			assertThat(context).hasSingleBean(DependencyMetadataProvider.class);
 			assertThat(context).hasBean("testDependencyMetadataProvider");
-		});
-	}
-
-	@Test
-	void customRestTemplateBuilderIsUsed() {
-		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class).run((context) -> {
-			assertThat(context).hasSingleBean(DefaultInitializrMetadataUpdateStrategy.class);
-			RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-					context.getBean(DefaultInitializrMetadataUpdateStrategy.class)).getPropertyValue("restTemplate");
-			assertThat(restTemplate.getErrorHandler()).isSameAs(CustomRestTemplateConfiguration.errorHandler);
 		});
 	}
 
@@ -165,18 +148,6 @@ class InitializrAutoConfigurationTests {
 	void cacheConfigurationConditionalOnClass() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
 				.run((context) -> assertThat(context).doesNotHaveBean(JCacheManagerCustomizer.class));
-	}
-
-	@Configuration
-	static class CustomRestTemplateConfiguration {
-
-		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
-
-		@Bean
-		RestTemplateCustomizer testRestTemplateCustomizer() {
-			return (b) -> b.setErrorHandler(errorHandler);
-		}
-
 	}
 
 	@Configuration
