@@ -3,7 +3,7 @@ set -e
 
 version=$( cat version/version )
 
-milestone=${version%.RELEASE}
+milestone=${version}
 
 java -jar /github-release-notes-generator.jar \
   --releasenotes.github.username=${GITHUB_USERNAME} \
