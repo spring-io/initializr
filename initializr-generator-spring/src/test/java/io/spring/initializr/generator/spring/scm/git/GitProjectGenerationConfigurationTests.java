@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,8 +67,9 @@ class GitProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(new GradleBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		assertThat(generateGitIgnore(description)).contains(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar",
-				"out/", "!**/src/main/**", "!**/src/test/**")
+		assertThat(generateGitIgnore(description))
+				.contains(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar", "out/", "!**/src/main/**/build/",
+						"!**/src/test/**/build/", "!**/src/main/**/out/", "!**/src/test/**/out/")
 				.doesNotContain("/target/", "!.mvn/wrapper/maven-wrapper.jar");
 	}
 
@@ -78,7 +79,8 @@ class GitProjectGenerationConfigurationTests {
 		description.setBuildSystem(new MavenBuildSystem());
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(generateGitIgnore(description))
-				.contains("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**", "!**/src/test/**")
+				.contains("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**/target/",
+						"!**/src/test/**/target/")
 				.doesNotContain(".gradle", "!gradle/wrapper/gradle-wrapper.jar", "/out/");
 	}
 
