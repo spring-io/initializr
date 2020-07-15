@@ -1,4 +1,4 @@
-FROM ubuntu:bionic-20181018
+FROM ubuntu:bionic-20200630
 
 ADD setup.sh /setup.sh
 RUN ./setup.sh
