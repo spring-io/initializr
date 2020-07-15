@@ -36,7 +36,7 @@ git tag -a "v$stageVersion" -m"Release v$stageVersion" > /dev/null
 git reset --hard HEAD^ > /dev/null
 if [[ $nextVersion != $snapshotVersion ]]; then
 	echo "Setting next development version (v$nextVersion)"
-	set_revision_to_pom "$nextVersion"
+	set_revision "$nextVersion"
 	git add pom.xml > /dev/null
 	git commit -m"Next development version (v$nextVersion)" > /dev/null
 fi;
