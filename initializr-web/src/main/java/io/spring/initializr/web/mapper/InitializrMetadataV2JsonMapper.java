@@ -48,6 +48,7 @@ import org.springframework.util.StringUtils;
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.
  *
  * @author Stephane Nicoll
+ * @author Guillaume Gerbaud
  */
 public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMapper {
 
@@ -146,7 +147,10 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		single.put("type", capability.getType().getName());
 		DefaultMetadataElement defaultType = capability.getDefault();
 		if (defaultType != null) {
-			single.put("default", defaultType.getId());
+			ObjectNode defaultNode = valueMapper.apply(defaultType);
+			String defaultValue = (defaultNode.get("id") != null) ? defaultNode.get("id").textValue()
+					: defaultType.getId();
+			single.put("default", defaultValue);
 		}
 		ArrayNode values = nodeFactory.arrayNode();
 		values.addAll(capability.getContent().stream().map(valueMapper).collect(Collectors.toList()));
