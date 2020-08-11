@@ -48,6 +48,7 @@ import org.springframework.util.StringUtils;
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.
  *
  * @author Stephane Nicoll
+ * @author Guillaume Gerbaud
  */
 public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMapper {
 
@@ -83,7 +84,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		singleSelect(delegate, metadata.getPackagings());
 		singleSelect(delegate, metadata.getJavaVersions());
 		singleSelect(delegate, metadata.getLanguages());
-		singleSelect(delegate, metadata.getBootVersions(), this::mapVersionMetadata);
+		singleSelect(delegate, metadata.getBootVersions(), this::mapVersionMetadata, this::formatVersion);
 		text(delegate, metadata.getGroupId());
 		text(delegate, metadata.getArtifactId());
 		text(delegate, metadata.getVersion());
@@ -137,16 +138,30 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	}
 
 	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability) {
-		singleSelect(parent, capability, this::mapValue);
+		singleSelect(parent, capability, this::mapValue, (id) -> id);
+	}
+
+	/**
+	 * Map a {@link SingleSelectCapability} invoking the specified {@code valueMapper}.
+	 * @param parent the parent node
+	 * @param capability the capability to map
+	 * @param valueMapper the function to invoke to transform one value of the capability
+	 * @deprecated in favor of
+	 * {@link #singleSelect(ObjectNode, SingleSelectCapability, Function, Function)}
+	 */
+	@Deprecated
+	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability,
+			Function<MetadataElement, ObjectNode> valueMapper) {
+		singleSelect(parent, capability, valueMapper, (id) -> id);
 	}
 
 	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability,
-			Function<MetadataElement, ObjectNode> valueMapper) {
+			Function<MetadataElement, ObjectNode> valueMapper, Function<String, String> defaultMapper) {
 		ObjectNode single = nodeFactory.objectNode();
 		single.put("type", capability.getType().getName());
 		DefaultMetadataElement defaultType = capability.getDefault();
 		if (defaultType != null) {
-			single.put("default", defaultType.getId());
+			single.put("default", defaultMapper.apply(defaultType.getId()));
 		}
 		ArrayNode values = nodeFactory.arrayNode();
 		values.addAll(capability.getContent().stream().map(valueMapper).collect(Collectors.toList()));

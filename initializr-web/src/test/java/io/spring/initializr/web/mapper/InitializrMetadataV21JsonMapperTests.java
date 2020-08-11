@@ -102,7 +102,9 @@ class InitializrMetadataV21JsonMapperTests {
 				.addBootVersion("2.5.0-M2", false).addBootVersion("2.4.2", true).build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
-		JsonNode versions = result.get("bootVersion").get("values");
+		JsonNode platformVersions = result.get("bootVersion");
+		assertThat(platformVersions.get("default").textValue()).isEqualTo("2.4.2.RELEASE");
+		JsonNode versions = platformVersions.get("values");
 		assertThat(versions).hasSize(3);
 		assertVersionMetadata(versions.get(0), "2.5.0.BUILD-SNAPSHOT", "2.5.0-SNAPSHOT");
 		assertVersionMetadata(versions.get(1), "2.5.0.M2", "2.5.0-M2");
