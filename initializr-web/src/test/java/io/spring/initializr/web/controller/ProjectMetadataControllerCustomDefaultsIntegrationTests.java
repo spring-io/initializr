@@ -88,10 +88,24 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 	}
 
 	@Test
-	void noBootVersion() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies", String.class, null, "application/json");
+	void dependenciesNoAcceptHeaderWithNoBootVersion() throws JSONException {
+		validateDependenciesMetadata("*/*", DEFAULT_METADATA_MEDIA_TYPE);
+	}
+
+	@Test
+	void dependenciesV21WithNoBootVersion() throws JSONException {
+		validateDependenciesMetadata("application/vnd.initializr.v2.1+json", DEFAULT_METADATA_MEDIA_TYPE);
+	}
+
+	@Test
+	void dependenciesV22WithNoBootVersion() throws JSONException {
+		validateDependenciesMetadata("application/vnd.initializr.v2.2+json", CURRENT_METADATA_MEDIA_TYPE);
+	}
+
+	private void validateDependenciesMetadata(String acceptHeader, MediaType expectedMediaType) throws JSONException {
+		ResponseEntity<String> response = execute("/dependencies", String.class, null, acceptHeader);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		validateContentType(response, DEFAULT_METADATA_MEDIA_TYPE);
+		validateContentType(response, expectedMediaType);
 		validateDependenciesOutput("2.1.4", response.getBody());
 	}
 

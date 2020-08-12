@@ -94,6 +94,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
 
+	@RequestMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.2+json")
+	public ResponseEntity<String> dependenciesV22(@RequestParam(required = false) String bootVersion) {
+		return dependenciesFor(InitializrMetadataVersion.V2_2, bootVersion);
+	}
+
 	@RequestMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
