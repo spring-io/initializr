@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.BuildWriter;
@@ -56,7 +56,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 
 	private final ProjectRequestToDescriptionConverter<R> requestConverter;
 
-	private transient Map<Path, List<Path>> temporaryFiles = new LinkedHashMap<>();
+	private final transient Map<Path, List<Path>> temporaryFiles = new ConcurrentHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
 			ProjectRequestToDescriptionConverter<R> requestConverter) {
@@ -143,7 +143,11 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	}
 
 	private void addTempFile(Path group, Path file) {
-		this.temporaryFiles.computeIfAbsent(group, (key) -> new ArrayList<>()).add(file);
+		this.temporaryFiles.compute(group, (path, paths) -> {
+			List<Path> newPaths = (paths != null) ? paths : new ArrayList<>();
+			newPaths.add(file);
+			return newPaths;
+		});
 	}
 
 	/**
