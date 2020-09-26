@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.spring.initializr.web.support;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +38,8 @@ import org.springframework.web.client.RestTemplate;
  * @author Stephane Nicoll
  */
 class SpringBootMetadataReader {
+
+	private static final Comparator<DefaultMetadataElement> VERSION_METADATA_ELEMENT_COMPARATOR = new VersionMetadataElementComparator();
 
 	private final JsonNode content;
 
@@ -64,6 +67,7 @@ class SpringBootMetadataReader {
 				list.add(versionMetadata);
 			}
 		}
+		list.sort(VERSION_METADATA_ELEMENT_COMPARATOR.reversed());
 		return list;
 	}
 
@@ -106,6 +110,19 @@ class SpringBootMetadataReader {
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+
+	private static class VersionMetadataElementComparator implements Comparator<DefaultMetadataElement> {
+
+		private static final VersionParser versionParser = VersionParser.DEFAULT;
+
+		@Override
+		public int compare(DefaultMetadataElement o1, DefaultMetadataElement o2) {
+			Version o1Version = versionParser.parse(o1.getId());
+			Version o2Version = versionParser.parse(o2.getId());
+			return o1Version.compareTo(o2Version);
+		}
+
 	}
 
 }

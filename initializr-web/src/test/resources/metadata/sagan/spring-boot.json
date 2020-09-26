@@ -7,6 +7,20 @@
   "stackOverflowTags": "spring-boot",
   "projectReleases": [
     {
+      "releaseStatus": "GENERAL_AVAILABILITY",
+      "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/reference/htmlsingle/",
+      "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/api/",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot",
+      "repository": null,
+      "preRelease": false,
+      "generalAvailability": true,
+      "versionDisplayName": "2.4.0",
+      "current": true,
+      "snapshot": false,
+      "version": "2.4.0"
+    },
+    {
       "releaseStatus": "SNAPSHOT",
       "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.5.0-M1/reference/htmlsingle/",
       "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.5.0-M1/api/",
@@ -43,20 +57,6 @@
       "current": false,
       "snapshot": true,
       "version": "2.4.1-SNAPSHOT"
-    },
-    {
-      "releaseStatus": "GENERAL_AVAILABILITY",
-      "refDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/reference/htmlsingle/",
-      "apiDocUrl": "https://docs.spring.io/spring-boot/docs/2.4.0/api/",
-      "groupId": "org.springframework.boot",
-      "artifactId": "spring-boot",
-      "repository": null,
-      "preRelease": false,
-      "generalAvailability": true,
-      "versionDisplayName": "2.4.0",
-      "current": true,
-      "snapshot": false,
-      "version": "2.4.0"
     },
     {
       "releaseStatus": "SNAPSHOT",
