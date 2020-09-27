@@ -1,4 +1,4 @@
-FROM ubuntu:bionic-20200713
+FROM ubuntu:focal-20200916
 
 ADD setup.sh /setup.sh
 RUN ./setup.sh
