@@ -26,7 +26,7 @@ list of matching choices with that simple criteria. Use the mouse or the arrow k
 
 Your browser should now be in this state:
 
-image::web-selected.png[Browser,1200, 720]
+image::images/web-selected.png[Browser,1200, 720]
 
 NOTE: The Spring Boot version above probably doesn't match the one you have. As we will
 see later, start.spring.io is continuously updated as new Spring Boot versions are
