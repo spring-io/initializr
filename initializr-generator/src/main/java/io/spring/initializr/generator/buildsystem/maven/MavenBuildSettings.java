@@ -53,6 +53,8 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final String testSourceDirectory;
 
+	private final String defaultGoal;
+
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
 		this.parent = builder.parent;
@@ -65,6 +67,7 @@ public class MavenBuildSettings extends BuildSettings {
 		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
+		this.defaultGoal = builder.defaultGoal;
 	}
 
 	/**
@@ -152,6 +155,14 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the default goal to execute when none is specified for the project.
+	 * @return the default goal or {@code null} to use the default
+	 */
+	public String getDefaultGoal() {
+		return this.defaultGoal;
+	}
+
+	/**
 	 * Builder for a Maven dependency.
 	 *
 	 * @see MavenDependency#withCoordinates(String, String)
@@ -177,6 +188,8 @@ public class MavenBuildSettings extends BuildSettings {
 		private String sourceDirectory;
 
 		private String testSourceDirectory;
+
+		private String defaultGoal;
 
 		public Builder() {
 		}
@@ -295,6 +308,16 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
+			return self();
+		}
+
+		/**
+		 * Set the default goal to execute when none is specified for the project.
+		 * @param defaultGoal the default goal or {@code null} to use the default
+		 * @return this for method chaining
+		 */
+		public Builder defaultGoal(String defaultGoal) {
+			this.defaultGoal = defaultGoal;
 			return self();
 		}
 
