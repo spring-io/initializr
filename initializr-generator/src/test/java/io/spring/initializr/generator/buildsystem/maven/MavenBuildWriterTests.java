@@ -802,6 +802,21 @@ class MavenBuildWriterTests {
 		});
 	}
 
+	@Test
+	void pomWithNoDefaultGoal() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").build();
+		generatePom(build, (pom) -> assertThat(pom.nodeAtPath("/project/build/defaultGoal")).isNull());
+	}
+
+	@Test
+	void pomWithDefaultGoal() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").defaultGoal("clean package");
+		generatePom(build,
+				(pom) -> assertThat(pom).textAtPath("/project/build/defaultGoal").isEqualTo("clean package"));
+	}
+
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();

@@ -305,12 +305,13 @@ public class MavenBuildWriter {
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
 		if (settings.getFinalName() == null && settings.getSourceDirectory() == null
-				&& settings.getTestSourceDirectory() == null && build.resources().isEmpty()
-				&& build.testResources().isEmpty() && build.plugins().isEmpty()) {
+				&& settings.getTestSourceDirectory() == null && settings.getDefaultGoal() == null
+				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()) {
 			return;
 		}
 		writer.println();
 		writeElement(writer, "build", () -> {
+			writeSingleElement(writer, "defaultGoal", settings.getDefaultGoal());
 			writeSingleElement(writer, "finalName", settings.getFinalName());
 			writeSingleElement(writer, "sourceDirectory", settings.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", settings.getTestSourceDirectory());
