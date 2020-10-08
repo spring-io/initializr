@@ -14,7 +14,7 @@
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
 		<maven.test.skip>true</maven.test.skip>
-		<spring-doc-resources.version>0.1.0.RELEASE</spring-doc-resources.version>
+		<spring-doc-resources.version>0.2.2.RELEASE</spring-doc-resources.version>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
