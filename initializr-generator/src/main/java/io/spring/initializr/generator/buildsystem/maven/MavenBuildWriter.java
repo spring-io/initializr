@@ -304,8 +304,8 @@ public class MavenBuildWriter {
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
-		if (settings.getFinalName() == null && settings.getSourceDirectory() == null
-				&& settings.getTestSourceDirectory() == null && settings.getDefaultGoal() == null
+		if (settings.getDefaultGoal() == null && settings.getFinalName() == null
+				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
 				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()) {
 			return;
 		}

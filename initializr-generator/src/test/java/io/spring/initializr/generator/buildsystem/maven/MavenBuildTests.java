@@ -139,11 +139,4 @@ class MavenBuildTests {
 				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}
 
-	@Test
-	void mavenDefaultGoalCanBeCustomized() {
-		MavenBuild build = new MavenBuild();
-		build.settings().defaultGoal("clean package");
-		assertThat(build.getSettings().getDefaultGoal()).isEqualTo("clean package");
-	}
-
 }

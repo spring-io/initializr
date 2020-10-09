@@ -47,13 +47,13 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final MavenScm scm;
 
+	private final String defaultGoal;
+
 	private final String finalName;
 
 	private final String sourceDirectory;
 
 	private final String testSourceDirectory;
-
-	private final String defaultGoal;
 
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
@@ -64,10 +64,10 @@ public class MavenBuildSettings extends BuildSettings {
 		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
 		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
 		this.scm = builder.scm.build();
+		this.defaultGoal = builder.defaultGoal;
 		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
-		this.defaultGoal = builder.defaultGoal;
 	}
 
 	/**
@@ -129,6 +129,14 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the default goal or phase to execute if none is given.
+	 * @return the default goal or {@code null} to use the default
+	 */
+	public String getDefaultGoal() {
+		return this.defaultGoal;
+	}
+
+	/**
 	 * Return the final name of the artifact.
 	 * @return the final name or {@code null} to use the default
 	 */
@@ -155,14 +163,6 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
-	 * Return the default goal to execute when none is specified for the project.
-	 * @return the default goal or {@code null} to use the default
-	 */
-	public String getDefaultGoal() {
-		return this.defaultGoal;
-	}
-
-	/**
 	 * Builder for a Maven dependency.
 	 *
 	 * @see MavenDependency#withCoordinates(String, String)
@@ -183,13 +183,13 @@ public class MavenBuildSettings extends BuildSettings {
 
 		private final MavenScm.Builder scm = new MavenScm.Builder();
 
+		private String defaultGoal;
+
 		private String finalName;
 
 		private String sourceDirectory;
 
 		private String testSourceDirectory;
-
-		private String defaultGoal;
 
 		public Builder() {
 		}
@@ -288,6 +288,16 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
+		 * Set the default goal or phase to execute if none is given.
+		 * @param defaultGoal the default goal or {@code null} to use the default
+		 * @return this for method chaining
+		 */
+		public Builder defaultGoal(String defaultGoal) {
+			this.defaultGoal = defaultGoal;
+			return self();
+		}
+
+		/**
 		 * Set the the location of main source code. Can use Maven properties such as
 		 * {@code ${basedir}}.
 		 * @param sourceDirectory the location of main source code or {@code null} to use
@@ -308,16 +318,6 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
-			return self();
-		}
-
-		/**
-		 * Set the default goal to execute when none is specified for the project.
-		 * @param defaultGoal the default goal or {@code null} to use the default
-		 * @return this for method chaining
-		 */
-		public Builder defaultGoal(String defaultGoal) {
-			this.defaultGoal = defaultGoal;
 			return self();
 		}
 
