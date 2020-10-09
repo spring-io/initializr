@@ -47,6 +47,8 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final MavenScm scm;
 
+	private final String defaultGoal;
+
 	private final String finalName;
 
 	private final String sourceDirectory;
@@ -62,6 +64,7 @@ public class MavenBuildSettings extends BuildSettings {
 		this.licenses = Collections.unmodifiableList(new ArrayList<>(builder.licenses));
 		this.developers = Collections.unmodifiableList(new ArrayList<>(builder.developers));
 		this.scm = builder.scm.build();
+		this.defaultGoal = builder.defaultGoal;
 		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
@@ -126,6 +129,14 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return the default goal or phase to execute if none is given.
+	 * @return the default goal or {@code null} to use the default
+	 */
+	public String getDefaultGoal() {
+		return this.defaultGoal;
+	}
+
+	/**
 	 * Return the final name of the artifact.
 	 * @return the final name or {@code null} to use the default
 	 */
@@ -171,6 +182,8 @@ public class MavenBuildSettings extends BuildSettings {
 		private List<MavenDeveloper> developers = new ArrayList<>();
 
 		private final MavenScm.Builder scm = new MavenScm.Builder();
+
+		private String defaultGoal;
 
 		private String finalName;
 
@@ -271,6 +284,16 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder finalName(String finalName) {
 			this.finalName = finalName;
+			return self();
+		}
+
+		/**
+		 * Set the default goal or phase to execute if none is given.
+		 * @param defaultGoal the default goal or {@code null} to use the default
+		 * @return this for method chaining
+		 */
+		public Builder defaultGoal(String defaultGoal) {
+			this.defaultGoal = defaultGoal;
 			return self();
 		}
 
