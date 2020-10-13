@@ -65,6 +65,15 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		assertThat(project).mavenBuild().hasDependenciesSize(2).hasDependency("org.acme", "foo", "1.3.5");
 	}
 
+	@Test
+	void tgzProjectWithLongFilenames() {
+		String queryParams = "name=spring-boot-service&dependencies=org.acme:foo&artifactId=spring-boot-service"
+				+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service";
+
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?" + queryParams);
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
+	}
+
 	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {
 		assertThat(entity.getHeaders().getContentType()).isEqualTo(contentType);
 		assertThat(entity.getHeaders().getContentDisposition()).isNotNull();
