@@ -141,7 +141,9 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	private TarArchiveOutputStream createTarArchiveOutputStream(OutputStream output) {
 		try {
-			return new TarArchiveOutputStream(new GzipCompressorOutputStream(output));
+			TarArchiveOutputStream out = new TarArchiveOutputStream(new GzipCompressorOutputStream(output));
+			out.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+			return out;
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException(ex);
