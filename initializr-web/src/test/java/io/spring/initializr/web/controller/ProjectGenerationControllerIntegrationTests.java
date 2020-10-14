@@ -67,11 +67,13 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void tgzProjectWithLongFilenames() {
-		String queryParams = "name=spring-boot-service&dependencies=org.acme:foo&artifactId=spring-boot-service"
-				+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service";
-
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?" + queryParams);
+		ResponseEntity<byte[]> entity = downloadArchive(
+				"/starter.tgz?name=spring-boot-service&artifactId=spring-boot-service"
+						+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
+		ProjectStructure project = tgzProjectAssert(entity.getBody());
+		assertThat(project).containsFiles(
+				"spring-boot-service/src/test/java/com/spring/boot/service/springbootservice/SpringBootServiceApplicationTests.java");
 	}
 
 	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {
