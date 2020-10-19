@@ -69,7 +69,8 @@ class GitProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		assertThat(generateGitIgnore(description))
 				.contains(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar", "out/", "!**/src/main/**/build/",
-						"!**/src/test/**/build/", "!**/src/main/**/out/", "!**/src/test/**/out/")
+						"!**/src/test/**/build/", "!**/src/main/**/out/", "!**/src/test/**/out/", "bin/",
+						"!**/src/main/**/bin/", "!**/src/test/**/bin/")
 				.doesNotContain("/target/", "!.mvn/wrapper/maven-wrapper.jar");
 	}
 
