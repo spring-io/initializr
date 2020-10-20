@@ -59,9 +59,10 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public GitIgnoreCustomizer gradleGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add(".gradle", "build/", "bin/", "!gradle/wrapper/gradle-wrapper.jar",
+			gitIgnore.getGeneral().add(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar",
 					"!**/src/main/**/build/", "!**/src/test/**/build/");
 			gitIgnore.getIntellijIdea().add("out/", "!**/src/main/**/out/", "!**/src/test/**/out/");
+			gitIgnore.getSts().add("bin/");
 		};
 	}
 
