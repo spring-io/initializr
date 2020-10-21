@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class MavenResourceContainerTests {
 			resource.includes("**/*.yml");
 			resource.excludes("**/*.properties");
 		});
-		assertThat(container.values()).hasOnlyOneElementSatisfying((resource) -> {
+		assertThat(container.values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
 			assertThat(resource.getTargetPath()).isEqualTo("targetPath");
 			assertThat(resource.isFiltering()).isTrue();
@@ -56,7 +56,7 @@ class MavenResourceContainerTests {
 			resource.includes("**/*.yaml");
 			resource.excludes("**/*.properties");
 		});
-		assertThat(container.values()).hasOnlyOneElementSatisfying((resource) -> {
+		assertThat(container.values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
 			assertThat(resource.getTargetPath()).isNull();
 			assertThat(resource.isFiltering()).isTrue();
@@ -70,7 +70,7 @@ class MavenResourceContainerTests {
 	void mavenResourceDefaultValues() {
 		MavenResourceContainer container = new MavenResourceContainer();
 		container.add("src/main/custom");
-		assertThat(container.values()).hasOnlyOneElementSatisfying((resource) -> {
+		assertThat(container.values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
 			assertThat(resource.getTargetPath()).isNull();
 			assertThat(resource.isFiltering()).isFalse();

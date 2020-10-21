@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ class GradleTaskContainerTests {
 	void customizeTask() {
 		GradleTaskContainer container = new GradleTaskContainer();
 		container.customize("test", (task) -> task.attribute("fork", "true"));
-		assertThat(container.values()).hasOnlyOneElementSatisfying((task) -> {
+		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("test");
 			assertThat(task.getType()).isNull();
 			assertThat(task.getAttributes()).containsOnly(entry("fork", "true"));
@@ -90,11 +90,11 @@ class GradleTaskContainerTests {
 			task.attribute("fork", "true");
 			task.invoke("property", "taskDir");
 		});
-		assertThat(container.values()).hasOnlyOneElementSatisfying((task) -> {
+		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("MyTask");
 			assertThat(task.getType()).isEqualTo("com.example.MyTask");
 			assertThat(task.getAttributes()).containsOnly(entry("fork", "true"));
-			assertThat(task.getInvocations()).hasOnlyOneElementSatisfying((invocation) -> {
+			assertThat(task.getInvocations()).singleElement().satisfies((invocation) -> {
 				assertThat(invocation.getTarget()).isEqualTo("property");
 				assertThat(invocation.getArguments()).containsOnly("taskDir");
 			});
@@ -113,11 +113,11 @@ class GradleTaskContainerTests {
 			task.attribute("fork", "false");
 			task.invoke("method", "arg1", "arg2");
 		});
-		assertThat(container.values()).hasOnlyOneElementSatisfying((task) -> {
+		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("test");
 			assertThat(task.getType()).isNull();
 			assertThat(task.getAttributes()).containsOnly(entry("ignore", "false"), entry("fork", "false"));
-			assertThat(task.getInvocations()).hasOnlyOneElementSatisfying((invocation) -> {
+			assertThat(task.getInvocations()).singleElement().satisfies((invocation) -> {
 				assertThat(invocation.getTarget()).isEqualTo("method");
 				assertThat(invocation.getArguments()).containsOnly("arg1", "arg2");
 			});

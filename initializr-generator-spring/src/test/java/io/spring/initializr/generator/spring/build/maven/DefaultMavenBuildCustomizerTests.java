@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class DefaultMavenBuildCustomizerTests {
 	void customizeRegisterSpringBootPlugin() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((mavenPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((mavenPlugin) -> {
 			assertThat(mavenPlugin.getGroupId()).isEqualTo("org.springframework.boot");
 			assertThat(mavenPlugin.getArtifactId()).isEqualTo("spring-boot-maven-plugin");
 			assertThat(mavenPlugin.getVersion()).isNull();

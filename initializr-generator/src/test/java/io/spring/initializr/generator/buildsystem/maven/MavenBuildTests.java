@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class MavenBuildTests {
 	void mavenResourcesCanBeConfigured() {
 		MavenBuild build = new MavenBuild();
 		build.resources().add("src/main/custom", (resource) -> resource.filtering(true));
-		assertThat(build.resources().values()).hasOnlyOneElementSatisfying((resource) -> {
+		assertThat(build.resources().values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
 			assertThat(resource.isFiltering()).isTrue();
 		});
@@ -51,7 +51,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		build.testResources().add("src/test/custom", (resource) -> resource.excludes("**/*.gen"));
 		assertThat(build.resources().isEmpty()).isTrue();
-		assertThat(build.testResources().values()).hasOnlyOneElementSatisfying((resource) -> {
+		assertThat(build.testResources().values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/test/custom");
 			assertThat(resource.getExcludes()).containsExactly("**/*.gen");
 		});
@@ -62,7 +62,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin",
 				(plugin) -> plugin.execution("first", (first) -> first.goal("run-this")));
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(testPlugin.getVersion()).isNull();
@@ -77,7 +77,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin");
 		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
@@ -90,7 +90,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
 		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version(null));
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(testPlugin.getVersion()).isNull();
@@ -102,7 +102,7 @@ class MavenBuildTests {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
 		build.plugins().add("com.example", "test-plugin");
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
@@ -116,7 +116,7 @@ class MavenBuildTests {
 				(plugin) -> plugin.execution("first", (first) -> first.goal("run-this")));
 		build.plugins().add("com.example", "test-plugin",
 				(plugin) -> plugin.execution("first", (first) -> first.goal("run-that")));
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((testPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getExecutions()).hasSize(1);
 			assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
 			assertThat(testPlugin.getExecutions().get(0).getGoals()).containsExactly("run-this", "run-that");
@@ -127,16 +127,16 @@ class MavenBuildTests {
 	void mavenPluginExtensionsNotLoadedByDefault() {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin");
-		assertThat(build.plugins().values())
-				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isFalse());
+		assertThat(build.plugins().values()).singleElement()
+				.satisfies((testPlugin) -> assertThat(testPlugin.isExtensions()).isFalse());
 	}
 
 	@Test
 	void mavenPluginExtensionsCanBeLoaded() {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.extensions(true));
-		assertThat(build.plugins().values())
-				.hasOnlyOneElementSatisfying((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
+		assertThat(build.plugins().values()).singleElement()
+				.satisfies((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}
 
 }

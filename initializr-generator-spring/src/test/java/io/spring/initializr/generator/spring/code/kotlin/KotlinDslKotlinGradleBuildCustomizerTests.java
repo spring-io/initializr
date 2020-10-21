@@ -44,7 +44,7 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 		GradleBuild build = new GradleBuild();
 		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "11")).customize(build);
 		assertThat(build.tasks().importedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
-		assertThat(build.tasks().values()).hasOnlyOneElementSatisfying((task) -> {
+		assertThat(build.tasks().values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("KotlinCompile");
 			assertKotlinOptions(task, "11");
 		});

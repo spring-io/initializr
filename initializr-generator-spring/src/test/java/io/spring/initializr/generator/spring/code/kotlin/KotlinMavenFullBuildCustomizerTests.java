@@ -54,7 +54,7 @@ class KotlinMavenFullBuildCustomizerTests {
 	void kotlinMavenPluginIsConfigured() {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "1.6")).customize(build);
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((kotlinPlugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
 			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			assertThat(kotlinPlugin.getVersion()).isEqualTo("${kotlin.version}");

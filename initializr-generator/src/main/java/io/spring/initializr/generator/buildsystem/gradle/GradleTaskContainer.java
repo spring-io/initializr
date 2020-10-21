@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class GradleTaskContainer {
 	 */
 	public void customizeWithType(String type, Consumer<Builder> task) {
 		String packageName = ClassUtils.getPackageName(type);
-		if (!StringUtils.isEmpty(packageName)) {
+		if (StringUtils.hasLength(packageName)) {
 			this.importedTypes.add(type);
 		}
 		String shortName = ClassUtils.getShortName(type);

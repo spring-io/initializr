@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class GradlePluginContainerTests {
 	void addPluginWithId() {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.add("com.example");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin.isApply()).isFalse();
 		});
@@ -42,7 +42,7 @@ class GradlePluginContainerTests {
 	void addPluginWithConsumer() {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.add("com.example", (plugin) -> plugin.setVersion("1.0"));
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin).isInstanceOf(StandardGradlePlugin.class);
 			assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("1.0");
@@ -61,7 +61,7 @@ class GradlePluginContainerTests {
 			assertThat(plugin.getVersion()).isEqualTo("1.0");
 			plugin.setVersion("2.0");
 		});
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin).isInstanceOf(StandardGradlePlugin.class);
 			assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("2.0");
@@ -73,7 +73,7 @@ class GradlePluginContainerTests {
 	void applyGradlePlugin() {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.apply("com.example");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin.isApply()).isTrue();
 		});
@@ -84,7 +84,7 @@ class GradlePluginContainerTests {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.apply("com.example");
 		pluginContainer.apply("com.example");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin.isApply()).isTrue();
 		});
@@ -95,7 +95,7 @@ class GradlePluginContainerTests {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.add("com.example");
 		pluginContainer.apply("com.example");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin.isApply()).isFalse();
 		});
@@ -106,7 +106,7 @@ class GradlePluginContainerTests {
 		GradlePluginContainer pluginContainer = new GradlePluginContainer();
 		pluginContainer.apply("com.example");
 		pluginContainer.add("com.example");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("com.example");
 			assertThat(plugin.isApply()).isTrue();
 		});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
 		assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
-		assertThat(build.plugins().values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
 			assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("1.2.70");
 		});

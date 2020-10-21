@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class MavenPluginContainerTests {
 	void addPlugin() {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
 		pluginContainer.add("com.example", "test-plugin");
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(plugin.getVersion()).isNull();
@@ -44,7 +44,7 @@ public class MavenPluginContainerTests {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
 		pluginContainer.add("com.example", "test-plugin",
 				(plugin) -> plugin.version("1.0").execution("first", (first) -> first.goal("run-this")));
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(plugin.getVersion()).isEqualTo("1.0");
@@ -59,7 +59,7 @@ public class MavenPluginContainerTests {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
 		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("1.0"));
 		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("2.0"));
-		assertThat(pluginContainer.values()).hasOnlyOneElementSatisfying((plugin) -> {
+		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
 			assertThat(plugin.getVersion()).isEqualTo("2.0");

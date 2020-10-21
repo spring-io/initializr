@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class GradleAnnotationProcessorScopeBuildCustomizerTests {
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
 		build.dependencies().add("ap", "com.example", "model-generator", DependencyScope.ANNOTATION_PROCESSOR);
 		customize(build);
-		assertThat(build.configurations().customizations()).hasOnlyOneElementSatisfying((configuration) -> {
+		assertThat(build.configurations().customizations()).singleElement().satisfies((configuration) -> {
 			assertThat(configuration.getName()).isEqualTo("compileOnly");
 			assertThat(configuration.getExtendsFrom()).containsOnly("annotationProcessor");
 		});
