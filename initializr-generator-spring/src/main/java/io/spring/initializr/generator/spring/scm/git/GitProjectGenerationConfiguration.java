@@ -62,6 +62,7 @@ public class GitProjectGenerationConfiguration {
 			gitIgnore.getGeneral().add(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar",
 					"!**/src/main/**/build/", "!**/src/test/**/build/");
 			gitIgnore.getIntellijIdea().add("out/", "!**/src/main/**/out/", "!**/src/test/**/out/");
+			gitIgnore.getSts().add("bin/", "!**/src/main/**/bin/", "!**/src/test/**/bin/");
 		};
 	}
 
