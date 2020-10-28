@@ -32,17 +32,14 @@ import io.spring.initializr.generator.language.SourceCodeWriter;
  * @author Matt Berteaux
  * @author Tad Sanden
  */
-public class JavaSourceCodeWriter extends JavaCodeWriter {
+public class JavaInterfaceWriter extends JavaCodeWriter {
 
-	public JavaSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+	public JavaInterfaceWriter(IndentingWriterFactory indentingWriterFactory) {
 		super(indentingWriterFactory);
 	}
 
 	protected void writeTopTypeDeclaration(IndentingWriter writer, JavaTypeDeclaration type) {
-		writer.print("class " + type.getName());
-		if (type.getExtends() != null) {
-			writer.print(" extends " + getUnqualifiedName(type.getExtends()));
-		}
+		writer.print("interface " + type.getName());
 		writer.println(" {");
 		writer.println();
 	}
@@ -57,33 +54,8 @@ public class JavaSourceCodeWriter extends JavaCodeWriter {
 					.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
 					.collect(Collectors.joining(", ")));
 		}
-		writer.println(") {");
-		writer.indented(() -> {
-			List<JavaStatement> statements = methodDeclaration.getStatements();
-			for (JavaStatement statement : statements) {
-				if (statement instanceof JavaExpressionStatement) {
-					writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
-				}
-				else if (statement instanceof JavaReturnStatement) {
-					writer.print("return ");
-					writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
-				}
-				writer.println(";");
-			}
-		});
-		writer.println("}");
+		writer.println(");");
 		writer.println();
-	}
-
-	private void writeExpression(IndentingWriter writer, JavaExpression expression) {
-		if (expression instanceof JavaMethodInvocation) {
-			writeMethodInvocation(writer, (JavaMethodInvocation) expression);
-		}
-	}
-
-	private void writeMethodInvocation(IndentingWriter writer, JavaMethodInvocation methodInvocation) {
-		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
-				+ String.join(", ", methodInvocation.getArguments()) + ")");
 	}
 
 }
