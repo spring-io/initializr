@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,6 +95,13 @@ class AgentTests {
 		Agent agent = Agent.fromUserAgent("jx/1.1.71");
 		assertThat(agent.getId()).isEqualTo(Agent.AgentId.JENKINSX);
 		assertThat(agent.getVersion()).isEqualTo("1.1.71");
+	}
+
+	@Test
+	void checkNx() {
+		Agent agent = Agent.fromUserAgent("@nxrocks_nx-spring-boot/1.0.0");
+		assertThat(agent.getId()).isEqualTo(Agent.AgentId.NX);
+		assertThat(agent.getVersion()).isEqualTo("1.0.0");
 	}
 
 	@Test
