@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import io.spring.initializr.metadata.Dependency;
 import org.assertj.core.api.AssertProvider;
 import org.junit.jupiter.api.Test;
 
@@ -182,6 +183,15 @@ class MavenBuildAssertTests {
 		assertThatExceptionOfType(AssertionError.class)
 				.isThrownBy(() -> assertThat(forMavenBuild("sample-dependency-version-pom.xml"))
 						.hasDependency("com.example.acme", "library-test", "1.3.0", "runtime"));
+	}
+
+	@Test
+	void hasDependencyWithMultipleCandidates() {
+		Dependency main = Dependency.withId("acme", "com.example.acme", "library", "1.2.0");
+		Dependency test = Dependency.withId("acme", "com.example.acme", "library", "1.2.0", "test");
+		test.setType("test-jar");
+		assertThat(forMavenBuild("sample-dependency-multiple-identical-gav-pom.xml")).hasDependency(main)
+				.hasDependency(test);
 	}
 
 	@Test

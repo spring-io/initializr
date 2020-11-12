@@ -193,13 +193,19 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 			if (dependency.getGroupId().equals(actual.getGroupId())
 					&& dependency.getArtifactId().equals(actual.getArtifactId())) {
 				if (dependency.getVersion() != null) {
-					new StringAssert(actual.getVersion()).isEqualTo(dependency.getVersion());
+					if (!dependency.getVersion().equals(actual.getVersion())) {
+						return false;
+					}
 				}
 				if (dependency.getScope() != null) {
-					new StringAssert(actual.getScope()).isEqualTo(dependency.getScope());
+					if (!dependency.getScope().equals(actual.getScope())) {
+						return false;
+					}
 				}
 				if (dependency.getType() != null) {
-					new StringAssert(actual.getType()).isEqualTo(dependency.getType());
+					if (!dependency.getType().equals(actual.getType())) {
+						return false;
+					}
 				}
 				return true;
 			}
