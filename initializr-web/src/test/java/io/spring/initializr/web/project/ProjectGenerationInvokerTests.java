@@ -22,9 +22,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.project.ProjectAssetGenerator;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.buildsystem.gradle.GroovyDslGradleBuildAssert;
@@ -167,6 +170,26 @@ public class ProjectGenerationInvokerTests {
 		ProjectGenerationResult result = this.invoker.invokeProjectStructureGeneration(request);
 		this.invoker.cleanTempFiles(result.getRootDirectory());
 		assertThat(result.getRootDirectory()).doesNotExist();
+	}
+
+	@Test
+	void invokeProjectStructureGenerationWithCustomAssetGenerator(@TempDir Path directory) {
+		WebProjectRequest webRequest = new WebProjectRequest();
+		webRequest.initialize(metadata);
+		webRequest.setGroupId("org.acme.test");
+		webRequest.setType("maven-project");
+		ProjectGenerationResult result = new ProjectGenerationInvoker<ProjectRequest>(this.context, this.eventPublisher,
+				new DefaultProjectRequestToDescriptionConverter()) {
+			@Override
+			protected ProjectAssetGenerator<Path> getProjectAssetGenerator(ProjectDescription description) {
+				assertThat(description.getBuildSystem()).isInstanceOf(MavenBuildSystem.class);
+				assertThat(description.getGroupId()).isEqualTo("org.acme.test");
+				return (context) -> directory;
+			}
+		}.invokeProjectStructureGeneration(webRequest);
+		assertThat(result.getRootDirectory()).isSameAs(directory);
+		assertThat(result.getRootDirectory()).isEmptyDirectory();
+		verifyProjectSuccessfulEventFor(webRequest);
 	}
 
 	private void setupContext() {

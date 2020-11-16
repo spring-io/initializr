@@ -47,6 +47,7 @@ import org.springframework.util.FileSystemUtils;
  *
  * @param <R> the concrete {@link ProjectRequest} type
  * @author Madhura Bhave
+ * @see ProjectAssetGenerator
  */
 public class ProjectGenerationInvoker<R extends ProjectRequest> {
 
@@ -55,6 +56,8 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	private final ApplicationEventPublisher eventPublisher;
 
 	private final ProjectRequestToDescriptionConverter<R> requestConverter;
+
+	private final ProjectAssetGenerator<Path> projectAssetGenerator = new DefaultProjectAssetGenerator();
 
 	private final transient Map<Path, List<Path>> temporaryFiles = new ConcurrentHashMap<>();
 
@@ -82,7 +85,8 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
 			ProjectGenerator projectGenerator = new ProjectGenerator((
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
-			ProjectGenerationResult result = projectGenerator.generate(description, generateProject(request));
+			ProjectGenerationResult result = projectGenerator.generate(description,
+					generateProject(description, request));
 			addTempFile(result.getRootDirectory(), result.getRootDirectory());
 			return result;
 		}
@@ -92,12 +96,22 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 		}
 	}
 
-	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(R request) {
+	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(ProjectDescription description, R request) {
 		return (context) -> {
-			Path projectDir = new DefaultProjectAssetGenerator().generate(context);
+			Path projectDir = getProjectAssetGenerator(description).generate(context);
 			publishProjectGeneratedEvent(request, context);
 			return new ProjectGenerationResult(context.getBean(ProjectDescription.class), projectDir);
 		};
+	}
+
+	/**
+	 * Return the {@link ProjectAssetGenerator} to use to generate the project structure
+	 * for the specified {@link ProjectDescription}.
+	 * @param description the project description
+	 * @return an asset generator for the specified request
+	 */
+	protected ProjectAssetGenerator<Path> getProjectAssetGenerator(ProjectDescription description) {
+		return this.projectAssetGenerator;
 	}
 
 	/**
