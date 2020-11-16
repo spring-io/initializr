@@ -23,7 +23,7 @@ The following versions are supported:
 * `v2.1` support compatibility range and dependencies links
 * `v2.2` (current) support for V1 and V2 version formats.
 
-This is an example output for a service running at `https://start.spring.io`:
+This is an example output for a service running at `start.example.com`:
 
 .request
 include::{snippets}/metadataWithCurrentAcceptHeader/http-request.adoc[]

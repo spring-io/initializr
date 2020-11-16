@@ -224,25 +224,26 @@ this makes sure to add the Kotlin-specific jackson module for better interoperab
 
 [[create-instance]]
 == Creating your own instance
-NOTE: This walkthrough of how to create your own service assumes that the service will be
-used for creating Spring Boot projects which is the why `initializr-generator-spring` jar
-is included.
+This section describes how one can create a custom service.
 
-Spring Initializr provides a Bill of Materials (BOM) so that you don't have to worry about
-versions. You can generate a project for your own instance on https://start.spring.io.
-Create a new project with the `web` dependency and add the following dependencies and BOM:
+The first step is to create a new project for your instance and add the following to
+the build:
 
 [source,xml,indent=0,subs="verbatim,attributes"]
 ----
 	<dependencies>
 		<dependency>
-    		<groupId>io.spring.initializr</groupId>
-    		<artifactId>initializr-web</artifactId>
-    	</dependency>
-    	<dependency>
-    		<groupId>io.spring.initializr</groupId>
-    		<artifactId>initializr-generator-spring</artifactId>
-    	</dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.spring.initializr</groupId>
+			<artifactId>initializr-generator-spring</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -262,6 +263,7 @@ Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
+implementation("org.springframework.boot:spring-boot-starter-web")
 implementation("io.spring.initializr:initializr-web")
 implementation("io.spring.initializr:initializr-generator-spring")
 
@@ -271,6 +273,9 @@ dependencyManagement {
   }
 }
 ----
+
+NOTE: It is assumed that the custom instance will be used to generate Spring Boot-based
+projects using the conventions provided by the `initializr-generator-spring` module.
 
 Once you've started the application, you can hit http://localhost:8080. You'll get a json
 document that describes the capabilities of the service. None of the select capabilities
@@ -282,8 +287,8 @@ we will configure those basic settings.
 ====
 Most of the settings are configured via `application.properties` using the `initializr`
 namespace. Because the configuration is highly hierarchical, we recommend using the yaml
-format that is more readable for such structure. If you agree, go ahead and rename
-`application.properties` to `application.yml`.
+format that is more readable for such structure. If you agree, go ahead and create an
+`application.yml` in `src/main/resources`.
 ====
 
 
@@ -823,6 +828,69 @@ that are used to prioritize them in the search feature in the web UI. If you typ
 the keywords into the "Dependencies" box in the UI, those dependencies will be listed
 below, in order of decreasing weight, if they have one (unweighted dependencies come
 last).
+
+
+[[configuration-access]]
+== Generating a Project using the Web Endpoints
+To discover the available options of a particular instance, simply "curl it". Assuming
+that an instance is running on your machine on the default port, invoke the following:
+
+[indent=0]
+----
+	$ curl http://localhost:8080
+----
+
+Alternatively, if you prefer `HTTPie`, you can discover the available options as follows:
+
+
+[indent=0]
+----
+	$ http http://localhost:8080
+----
+
+The result is a textual representation of the capabilities of the service that are split
+in three sections:
+
+First, a table that describes the <<create-instance-types,available project types>>.
+
+Then, a table that describes the <<initializr-generator-project,available parameters>>.
+
+Finally, the list of dependencies are defined. Each entry provides the identifier that
+you'll have to use if you want to select the dependency, a description and the Spring Boot
+version range, if any.
+
+Alongside the capabilities of the service, you'll also find a few examples that help you
+understand how you can generate a project. These are obviously tailored to the client that
+you are using.
+
+Let's assume that you want to generate a "my-project.zip" project based on Spring Boot
+`2.3.5.RELEASE`, using the `web` and `devtools` dependencies (remember, those two ids are
+displayed in the capabilities of the service):
+
+[source]
+----
+$ curl http://localhost:8080/starter.zip -d dependencies=web,devtools \
+           -d bootVersion=2.3.5.RELEASE -o my-project.zip
+----
+
+If you extract `my-project.zip`, you'll notice a few differences compared to what happens
+with the web UI:
+
+* The project will be extracted in the current directory (the web UI adds a base directory
+automatically with the same name as the one of the project)
+* The name of the project is not `my-project` (the `-o` parameter has no impact on the
+name of the project)
+
+The exact same project can be generated using the `http` command as well:
+
+[source]
+----
+$ http https://localhost:8080/starter.zip dependencies==web,devtools \
+           bootVersion==2.3.5.RELEASE -d
+----
+
+NOTE: `HTTPie` reads the same hint as the browser so it will store a `demo.zip` file in
+the current directory, with the same differences discussed above.
 
 
 

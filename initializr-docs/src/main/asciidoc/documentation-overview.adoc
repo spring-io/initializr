@@ -14,8 +14,8 @@ dependencies and versions.
 
 The documentation is roughly divided into three parts:
 
-* <<user-guide.adoc#user-guide>>: This section is about how to use our default instance of
-Spring Initializr which is available at https://start.spring.io
+* <<introduction.adoc#introduction>>: This section provides an introduction to the library and how one
+can interact with the service to generate a project.
 
 * <<configuration-guide.adoc#configuration-guide>>: This section covers creating your own
 instance of Spring Initializr using the jars as libraries in your own app.

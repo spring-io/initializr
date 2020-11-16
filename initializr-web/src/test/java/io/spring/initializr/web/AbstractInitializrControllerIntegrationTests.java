@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ import org.springframework.test.context.TestExecutionListeners.MergeMode;
 @TestExecutionListeners(mergeMode = MergeMode.MERGE_WITH_DEFAULTS,
 		listeners = MockMvcClientHttpRequestFactoryTestExecutionListener.class)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80, uriHost = "start.spring.io")
+@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80, uriHost = "start.example.com")
 public abstract class AbstractInitializrControllerIntegrationTests extends AbstractInitializrIntegrationTests {
 
-	protected String host = "start.spring.io";
+	protected String host = "start.example.com";
 
 	@Autowired
 	private MockMvcClientHttpRequestFactory requests;

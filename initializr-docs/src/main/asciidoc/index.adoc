@@ -31,7 +31,7 @@ Stéphane Nicoll; Dave Syer; Madhura Bhave
 // ======================================================================================
 
 include::documentation-overview.adoc[]
-include::user-guide.adoc[]
+include::introduction.adoc[]
 include::configuration-guide.adoc[]
 include::api-guide.adoc[]
 // ======================================================================================

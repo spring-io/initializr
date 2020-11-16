@@ -27,7 +27,7 @@ particular, the
 {service}/blob/master/start-site/src/main/resources/application.yml[configuration of our
 instance]. Such configuration is also described in details in the documentation.
 
-NOTE: While Spring Initializr is now available on Maven Central, it is still in a pre 1.0
+NOTE: While Spring Initializr is available on Maven Central, it is still in a pre 1.0
 state and major refactoring are still possible. Check the
 https://github.com/spring-io/initializr/milestones[milestones page] for an overview of the
 changes.
@@ -67,106 +67,12 @@ plugin]).
 
 There are other command-line integrations out there and you can also build your own!
 
-== Generating a project
-As Spring Initializr doesn't come with a Web UI, you can use any of the out-of-the-box
-integration to generate a project. For instance, the following `curl` command downloads
-a project archive with a Maven-based project and the necessary infrastructure to start
-a basic Spring Boot app.
-
-[source,bash]
-----
-$ curl https://start.spring.io/starter.zip -o demo.zip
-----
-
-The project to generate can be customized of course with a number of options:
-
-* Basic information for the generated project: `groupId`, `artifactId`, `version`,
-`name`, `description` and `packageName`
-** The `name` attribute is also used to generate a default application name. The
-logic is that the name of the application is equal to the `name` attribute with an
-`Application` suffix (unless said suffix is already present). Of course, if the
-specified name contains an invalid character for a java identifier, `Application` is
-used as fallback.
-** The `artifactId` attribute not only defines the identifier of the project in the
-build but also the name of the generated archive.
-* `dependencies`: the identifiers of the dependencies to add to the
-project. Such identifiers are defined through configuration and are exposed in the
-<<metadata,metadata>>.
-* `type`: the _kind_ of project to generate (e.g. `maven-project`). Again, each
-service exposes an arbitrary number of supported types and these are available in the
-<<metadata,metadata>>.
-* `javaVersion`: the JVM language level (e.g. `1.8`).
-* `bootVersion`: the platform version to use (e.g. `2.1.0.RELEASE`).
-* `language`: the programming language to use (e.g. `java`).
-* `packaging`: the packaging of the project (e.g. `jar`).
-* `applicationName`: the name of the application class (inferred by the `name`
-attribute by default).
-* `baseDir`: the name of the base directory to create in the archive. By default, the
-project is stored in the root.
-
-[TIP]
-====
-You can "curl" an instance to get a usage page with examples (try
-`curl https://start.spring.io`)
-====
-
-This command generates an `another-project` directory holding a Gradle web-based
-Groovy project using the actuator:
-
-[source,bash]
-----
-$ curl https://start.spring.io/starter.tgz -d dependencies=web,actuator \
--d language=groovy -d type=gradle-project -d baseDir=another-project | tar -xzvf -
-----
-
-NOTE: The `/starter.tgz` endpoint offers the same feature as `/starter.zip` but
-generates a compressed tarball instead.
-
-You could use this infrastructure to create your own client since the project is
-generated via a plain HTTP call.
-
-[[metadata]]
-== Service metadata
-The service metadata is used by all clients to know which values they should expose for
-the standard attributes of a project. For instance, a custom version can specify that the
-default `groupId` is `com.example.acme`. You can grab the metadata on the root endpoint
-with the appropriate `Accept` header:
-
-[source,bash]
-----
-$ curl -H 'Accept: application/json' https://start.spring.io
-----
-
-NOTE: As stated above, if you use `curl` without an accept header, you'll retrieve a
-human readable text version of the metadata.
-
-`HTTPie` is also supported:
-
-[source,bash]
-----
-$ http https://start.spring.io Accept:application/json
-----
-
-The metadata basically lists the _capabilities_ of the service, that is the available
-options for all request parameters (`dependencies`, `type`, `bootVersion`, etc.) A client
-to the service uses that information to initialize the select options and the tree of
-available dependencies.
-
-The metadata also lists the default values for simple _text_ parameter (i.e. the
-default `name` for the project).
-
-NOTE: More details about the structure of the metadata are
-{docs}/html/#metadata-format[available in the documentation].
-
 == Running your own instance
 You can easily run your own instance. The `initializr-web` modules uses Spring Boot
 so when it is added to a project, it will trigger the necessary auto-configuration to
 deploy the service.
 
 The `initializr-service-sample` showcases a basic custom instance with dedicated metadata.
-
-If you want to run our instance at https://start.spring.io, refer to
-https://github.com/spring-io/start.spring.io#run-app[run the default instance locally].
 
 
 [[build]]

@@ -1,0 +1,41 @@
+[[introduction]]
+= Introduction
+
+[partintro]
+--
+This is a gentle introduction to what Spring Initializr can do. You'll find the various
+ways you can interact with a Spring Initializr service and get a better insight at what
+you can do with it.
+
+The service allows you to generate JVM-based projects quickly. You can customize the
+project to generate: the build system and packaging, the language, the packaging,
+the coordinates, the platform version and, finally, the dependencies to add to the
+project.
+--
+
+== Project Metadata
+Spring Initializr exposes a number of endpoints that can be used to generate a JVM-based
+project. You can easily <<configuration-guide.adoc#create-instance,create your own
+instance>> by providing the metadata of various core concepts.
+
+Based on the metadata and a list of contributors, a
+<<configuration-guide.adoc#initializr-generator-project,project generation engine>> is
+available to generate the actual project's assets. The result of the generation could be
+a directory with a project or any other content.
+
+== Web Endpoints
+This library can be used in a web application to expose a number of endpoints that are
+used to handle project generation. The main entry point for the service is its metadata
+endpoint, available at the root of the context. It is used by various clients to determine
+the available options and present them to the user, if possible.
+
+The metadata endpoint also lists the type of projects that can be generated and how the
+service can trigger them.
+
+== Supported Clients
+Out-of-the-box, a custom instance handles command-line requests using `cURL` or `HTTPie`.
+Spring Initializr is also supported in various IDEs, check the documentation of your
+favourite IDE for more details.
+
+NOTE: Spring Initializr does not provide a Web UI to interact with the service.
+
