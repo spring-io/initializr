@@ -209,11 +209,11 @@
 								</goals>
 								<configuration>
 									<backend>html5</backend>
-									<sourceHighlighter>highlight.js</sourceHighlighter>
 									<doctype>book</doctype>
 									<attributes>
 										<highlightjsdir>js/highlight</highlightjsdir>
-										<highlightjs-theme>atom-one-dark-reasonable</highlightjs-theme>
+										<highlightjs-theme>github</highlightjs-theme>
+										<source-highlighter>highlight.js</source-highlighter>
 										<linkcss>true</linkcss>
 										<imagesdir>./images</imagesdir>
 										<icons>font</icons>
