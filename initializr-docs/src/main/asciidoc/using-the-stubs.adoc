@@ -1,4 +1,5 @@
 = Using the Stubs
+
 Spring Initializr project publishes
 https://github.com/tomakehurst/wiremock[WireMock] stubs for all the JSON responses
 that are tested in the project. If you are writing a client for Spring Initializr

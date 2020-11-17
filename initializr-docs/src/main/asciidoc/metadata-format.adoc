@@ -1,5 +1,6 @@
 [[metadata-format]]
 = Metadata Format
+
 This section describes the hal/json structure of the metadata exposed by the
 initializr. Such metadata can be used by third party clients to provide a list of
 options and default settings that can be used to request the creation of a project.
