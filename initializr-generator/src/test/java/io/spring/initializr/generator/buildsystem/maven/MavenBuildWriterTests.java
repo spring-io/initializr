@@ -818,38 +818,24 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithEscapedCharacters() {
+	void pomWithReservedCharacters() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").name("<demo project>")
 				.description("A \"demo\" project for 'developers' & 'testers'");
-
-		generatePomString(build, (pomString) -> {
-			String separator = System.lineSeparator();
-			assertThat(pomString).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + separator
-					+ "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-					+ separator
-					+ "    xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">"
-					+ separator + "    <modelVersion>4.0.0</modelVersion>" + separator
-					+ "    <groupId>com.example.demo</groupId>" + separator + "    <artifactId>demo</artifactId>"
-					+ separator + "    <version>0.0.1-SNAPSHOT</version>" + separator
-					+ "    <name>&lt;demo project&gt;</name>" + separator
-					+ "    <description>A &quot;demo&quot; project for &apos;developers&apos; &amp; &apos;testers&apos;</description>"
-					+ separator + separator + "</project>" + separator);
-		});
+		String pom = writePom(build);
+		assertThat(pom).contains("<name>&lt;demo project&gt;</name>").contains(
+				"<description>A &quot;demo&quot; project for &apos;developers&apos; &amp; &apos;testers&apos;</description>");
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
-		MavenBuildWriter writer = new MavenBuildWriter();
-		StringWriter out = new StringWriter();
-		writer.writeTo(new IndentingWriter(out), mavenBuild);
-		consumer.accept(new NodeAssert(out.toString()));
+		consumer.accept(new NodeAssert(writePom(mavenBuild)));
 	}
 
-	private void generatePomString(MavenBuild mavenBuild, Consumer<String> consumer) {
+	private String writePom(MavenBuild mavenBuild) {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), mavenBuild);
-		consumer.accept(out.toString());
+		return out.toString();
 	}
 
 }
