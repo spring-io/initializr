@@ -279,9 +279,7 @@ projects using the conventions provided by the `initializr-generator-spring` mod
 
 Once you've started the application, you can hit http://localhost:8080. You'll get a json
 document that describes the capabilities of the service. None of the select capabilities
-will have values (except the one for the Spring Boot version, we will
-<<create-instance-boot-versions,come back to that later>>). In the rest of this section,
-we will configure those basic settings.
+will have values. In the rest of this section, we will configure those basic settings.
 
 [TIP]
 ====
@@ -362,10 +360,13 @@ defaults can be overridden as shown below:
 
 
 
-[[create-instance-boot-versions]]
-=== Configuring available Spring Boot versions
-You can configure the available Spring Boot versions the same way you configure other
+[[create-instance-platform-versions]]
+=== Configuring available platform versions
+You can configure the available platform versions the same way you configure other
 capabilities.
+
+NOTE: the concept is reference to `bootVersions` as it predates the concept of platform
+versions.
 
 [source,yaml,indent=0]
 ----
@@ -383,14 +384,15 @@ capabilities.
 ----
 
 The configuration above provides three versions, with `2.3.2` being used by default. In
-practice though, you may want to upgrade the available Spring Boot versions without having
+practice though, you may want to upgrade the available platform versions without having
 to redeploy the application every time. Implementing your own
 `InitializrMetadataUpdateStrategy` bean allows you to update the metadata at runtime.
 
 If you look at https://spring.io/projects/spring-boot[the project home page for Spring
 Boot], the latest versions are displayed. `SaganInitializrMetadataUpdateStrategy` is an
 implementation of that strategy that fetches the latest Spring Boot versions and update
-the metadata to make sure a running instance always get the latest available versions.
+the metadata to make sure a running instance using those conventions always get the latest
+available versions.
 
 If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
 scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
@@ -454,7 +456,7 @@ project:
 NOTE: If you intend to build a custom client against your service, you can add as many
 tags as you want, and process them in the client in a way that makes sense for your users.
 
-For instance, the spring boot CLI uses them as a shortcut to the full type id. So rather
+For instance, the Spring Boot CLI uses them as a shortcut to the full type id. So rather
 than having to create a Gradle project as follows:
 
 [indent=0,subs="verbatim,quotes,attributes"]
@@ -507,10 +509,10 @@ surface area or any other form of grouping. In the example above, a `Web` group 
 unique dependency. A group can also provide default values for various settings, see the
 <<howto-group-share-settings,dedicated how-to>> for more details.
 
-In our `spring-boot-starter-web` example above, the dependency is _managed_ by Spring
-Boot so there is no need to provide a `version` attribute for it. You'll surely need to
-define additional dependencies that are not provided by Spring Boot and we strongly
-recommend you to use a <<create-instance-boms,Bill Of Materials (or BOM)>>.
+In our `spring-boot-starter-web` example above, we assume that the dependency is _managed_
+by the platform so there is no need to provide a `version` attribute for it. You'll surely
+need to define additional dependencies that are not provided by the platform and we
+strongly recommend you to use a <<create-instance-boms,Bill Of Materials (or BOM)>>.
 
 If no BOM is available you can specify a version directly:
 
@@ -546,12 +548,12 @@ The rest of this section will detail the other configuration options.
 
 [[dependencies-compatibility-range]]
 ==== Compatibility Range
-By default, a dependency is available regardless of the Spring Boot version you have
-selected. If you need to restrict a dependency to a certain Spring Boot generation you
+By default, a dependency is available regardless of the platform version you have
+selected. If you need to restrict a dependency to a certain platform generation you
 can add a `compatibilityRange` attribute to its definition that defines a version range. A
-version range is a range of versions of Spring Boot which are valid in combination with
+version range is a range of versions of the platform which are valid in combination with
 it. The versions are *not* applied to the dependency itself, but rather used to filter out
-the dependency, or modify it, when different versions of Spring Boot are selected for the
+the dependency, or modify it, when different versions of the platform are selected for the
 generated project.
 
 A version is composed of four parts: a major revision, a minor revision, a patch
@@ -594,13 +596,13 @@ of the 1.4.x line. For instance, if you want to restrict a dependency from `1.1.
 to the latest stable release of the 1.3.x line, you'd use `[1.1.0.RELEASE,1.3.x.RELEASE]`.
 
 Snapshots are naturally the most recent version of a given line, so if you are looking to
-match a dependency to only the latest snapshots of Spring Boot, you could use a version
+match a dependency to only the latest snapshots of the platform, you could use a version
 range of `1.5.x.BUILD-SNAPSHOT` (assuming 1.5 was the latest).
 
 TIP: Remember to quote the values of a version range in YAML configuration files (with
 double quotes "").
 
-See below in the section on <<howto-link-boot-version,linking versions>> for more examples
+See below in the section on <<howto-link-platform-version,linking versions>> for more examples
 and idioms. See also how the <<howto-platform-version-format,platform version format>> can
 be configured.
 
@@ -692,12 +694,12 @@ BOMs by referring to the id:
 
 
 [[dependencies-mappings]]
-==== Map coordinates according to the Spring Boot version
-In addition to a Spring Boot version range for the dependency or a BOM, you can configure
+==== Map coordinates according to the platform version
+In addition to a compatibility range for the dependency or a BOM, you can configure
 the version relationships at a finer grained level using version mappings. A dependency or
 BOM has a list of "mappings", each of which consists of a version range, and a set of one
-or more dependency properties to override for those versions of Spring Boot. You can use a
-mapping to switch the version of a dependency, or (better) the BOM, or to change its
+or more dependency properties to override for those versions of the platform. You can use
+a mapping to switch the version of a dependency, or (better) the BOM, or to change its
 artifact id (if the project changed its packaging) for instance.
 
 Here's an example of a BOM with mappings:
@@ -727,16 +729,16 @@ Here's an example of a BOM with mappings:
 				repositories: spring-snapshots,spring-milestones
 ----
 
-The primary use case here is to map Spring Boot versions to the preferred or supported
+The primary use case here is to map platform versions to the preferred or supported
 versions of the Foo project. You can also see that for the milestone and snapshot BOMs,
 additional repositories are declared because those artifacts are not in the default
 repository. Initially the BOM was identified as `com.example.bar:acme-foo-bom` and renamed
 as of `Botein` to `com.example.foo:acme-foo-dependencies`.
 
 TIP: We also use the `x` trick in version ranges to avoid updating the range every time
-a new Spring Boot 1.5 bug fix release is available
+a new platform 1.5 bug fix release is available.
 
-See below in the section on <<howto-link-boot-version,linking versions>> for more examples.
+See below in the section on <<howto-link-platform-version,linking versions>> for more examples.
 
 
 
@@ -795,7 +797,8 @@ URL parameter is specified with curly braces, something like
 
 The following attributes are currently supported:
 
-* `bootVersion`: the Spring Boot version that is currently active
+* `bootVersion`: the platform version that is currently active (named `bootVersion` for
+backward compatibility with the metadata format)
 
 Here is an example that adds two links to the `acme` dependency:
 
@@ -856,16 +859,16 @@ First, a table that describes the <<create-instance-types,available project type
 Then, a table that describes the <<initializr-generator-project,available parameters>>.
 
 Finally, the list of dependencies are defined. Each entry provides the identifier that
-you'll have to use if you want to select the dependency, a description and the Spring Boot
-version range, if any.
+you'll have to use if you want to select the dependency, a description and the
+compatibility range, if any.
 
 Alongside the capabilities of the service, you'll also find a few examples that help you
 understand how you can generate a project. These are obviously tailored to the client that
 you are using.
 
-Let's assume that you want to generate a "my-project.zip" project based on Spring Boot
-`2.3.5.RELEASE`, using the `web` and `devtools` dependencies (remember, those two ids are
-displayed in the capabilities of the service):
+Let's assume that you want to generate a "my-project.zip" project based on version
+`2.3.5.RELEASE` of the platform, using the `web` and `devtools` dependencies (remember,
+those two ids are displayed in the capabilities of the service):
 
 [source]
 ----
@@ -903,18 +906,18 @@ that often arise when configuring Spring Initializr.
 
 [[howto-add-a-new-dependency]]
 === Add a new dependency
-To add a new dependency, first identify the Maven co-ordinates of the dependency you want
-to add (`groupId:artifactId:version`) and then check which versions of Spring Boot it works
-with. If there are multiple versions that work with different versions of Spring Boot,
-then that's fine too.
+To add a new dependency, first identify the Maven coordinates of the dependency you want
+to add (`groupId:artifactId:version`) and then check which versions of the platform it
+works with. If there are multiple versions that work with different versions of the
+platform, then that's fine too.
 
 * If there is a published BOM that manages the version of you dependency, then add that
   first, in the `env` section (see <<create-instance-boms>>).
 * Then configure the dependency, fitting it into an existing group if you can, otherwise
   creating a new group.
 * If there is a BOM then omit the version.
-* If there is a Spring Boot version range (or min or max) that you need for this
-  dependency, add that as a <<howto-link-boot-version,linked version>>.
+* If there is a compatibility version range (or min or max) that you need for this
+  dependency, add that as a <<howto-link-platform-version,linked version>>.
 
 
 
@@ -925,7 +928,7 @@ conflict with the newest version. Or maybe this is the case for only a range of 
 Boot versions. Or maybe there just is no BOM, or it's not worth creating one for just one
 dependency. In these cases you can specify the version manually for a dependency either
 at the top level, or in a
-<<howto-link-boot-version,version mapping>>. At the top level it looks like this (just
+<<howto-link-platform-version,version mapping>>. At the top level it looks like this (just
 a `version` property in a dependency):
 
 [source,yaml,indent=0]
@@ -944,14 +947,14 @@ a `version` property in a dependency):
 
 
 
-[[howto-link-boot-version]]
-=== Link a Boot version to a version of your dependency
-If your dependency requires a specific version of Spring Boot, ot different versions of
-Spring Boot require different versions of your dependency there are a couple of mechanisms
-to configure that.
+[[howto-link-platform-version]]
+=== Link a version of the platform to a version of your dependency
+If your dependency requires a specific version of the platform, ot different versions of
+the platform require different versions of your dependency there are a couple of
+mechanisms to configure that.
 
 The simplest is to put a `compatibilityRange` in the dependency declaration. This is a
-range of versions of Spring Boot, not of your dependency. For example:
+range of versions of the platform, not of your dependency. For example:
 
 [source,yaml,indent=0]
 ----
@@ -969,10 +972,11 @@ range of versions of Spring Boot, not of your dependency. For example:
 			  compatibilityRange: "[1.5.0.RC1,2.0.0.M1)"
 ----
 
-In this example `Foo` is available for Spring Boot 1.2.0 (or any milestone of 1.2.0) or
-greater, and `Bar` is available for Spring Boot 1.5.0 up to, but not including 2.0.0.
+In this example `Foo` is available for as of `1.2.0` of the platform, and `Bar` is
+available for versions of the platform starting at `1.5.0.RC1` and up to, but not
+including, `2.0.0.M1`.
 
-If different versions of your dependency work with different versions of Spring Boot,
+If different versions of your dependency work with different versions of the platform,
 that's when you need the `mappings` property. A mapping is a combination of a
 `compatibilityRange` and some or all of the other properties of the dependency, overriding
 the values defined at the top level. For example:
@@ -996,8 +1000,8 @@ the values defined at the top level. For example:
 ----
 
 In this example, The artifact of `foo` was changed to `foo-spring-boot-starter` as of the
-version that is compatible with Spring Boot 1.4. This mapping instruct that if Spring Boot
-1.3.x is selected, the artifact Id should be set to `foo-starter`.
+version that is compatible as of `1.4.0` of the platform. This mapping instructs that if
+`1.3.x` of the platform is selected, the artifactId should be set to `foo-starter`.
 
 A mapping can also be applied to a BOM declaration. For example:
 
@@ -1019,9 +1023,9 @@ A mapping can also be applied to a BOM declaration. For example:
 				repositories: my-api-repo-2
 ----
 
-In this example Spring Boot versions up to 1.1.6 select version 1.0.0 of the BOM, and set
-a different repository. Spring Boot versions 1.2.1 and above select 2.0.0 of the BOM and
-yet another repository.
+In this example, versions of the platform up to `1.1.6` select version `1.0.0` of the BOM,
+and set a different repository. Versions of the platform as of `1.2.1` select `2.0.0` of
+the BOM and yet another repository.
 
 
 
@@ -1030,8 +1034,8 @@ yet another repository.
 A dependency, or a BOM, might require the use of a specific repository, if the default one
 (usually Maven Central) does not contain the artifacts. Normally, the best place to
 declare that is in the BOM configuration, but if there isn't a BOM then you can put it in
-the dependency itself. You can also use a Spring Boot <<You can declare a
-repository,version mapping>> to override the default repository for a dependency or BOM.
+the dependency itself. You can also use a platform <<dependencies-mappings,version
+mapping>> to override the default repository for a dependency or BOM.
 
 
 
@@ -1071,7 +1075,7 @@ existing Spring Boot starter) you can flag it as a "non starter":
 			  id: lib
 			  groupId: com.acme
 			  artifactId: lib
-			  starter:false
+			  starter: false
 ----
 
 When a project is generated that only has dependencies with this flag set, then the base
@@ -1097,8 +1101,8 @@ common settings in a group are the `groupId`, `compatibilityRange` and `bom`:
 	...
 ----
 
-These dependencies, by default, will be available only for Spring Boot versions 1.3 up to
-2.0 (excluded) and will bring in the `stuff-bom` BOM.
+These dependencies, by default, will be available only for versions of the platform as of
+`1.3.0.RELEASE` up to `2.0.0.M1` (excluded) and will bring in the `stuff-bom` BOM.
 
 
 
@@ -1173,8 +1177,8 @@ one will require some configuration to get it working):
 
 |`initializr.metadata`
 |Cache the full metadata of the service. When the metadata expires, it is fully resolved
-again (including a check on spring.io for the latest Spring Boot versions). Adapt the
-expiration settings accordingly.
+again (which may include a network call to determine the latest platform versions). Adapt
+the expiration settings accordingly.
 
 |`initializr.dependency-metadata`
 |Cache dependency-specific metadata.

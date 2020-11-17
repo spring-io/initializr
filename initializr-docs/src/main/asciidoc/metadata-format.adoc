@@ -45,7 +45,7 @@ component responsible to generate the project (for instance, generate an executa
 _jar_ project).
 * Java version: the supported java versions
 * Language: the language to use (e.g. Java)
-* Boot version: the Spring Boot version to use
+* Boot version: the platform version to use
 * Additional basic information such as: `groupId`, `artifactId`,  `version`, `name`,
 `description` and `packageName`.
 
@@ -168,10 +168,10 @@ include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/language.val
 
 
 
-=== Boot version
-The `bootVersion` element provides the list of available boot versions
+=== Platform versions
+The `bootVersion` element provides the list of available platform versions
 
-.Spring Boot version example
+.Platform versions example
 include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/bootVersion.values.0.adoc[]
 
 
