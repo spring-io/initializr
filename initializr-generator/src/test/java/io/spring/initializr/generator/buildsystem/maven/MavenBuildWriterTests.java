@@ -817,11 +817,25 @@ class MavenBuildWriterTests {
 		});
 	}
 
+	@Test
+	void pomWithReservedCharacters() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").name("<demo project>")
+				.description("A \"demo\" project for 'developers' & 'testers'");
+		String pom = writePom(build);
+		assertThat(pom).contains("<name>&lt;demo project&gt;</name>").contains(
+				"<description>A &quot;demo&quot; project for &apos;developers&apos; &amp; &apos;testers&apos;</description>");
+	}
+
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
+		consumer.accept(new NodeAssert(writePom(mavenBuild)));
+	}
+
+	private String writePom(MavenBuild mavenBuild) {
 		MavenBuildWriter writer = new MavenBuildWriter();
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), mavenBuild);
-		consumer.accept(new NodeAssert(out.toString()));
+		return out.toString();
 	}
 
 }
