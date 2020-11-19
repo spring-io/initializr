@@ -16,36 +16,99 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenProfileActivation.Builder;
+import io.spring.initializr.generator.buildsystem.maven.MavenProfileActivation.Os;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MavenProfileActivationTests {
+/**
+ * Tests for {@link MavenProfileActivation}.
+ */
+public class MavenProfileActivationTests {
 
 	@Test
-	void profileActivationEmpty() {
-		MavenProfileActivation profileActivation = new MavenProfileActivation.Builder().build();
-		assertThat(profileActivation.getActiveByDefault()).isNull();
-		assertThat(profileActivation.getJdk()).isNull();
-		assertThat(profileActivation.getOs()).isNull();
-		assertThat(profileActivation.getProperty()).isNull();
-		assertThat(profileActivation.getFile()).isNull();
+	void profileWithNoActivation() {
+		assertThat(createProfileActivation().build().isEmpty()).isTrue();
 	}
 
 	@Test
-	void profileActivationWithFullData() {
-		MavenProfileActivation profileActivation = new MavenProfileActivation.Builder().jdk("jdk1")
-				.activeByDefault(true).os((os) -> os.name("name1")).file((file) -> file.exists("yes"))
-				.property((property) -> property.name("name1")).build();
+	void profileActiveByDefault() {
+		assertThat(createProfileActivation().activeByDefault(true).build().getActiveByDefault()).isTrue();
+	}
 
-		assertThat(profileActivation.getActiveByDefault()).isTrue();
-		assertThat(profileActivation.getJdk()).isEqualTo("jdk1");
-		assertThat(profileActivation.getOs()).isNotNull();
-		assertThat(profileActivation.getOs().getName()).isEqualTo("name1");
-		assertThat(profileActivation.getProperty()).isNotNull();
-		assertThat(profileActivation.getProperty().getName()).isEqualTo("name1");
-		assertThat(profileActivation.getFile()).isNotNull();
-		assertThat(profileActivation.getFile().getExists()).isEqualTo("yes");
+	@Test
+	void profileActiveByDefaultCanBeAmended() {
+		assertThat(createProfileActivation().activeByDefault(true).activeByDefault(null).build().getActiveByDefault())
+				.isNull();
+	}
+
+	@Test
+	void profileActivationJdk() {
+		assertThat(createProfileActivation().jdk("15").build().getJdk()).isEqualTo("15");
+	}
+
+	@Test
+	void profileActivationCanBeAmended() {
+		assertThat(createProfileActivation().jdk("15").jdk(null).build().getJdk()).isNull();
+	}
+
+	@Test
+	void profileActivationOs() {
+		Os os = createProfileActivation().os("test-name", null, "arm64", null).build().getOs();
+		assertThat(os).isNotNull();
+		assertThat(os.getName()).isEqualTo("test-name");
+		assertThat(os.getFamily()).isNull();
+		assertThat(os.getArch()).isEqualTo("arm64");
+		assertThat(os.getVersion()).isNull();
+	}
+
+	@Test
+	void profileActivationOsCanBeDisabled() {
+		assertThat(
+				createProfileActivation().os("test-name", null, null, null).os(null, null, null, null).build().getOs())
+						.isNull();
+	}
+
+	@Test
+	void profileActivationProperty() {
+		assertThat(createProfileActivation().property("test", "1").build().getProperty()).satisfies((property) -> {
+			assertThat(property).isNotNull();
+			assertThat(property.getName()).isEqualTo("test");
+			assertThat(property.getValue()).isEqualTo("1");
+		});
+	}
+
+	@Test
+	void profileActivationPropertyCanBeDisabled() {
+		assertThat(createProfileActivation().property("test", "1").property(null, null).build().getProperty()).isNull();
+	}
+
+	@Test
+	void profileActivationFileExisting() {
+		assertThat(createProfileActivation().fileExists("test.txt").build().getFile()).satisfies((file) -> {
+			assertThat(file).isNotNull();
+			assertThat(file.getExists()).isEqualTo("test.txt");
+			assertThat(file.getMissing()).isNull();
+		});
+	}
+
+	@Test
+	void profileActivationFileMissing() {
+		assertThat(createProfileActivation().fileMissing("test.txt").build().getFile()).satisfies((file) -> {
+			assertThat(file).isNotNull();
+			assertThat(file.getExists()).isNull();
+			assertThat(file.getMissing()).isEqualTo("test.txt");
+		});
+	}
+
+	@Test
+	void profileActivationFileCanBeDisabled() {
+		assertThat(createProfileActivation().fileMissing("test.txt").fileMissing(null).build().getFile()).isNull();
+	}
+
+	private MavenProfileActivation.Builder createProfileActivation() {
+		return new Builder();
 	}
 
 }

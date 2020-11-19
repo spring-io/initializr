@@ -24,6 +24,11 @@ package io.spring.initializr.generator.buildsystem;
 public interface BuildItemResolver {
 
 	/**
+	 * A default {@link BuildItemResolver} that bypass resolution.
+	 */
+	SimpleBuildItemResolver NO_OP = new SimpleBuildItemResolver((id) -> null, (id) -> null, (id) -> null);
+
+	/**
 	 * Resolve the {@link Dependency} with the specified {@code id}.
 	 * @param id the id of the dependency
 	 * @return the matching {@link Dependency} or {@code null} if none is found

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,8 @@ public abstract class Build {
 
 	private final MavenRepositoryContainer pluginRepositories;
 
-	private final BuildItemResolver resolver;
-
 	protected Build(BuildItemResolver buildItemResolver) {
-		this.resolver = determineBuildItemResolver(buildItemResolver);
+		BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
 		this.properties = new PropertyContainer();
 		this.dependencies = new DependencyContainer(resolver::resolveDependency);
 		this.boms = new BomContainer(resolver::resolveBom);
@@ -45,7 +43,7 @@ public abstract class Build {
 		this.pluginRepositories = new MavenRepositoryContainer(resolver::resolveRepository);
 	}
 
-	private static BuildItemResolver determineBuildItemResolver(BuildItemResolver buildItemResolver) {
+	protected static BuildItemResolver determineBuildItemResolver(BuildItemResolver buildItemResolver) {
 		if (buildItemResolver != null) {
 			return buildItemResolver;
 		}
@@ -110,7 +108,4 @@ public abstract class Build {
 		return this.pluginRepositories;
 	}
 
-	public BuildItemResolver getResolver() {
-		return resolver;
-	}
 }

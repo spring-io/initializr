@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,206 +16,253 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import io.spring.initializr.generator.buildsystem.BomContainer;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
+import io.spring.initializr.generator.buildsystem.PropertyContainer;
 
+/**
+ * A profile in a {@link MavenBuild}.
+ *
+ * @author Daniel Andres Pelaez Lopez
+ * @author Stephane Nicoll
+ */
 public class MavenProfile {
 
 	private final String id;
 
-	private final MavenProfileActivation activation;
+	private final MavenProfileActivation.Builder activation = new MavenProfileActivation.Builder();
 
-	private final MavenProfileBuild build;
+	private final SettingsBuilder settings = new SettingsBuilder();
 
-	private final List<String> modules;
+	private final PropertyContainer properties = new PropertyContainer();
+
+	private final DependencyContainer dependencies;
+
+	private final MavenResourceContainer resources = new MavenResourceContainer();
+
+	private final MavenResourceContainer testResources = new MavenResourceContainer();
+
+	private final MavenPluginContainer plugins = new MavenPluginContainer();
+
+	private final BomContainer boms;
 
 	private final MavenRepositoryContainer repositories;
 
 	private final MavenRepositoryContainer pluginRepositories;
 
-	private final DependencyContainer dependencies;
+	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
-	private final MavenReporting reporting;
-
-	private final BomContainer dependencyManagement;
-
-	private final MavenDistributionManagement distributionManagement;
-
-	private final MavenConfiguration properties;
-
-	protected MavenProfile(Builder builder) {
-		this.id = builder.id;
-		this.activation = Optional.ofNullable(builder.activationBuilder).map(MavenProfileActivation.Builder::build)
-				.orElse(null);
-		this.build = Optional.ofNullable(builder.buildBuilder).map(MavenProfileBuild.Builder::build).orElse(null);
-		this.modules = builder.modules;
-		this.repositories = builder.repositories;
-		this.pluginRepositories = builder.pluginRepositories;
-		this.dependencies = builder.dependencies;
-		this.reporting = Optional.ofNullable(builder.reportingBuilder).map(MavenReporting.Builder::build).orElse(null);
-		this.dependencyManagement = builder.dependencyManagement;
-		this.distributionManagement = Optional.ofNullable(builder.distributionManagementBuilder)
-				.map(MavenDistributionManagement.Builder::build).orElse(new MavenDistributionManagement.Builder().build());
-		this.properties = Optional.ofNullable(builder.properties).map(MavenConfiguration.Builder::build).orElse(null);
+	protected MavenProfile(String id, BuildItemResolver buildItemResolver) {
+		this.id = id;
+		this.dependencies = new DependencyContainer(buildItemResolver::resolveDependency);
+		this.boms = new BomContainer(buildItemResolver::resolveBom);
+		this.repositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
+		this.pluginRepositories = new MavenRepositoryContainer(buildItemResolver::resolveRepository);
 	}
 
+	/**
+	 * Return the identifier of the profile.
+	 * @return the profile id
+	 */
 	public String getId() {
 		return this.id;
 	}
 
-	public MavenProfileActivation getActivation() {
+	/**
+	 * Return a builder to configure how this profile should be
+	 * {@link MavenProfileActivation activated}.
+	 * @return a builder for {@link MavenProfileActivation}.
+	 */
+	public MavenProfileActivation.Builder activation() {
 		return this.activation;
 	}
 
-	public MavenProfileBuild getBuild() {
-		return this.build;
+	/**
+	 * Return the {@link MavenProfileActivation} of this profile.
+	 * @return the {@link MavenProfileActivation}
+	 */
+	public MavenProfileActivation getActivation() {
+		return this.activation.build();
 	}
 
-	public List<String> getModules() {
-		return this.modules;
+	/**
+	 * Return a builder to configure the general settings of this profile.
+	 * @return a builder for {@link SettingsBuilder}.
+	 */
+	public SettingsBuilder settings() {
+		return this.settings;
 	}
 
-	public MavenRepositoryContainer getRepositories() {
-		return this.repositories;
+	/**
+	 * Return the settings of this profile.
+	 * @return a {@link Settings}
+	 */
+	public Settings getSettings() {
+		return this.settings.build();
 	}
 
-	public MavenRepositoryContainer getPluginRepositories() {
-		return this.pluginRepositories;
-	}
-
-	public DependencyContainer getDependencies() {
-		return this.dependencies;
-	}
-
-	public MavenReporting getReporting() {
-		return this.reporting;
-	}
-
-	public BomContainer getDependencyManagement() {
-		return this.dependencyManagement;
-	}
-
-	public MavenDistributionManagement getDistributionManagement() {
-		return this.distributionManagement;
-	}
-
-	public MavenConfiguration getProperties() {
+	/**
+	 * Return the {@linkplain PropertyContainer property container} to use to configure
+	 * properties.
+	 * @return the {@link PropertyContainer}
+	 */
+	public PropertyContainer properties() {
 		return this.properties;
 	}
 
-	public static class Builder {
+	/**
+	 * Return the {@linkplain DependencyContainer dependency container} to use to
+	 * configure dependencies.
+	 * @return the {@link DependencyContainer}
+	 */
+	public DependencyContainer dependencies() {
+		return this.dependencies;
+	}
 
-		private final String id;
+	/**
+	 * Return the {@linkplain BomContainer bom container} to use to configure Bill of
+	 * Materials.
+	 * @return the {@link BomContainer}
+	 */
+	public BomContainer boms() {
+		return this.boms;
+	}
 
-		private final BuildItemResolver buildItemResolver;
+	/**
+	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+	 * configure repositories.
+	 * @return the {@link MavenRepositoryContainer} for repositories
+	 */
+	public MavenRepositoryContainer repositories() {
+		return this.repositories;
+	}
 
-		private MavenProfileActivation.Builder activationBuilder;
+	/**
+	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+	 * configure plugin repositories.
+	 * @return the {@link MavenRepositoryContainer} for plugin repositories
+	 */
+	public MavenRepositoryContainer pluginRepositories() {
+		return this.pluginRepositories;
+	}
 
-		private MavenProfileBuild.Builder buildBuilder;
+	/**
+	 * Return a builder to configure the {@linkplain MavenDistributionManagement
+	 * distribution management} of this profile.
+	 * @return a builder for {@link MavenDistributionManagement}
+	 */
+	public MavenDistributionManagement.Builder distributionManagement() {
+		return this.distributionManagement;
+	}
 
-		private List<String> modules;
+	/**
+	 * Return the {@linkplain MavenDistributionManagement distribution management} of this
+	 * profile.
+	 * @return the {@link MavenDistributionManagement}
+	 */
+	public MavenDistributionManagement getDistributionManagement() {
+		return this.distributionManagement.build();
+	}
 
-		private MavenRepositoryContainer repositories;
+	/**
+	 * Return the {@linkplain MavenResource resource container} to use to configure main
+	 * resources.
+	 * @return the {@link MavenRepositoryContainer} for main resources
+	 */
+	public MavenResourceContainer resources() {
+		return this.resources;
+	}
 
-		private MavenRepositoryContainer pluginRepositories;
+	/**
+	 * Return the {@linkplain MavenResource resource container} to use to configure test
+	 * resources.
+	 * @return the {@link MavenRepositoryContainer} for test resources
+	 */
+	public MavenResourceContainer testResources() {
+		return this.testResources;
+	}
 
-		private DependencyContainer dependencies;
+	/**
+	 * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
+	 * plugins.
+	 * @return the {@link MavenPluginContainer}
+	 */
+	public MavenPluginContainer plugins() {
+		return this.plugins;
+	}
 
-		private MavenReporting.Builder reportingBuilder;
+	/**
+	 * Builder for {@link Settings}.
+	 */
+	public static class SettingsBuilder {
 
-		private BomContainer dependencyManagement;
+		private String defaultGoal;
 
-		private MavenDistributionManagement.Builder distributionManagementBuilder;
+		private String finalName;
 
-		private MavenConfiguration.Builder properties;
-
-		protected Builder(String id, BuildItemResolver buildItemResolver) {
-			this.id = id;
-			this.buildItemResolver = buildItemResolver;
-			this.dependencyManagement = new BomContainer(this.buildItemResolver::resolveBom);
-			this.repositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-			this.pluginRepositories = new MavenRepositoryContainer(this.buildItemResolver::resolveRepository);
-			this.dependencies = new DependencyContainer(this.buildItemResolver::resolveDependency);
+		protected SettingsBuilder() {
 		}
 
-		public Builder activation(Consumer<MavenProfileActivation.Builder> activation) {
-			if (this.activationBuilder == null) {
-				this.activationBuilder = new MavenProfileActivation.Builder();
-			}
-			activation.accept(this.activationBuilder);
+		/**
+		 * Set the default goal or phase to execute if none is given when this profile is
+		 * active.
+		 * @param defaultGoal the default goal or {@code null} to use the value in the
+		 * build
+		 * @return this for method chaining
+		 */
+		public SettingsBuilder defaultGoal(String defaultGoal) {
+			this.defaultGoal = defaultGoal;
 			return this;
 		}
 
-		public Builder build(Consumer<MavenProfileBuild.Builder> build) {
-			if (this.buildBuilder == null) {
-				this.buildBuilder = new MavenProfileBuild.Builder();
-			}
-			build.accept(this.buildBuilder);
+		/**
+		 * Set the name of the bundled project when it is finally built when this profile
+		 * is active.
+		 * @param finalName the final name of the artifact or {@code null} to use the
+		 * value in the build.
+		 * @return this for method chaining
+		 */
+		public SettingsBuilder finalName(String finalName) {
+			this.finalName = finalName;
 			return this;
 		}
 
-		public Builder module(String module) {
-			if (this.modules == null) {
-				this.modules = new LinkedList<>();
-			}
-			this.modules.add(module);
-			return this;
+		public Settings build() {
+			return new Settings(this);
 		}
 
-		public Builder repositories(Consumer<MavenRepositoryContainer> repositories) {
-			repositories.accept(this.repositories);
-			return this;
+	}
+
+	/**
+	 * Maven profile settings.
+	 */
+	public static final class Settings {
+
+		private final String defaultGoal;
+
+		private final String finalName;
+
+		protected Settings(SettingsBuilder builder) {
+			this.defaultGoal = builder.defaultGoal;
+			this.finalName = builder.finalName;
 		}
 
-		public Builder pluginRepositories(Consumer<MavenRepositoryContainer> pluginRepositories) {
-			pluginRepositories.accept(this.pluginRepositories);
-			return this;
+		/**
+		 * Return the default goal or phase to execute if none is given.
+		 * @return the default goal or {@code null} to use the default
+		 */
+		public String getDefaultGoal() {
+			return this.defaultGoal;
 		}
 
-		public Builder reporting(Consumer<MavenReporting.Builder> reporting) {
-			if (this.reportingBuilder == null) {
-				this.reportingBuilder = new MavenReporting.Builder();
-			}
-			reporting.accept(this.reportingBuilder);
-			return this;
-		}
-
-		public Builder dependencies(Consumer<DependencyContainer> dependencies) {
-			dependencies.accept(this.dependencies);
-			return this;
-		}
-
-		public Builder dependencyManagement(Consumer<BomContainer> dependencyManagement) {
-			dependencyManagement.accept(this.dependencyManagement);
-			return this;
-		}
-
-		public Builder distributionManagement(
-				Consumer<MavenDistributionManagement.Builder> distributionManagementBuilder) {
-			if (this.distributionManagementBuilder == null) {
-				this.distributionManagementBuilder = new MavenDistributionManagement.Builder();
-			}
-			distributionManagementBuilder.accept(this.distributionManagementBuilder);
-			return this;
-		}
-
-		public Builder properties(Consumer<MavenConfiguration.Builder> properties) {
-			if (this.properties == null) {
-				this.properties = new MavenConfiguration.Builder();
-			}
-			properties.accept(this.properties);
-			return this;
-		}
-
-		public MavenProfile build() {
-			return new MavenProfile(this);
+		/**
+		 * Return the final name of the artifact.
+		 * @return the final name or {@code null} to use the default
+		 */
+		public String getFinalName() {
+			return this.finalName;
 		}
 
 	}

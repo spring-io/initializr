@@ -44,7 +44,7 @@ public class MavenPlugin {
 
 	private final List<Dependency> dependencies;
 
-	private final MavenConfiguration configuration;
+	private final Configuration configuration;
 
 	protected MavenPlugin(Builder builder) {
 		this.groupId = builder.groupId;
@@ -107,10 +107,10 @@ public class MavenPlugin {
 	}
 
 	/**
-	 * Return the {@linkplain MavenConfiguration configuration} of the plugin.
+	 * Return the {@linkplain Configuration configuration} of the plugin.
 	 * @return the configuration
 	 */
-	public MavenConfiguration getConfiguration() {
+	public Configuration getConfiguration() {
 		return this.configuration;
 	}
 
@@ -131,7 +131,7 @@ public class MavenPlugin {
 
 		private final List<Dependency> dependencies = new ArrayList<>();
 
-		private MavenConfiguration.Builder configurationBuilder;
+		private ConfigurationBuilder configurationBuilder;
 
 		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
@@ -164,9 +164,9 @@ public class MavenPlugin {
 		 * @param configuration a consumer of the current configuration
 		 * @return this for method chaining
 		 */
-		public Builder configuration(Consumer<MavenConfiguration.Builder> configuration) {
+		public Builder configuration(Consumer<ConfigurationBuilder> configuration) {
 			if (this.configurationBuilder == null) {
-				this.configurationBuilder = new MavenConfiguration.Builder();
+				this.configurationBuilder = new ConfigurationBuilder();
 			}
 			configuration.accept(this.configurationBuilder);
 			return this;
@@ -218,7 +218,7 @@ public class MavenPlugin {
 
 		private final List<String> goals = new ArrayList<>();
 
-		private MavenConfiguration.Builder configurationCustomization = null;
+		private ConfigurationBuilder configurationCustomization = null;
 
 		public ExecutionBuilder(String id) {
 			this.id = id;
@@ -255,12 +255,129 @@ public class MavenPlugin {
 		 * @param configuration a consumer of the current configuration
 		 * @return this for method chaining
 		 */
-		public ExecutionBuilder configuration(Consumer<MavenConfiguration.Builder> configuration) {
+		public ExecutionBuilder configuration(Consumer<ConfigurationBuilder> configuration) {
 			if (this.configurationCustomization == null) {
-				this.configurationCustomization = new MavenConfiguration.Builder();
+				this.configurationCustomization = new ConfigurationBuilder();
 			}
 			configuration.accept(this.configurationCustomization);
 			return this;
+		}
+
+	}
+
+	/**
+	 * Builder for a {@link Configuration}.
+	 */
+	public static class ConfigurationBuilder {
+
+		private final List<Setting> settings = new ArrayList<>();
+
+		/**
+		 * Add the specified parameter with a single value.
+		 * @param name the name of the parameter
+		 * @param value the single value of the parameter
+		 * @return this for method chaining
+		 */
+		public ConfigurationBuilder add(String name, String value) {
+			this.settings.add(new Setting(name, value));
+			return this;
+		}
+
+		/**
+		 * Configure the parameter with the specified {@code name}.
+		 * @param name the name of the parameter
+		 * @param consumer a consumer to further configure the parameter
+		 * @return this for method chaining
+		 * @throws IllegalArgumentException if a parameter with the same name is
+		 * registered with a single value
+		 */
+		public ConfigurationBuilder configure(String name, Consumer<ConfigurationBuilder> consumer) {
+			Object value = this.settings.stream().filter((candidate) -> candidate.getName().equals(name)).findFirst()
+					.orElseGet(() -> {
+						Setting nestedSetting = new Setting(name, new ConfigurationBuilder());
+						this.settings.add(nestedSetting);
+						return nestedSetting;
+					}).getValue();
+			if (!(value instanceof ConfigurationBuilder)) {
+				throw new IllegalArgumentException(String.format(
+						"Could not customize parameter '%s', a single value %s is already registered", name, value));
+			}
+			ConfigurationBuilder nestedConfiguration = (ConfigurationBuilder) value;
+			consumer.accept(nestedConfiguration);
+			return this;
+		}
+
+		/**
+		 * Build a {@link Configuration} with the current state of this builder.
+		 * @return a {@link Configuration}
+		 */
+		Configuration build() {
+			return new Configuration(this.settings.stream().map((entry) -> resolve(entry.getName(), entry.getValue()))
+					.collect(Collectors.toList()));
+		}
+
+		private Setting resolve(String key, Object value) {
+			if (value instanceof ConfigurationBuilder) {
+				List<Setting> values = ((ConfigurationBuilder) value).settings.stream()
+						.map((entry) -> resolve(entry.getName(), entry.getValue())).collect(Collectors.toList());
+				return new Setting(key, values);
+			}
+			else {
+				return new Setting(key, value);
+			}
+		}
+
+	}
+
+	/**
+	 * A {@code <configuration>} on an {@link Execution} or {@link MavenPlugin}.
+	 */
+	public static final class Configuration {
+
+		private final List<Setting> settings;
+
+		private Configuration(List<Setting> settings) {
+			this.settings = Collections.unmodifiableList(settings);
+		}
+
+		/**
+		 * Return the {@linkplain Setting settings} of the configuration.
+		 * @return the settings
+		 */
+		public List<Setting> getSettings() {
+			return this.settings;
+		}
+
+	}
+
+	/**
+	 * A setting in a {@link Configuration}.
+	 */
+	public static final class Setting {
+
+		private final String name;
+
+		private final Object value;
+
+		private Setting(String name, Object value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		/**
+		 * Return the name of the configuration item.
+		 * @return the name
+		 */
+		public String getName() {
+			return this.name;
+		}
+
+		/**
+		 * Return the value. Can be a nested {@link Configuration}.
+		 * @return a simple value or a nested configuration
+		 */
+		public Object getValue() {
+			return this.value;
 		}
 
 	}
@@ -276,9 +393,9 @@ public class MavenPlugin {
 
 		private final List<String> goals;
 
-		private final MavenConfiguration configuration;
+		private final Configuration configuration;
 
-		private Execution(String id, String phase, List<String> goals, MavenConfiguration configuration) {
+		private Execution(String id, String phase, List<String> goals, Configuration configuration) {
 			this.id = id;
 			this.phase = phase;
 			this.goals = Collections.unmodifiableList(goals);
@@ -310,10 +427,10 @@ public class MavenPlugin {
 		}
 
 		/**
-		 * Return the {@linkplain MavenConfiguration configuration} of the execution.
+		 * Return the {@linkplain Configuration configuration} of the execution.
 		 * @return the configuration
 		 */
-		public MavenConfiguration getConfiguration() {
+		public Configuration getConfiguration() {
 			return this.configuration;
 		}
 

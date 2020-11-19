@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,7 @@ public class MavenBuild extends Build {
 
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
-
-		this.profiles = new MavenProfileContainer(super.getResolver());
+		this.profiles = new MavenProfileContainer(determineBuildItemResolver(buildItemResolver));
 	}
 
 	public MavenBuild() {
@@ -106,6 +105,11 @@ public class MavenBuild extends Build {
 		return this.plugins;
 	}
 
+	/**
+	 * Return the {@linkplain MavenProfileContainer profile container} to use to configure
+	 * profiles.
+	 * @return the {@link MavenProfileContainer}
+	 */
 	public MavenProfileContainer profiles() {
 		return this.profiles;
 	}

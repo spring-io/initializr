@@ -16,81 +16,76 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
-import java.util.Arrays;
-
-import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
-import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.MavenRepository;
-
+import io.spring.initializr.generator.buildsystem.maven.MavenProfile.Settings;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
+/**
+ * Tests for {@link MavenProfile}.
+ */
 class MavenProfileTests {
 
-	@Mock
-	private BuildItemResolver buildItemResolver;
-
 	@Test
-	void profileEmpty() {
-		MavenProfile profile = new MavenProfile.Builder("profile1", this.buildItemResolver).build();
-		assertThat(profile.getId()).isEqualTo("profile1");
-		assertThat(profile.getActivation()).isNull();
-		assertThat(profile.getBuild()).isNull();
-		assertThat(profile.getModules()).isNull();
-		assertThat(profile.getRepositories().isEmpty()).isTrue();
-		assertThat(profile.getPluginRepositories().isEmpty()).isTrue();
-		assertThat(profile.getDependencies().isEmpty()).isTrue();
-		assertThat(profile.getReporting()).isNull();
-		assertThat(profile.getDependencyManagement().isEmpty()).isTrue();
+	void profileWithNoCustomization() {
+		MavenProfile profile = createProfile("test");
+		assertThat(profile.getId()).isEqualTo("test");
+		assertThat(profile.getActivation().isEmpty()).isTrue();
+		assertThat(profile.properties().isEmpty()).isTrue();
+		assertThat(profile.dependencies().isEmpty()).isTrue();
+		assertThat(profile.resources().isEmpty()).isTrue();
+		assertThat(profile.testResources().isEmpty()).isTrue();
+		assertThat(profile.plugins().isEmpty()).isTrue();
+		assertThat(profile.boms().isEmpty()).isTrue();
+		assertThat(profile.repositories().isEmpty()).isTrue();
+		assertThat(profile.pluginRepositories().isEmpty()).isTrue();
 		assertThat(profile.getDistributionManagement().isEmpty()).isTrue();
-		assertThat(profile.getProperties()).isNull();
 	}
 
 	@Test
-	void profileWithFullData() {
-		MavenProfile profile = new MavenProfile.Builder("profile1", this.buildItemResolver)
-				.activation((activation) -> activation.activeByDefault(true))
-				.build((build) -> build.defaultGoal("goal1")).module("module1").module("module2")
-				.repositories((repositories) -> repositories.add("repository1",
-						MavenRepository.withIdAndUrl("repository1", "url").build()))
-				.pluginRepositories((pluginRepositories) -> pluginRepositories.add("pluginRepository1",
-						MavenRepository.withIdAndUrl("pluginRepository1", "url2").build()))
-				.dependencies((dependencies) -> dependencies.add("dependency1",
-						Dependency.withCoordinates("com.example", "demo").build()))
-				.reporting((reporting) -> reporting.outputDirectory("directory1"))
-				.dependencyManagement((dependencyManagement) -> dependencyManagement.add("dependencyManagement1",
-						BillOfMaterials.withCoordinates("com.example1", "demo1").build()))
-				.distributionManagement((distributionManagement) -> distributionManagement.downloadUrl("url"))
-				.properties((properties) -> properties.add("name1", "value1")).build();
-
-		assertThat(profile.getId()).isEqualTo("profile1");
-		assertThat(profile.getActivation()).isNotNull();
-		assertThat(profile.getActivation().getActiveByDefault()).isTrue();
-		assertThat(profile.getBuild()).isNotNull();
-		assertThat(profile.getBuild().getDefaultGoal()).isEqualTo("goal1");
-		assertThat(profile.getModules()).isNotNull();
-		assertThat(profile.getModules()).isEqualTo(Arrays.asList("module1", "module2"));
-		assertThat(profile.getRepositories()).isNotNull();
-		assertThat(profile.getRepositories().has("repository1")).isTrue();
-		assertThat(profile.getPluginRepositories()).isNotNull();
-		assertThat(profile.getPluginRepositories().has("pluginRepository1")).isTrue();
-		assertThat(profile.getDependencies()).isNotNull();
-		assertThat(profile.getDependencies().has("dependency1")).isTrue();
-		assertThat(profile.getReporting()).isNotNull();
-		assertThat(profile.getReporting().getOutputDirectory()).isEqualTo("directory1");
-		assertThat(profile.getDependencyManagement()).isNotNull();
-		assertThat(profile.getDependencyManagement().has("dependencyManagement1")).isTrue();
-		assertThat(profile.getProperties()).isNotNull();
-		assertThat(profile.getProperties().getSettings()).hasOnlyOneElementSatisfying((settings) -> {
-			assertThat(settings.getName()).isEqualTo("name1");
-			assertThat(settings.getValue()).isEqualTo("value1");
+	void profileWithActivation() {
+		MavenProfile profile = createProfile("test");
+		profile.activation().jdk("15").property("test", "value").jdk(null);
+		assertThat(profile.getActivation().getProperty()).satisfies((property) -> {
+			assertThat(property.getName()).isEqualTo("test");
+			assertThat(property.getValue()).isEqualTo("value");
 		});
+		assertThat(profile.getActivation().getJdk()).isNull();
+	}
+
+	@Test
+	void profileWithDefaultGoal() {
+		MavenProfile profile = createProfile("test");
+		profile.settings().defaultGoal("verify");
+		Settings settings = profile.getSettings();
+		assertThat(settings.getDefaultGoal()).isEqualTo("verify");
+		assertThat(settings.getFinalName()).isNull();
+	}
+
+	@Test
+	void profileWithFinalName() {
+		MavenProfile profile = createProfile("test");
+		profile.settings().finalName("test-app");
+		Settings settings = profile.getSettings();
+		assertThat(settings.getDefaultGoal()).isNull();
+		assertThat(settings.getFinalName()).isEqualTo("test-app");
+	}
+
+	@Test
+	void profileWithDistributionManagement() {
+		MavenProfile profile = createProfile("test");
+		profile.distributionManagement().downloadUrl("https://example.com/download");
+		MavenDistributionManagement dm = profile.getDistributionManagement();
+		assertThat(dm.getDownloadUrl()).isEqualTo("https://example.com/download");
+		assertThat(dm.getRepository().isEmpty()).isTrue();
+		assertThat(dm.getSnapshotRepository().isEmpty()).isTrue();
+		assertThat(dm.getSite().isEmpty()).isTrue();
+		assertThat(dm.getRepository().isEmpty()).isTrue();
+	}
+
+	private MavenProfile createProfile(String id) {
+		return new MavenProfile(id, BuildItemResolver.NO_OP);
 	}
 
 }

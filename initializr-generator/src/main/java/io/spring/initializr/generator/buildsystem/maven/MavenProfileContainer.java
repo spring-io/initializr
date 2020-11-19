@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,26 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 
+/**
+ * A container for {@link MavenProfile maven profiles}.
+ *
+ * @author Stephane Nicoll
+ * @author Daniel Andres Pelaez Lopez
+ */
 public class MavenProfileContainer {
 
-	private final Map<String, MavenProfile.Builder> profiles = new LinkedHashMap<>();
+	private final Map<String, MavenProfile> profiles = new LinkedHashMap<>();
 
 	private final BuildItemResolver buildItemResolver;
 
+	/**
+	 * Create an instance with the {@link BuildItemResolver} to use.
+	 * @param buildItemResolver the build item resolver to use
+	 */
 	public MavenProfileContainer(BuildItemResolver buildItemResolver) {
 		this.buildItemResolver = buildItemResolver;
 	}
@@ -42,65 +51,47 @@ public class MavenProfileContainer {
 	}
 
 	/**
-	 * Returns a {@link Stream} of registered {@link MavenProfile}s.
-	 * @return a stream of {@link MavenProfile}s
-	 */
-	public Stream<MavenProfile> values() {
-		return this.profiles.values().stream().map(MavenProfile.Builder::build);
-	}
-
-	/**
-	 * Add a {@link MavenProfile} with the specified {@code id} and
-	 * {@code activateByDefault}.
+	 * Specify if this container has a profile with the specified {@code id}.
 	 * @param id the id of the profile
-	 */
-	public void add(String id) {
-		createProfileBuilder(id);
-	}
-
-	/**
-	 * Specify if this container has a plugin with the specified {@code groupId} and
-	 * {@code artifactId}.
-	 * @param id the groupId of the plugin
-	 * @return {@code true} if an item with the specified {@code groupId} and
-	 * {@code artifactId} exists
+	 * @return {@code true} if a profile with the specified {@code id} exists
 	 */
 	public boolean has(String id) {
 		return this.profiles.containsKey(id);
 	}
 
 	/**
-	 * Add a {@link MavenProfile} with the specified {@code id} and
-	 * {@code activateByDefault} and {@link MavenProfile.Builder} to customize the
-	 * profile. If the profile has already been added, the profileBuilder can be used to
-	 * further tune the existing profile configuration.
-	 * @param id the id of the profile
-	 * @param profileBuilder a {@link MavenProfile.Builder} to customize the
-	 * {@link MavenProfile}
+	 * Return a {@link Stream} of registered profile identifiers.
+	 * @return a stream of profile ids
 	 */
-	public void add(String id, Consumer<MavenProfile.Builder> profileBuilder) {
-		profileBuilder.accept(createProfileBuilder(id));
+	public Stream<String> ids() {
+		return this.profiles.keySet().stream();
 	}
 
 	/**
-	 * Remove the plugin with the specified {@code groupId} and {@code artifactId}.
-	 * @param id the groupId of the plugin to remove
-	 * @return {@code true} if such a plugin was registered, {@code false} otherwise
+	 * Returns a {@link Stream} of registered {@link MavenProfile}s.
+	 * @return a stream of {@link MavenProfile}s
+	 */
+	public Stream<MavenProfile> values() {
+		return this.profiles.values().stream();
+	}
+
+	/**
+	 * Return the profile with the specified {@code id}. If no such profile exists a new
+	 * profile is created.
+	 * @param id the id of the profile
+	 * @return the {@link MavenProfile} for that id
+	 */
+	public MavenProfile id(String id) {
+		return this.profiles.computeIfAbsent(id, (key) -> new MavenProfile(id, this.buildItemResolver));
+	}
+
+	/**
+	 * Remove the profile with the specified {@code id}.
+	 * @param id the id of the profile
+	 * @return {@code true} if such a profile was registered, {@code false} otherwise
 	 */
 	public boolean remove(String id) {
 		return this.profiles.remove(id) != null;
-	}
-
-	private MavenProfile.Builder createProfileBuilder(String id) {
-		MavenProfile.Builder profileBuilder = this.profiles.get(id);
-		if (profileBuilder == null) {
-			MavenProfile.Builder builder = new MavenProfile.Builder(id, this.buildItemResolver);
-			this.profiles.put(id, builder);
-			return builder;
-		}
-		else {
-			return profileBuilder;
-		}
 	}
 
 }
