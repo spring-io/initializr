@@ -83,6 +83,14 @@ public class MavenBuildWriter {
 		});
 	}
 
+	/**
+	 * Return the {@link Comparator} to use to sort dependencies.
+	 * @return a dependency comparator
+	 */
+	protected Comparator<Dependency> getDependencyComparator() {
+		return DependencyComparator.INSTANCE;
+	}
+
 	private void writeProject(IndentingWriter writer, Runnable whenWritten) {
 		writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		writer.println(
@@ -214,7 +222,7 @@ public class MavenBuildWriter {
 	private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
 			Predicate<DependencyScope> filter) {
 		Collection<Dependency> candidates = dependencies.items().filter((dep) -> filter.test(dep.getScope()))
-				.sorted(DependencyComparator.INSTANCE).collect(Collectors.toList());
+				.sorted(getDependencyComparator()).collect(Collectors.toList());
 		writeCollection(writer, candidates, this::writeDependency);
 		return candidates;
 	}

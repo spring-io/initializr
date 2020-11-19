@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,6 +142,14 @@ public abstract class GradleBuildWriter {
 		return (scope) -> Arrays.asList(validScopes).contains(scope);
 	}
 
+	/**
+	 * Return the {@link Comparator} to use to sort dependencies.
+	 * @return a dependency comparator
+	 */
+	protected Comparator<Dependency> getDependencyComparator() {
+		return DependencyComparator.INSTANCE;
+	}
+
 	protected abstract void writeDependency(IndentingWriter writer, Dependency dependency);
 
 	protected String configurationForDependency(Dependency dependency) {
@@ -242,9 +250,9 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writeProperty(IndentingWriter writer, String name, String value);
 
-	private static Collection<Dependency> filterDependencies(DependencyContainer dependencies,
+	private Collection<Dependency> filterDependencies(DependencyContainer dependencies,
 			Predicate<DependencyScope> filter) {
-		return dependencies.items().filter((dep) -> filter.test(dep.getScope())).sorted(DependencyComparator.INSTANCE)
+		return dependencies.items().filter((dep) -> filter.test(dep.getScope())).sorted(getDependencyComparator())
 				.collect(Collectors.toList());
 	}
 

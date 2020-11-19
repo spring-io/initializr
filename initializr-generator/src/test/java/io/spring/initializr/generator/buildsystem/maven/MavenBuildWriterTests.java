@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.io.StringWriter;
+import java.util.Comparator;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -421,6 +422,39 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithOrderedDependencies() {
+		MavenBuild build = new MavenBuild();
+		build.dependencies().add("beta", Dependency.withCoordinates("com.example", "beta"));
+		build.dependencies().add("alpha", Dependency.withCoordinates("com.example", "alpha"));
+		build.dependencies().add("web",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
+		String pom = writePom(new MavenBuildWriter(), build);
+		assertThat(pom).containsSubsequence("<artifactId>spring-boot-starter</artifactId>",
+				"<artifactId>spring-boot-starter-web</artifactId>", "<artifactId>alpha</artifactId>",
+				"<artifactId>beta</artifactId>");
+	}
+
+	@Test
+	void pomWithOrderedDependenciesAndCustomComparator() {
+		MavenBuild build = new MavenBuild();
+		build.dependencies().add("beta", Dependency.withCoordinates("com.example", "beta"));
+		build.dependencies().add("alpha", Dependency.withCoordinates("com.example", "alpha"));
+		build.dependencies().add("web",
+				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
+		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
+		MavenBuildWriter writer = new MavenBuildWriter() {
+			@Override
+			protected Comparator<Dependency> getDependencyComparator() {
+				return Comparator.comparing(Dependency::getArtifactId);
+			}
+		};
+		String pom = writePom(writer, build);
+		assertThat(pom).containsSubsequence("<artifactId>alpha</artifactId>", "<artifactId>beta</artifactId>",
+				"<artifactId>spring-boot-starter</artifactId>", "<artifactId>spring-boot-starter-web</artifactId>");
+	}
+
+	@Test
 	void pomWithBom() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
@@ -822,17 +856,16 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo").name("<demo project>")
 				.description("A \"demo\" project for 'developers' & 'testers'");
-		String pom = writePom(build);
+		String pom = writePom(new MavenBuildWriter(), build);
 		assertThat(pom).contains("<name>&lt;demo project&gt;</name>").contains(
 				"<description>A &quot;demo&quot; project for &apos;developers&apos; &amp; &apos;testers&apos;</description>");
 	}
 
 	private void generatePom(MavenBuild mavenBuild, Consumer<NodeAssert> consumer) {
-		consumer.accept(new NodeAssert(writePom(mavenBuild)));
+		consumer.accept(new NodeAssert(writePom(new MavenBuildWriter(), mavenBuild)));
 	}
 
-	private String writePom(MavenBuild mavenBuild) {
-		MavenBuildWriter writer = new MavenBuildWriter();
+	private String writePom(MavenBuildWriter writer, MavenBuild mavenBuild) {
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out), mavenBuild);
 		return out.toString();
