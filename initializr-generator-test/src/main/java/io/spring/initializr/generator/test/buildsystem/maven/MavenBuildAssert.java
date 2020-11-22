@@ -298,7 +298,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 				}
 				if (url != null) {
 					try {
-						new UrlAssert(repository.getUrl()).isEqualTo(new URL(url));
+						new UrlAssert(repository.getUrl()).isEqualToWithSortedQueryParameters(new URL(url));
 					}
 					catch (MalformedURLException ex) {
 						throw new IllegalArgumentException("Cannot parse URL", ex);
