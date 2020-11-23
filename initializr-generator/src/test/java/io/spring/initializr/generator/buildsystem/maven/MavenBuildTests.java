@@ -139,4 +139,46 @@ class MavenBuildTests {
 				.satisfies((testPlugin) -> assertThat(testPlugin.isExtensions()).isTrue());
 	}
 
+	@Test
+	void mavenProfileCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.profiles().id("test").activation().jdk("15");
+		build.profiles().id("test").properties().property("test", "value");
+		assertThat(build.profiles().values()).singleElement().satisfies((profile) -> {
+			assertThat(profile.getActivation().getActiveByDefault()).isNull();
+			assertThat(profile.getActivation().getJdk()).isEqualTo("15");
+			assertThat(profile.getActivation().getOs()).isNull();
+			assertThat(profile.getActivation().getProperty()).isNull();
+			assertThat(profile.getActivation().getFile()).isNull();
+			assertThat(profile.properties().values()).singleElement().satisfies((property) -> {
+				assertThat(property.getKey()).isEqualTo("test");
+				assertThat(property.getValue()).isEqualTo("value");
+			});
+		});
+	}
+
+	@Test
+	void mavenProfileActivationCanBeAmended() {
+		MavenBuild build = new MavenBuild();
+		build.profiles().id("test").activation().jdk("15");
+		build.profiles().id("test").activation().jdk(null).activeByDefault(true);
+		assertThat(build.profiles().values()).singleElement().satisfies((profile) -> {
+			assertThat(profile.getActivation().getActiveByDefault()).isTrue();
+			assertThat(profile.getActivation().getJdk()).isNull();
+			assertThat(profile.getActivation().getOs()).isNull();
+			assertThat(profile.getActivation().getProperty()).isNull();
+			assertThat(profile.getActivation().getFile()).isNull();
+		});
+	}
+
+	@Test
+	void mavenProfileCanBeRemoved() {
+		MavenBuild build = new MavenBuild();
+		build.profiles().id("test").activation().jdk("15");
+		assertThat(build.profiles().ids()).containsOnly("test");
+		build.profiles().remove("test");
+		assertThat(build.profiles().ids()).isEmpty();
+		assertThat(build.profiles().values()).isEmpty();
+	}
+
 }
