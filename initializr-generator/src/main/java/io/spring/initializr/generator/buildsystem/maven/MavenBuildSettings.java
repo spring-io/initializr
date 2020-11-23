@@ -163,9 +163,7 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
-	 * Builder for a Maven dependency.
-	 *
-	 * @see MavenDependency#withCoordinates(String, String)
+	 * Builder for {@link BuildSettings}.
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
 
