@@ -21,12 +21,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportSelector;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.support.SpringFactoriesLoader;
-import org.springframework.core.type.AnnotationMetadata;
 
 /**
  * Main entry point for project generation that processes a {@link ProjectDescription} by
@@ -104,8 +101,8 @@ public class ProjectGenerator {
 	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator)
 			throws ProjectGenerationException {
 		try (ProjectGenerationContext context = this.contextFactory.get()) {
-			context.registerBean(ProjectDescription.class, resolve(description, context));
-			context.register(CoreConfiguration.class);
+			registerProjectDescription(context, description);
+			registerProjectContributors(context, description);
 			this.contextConsumer.accept(context);
 			context.refresh();
 			try {
@@ -115,6 +112,30 @@ public class ProjectGenerator {
 				throw new ProjectGenerationException("Failed to generate project", ex);
 			}
 		}
+	}
+
+	/**
+	 * Return the {@link ProjectGenerationConfiguration} class names that should be
+	 * considered. By default this method will load candidates using
+	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration}.
+	 * @param description the description of the project to generate
+	 * @return a list of candidate configurations
+	 */
+	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
+		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
+				getClass().getClassLoader());
+	}
+
+	private void registerProjectDescription(ProjectGenerationContext context, ProjectDescription description) {
+		context.registerBean(ProjectDescription.class, resolve(description, context));
+	}
+
+	private void registerProjectContributors(ProjectGenerationContext context, ProjectDescription description) {
+		getCandidateProjectGenerationConfigurations(description).forEach((configurationClassName) -> {
+			GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+			beanDefinition.setBeanClassName(configurationClassName);
+			context.registerBeanDefinition(configurationClassName, beanDefinition);
+		});
 	}
 
 	private Supplier<ProjectDescription> resolve(ProjectDescription description, ProjectGenerationContext context) {
@@ -132,32 +153,6 @@ public class ProjectGenerator {
 			}
 			return description;
 		};
-	}
-
-	/**
-	 * {@link Configuration} class that registers all available
-	 * {@link ProjectGenerationConfiguration} classes.
-	 */
-	@Configuration
-	@Import(ProjectGenerationImportSelector.class)
-	static class CoreConfiguration {
-
-	}
-
-	/**
-	 * {@link ImportSelector} for loading classes configured in {@code spring.factories}
-	 * using the
-	 * {@code io.spring.initializr.generator.project.ProjectGenerationConfiguration} key.
-	 */
-	static class ProjectGenerationImportSelector implements ImportSelector {
-
-		@Override
-		public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-			List<String> factories = SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-					getClass().getClassLoader());
-			return factories.toArray(new String[0]);
-		}
-
 	}
 
 }

@@ -17,10 +17,16 @@
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.project.contributor.TestProjectGenerationConfiguration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InOrder;
 
 import org.springframework.beans.factory.support.BeanDefinitionOverrideException;
@@ -164,6 +170,27 @@ public class ProjectGeneratorTests {
 		Map<String, String> candidates = generator.generate(new MutableProjectDescription(),
 				(context) -> context.getBeansOfType(String.class));
 		assertThat(candidates).containsOnly(entry("testBean", "duplicate"));
+	}
+
+	@Test
+	void generateCanBeExtendedToFilterProjectContributors(@TempDir Path projectDir) {
+		ProjectDescription description = mock(ProjectDescription.class);
+		given(description.getArtifactId()).willReturn("test-custom-contributor");
+		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());
+		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr()) {
+			@Override
+			protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
+				assertThat(description).isSameAs(description);
+				return Collections.singletonList(TestProjectGenerationConfiguration.class.getName());
+			}
+		};
+		DefaultProjectAssetGenerator assetGenerator = new DefaultProjectAssetGenerator((desc) -> projectDir);
+		Path outputDir = generator.generate(description, assetGenerator);
+		Path expectedFile = outputDir.resolve("artifact-id.txt");
+		assertThat(expectedFile).isRegularFile();
+		assertThat(expectedFile).hasContent("test-custom-contributor");
+		verify(description).getArtifactId();
+		verify(description).getBuildSystem();
 	}
 
 	@SuppressWarnings("unchecked")
