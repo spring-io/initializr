@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.spring.AbstractComplianceTests;
 import io.spring.initializr.generator.test.project.ProjectStructure;
-import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -87,16 +86,6 @@ class CodeComplianceTests extends AbstractComplianceTests {
 
 	@ParameterizedTest
 	@MethodSource("parameters")
-	void previousGenerationMainClass(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.1.1.RELEASE",
-				(description) -> description.setPlatformVersion(Version.parse("1.5.18.RELEASE")));
-		assertThat(project).asJvmModule(language).mainSource("com.example.demo", "DemoApplication")
-				.hasSameContentAs(new ClassPathResource(
-						"project/" + language + "/previous/" + "/DemoApplication." + getExpectedExtension(language)));
-	}
-
-	@ParameterizedTest
-	@MethodSource("parameters")
 	void currentGenerationTestClass(Language language) {
 		ProjectStructure project = generateProject(language, maven, "2.1.1.RELEASE");
 		assertThat(project).asJvmModule(language).testSource("com.example.demo", "DemoApplicationTests")
@@ -126,18 +115,6 @@ class CodeComplianceTests extends AbstractComplianceTests {
 
 	@ParameterizedTest
 	@MethodSource("parameters")
-	void previousGenerationServletInitializer(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.1.1.RELEASE", (description) -> {
-			description.setPackaging(Packaging.forId("war"));
-			description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		});
-		assertThat(project).asJvmModule(language).mainSource("com.example.demo", "ServletInitializer")
-				.hasSameContentAs(new ClassPathResource(
-						"project/" + language + "/previous/" + "ServletInitializer." + getExpectedExtension(language)));
-	}
-
-	@ParameterizedTest
-	@MethodSource("parameters")
 	void currentGenerationCustomCoordinates(Language language) {
 		ProjectStructure project = generateProject(language, maven, "2.1.1.RELEASE", (description) -> {
 			description.setGroupId("com.example.acme");
@@ -151,20 +128,6 @@ class CodeComplianceTests extends AbstractComplianceTests {
 		assertThat(project).asJvmModule(language).testSource("com.example.acme.myproject", "MyProjectApplicationTests")
 				.hasSameContentAs(new ClassPathResource("project/" + language + "/standard/MyProjectApplicationTests."
 						+ getExpectedExtension(language)));
-	}
-
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void previousGenerationCustomCoordinates(Language language) {
-		ProjectStructure project = generateProject(language, maven, "1.5.18.RELEASE", (description) -> {
-			description.setGroupId("com.example.acme");
-			description.setArtifactId("my-project");
-			description.setPackageName("com.example.acme.myproject");
-			description.setApplicationName("MyProjectApplication");
-		});
-		assertThat(project).asJvmModule(language).mainSource("com.example.acme.myproject", "MyProjectApplication")
-				.hasSameContentAs(new ClassPathResource(
-						"project/" + language + "/previous/MyProjectApplication." + getExpectedExtension(language)));
 	}
 
 	private String getExpectedExtension(Language language) {

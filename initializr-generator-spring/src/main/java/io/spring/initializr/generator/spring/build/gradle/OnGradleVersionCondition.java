@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
-	private static final VersionRange GRADLE_3_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[1.5.0.M1,2.0.0.M1)");
-
 	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.0.0.M1, 2.1.0.M1)");
 
 	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT
@@ -60,9 +58,6 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private String determineGradleGeneration(Version platformVersion) {
 		if (platformVersion == null) {
 			return null;
-		}
-		else if (GRADLE_3_VERSION_RANGE.match(platformVersion)) {
-			return "3";
 		}
 		else if (GRADLE_4_VERSION_RANGE.match(platformVersion)) {
 			return "4";

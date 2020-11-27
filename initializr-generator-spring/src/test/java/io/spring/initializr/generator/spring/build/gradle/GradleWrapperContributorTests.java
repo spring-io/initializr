@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class GradleWrapperContributorTests {
 	Path directory;
 
 	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments("3"), Arguments.arguments("4"), Arguments.arguments("5"));
+		return Stream.of(Arguments.arguments("4"), Arguments.arguments("5"));
 	}
 
 	@ParameterizedTest(name = "Gradle {0}")

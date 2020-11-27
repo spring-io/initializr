@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,16 +57,11 @@ class BuildComplianceTests extends AbstractComplianceTests {
 
 	private static final Language kotlin = new KotlinLanguage();
 
-	static Stream<Arguments> previousGenerationParameters() {
-		return Stream.of(Arguments.arguments(BuildSystem.forId(MavenBuildSystem.ID), "pom.xml"),
-				Arguments.arguments(BuildSystem.forId(GradleBuildSystem.ID), "build.gradle"));
-	}
-
 	static Stream<Arguments> parameters() {
-		return Stream.concat(previousGenerationParameters(),
-				Stream.of(Arguments.arguments(
-						BuildSystem.forIdAndDialect(GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN),
-						"build.gradle.kts")));
+		return Stream.of(Arguments.arguments(BuildSystem.forId(MavenBuildSystem.ID), "pom.xml"),
+				Arguments.arguments(BuildSystem.forId(GradleBuildSystem.ID), "build.gradle"),
+				Arguments.arguments(BuildSystem.forIdAndDialect(GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN),
+						"build.gradle.kts"));
 	}
 
 	@ParameterizedTest
@@ -141,30 +136,6 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		ProjectStructure project = generateProject(language, build, "2.2.0.RELEASE");
 		assertThat(project).textFile(fileName).hasSameContentAs(
 				new ClassPathResource("project/" + language + "/next/" + getAssertFileName(fileName)));
-	}
-
-	@ParameterizedTest
-	@MethodSource("previousGenerationParameters")
-	void previousGenerationJarJava(BuildSystem build, String fileName) {
-		testPreviousGenerationJar(java, build, fileName);
-	}
-
-	@ParameterizedTest
-	@MethodSource("previousGenerationParameters")
-	void previousGenerationJarGroovy(BuildSystem build, String fileName) {
-		testPreviousGenerationJar(groovy, build, fileName);
-	}
-
-	@ParameterizedTest
-	@MethodSource("previousGenerationParameters")
-	void previousGenerationJarKotlin(BuildSystem build, String fileName) {
-		testPreviousGenerationJar(kotlin, build, fileName);
-	}
-
-	private void testPreviousGenerationJar(Language language, BuildSystem build, String fileName) {
-		ProjectStructure project = generateProject(language, build, "1.5.18.RELEASE");
-		assertThat(project).textFile(fileName).hasSameContentAs(
-				new ClassPathResource("project/" + language + "/previous/" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest

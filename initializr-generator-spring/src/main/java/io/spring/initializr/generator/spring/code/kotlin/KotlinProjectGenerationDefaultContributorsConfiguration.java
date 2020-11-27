@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ import org.springframework.context.annotation.Configuration;
 class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
-	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	@ConditionalOnPlatformVersion("[2.0.0.RELEASE,2.2.0.M3)")
 	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
@@ -74,8 +74,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	BuildCustomizer<Build> kotlinDependenciesConfigurer(ProjectDescription description) {
-		return new KotlinDependenciesConfigurer(description.getPlatformVersion());
+	BuildCustomizer<Build> kotlinDependenciesConfigurer() {
+		return new KotlinDependenciesConfigurer();
 	}
 
 	@Bean
@@ -89,31 +89,6 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
 	KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
 		return new KotlinJpaMavenBuildCustomizer(metadata);
-	}
-
-	/**
-	 * Configuration for Kotlin projects using Spring Boot 1.5.
-	 */
-	@Configuration
-	@ConditionalOnPlatformVersion("[1.5.0.M1, 2.0.0.M1)")
-	static class SpringBoot15KotlinProjectGenerationConfiguration {
-
-		@Bean
-		@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-		KotlinMavenFullBuildCustomizer kotlinBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
-			return new KotlinMavenFullBuildCustomizer(kotlinProjectSettings);
-		}
-
-		@Bean
-		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> boot15MainFunctionContributor(
-				ProjectDescription description) {
-			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
-					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
-							.body(new KotlinExpressionStatement(
-									new KotlinFunctionInvocation("org.springframework.boot.SpringApplication", "run",
-											description.getApplicationName() + "::class.java", "*args"))));
-		}
-
 	}
 
 	/**

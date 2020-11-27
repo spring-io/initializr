@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
-import io.spring.initializr.generator.buildsystem.gradle.Gradle3BuildWriter;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleBuildWriter;
@@ -119,40 +118,6 @@ public class GradleProjectGenerationConfiguration {
 	public GradleBuildProjectContributor gradleKtsBuildProjectContributor(KotlinDslGradleBuildWriter buildWriter,
 			GradleBuild build) {
 		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle.kts");
-	}
-
-	/**
-	 * Configuration specific to projects using Gradle 3.
-	 */
-	@Configuration
-	@ConditionalOnGradleVersion("3")
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	static class Gradle3ProjectGenerationConfiguration {
-
-		@Bean
-		Gradle3BuildWriter gradleBuildWriter() {
-			return new Gradle3BuildWriter();
-		}
-
-		@Bean
-		GradleWrapperContributor gradle3WrapperContributor() {
-			return new GradleWrapperContributor("3");
-		}
-
-		@Bean
-		Gradle3SettingsGradleProjectContributor settingsGradleProjectContributor(GradleBuild build) {
-			return new Gradle3SettingsGradleProjectContributor(build);
-		}
-
-		@Bean
-		BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description) {
-			return (build) -> {
-				build.buildscript((buildscript) -> buildscript.dependency(
-						"org.springframework.boot:spring-boot-gradle-plugin:" + description.getPlatformVersion()));
-				build.plugins().apply("org.springframework.boot");
-			};
-		}
-
 	}
 
 	/**

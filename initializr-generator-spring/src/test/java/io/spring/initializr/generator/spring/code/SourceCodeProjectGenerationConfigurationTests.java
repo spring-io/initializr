@@ -87,11 +87,6 @@ class SourceCodeProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void springBoot15WarServletInitializerContributor() {
-		runWarTest("1.5.0", "org.springframework.boot.web.support.SpringBootServletInitializer");
-	}
-
-	@Test
 	void springBoot20WarServletInitializerContributor() {
 		runWarTest("2.1.0", "org.springframework.boot.web.servlet.support.SpringBootServletInitializer");
 	}

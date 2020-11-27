@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Bean;
 public class BuildProjectGenerationConfiguration {
 
 	@Bean
-	@ConditionalOnPlatformVersion("[1.5.0.RELEASE,2.2.0.M3)")
+	@ConditionalOnPlatformVersion("[2.0.0.RELEASE,2.2.0.M3)")
 	public BuildCustomizer<Build> junit4TestStarterContributor() {
 		return (build) -> build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
 				DependencyScope.TEST_COMPILE);

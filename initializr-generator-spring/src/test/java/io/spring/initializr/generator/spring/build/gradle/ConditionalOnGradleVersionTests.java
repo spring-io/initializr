@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,14 +37,6 @@ public class ConditionalOnGradleVersionTests {
 			.withConfiguration(GradleVersionTestConfiguration.class);
 
 	@Test
-	void outcomeWithSpringBoot15() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
-				.getBean(String.class).isEqualTo("testGradle3"));
-	}
-
-	@Test
 	void outcomeWithSpringBoot20() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
@@ -74,37 +66,23 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
-	void outcomeWithSpringBoot15AndMultipleGenerations() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("1.5.18.RELEASE"));
-		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
-				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle3", "gradle3AndLater"));
-	}
-
-	@Test
 	void outcomeWithSpringBoot20AndMultipleGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
-				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle4", "gradle3AndLater"));
+		this.projectTester.withConfiguration(Gradle4Or5TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle4", "gradle4Or5"));
 	}
 
 	@Test
-	void outcomeWithSpringBoot21AndMultipleNonMatchingGenerations() {
+	void outcomeWithSpringBoot24AndMultipleNonMatchingGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
-		this.projectTester.withConfiguration(Gradle3Or4TestConfiguration.class).configure(description,
-				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle5"));
+		description.setPlatformVersion(Version.parse("2.4.0"));
+		this.projectTester.withConfiguration(Gradle4Or5TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle6"));
 	}
 
 	@Configuration
 	static class GradleVersionTestConfiguration {
-
-		@Bean
-		@ConditionalOnGradleVersion("3")
-		String gradle3() {
-			return "testGradle3";
-		}
 
 		@Bean
 		@ConditionalOnGradleVersion("4")
@@ -118,15 +96,21 @@ public class ConditionalOnGradleVersionTests {
 			return "testGradle5";
 		}
 
+		@Bean
+		@ConditionalOnGradleVersion("6")
+		String gradle6() {
+			return "testGradle6";
+		}
+
 	}
 
 	@Configuration
-	static class Gradle3Or4TestConfiguration {
+	static class Gradle4Or5TestConfiguration {
 
 		@Bean
-		@ConditionalOnGradleVersion({ "3", "4" })
-		String gradle3AndLater() {
-			return "testGradle3AndLater";
+		@ConditionalOnGradleVersion({ "4", "5" })
+		String gradle4Or5() {
+			return "testGradle4Or5";
 		}
 
 	}
