@@ -131,14 +131,14 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	@Test
 	void convertWhenDependencyOutOfRangeShouldThrowException() {
 		Dependency dependency = Dependency.withId("foo");
-		dependency.setRange(new VersionRange(Version.parse("2.2.0.M1")));
+		dependency.setRange(new VersionRange(Version.parse("2.5.0.M1")));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
 				.build();
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Collections.singletonList("foo"));
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
 				.isThrownBy(() -> this.converter.convert(request, metadata))
-				.withMessage("Dependency 'foo' is not compatible " + "with Spring Boot 2.1.1.RELEASE");
+				.withMessage("Dependency 'foo' is not compatible " + "with Spring Boot 2.4.1");
 	}
 
 	@Test

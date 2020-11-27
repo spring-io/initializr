@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ class ProjectGenerationStatPublisherTests {
 		request.setGroupId("com.example.acme");
 		request.setArtifactId("project");
 		request.setType("maven-project");
-		request.setBootVersion("2.1.1.RELEASE");
+		request.setBootVersion("2.4.1");
 		request.setDependencies(Arrays.asList("web", "data-jpa"));
 		request.setLanguage("java");
 		request.getParameters().put("user-agent", "curl/1.2.4");

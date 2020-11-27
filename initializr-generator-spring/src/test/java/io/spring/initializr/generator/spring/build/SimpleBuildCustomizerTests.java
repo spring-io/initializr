@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ class SimpleBuildCustomizerTests {
 	@Test
 	void customizeVersion() {
 		MutableProjectDescription description = initializeDescription();
-		description.setVersion("1.5.6.RELEASE");
+		description.setVersion("2.4.0");
 		MavenBuild build = customizeBuild(description);
-		assertThat(build.getSettings().getVersion()).isEqualTo("1.5.6.RELEASE");
+		assertThat(build.getSettings().getVersion()).isEqualTo("2.4.0");
 	}
 
 	@Test

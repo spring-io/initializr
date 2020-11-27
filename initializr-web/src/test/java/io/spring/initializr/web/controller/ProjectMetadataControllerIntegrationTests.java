@@ -75,12 +75,12 @@ public class ProjectMetadataControllerIntegrationTests extends AbstractInitializ
 	@Test
 	void metadataWithInvalidPlatformVersion() {
 		try {
-			execute("/dependencies?bootVersion=1.5.17.RELEASE", String.class, "application/vnd.initializr.v2.1+json",
+			execute("/dependencies?bootVersion=2.2.17.RELEASE", String.class, "application/vnd.initializr.v2.1+json",
 					"application/json");
 		}
 		catch (HttpClientErrorException ex) {
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertThat(ex.getResponseBodyAsString().contains("1.5.17.RELEASE"));
+			assertThat(ex.getResponseBodyAsString().contains("2.2.17.RELEASE"));
 		}
 	}
 

@@ -9,9 +9,9 @@
   "packaging": "jar",
   "packageName": "com.example.acme.project",
   "version": {
-    "id": "2.1.1.RELEASE",
+    "id": "2.4.1",
     "major": "2",
-    "minor": "2.1"
+    "minor": "2.4"
   },
   "client": {
     "id": "curl",

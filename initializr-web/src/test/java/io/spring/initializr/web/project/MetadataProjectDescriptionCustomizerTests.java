@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MetadataProjectDescriptionCustomizerTests {
 
-	private InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+	private final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 
 	@Test
 	void customizeShouldUseDefaultApplicationNameFromMetadata() {
@@ -47,8 +47,7 @@ class MetadataProjectDescriptionCustomizerTests {
 
 	@Test
 	void customizeShouldUseDefaultPlatformVersionFromMetadata() {
-		assertThat(customize(new MutableProjectDescription()).getPlatformVersion())
-				.isEqualTo(Version.parse("2.1.1.RELEASE"));
+		assertThat(customize(new MutableProjectDescription()).getPlatformVersion()).isEqualTo(Version.parse("2.4.1"));
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 plugins {
-	id("org.springframework.boot") version "2.1.1.RELEASE"
+	id("org.springframework.boot") version "2.4.1"
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 	java
 }
@@ -23,4 +23,8 @@ dependencyManagement {
 	imports {
 		mavenBom("org.acme:foo-bom:${property("fooVersion")}")
 	}
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
 }

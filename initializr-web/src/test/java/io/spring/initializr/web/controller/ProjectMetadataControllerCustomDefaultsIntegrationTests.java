@@ -111,11 +111,11 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 
 	@Test
 	void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.4.1.RELEASE", String.class, null,
+		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.5.1", String.class, null,
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, DEFAULT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("2.4.1", response.getBody());
+		validateDependenciesOutput("2.5.1", response.getBody());
 	}
 
 	protected void validateDependenciesOutput(String version, String actual) throws JSONException {

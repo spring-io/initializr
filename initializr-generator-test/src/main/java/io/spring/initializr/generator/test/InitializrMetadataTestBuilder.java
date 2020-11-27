@@ -162,8 +162,8 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultBootVersions() {
-		return addBootVersion("1.5.17.RELEASE", false).addBootVersion("2.0.3.RELEASE", false)
-				.addBootVersion("2.1.1.RELEASE", true).addBootVersion("2.2.0.BUILD-SNAPSHOT", false);
+		return addBootVersion("2.2.17.RELEASE", false).addBootVersion("2.3.3.RELEASE", false)
+				.addBootVersion("2.4.1", true).addBootVersion("2.5.0-SNAPSHOT", false);
 	}
 
 	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {

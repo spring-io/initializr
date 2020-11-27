@@ -20,7 +20,7 @@
       },
       {
         "default": false,
-        "id": "1.5.17.RELEASE",
+        "id": "2.2.17.RELEASE",
         "name": "1.5.17"
       }
     ],
@@ -224,7 +224,7 @@
             "name": "Biz",
             "scope": "runtime",
             "version": "1.3.5",
-            "compatibilityRange": "2.2.0.BUILD-SNAPSHOT"
+            "compatibilityRange": "2.5.0-SNAPSHOT"
           },
           {
             "starter": true,

@@ -80,7 +80,7 @@
           {
             "id": "org.acme:biz",
             "name": "Biz",
-            "versionRange": "2.2.0.BUILD-SNAPSHOT"
+            "versionRange": "2.5.0.BUILD-SNAPSHOT"
           },
           {
             "id": "org.acme:bur",
@@ -200,7 +200,7 @@
         "name": "2.1.4"
       },
       {
-        "id": "1.5.17.RELEASE",
+        "id": "2.2.17.RELEASE",
         "name": "1.5.17"
       }
     ]
