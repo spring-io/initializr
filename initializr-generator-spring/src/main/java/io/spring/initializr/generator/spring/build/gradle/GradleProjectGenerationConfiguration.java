@@ -54,6 +54,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnBuildSystem(GradleBuildSystem.ID)
 public class GradleProjectGenerationConfiguration {
 
+	private static final int TEST_ORDER = 100;
+
 	private final IndentingWriterFactory indentingWriterFactory;
 
 	public GradleProjectGenerationConfiguration(IndentingWriterFactory indentingWriterFactory) {
@@ -186,7 +188,17 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform"));
+			return new BuildCustomizer<GradleBuild>() {
+				@Override
+				public void customize(GradleBuild build) {
+					build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform"));
+				}
+
+				@Override
+				public int getOrder() {
+					return TEST_ORDER;
+				}
+			};
 		}
 
 		@Bean
@@ -219,7 +231,17 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return (build) -> build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
+			return new BuildCustomizer<GradleBuild>() {
+				@Override
+				public void customize(GradleBuild build) {
+					build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
+				}
+
+				@Override
+				public int getOrder() {
+					return TEST_ORDER;
+				}
+			};
 		}
 
 		@Bean
