@@ -203,7 +203,9 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 					}
 				}
 				if (dependency.getType() != null) {
-					return dependency.getType().equals(actual.getType());
+					if (!dependency.getType().equals(actual.getType())) {
+						return false;
+					}
 				}
 				return true;
 			}
