@@ -28,8 +28,8 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Repository;
 import org.assertj.core.api.BooleanAssert;
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.ObjectAssert;
 import org.assertj.core.api.StringAssert;
-import org.assertj.core.api.UrlAssert;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -203,9 +203,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 					}
 				}
 				if (dependency.getType() != null) {
-					if (!dependency.getType().equals(actual.getType())) {
-						return false;
-					}
+					return dependency.getType().equals(actual.getType());
 				}
 				return true;
 			}
@@ -297,12 +295,8 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 					new StringAssert(repository.getName()).isEqualTo(name);
 				}
 				if (url != null) {
-					try {
-						new UrlAssert(repository.getUrl()).isEqualTo(new URL(url));
-					}
-					catch (MalformedURLException ex) {
-						throw new IllegalArgumentException("Cannot parse URL", ex);
-					}
+					new ObjectAssert<>(repository.getUrl()).describedAs("URL of repository " + id).isNotNull();
+					new StringAssert(repository.getUrl().toExternalForm()).isEqualTo(url);
 				}
 				if (snapshotsEnabled) {
 					new BooleanAssert(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);

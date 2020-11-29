@@ -262,7 +262,7 @@ class MavenBuildAssertTests {
 
 	@Test
 	void hasRepositoriesSize() {
-		assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(2);
+		assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(3);
 	}
 
 	@Test
@@ -273,7 +273,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasRepositoriesSizeWrongSize() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(3));
+				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(2));
 	}
 
 	@Test
@@ -307,6 +307,14 @@ class MavenBuildAssertTests {
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(
 				() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
 						"Acme Milestones", "https://repo.wrong.com/milestone", false));
+	}
+
+	@Test
+	void hasRepositoryWithNullUrl() {
+		assertThatExceptionOfType(AssertionError.class)
+				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-empty",
+						"Acme Empty", "https://repo.wrong.com/milestone", null))
+				.withMessageContaining("URL of repository acme-empty");
 	}
 
 	@Test

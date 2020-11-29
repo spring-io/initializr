@@ -21,6 +21,10 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>acme-empty</id>
+			<name>Acme Empty</name>
+		</repository>
 	</repositories>
 
 </project>
