@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,6 @@ public class StatsProperties {
 		private String indexName = "initializr";
 
 		/**
-		 * Name of the entity to use to publish stats.
-		 */
-		private String entityName = "request";
-
-		/**
 		 * Number of attempts before giving up.
 		 */
 		private int maxAttempts = 3;
@@ -92,14 +87,6 @@ public class StatsProperties {
 
 		public void setIndexName(String indexName) {
 			this.indexName = indexName;
-		}
-
-		public String getEntityName() {
-			return this.entityName;
-		}
-
-		public void setEntityName(String entityName) {
-			this.entityName = entityName;
 		}
 
 		public int getMaxAttempts() {

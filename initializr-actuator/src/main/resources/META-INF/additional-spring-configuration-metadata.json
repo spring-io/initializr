@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "initializr.stats.elastic.entity-name",
+      "type": "java.lang.String",
+      "description": "Name of the entity to use to publish stats.",
+      "deprecation": {
+        "reason": "Elasticsearch does no longer support mapping types.",
+        "level": "error"
+      }
+    }
+  ]
+}
