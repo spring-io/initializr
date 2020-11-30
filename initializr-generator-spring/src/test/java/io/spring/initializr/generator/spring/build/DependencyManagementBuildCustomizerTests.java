@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,22 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	@Test
+	void contributeBomFromMapping() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.getMappings()
+				.add(Dependency.Mapping.create("[2.4.0,2.5.0-M1)", null, null, null, null, "foo-bom", null));
+		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+		bom.getAdditionalBoms().add("bar-bom");
+		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
+				.addBom("bar-bom", additionalBom).addDependencyGroup("test", dependency).build();
+		Build build = createBuild(metadata);
+		build.dependencies().add(dependency.getId());
+		customizeBuild(build, metadata);
+		assertThat(build.boms().items()).hasSize(2);
+	}
+
+	@Test
 	void contributeRepositories() { // ProjectRequestTests#resolveAdditionalRepositories
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setBom("foo-bom");
@@ -70,12 +86,12 @@ class DependencyManagementBuildCustomizerTests {
 	}
 
 	private MavenBuild createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.4.0")));
 	}
 
 	private void customizeBuild(Build build, InitializrMetadata metadata) {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.0.0.RELEASE"));
+		description.setPlatformVersion(Version.parse("2.4.0"));
 		new DependencyManagementBuildCustomizer(description, metadata).customize(build);
 	}
 

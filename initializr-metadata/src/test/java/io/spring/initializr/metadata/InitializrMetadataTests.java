@@ -137,10 +137,10 @@ class InitializrMetadataTests {
 		bom.getMappings().add(Mapping.create("[1.2.0.RELEASE,1.3.x.RELEASE]", "1.0.0"));
 		bom.getMappings().add(Mapping.create("1.3.x.BUILD-SNAPSHOT", "1.1.0-BUILD-SNAPSHOT"));
 		Dependency dependency = Dependency.withId("bar");
-		dependency.getMappings().add(
-				Dependency.Mapping.create("[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null, "0.1.0.RELEASE", null, null));
+		dependency.getMappings().add(Dependency.Mapping.create("[1.3.0.RELEASE, 1.3.x.RELEASE]", null, null,
+				"0.1.0.RELEASE", null, null, null));
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("1.3.x.BUILD-SNAPSHOT", null, null, "0.2.0.RELEASE", null, null));
+				.add(Dependency.Mapping.create("1.3.x.BUILD-SNAPSHOT", null, null, "0.2.0.RELEASE", null, null, null));
 
 		addTestDependencyGroup(metadata, dependency);
 		metadata.getConfiguration().getEnv().getBoms().put("foo-bom", bom);

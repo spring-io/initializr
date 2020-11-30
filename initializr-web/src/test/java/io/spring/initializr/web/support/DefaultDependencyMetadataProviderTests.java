@@ -55,9 +55,9 @@ class DefaultDependencyMetadataProviderTests {
 	void resolveDependencies() {
 		Dependency first = Dependency.withId("first", "org.foo", "first");
 		first.getMappings().add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "org.bar", "second",
-				"0.1.0.RELEASE", null, null));
+				"0.1.0.RELEASE", null, null, null));
 		first.getMappings()
-				.add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null));
+				.add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null, null));
 		Dependency second = Dependency.withId("second", "org.foo", "second");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 				.addDependencyGroup("test", first, second).build();
