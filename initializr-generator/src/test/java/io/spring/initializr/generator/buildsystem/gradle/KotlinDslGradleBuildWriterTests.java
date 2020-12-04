@@ -20,6 +20,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -30,6 +31,9 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
@@ -49,20 +53,31 @@ class KotlinDslGradleBuildWriterTests {
 		assertThat(lines).contains("group = \"com.example\"", "version = \"1.0.1-SNAPSHOT\"");
 	}
 
-	@Test
-	void gradleBuildWithSourceCompatibility11() {
+	@ParameterizedTest
+	@MethodSource("sourceCompatibilityParameters")
+	void gradleBuildWithSourceCompatibility15(String sourceCompatibility, String javaVersionConstant) {
 		GradleBuild build = new GradleBuild();
-		build.settings().sourceCompatibility("11");
+		build.settings().sourceCompatibility(sourceCompatibility);
 		List<String> lines = generateBuild(build);
-		assertThat(lines).contains("java.sourceCompatibility = JavaVersion.VERSION_11");
+		assertThat(lines).contains("java.sourceCompatibility = " + javaVersionConstant);
 	}
 
-	@Test
-	void gradleBuildWithSourceCompatibility1Dot8() {
-		GradleBuild build = new GradleBuild();
-		build.settings().sourceCompatibility("1.8");
-		List<String> lines = generateBuild(build);
-		assertThat(lines).contains("java.sourceCompatibility = JavaVersion.VERSION_1_8");
+	static Stream<Arguments> sourceCompatibilityParameters() {
+		return Stream.of(Arguments.arguments("1.8", "JavaVersion.VERSION_1_8"),
+				Arguments.arguments("8", "JavaVersion.VERSION_1_8"),
+				Arguments.arguments("1.9", "JavaVersion.VERSION_1_9"),
+				Arguments.arguments("9", "JavaVersion.VERSION_1_9"),
+				Arguments.arguments("1.10", "JavaVersion.VERSION_1_10"),
+				Arguments.arguments("10", "JavaVersion.VERSION_1_10"),
+				Arguments.arguments(null, "JavaVersion.VERSION_11"),
+				Arguments.arguments("11", "JavaVersion.VERSION_11"),
+				Arguments.arguments("12", "JavaVersion.VERSION_12"),
+				Arguments.arguments("13", "JavaVersion.VERSION_13"),
+				Arguments.arguments("14", "JavaVersion.VERSION_14"),
+				Arguments.arguments("15", "JavaVersion.VERSION_15"),
+				Arguments.arguments("16", "JavaVersion.VERSION_16"),
+				Arguments.arguments("17", "JavaVersion.VERSION_17"),
+				Arguments.arguments("18", "JavaVersion.VERSION_HIGHER"));
 	}
 
 	@Test
