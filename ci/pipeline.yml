@@ -5,9 +5,10 @@ resource_types:
     repository: springio/artifactory-resource
     tag: 0.0.12
 - name: pull-request
-  type: docker-image
+  type: registry-image
   source:
-    repository: jtarchie/pr
+    repository: teliaoss/github-pr-resource
+    tag: v0.21.0
 - name: github-status-resource
   type: docker-image
   source:
