@@ -10,12 +10,12 @@ resource_types:
     repository: teliaoss/github-pr-resource
     tag: v0.21.0
 - name: github-status-resource
-  type: docker-image
+  type: registry-image
   source:
     repository: dpb587/github-status-resource
     tag: master
 - name: slack-notification
-  type: docker-image
+  type: registry-image
   source:
     repository: cfcommunity/slack-notification-resource
     tag: latest
@@ -53,7 +53,7 @@ resources:
     branch: ((branch))
     paths: ["ci/images/*"]
 - name: initializr-ci-image
-  type: docker-image
+  type: registry-image
   source:
     repository: springci/initializr-ci-image
     username: ((docker-hub-username))
