@@ -1,9 +1,9 @@
 resource_types:
 - name: artifactory-resource
-  type: docker-image
+  type: registry-image
   source:
     repository: springio/artifactory-resource
-    tag: 0.0.11
+    tag: 0.0.12
 - name: pull-request
   type: docker-image
   source:
