@@ -84,7 +84,7 @@
 				</property>
 			</activation>
 			<properties>
-				<spring-javaformat.version>0.0.25</spring-javaformat.version>
+				<spring-javaformat.version>0.0.26</spring-javaformat.version>
 				<nohttp-checkstyle.version>0.0.5.RELEASE</nohttp-checkstyle.version>
 			</properties>
 			<build>
