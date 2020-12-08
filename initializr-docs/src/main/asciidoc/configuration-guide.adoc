@@ -1143,6 +1143,9 @@ checking for the latest Spring Boot versions too often, you should enable cachin
 service. Spring Initializr has some auto-configuration to apply the proper caches if you
 are willing to use a JCache (JSR-107) implementation.
 
+NOTE: The caches are created with an auto-configured `JCacheManagerCustomizer` with order `0` and only if they don't exist already.
+You can contribute a bean of the same type with a lower `@Order` to override some of the configuration to suit your specific needs.
+
 Add the `javax.cache:cache-api` and your favorite JCache implementation and simply enable
 caching by adding `@EnableCaching` to your `@SpringBootApplication`. For instance, you
 could use `ehcache` by adding the following:

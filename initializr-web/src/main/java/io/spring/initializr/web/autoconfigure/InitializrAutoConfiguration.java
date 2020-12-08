@@ -17,6 +17,8 @@
 package io.spring.initializr.web.autoconfigure;
 
 import java.nio.file.Files;
+import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
 
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
@@ -62,6 +64,7 @@ import org.springframework.cache.support.NoOpCache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 /**
@@ -182,13 +185,30 @@ public class InitializrAutoConfiguration {
 
 		@Bean
 		JCacheManagerCustomizer initializrCacheManagerCustomizer() {
-			return (cacheManager) -> {
-				cacheManager.createCache("initializr.metadata",
-						config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
-				cacheManager.createCache("initializr.dependency-metadata", config());
-				cacheManager.createCache("initializr.project-resources", config());
-				cacheManager.createCache("initializr.templates", config());
-			};
+			return new InitializrJCacheManagerCustomizer();
+		}
+
+	}
+
+	@Order(0)
+	private static class InitializrJCacheManagerCustomizer implements JCacheManagerCustomizer {
+
+		@Override
+		public void customize(javax.cache.CacheManager cacheManager) {
+			createMissingCache(cacheManager, "initializr.metadata",
+					() -> config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+			createMissingCache(cacheManager, "initializr.dependency-metadata", this::config);
+			createMissingCache(cacheManager, "initializr.project-resources", this::config);
+			createMissingCache(cacheManager, "initializr.templates", this::config);
+		}
+
+		private void createMissingCache(javax.cache.CacheManager cacheManager, String cacheName,
+				Supplier<MutableConfiguration<Object, Object>> config) {
+			boolean cacheExist = StreamSupport.stream(cacheManager.getCacheNames().spliterator(), true)
+					.anyMatch((name) -> name.equals(cacheName));
+			if (!cacheExist) {
+				cacheManager.createCache(cacheName, config.get());
+			}
 		}
 
 		private MutableConfiguration<Object, Object> config() {

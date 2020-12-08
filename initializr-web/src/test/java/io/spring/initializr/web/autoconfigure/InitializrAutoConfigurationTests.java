@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,11 @@
 
 package io.spring.initializr.web.autoconfigure;
 
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.configuration.CompleteConfiguration;
+import javax.cache.configuration.MutableConfiguration;
+
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -28,14 +33,18 @@ import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -140,14 +149,42 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Test
-	void cacheConfiguration() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(JCacheManagerCustomizer.class));
+	void cacheConfigurationCreatesInitializrCachesIfNecessary() {
+		this.contextRunner.withConfiguration(AutoConfigurations.of(CacheAutoConfiguration.class))
+				.withUserConfiguration(CacheTestConfiguration.class).run((context) -> {
+					assertThat(context).hasSingleBean(JCacheManagerCustomizer.class)
+							.hasSingleBean(JCacheCacheManager.class);
+					JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
+					assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
+							"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates");
+					assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isTrue();
+				});
+	}
+
+	@Test
+	void cacheConfigurationDoesNotOverrideExistingCaches() {
+		this.contextRunner.withConfiguration(AutoConfigurations.of(CacheAutoConfiguration.class))
+				.withUserConfiguration(CacheTestConfiguration.class, CustomJCacheManagerCustomizer.class)
+				.run((context) -> {
+					assertThat(context).getBeans(JCacheManagerCustomizer.class).hasSize(2);
+					JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
+					assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
+							"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates",
+							"custom.cache");
+					assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isFalse();
+				});
 	}
 
 	@Test
 	void cacheConfigurationConditionalOnClass() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
 				.run((context) -> assertThat(context).doesNotHaveBean(JCacheManagerCustomizer.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	private CompleteConfiguration<?, ?> getConfiguration(JCacheCacheManager cacheManager, String cacheName) {
+		Cache<?, ?> cache = (Cache<?, ?>) cacheManager.getCache("initializr.metadata").getNativeCache();
+		return (CompleteConfiguration<?, ?>) cache.getConfiguration(CompleteConfiguration.class);
 	}
 
 	@Configuration
@@ -196,6 +233,23 @@ class InitializrAutoConfigurationTests {
 		@Bean
 		ProjectGenerationController<?> testProjectGenerationController() {
 			return mock(ProjectGenerationController.class);
+		}
+
+	}
+
+	@Configuration
+	@EnableCaching
+	static class CacheTestConfiguration {
+
+	}
+
+	@Order(-1)
+	private static class CustomJCacheManagerCustomizer implements JCacheManagerCustomizer {
+
+		@Override
+		public void customize(CacheManager cacheManager) {
+			cacheManager.createCache("initializr.metadata", new MutableConfiguration<>().setStatisticsEnabled(false));
+			cacheManager.createCache("custom.cache", new MutableConfiguration<>());
 		}
 
 	}

@@ -99,6 +99,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin.external.google</groupId>
 			<artifactId>android-json</artifactId>
 			<scope>test</scope>
