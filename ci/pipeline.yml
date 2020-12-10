@@ -84,7 +84,7 @@ resources:
     repository: initializr
     access_token: ((github-ci-release-token))
     pre_release: false
-- name: 24h
+- name: daily
   type: time
   source: {interval: 24h}
 jobs:
@@ -141,7 +141,7 @@ jobs:
   serial: true
   public: true
   plan:
-  - get: 24h
+  - get: daily
     trigger: true
   - get: git-repo
     resource: git-repo-windows
@@ -222,19 +222,11 @@ jobs:
       tag: generated-release-notes/version
       body:  generated-release-notes/body
 groups:
-- name: "Build"
-  jobs:
-  - build
-- name: "Windows Build"
-  jobs:
-  - windows-build
-- name: "Build Pull Requests"
-  jobs:
-  - "build-pull-requests"
-- name: "CI Images"
-  jobs:
-  - build-initializr-ci-image
-- name: "Release"
-  jobs:
-  - stage-release
-  - promote-release
+- name: "build"
+  jobs: ["build", "windows-build"]
+- name: "releases"
+  jobs: ["stage-release", "promote-release"]
+- name: "ci-images"
+  jobs: ["build-initializr-ci-image"]
+- name: "pull-requests"
+  jobs: ["build-pull-requests"]
