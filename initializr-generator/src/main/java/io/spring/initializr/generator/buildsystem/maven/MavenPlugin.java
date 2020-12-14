@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -284,12 +284,29 @@ public class MavenPlugin {
 		}
 
 		/**
-		 * Configure the parameter with the specified {@code name}.
+		 * Add the specified parameter with a nested structure.
+		 * @param name the name of the parameter
+		 * @param consumer a consumer to further configure the parameter
+		 * @return this for method chaining
+		 * @see #configure(String, Consumer) name
+		 */
+		public ConfigurationBuilder add(String name, Consumer<ConfigurationBuilder> consumer) {
+			ConfigurationBuilder nestedConfiguration = new ConfigurationBuilder();
+			consumer.accept(nestedConfiguration);
+			this.settings.add(new Setting(name, nestedConfiguration));
+			return this;
+		}
+
+		/**
+		 * Configure the parameter with the specified {@code name}. If no parameter with
+		 * that name exists, it is created. If the parameter already exists, the consumer
+		 * can be used to further tune the nested structure.
 		 * @param name the name of the parameter
 		 * @param consumer a consumer to further configure the parameter
 		 * @return this for method chaining
 		 * @throws IllegalArgumentException if a parameter with the same name is
 		 * registered with a single value
+		 * @see #add(String, Consumer)
 		 */
 		public ConfigurationBuilder configure(String name, Consumer<ConfigurationBuilder> consumer) {
 			Object value = this.settings.stream().filter((candidate) -> candidate.getName().equals(name)).findFirst()

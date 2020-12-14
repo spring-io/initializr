@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,35 @@ class MavenPluginTests {
 				"skip");
 		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("true",
 				"false");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	void configurationParameterWithNestedValuesCanBeAdded() {
+		MavenPlugin plugin = plugin("com.example", "test-plugin")
+				.configuration((configuration) -> configuration.configure("items", (items) -> {
+					items.add("item", (firstItem) -> firstItem.add("name", "one"));
+					items.add("item", (secondItem) -> secondItem.add("name", "two"));
+				})).build();
+		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
+		Setting setting = plugin.getConfiguration().getSettings().get(0);
+		assertThat(setting.getName()).isEqualTo("items");
+		assertThat(setting.getValue()).isInstanceOf(List.class);
+		List<Setting> values = (List<Setting>) setting.getValue();
+		assertThat(values.stream().map(Setting::getName)).containsExactly("item", "item");
+		assertThat(values.stream().map(Setting::getValue)).anySatisfy((value) -> {
+			assertThat(value).isInstanceOf(List.class);
+			List<Setting> itemValues = (List<Setting>) value;
+			assertThat(itemValues.stream().map(Setting::getName)).containsExactly("name");
+			assertThat(itemValues.stream().map(Setting::getValue)).containsExactly("one");
+		});
+		assertThat(values.stream().map(Setting::getValue)).anySatisfy((value) -> {
+			assertThat(value).isInstanceOf(List.class);
+			List<Setting> itemValues = (List<Setting>) value;
+			assertThat(itemValues.stream().map(Setting::getName)).containsExactly("name");
+			assertThat(itemValues.stream().map(Setting::getValue)).containsExactly("two");
+		});
+		assertThat(values).hasSize(2);
 	}
 
 	@Test
