@@ -92,10 +92,16 @@ jobs:
   plan:
   - get: ci-images-git-repo
     trigger: true
+  - get: git-repo
+  - do:
+    - task: build-ci-image
+      privileged: true
+      file: git-repo/ci/tasks/build-ci-image.yml
+      output_mapping:
+        image: initializr-ci-image
   - put: initializr-ci-image
     params:
-      build: ci-images-git-repo/ci/images
-      dockerfile: ci-images-git-repo/ci/images/initializr-ci-image/Dockerfile
+      image: initializr-ci-image/image.tar
 - name: build
   serial: true
   public: true
