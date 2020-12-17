@@ -2,13 +2,6 @@
 set -e
 
 source $(dirname $0)/common.sh
-
-set_revision() {
-	[[ -n $1 ]] || { echo "missing set_revision_to_pom() argument" >&2; return 1; }
-	grep -q "<revision>.*</revision>" pom.xml || { echo "missing revision tag" >&2; return 1; }
-	sed --in-place -e "s|<revision>.*</revision>|<revision>${1}</revision>|" pom.xml > /dev/null
-}
-
 repository=$(pwd)/distribution-repository
 
 pushd git-repo > /dev/null
@@ -24,7 +17,7 @@ stageVersion=$( get_next_release $snapshotVersion)
 nextVersion=$( bump_version_number $snapshotVersion)
 echo "Staging $stageVersion (next version will be $nextVersion)"
 
-set_revision "$stageVersion"
+set_revision_to_pom "$stageVersion"
 git config user.name "Spring Buildmaster" > /dev/null
 git config user.email "buildmaster@springframework.org" > /dev/null
 git add pom.xml > /dev/null
@@ -36,7 +29,7 @@ git tag -a "v$stageVersion" -m"Release v$stageVersion" > /dev/null
 git reset --hard HEAD^ > /dev/null
 if [[ $nextVersion != $snapshotVersion ]]; then
 	echo "Setting next development version (v$nextVersion)"
-	set_revision "$nextVersion"
+	set_revision_to_pom "$nextVersion"
 	git add pom.xml > /dev/null
 	git commit -m"Next development version (v$nextVersion)" > /dev/null
 fi;
