@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,14 @@ package io.spring.initializr.generator.version;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 import io.spring.initializr.generator.version.Version.Format;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,59 +36,87 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class VersionRangeTests {
 
-	@Test
-	void simpleStartingRange() {
-		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString()).isEqualTo(">=1.3.0.RELEASE");
+	@ParameterizedTest(name = "{0} in {1}")
+	@MethodSource("matchInRangeParameters")
+	void matchWithVersionInTheRange(String version, String range) {
+		assertThat(version).is(match(range));
 	}
 
-	@Test
-	void matchSimpleRange() {
-		assertThat("1.2.0.RC3").is(match("[1.2.0.RC1,1.2.0.RC5]"));
+	static Stream<Arguments> matchInRangeParameters() {
+		return Stream.of(Arguments.arguments("1.2.2.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.2", "[1.2.0,1.2.5]"), Arguments.arguments("1.2.0.M3", "[1.2.0.M1,1.2.0.RC1]"),
+				Arguments.arguments("1.2.0-M3", "[1.2.0-M1,1.2.0-RC1]"),
+				Arguments.arguments("1.2.0.RC1", "[1.2.0.M1,1.2.0.RC2]"),
+				Arguments.arguments("1.2.0-RC1", "[1.2.0-M1,1.2.0-RC2]"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "[1.2.0,1.2.5]"),
+				Arguments.arguments("1.2.0.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.0", "[1.2.0,1.2.5]"), Arguments.arguments("1.2.0.M1", "[1.2.0.M1,1.2.0.RC1]"),
+				Arguments.arguments("1.2.0-M1", "[1.2.0-M1,1.2.0-RC1]"),
+				Arguments.arguments("1.2.0.RC1", "[1.2.0.RC1,1.2.0.RC2]"),
+				Arguments.arguments("1.2.0-RC1", "[1.2.0-RC1,1.2.0-RC2]"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "[1.2.2.BUILD-SNAPSHOT,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "[1.2.2-SNAPSHOT,1.2.5]"),
+				Arguments.arguments("1.2.5.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.5", "[1.2.0,1.2.5]"), Arguments.arguments("1.2.0.M3", "[1.2.0.M1,1.2.0.M3]"),
+				Arguments.arguments("1.2.0-M3", "[1.2.0-M1,1.2.0-M3]"),
+				Arguments.arguments("1.2.0.RC2", "[1.2.0.RC1,1.2.0.RC2]"),
+				Arguments.arguments("1.2.0-RC2", "[1.2.0-RC1,1.2.0-RC2]"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "[1.2.0.RELEASE,1.2.2.BUILD-SNAPSHOT]"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "[1.2.0,1.2.2-SNAPSHOT]"),
+				Arguments.arguments("1.2.0.RELEASE", "1.2.0.RELEASE"), Arguments.arguments("1.2.0", "1.2.0"),
+				Arguments.arguments("1.2.0.M3", "1.2.0.M3"), Arguments.arguments("1.2.0-M3", "1.2.0-M3"),
+				Arguments.arguments("1.2.0.RC1", "1.2.0.RC1"), Arguments.arguments("1.2.0-RC1", "1.2.0-RC1"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "1.2.2.BUILD-SNAPSHOT"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "1.2.2-SNAPSHOT"),
+				Arguments.arguments("1.2.5.RELEASE", "1.2.0.RELEASE"), Arguments.arguments("1.2.5", "1.2.0"),
+				Arguments.arguments("2.2.0.M3", "1.2.0.M3"), Arguments.arguments("2.2.0-M3", "1.2.0-M3"),
+				Arguments.arguments("1.4.0.RC1", "1.2.0.RC1"), Arguments.arguments("1.4.0-RC1", "1.2.0-RC1"),
+				Arguments.arguments("1.3.2.BUILD-SNAPSHOT", "1.2.2.BUILD-SNAPSHOT"),
+				Arguments.arguments("1.3.2-SNAPSHOT", "1.2.2-SNAPSHOT"));
 	}
 
-	@Test
-	void matchSimpleRangeBefore() {
-		assertThat("1.1.9.RC3").isNot(match("[1.2.0.RC1,1.2.0.RC5]"));
+	@ParameterizedTest(name = "{0} in {1}")
+	@MethodSource("matchOutRangeParameters")
+	void matchWithVersionOutTheRange(String version, String range) {
+		assertThat(version).isNot(match(range));
 	}
 
-	@Test
-	void matchSimpleRangeAfter() {
-		assertThat("1.2.0.RC6").isNot(match("[1.2.0.RC1,1.2.0.RC5]"));
-	}
-
-	@Test
-	void matchInclusiveLowerRange() {
-		assertThat("1.2.0.RC1").is(match("[1.2.0.RC1,1.2.0.RC5]"));
-	}
-
-	@Test
-	void matchInclusiveHigherRange() {
-		assertThat("1.2.0.RC5").is(match("[1.2.0.RC1,1.2.0.RC5]"));
-	}
-
-	@Test
-	void matchExclusiveLowerRange() {
-		assertThat("1.2.0.RC1").isNot(match("(1.2.0.RC1,1.2.0.RC5)"));
-	}
-
-	@Test
-	void matchExclusiveHigherRange() {
-		assertThat("1.2.0.RC5").isNot(match("[1.2.0.RC1,1.2.0.RC5)"));
-	}
-
-	@Test
-	void matchUnboundedRangeEqual() {
-		assertThat("1.2.0.RELEASE").is(match("1.2.0.RELEASE"));
-	}
-
-	@Test
-	void matchUnboundedRangeAfter() {
-		assertThat("2.2.0.RELEASE").is(match("1.2.0.RELEASE"));
-	}
-
-	@Test
-	void matchUnboundedRangeBefore() {
-		assertThat("1.1.9.RELEASE").isNot(match("1.2.0.RELEASE"));
+	static Stream<Arguments> matchOutRangeParameters() {
+		return Stream.of(Arguments.arguments("1.1.9.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.1.9", "[1.2.0,1.2.5]"),
+				Arguments.arguments("1.2.6.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.6", "[1.2.0,1.2.5]"), Arguments.arguments("1.2.0.M2", "[1.2.0.M3,1.2.0.RC1]"),
+				Arguments.arguments("1.2.0-M2", "[1.2.0-M3,1.2.0-RC1]"),
+				Arguments.arguments("1.2.0.M4", "[1.2.0.M1,1.2.0.M3]"),
+				Arguments.arguments("1.2.0-M4", "[1.2.0-M1,1.2.0-M3]"),
+				Arguments.arguments("1.2.0.RC1", "[1.2.0.RC2,1.2.0.RC3]"),
+				Arguments.arguments("1.2.0-RC1", "[1.2.0-RC2,1.2.0-RC3]"),
+				Arguments.arguments("1.2.0.RC4", "[1.2.0.RC2,1.2.0.RC3]"),
+				Arguments.arguments("1.2.0-RC4", "[1.2.0-RC2,1.2.0-RC3]"),
+				Arguments.arguments("1.1.9.BUILD-SNAPSHOT", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.1.9-SNAPSHOT", "[1.2.0,1.2.5]"),
+				Arguments.arguments("1.2.6.BUILD-SNAPSHOT", "[1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.6-SNAPSHOT", "[1.2.0,1.2.5]"),
+				Arguments.arguments("1.2.0.RELEASE", "(1.2.0.RELEASE,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.0", "(1.2.0,1.2.5]"), Arguments.arguments("1.2.0.M1", "(1.2.0.M1,1.2.0.RC1]"),
+				Arguments.arguments("1.2.0-M1", "(1.2.0-M1,1.2.0-RC1]"),
+				Arguments.arguments("1.2.0.RC1", "(1.2.0.RC1,1.2.0.RC2]"),
+				Arguments.arguments("1.2.0-RC1", "(1.2.0-RC1,1.2.0-RC2]"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "(1.2.2.BUILD-SNAPSHOT,1.2.5.RELEASE]"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "(1.2.2-SNAPSHOT,1.2.5]"),
+				Arguments.arguments("1.2.5.RELEASE", "[1.2.0.RELEASE,1.2.5.RELEASE)"),
+				Arguments.arguments("1.2.5", "[1.2.0,1.2.5)"), Arguments.arguments("1.2.0.M3", "[1.2.0.M1,1.2.0.M3)"),
+				Arguments.arguments("1.2.0-M3", "[1.2.0-M1,1.2.0-M3)"),
+				Arguments.arguments("1.2.0.RC2", "[1.2.0.RC1,1.2.0.RC2)"),
+				Arguments.arguments("1.2.0-RC2", "[1.2.0-RC1,1.2.0-RC2)"),
+				Arguments.arguments("1.2.2.BUILD-SNAPSHOT", "[1.2.0.RELEASE,1.2.2.BUILD-SNAPSHOT)"),
+				Arguments.arguments("1.2.2-SNAPSHOT", "[1.2.0,1.2.2-SNAPSHOT)"),
+				Arguments.arguments("1.2.0.RELEASE", "1.2.1.RELEASE"), Arguments.arguments("1.2.0", "1.2.1"),
+				Arguments.arguments("1.2.0.M2", "1.2.0.M3"), Arguments.arguments("1.2.0-M2", "1.2.0-M3"),
+				Arguments.arguments("1.2.0.RC1", "1.2.0.RC2"), Arguments.arguments("1.2.0-RC1", "1.2.0-RC2"),
+				Arguments.arguments("1.2.1.BUILD-SNAPSHOT", "1.2.2.BUILD-SNAPSHOT"),
+				Arguments.arguments("1.2.1-SNAPSHOT", "1.2.2-SNAPSHOT"));
 	}
 
 	@Test
@@ -114,6 +146,11 @@ class VersionRangeTests {
 	void matchOverAsOfCurrentVersion() {
 		assertThat("1.3.5.RELEASE").isNot(match("[1.3.x.RELEASE,1.3.x.BUILD-SNAPSHOT]", new VersionParser(
 				Arrays.asList(Version.parse("1.3.7.RELEASE"), Version.parse("1.3.6.BUILD-SNAPSHOT")))));
+	}
+
+	@Test
+	void simpleStartingRange() {
+		assertThat(new VersionRange(Version.parse("1.3.0.RELEASE")).toString()).isEqualTo(">=1.3.0.RELEASE");
 	}
 
 	@Test
