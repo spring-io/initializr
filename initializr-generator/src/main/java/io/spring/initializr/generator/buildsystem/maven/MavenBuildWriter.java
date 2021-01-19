@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,7 +146,6 @@ public class MavenBuildWriter {
 		if (properties.isEmpty()) {
 			return;
 		}
-		writer.println();
 		writeElement(writer, "properties", () -> {
 			properties.values().forEach((entry) -> writeSingleElement(writer, entry.getKey(), entry.getValue()));
 			properties.versions((VersionProperty::toStandardFormat))
@@ -202,7 +201,6 @@ public class MavenBuildWriter {
 		if (dependencies.isEmpty()) {
 			return;
 		}
-		writer.println();
 		writeElement(writer, "dependencies", () -> {
 			Collection<Dependency> compiledDependencies = writeDependencies(writer, dependencies,
 					(scope) -> scope == null || scope == DependencyScope.COMPILE);
@@ -288,7 +286,6 @@ public class MavenBuildWriter {
 		if (boms.isEmpty()) {
 			return;
 		}
-		writer.println();
 		writeElement(writer, "dependencyManagement",
 				() -> writeCollectionElement(writer, "dependencies", boms.items()
 						.sorted(Comparator.comparing(BillOfMaterials::getOrder)).collect(Collectors.toList()),
@@ -423,7 +420,6 @@ public class MavenBuildWriter {
 		if (repositories.isEmpty() && pluginRepositories.isEmpty()) {
 			return;
 		}
-		writer.println();
 		writeCollectionElement(writer, "repositories", repositories, this::writeRepository);
 		writeCollectionElement(writer, "pluginRepositories", pluginRepositories, this::writePluginRepository);
 	}
@@ -547,7 +543,6 @@ public class MavenBuildWriter {
 				&& profile.testResources().isEmpty() && profile.plugins().isEmpty()) {
 			return;
 		}
-		writer.println();
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "defaultGoal", settings.getDefaultGoal());
 			writeSingleElement(writer, "finalName", settings.getFinalName());

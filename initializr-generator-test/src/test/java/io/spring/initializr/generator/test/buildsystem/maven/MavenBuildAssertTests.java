@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -322,6 +322,17 @@ class MavenBuildAssertTests {
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(
 				() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
 						"Acme Milestones", "https://repo.example.com/milestone", true));
+	}
+
+	@Test
+	void hasProfile() {
+		assertThat(forMavenBuild("sample-profiles-pom.xml")).hasProfile("one");
+	}
+
+	@Test
+	void hasProfileWithUnknownId() {
+		assertThatExceptionOfType(AssertionError.class)
+				.isThrownBy(() -> assertThat(forMavenBuild("sample-profiles-pom.xml")).hasProfile("unknown"));
 	}
 
 	private AssertProvider<MavenBuildAssert> forSampleMavenBuild() {

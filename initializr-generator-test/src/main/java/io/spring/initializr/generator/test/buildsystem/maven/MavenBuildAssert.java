@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.spring.initializr.generator.test.buildsystem.maven;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.function.Predicate;
 
 import io.spring.initializr.generator.test.io.AbstractTextAssert;
 import io.spring.initializr.generator.test.io.NodeAssert;
@@ -311,6 +312,27 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	}
 
 	/**
+	 * Assert {@code pom.xml} defines a profile with the specified {@code id}.
+	 * @param id the id of the profile
+	 * @return {@code this} assertion object
+	 */
+	public MavenBuildAssert hasProfile(String id) {
+		this.pom.nodesAtPath("/project/profiles/profile").areExactly(1,
+				new Condition<>(profile(id), "matching profile"));
+		return this;
+	}
+
+	/**
+	 * Assert {@code pom.xml} does not define a profile with the specified {@code id}.
+	 * @param id the id of the profile
+	 * @return {@code this} assertion object
+	 */
+	public MavenBuildAssert doesNotHaveProfile(String id) {
+		this.pom.nodesAtPath("/project/profiles/profile").noneMatch(profile(id));
+		return this;
+	}
+
+	/**
 	 * Assert {@code pom.xml} does not define a node with the specified {@code path}.
 	 * @param path the path of the node
 	 * @return this
@@ -419,6 +441,13 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 			}
 		}
 		return repository;
+	}
+
+	private static Predicate<? super Node> profile(String id) {
+		return (candidate) -> {
+			String actualId = ((Element) candidate).getElementsByTagName("id").item(0).getTextContent();
+			return (actualId.equals(id));
+		};
 	}
 
 }
