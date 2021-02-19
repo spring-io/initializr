@@ -342,7 +342,6 @@ jobs:
   - task: stage
     image: ci-image
     file: git-repo/ci/tasks/stage.yml
-  - put: artifactory-repo
     params:
       RELEASE_TYPE: RELEASE
   - put: artifactory-repo
