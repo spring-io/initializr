@@ -140,10 +140,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation));
+		boolean newLine = annotatable instanceof JavaParameter ? false : true;
+		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation, newLine));
 	}
 
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
+	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
 		writer.print("@" + getUnqualifiedName(annotation.getName()));
 		List<Annotation.Attribute> attributes = annotation.getAttributes();
 		if (!attributes.isEmpty()) {
@@ -158,7 +159,11 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			}
 			writer.print(")");
 		}
-		writer.println();
+		if(newLine) {
+			writer.println();
+		} else {
+			writer.print(" ");
+		}
 	}
 
 	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
@@ -202,11 +207,16 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		writeAnnotations(writer, methodDeclaration);
 		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
-		List<Parameter> parameters = methodDeclaration.getParameters();
+		List<JavaParameter> parameters = methodDeclaration.getParameters();
+		int size = parameters.size();
 		if (!parameters.isEmpty()) {
-			writer.print(parameters.stream()
-					.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
-					.collect(Collectors.joining(", ")));
+		    for(JavaParameter parameter : parameters) {
+                writeAnnotations(writer, parameter);
+                writer.print(getUnqualifiedName(parameter.getType()) + " " + parameter.getName());
+                if(--size > 0) {
+                    writer.print(", ");
+                }
+            }
 		}
 		writer.println(") {");
 		writer.indented(() -> {
@@ -268,6 +278,8 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
+                imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
+                        (parameter) -> getRequiredImports(parameter.getAnnotations(), this::determineImports)));
 				imports.addAll(getRequiredImports(
 						methodDeclaration.getStatements().stream().filter(JavaExpressionStatement.class::isInstance)
 								.map(JavaExpressionStatement.class::cast).map(JavaExpressionStatement::getExpression)

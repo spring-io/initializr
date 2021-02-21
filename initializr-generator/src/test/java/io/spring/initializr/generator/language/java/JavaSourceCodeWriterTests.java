@@ -30,7 +30,6 @@ import java.util.UUID;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Language;
-import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -111,7 +110,7 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addMethodDeclaration(JavaMethodDeclaration.method("trim").returning("java.lang.String")
-				.modifiers(Modifier.PUBLIC).parameters(new Parameter("java.lang.String", "value"))
+				.modifiers(Modifier.PUBLIC).parameters(new JavaParameter("java.lang.String", "value"))
 				.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
@@ -193,7 +192,7 @@ class JavaSourceCodeWriterTests {
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
 		test.addMethodDeclaration(JavaMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC)
-				.returning("void").parameters(new Parameter("java.lang.String[]", "args"))
+				.returning("void").parameters(new JavaParameter("java.lang.String[]", "args"))
 				.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
 						"run", "Test.class", "args"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
@@ -293,6 +292,38 @@ class JavaSourceCodeWriterTests {
 		SourceStructure sourceStructure = new SourceStructure(srcDirectory, LANGUAGE);
 		this.writer.writeTo(sourceStructure, sourceCode);
 		return sourceStructure.getSourcesDirectory();
+	}
+
+	@Test
+	void testParameterWithSimpleAnnotation() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaParameter parameter = new JavaParameter("java.lang.String", "arg0");
+		parameter.annotate(Annotation.name("javax.validation.constraints.NotNull"));
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters(parameter).body();
+		test.addMethodDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import javax.validation.constraints.NotNull;", "",
+				"class Test {", "", "    void something(@NotNull String arg0) {", "    }", "", "}");
+	}
+
+	@Test
+	void testMethodWithMultiParametersAndParameterWithMultiAnnotations() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaParameter arg0 = new JavaParameter("java.lang.String", "arg0");
+		arg0.annotate(Annotation.name("javax.validation.constraints.NotNull"));
+		JavaParameter arg1 = new JavaParameter("int", "arg1");
+		arg1.annotate(Annotation.name("javax.validation.constraints.Max", t -> t.attribute("value", int.class, "10")));
+		arg1.annotate(Annotation.name("javax.validation.constraints.Min", t -> t.attribute("value", int.class, "1")));
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters(arg0, arg1).body();
+		test.addMethodDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import javax.validation.constraints.Max;",
+                "import javax.validation.constraints.Min;", "import javax.validation.constraints.NotNull;", "",
+				"class Test {", "", "    void something(@NotNull String arg0, @Max(10) @Min(1) int arg1) {", "    }", "", "}");
 	}
 
 }
