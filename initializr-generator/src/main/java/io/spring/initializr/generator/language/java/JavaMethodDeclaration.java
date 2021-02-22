@@ -23,7 +23,6 @@ import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.Parameter;
 
 /**
  * Declaration of a method written in Java.

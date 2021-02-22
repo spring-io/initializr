@@ -38,7 +38,6 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.SourceStructure;
@@ -140,7 +139,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		boolean newLine = annotatable instanceof JavaParameter ? false : true;
+		boolean newLine = (annotatable instanceof JavaParameter) ? false : true;
 		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation, newLine));
 	}
 
@@ -159,9 +158,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			}
 			writer.print(")");
 		}
-		if(newLine) {
+		if (newLine) {
 			writer.println();
-		} else {
+		}
+		else {
 			writer.print(" ");
 		}
 	}
@@ -210,13 +210,13 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		List<JavaParameter> parameters = methodDeclaration.getParameters();
 		int size = parameters.size();
 		if (!parameters.isEmpty()) {
-		    for(JavaParameter parameter : parameters) {
-                writeAnnotations(writer, parameter);
-                writer.print(getUnqualifiedName(parameter.getType()) + " " + parameter.getName());
-                if(--size > 0) {
-                    writer.print(", ");
-                }
-            }
+			for (JavaParameter parameter : parameters) {
+				writeAnnotations(writer, parameter);
+				writer.print(getUnqualifiedName(parameter.getType()) + " " + parameter.getName());
+				if (--size > 0) {
+					writer.print(", ");
+				}
+			}
 		}
 		writer.println(") {");
 		writer.indented(() -> {
@@ -278,8 +278,8 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
-                imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
-                        (parameter) -> getRequiredImports(parameter.getAnnotations(), this::determineImports)));
+				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
+						(parameter) -> getRequiredImports(parameter.getAnnotations(), this::determineImports)));
 				imports.addAll(getRequiredImports(
 						methodDeclaration.getStatements().stream().filter(JavaExpressionStatement.class::isInstance)
 								.map(JavaExpressionStatement.class::cast).map(JavaExpressionStatement::getExpression)

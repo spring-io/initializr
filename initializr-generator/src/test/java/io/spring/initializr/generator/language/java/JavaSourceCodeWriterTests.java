@@ -301,11 +301,12 @@ class JavaSourceCodeWriterTests {
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		JavaParameter parameter = new JavaParameter("java.lang.String", "arg0");
 		parameter.annotate(Annotation.name("javax.validation.constraints.NotNull"));
-		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters(parameter).body();
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters(parameter)
+				.body();
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "import javax.validation.constraints.NotNull;", "",
-				"class Test {", "", "    void something(@NotNull String arg0) {", "    }", "", "}");
+		assertThat(lines).containsExactly("package com.example;", "", "import javax.validation.constraints.NotNull;",
+				"", "class Test {", "", "    void something(@NotNull String arg0) {", "    }", "", "}");
 	}
 
 	@Test
@@ -316,14 +317,17 @@ class JavaSourceCodeWriterTests {
 		JavaParameter arg0 = new JavaParameter("java.lang.String", "arg0");
 		arg0.annotate(Annotation.name("javax.validation.constraints.NotNull"));
 		JavaParameter arg1 = new JavaParameter("int", "arg1");
-		arg1.annotate(Annotation.name("javax.validation.constraints.Max", t -> t.attribute("value", int.class, "10")));
-		arg1.annotate(Annotation.name("javax.validation.constraints.Min", t -> t.attribute("value", int.class, "1")));
-		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters(arg0, arg1).body();
+		arg1.annotate(
+				Annotation.name("javax.validation.constraints.Max", (t) -> t.attribute("value", int.class, "10")));
+		arg1.annotate(Annotation.name("javax.validation.constraints.Min", (t) -> t.attribute("value", int.class, "1")));
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void")
+				.parameters(arg0, arg1).body();
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import javax.validation.constraints.Max;",
-                "import javax.validation.constraints.Min;", "import javax.validation.constraints.NotNull;", "",
-				"class Test {", "", "    void something(@NotNull String arg0, @Max(10) @Min(1) int arg1) {", "    }", "", "}");
+				"import javax.validation.constraints.Min;", "import javax.validation.constraints.NotNull;", "",
+				"class Test {", "", "    void something(@NotNull String arg0, @Max(10) @Min(1) int arg1) {", "    }",
+				"", "}");
 	}
 
 }
