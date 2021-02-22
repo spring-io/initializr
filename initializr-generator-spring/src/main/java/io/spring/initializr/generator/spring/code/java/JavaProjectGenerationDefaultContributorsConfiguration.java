@@ -21,10 +21,10 @@ import java.lang.reflect.Modifier;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.java.JavaExpressionStatement;
 import io.spring.initializr.generator.language.java.JavaMethodDeclaration;
 import io.spring.initializr.generator.language.java.JavaMethodInvocation;
+import io.spring.initializr.generator.language.java.JavaParameter;
 import io.spring.initializr.generator.language.java.JavaReturnStatement;
 import io.spring.initializr.generator.language.java.JavaTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
@@ -51,7 +51,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 			typeDeclaration.modifiers(Modifier.PUBLIC);
 			typeDeclaration.addMethodDeclaration(
 					JavaMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
-							.parameters(new Parameter("java.lang.String[]", "args"))
+							.parameters(new JavaParameter("java.lang.String[]", "args"))
 							.body(new JavaExpressionStatement(
 									new JavaMethodInvocation("org.springframework.boot.SpringApplication", "run",
 											typeDeclaration.getName() + ".class", "args"))));
@@ -95,7 +95,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 				JavaMethodDeclaration configure = JavaMethodDeclaration.method("configure")
 						.modifiers(Modifier.PROTECTED)
 						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
+						.parameters(new JavaParameter("org.springframework.boot.builder.SpringApplicationBuilder",
 								"application"))
 						.body(new JavaReturnStatement(new JavaMethodInvocation("application", "sources",
 								description.getApplicationName() + ".class")));
