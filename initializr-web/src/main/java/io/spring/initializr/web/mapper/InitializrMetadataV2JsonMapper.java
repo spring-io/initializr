@@ -126,7 +126,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 
 	protected void type(ObjectNode parent, TypeCapability capability) {
 		ObjectNode type = nodeFactory.objectNode();
-		type.put("type", "action");
+		type.put("type", capability.getType().getName());
 		Type defaultType = capability.getDefault();
 		if (defaultType != null) {
 			type.put("default", defaultType.getId());
