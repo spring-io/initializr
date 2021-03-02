@@ -16,7 +16,9 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.PluginMapping;
 import io.spring.initializr.generator.io.IndentingWriter;
 
 /**
@@ -41,20 +43,49 @@ public abstract class GradleSettingsWriter {
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
-		if (build.pluginRepositories().isEmpty()) {
+		if (build.pluginRepositories().isEmpty() && build.getSettings().getPluginMappings().isEmpty()) {
 			return;
 		}
 		writer.println("pluginManagement {");
-		writer.indented(() -> writeRepositories(writer, build));
+		writer.indented(() -> {
+			writeRepositories(writer, build);
+			writeResolutionStrategy(writer, build);
+		});
 		writer.println("}");
 	}
 
 	private void writeRepositories(IndentingWriter writer, GradleBuild build) {
+		if (build.pluginRepositories().isEmpty()) {
+			return;
+		}
 		writer.println("repositories {");
 		writer.indented(() -> {
 			build.pluginRepositories().items().map(this::repositoryAsString).forEach(writer::println);
 			writer.println("gradlePluginPortal()");
 		});
+		writer.println("}");
+	}
+
+	private void writeResolutionStrategy(IndentingWriter writer, GradleBuild build) {
+		if (build.getSettings().getPluginMappings().isEmpty()) {
+			return;
+		}
+		writer.println("resolutionStrategy {");
+		writer.indented(() -> {
+			writer.println("eachPlugin {");
+			writer.indented(() -> build.getSettings().getPluginMappings()
+					.forEach((pluginMapping) -> writePluginMapping(writer, pluginMapping)));
+			writer.println("}");
+		});
+		writer.println("}");
+	}
+
+	private void writePluginMapping(IndentingWriter writer, PluginMapping pluginMapping) {
+		writer.println("if (requested.id.id == " + wrapWithQuotes(pluginMapping.getId()) + ") {");
+		Dependency dependency = pluginMapping.getDependency();
+		String module = String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(),
+				dependency.getVersion().getValue());
+		writer.indented(() -> writer.println("useModule(" + wrapWithQuotes(module) + ")"));
 		writer.println("}");
 	}
 

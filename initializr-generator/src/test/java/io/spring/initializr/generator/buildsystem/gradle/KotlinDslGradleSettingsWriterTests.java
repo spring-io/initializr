@@ -20,8 +20,10 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,6 +72,32 @@ class KotlinDslGradleSettingsWriterTests {
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
 				"        maven { url = uri(\"https://repo.spring.io/snapshot\") }", "        gradlePluginPortal()",
 				"    }", "}");
+	}
+
+	@Test
+	void gradleBuildWithPluginMappings() {
+		GradleBuild build = new GradleBuild();
+		build.settings()
+				.mapPlugin("com.example",
+						Dependency.withCoordinates("com.example", "gradle-plugin")
+								.version(VersionReference.ofValue("1.0.0")).build())
+				.mapPlugin("org.acme", Dependency.withCoordinates("org.acme.plugin", "gradle")
+						.version(VersionReference.ofValue("2.0.0")).build());
+		List<String> lines = generateSettings(build);
+		assertThat(lines)
+				.containsSequence(// @formatter:off
+				"pluginManagement {",
+				"    resolutionStrategy {",
+				"        eachPlugin {",
+				"            if (requested.id.id == \"com.example\") {",
+				"                useModule(\"com.example:gradle-plugin:1.0.0\")",
+				"            }",
+				"            if (requested.id.id == \"org.acme\") {",
+				"                useModule(\"org.acme.plugin:gradle:2.0.0\")",
+				"            }",
+				"        }",
+				"    }",
+				"}"); // @formatter:on
 	}
 
 	@Test
