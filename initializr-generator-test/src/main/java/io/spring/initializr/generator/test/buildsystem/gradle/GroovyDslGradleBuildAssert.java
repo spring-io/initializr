@@ -82,7 +82,7 @@ public class GroovyDslGradleBuildAssert extends AbstractTextAssert<GroovyDslGrad
 	 * @return {@code this} assertion object
 	 */
 	public GroovyDslGradleBuildAssert hasProperty(String name, String value) {
-		return contains(String.format("%s = '%s", name, value));
+		return contains(String.format("%s = '%s'", name, value));
 	}
 
 	/**
