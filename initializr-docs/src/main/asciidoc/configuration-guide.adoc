@@ -872,7 +872,7 @@ those two ids are displayed in the capabilities of the service):
 
 [source]
 ----
-$ curl http://localhost:8080/starter.zip -d dependencies=web,devtools \
+$ curl -G http://localhost:8080/starter.zip -d dependencies=web,devtools \
            -d bootVersion=2.3.5.RELEASE -o my-project.zip
 ----
 
