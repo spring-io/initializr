@@ -6,6 +6,4 @@ branch: "0.10.x"
 milestone: "0.10.x"
 build-name: "initializr"
 concourse-url: "https://ci.spring.io"
-bintray-subject: "spring"
-bintray-repo: "jars"
 task-timeout: 30m
