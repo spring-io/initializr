@@ -1,5 +1,7 @@
 anchors:
   artifactory-repo-put-params: &artifactory-repo-put-params
+    signing_key: ((signing-key))
+    signing_passphrase: ((signing-passphrase))
     repo: libs-snapshot-local
     folder: distribution-repository
     build_uri: "https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
@@ -12,11 +14,6 @@ anchors:
     ARTIFACTORY_SERVER: ((artifactory-server))
     ARTIFACTORY_USERNAME: ((artifactory-username))
     ARTIFACTORY_PASSWORD: ((artifactory-password))
-  bintray-task-params: &bintray-task-params
-    BINTRAY_SUBJECT: ((bintray-subject))
-    BINTRAY_REPO: ((bintray-repo))
-    BINTRAY_USERNAME: ((bintray-username))
-    BINTRAY_API_KEY: ((bintray-api-key))
   build-project-task-params: &build-project-task-params
     privileged: true
     timeout: ((task-timeout))
@@ -43,6 +40,8 @@ anchors:
   sontatype-task-params: &sonatype-task-params
     SONATYPE_USER_TOKEN: ((sonatype-user-token))
     SONATYPE_PASSWORD_TOKEN: ((sonatype-user-token-password))
+    SONATYPE_URL: ((sonatype-url))
+    SONATYPE_STAGING_PROFILE_ID: ((sonatype-staging-profile-id))
 resource_types:
 - name: artifactory-resource
   type: registry-image
@@ -369,8 +368,8 @@ jobs:
     params:
       RELEASE_TYPE: RELEASE
       <<: *artifactory-task-params
-      <<: *bintray-task-params
-- name: sync-to-maven-central
+      <<: *sonatype-task-params
+- name: create-github-release
   serial: true
   plan:
   - get: ci-image
@@ -381,12 +380,6 @@ jobs:
     params:
       download_artifacts: false
       save_build_info: true
-  - task: sync-to-maven-central
-    image: ci-image
-    file: git-repo/ci/tasks/sync-to-maven-central.yml
-    params:
-      <<: *bintray-task-params
-      <<: *sonatype-task-params
   - task: generate-changelog
     file: git-repo/ci/tasks/generate-changelog.yml
     params:
@@ -402,7 +395,7 @@ groups:
 - name: "build"
   jobs: ["build", "jdk11-build", "jdk15-build", "windows-build"]
 - name: "releases"
-  jobs: ["stage-release", "promote-release", "sync-to-maven-central"]
+  jobs: ["stage-release", "promote-release", "create-github-release"]
 - name: "ci-images"
   jobs: ["build-ci-image"]
 - name: "pull-requests"
