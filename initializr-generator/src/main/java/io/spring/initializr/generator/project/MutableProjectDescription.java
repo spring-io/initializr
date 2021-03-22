@@ -133,6 +133,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return addDependency(id, builder.build());
 	}
 
+	public Dependency removeDependency(String id) {
+		return this.requestedDependencies.remove(id);
+	}
+
 	@Override
 	public Map<String, Dependency> getRequestedDependencies() {
 		return Collections.unmodifiableMap(this.requestedDependencies);
