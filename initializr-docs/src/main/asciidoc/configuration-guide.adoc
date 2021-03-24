@@ -1196,7 +1196,7 @@ the expiration settings accordingly.
 [[create-instance-advanced-config-custom-project-request]]
 === Bind to custom project request
 Only attributes that are defined in the metadata can be bound to a `ProjectRequest` and
-ultimately made available in `ProjectDescription`. A custom instance may chose however to
+ultimately made available in `ProjectDescription`. A custom instance may choose however to
 provide additional attributes. Please note that those attributes won't be supported by
 official clients (i.e. IDEs).
 
@@ -1209,7 +1209,7 @@ include::{code-examples}/doc/generator/project/CustomProjectGenerationController
 ----
 
 If you inherit from `WebProjectRequest`, defaults can be automatically applied from the
-metadata as shown above but you may also chose to ignore that.
+metadata as shown above but you may also choose to ignore that.
 
 The next step is to make sure that those additional attributes are made available in the
 `ProjectGenerationContext`. The idiomatic way of doing this is to create your own
