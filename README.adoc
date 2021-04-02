@@ -1,7 +1,7 @@
 = Spring Initializr image:https://ci.spring.io/api/v1/teams/initializr/pipelines/initializr/jobs/build/badge["Build Status", link="https://ci.spring.io/teams/initializr/pipelines/initializr?groups=Build"] image:https://badges.gitter.im/spring-io/initializr.svg[link="https://gitter.im/spring-io/initializr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
 :boot-doc: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
-:code: https://github.com/spring-io/initializr/blob/master
+:code: https://github.com/spring-io/initializr/blob/main
 :docs: https://docs.spring.io/initializr/docs/current-SNAPSHOT/reference
 :service: https://github.com/spring-io/start.spring.io
 

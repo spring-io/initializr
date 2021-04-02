@@ -41,8 +41,8 @@ added after the original pull request but before a merge.
   than cosmetic changes).
 * Add some Javadocs and, if you change the namespace, some XSD doc elements.
 * A few unit tests would help a lot as well -- someone has to do it.
-* If no-one else is using your branch, please rebase it against the current master (or
-  other target branch in the main project).
+* If no-one else is using your branch, please rebase it against the current `main` (or
+  other target branch in the original project).
 * When writing a commit message please follow https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions],
   if you are fixing an existing issue please add `Fixes gh-XXXX` at the end of the commit
   message (where XXXX is the issue number).

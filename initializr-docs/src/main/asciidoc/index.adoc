@@ -16,12 +16,12 @@ Stéphane Nicoll; Dave Syer; Madhura Bhave
 :code-examples: {sources-root}/main/java/io/spring/initializr
 :test-examples: {sources-root}/test/java/io/spring/initializr
 :initializr-repo: snapshot
-:github-tag: master
+:github-tag: main
 :github-repo: spring-io/initializr
 :github-raw: https://raw.github.com/{github-repo}/{github-tag}
 :github-code: https://github.com/{github-repo}/tree/{github-tag}
 :github-wiki: https://github.com/{github-repo}/wiki
-:github-master-code: https://github.com/{github-repo}/tree/master
+:github-main-code: https://github.com/{github-repo}/tree/main
 :sc-initializr-generator: {github-code}/initializr-generator/src/main/java/io/spring/initializr
 :spring-initializr-docs-version: current
 :spring-initializr-docs: https://docs.spring.io/initializr/docs/{spring-initializr-docs-version}/reference
