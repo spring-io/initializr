@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,30 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
+	void outcomeWithSpringBoot23() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.3.10.RELEASE"));
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle6"));
+	}
+
+	@Test
+	void outcomeWithSpringBoot24() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.4.0"));
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle6"));
+	}
+
+	@Test
+	void outcomeWithSpringBoot25() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.5.1"));
+		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
+				.getBean(String.class).isEqualTo("testGradle7"));
+	}
+
+	@Test
 	void outcomeWithNoMatch() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
@@ -100,6 +124,12 @@ public class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("6")
 		String gradle6() {
 			return "testGradle6";
+		}
+
+		@Bean
+		@ConditionalOnGradleVersion("7")
+		String gradle7() {
+			return "testGradle7";
 		}
 
 	}

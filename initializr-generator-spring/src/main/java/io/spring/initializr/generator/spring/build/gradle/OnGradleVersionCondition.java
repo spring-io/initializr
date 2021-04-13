@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,12 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.0.0.M1, 2.1.0.M1)");
 
 	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("[2.1.0.M1,2.2.2.BUILD-SNAPSHOT)");
+			.parseRange("[2.1.0.M1,2.2.2.RELEASE)");
 
-	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.2.2.BUILD-SNAPSHOT");
+	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
+			.parseRange("[2.2.2.RELEASE,2.5.0-SNAPSHOT)");
+
+	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-SNAPSHOT");
 
 	@Override
 	protected boolean matches(ProjectDescription description, ConditionContext context,
@@ -67,6 +70,9 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 		}
 		else if (GRADLE_6_VERSION_RANGE.match(platformVersion)) {
 			return "6";
+		}
+		else if (GRADLE_7_VERSION_RANGE.match(platformVersion)) {
+			return "7";
 		}
 		else {
 			return null;

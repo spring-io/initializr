@@ -67,7 +67,8 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	static Stream<Arguments> supportedPlatformVersions() {
 		// previous versions use gradle < 5, where Kotlin DSL is not supported
-		return Stream.of(Arguments.arguments("2.1.3.RELEASE"), Arguments.arguments("2.2.3.RELEASE"));
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE"), Arguments.arguments("2.2.3.RELEASE"),
+				Arguments.arguments("2.5.0"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -85,7 +86,8 @@ class GradleKtsProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.8.3"));
+		return Stream.of(Arguments.arguments("2.1.3.RELEASE", "5.6.4"), Arguments.arguments("2.2.3.RELEASE", "6.8.3"),
+				Arguments.arguments("2.5.0", "7.0"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
