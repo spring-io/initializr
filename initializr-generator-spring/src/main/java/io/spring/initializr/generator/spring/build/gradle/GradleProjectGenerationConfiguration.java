@@ -101,7 +101,7 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnGradleVersion({ "4", "5", "6", "7" })
+	@ConditionalOnGradleVersion({ "6", "7" })
 	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
 		return new SpringBootPluginBuildCustomizer(description, versionResolver
@@ -120,35 +120,6 @@ public class GradleProjectGenerationConfiguration {
 	public GradleBuildProjectContributor gradleKtsBuildProjectContributor(KotlinDslGradleBuildWriter buildWriter,
 			GradleBuild build) {
 		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle.kts");
-	}
-
-	/**
-	 * Configuration specific to projects using Gradle 4.
-	 */
-	@Configuration
-	@ConditionalOnGradleVersion("4")
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	static class Gradle4ProjectGenerationConfiguration {
-
-		@Bean
-		GradleWrapperContributor gradle4WrapperContributor() {
-			return new GradleWrapperContributor("4");
-		}
-
-	}
-
-	/**
-	 * Configuration specific to projects using Gradle 5.
-	 */
-	@Configuration
-	@ConditionalOnGradleVersion("5")
-	static class Gradle5ProjectGenerationConfiguration {
-
-		@Bean
-		GradleWrapperContributor gradle5WrapperContributor() {
-			return new GradleWrapperContributor("5");
-		}
-
 	}
 
 	/**
@@ -180,11 +151,11 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	/**
-	 * Configuration specific to projects using Gradle (Groovy DSL) 4, 5, 6, or 7.
+	 * Configuration specific to projects using Gradle (Groovy DSL).
 	 */
 	@Configuration
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
-	@ConditionalOnGradleVersion({ "4", "5", "6", "7" })
+	@ConditionalOnGradleVersion({ "6", "7" })
 	static class Gradle4Or5ProjectGenerationConfiguration {
 
 		@Bean
@@ -227,7 +198,7 @@ public class GradleProjectGenerationConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
-	@ConditionalOnGradleVersion({ "5", "6", "7" })
+	@ConditionalOnGradleVersion({ "6", "7" })
 	static class GradleKtsProjectGenerationConfiguration {
 
 		@Bean

@@ -37,22 +37,6 @@ public class ConditionalOnGradleVersionTests {
 			.withConfiguration(GradleVersionTestConfiguration.class);
 
 	@Test
-	void outcomeWithSpringBoot20() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
-				.getBean(String.class).isEqualTo("testGradle4"));
-	}
-
-	@Test
-	void outcomeWithSpringBoot21() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.3.RELEASE"));
-		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(String.class)
-				.getBean(String.class).isEqualTo("testGradle5"));
-	}
-
-	@Test
 	void outcomeWithSpringBoot23() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.3.10.RELEASE"));
@@ -90,35 +74,15 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
-	void outcomeWithSpringBoot20AndMultipleGenerations() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.0.9.RELEASE"));
-		this.projectTester.withConfiguration(Gradle4Or5TestConfiguration.class).configure(description,
-				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle4", "gradle4Or5"));
-	}
-
-	@Test
-	void outcomeWithSpringBoot24AndMultipleNonMatchingGenerations() {
+	void outcomeWithSpringBoot24AndMultipleGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.4.0"));
-		this.projectTester.withConfiguration(Gradle4Or5TestConfiguration.class).configure(description,
-				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle6"));
+		this.projectTester.withConfiguration(Gradle6Or7TestConfiguration.class).configure(description,
+				(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle6", "gradle6Or7"));
 	}
 
 	@Configuration
 	static class GradleVersionTestConfiguration {
-
-		@Bean
-		@ConditionalOnGradleVersion("4")
-		String gradle4() {
-			return "testGradle4";
-		}
-
-		@Bean
-		@ConditionalOnGradleVersion("5")
-		String gradle5() {
-			return "testGradle5";
-		}
 
 		@Bean
 		@ConditionalOnGradleVersion("6")
@@ -135,12 +99,12 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Configuration
-	static class Gradle4Or5TestConfiguration {
+	static class Gradle6Or7TestConfiguration {
 
 		@Bean
-		@ConditionalOnGradleVersion({ "4", "5" })
-		String gradle4Or5() {
-			return "testGradle4Or5";
+		@ConditionalOnGradleVersion({ "6", "7" })
+		String gradle6Or7() {
+			return "testGradle6Or7";
 		}
 
 	}

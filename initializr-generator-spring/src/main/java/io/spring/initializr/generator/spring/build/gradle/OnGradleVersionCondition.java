@@ -36,11 +36,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
-	private static final VersionRange GRADLE_4_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.0.0.M1, 2.1.0.M1)");
-
-	private static final VersionRange GRADLE_5_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("[2.1.0.M1,2.2.2.RELEASE)");
-
 	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
 			.parseRange("[2.2.2.RELEASE,2.5.0-SNAPSHOT)");
 
@@ -61,12 +56,6 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private String determineGradleGeneration(Version platformVersion) {
 		if (platformVersion == null) {
 			return null;
-		}
-		else if (GRADLE_4_VERSION_RANGE.match(platformVersion)) {
-			return "4";
-		}
-		else if (GRADLE_5_VERSION_RANGE.match(platformVersion)) {
-			return "5";
 		}
 		else if (GRADLE_6_VERSION_RANGE.match(platformVersion)) {
 			return "6";
