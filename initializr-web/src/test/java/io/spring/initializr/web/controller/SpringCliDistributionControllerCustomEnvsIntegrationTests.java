@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class SpringCliDistributionControllerCustomEnvsIntegrationTests
 	void downloadCliWithCustomRepository() throws Exception {
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl("/spring"), String.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin.zip";
+		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/2.4.4/spring-boot-cli-2.4.4-bin.zip";
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}
 

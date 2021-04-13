@@ -1,9 +1,9 @@
 {
-  "bootVersion": "2.1.4.RELEASE",
+  "bootVersion": "2.6.1",
   "repositories": {
-    "my-api-repo-1": {
-      "name": "repo1",
-      "url": "https://example.com/repo1",
+    "my-api-repo-2": {
+      "name": "repo2",
+      "url": "https://example.com/repo2",
       "snapshotEnabled": false
     }
   },
@@ -11,9 +11,9 @@
     "my-api-bom": {
       "groupId": "org.acme",
       "artifactId": "my-api-bom",
-      "version": "1.0.0.RELEASE",
+      "version": "2.0.0.RELEASE",
       "repositories": [
-        "my-api-repo-1"
+        "my-api-repo-2"
       ]
     }
   },
@@ -45,11 +45,11 @@
       "artifactId": "bar",
       "version": "2.1.0"
     },
-    "org.acme:bur": {
+    "org.acme:biz": {
       "groupId": "org.acme",
-      "scope": "test",
-      "artifactId": "bur",
-      "version": "2.1.0"
+      "scope": "runtime",
+      "artifactId": "biz",
+      "version": "1.3.5"
     },
     "my-api": {
       "groupId": "org.acme",

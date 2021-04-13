@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class SpringCliDistributionControllerIntegrationTests extends AbstractIni
 	private void assertSpringCliRedirect(String context, String extension) throws URISyntaxException {
 		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context), Object.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.1.4.RELEASE/spring-boot-cli-2.1.4.RELEASE-bin."
+		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.4.4/spring-boot-cli-2.4.4-bin."
 				+ extension;
 		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
 	}

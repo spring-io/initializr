@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void dependencyInRange() {
 		Dependency biz = Dependency.create("org.acme", "biz", "1.3.5", "runtime");
-		ProjectStructure project = downloadTgz("/starter.tgz?dependencies=org.acme:biz&bootVersion=2.5.1");
+		ProjectStructure project = downloadTgz("/starter.tgz?dependencies=org.acme:biz&bootVersion=2.6.1");
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
 		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(biz);
@@ -136,12 +136,11 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void kotlinRange() {
-		ProjectStructure project = downloadZip(
-				"/starter.zip?dependencies=web&language=kotlin&bootVersion=2.0.1.RELEASE");
+		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&language=kotlin&bootVersion=2.4.0");
 		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
 				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
 				"src/main/resources/application.properties");
-		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.1");
+		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.4.31");
 	}
 
 	@Test

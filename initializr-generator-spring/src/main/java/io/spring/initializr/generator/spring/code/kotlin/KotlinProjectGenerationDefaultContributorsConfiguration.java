@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,17 +54,6 @@ import org.springframework.context.annotation.Configuration;
 class KotlinProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
-	@ConditionalOnPlatformVersion("[2.0.0.RELEASE,2.2.0.M3)")
-	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junit4TestMethodContributor() {
-		return (typeDeclaration) -> {
-			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
-			function.annotate(Annotation.name("org.junit.Test"));
-			typeDeclaration.addFunctionDeclaration(function);
-		};
-	}
-
-	@Bean
-	@ConditionalOnPlatformVersion("2.2.0.M3")
 	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();

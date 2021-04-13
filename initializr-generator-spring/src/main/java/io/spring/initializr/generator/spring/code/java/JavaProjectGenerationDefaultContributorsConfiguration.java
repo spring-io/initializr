@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package io.spring.initializr.generator.spring.code.java;
 import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.java.JavaExpressionStatement;
@@ -59,19 +58,6 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("[2.0.0.RELEASE,2.2.0.M3)")
-	TestApplicationTypeCustomizer<JavaTypeDeclaration> junit4TestMethodContributor() {
-		return (typeDeclaration) -> {
-			typeDeclaration.modifiers(Modifier.PUBLIC);
-			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads").modifiers(Modifier.PUBLIC)
-					.returning("void").body();
-			method.annotate(Annotation.name("org.junit.Test"));
-			typeDeclaration.addMethodDeclaration(method);
-		};
-	}
-
-	@Bean
-	@ConditionalOnPlatformVersion("2.2.0.M3")
 	TestApplicationTypeCustomizer<JavaTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads").returning("void").body();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,19 +59,6 @@ class GroovyProjectGenerationConfigurationTests {
 	void mainClassIsContributed() {
 		ProjectStructure project = this.projectTester.generate(new MutableProjectDescription());
 		assertThat(project).containsFiles("src/main/groovy/com/example/demo/DemoApplication.groovy");
-	}
-
-	@Test
-	void testClassIsContributedWithJUnit4() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/test/groovy/com/example/demo/DemoApplicationTests.groovy").containsExactly(
-				"package com.example.demo", "", "import org.junit.Test", "import org.junit.runner.RunWith",
-				"import org.springframework.boot.test.context.SpringBootTest",
-				"import org.springframework.test.context.junit4.SpringRunner", "", "@RunWith(SpringRunner)",
-				"@SpringBootTest", "class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {",
-				"    }", "", "}");
 	}
 
 	@Test

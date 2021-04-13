@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,24 +90,9 @@ class MavenProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	@Deprecated
-	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.0.M4"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>",
-				"                <exclusion>", "                    <groupId>org.junit.vintage</groupId>",
-				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
-				"                <exclusion>", "                    <groupId>junit</groupId>",
-				"                    <artifactId>junit</artifactId>", "                </exclusion>",
-				"            </exclusions>");
-	}
-
-	@Test
 	void testStarterExcludesVintageEngineWithCompatibleVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.0.M5"));
+		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>",

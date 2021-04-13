@@ -107,19 +107,36 @@ class GradleKtsProjectGenerationConfigurationTests {
 	@Test
 	void buildDotGradleDotKtsIsContributedWhenGeneratingGradleKtsProject() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		description.setPlatformVersion(Version.parse("2.4.0"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
 				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle.kts").containsExactly("plugins {",
-				"    id(\"org.springframework.boot\") version \"2.1.0.RELEASE\"",
-				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"", "    java", "}", "",
-				"group = \"com.example\"", "version = \"0.0.1-SNAPSHOT\"",
-				"java.sourceCompatibility = JavaVersion.VERSION_11", "", "repositories {", "    mavenCentral()", "}",
-				"", "dependencies {", "    implementation(\"org.springframework.boot:spring-boot-starter\")",
+		assertThat(project).textFile("build.gradle.kts")
+				.containsExactly(// @formatter:off
+				"plugins {",
+				"    id(\"org.springframework.boot\") version \"2.4.0\"",
+				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"",
+				"    java",
+				"}",
+				"",
+				"group = \"com.example\"",
+				"version = \"0.0.1-SNAPSHOT\"",
+				"java.sourceCompatibility = JavaVersion.VERSION_11",
+				"",
+				"repositories {",
+				"    mavenCentral()",
+				"}",
+				"",
+				"dependencies {",
+				"    implementation(\"org.springframework.boot:spring-boot-starter\")",
 				"    implementation(\"com.example:acme\")",
-				"    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")", "}");
+				"    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")",
+				"}",
+				"",
+				"tasks.withType<Test> {",
+				"    useJUnitPlatform()",
+				"}"); // @formatter:on
 	}
 
 	@Test
@@ -161,16 +178,6 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("build.gradle.kts").lines().containsSequence("tasks.withType<Test> {",
-				"    useJUnitPlatform()", "}");
-	}
-
-	@Test
-	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle.kts").lines().doesNotContainSequence("tasks.withType<Test> {",
 				"    useJUnitPlatform()", "}");
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,16 +106,16 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 		ResponseEntity<String> response = execute("/dependencies", String.class, null, acceptHeader);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, expectedMediaType);
-		validateDependenciesOutput("2.1.4", response.getBody());
+		validateDependenciesOutput("2.4.4", response.getBody());
 	}
 
 	@Test
 	void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.5.1", String.class, null,
+		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.6.1", String.class, null,
 				"application/json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		validateContentType(response, DEFAULT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("2.5.1", response.getBody());
+		validateDependenciesOutput("2.6.1", response.getBody());
 	}
 
 	protected void validateDependenciesOutput(String version, String actual) throws JSONException {

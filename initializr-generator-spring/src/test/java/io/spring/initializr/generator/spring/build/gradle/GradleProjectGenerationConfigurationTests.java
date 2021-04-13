@@ -104,19 +104,36 @@ class GradleProjectGenerationConfigurationTests {
 	@Test
 	void buildDotGradleIsContributedWhenGeneratingGradleProject() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+		description.setPlatformVersion(Version.parse("2.4.0"));
 		description.setLanguage(new JavaLanguage("11"));
 		description.addDependency("acme",
 				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle").containsExactly("plugins {",
-				"    id 'org.springframework.boot' version '2.1.0.RELEASE'",
-				"    id 'io.spring.dependency-management' version '1.0.6.RELEASE'", "    id 'java'", "}", "",
-				"group = 'com.example'", "version = '0.0.1-SNAPSHOT'", "sourceCompatibility = '11'", "",
-				"repositories {", "    mavenCentral()", "}", "", "dependencies {",
+		assertThat(project).textFile("build.gradle").containsExactly(
+		// @formatter:off
+				"plugins {",
+				"    id 'org.springframework.boot' version '2.4.0'",
+				"    id 'io.spring.dependency-management' version '1.0.6.RELEASE'",
+				"    id 'java'",
+				"}",
+				"",
+				"group = 'com.example'",
+				"version = '0.0.1-SNAPSHOT'",
+				"sourceCompatibility = '11'",
+				"",
+				"repositories {",
+				"    mavenCentral()",
+				"}",
+				"",
+				"dependencies {",
 				"    implementation 'org.springframework.boot:spring-boot-starter'",
 				"    implementation 'com.example:acme'",
-				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'", "}");
+				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'",
+				"}",
+				"",
+				"test {",
+				"    useJUnitPlatform()",
+				"}"); // @formatter:on
 	}
 
 	@Test
@@ -139,46 +156,14 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void junitPlatformIsNotConfiguredWithIncompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle").lines().doesNotContainSequence("test {", "    useJUnitPlatform()",
-				"}");
-	}
-
-	@Test
-	@Deprecated
-	void testStarterExcludesVintageEngineAndJUnitWithAppropriateVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.0.M4"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle").lines().containsSequence(
-				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
-				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'",
-				"        exclude group: 'junit', module: 'junit'", "    }");
-	}
-
-	@Test
 	void testStarterExcludesVintageEngineWithCompatibleVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.0.M5"));
+		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("build.gradle").lines().containsSequence(
 				"    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
 				"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'", "    }");
-	}
-
-	@Test
-	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");
 	}
 
 	@Test
@@ -199,19 +184,13 @@ class GradleProjectGenerationConfigurationTests {
 		assertThat(project).textFile("build.gradle").doesNotContain("exclude group");
 	}
 
-	static Stream<Arguments> annotationProcessorScopeBuildParameters() {
-		return Stream.of(Arguments.arguments("2.0.6.RELEASE", true), Arguments.arguments("2.1.3.RELEASE", true));
-	}
-
-	@ParameterizedTest(name = "Spring Boot {0}")
-	@MethodSource("annotationProcessorScopeBuildParameters")
-	void gradleAnnotationProcessorScopeCustomizerIsContributedIfNecessary(String platformVersion,
-			boolean contributorExpected) {
+	@Test
+	void gradleAnnotationProcessorScopeCustomizerIsContributed() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse(platformVersion));
+		description.setPlatformVersion(Version.parse("2.4.0"));
 		description.setLanguage(new JavaLanguage());
-		this.projectTester.configure(description, (context) -> assertThat(context)
-				.getBeans(GradleAnnotationProcessorScopeBuildCustomizer.class).hasSize((contributorExpected) ? 1 : 0));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(GradleAnnotationProcessorScopeBuildCustomizer.class));
 	}
 
 }

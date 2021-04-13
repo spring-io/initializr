@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,17 +54,6 @@ class SourceCodeProjectGenerationConfigurationTests {
 		assertThat(declaration.getAnnotations()).singleElement()
 				.satisfies((annotation) -> assertThat(annotation.getName())
 						.isEqualTo("org.springframework.boot.autoconfigure.SpringBootApplication"));
-	}
-
-	@Test
-	void addsACustomizerThatAppliesTestAnnotationsOnTestClassWithJunit4() {
-		TypeDeclaration declaration = generateTestTypeDeclaration("2.1.0.RELEASE");
-		assertThat(declaration.getAnnotations()).hasSize(2);
-		assertThat(declaration.getAnnotations().get(0).getName()).isEqualTo("org.junit.runner.RunWith");
-		assertThat(declaration.getAnnotations().get(0).getAttributes().get(0).getValues())
-				.containsOnly("org.springframework.test.context.junit4.SpringRunner");
-		assertThat(declaration.getAnnotations().get(1).getName())
-				.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
 	}
 
 	@Test

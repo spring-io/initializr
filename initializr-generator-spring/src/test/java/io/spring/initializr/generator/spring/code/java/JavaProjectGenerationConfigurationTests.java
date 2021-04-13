@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,19 +60,6 @@ class JavaProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java");
-	}
-
-	@Test
-	void testClassIsContributedWithJUnit4() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.4.RELEASE"));
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/test/java/com/example/demo/DemoApplicationTests.java").containsExactly(
-				"package com.example.demo;", "", "import org.junit.Test;", "import org.junit.runner.RunWith;",
-				"import org.springframework.boot.test.context.SpringBootTest;",
-				"import org.springframework.test.context.junit4.SpringRunner;", "", "@RunWith(SpringRunner.class)",
-				"@SpringBootTest", "public class DemoApplicationTests {", "", "    @Test",
-				"    public void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test

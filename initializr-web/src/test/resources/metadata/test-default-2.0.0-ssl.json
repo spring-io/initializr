@@ -151,19 +151,19 @@
   },
   "bootVersion": {
     "type": "single-select",
-    "default": "2.1.4.RELEASE",
+    "default": "2.4.4.RELEASE",
     "values": [
       {
-        "id": "2.4.0.BUILD-SNAPSHOT",
+        "id": "2.5.0.BUILD-SNAPSHOT",
         "name": "Latest SNAPSHOT"
       },
       {
-        "id": "2.1.4.RELEASE",
-        "name": "2.1.4"
+        "id": "2.4.4.RELEASE",
+        "name": "2.4.4"
       },
       {
-        "id": "2.2.17.RELEASE",
-        "name": "1.5.17"
+        "id": "2.3.10.RELEASE",
+        "name": "2.3.10"
       }
     ]
   },

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,17 +43,6 @@ public class SourceCodeProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("[2.0.0.RELEASE,2.2.0.M3)")
-	public TestApplicationTypeCustomizer<TypeDeclaration> junit4SpringBootTestTypeCustomizer() {
-		return (typeDeclaration) -> {
-			typeDeclaration.annotate(Annotation.name("org.junit.runner.RunWith", (annotation) -> annotation
-					.attribute("value", Class.class, "org.springframework.test.context.junit4.SpringRunner")));
-			typeDeclaration.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
-		};
-	}
-
-	@Bean
-	@ConditionalOnPlatformVersion("2.2.0.M3")
 	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
 		return (typeDeclaration) -> typeDeclaration
 				.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
