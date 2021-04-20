@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package io.spring.initializr.generator.buildsystem;
  * A Maven repository.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public class MavenRepository {
 
@@ -27,7 +28,8 @@ public class MavenRepository {
 	 * Maven Central.
 	 */
 	public static final MavenRepository MAVEN_CENTRAL = MavenRepository
-			.withIdAndUrl("maven-central", "https://repo.maven.apache.org/maven2").name("Maven Central").build();
+			.withIdAndUrl("maven-central", "https://repo.maven.apache.org/maven2").name("Maven Central").onlyReleases()
+			.build();
 
 	private final String id;
 
@@ -35,12 +37,15 @@ public class MavenRepository {
 
 	private final String url;
 
+	private final boolean releasesEnabled;
+
 	private final boolean snapshotsEnabled;
 
 	protected MavenRepository(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.url = builder.url;
+		this.releasesEnabled = builder.releasesEnabled;
 		this.snapshotsEnabled = builder.snapshotsEnabled;
 	}
 
@@ -80,6 +85,14 @@ public class MavenRepository {
 	}
 
 	/**
+	 * Return whether releases are enabled on the repository.
+	 * @return {@code true} to enable releases, {@code false} otherwise
+	 */
+	public boolean isReleasesEnabled() {
+		return this.releasesEnabled;
+	}
+
+	/**
 	 * Return whether snapshots are enabled on the repository.
 	 * @return {@code true} to enable snapshots, {@code false} otherwise
 	 */
@@ -94,6 +107,8 @@ public class MavenRepository {
 		private String name;
 
 		private String url;
+
+		private boolean releasesEnabled = true;
 
 		private boolean snapshotsEnabled;
 
@@ -134,6 +149,16 @@ public class MavenRepository {
 		}
 
 		/**
+		 * Specify whether releases are enabled.
+		 * @param releasesEnabled whether releases are served by the repository
+		 * @return this for method chaining
+		 */
+		public Builder releasesEnabled(boolean releasesEnabled) {
+			this.releasesEnabled = releasesEnabled;
+			return this;
+		}
+
+		/**
 		 * Specify whether snapshots are enabled.
 		 * @param snapshotsEnabled whether snapshots are served by the repository
 		 * @return this for method chaining
@@ -141,6 +166,22 @@ public class MavenRepository {
 		public Builder snapshotsEnabled(boolean snapshotsEnabled) {
 			this.snapshotsEnabled = snapshotsEnabled;
 			return this;
+		}
+
+		/**
+		 * Specify that the repository should only be used for releases.
+		 * @return this for method chaining
+		 */
+		public Builder onlyReleases() {
+			return releasesEnabled(true).snapshotsEnabled(false);
+		}
+
+		/**
+		 * Specify that the repository should only be used for snapshots.
+		 * @return this for method chaining
+		 */
+		public Builder onlySnapshots() {
+			return snapshotsEnabled(true).releasesEnabled(false);
 		}
 
 		/**

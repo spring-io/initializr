@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -230,7 +230,16 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addRepository(String id, String name, String url, boolean snapshotsEnabled) {
+	public InitializrMetadataTestBuilder addReleasesRepository(String id, String name, String url) {
+		return addRepository(id, name, url, true, false);
+	}
+
+	public InitializrMetadataTestBuilder addSnapshotsRepository(String id, String name, String url) {
+		return addRepository(id, name, url, false, true);
+	}
+
+	public InitializrMetadataTestBuilder addRepository(String id, String name, String url, boolean releasesEnabled,
+			boolean snapshotsEnabled) {
 		this.builder.withCustomizer((it) -> {
 			Repository repo = new Repository();
 			repo.setName(name);
@@ -240,6 +249,7 @@ public class InitializrMetadataTestBuilder {
 			catch (MalformedURLException ex) {
 				throw new IllegalArgumentException("Cannot create URL", ex);
 			}
+			repo.setReleasesEnabled(releasesEnabled);
 			repo.setSnapshotsEnabled(snapshotsEnabled);
 			it.getConfiguration().getEnv().getRepositories().put(id, repo);
 		});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.spring.initializr.metadata;
 
 import java.net.URL;
+import java.util.StringJoiner;
 
 /**
  * Define a repository to be represented in the generated project if a dependency refers
@@ -30,14 +31,21 @@ public class Repository {
 
 	private URL url;
 
+	private boolean releasesEnabled = true;
+
 	private boolean snapshotsEnabled;
 
 	public Repository() {
 	}
 
-	public Repository(String name, URL url, boolean snapshotsEnabled) {
+	public Repository(String name, URL url) {
+		this(name, url, true, false);
+	}
+
+	public Repository(String name, URL url, boolean releasesEnabled, boolean snapshotsEnabled) {
 		this.name = name;
 		this.url = url;
+		this.releasesEnabled = releasesEnabled;
 		this.snapshotsEnabled = snapshotsEnabled;
 	}
 
@@ -55,6 +63,14 @@ public class Repository {
 
 	public void setUrl(URL url) {
 		this.url = url;
+	}
+
+	public boolean isReleasesEnabled() {
+		return this.releasesEnabled;
+	}
+
+	public void setReleasesEnabled(boolean releasesEnabled) {
+		this.releasesEnabled = releasesEnabled;
 	}
 
 	public boolean isSnapshotsEnabled() {
@@ -85,6 +101,9 @@ public class Repository {
 		else if (!this.name.equals(other.name)) {
 			return false;
 		}
+		if (this.releasesEnabled != other.releasesEnabled) {
+			return false;
+		}
 		if (this.snapshotsEnabled != other.snapshotsEnabled) {
 			return false;
 		}
@@ -104,6 +123,7 @@ public class Repository {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + (this.releasesEnabled ? 1231 : 1237);
 		result = prime * result + (this.snapshotsEnabled ? 1231 : 1237);
 		result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
 		return result;
@@ -111,9 +131,9 @@ public class Repository {
 
 	@Override
 	public String toString() {
-		return "Repository [" + ((this.name != null) ? "name=" + this.name + ", " : "")
-				+ ((this.url != null) ? "url=" + this.url + ", " : "") + "snapshotsEnabled=" + this.snapshotsEnabled
-				+ "]";
+		return new StringJoiner(", ", Repository.class.getSimpleName() + "[", "]").add("name='" + this.name + "'")
+				.add("url=" + this.url).add("releasesEnabled=" + this.releasesEnabled)
+				.add("snapshotsEnabled=" + this.snapshotsEnabled).toString();
 	}
 
 }

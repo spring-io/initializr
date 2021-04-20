@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,8 +75,8 @@ class DependencyManagementBuildCustomizerTests {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
 		bom.getRepositories().add("bar-repo");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom)
-				.addRepository("foo-repo", "foo-repo", "https://example.com/foo", false)
-				.addRepository("bar-repo", "bar-repo", "https://example.com/bar", false)
+				.addReleasesRepository("foo-repo", "foo-repo", "https://example.com/foo")
+				.addReleasesRepository("bar-repo", "bar-repo", "https://example.com/bar")
 				.addDependencyGroup("test", dependency).build();
 		Build build = createBuild(metadata);
 		build.dependencies().add(dependency.getId());

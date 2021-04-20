@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ class DefaultDependencyMetadataProviderTests {
 		Dependency third = Dependency.withId("third", "org.foo", "third");
 		third.setRepository("repo-foo");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addRepository("repo-foo", "my-repo", "http://localhost", false)
+				.addReleasesRepository("repo-foo", "my-repo", "http://localhost")
 				.addDependencyGroup("test", first, second, third).build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
@@ -155,9 +155,9 @@ class DefaultDependencyMetadataProviderTests {
 				"repo-foo", "repo-bar"));
 		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.0.RELEASE", "3.0.0.RELEASE", "repo-biz"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom)
-				.addRepository("repo-foo", "foo", "http://localhost", false)
-				.addRepository("repo-bar", "bar", "http://localhost", false)
-				.addRepository("repo-biz", "biz", "http://localhost", false)
+				.addReleasesRepository("repo-foo", "foo", "http://localhost")
+				.addReleasesRepository("repo-bar", "bar", "http://localhost")
+				.addReleasesRepository("repo-biz", "biz", "http://localhost")
 				.addDependencyGroup("test", first, second, third).build();
 		return this.provider.get(metadata, Version.parse(bootVersion));
 	}

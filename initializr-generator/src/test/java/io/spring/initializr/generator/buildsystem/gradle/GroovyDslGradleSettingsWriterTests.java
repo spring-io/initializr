@@ -68,7 +68,7 @@ class GroovyDslGradleSettingsWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories()
 				.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
-						.name("Spring Snapshots").snapshotsEnabled(true));
+						.name("Spring Snapshots").onlySnapshots());
 		List<String> lines = generateSettings(build);
 		assertThat(lines).containsSequence("pluginManagement {", "    repositories {",
 				"        maven { url 'https://repo.spring.io/snapshot' }", "        gradlePluginPortal()", "    }",

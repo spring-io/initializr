@@ -432,6 +432,14 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 				throw new IllegalStateException("Cannot parse URL", ex);
 			}
 		}
+		NodeList releases = element.getElementsByTagName("releases");
+		if (releases.getLength() > 0) {
+			Element releasesElement = (Element) releases.item(0);
+			NodeList releasesEnabled = releasesElement.getElementsByTagName("enabled");
+			if (releasesEnabled.getLength() > 0) {
+				repository.setReleasesEnabled("true".equals(releasesEnabled.item(0).getTextContent()));
+			}
+		}
 		NodeList snapshots = element.getElementsByTagName("snapshots");
 		if (snapshots.getLength() > 0) {
 			Element snapshotsElement = (Element) snapshots.item(0);

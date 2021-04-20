@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -638,70 +638,104 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithRepository() {
+	void pomWithReleasesOnlyRepository() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone")
 				.name("Spring Milestones"));
 		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-milestones");
-			assertThat(pom).textAtPath("/project/repositories/repository/name").isEqualTo("Spring Milestones");
-			assertThat(pom).textAtPath("/project/repositories/repository/url")
-					.isEqualTo("https://repo.spring.io/milestone");
-			assertThat(pom).nodeAtPath("/project/repositories/repository/snapshots").isNull();
+			NodeAssert repository = pom.nodeAtPath("/project/repositories/repository");
+			assertThat(repository).textAtPath("id").isEqualTo("spring-milestones");
+			assertThat(repository).textAtPath("name").isEqualTo("Spring Milestones");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.spring.io/milestone");
+			assertThat(repository).nodeAtPath("releases").isNull();
+			assertThat(repository).textAtPath("snapshots/enabled").isEqualTo("false");
 			assertThat(pom).nodeAtPath("/project/pluginRepositories").isNull();
 		});
 	}
 
 	@Test
-	void pomWithPluginRepository() {
+	void pomWithReleasesOnlyPluginRepository() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.pluginRepositories().add(MavenRepository
 				.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones"));
 		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id")
-					.isEqualTo("spring-milestones");
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/name")
-					.isEqualTo("Spring Milestones");
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/url")
-					.isEqualTo("https://repo.spring.io/milestone");
-			assertThat(pom).nodeAtPath("/project/repositories/repository/snapshots").isNull();
+			NodeAssert repository = pom.nodeAtPath("/project/pluginRepositories/pluginRepository");
+			assertThat(repository).textAtPath("id").isEqualTo("spring-milestones");
+			assertThat(repository).textAtPath("name").isEqualTo("Spring Milestones");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.spring.io/milestone");
+			assertThat(repository).nodeAtPath("releases").isNull();
+			assertThat(repository).textAtPath("snapshots/enabled").isEqualTo("false");
 			assertThat(pom).nodeAtPath("/project/repositories").isNull();
 		});
 	}
 
 	@Test
-	void pomWithSnapshotRepository() {
+	void pomWithSnapshotsOnlyRepository() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
-				.name("Spring Snapshots").snapshotsEnabled(true));
+				.name("Spring Snapshots").onlySnapshots());
 		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/repositories/repository/id").isEqualTo("spring-snapshots");
-			assertThat(pom).textAtPath("/project/repositories/repository/name").isEqualTo("Spring Snapshots");
-			assertThat(pom).textAtPath("/project/repositories/repository/url")
-					.isEqualTo("https://repo.spring.io/snapshot");
-			assertThat(pom).textAtPath("/project/repositories/repository/snapshots/enabled").isEqualTo("true");
+			NodeAssert repository = pom.nodeAtPath("/project/repositories/repository");
+			assertThat(repository).textAtPath("id").isEqualTo("spring-snapshots");
+			assertThat(repository).textAtPath("name").isEqualTo("Spring Snapshots");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.spring.io/snapshot");
+			assertThat(repository).textAtPath("releases/enabled").isEqualTo("false");
+			assertThat(repository).nodeAtPath("snapshots").isNull();
 			assertThat(pom).nodeAtPath("/project/pluginRepositories").isNull();
 		});
 	}
 
 	@Test
-	void pomWithSnapshotPluginRepository() {
+	void pomWithSnapshotsOnlyPluginRepository() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.pluginRepositories()
 				.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
-						.name("Spring Snapshots").snapshotsEnabled(true));
+						.name("Spring Snapshots").onlySnapshots());
 		generatePom(build, (pom) -> {
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/id").isEqualTo("spring-snapshots");
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/name")
-					.isEqualTo("Spring Snapshots");
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/url")
-					.isEqualTo("https://repo.spring.io/snapshot");
-			assertThat(pom).textAtPath("/project/pluginRepositories/pluginRepository/snapshots/enabled")
-					.isEqualTo("true");
+			NodeAssert repository = pom.nodeAtPath("/project/pluginRepositories/pluginRepository");
+			assertThat(repository).textAtPath("id").isEqualTo("spring-snapshots");
+			assertThat(repository).textAtPath("name").isEqualTo("Spring Snapshots");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.spring.io/snapshot");
+			assertThat(repository).textAtPath("releases/enabled").isEqualTo("false");
+			assertThat(repository).nodeAtPath("snapshots").isNull();
+			assertThat(pom).nodeAtPath("/project/repositories").isNull();
+		});
+	}
+
+	@Test
+	void pomWithReleasesAndSnapshotsRepository() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.repositories().add(MavenRepository.withIdAndUrl("example", "https://repo.example.com/")
+				.name("Example Repo").releasesEnabled(true).snapshotsEnabled(true));
+		generatePom(build, (pom) -> {
+			NodeAssert repository = pom.nodeAtPath("/project/repositories/repository");
+			assertThat(repository).textAtPath("id").isEqualTo("example");
+			assertThat(repository).textAtPath("name").isEqualTo("Example Repo");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.example.com/");
+			assertThat(repository).nodeAtPath("releases").isNull();
+			assertThat(repository).nodeAtPath("snapshots").isNull();
+			assertThat(pom).nodeAtPath("/project/pluginRepositories").isNull();
+		});
+	}
+
+	@Test
+	void pomWithReleasesAndSnapshotsPluginRepository() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.pluginRepositories().add(MavenRepository.withIdAndUrl("example", "https://repo.example.com/")
+				.name("Example Repo").releasesEnabled(true).snapshotsEnabled(true));
+		generatePom(build, (pom) -> {
+			NodeAssert repository = pom.nodeAtPath("/project/pluginRepositories/pluginRepository");
+			assertThat(repository).textAtPath("id").isEqualTo("example");
+			assertThat(repository).textAtPath("name").isEqualTo("Example Repo");
+			assertThat(repository).textAtPath("url").isEqualTo("https://repo.example.com/");
+			assertThat(repository).nodeAtPath("releases").isNull();
+			assertThat(repository).nodeAtPath("snapshots").isNull();
 			assertThat(pom).nodeAtPath("/project/repositories").isNull();
 		});
 	}

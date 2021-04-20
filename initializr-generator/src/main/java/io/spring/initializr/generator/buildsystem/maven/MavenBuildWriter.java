@@ -442,8 +442,11 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "id", repository.getId());
 			writeSingleElement(writer, "name", repository.getName());
 			writeSingleElement(writer, "url", repository.getUrl());
-			if (repository.isSnapshotsEnabled()) {
-				writeElement(writer, "snapshots", () -> writeSingleElement(writer, "enabled", Boolean.toString(true)));
+			if (!repository.isReleasesEnabled()) {
+				writeElement(writer, "releases", () -> writeSingleElement(writer, "enabled", Boolean.toString(false)));
+			}
+			if (!repository.isSnapshotsEnabled()) {
+				writeElement(writer, "snapshots", () -> writeSingleElement(writer, "enabled", Boolean.toString(false)));
 			}
 		});
 	}

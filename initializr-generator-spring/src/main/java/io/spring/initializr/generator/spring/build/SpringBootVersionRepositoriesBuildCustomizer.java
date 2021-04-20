@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,12 @@ import io.spring.initializr.generator.version.Version;
 class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Build> {
 
 	private static final MavenRepository SPRING_MILESTONES = MavenRepository
-			.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones").build();
+			.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones")
+			.onlyReleases().build();
 
 	private static final MavenRepository SPRING_SNAPSHOTS = MavenRepository
 			.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").name("Spring Snapshots")
-			.snapshotsEnabled(true).build();
+			.onlySnapshots().build();
 
 	private final Version springBootVersion;
 

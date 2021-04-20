@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,8 +150,8 @@ class KotlinDslGradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSnapshotRepository() {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
-				.snapshotsEnabled(true));
+		build.repositories().add(
+				MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").onlySnapshots());
 		List<String> lines = generateBuild(build);
 		assertThat(lines).containsSequence("repositories {",
 				"    maven { url = uri(\"https://repo.spring.io/snapshot\") }", "}");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class InitializrMetadataTests {
 		foo.setRepository("foo-repo");
 		addTestDependencyGroup(metadata, foo);
 		metadata.getConfiguration().getEnv().getRepositories().put("my-repo",
-				new Repository("repo", new URL("https://example.com/repo"), true));
+				new Repository("repo", new URL("https://example.com/repo")));
 		assertThatExceptionOfType(InvalidInitializrMetadataException.class).isThrownBy(metadata::validate)
 				.withMessageContaining("foo-repo").withMessageContaining("my-repo");
 	}

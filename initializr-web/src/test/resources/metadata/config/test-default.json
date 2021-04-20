@@ -74,27 +74,32 @@
       "my-api-repo-1": {
         "name": "repo1",
         "url": "https://example.com/repo1",
+        "releasesEnabled": true,
         "snapshotsEnabled": false
       },
       "my-api-repo-2": {
         "name": "repo2",
         "url": "https://example.com/repo2",
+        "releasesEnabled": true,
         "snapshotsEnabled": false
       },
       "my-api-repo-3": {
         "name": "repo3",
         "url": "https://example.com/repo3",
+        "releasesEnabled": true,
         "snapshotsEnabled": false
       },
       "spring-milestones": {
         "name": "Spring Milestones",
-        "snapshotsEnabled": false,
-        "url": "https://repo.spring.io/milestone"
+        "url": "https://repo.spring.io/milestone",
+        "releasesEnabled": true,
+        "snapshotsEnabled": false
       },
       "spring-snapshots": {
         "name": "Spring Snapshots",
-        "snapshotsEnabled": true,
-        "url": "https://repo.spring.io/snapshot"
+        "url": "https://repo.spring.io/snapshot",
+        "releasesEnabled": false,
+        "snapshotsEnabled": true
       }
     },
     "boms": {

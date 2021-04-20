@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ class MetadataBuildItemResolverTests {
 		bom.getMappings().add(BillOfMaterials.Mapping.create("2.0.0.RELEASE", "1.1.0"));
 		metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
 		metadata.getConfiguration().getEnv().getRepositories().put("test-repo",
-				new Repository("test", new URL("https://example.com/repo"), false));
+				new Repository("test", new URL("https://example.com/repo")));
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
@@ -132,24 +132,40 @@ class MetadataBuildItemResolverTests {
 	}
 
 	@Test
-	void resoleRepositoryWithMatchingEntry() throws MalformedURLException {
+	void resoleRepositoryWithMatchingReleasesOnlyRepository() throws MalformedURLException {
 		InitializrMetadata metadata = new InitializrMetadata();
 		metadata.getConfiguration().getEnv().getRepositories().put("test-repo",
-				new Repository("test", new URL("https://example.com/repo"), false));
+				new Repository("test", new URL("https://example.com/repo")));
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		MavenRepository repository = resolver.resolveRepository("test-repo");
 		assertThat(repository.getId()).isEqualTo("test-repo");
 		assertThat(repository.getName()).isEqualTo("test");
 		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
+		assertThat(repository.isReleasesEnabled()).isTrue();
 		assertThat(repository.isSnapshotsEnabled()).isFalse();
+	}
+
+	@Test
+	void resoleRepositoryWithMatchingSnapshotsOnlyRepository() throws MalformedURLException {
+		InitializrMetadata metadata = new InitializrMetadata();
+		metadata.getConfiguration().getEnv().getRepositories().put("test-repo",
+				new Repository("test", new URL("https://example.com/repo"), false, true));
+		metadata.validate();
+		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+		MavenRepository repository = resolver.resolveRepository("test-repo");
+		assertThat(repository.getId()).isEqualTo("test-repo");
+		assertThat(repository.getName()).isEqualTo("test");
+		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
+		assertThat(repository.isReleasesEnabled()).isFalse();
+		assertThat(repository.isSnapshotsEnabled()).isTrue();
 	}
 
 	@Test
 	void resoleRepositoryWithNonMatchingEntry() throws MalformedURLException {
 		InitializrMetadata metadata = new InitializrMetadata();
 		metadata.getConfiguration().getEnv().getRepositories().put("test-repo",
-				new Repository("test", new URL("https://example.com/repo"), false));
+				new Repository("test", new URL("https://example.com/repo")));
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		assertThat(resolver.resolveRepository("does-not-exist")).isNull();

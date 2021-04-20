@@ -218,8 +218,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 		Dependency bar = Dependency.withId("bar", "org.acme", "bar");
 		bar.setRepository("bar-repository");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", foo, bar)
-				.addRepository("foo-repository", "foo-repo", "https://example.com/foo", false)
-				.addRepository("bar-repository", "bar-repo", "https://example.com/bar", true).build();
+				.addReleasesRepository("foo-repository", "foo-repo", "https://example.com/foo")
+				.addSnapshotsRepository("bar-repository", "bar-repo", "https://example.com/bar").build();
 		ProjectStructure project = generateProject(java, build, "2.4.1", (description) -> {
 			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
 			description.addDependency("bar", MetadataBuildItemMapper.toDependency(bar));

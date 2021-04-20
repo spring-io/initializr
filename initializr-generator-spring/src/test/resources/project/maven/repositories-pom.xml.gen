@@ -49,14 +49,17 @@
 			<id>foo-repository</id>
 			<name>foo-repo</name>
 			<url>https://example.com/foo</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>bar-repository</id>
 			<name>bar-repo</name>
 			<url>https://example.com/bar</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 		</repository>
 	</repositories>
 

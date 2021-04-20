@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -250,9 +250,9 @@ public class InitializrConfiguration {
 		public Env() {
 			try {
 				this.repositories.put("spring-snapshots",
-						new Repository("Spring Snapshots", new URL("https://repo.spring.io/snapshot"), true));
+						new Repository("Spring Snapshots", new URL("https://repo.spring.io/snapshot"), false, true));
 				this.repositories.put("spring-milestones",
-						new Repository("Spring Milestones", new URL("https://repo.spring.io/milestone"), false));
+						new Repository("Spring Milestones", new URL("https://repo.spring.io/milestone"), true, false));
 			}
 			catch (MalformedURLException ex) {
 				throw new IllegalStateException("Cannot parse URL", ex);
