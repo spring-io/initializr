@@ -37,9 +37,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
 	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
-			.parseRange("[2.2.2.RELEASE,2.5.0-SNAPSHOT)");
+			.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
 
-	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-SNAPSHOT");
+	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-RC1");
 
 	@Override
 	protected boolean matches(ProjectDescription description, ConditionContext context,
