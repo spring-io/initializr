@@ -1,10 +1,35 @@
 initializr:
+  group-id:
+    value: org.acme
   dependencies:
     - name: Web
       content:
         - name: Web
           id: web
           description: Servlet web application with Spring MVC and Tomcat
+  languages:
+    - name: Java
+      id: java
+      default: true
+    - name: Kotlin
+      id: kotlin
+      default: false
+    - name: Groovy
+      id: groovy
+      default: false
+  javaVersions:
+    - id: 11
+      default: true
+    - id: 1.8
+      name: 8
+      default: false
+  packagings:
+    - name: Jar
+      id: jar
+      default: true
+    - name: War
+      id: war
+      default: false
   types:
     - name: Maven Project
       id: maven-project
@@ -22,28 +47,3 @@ initializr:
         format: project
       default: false
       action: /starter.zip
-  packagings:
-    - name: Jar
-      id: jar
-      default: true
-    - name: War
-      id: war
-      default: false
-  javaVersions:
-    - id: 11
-      default: false
-    - id: 1.8
-      name: 8
-      default: true
-  languages:
-    - name: Java
-      id: java
-      default: true
-    - name: Kotlin
-      id: kotlin
-      default: false
-    - name: Groovy
-      id: groovy
-      default: false
-  group-id:
-    value: org.acme
