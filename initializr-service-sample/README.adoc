@@ -43,8 +43,24 @@ If you have the `spring` CLI installed, you can also use it as follows:
 Finally, you can configure your IDE to point to another service instance.
 
 == Configuration
-The configuration in `application.yml` is very simple with a single `web` dependency that
-brings `spring-boot-starter-web`. You can experiment by adding more dependencies or other
-elements that drive how projects are generated.
+There are two main customizations to the sample.
+
+=== Metadata Update Strategy
+First, `ServiceApplication` has a dedicated strategy to update the metadata with the available Spring Boot versions from Sagan (`spring.io`).
+When you issue your first request, you should see something like the following:
+
+[indent=0]
+----
+Fetching Spring Boot metadata from https://spring.io/project_metadata/spring-boot
+----
+
+On further request, you won't see this log entry as the content is cached.
+There are no expiration set, so the available versions won't change until you restart the service.
+
+=== Basic Metadata
+The configuration in `application.yml` is very simple with a single `web` dependency that brings `spring-boot-starter-web`.
+The default `groupId` for generated projects has been customized to `org.acme`.
+
+You can experiment by adding more dependencies or other elements that drive how projects are generated.
 
 
