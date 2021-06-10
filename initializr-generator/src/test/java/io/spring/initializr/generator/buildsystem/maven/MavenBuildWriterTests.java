@@ -218,6 +218,19 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithPropertiesAndEmptyValue() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.properties().property("alpha", "");
+		generatePom(build, (pom) -> {
+			assertThat(pom).nodeAtPath("/project/properties/alpha").isNotNull();
+			assertThat(pom).textAtPath("/project/properties/alpha").isEmpty();
+		});
+		String pom = writePom(new MavenBuildWriter(), build);
+		assertThat(pom).containsSubsequence("<properties>", "<alpha/>", "</properties>");
+	}
+
+	@Test
 	void pomWithVersionProperties() {
 		MavenBuild build = new MavenBuild();
 		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")

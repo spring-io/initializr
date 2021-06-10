@@ -49,6 +49,7 @@ import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A {@link MavenBuild} writer for {@code pom.xml}.
@@ -557,9 +558,14 @@ public class MavenBuildWriter {
 	private void writeSingleElement(IndentingWriter writer, String name, Object value) {
 		if (value != null) {
 			CharSequence text = (value instanceof CharSequence) ? (CharSequence) value : value.toString();
-			writer.print(String.format("<%s>", name));
-			writer.print(encodeText(text));
-			writer.println(String.format("</%s>", name));
+			if (!StringUtils.hasLength(text)) {
+				writer.println(String.format("<%s/>", name));
+			}
+			else {
+				writer.print(String.format("<%s>", name));
+				writer.print(encodeText(text));
+				writer.println(String.format("</%s>", name));
+			}
 		}
 	}
 
