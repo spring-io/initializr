@@ -21,7 +21,7 @@ anchors:
   git-repo-resource-source: &git-repo-resource-source
     uri: ((github-repo))
     username: ((github-username))
-    password: ((github-password))
+    password: ((github-ci-release-token))
     branch: ((branch))
   registry-image-resource-source: &registry-image-resource-source
     username: ((docker-hub-username))
@@ -42,6 +42,10 @@ anchors:
     SONATYPE_PASSWORD: ((sonatype-password))
     SONATYPE_URL: ((sonatype-url))
     SONATYPE_STAGING_PROFILE_ID: ((sonatype-staging-profile-id))
+  registry-mirror-vars: &registry-mirror-vars
+    registry-mirror-host: ((registry-mirror-host))
+    registry-mirror-username: ((registry-mirror-username))
+    registry-mirror-password: ((registry-mirror-password))
 resource_types:
 - name: artifactory-resource
   type: registry-image
@@ -173,6 +177,7 @@ jobs:
         image: ci-image
       vars:
         ci-image-name: ci-image
+        <<: *registry-mirror-vars
     - task: build-ci-image-jdk11
       privileged: true
       file: git-repo/ci/tasks/build-ci-image.yml
@@ -180,6 +185,7 @@ jobs:
         image: ci-image-jdk11
       vars:
         ci-image-name: ci-image-jdk11
+        <<: *registry-mirror-vars
     - task: build-ci-image-jdk16
       privileged: true
       file: git-repo/ci/tasks/build-ci-image.yml
@@ -187,6 +193,7 @@ jobs:
         image: ci-image-jdk16
       vars:
         ci-image-name: ci-image-jdk16
+        <<: *registry-mirror-vars
   - in_parallel:
     - put: ci-image
       params:
@@ -386,6 +393,8 @@ jobs:
       RELEASE_TYPE: RELEASE
       GITHUB_USERNAME: ((github-username))
       GITHUB_TOKEN: ((github-ci-release-token))
+    vars:
+      <<: *registry-mirror-vars
   - put: github-release
     params:
       name: generated-changelog/tag

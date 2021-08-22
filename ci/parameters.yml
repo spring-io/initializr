@@ -7,3 +7,6 @@ milestone: "0.11.x"
 build-name: "initializr"
 concourse-url: "https://ci.spring.io"
 task-timeout: 30m
+registry-mirror-host: docker.repo.spring.io
+registry-mirror-username: ((artifactory-username))
+registry-mirror-password: ((artifactory-password))
