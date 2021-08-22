@@ -19,7 +19,7 @@ echo "Staging $stageVersion (next version will be $nextVersion)"
 
 set_revision_to_pom "$stageVersion"
 git config user.name "Spring Buildmaster" > /dev/null
-git config user.email "buildmaster@springframework.org" > /dev/null
+git config user.email "spring-buildmaster@users.noreply.github.com" > /dev/null
 git add pom.xml > /dev/null
 git commit -m"Release v$stageVersion" > /dev/null
 git tag -a "v$stageVersion" -m"Release v$stageVersion" > /dev/null

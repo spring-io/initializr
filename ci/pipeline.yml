@@ -21,7 +21,7 @@ anchors:
   git-repo-resource-source: &git-repo-resource-source
     uri: ((github-repo))
     username: ((github-username))
-    password: ((github-password))
+    password: ((github-ci-release-token))
     branch: ((branch))
   registry-image-resource-source: &registry-image-resource-source
     username: ((docker-hub-username))
