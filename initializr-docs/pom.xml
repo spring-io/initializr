@@ -338,7 +338,7 @@
 									<artifacts>
 										<artifact>
 											<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
-											<type>zip;zip.type=docs;zip.deployed=false</type>
+											<type>zip</type>
 										</artifact>
 									</artifacts>
 								</configuration>
