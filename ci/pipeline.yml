@@ -10,6 +10,12 @@ anchors:
     exclude:
       - "**/*.effective-pom"
       - "**/initializr-service-sample/**"
+    artifact_set:
+    - include:
+      - "/**/initializr-docs-*.zip"
+      properties:
+        "zip.type": "docs"
+        "zip.deployed": "false"
   artifactory-task-params: &artifactory-task-params
     ARTIFACTORY_SERVER: ((artifactory-server))
     ARTIFACTORY_USERNAME: ((artifactory-username))
