@@ -128,6 +128,12 @@ resources:
   source:
     <<: *registry-image-resource-source
     repository: ((docker-hub-organization))/initializr-ci-jdk16
+- name: ci-image-jdk17
+  type: registry-image
+  icon: docker
+  source:
+    <<: *registry-image-resource-source
+    repository: ((docker-hub-organization))/initializr-ci-jdk17
 - name: artifactory-repo
   type: artifactory-resource
   icon: package-variant
@@ -160,6 +166,14 @@ resources:
     access_token: ((github-ci-status-token))
     branch: ((branch))
     context: jdk16-build
+- name: repo-status-jdk17-build
+  type: github-status-resource
+  icon: eye-check-outline
+  source:
+    repository: ((github-repo-name))
+    access_token: ((github-ci-status-token))
+    branch: ((branch))
+    context: jdk17-build
 - name: slack-alert
   type: slack-notification
   icon: slack
@@ -200,6 +214,14 @@ jobs:
       vars:
         ci-image-name: ci-image-jdk16
         <<: *registry-mirror-vars
+    - task: build-ci-image-jdk17
+      privileged: true
+      file: git-repo/ci/tasks/build-ci-image.yml
+      output_mapping:
+        image: ci-image-jdk17
+      vars:
+        ci-image-name: ci-image-jdk17
+        <<: *registry-mirror-vars
   - in_parallel:
     - put: ci-image
       params:
@@ -210,6 +232,9 @@ jobs:
     - put: ci-image-jdk16
       params:
         image: ci-image-jdk16/image.tar
+    - put: ci-image-jdk17
+      params:
+        image: ci-image-jdk17/image.tar
 - name: build
   serial: true
   public: true
@@ -291,6 +316,32 @@ jobs:
             params:
               <<: *slack-fail-params
     - put: repo-status-jdk16-build
+      params: { state: "success", commit: "git-repo" }
+    - put: slack-alert
+      params:
+        <<: *slack-success-params
+- name: jdk17-build
+  serial: true
+  public: true
+  plan:
+    - get: ci-image-jdk17
+    - get: git-repo
+    - get: daily
+      trigger: true
+    - put: repo-status-jdk17-build
+      params: { state: "pending", commit: "git-repo" }
+    - do:
+        - task: build-project
+          image: ci-image-jdk17
+          <<: *build-project-task-params
+      on_failure:
+        do:
+          - put: repo-status-jdk17-build
+            params: { state: "failure", commit: "git-repo" }
+          - put: slack-alert
+            params:
+              <<: *slack-fail-params
+    - put: repo-status-jdk17-build
       params: { state: "success", commit: "git-repo" }
     - put: slack-alert
       params:
@@ -408,7 +459,7 @@ jobs:
       body: generated-changelog/changelog.md
 groups:
 - name: "build"
-  jobs: ["build", "jdk11-build", "jdk16-build", "windows-build"]
+  jobs: ["build", "jdk11-build", "jdk16-build", "jdk17-build", "windows-build"]
 - name: "releases"
   jobs: ["stage-release", "promote-release", "create-github-release"]
 - name: "ci-images"

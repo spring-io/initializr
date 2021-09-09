@@ -11,6 +11,9 @@ case "$1" in
 	java16)
 		 echo "https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz"
 	;;
+  java17)
+		 echo "https://github.com/adoptium/temurin17-binaries/releases/download/jdk17-2021-09-01-12-34-beta/OpenJDK17-jdk_x64_linux_hotspot_2021-09-01-12-34.tar.gz"
+	;;
   *)
 		echo $"Unknown java version"
 		exit 1
