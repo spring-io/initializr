@@ -53,15 +53,15 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println();
 	}
 
-	private void writeBuildscriptExt(IndentingWriter writer, GradleBuild build) {
+	protected void writeBuildscriptExt(IndentingWriter writer, GradleBuild build) {
 		writeNestedMap(writer, "ext", build.getBuildscript().getExt(), (key, value) -> key + " = " + value);
 	}
 
-	private void writeBuildscriptRepositories(IndentingWriter writer, GradleBuild build) {
+	protected void writeBuildscriptRepositories(IndentingWriter writer, GradleBuild build) {
 		writeRepositories(writer, build);
 	}
 
-	private void writeBuildscriptDependencies(IndentingWriter writer, GradleBuild build) {
+	protected void writeBuildscriptDependencies(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "dependencies", build.getBuildscript().getDependencies(),
 				(dependency) -> "classpath '" + dependency + "'");
 	}
@@ -74,11 +74,11 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println();
 	}
 
-	private List<GradlePlugin> extractApplyPlugins(GradleBuild build) {
+	protected List<GradlePlugin> extractApplyPlugins(GradleBuild build) {
 		return build.plugins().values().filter(GradlePlugin::isApply).collect(Collectors.toList());
 	}
 
-	private String pluginAsString(StandardGradlePlugin plugin) {
+	protected String pluginAsString(StandardGradlePlugin plugin) {
 		String string = "id '" + plugin.getId() + "'";
 		if (plugin.getVersion() != null) {
 			string += " version '" + plugin.getVersion() + "'";
@@ -105,7 +105,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 				(e) -> getFormattedExtraProperty(e.getKey(), e.getValue()), writer::println);
 	}
 
-	private String getFormattedExtraProperty(String key, String value) {
+	protected String getFormattedExtraProperty(String key, String value) {
 		return String.format("set('%s', %s)", key, value);
 	}
 
@@ -153,11 +153,11 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		}
 	}
 
-	private String dependencyExclusionAsString(Exclusion exclusion) {
+	protected String dependencyExclusionAsString(Exclusion exclusion) {
 		return "exclude group: '" + exclusion.getGroupId() + "', module: '" + exclusion.getArtifactId() + "'";
 	}
 
-	private String determineQuoteStyle(VersionReference versionReference) {
+	protected String determineQuoteStyle(VersionReference versionReference) {
 		return (versionReference != null && versionReference.isProperty()) ? "\"" : "'";
 	}
 
@@ -168,7 +168,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 				+ determineVersion(bom.getVersion()) + quoteStyle;
 	}
 
-	private String determineVersion(VersionReference versionReference) {
+	protected String determineVersion(VersionReference versionReference) {
 		if (versionReference != null) {
 			if (versionReference.isProperty()) {
 				VersionProperty property = versionReference.getProperty();
@@ -210,7 +210,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		}
 	}
 
-	private <T, U> void writeNestedMap(IndentingWriter writer, String name, Map<T, U> map,
+	protected <T, U> void writeNestedMap(IndentingWriter writer, String name, Map<T, U> map,
 			BiFunction<T, U, String> converter) {
 		if (!map.isEmpty()) {
 			writer.println(name + " {");

@@ -37,7 +37,7 @@ import io.spring.initializr.generator.version.VersionReference;
  */
 public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
-	private final Map<String, String> sourceCompatibilitiesToJavaVersion = new HashMap<>();
+	protected final Map<String, String> sourceCompatibilitiesToJavaVersion = new HashMap<>();
 
 	@Override
 	protected void writeBuildscript(IndentingWriter writer, GradleBuild build) {
@@ -56,7 +56,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		}
 	}
 
-	private String pluginAsString(StandardGradlePlugin plugin) {
+	protected String pluginAsString(StandardGradlePlugin plugin) {
 		String result = shortPluginNotation(plugin.getId());
 		if (result == null) {
 			result = "id(\"" + plugin.getId() + "\")";
@@ -67,7 +67,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		return result;
 	}
 
-	private String shortPluginNotation(String pluginId) {
+	protected String shortPluginNotation(String pluginId) {
 		if (pluginId.equals("java") || pluginId.equals("war") || pluginId.equals("groovy")) {
 			return pluginId;
 		}
@@ -85,7 +85,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println("java.sourceCompatibility = " + getJavaVersionConstant(settings.getSourceCompatibility()));
 	}
 
-	private String getJavaVersionConstant(String jvmVersion) {
+	protected String getJavaVersionConstant(String jvmVersion) {
 		return this.sourceCompatibilitiesToJavaVersion.computeIfAbsent(jvmVersion, (key) -> {
 			StringBuilder sb = new StringBuilder("JavaVersion.");
 			if (jvmVersion == null) {
@@ -106,7 +106,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		});
 	}
 
-	private String configurationReference(String configurationName, Collection<String> customConfigurations) {
+	protected String configurationReference(String configurationName, Collection<String> customConfigurations) {
 		if (customConfigurations.contains(configurationName)) {
 			return configurationName;
 		}
@@ -170,7 +170,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		}
 	}
 
-	private String dependencyExclusionAsString(Exclusion exclusion) {
+	protected String dependencyExclusionAsString(Exclusion exclusion) {
 		return "exclude(group = \"" + exclusion.getGroupId() + "\", module = \"" + exclusion.getArtifactId() + "\")";
 	}
 
@@ -180,7 +180,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 				writer::println);
 	}
 
-	private String getFormattedExtraProperty(String key, String value) {
+	protected String getFormattedExtraProperty(String key, String value) {
 		return String.format("extra[\"%s\"] = %s", key, value);
 	}
 
@@ -190,7 +190,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 				+ "\")";
 	}
 
-	private String determineVersion(VersionReference versionReference) {
+	protected String determineVersion(VersionReference versionReference) {
 		if (versionReference != null) {
 			if (versionReference.isProperty()) {
 				VersionProperty property = versionReference.getProperty();

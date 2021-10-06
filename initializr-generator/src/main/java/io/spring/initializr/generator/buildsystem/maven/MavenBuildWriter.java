@@ -96,7 +96,7 @@ public class MavenBuildWriter {
 		return DependencyComparator.INSTANCE;
 	}
 
-	private void writeProject(IndentingWriter writer, Runnable whenWritten) {
+	protected void writeProject(IndentingWriter writer, Runnable whenWritten) {
 		writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		writer.println(
 				"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
@@ -110,7 +110,7 @@ public class MavenBuildWriter {
 		writer.println("</project>");
 	}
 
-	private void writeParent(IndentingWriter writer, MavenBuild build) {
+	protected void writeParent(IndentingWriter writer, MavenBuild build) {
 		MavenParent parent = build.getSettings().getParent();
 		if (parent == null) {
 			return;
@@ -125,25 +125,25 @@ public class MavenBuildWriter {
 		writer.println("</parent>");
 	}
 
-	private void writeProjectCoordinates(IndentingWriter writer, MavenBuildSettings settings) {
+	protected void writeProjectCoordinates(IndentingWriter writer, MavenBuildSettings settings) {
 		writeSingleElement(writer, "groupId", settings.getGroup());
 		writeSingleElement(writer, "artifactId", settings.getArtifact());
 		writeSingleElement(writer, "version", settings.getVersion());
 	}
 
-	private void writePackaging(IndentingWriter writer, MavenBuildSettings settings) {
+	protected void writePackaging(IndentingWriter writer, MavenBuildSettings settings) {
 		String packaging = settings.getPackaging();
 		if (!"jar".equals(packaging)) {
 			writeSingleElement(writer, "packaging", packaging);
 		}
 	}
 
-	private void writeProjectName(IndentingWriter writer, MavenBuildSettings settings) {
+	protected void writeProjectName(IndentingWriter writer, MavenBuildSettings settings) {
 		writeSingleElement(writer, "name", settings.getName());
 		writeSingleElement(writer, "description", settings.getDescription());
 	}
 
-	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
+	protected void writeProperties(IndentingWriter writer, PropertyContainer properties) {
 		if (properties.isEmpty()) {
 			return;
 		}
@@ -154,7 +154,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeLicense(IndentingWriter writer, MavenLicense license) {
+	protected void writeLicense(IndentingWriter writer, MavenLicense license) {
 		writeElement(writer, "license", () -> {
 			writeSingleElement(writer, "name", license.getName());
 			writeSingleElement(writer, "url", license.getUrl());
@@ -166,7 +166,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDeveloper(IndentingWriter writer, MavenDeveloper developer) {
+	protected void writeDeveloper(IndentingWriter writer, MavenDeveloper developer) {
 		writeElement(writer, "developer", () -> {
 			writeSingleElement(writer, "id", developer.getId());
 			writeSingleElement(writer, "name", developer.getName());
@@ -187,7 +187,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeScm(IndentingWriter writer, MavenScm mavenScm) {
+	protected void writeScm(IndentingWriter writer, MavenScm mavenScm) {
 		if (!mavenScm.isEmpty()) {
 			writeElement(writer, "scm", () -> {
 				writeSingleElement(writer, "connection", mavenScm.getConnection());
@@ -198,7 +198,7 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void writeDependencies(IndentingWriter writer, DependencyContainer dependencies) {
+	protected void writeDependencies(IndentingWriter writer, DependencyContainer dependencies) {
 		if (dependencies.isEmpty()) {
 			return;
 		}
@@ -217,11 +217,11 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
+	protected Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
 		return (scope) -> Arrays.asList(validScopes).contains(scope);
 	}
 
-	private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
+	protected Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
 			Predicate<DependencyScope> filter) {
 		Collection<Dependency> candidates = dependencies.items().filter((dep) -> filter.test(dep.getScope()))
 				.sorted(getDependencyComparator()).collect(Collectors.toList());
@@ -229,7 +229,7 @@ public class MavenBuildWriter {
 		return candidates;
 	}
 
-	private void writeDependency(IndentingWriter writer, Dependency dependency) {
+	protected void writeDependency(IndentingWriter writer, Dependency dependency) {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", dependency.getGroupId());
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
@@ -244,14 +244,14 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDependencyExclusion(IndentingWriter writer, Exclusion exclusion) {
+	protected void writeDependencyExclusion(IndentingWriter writer, Exclusion exclusion) {
 		writeElement(writer, "exclusion", () -> {
 			writeSingleElement(writer, "groupId", exclusion.getGroupId());
 			writeSingleElement(writer, "artifactId", exclusion.getArtifactId());
 		});
 	}
 
-	private String scopeForType(DependencyScope type) {
+	protected String scopeForType(DependencyScope type) {
 		if (type == null) {
 			return null;
 		}
@@ -275,7 +275,7 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private boolean isOptional(Dependency dependency) {
+	protected boolean isOptional(Dependency dependency) {
 		if (dependency instanceof MavenDependency && ((MavenDependency) dependency).isOptional()) {
 			return true;
 		}
@@ -283,7 +283,7 @@ public class MavenBuildWriter {
 				|| dependency.getScope() == DependencyScope.COMPILE_ONLY);
 	}
 
-	private void writeDependencyManagement(IndentingWriter writer, BomContainer boms) {
+	protected void writeDependencyManagement(IndentingWriter writer, BomContainer boms) {
 		if (boms.isEmpty()) {
 			return;
 		}
@@ -293,7 +293,7 @@ public class MavenBuildWriter {
 						this::writeBom));
 	}
 
-	private void writeBom(IndentingWriter writer, BillOfMaterials bom) {
+	protected void writeBom(IndentingWriter writer, BillOfMaterials bom) {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", bom.getGroupId());
 			writeSingleElement(writer, "artifactId", bom.getArtifactId());
@@ -303,7 +303,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private String determineVersion(VersionReference versionReference) {
+	protected String determineVersion(VersionReference versionReference) {
 		if (versionReference == null) {
 			return null;
 		}
@@ -311,7 +311,7 @@ public class MavenBuildWriter {
 				: versionReference.getValue();
 	}
 
-	private void writeBuild(IndentingWriter writer, MavenBuild build) {
+	protected void writeBuild(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
 		if (settings.getDefaultGoal() == null && settings.getFinalName() == null
 				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
@@ -329,21 +329,21 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeResources(IndentingWriter writer, MavenResourceContainer resources,
+	protected void writeResources(IndentingWriter writer, MavenResourceContainer resources,
 			MavenResourceContainer testResources) {
 		writeCollectionElement(writer, "resources", resources.values(), this::writeResource);
 		writeCollectionElement(writer, "testResources", testResources.values(), this::writeTestResource);
 	}
 
-	private void writeResource(IndentingWriter writer, MavenResource resource) {
+	protected void writeResource(IndentingWriter writer, MavenResource resource) {
 		writeResource(writer, resource, "resource");
 	}
 
-	private void writeTestResource(IndentingWriter writer, MavenResource resource) {
+	protected void writeTestResource(IndentingWriter writer, MavenResource resource) {
 		writeResource(writer, resource, "testResource");
 	}
 
-	private void writeResource(IndentingWriter writer, MavenResource resource, String resourceName) {
+	protected void writeResource(IndentingWriter writer, MavenResource resource, String resourceName) {
 		writeElement(writer, resourceName, () -> {
 			writeSingleElement(writer, "directory", resource.getDirectory());
 			writeSingleElement(writer, "targetPath", resource.getTargetPath());
@@ -355,15 +355,15 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeResourceInclude(IndentingWriter writer, String include) {
+	protected void writeResourceInclude(IndentingWriter writer, String include) {
 		writeSingleElement(writer, "include", include);
 	}
 
-	private void writeResourceExclude(IndentingWriter writer, String exclude) {
+	protected void writeResourceExclude(IndentingWriter writer, String exclude) {
 		writeSingleElement(writer, "exclude", exclude);
 	}
 
-	private void writePlugin(IndentingWriter writer, MavenPlugin plugin) {
+	protected void writePlugin(IndentingWriter writer, MavenPlugin plugin) {
 		writeElement(writer, "plugin", () -> {
 			writeSingleElement(writer, "groupId", plugin.getGroupId());
 			writeSingleElement(writer, "artifactId", plugin.getArtifactId());
@@ -377,7 +377,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writePluginConfiguration(IndentingWriter writer, Configuration configuration) {
+	protected void writePluginConfiguration(IndentingWriter writer, Configuration configuration) {
 		if (configuration == null || configuration.getSettings().isEmpty()) {
 			return;
 		}
@@ -385,7 +385,7 @@ public class MavenBuildWriter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeSetting(IndentingWriter writer, Setting setting) {
+	protected void writeSetting(IndentingWriter writer, Setting setting) {
 		if (setting.getValue() instanceof String) {
 			writeSingleElement(writer, setting.getName(), setting.getValue());
 		}
@@ -394,7 +394,7 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void writePluginExecution(IndentingWriter writer, Execution execution) {
+	protected void writePluginExecution(IndentingWriter writer, Execution execution) {
 		writeElement(writer, "execution", () -> {
 			writeSingleElement(writer, "id", execution.getId());
 			writeSingleElement(writer, "phase", execution.getPhase());
@@ -406,7 +406,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writePluginDependency(IndentingWriter writer, MavenPlugin.Dependency dependency) {
+	protected void writePluginDependency(IndentingWriter writer, MavenPlugin.Dependency dependency) {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", dependency.getGroupId());
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
@@ -414,7 +414,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeRepositories(IndentingWriter writer, MavenRepositoryContainer buildRepositories,
+	protected void writeRepositories(IndentingWriter writer, MavenRepositoryContainer buildRepositories,
 			MavenRepositoryContainer buildPluginRepositories) {
 		List<MavenRepository> repositories = filterRepositories(buildRepositories.items());
 		List<MavenRepository> pluginRepositories = filterRepositories(buildPluginRepositories.items());
@@ -425,20 +425,20 @@ public class MavenBuildWriter {
 		writeCollectionElement(writer, "pluginRepositories", pluginRepositories, this::writePluginRepository);
 	}
 
-	private List<MavenRepository> filterRepositories(Stream<MavenRepository> repositories) {
+	protected List<MavenRepository> filterRepositories(Stream<MavenRepository> repositories) {
 		return repositories.filter((repository) -> !MavenRepository.MAVEN_CENTRAL.equals(repository))
 				.collect(Collectors.toList());
 	}
 
-	private void writeRepository(IndentingWriter writer, MavenRepository repository) {
+	protected void writeRepository(IndentingWriter writer, MavenRepository repository) {
 		writeRepository(writer, repository, "repository");
 	}
 
-	private void writePluginRepository(IndentingWriter writer, MavenRepository repository) {
+	protected void writePluginRepository(IndentingWriter writer, MavenRepository repository) {
 		writeRepository(writer, repository, "pluginRepository");
 	}
 
-	private void writeRepository(IndentingWriter writer, MavenRepository repository, String childName) {
+	protected void writeRepository(IndentingWriter writer, MavenRepository repository, String childName) {
 		writeElement(writer, childName, () -> {
 			writeSingleElement(writer, "id", repository.getId());
 			writeSingleElement(writer, "name", repository.getName());
@@ -452,7 +452,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDistributionManagement(IndentingWriter writer,
+	protected void writeDistributionManagement(IndentingWriter writer,
 			MavenDistributionManagement distributionManagement) {
 		if (distributionManagement.isEmpty()) {
 			return;
@@ -481,7 +481,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeDeploymentRepository(IndentingWriter writer, String name, DeploymentRepository repository) {
+	protected void writeDeploymentRepository(IndentingWriter writer, String name, DeploymentRepository repository) {
 		if (!repository.isEmpty()) {
 			writeElement(writer, name, () -> {
 				writeSingleElement(writer, "id", repository.getId());
@@ -495,7 +495,7 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void writeProfiles(IndentingWriter writer, MavenBuild build) {
+	protected void writeProfiles(IndentingWriter writer, MavenBuild build) {
 		MavenProfileContainer profiles = build.profiles();
 		if (profiles.isEmpty()) {
 			return;
@@ -504,7 +504,7 @@ public class MavenBuildWriter {
 		writeElement(writer, "profiles", () -> profiles.values().forEach((profile) -> writeProfile(writer, profile)));
 	}
 
-	private void writeProfile(IndentingWriter writer, MavenProfile profile) {
+	protected void writeProfile(IndentingWriter writer, MavenProfile profile) {
 		writeElement(writer, "profile", () -> {
 			writeSingleElement(writer, "id", profile.getId());
 			writeProfileActivation(writer, profile.getActivation());
@@ -517,7 +517,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeProfileActivation(IndentingWriter writer, MavenProfileActivation activation) {
+	protected void writeProfileActivation(IndentingWriter writer, MavenProfileActivation activation) {
 		if (activation.isEmpty()) {
 			return;
 		}
@@ -541,7 +541,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeProfileBuild(IndentingWriter writer, MavenProfile profile) {
+	protected void writeProfileBuild(IndentingWriter writer, MavenProfile profile) {
 		MavenProfile.Settings settings = profile.getSettings();
 		if (settings.getDefaultGoal() == null && settings.getFinalName() == null && profile.resources().isEmpty()
 				&& profile.testResources().isEmpty() && profile.plugins().isEmpty()) {
@@ -555,7 +555,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeSingleElement(IndentingWriter writer, String name, Object value) {
+	protected void writeSingleElement(IndentingWriter writer, String name, Object value) {
 		if (value != null) {
 			CharSequence text = (value instanceof CharSequence) ? (CharSequence) value : value.toString();
 			if (!StringUtils.hasLength(text)) {
@@ -569,38 +569,38 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private void writeElement(IndentingWriter writer, String name, Runnable withContent) {
+	protected void writeElement(IndentingWriter writer, String name, Runnable withContent) {
 		writer.println(String.format("<%s>", name));
 		writer.indented(withContent);
 		writer.println(String.format("</%s>", name));
 	}
 
-	private <T> void writeCollectionElement(IndentingWriter writer, String name, Stream<T> items,
+	protected <T> void writeCollectionElement(IndentingWriter writer, String name, Stream<T> items,
 			BiConsumer<IndentingWriter, T> itemWriter) {
 		writeCollectionElement(writer, name, items.collect(Collectors.toList()), itemWriter);
 	}
 
-	private <T> void writeCollectionElement(IndentingWriter writer, String name, Collection<T> items,
+	protected <T> void writeCollectionElement(IndentingWriter writer, String name, Collection<T> items,
 			BiConsumer<IndentingWriter, T> itemWriter) {
 		if (!ObjectUtils.isEmpty(items)) {
 			writeElement(writer, name, () -> writeCollection(writer, items, itemWriter));
 		}
 	}
 
-	private <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
+	protected <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
 			BiConsumer<IndentingWriter, T> itemWriter) {
 		if (!collection.isEmpty()) {
 			collection.forEach((item) -> itemWriter.accept(writer, item));
 		}
 	}
 
-	private <T> void ifNotNull(T value, Consumer<T> elementWriter) {
+	protected <T> void ifNotNull(T value, Consumer<T> elementWriter) {
 		if (value != null) {
 			elementWriter.accept(value);
 		}
 	}
 
-	private String encodeText(CharSequence text) {
+	protected String encodeText(CharSequence text) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < text.length(); i++) {
 			char character = text.charAt(i);

@@ -74,7 +74,7 @@ public abstract class GradleBuildWriter {
 		writeTasks(writer, build.tasks());
 	}
 
-	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks) {
+	protected void writeImports(IndentingWriter writer, GradleTaskContainer tasks) {
 		List<String> imports = tasks.importedTypes().sorted().collect(Collectors.toList());
 		imports.forEach((importedType) -> writer.println("import " + importedType));
 		if (!imports.isEmpty()) {
@@ -102,7 +102,7 @@ public abstract class GradleBuildWriter {
 
 	protected abstract String repositoryAsString(MavenRepository repository);
 
-	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
+	protected void writeProperties(IndentingWriter writer, PropertyContainer properties) {
 		if (properties.isEmpty()) {
 			return;
 		}
@@ -115,11 +115,11 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writeExtraProperties(IndentingWriter writer, Map<String, String> allProperties);
 
-	private String getVersionPropertyKey(VersionProperty versionProperty) {
+	protected String getVersionPropertyKey(VersionProperty versionProperty) {
 		return versionProperty.isInternal() ? versionProperty.toCamelCaseFormat() : versionProperty.toStandardFormat();
 	}
 
-	private void writeDependencies(IndentingWriter writer, GradleBuild build) {
+	protected void writeDependencies(IndentingWriter writer, GradleBuild build) {
 		Set<Dependency> sortedDependencies = new LinkedHashSet<>();
 		DependencyContainer dependencies = build.dependencies();
 		sortedDependencies
@@ -138,7 +138,7 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
-	private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
+	protected Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
 		return (scope) -> Arrays.asList(validScopes).contains(scope);
 	}
 
@@ -183,7 +183,7 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
-	private void writeBoms(IndentingWriter writer, GradleBuild build) {
+	protected void writeBoms(IndentingWriter writer, GradleBuild build) {
 		if (build.boms().isEmpty()) {
 			return;
 		}
@@ -250,7 +250,7 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writeProperty(IndentingWriter writer, String name, String value);
 
-	private Collection<Dependency> filterDependencies(DependencyContainer dependencies,
+	protected Collection<Dependency> filterDependencies(DependencyContainer dependencies,
 			Predicate<DependencyScope> filter) {
 		return dependencies.items().filter((dep) -> filter.test(dep.getScope())).sorted(getDependencyComparator())
 				.collect(Collectors.toList());
