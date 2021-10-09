@@ -84,7 +84,7 @@
 				</property>
 			</activation>
 			<properties>
-				<spring-javaformat.version>0.0.26</spring-javaformat.version>
+				<spring-javaformat.version>0.0.29</spring-javaformat.version>
 				<nohttp-checkstyle.version>0.0.5.RELEASE</nohttp-checkstyle.version>
 			</properties>
 			<build>
@@ -113,7 +113,7 @@
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
 								<artifactId>checkstyle</artifactId>
-								<version>8.32</version>
+								<version>8.45</version>
 							</dependency>
 							<dependency>
 								<groupId>io.spring.javaformat</groupId>
