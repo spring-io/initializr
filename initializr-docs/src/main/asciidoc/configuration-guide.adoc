@@ -824,15 +824,6 @@ Here is an example that adds two links to the `acme` dependency:
 
 
 
-[[create-instance-dependencies-search]]
-==== Improve search results
-Each dependency can have a `weight` (a number >=0) and also `keywords` (list of string)
-that are used to prioritize them in the search feature in the web UI. If you type one of
-the keywords into the "Dependencies" box in the UI, those dependencies will be listed
-below, in order of decreasing weight, if they have one (unweighted dependencies come
-last).
-
-
 [[configuration-access]]
 == Generating a Project using the Web Endpoints
 To discover the available options of a particular instance, simply "curl it". Assuming
