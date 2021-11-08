@@ -28,23 +28,19 @@ public enum GitEnum {
 	STS("STS", new String[] { ".apt_generated", ".classpath", ".factorypath", ".project", ".settings", ".springBeans",
 			".sts4-cache" }),
 	/**
-	 * Intellij IDEA values.
+	 * Intellij IDEA value of GitignoreSection.
 	 */
 	INTELLIJ_IDEA("IntelliJ IDEA", new String[] { ".idea", "*.iws", "*.iml", "*.ipr" }),
 	/**
-	 * Netbeans vvalues.
+	 * Netbeans value of GitignoreSection.
 	 */
 	NET_BEANS("NetBeans", new String[] { "/nbproject/private/", "/nbbuild/", "/dist/", "/nbdist/", "/.nb-gradle/" }),
 	/**
-	 * VS Code Values.
+	 * VS Code value of GitignoreSection.
 	 */
 	VS_CODE("VS Code", new String[] { ".vscode/" }),
 	/**
-	 * Livelo values.
-	 */
-	LIVELO("Livelo", new String[] { ".vscode/" }),
-	/**
-	 * General values.
+	 * General value of GitignoreSection.
 	 */
 	GENERAL(null, null);
 

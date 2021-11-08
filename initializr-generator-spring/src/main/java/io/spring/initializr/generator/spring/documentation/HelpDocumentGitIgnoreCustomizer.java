@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
+import io.spring.initializr.generator.spring.scm.git.GitEnum;
 import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 
@@ -36,7 +37,7 @@ class HelpDocumentGitIgnoreCustomizer implements GitIgnoreCustomizer {
 	@Override
 	public void customize(GitIgnore gitIgnore) {
 		if (!this.document.isEmpty()) {
-			gitIgnore.getGeneral().add("HELP.md");
+			gitIgnore.getGitIgnoreSection(GitEnum.GENERAL).add("HELP.md");
 		}
 	}
 

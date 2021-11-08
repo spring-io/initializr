@@ -16,10 +16,12 @@
 
 package io.spring.initializr.generator.spring.scm.git;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import io.spring.initializr.generator.io.text.Section;
 
@@ -28,51 +30,37 @@ import io.spring.initializr.generator.io.text.Section;
  * popular IDEs. Empty sections are not rendered.
  *
  * @author Stephane Nicoll
+ * @author Yves Galvão
  */
 public class GitIgnore {
 
-	private final GitIgnoreSection general = new GitIgnoreSection(null);
+	private final Map<GitEnum, GitIgnoreSection> ignoreSections;
 
-	private final GitIgnoreSection sts = new GitIgnoreSection("STS");
+	public GitIgnore() {
+		this.ignoreSections = initializeGitIgnoreSections();
+	}
 
-	private final GitIgnoreSection intellijIdea = new GitIgnoreSection("IntelliJ IDEA");
+	private Map<GitEnum, GitIgnoreSection> initializeGitIgnoreSections() {
+		Map<GitEnum, GitIgnoreSection> ignoreSections = new HashMap<>();
+		Stream.of(GitEnum.values()).forEach((gitEnum) -> {
+			GitIgnoreSection gitIgnoreSection = new GitIgnoreSection(gitEnum.getName());
+			gitIgnoreSection.add(gitEnum.getIgnores());
+			ignoreSections.put(gitEnum, gitIgnoreSection);
+		});
 
-	private final GitIgnoreSection netBeans = new GitIgnoreSection("NetBeans");
+		return ignoreSections;
+	}
 
-	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
-
-	public void write(PrintWriter writer) throws IOException {
-		this.general.write(writer);
-		this.sts.write(writer);
-		this.intellijIdea.write(writer);
-		this.netBeans.write(writer);
-		this.vscode.write(writer);
+	public void write(PrintWriter writer) {
+		this.ignoreSections.values().stream().forEach((it) -> it.write(writer));
 	}
 
 	public boolean isEmpty() {
-		return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty()
-				&& this.intellijIdea.getItems().isEmpty() && this.netBeans.getItems().isEmpty()
-				&& this.vscode.getItems().isEmpty();
+		return this.ignoreSections.values().stream().allMatch((it) -> it.getItems().isEmpty());
 	}
 
-	public GitIgnoreSection getGeneral() {
-		return this.general;
-	}
-
-	public GitIgnoreSection getSts() {
-		return this.sts;
-	}
-
-	public GitIgnoreSection getIntellijIdea() {
-		return this.intellijIdea;
-	}
-
-	public GitIgnoreSection getNetBeans() {
-		return this.netBeans;
-	}
-
-	public GitIgnoreSection getVscode() {
-		return this.vscode;
+	public GitIgnoreSection getGitIgnoreSection(GitEnum gitEnum) {
+		return this.ignoreSections.get(gitEnum);
 	}
 
 	/**
@@ -90,7 +78,9 @@ public class GitIgnore {
 		}
 
 		public void add(String... items) {
-			this.items.addAll(Arrays.asList(items));
+			if (items != null) {
+				this.items.addAll(Arrays.asList(items));
+			}
 		}
 
 		public LinkedList<String> getItems() {

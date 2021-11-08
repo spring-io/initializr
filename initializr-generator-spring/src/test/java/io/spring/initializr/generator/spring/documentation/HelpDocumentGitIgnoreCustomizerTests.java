@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.documentation;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.spring.scm.git.GitEnum;
 import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import org.junit.jupiter.api.Test;
 
@@ -37,14 +38,14 @@ class HelpDocumentGitIgnoreCustomizerTests {
 		HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
 		document.addSection((writer) -> writer.println("test"));
 		new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
-		assertThat(this.gitIgnore.getGeneral().getItems()).containsOnly("HELP.md");
+		assertThat(this.gitIgnore.getGitIgnoreSection(GitEnum.GENERAL).getItems()).containsOnly("HELP.md");
 	}
 
 	@Test
 	void gitIgnoreIsNotUpdatedWithEmptyHelpDocument() {
 		HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
 		new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
-		assertThat(this.gitIgnore.getGeneral().getItems()).isEmpty();
+		assertThat(this.gitIgnore.getGitIgnoreSection(GitEnum.GENERAL).getItems()).isEmpty();
 	}
 
 }

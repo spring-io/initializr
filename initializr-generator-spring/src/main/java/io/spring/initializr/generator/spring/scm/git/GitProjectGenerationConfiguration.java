@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Yves Galvão
  */
 @ProjectGenerationConfiguration
 public class GitProjectGenerationConfiguration {
@@ -40,7 +41,7 @@ public class GitProjectGenerationConfiguration {
 
 	@Bean
 	public GitIgnore gitIgnore(ObjectProvider<GitIgnoreCustomizer> gitIgnoreCustomizers) {
-		GitIgnore gitIgnore = createGitIgnore();
+		GitIgnore gitIgnore = new GitIgnore();
 		gitIgnoreCustomizers.orderedStream().forEach((customizer) -> customizer.customize(gitIgnore));
 		return gitIgnore;
 	}
@@ -49,9 +50,10 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
 	public GitIgnoreCustomizer mavenGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**/target/",
-					"!**/src/test/**/target/");
-			gitIgnore.getNetBeans().add("build/", "!**/src/main/**/build/", "!**/src/test/**/build/");
+			gitIgnore.getGitIgnoreSection(GitEnum.GENERAL).add("target/", "!.mvn/wrapper/maven-wrapper.jar",
+					"!**/src/main/**/target/", "!**/src/test/**/target/");
+			gitIgnore.getGitIgnoreSection(GitEnum.NET_BEANS).add("build/", "!**/src/main/**/build/",
+					"!**/src/test/**/build/");
 		};
 	}
 
@@ -59,21 +61,12 @@ public class GitProjectGenerationConfiguration {
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	public GitIgnoreCustomizer gradleGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
-			gitIgnore.getGeneral().add(".gradle", "build/", "!gradle/wrapper/gradle-wrapper.jar",
-					"!**/src/main/**/build/", "!**/src/test/**/build/");
-			gitIgnore.getIntellijIdea().add("out/", "!**/src/main/**/out/", "!**/src/test/**/out/");
-			gitIgnore.getSts().add("bin/", "!**/src/main/**/bin/", "!**/src/test/**/bin/");
+			gitIgnore.getGitIgnoreSection(GitEnum.GENERAL).add(".gradle", "build/",
+					"!gradle/wrapper/gradle-wrapper.jar", "!**/src/main/**/build/", "!**/src/test/**/build/");
+			gitIgnore.getGitIgnoreSection(GitEnum.INTELLIJ_IDEA).add("out/", "!**/src/main/**/out/",
+					"!**/src/test/**/out/");
+			gitIgnore.getGitIgnoreSection(GitEnum.STS).add("bin/", "!**/src/main/**/bin/", "!**/src/test/**/bin/");
 		};
-	}
-
-	private GitIgnore createGitIgnore() {
-		GitIgnore gitIgnore = new GitIgnore();
-		gitIgnore.getSts().add(".apt_generated", ".classpath", ".factorypath", ".project", ".settings", ".springBeans",
-				".sts4-cache");
-		gitIgnore.getIntellijIdea().add(".idea", "*.iws", "*.iml", "*.ipr");
-		gitIgnore.getNetBeans().add("/nbproject/private/", "/nbbuild/", "/dist/", "/nbdist/", "/.nb-gradle/");
-		gitIgnore.getVscode().add(".vscode/");
-		return gitIgnore;
 	}
 
 }
