@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.VersionReference;
 
 /**
  * {@link BuildCustomizer} for Kotlin projects build with Maven when Kotlin is not
@@ -39,7 +40,7 @@ class KotlinMavenFullBuildCustomizer implements BuildCustomizer<MavenBuild> {
 		build.settings().sourceDirectory("${project.basedir}/src/main/kotlin")
 				.testSourceDirectory("${project.basedir}/src/test/kotlin");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinMavenPlugin) -> {
-			kotlinMavenPlugin.version("${kotlin.version}");
+			kotlinMavenPlugin.version(VersionReference.ofValue("${kotlin.version}"));
 			kotlinMavenPlugin.configuration((configuration) -> {
 				configuration.configure("args",
 						(args) -> this.settings.getCompilerArgs().forEach((arg) -> args.add("arg", arg)));

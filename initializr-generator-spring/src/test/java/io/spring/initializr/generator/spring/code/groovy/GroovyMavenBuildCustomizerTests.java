@@ -37,7 +37,7 @@ class GroovyMavenBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((groovyPlugin) -> {
 			assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
 			assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
-			assertThat(groovyPlugin.getVersion()).isEqualTo("1.11.0");
+			assertThat(groovyPlugin.getVersion().getValue()).isEqualTo("1.11.0");
 			Configuration configuration = groovyPlugin.getConfiguration();
 			assertThat(configuration).isNull();
 			assertThat(groovyPlugin.getExecutions()).hasSize(1);

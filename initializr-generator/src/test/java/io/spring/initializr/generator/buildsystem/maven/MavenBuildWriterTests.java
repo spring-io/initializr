@@ -564,7 +564,7 @@ class MavenBuildWriterTests {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
-			plugin.version("1.5.3");
+			plugin.version(VersionReference.ofValue("1.5.3"));
 			plugin.execution("generateProject-docs", (execution) -> {
 				execution.goal("process-asciidoc");
 				execution.phase("generateProject-resources");

@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,12 +43,12 @@ public class MavenPluginContainerTests {
 	@Test
 	void addPluginWithConsumer() {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
-		pluginContainer.add("com.example", "test-plugin",
-				(plugin) -> plugin.version("1.0").execution("first", (first) -> first.goal("run-this")));
+		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version(VersionReference.ofValue("1.0"))
+				.execution("first", (first) -> first.goal("run-this")));
 		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(plugin.getVersion()).isEqualTo("1.0");
+			assertThat(plugin.getVersion().getValue()).isEqualTo("1.0");
 			assertThat(plugin.getExecutions()).hasSize(1);
 			assertThat(plugin.getExecutions().get(0).getId()).isEqualTo("first");
 			assertThat(plugin.getExecutions().get(0).getGoals()).containsExactly("run-this");
@@ -57,12 +58,12 @@ public class MavenPluginContainerTests {
 	@Test
 	void addPluginSeveralTimeReuseConfiguration() {
 		MavenPluginContainer pluginContainer = new MavenPluginContainer();
-		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("1.0"));
-		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version("2.0"));
+		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version(VersionReference.ofValue("1.0")));
+		pluginContainer.add("com.example", "test-plugin", (plugin) -> plugin.version(VersionReference.ofValue("2.0")));
 		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(plugin.getVersion()).isEqualTo("2.0");
+			assertThat(plugin.getVersion().getValue()).isEqualTo("2.0");
 		});
 	}
 

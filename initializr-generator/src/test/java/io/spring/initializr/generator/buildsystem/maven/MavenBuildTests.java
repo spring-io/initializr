@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,11 +77,12 @@ class MavenBuildTests {
 	void mavenPluginVersionCanBeAmended() {
 		MavenBuild build = new MavenBuild();
 		build.plugins().add("com.example", "test-plugin");
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
+		build.plugins().add("com.example", "test-plugin",
+				(plugin) -> plugin.version(VersionReference.ofValue("1.0.0")));
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
+			assertThat(testPlugin.getVersion().getValue()).isEqualTo("1.0.0");
 		});
 
 	}
@@ -88,24 +90,26 @@ class MavenBuildTests {
 	@Test
 	void mavenPluginVersionCanBeAmendedWithCustomizer() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version(null));
+		build.plugins().add("com.example", "test-plugin",
+				(plugin) -> plugin.version(VersionReference.ofValue("1.0.0")));
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version(VersionReference.ofValue(null)));
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isNull();
+			assertThat(testPlugin.getVersion().getValue()).isNull();
 		});
 	}
 
 	@Test
 	void mavenPluginVersionIsNotLostOnAmend() {
 		MavenBuild build = new MavenBuild();
-		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.0.0"));
+		build.plugins().add("com.example", "test-plugin",
+				(plugin) -> plugin.version(VersionReference.ofValue("1.0.0")));
 		build.plugins().add("com.example", "test-plugin");
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
+			assertThat(testPlugin.getVersion().getValue()).isEqualTo("1.0.0");
 		});
 	}
 

@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import io.spring.initializr.generator.version.VersionReference;
+
 /**
  * A plugin in a {@link MavenBuild}.
  *
@@ -36,7 +38,7 @@ public class MavenPlugin {
 
 	private final String artifactId;
 
-	private final String version;
+	private final VersionReference version;
 
 	private final boolean extensions;
 
@@ -76,9 +78,9 @@ public class MavenPlugin {
 	/**
 	 * Return the version of the plugin or {@code null} if the version of the plugin is
 	 * managed.
-	 * @return the version or {@code null}
+	 * @return the {@link VersionReference} or {@code null}
 	 */
-	public String getVersion() {
+	public VersionReference getVersion() {
 		return this.version;
 	}
 
@@ -123,7 +125,7 @@ public class MavenPlugin {
 
 		private final String artifactId;
 
-		private String version;
+		private VersionReference version;
 
 		private boolean extensions;
 
@@ -144,7 +146,7 @@ public class MavenPlugin {
 		 * @param version the version of the plugin or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder version(String version) {
+		public Builder version(VersionReference version) {
 			this.version = version;
 			return this;
 		}
