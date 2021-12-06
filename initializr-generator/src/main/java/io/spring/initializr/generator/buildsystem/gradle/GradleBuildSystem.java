@@ -42,12 +42,19 @@ public final class GradleBuildSystem implements BuildSystem {
 
 	private final String dialect;
 
+	private final String applicationModuleName;
+
 	public GradleBuildSystem() {
 		this(DIALECT_GROOVY);
 	}
 
 	public GradleBuildSystem(String dialect) {
+		this(dialect, null);
+	}
+
+	public GradleBuildSystem(String dialect, String applicationModuleName) {
 		this.dialect = dialect;
+		this.applicationModuleName = applicationModuleName;
 	}
 
 	@Override
@@ -58,6 +65,11 @@ public final class GradleBuildSystem implements BuildSystem {
 	@Override
 	public String dialect() {
 		return this.dialect;
+	}
+
+	@Override
+	public String getApplicationModuleName() {
+		return this.applicationModuleName;
 	}
 
 	@Override

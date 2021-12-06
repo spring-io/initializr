@@ -54,7 +54,11 @@ public class GradleBuildProjectContributor implements BuildWriter, ProjectContri
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		Path buildGradle = Files.createFile(projectRoot.resolve(this.buildFileName));
+		Path buildGradle = projectRoot.resolve(this.buildFileName);
+		if (!Files.exists(buildGradle)) {
+			Files.createDirectories(buildGradle.getParent());
+			Files.createFile(buildGradle);
+		}
 		writeBuild(Files.newBufferedWriter(buildGradle));
 	}
 

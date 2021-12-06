@@ -59,6 +59,14 @@ class ConditionalOnBuildSystemTests {
 				"gradleKotlin");
 	}
 
+	@Test
+	void conditionalOnGradleWithMultiModuleMatchesWhenGradleBuildSystemUsesMultiModuleConfiguration() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new GradleBuildSystem(GradleBuildSystem.DIALECT_GROOVY, "test"));
+		assertThat(candidatesFor(description, BuildSystemTestConfiguration.class)).containsOnlyKeys("gradle",
+				"multiModuleGradleAnyDialect");
+	}
+
 	private Map<String, String> candidatesFor(MutableProjectDescription description, Class<?>... extraConfigurations) {
 		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
 			context.registerBean(ProjectDescription.class, () -> description);
@@ -93,6 +101,12 @@ class ConditionalOnBuildSystemTests {
 		@ConditionalOnBuildSystem(id = "gradle", dialect = "kotlin")
 		String gradleKotlin() {
 			return "testGradleKotlinDialect";
+		}
+
+		@Bean
+		@ConditionalOnBuildSystem(id = "gradle", multiModule = "true")
+		String multiModuleGradleAnyDialect() {
+			return "multiModuleGradleAnyDialect";
 		}
 
 	}

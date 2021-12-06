@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.function.Function;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -36,7 +37,7 @@ public class SingleResourceProjectContributor implements ProjectContributor {
 
 	private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
-	private final String relativePath;
+	private final Function<Path, Path> pathProvider;
 
 	private final String resourcePattern;
 
@@ -49,13 +50,17 @@ public class SingleResourceProjectContributor implements ProjectContributor {
 	 * @see PathMatchingResourcePatternResolver#getResource(String)
 	 */
 	public SingleResourceProjectContributor(String relativePath, String resourcePattern) {
-		this.relativePath = relativePath;
+		this((root) -> root.resolve(relativePath), resourcePattern);
+	}
+
+	public SingleResourceProjectContributor(Function<Path, Path> pathProvider, String resourcePattern) {
+		this.pathProvider = pathProvider;
 		this.resourcePattern = resourcePattern;
 	}
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		Path output = projectRoot.resolve(this.relativePath);
+		Path output = this.pathProvider.apply(projectRoot);
 		if (!Files.exists(output)) {
 			Files.createDirectories(output.getParent());
 			Files.createFile(output);

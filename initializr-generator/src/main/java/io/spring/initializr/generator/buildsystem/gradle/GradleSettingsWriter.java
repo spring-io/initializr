@@ -40,6 +40,7 @@ public abstract class GradleSettingsWriter {
 	public final void writeTo(IndentingWriter writer, GradleBuild build) {
 		writePluginManagement(writer, build);
 		writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
+		build.getSettings().getSubmodules().forEach((s) -> writer.println("include(" + wrapWithQuotes(s) + ")"));
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {

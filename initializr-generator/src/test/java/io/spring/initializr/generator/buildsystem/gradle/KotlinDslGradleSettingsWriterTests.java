@@ -108,6 +108,14 @@ class KotlinDslGradleSettingsWriterTests {
 		assertThat(lines).containsSequence("rootProject.name = \"my-application\"");
 	}
 
+	@Test
+	void submoduleShouldBeIncluded() {
+		GradleBuild build = new GradleBuild();
+		build.settings().artifact("my-application").submodule("submodule");
+		List<String> lines = generateSettings(build);
+		assertThat(lines).containsSequence("include(\"submodule\")");
+	}
+
 	private List<String> generateSettings(GradleBuild build) {
 		GradleSettingsWriter writer = new KotlinDslGradleSettingsWriter();
 		StringWriter out = new StringWriter();

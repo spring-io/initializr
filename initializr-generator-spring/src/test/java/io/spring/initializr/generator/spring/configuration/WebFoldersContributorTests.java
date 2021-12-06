@@ -81,7 +81,8 @@ class WebFoldersContributorTests {
 	}
 
 	private Path contribute(Build build, InitializrMetadata metadata) throws IOException {
-		new WebFoldersContributor(build, metadata).contribute(this.projectDir);
+		new WebFoldersContributor(build, metadata, (dir) -> dir.resolve("src/main/resources"))
+				.contribute(this.projectDir);
 		return this.projectDir;
 	}
 

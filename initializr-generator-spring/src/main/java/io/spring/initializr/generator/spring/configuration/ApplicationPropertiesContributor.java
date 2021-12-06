@@ -26,12 +26,22 @@ import io.spring.initializr.generator.project.contributor.SingleResourceProjectC
  */
 public class ApplicationPropertiesContributor extends SingleResourceProjectContributor {
 
+	private static final String defaultResourcePattern = "classpath:configuration/application.properties";
+
 	public ApplicationPropertiesContributor() {
-		this("classpath:configuration/application.properties");
+		this(ResourcesPathProvider.DEFAULT, defaultResourcePattern);
 	}
 
 	public ApplicationPropertiesContributor(String resourcePattern) {
-		super("src/main/resources/application.properties", resourcePattern);
+		this(ResourcesPathProvider.DEFAULT, resourcePattern);
+	}
+
+	public ApplicationPropertiesContributor(ResourcesPathProvider resourcesPathProvider) {
+		this(resourcesPathProvider, defaultResourcePattern);
+	}
+
+	public ApplicationPropertiesContributor(ResourcesPathProvider resourcesPathProvider, String resourcePattern) {
+		super((root) -> resourcesPathProvider.get(root).resolve("application.properties"), resourcePattern);
 	}
 
 }

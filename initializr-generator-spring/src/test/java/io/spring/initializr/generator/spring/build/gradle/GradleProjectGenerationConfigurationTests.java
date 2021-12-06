@@ -134,6 +134,23 @@ class GradleProjectGenerationConfigurationTests {
 				"}"); // @formatter:on
 	}
 
+	static Stream<Arguments> gradleBuildSystemDialects() {
+		return Stream.of(Arguments.arguments(GradleBuildSystem.DIALECT_GROOVY, "build.gradle"),
+				Arguments.arguments(GradleBuildSystem.DIALECT_KOTLIN, "build.gradle.kts"));
+	}
+
+	@ParameterizedTest(name = "Dialect {0}")
+	@MethodSource("gradleBuildSystemDialects")
+	void buildScriptIsContributedWhenGeneratingMultiModuleGradleProject(String dialect, String buildFileName) {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.4.0"));
+		description.setLanguage(new JavaLanguage("11"));
+		ProjectStructure project = this.projectTester
+				.withDescriptionCustomizer((d) -> d.setBuildSystem(new GradleBuildSystem(dialect, "service")))
+				.generate(description);
+		assertThat(project).containsFiles("service/" + buildFileName);
+	}
+
 	@Test
 	void warPluginIsAppliedWhenBuildingProjectThatUsesWarPackaging() {
 		MutableProjectDescription description = new MutableProjectDescription();

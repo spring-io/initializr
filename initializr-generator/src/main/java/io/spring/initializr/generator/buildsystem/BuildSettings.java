@@ -16,6 +16,9 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * General build settings.
  *
@@ -29,10 +32,13 @@ public class BuildSettings {
 
 	private final String version;
 
+	private final List<String> submodules;
+
 	protected BuildSettings(Builder<?> builder) {
 		this.group = builder.group;
 		this.artifact = builder.artifact;
 		this.version = builder.version;
+		this.submodules = builder.submodules;
 	}
 
 	/**
@@ -60,6 +66,14 @@ public class BuildSettings {
 	}
 
 	/**
+	 * Return the submodules of the project.
+	 * @return the submodules or {@code null}
+	 */
+	public List<String> getSubmodules() {
+		return this.submodules;
+	}
+
+	/**
 	 * Builder for build settings.
 	 *
 	 * @param <B> builder type
@@ -71,6 +85,8 @@ public class BuildSettings {
 		private String artifact;
 
 		private String version = "0.0.1-SNAPSHOT";
+
+		private final List<String> submodules = new ArrayList<>();
 
 		protected Builder() {
 		}
@@ -102,6 +118,16 @@ public class BuildSettings {
 		 */
 		public B version(String version) {
 			this.version = version;
+			return self();
+		}
+
+		/**
+		 * Adds a submodule to the project.
+		 * @param moduleName the name of the submodule
+		 * @return this for method chaining
+		 */
+		public B submodule(String moduleName) {
+			this.submodules.add(moduleName);
 			return self();
 		}
 

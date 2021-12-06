@@ -51,6 +51,16 @@ class GradleBuildProjectContributorTests {
 	}
 
 	@Test
+	void groovyDslGradleBuildIsContributedInMultiProjectStructure(@TempDir Path projectDir) throws IOException {
+		String path = "sub/build.gradle";
+		GradleBuild build = new GradleBuild();
+		new GradleBuildProjectContributor(new GroovyDslGradleBuildWriter(), build,
+				IndentingWriterFactory.withDefaultSettings(), path).contribute(projectDir);
+		Path buildGradle = projectDir.resolve(path);
+		assertThat(buildGradle).isRegularFile();
+	}
+
+	@Test
 	void groovyDslGradleBuildIsContributedToProject() throws IOException {
 		GradleBuild build = new GradleBuild();
 		build.settings().group("com.example").version("1.0.0-SNAPSHOT");

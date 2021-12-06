@@ -39,14 +39,15 @@ class OnBuildSystemCondition extends ProjectGenerationCondition {
 				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
 		String buildSystemId = (String) attributes.getFirst("value");
 		String dialect = (String) attributes.getFirst("dialect");
+		String multiModule = (String) attributes.getFirst("multiModule");
 		BuildSystem buildSystem = description.getBuildSystem();
-		if (buildSystem.id().equals(buildSystemId)) {
-			if (StringUtils.hasText(dialect)) {
-				return dialect.equals(buildSystem.dialect());
-			}
-			return true;
-		}
-		return false;
+		boolean dialectMatches = matches(dialect, buildSystem.dialect());
+		boolean multiModuleMatches = matches(multiModule, String.valueOf(buildSystem.isMultiModuleBuild()));
+		return buildSystem.id().equals(buildSystemId) && dialectMatches && multiModuleMatches;
+	}
+
+	private boolean matches(String target, String actual) {
+		return !StringUtils.hasText(target) || target.equals(actual);
 	}
 
 }
