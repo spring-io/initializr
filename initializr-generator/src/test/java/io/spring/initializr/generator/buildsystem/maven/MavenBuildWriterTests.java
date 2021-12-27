@@ -904,6 +904,23 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithoutExtensions() {
+		MavenBuild build = new MavenBuild();
+		generatePom(build, (pom) -> assertThat(pom).nodeAtPath("/project/build/extensions").isNull());
+	}
+
+	@Test
+	void pomWithExtension() {
+		MavenBuild build = new MavenBuild();
+		build.extensions().add("com.example", "testExtension", (builder) -> builder.version("1.6.1"));
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/build/extensions/extension/groupId").isEqualTo("com.example");
+			assertThat(pom).textAtPath("/project/build/extensions/extension/artifactId").isEqualTo("testExtension");
+			assertThat(pom).textAtPath("/project/build/extensions/extension/version").isEqualTo("1.6.1");
+		});
+	}
+
+	@Test
 	void pomWithDistributionManagementRepository() {
 		MavenBuild build = new MavenBuild();
 		build.distributionManagement()
