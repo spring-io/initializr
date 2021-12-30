@@ -129,7 +129,7 @@ class GradleProjectGenerationConfigurationTests {
 				"    testImplementation 'org.springframework.boot:spring-boot-starter-test'",
 				"}",
 				"",
-				"test {",
+				"tasks.named('test') {",
 				"    useJUnitPlatform()",
 				"}"); // @formatter:on
 	}
@@ -150,7 +150,8 @@ class GradleProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle").lines().containsSequence("test {", "    useJUnitPlatform()", "}");
+		assertThat(project).textFile("build.gradle").lines().containsSequence("tasks.named('test') {",
+				"    useJUnitPlatform()", "}");
 	}
 
 	@Test
