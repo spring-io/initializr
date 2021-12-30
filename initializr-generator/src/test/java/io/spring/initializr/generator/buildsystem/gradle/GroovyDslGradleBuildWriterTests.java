@@ -170,7 +170,8 @@ class GroovyDslGradleBuildWriterTests {
 			task.invoke("dependsOn", "test");
 		});
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("asciidoctor {", "    inputs.dir snippetsDir", "    dependsOn test", "}");
+		assertThat(lines).containsSequence("tasks.named('asciidoctor') {", "    inputs.dir snippetsDir",
+				"    dependsOn test", "}");
 	}
 
 	@Test
@@ -178,7 +179,7 @@ class GroovyDslGradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.tasks().customize("test", (task) -> task.invoke("myMethod"));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("test {", "    myMethod()", "}");
+		assertThat(lines).containsSequence("tasks.named('test') {", "    myMethod()", "}");
 	}
 
 	@Test
@@ -189,7 +190,7 @@ class GroovyDslGradleBuildWriterTests {
 			task.attribute("kotlinOptions.jvmTarget", "'1.8'");
 		});
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("compileKotlin {",
+		assertThat(lines).containsSequence("tasks.named('compileKotlin') {",
 				"    kotlinOptions.freeCompilerArgs = ['-Xjsr305=strict']", "    kotlinOptions.jvmTarget = '1.8'", "}");
 	}
 
@@ -202,7 +203,7 @@ class GroovyDslGradleBuildWriterTests {
 					kotlinOptions.attribute("jvmTarget", "'1.8'");
 				}));
 		List<String> lines = generateBuild(build);
-		assertThat(lines).containsSequence("compileKotlin {", "    kotlinOptions {",
+		assertThat(lines).containsSequence("tasks.named('compileKotlin') {", "    kotlinOptions {",
 				"        freeCompilerArgs = ['-Xjsr305=strict']", "        jvmTarget = '1.8'", "    }", "}");
 	}
 
