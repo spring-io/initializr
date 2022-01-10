@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,8 +68,8 @@ class MavenProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/MavenWrapperDownloader.java",
-				".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
+		assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
+				".mvn/wrapper/maven-wrapper.jar");
 	}
 
 	@Test
