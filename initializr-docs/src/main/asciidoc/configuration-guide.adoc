@@ -1099,6 +1099,25 @@ These dependencies, by default, will be available only for versions of the platf
 `1.3.0.RELEASE` up to `2.0.0.M1` (excluded) and will bring in the `stuff-bom` BOM.
 
 
+[[howto-kotlin-version-mapping]]
+=== Configure Kotlin version mapping
+By default, the Kotlin version to use is inferred from the metadata.
+The following example shows how to map two versions of Kotlin based on the platform version.
+
+[source,yaml,indent=0]
+----
+	initializr:
+	  env:
+	    kotlin:
+	      mappings:
+	        - compatibilityRange: "[2.0.0.RELEASE,2.4.0-M1)"
+	          version: 1.2
+	        - compatibilityRange: "2.4.0-M1"
+	          version: 1.3
+----
+
+For a more advanced resolution, consider implementing a `KotlinVersionResolver` bean.
+
 
 [[howto-platform-version-format]]
 === Configure platform version format
