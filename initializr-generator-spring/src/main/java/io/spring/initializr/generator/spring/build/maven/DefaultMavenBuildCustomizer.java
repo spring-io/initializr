@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,8 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 			build.properties().property("project.build.sourceEncoding", "UTF-8")
 					.property("project.reporting.outputEncoding", "UTF-8");
 		}
-		build.settings().parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
+		build.settings().parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion(),
+				parentPom.getRelativePath());
 	}
 
 	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {

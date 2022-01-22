@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,33 @@ class MavenBuildWriterTests {
 			assertThat(pom).textAtPath("/project/parent/groupId").isEqualTo("org.springframework.boot");
 			assertThat(pom).textAtPath("/project/parent/artifactId").isEqualTo("spring-boot-starter-parent");
 			assertThat(pom).textAtPath("/project/parent/version").isEqualTo("2.1.0.RELEASE");
+			assertThat(pom).textAtPath("/project/parent/relativePath").isEmpty();
+		});
+	}
+
+	@Test
+	void pomWithParentAndRelativePath() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").parent("org.springframework.boot",
+				"spring-boot-starter-parent", "2.1.0.RELEASE", "../parent/pom.xml");
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/parent/groupId").isEqualTo("org.springframework.boot");
+			assertThat(pom).textAtPath("/project/parent/artifactId").isEqualTo("spring-boot-starter-parent");
+			assertThat(pom).textAtPath("/project/parent/version").isEqualTo("2.1.0.RELEASE");
+			assertThat(pom).textAtPath("/project/parent/relativePath").isEqualTo("../parent/pom.xml");
+		});
+	}
+
+	@Test
+	void pomWithParentAndNullRelativePath() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo").parent("org.springframework.boot",
+				"spring-boot-starter-parent", "2.1.0.RELEASE", null);
+		generatePom(build, (pom) -> {
+			assertThat(pom).textAtPath("/project/parent/groupId").isEqualTo("org.springframework.boot");
+			assertThat(pom).textAtPath("/project/parent/artifactId").isEqualTo("spring-boot-starter-parent");
+			assertThat(pom).textAtPath("/project/parent/version").isEqualTo("2.1.0.RELEASE");
+			assertThat(pom).nodeAtPath("/project/parent/relativePath").isNull();
 		});
 	}
 

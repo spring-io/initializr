@@ -54,6 +54,7 @@
         "groupId": null,
         "artifactId": null,
         "version": null,
+        "relativePath": "",
         "includeSpringBootBom": false
       }
     },

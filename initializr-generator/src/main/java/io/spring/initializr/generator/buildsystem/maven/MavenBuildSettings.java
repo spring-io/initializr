@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,14 +203,30 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
-		 * Set the coordinates of the parent.
+		 * Set the coordinates of the parent, to be resolved against the repository.
 		 * @param groupId the groupID of the parent
 		 * @param artifactId the artifactID of the parent
 		 * @param version the version of the parent
 		 * @return this for method chaining
+		 * @see #parent(String, String, String, String)
 		 */
 		public Builder parent(String groupId, String artifactId, String version) {
-			this.parent = new MavenParent(groupId, artifactId, version);
+			return parent(groupId, artifactId, version, "");
+		}
+
+		/**
+		 * Set the coordinates of the parent and its relative path. The relative path can
+		 * be set to {@code null} to let Maven search the parent using local file search,
+		 * for instance {@code pom.xml} in the parent directory. It can also be set to an
+		 * empty string to specify that it should be resolved against the repository.
+		 * @param groupId the groupID of the parent
+		 * @param artifactId the artifactID of the parent
+		 * @param version the version of the parent
+		 * @param relativePath the relative path
+		 * @return this for method chaining
+		 */
+		public Builder parent(String groupId, String artifactId, String version, String relativePath) {
+			this.parent = new MavenParent(groupId, artifactId, version, relativePath);
 			return self();
 		}
 

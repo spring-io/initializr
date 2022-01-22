@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,13 @@ public class MavenParent {
 
 	private final String version;
 
-	MavenParent(String groupId, String artifactId, String version) {
+	private final String relativePath;
+
+	MavenParent(String groupId, String artifactId, String version, String relativePath) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
+		this.relativePath = relativePath;
 	}
 
 	/**
@@ -57,6 +60,14 @@ public class MavenParent {
 	 */
 	public String getVersion() {
 		return this.version;
+	}
+
+	/**
+	 * Return the relative path of this parent.
+	 * @return the relative path of this parent or {@code null}.
+	 */
+	public String getRelativePath() {
+		return this.relativePath;
 	}
 
 }

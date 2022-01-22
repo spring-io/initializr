@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -542,7 +542,7 @@ public class InitializrConfiguration {
 			 */
 			public ParentPom resolveParentPom(String bootVersion) {
 				return (StringUtils.hasText(this.parent.groupId) ? this.parent
-						: new ParentPom(DEFAULT_PARENT_GROUP_ID, DEFAULT_PARENT_ARTIFACT_ID, bootVersion));
+						: new ParentPom(DEFAULT_PARENT_GROUP_ID, DEFAULT_PARENT_ARTIFACT_ID, bootVersion, ""));
 			}
 
 			/**
@@ -578,14 +578,20 @@ public class InitializrConfiguration {
 				private String version;
 
 				/**
+				 * Parent relative path.
+				 */
+				private String relativePath = "";
+
+				/**
 				 * Add the "spring-boot-dependencies" BOM to the project.
 				 */
 				private boolean includeSpringBootBom;
 
-				public ParentPom(String groupId, String artifactId, String version) {
+				public ParentPom(String groupId, String artifactId, String version, String relativePath) {
 					this.groupId = groupId;
 					this.artifactId = artifactId;
 					this.version = version;
+					this.relativePath = relativePath;
 				}
 
 				public ParentPom() {
@@ -613,6 +619,14 @@ public class InitializrConfiguration {
 
 				public void setVersion(String version) {
 					this.version = version;
+				}
+
+				public String getRelativePath() {
+					return this.relativePath;
+				}
+
+				public void setRelativePath(String relativePath) {
+					this.relativePath = relativePath;
 				}
 
 				public boolean isIncludeSpringBootBom() {

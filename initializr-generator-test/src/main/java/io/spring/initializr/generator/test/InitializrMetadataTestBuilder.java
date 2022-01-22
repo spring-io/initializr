@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,12 +219,13 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId, String version,
-			boolean includeSpringBootBom) {
+			String relativePath, boolean includeSpringBootBom) {
 		this.builder.withCustomizer((it) -> {
 			ParentPom parent = it.getConfiguration().getEnv().getMaven().getParent();
 			parent.setGroupId(groupId);
 			parent.setArtifactId(artifactId);
 			parent.setVersion(version);
+			parent.setRelativePath(relativePath);
 			parent.setIncludeSpringBootBom(includeSpringBootBom);
 		});
 		return this;
