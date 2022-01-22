@@ -1043,8 +1043,11 @@ For Maven projects, you can configure a custom parent POM as follows:
 			groupId: com.example
 			artifactId: my-parent
 			version: 1.0.0
+			relativePath: ../pom.xml
 			includeSpringBootBom : true
 ----
+
+If the `relativePath` is not specified, the pom is resolved from the repository.
 
 `includeSpringBootBom` is `false` by default. When set to `true`, the
 `spring-boot-dependencies` bom is added to the `dependencyManagement` section with the
