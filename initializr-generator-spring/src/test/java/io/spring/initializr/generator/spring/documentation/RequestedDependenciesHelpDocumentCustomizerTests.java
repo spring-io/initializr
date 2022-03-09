@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
@@ -40,13 +41,24 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	private final InitializrMetadataTestBuilder metadataBuilder = InitializrMetadataTestBuilder.withDefaults();
 
 	@Test
-	void dependencyWithReferenceDocLink() {
+	void dependencyWithReferenceDocLinkUseDefaultPlatformVersionIfNoneIsSet() {
 		Dependency dependency = createDependency("example",
 				Link.create("reference", "https://example.com/{bootVersion}/doc", "Reference doc example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
 		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/2.4.1/doc",
+				"Reference doc example");
+	}
+
+	@Test
+	void dependencyWithReferenceDocLinkUsePlatformVersion() {
+		Dependency dependency = createDependency("example",
+				Link.create("reference", "https://example.com/{bootVersion}/doc", "Reference doc example"));
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp(Version.parse("2.4.10"), "example");
+		assertThat(document.gettingStarted().isEmpty()).isFalse();
+		assertSingleLink(document.gettingStarted().referenceDocs(), "https://example.com/2.4.10/doc",
 				"Reference doc example");
 	}
 
@@ -71,13 +83,23 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	}
 
 	@Test
-	void dependencyWithGuideLink() {
+	void dependencyWithGuideLinkUseDefaultPlatformVersionIfNoneIsSet() {
 		Dependency dependency = createDependency("example",
 				Link.create("guide", "https://example.com/{bootVersion}/how-to", "How-to example"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
 		assertSingleLink(document.gettingStarted().guides(), "https://example.com/2.4.1/how-to", "How-to example");
+	}
+
+	@Test
+	void dependencyWithGuideLinkUsePlatformVersion() {
+		Dependency dependency = createDependency("example",
+				Link.create("guide", "https://example.com/{bootVersion}/how-to", "How-to example"));
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp(Version.parse("2.4.9"), "example");
+		assertThat(document.gettingStarted().isEmpty()).isFalse();
+		assertSingleLink(document.gettingStarted().guides(), "https://example.com/2.4.9/how-to", "How-to example");
 	}
 
 	@Test
@@ -101,13 +123,23 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	}
 
 	@Test
-	void dependencyWithAdditionalLink() {
+	void dependencyWithAdditionalLinkUseDefaultPlatformVersionIfNoneIsSet() {
 		Dependency dependency = createDependency("example",
 				Link.create("something", "https://example.com/{bootVersion}/test", "Test App"));
 		this.metadataBuilder.addDependencyGroup("test", dependency);
 		HelpDocument document = customizeHelp("example");
 		assertThat(document.gettingStarted().isEmpty()).isFalse();
 		assertSingleLink(document.gettingStarted().additionalLinks(), "https://example.com/2.4.1/test", "Test App");
+	}
+
+	@Test
+	void dependencyWithAdditionalLinkUsePlatformVersion() {
+		Dependency dependency = createDependency("example",
+				Link.create("something", "https://example.com/{bootVersion}/test", "Test App"));
+		this.metadataBuilder.addDependencyGroup("test", dependency);
+		HelpDocument document = customizeHelp(Version.parse("2.4.9"), "example");
+		assertThat(document.gettingStarted().isEmpty()).isFalse();
+		assertSingleLink(document.gettingStarted().additionalLinks(), "https://example.com/2.4.9/test", "Test App");
 	}
 
 	@Test
@@ -136,7 +168,14 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 	}
 
 	private HelpDocument customizeHelp(String... requestedDependencies) {
+		return customizeHelp(null, requestedDependencies);
+	}
+
+	private HelpDocument customizeHelp(Version platformVersion, String... requestedDependencies) {
 		MutableProjectDescription description = new MutableProjectDescription();
+		if (platformVersion != null) {
+			description.setPlatformVersion(platformVersion);
+		}
 		for (String requestedDependency : requestedDependencies) {
 			description.addDependency(requestedDependency,
 					mock(io.spring.initializr.generator.buildsystem.Dependency.class));
