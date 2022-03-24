@@ -29,6 +29,8 @@ import io.spring.initializr.generator.version.VersionProperty;
  *
  * @author Stephane Nicoll
  */
+
+//<E></E>
 class InitializrModule extends SimpleModule {
 
 	InitializrModule() {
