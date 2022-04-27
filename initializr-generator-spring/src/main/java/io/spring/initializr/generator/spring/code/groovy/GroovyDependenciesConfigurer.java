@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,16 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 class GroovyDependenciesConfigurer implements BuildCustomizer<Build> {
 
+	private final boolean isUsingGroovy4;
+
+	GroovyDependenciesConfigurer(boolean isUsingGroovy4) {
+		this.isUsingGroovy4 = isUsingGroovy4;
+	}
+
 	@Override
 	public void customize(Build build) {
-		build.dependencies().add("groovy", "org.codehaus.groovy", "groovy", DependencyScope.COMPILE);
+		String groupId = this.isUsingGroovy4 ? "org.apache.groovy" : "org.codehaus.groovy";
+		build.dependencies().add("groovy", groupId, "groovy", DependencyScope.COMPILE);
 	}
 
 }

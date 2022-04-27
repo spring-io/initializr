@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,17 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	private void testCurrentGenerationJar(Language language, BuildSystem build, String fileName) {
 		assertThat(generateProject(language, build, "2.4.1")).textFile(fileName).hasSameContentAs(
 				new ClassPathResource("project/" + language + "/standard/" + getAssertFileName(fileName)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void nextGenerationJarGroovy(BuildSystem build, String fileName) {
+		testNextGenerationJar(new GroovyLanguage("17"), build, fileName);
+	}
+
+	private void testNextGenerationJar(Language language, BuildSystem build, String fileName) {
+		assertThat(generateProject(language, build, "3.0.0")).textFile(fileName).hasSameContentAs(
+				new ClassPathResource("project/" + language + "/next/" + getAssertFileName(fileName)));
 	}
 
 	@ParameterizedTest

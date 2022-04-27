@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,8 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +50,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 class GroovyProjectGenerationDefaultContributorsConfiguration {
+
+	private static final VersionRange GROOVY4 = VersionParser.DEFAULT.parseRange("3.0.0-M2");
 
 	@Bean
 	MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
@@ -69,8 +73,8 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	BuildCustomizer<Build> groovyDependenciesConfigurer() {
-		return new GroovyDependenciesConfigurer();
+	BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description) {
+		return new GroovyDependenciesConfigurer(GROOVY4.match(description.getPlatformVersion()));
 	}
 
 	/**
