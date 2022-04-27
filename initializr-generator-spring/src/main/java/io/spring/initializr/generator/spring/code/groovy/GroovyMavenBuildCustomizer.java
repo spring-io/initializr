@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class GroovyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 	@Override
 	public void customize(MavenBuild build) {
 		build.plugins().add("org.codehaus.gmavenplus", "gmavenplus-plugin", (groovyMavenPlugin) -> {
-			groovyMavenPlugin.version("1.11.0");
+			groovyMavenPlugin.version("1.13.1");
 			groovyMavenPlugin.execution(null,
 					(execution) -> execution.goal("addSources").goal("addTestSources").goal("generateStubs")
 							.goal("compile").goal("generateTestStubs").goal("compileTests").goal("removeStubs")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ class GroovyMavenBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((groovyPlugin) -> {
 			assertThat(groovyPlugin.getGroupId()).isEqualTo("org.codehaus.gmavenplus");
 			assertThat(groovyPlugin.getArtifactId()).isEqualTo("gmavenplus-plugin");
-			assertThat(groovyPlugin.getVersion()).isEqualTo("1.11.0");
+			assertThat(groovyPlugin.getVersion()).isEqualTo("1.13.1");
 			Configuration configuration = groovyPlugin.getConfiguration();
 			assertThat(configuration).isNull();
 			assertThat(groovyPlugin.getExecutions()).hasSize(1);
