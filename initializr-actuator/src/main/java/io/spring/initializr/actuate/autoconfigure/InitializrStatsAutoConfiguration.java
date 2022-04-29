@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
 import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,7 +31,6 @@ import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfigu
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -42,11 +41,10 @@ import org.springframework.retry.support.RetryTemplate;
  *
  * @author Stephane Nicoll
  */
-@Configuration
+@AutoConfiguration(after = RestTemplateAutoConfiguration.class,
+		afterName = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 @EnableConfigurationProperties(StatsProperties.class)
 @ConditionalOnProperty("initializr.stats.elastic.uri")
-@AutoConfigureAfter(value = RestTemplateAutoConfiguration.class,
-		name = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;

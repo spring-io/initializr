@@ -1,0 +1,2 @@
+io.spring.initializr.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration
+io.spring.initializr.actuate.autoconfigure.InitializrStatsAutoConfiguration
