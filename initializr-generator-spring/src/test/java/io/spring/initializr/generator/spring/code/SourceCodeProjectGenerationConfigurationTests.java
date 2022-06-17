@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.code;
 
+import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
@@ -57,6 +58,37 @@ class SourceCodeProjectGenerationConfigurationTests {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
+	void addsACustomizerThatAppliesCustomSpringBootApplicationAnnotationOnMainClass() {
+		TypeDeclaration declaration = this.projectTester.withBean(MainApplicationTypeCustomizer.class,
+				() -> new MainApplicationTypeCustomizer<TypeDeclaration>() {
+
+					@Override
+					public void customize(TypeDeclaration typeDeclaration) {
+						typeDeclaration.annotate(Annotation.name(
+								"org.springframework.boot.autoconfigure.SpringBootApplication",
+								(builder) -> builder.attribute("exclude", Class.class,
+										"org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration")));
+					}
+
+					@Override
+					public int getOrder() {
+						return MainApplicationTypeCustomizer.super.getOrder() - 10;
+					}
+				}).generate(new MutableProjectDescription(), (context) -> {
+					TypeDeclaration type = new TypeDeclaration("Test");
+					context.getBeanProvider(MainApplicationTypeCustomizer.class).orderedStream()
+							.forEach((bean) -> bean.customize(type));
+					return type;
+				});
+		assertThat(declaration.getAnnotations()).hasSize(1);
+		assertThat(declaration.getAnnotations()).singleElement().satisfies((annotation) -> {
+			assertThat(annotation.getName()).isEqualTo("org.springframework.boot.autoconfigure.SpringBootApplication");
+			assertThat(annotation.getAttributes()).extracting(Annotation.Attribute::getName).containsExactly("exclude");
+		});
+	}
+
+	@Test
 	void addsACustomizerThatAppliesTestAnnotationsOnTestClassWithJunit5() {
 		TypeDeclaration declaration = generateTestTypeDeclaration("2.2.0.RELEASE");
 		assertThat(declaration.getAnnotations()).hasSize(1);
@@ -73,6 +105,38 @@ class SourceCodeProjectGenerationConfigurationTests {
 			TestApplicationTypeCustomizer<TypeDeclaration> bean = context.getBean(TestApplicationTypeCustomizer.class);
 			bean.customize(type);
 			return type;
+		});
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void addsACustomizerThatCustomAppliesTestAnnotationsOnTestClassWithJunit5() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
+		TypeDeclaration declaration = this.projectTester.withBean(TestApplicationTypeCustomizer.class,
+				() -> new TestApplicationTypeCustomizer<TypeDeclaration>() {
+
+					@Override
+					public void customize(TypeDeclaration typeDeclaration) {
+						typeDeclaration.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest",
+								(builder) -> builder.attribute("value", String.class, "application.test=true")));
+					}
+
+					@Override
+					public int getOrder() {
+						return TestApplicationTypeCustomizer.super.getOrder() - 10;
+					}
+				}).generate(description, (context) -> {
+					TypeDeclaration type = new TypeDeclaration("Test");
+					context.getBeanProvider(TestApplicationTypeCustomizer.class).orderedStream()
+							.forEach((bean) -> bean.customize(type));
+					return type;
+				});
+
+		assertThat(declaration.getAnnotations()).hasSize(1);
+		assertThat(declaration.getAnnotations()).singleElement().satisfies((annotation) -> {
+			assertThat(annotation.getName()).isEqualTo("org.springframework.boot.test.context.SpringBootTest");
+			assertThat(annotation.getAttributes()).extracting(Annotation.Attribute::getName).containsExactly("value");
 		});
 	}
 

@@ -38,14 +38,21 @@ public class SourceCodeProjectGenerationConfiguration {
 
 	@Bean
 	public MainApplicationTypeCustomizer<TypeDeclaration> springBootApplicationAnnotator() {
-		return (typeDeclaration) -> typeDeclaration
-				.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
+		return (typeDeclaration) -> annotateIfNotAlreadyAnnotated(typeDeclaration,
+				"org.springframework.boot.autoconfigure.SpringBootApplication");
 	}
 
 	@Bean
 	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
-		return (typeDeclaration) -> typeDeclaration
-				.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
+		return (typeDeclaration) -> annotateIfNotAlreadyAnnotated(typeDeclaration,
+				"org.springframework.boot.test.context.SpringBootTest");
+	}
+
+	private void annotateIfNotAlreadyAnnotated(TypeDeclaration typeDeclaration, String annotationName) {
+		if (typeDeclaration.getAnnotations().stream()
+				.noneMatch((annotation) -> annotationName.equals(annotation.getName()))) {
+			typeDeclaration.annotate(Annotation.name(annotationName));
+		}
 	}
 
 	/**
