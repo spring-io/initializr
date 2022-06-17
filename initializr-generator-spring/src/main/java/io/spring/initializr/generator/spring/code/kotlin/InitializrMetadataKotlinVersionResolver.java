@@ -17,6 +17,8 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.spring.version.InitializrMetadataSpringBootVersionResolver;
+import io.spring.initializr.generator.spring.version.SpringBootVersionResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
@@ -29,14 +31,22 @@ public class InitializrMetadataKotlinVersionResolver implements KotlinVersionRes
 
 	private final InitializrMetadata metadata;
 
+	private final SpringBootVersionResolver bootVersionResolver;
+
 	public InitializrMetadataKotlinVersionResolver(InitializrMetadata metadata) {
+		this(metadata, new InitializrMetadataSpringBootVersionResolver(metadata));
+	}
+
+	public InitializrMetadataKotlinVersionResolver(InitializrMetadata metadata,
+			SpringBootVersionResolver bootVersionResolver) {
 		this.metadata = metadata;
+		this.bootVersionResolver = bootVersionResolver;
 	}
 
 	@Override
 	public String resolveKotlinVersion(ProjectDescription description) {
 		return this.metadata.getConfiguration().getEnv().getKotlin()
-				.resolveKotlinVersion(description.getPlatformVersion());
+				.resolveKotlinVersion(this.bootVersionResolver.resolveSpringBootVersion(description));
 	}
 
 }

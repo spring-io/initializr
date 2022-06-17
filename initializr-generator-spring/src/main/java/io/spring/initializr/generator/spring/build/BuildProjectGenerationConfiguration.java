@@ -21,11 +21,13 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.DefaultMavenBuildCustomizer;
+import io.spring.initializr.generator.spring.version.ConditionalOnSpringBootVersion;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
+import io.spring.initializr.generator.spring.version.SpringBootVersionResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.context.annotation.Bean;
@@ -40,7 +42,7 @@ import org.springframework.context.annotation.Bean;
 public class BuildProjectGenerationConfiguration {
 
 	@Bean
-	@ConditionalOnPlatformVersion("[2.2.0.M5,2.4.0-SNAPSHOT)")
+	@ConditionalOnSpringBootVersion("[2.2.0.M5,2.4.0-SNAPSHOT)")
 	public BuildCustomizer<Build> junit5TestStarterContributor() {
 		return (build) -> build.dependencies().add("test",
 				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
@@ -49,7 +51,7 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("2.4.0-M1")
+	@ConditionalOnSpringBootVersion("2.4.0-M1")
 	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
 		return (build) -> build.dependencies().add("test",
 				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
@@ -63,8 +65,8 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description,
-			InitializrMetadata metadata) {
-		return new DefaultMavenBuildCustomizer(description, metadata);
+			InitializrMetadata metadata, SpringBootProjectSettings settings) {
+		return new DefaultMavenBuildCustomizer(description, metadata, settings);
 	}
 
 	@Bean
@@ -85,8 +87,10 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(ProjectDescription description) {
-		return new SpringBootVersionRepositoriesBuildCustomizer(description.getPlatformVersion());
+	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(ProjectDescription description,
+			SpringBootVersionResolver bootVersionResolver) {
+		return new SpringBootVersionRepositoriesBuildCustomizer(
+				bootVersionResolver.resolveSpringBootVersion(description));
 	}
 
 }

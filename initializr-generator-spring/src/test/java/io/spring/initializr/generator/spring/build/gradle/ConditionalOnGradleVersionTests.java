@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.project.MutableProjectDescription;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConditionalOnGradleVersionTests {
 
 	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(GradleVersionTestConfiguration.class);
+			.withConfiguration(VersionProjectGenerationConfiguration.class, GradleVersionTestConfiguration.class);
 
 	@Test
 	void outcomeWithSpringBoot23() {

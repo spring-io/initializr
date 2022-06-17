@@ -27,6 +27,7 @@ import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -52,6 +53,7 @@ class KotlinProjectGenerationConfigurationTests {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
 				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
 						KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
+						VersionProjectGenerationConfiguration.class,
 						MavenProjectGenerationConfiguration.class)
 				.withDirectory(directory).withBean(InitializrMetadata.class, () -> {
 					io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency

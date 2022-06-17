@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
@@ -44,11 +45,24 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 
 	private final String platformVersion;
 
+	private final String bootVersion;
+
 	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+		this(description, metadata, (String) null);
+	}
+
+	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata,
+			SpringBootProjectSettings settings) {
+		this(description, metadata, settings.getVersion());
+	}
+
+	private RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata,
+			String bootVersion) {
 		this.description = description;
 		this.metadata = metadata;
 		this.platformVersion = (description.getPlatformVersion() != null) ? description.getPlatformVersion().toString()
 				: metadata.getBootVersions().getDefault().getId();
+		this.bootVersion = (bootVersion != null) ? bootVersion : this.platformVersion;
 	}
 
 	@Override
@@ -86,7 +100,8 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 				String description = (link.getDescription() != null) ? link.getDescription()
 						: defaultDescription.apply(links);
 				if (description != null) {
-					String url = link.getHref().replace("{bootVersion}", this.platformVersion);
+					String url = link.getHref().replace("{bootVersion}", this.bootVersion);
+					url = url.replace("{platformVersion}", this.platformVersion);
 					section.get().addItem(new GettingStartedSection.Link(url, description));
 				}
 			}

@@ -21,6 +21,7 @@ import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.verify;
 class SourceCodeProjectGenerationConfigurationTests {
 
 	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(SourceCodeProjectGenerationConfiguration.class);
+			.withConfiguration(SourceCodeProjectGenerationConfiguration.class, VersionProjectGenerationConfiguration.class);
 
 	@Test
 	@SuppressWarnings("unchecked")

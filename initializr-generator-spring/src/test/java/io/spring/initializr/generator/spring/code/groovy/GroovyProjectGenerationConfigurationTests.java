@@ -23,6 +23,7 @@ import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
@@ -45,6 +46,7 @@ class GroovyProjectGenerationConfigurationTests {
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
 				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
+						VersionProjectGenerationConfiguration.class,
 						GroovyProjectGenerationConfiguration.class)
 				.withDirectory(directory).withDescriptionCustomizer((description) -> {
 					description.setLanguage(new GroovyLanguage());

@@ -36,6 +36,7 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
+import io.spring.initializr.generator.spring.version.SpringBootVersionResolver;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
 
@@ -73,8 +74,10 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description) {
-		return new GroovyDependenciesConfigurer(GROOVY4.match(description.getPlatformVersion()));
+	BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description,
+			SpringBootVersionResolver bootVersionResolver) {
+		return new GroovyDependenciesConfigurer(
+				GROOVY4.match(bootVersionResolver.resolveSpringBootVersion(description)));
 	}
 
 	/**

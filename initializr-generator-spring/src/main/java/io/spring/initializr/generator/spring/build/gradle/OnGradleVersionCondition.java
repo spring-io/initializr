@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 import io.spring.initializr.generator.condition.ProjectGenerationCondition;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.spring.util.SpringBootVersionCondition;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
@@ -34,7 +36,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  */
-public class OnGradleVersionCondition extends ProjectGenerationCondition {
+public class OnGradleVersionCondition extends SpringBootVersionCondition {
 
 	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
 			.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
@@ -42,9 +44,9 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-RC1");
 
 	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		String gradleGeneration = determineGradleGeneration(description.getPlatformVersion());
+	protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata,
+			SpringBootProjectSettings settings) {
+		String gradleGeneration = determineGradleGeneration(Version.safeParse(settings.getVersion()));
 		if (gradleGeneration == null) {
 			return false;
 		}

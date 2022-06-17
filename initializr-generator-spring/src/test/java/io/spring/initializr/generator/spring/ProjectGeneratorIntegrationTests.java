@@ -23,6 +23,7 @@ import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.project.ProjectGenerator;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -47,6 +48,7 @@ class ProjectGeneratorIntegrationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectGeneratorTester().withDirectory(directory).withIndentingWriterFactory()
+				.withConfiguration(VersionProjectGenerationConfiguration.class)
 				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build());
 	}
 

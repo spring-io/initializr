@@ -29,7 +29,6 @@ import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleSettings
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
@@ -37,6 +36,8 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
+import io.spring.initializr.generator.spring.version.ConditionalOnSpringBootVersion;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -103,9 +104,11 @@ public class GradleProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnGradleVersion({ "6", "7" })
 	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
-			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
-		return new SpringBootPluginBuildCustomizer(description, versionResolver
-				.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
+			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata,
+			SpringBootProjectSettings settings) {
+		return new SpringBootPluginBuildCustomizer(description,
+				versionResolver.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)),
+				settings);
 	}
 
 	@Bean
@@ -171,7 +174,7 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnPlatformVersion("2.2.0.M3")
+		@ConditionalOnSpringBootVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return new BuildCustomizer<GradleBuild>() {
 				@Override
@@ -214,7 +217,7 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnPlatformVersion("2.2.0.M3")
+		@ConditionalOnSpringBootVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return new BuildCustomizer<GradleBuild>() {
 				@Override

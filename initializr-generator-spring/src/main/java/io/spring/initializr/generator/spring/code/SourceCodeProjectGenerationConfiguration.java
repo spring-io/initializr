@@ -17,12 +17,12 @@
 package io.spring.initializr.generator.spring.code;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.version.ConditionalOnSpringBootVersion;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -62,7 +62,7 @@ public class SourceCodeProjectGenerationConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnPlatformVersion("2.0.0.M1")
+		@ConditionalOnSpringBootVersion("2.0.0.M1")
 		ServletInitializerContributor boot20ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
 			return new ServletInitializerContributor(this.description.getPackageName(),

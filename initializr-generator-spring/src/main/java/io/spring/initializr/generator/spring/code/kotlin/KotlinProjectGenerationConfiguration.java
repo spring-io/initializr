@@ -32,6 +32,7 @@ import io.spring.initializr.generator.spring.code.MainSourceCodeProjectContribut
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeProjectContributor;
+import io.spring.initializr.generator.spring.version.SpringBootVersionResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -81,9 +82,9 @@ public class KotlinProjectGenerationConfiguration {
 
 	@Bean
 	public KotlinProjectSettings kotlinProjectSettings(ObjectProvider<KotlinVersionResolver> kotlinVersionResolver,
-			InitializrMetadata metadata) {
+			InitializrMetadata metadata, SpringBootVersionResolver bootVersionResolver) {
 		String kotlinVersion = kotlinVersionResolver
-				.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
+				.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata, bootVersionResolver))
 				.resolveKotlinVersion(this.description);
 		return new SimpleKotlinProjectSettings(kotlinVersion, this.description.getLanguage().jvmVersion());
 	}

@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
@@ -37,9 +38,17 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 
 	private final InitializrMetadata metadata;
 
+	private final SpringBootProjectSettings settings;
+
 	public DefaultMavenBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+		this(description, metadata, () -> description.getPlatformVersion().toString());
+	}
+
+	public DefaultMavenBuildCustomizer(ProjectDescription description, InitializrMetadata metadata,
+			SpringBootProjectSettings settings) {
 		this.description = description;
 		this.metadata = metadata;
+		this.settings = settings;
 	}
 
 	@Override
@@ -49,7 +58,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
-		String springBootVersion = this.description.getPlatformVersion().toString();
+		String springBootVersion = this.settings.getVersion();
 		ParentPom parentPom = maven.resolveParentPom(springBootVersion);
 		if (parentPom.isIncludeSpringBootBom()) {
 			String versionProperty = "spring-boot.version";

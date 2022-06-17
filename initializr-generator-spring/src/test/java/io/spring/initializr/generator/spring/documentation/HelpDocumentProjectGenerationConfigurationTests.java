@@ -21,6 +21,9 @@ import java.nio.file.Path;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
+import io.spring.initializr.generator.spring.version.SimpleSpringBootProjectSettings;
+import io.spring.initializr.generator.spring.version.SpringBootProjectSettings;
+import io.spring.initializr.generator.spring.version.VersionProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -48,7 +51,7 @@ class HelpDocumentProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester()
-				.withConfiguration(HelpDocumentProjectGenerationConfiguration.class)
+				.withConfiguration(HelpDocumentProjectGenerationConfiguration.class, VersionProjectGenerationConfiguration.class)
 				.withBean(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"))
 				.withBean(InitializrMetadata.class, () -> this.metadataBuilder.build()).withDirectory(directory);
 	}
