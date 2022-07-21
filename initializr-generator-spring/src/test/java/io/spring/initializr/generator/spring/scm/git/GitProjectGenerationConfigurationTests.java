@@ -16,7 +16,10 @@
 
 package io.spring.initializr.generator.spring.scm.git;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Path;
+import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
@@ -25,12 +28,10 @@ import io.spring.initializr.generator.spring.scm.git.GitIgnore.GitIgnoreSection;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.file.Path;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link GitProjectGenerationConfiguration}.
