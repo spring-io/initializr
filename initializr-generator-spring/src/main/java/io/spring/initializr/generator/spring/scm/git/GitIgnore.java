@@ -42,31 +42,31 @@ public class GitIgnore {
 	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
 
 	private final List<GitIgnoreSection> sections = new LinkedList<>(
-			Arrays.asList(general, sts, intellijIdea, netBeans, vscode));
+			Arrays.asList(this.general, this.sts, this.intellijIdea, this.netBeans, this.vscode));
 
 	public void write(PrintWriter writer) throws IOException {
-		for (GitIgnoreSection section : sections) {
+		for (GitIgnoreSection section : this.sections) {
 			section.write(writer);
 		}
 	}
 
 	public void registerCustomizeSection(GitIgnoreSection section) {
-		sections.add(section);
+		this.sections.add(section);
 	}
 
 	public GitIgnoreSection getSection(String sectionName) {
 		if ("general".equalsIgnoreCase(sectionName)) {
-			return general;
+			return this.general;
 		}
 		else {
-			return sections.stream()
-					.filter(section -> section.name != null && section.name.equalsIgnoreCase(sectionName)).findAny()
+			return this.sections.stream()
+					.filter((section) -> section.name != null && section.name.equalsIgnoreCase(sectionName)).findAny()
 					.orElse(null);
 		}
 	}
 
 	public boolean isEmpty() {
-		return sections.stream().allMatch(section -> section.items.isEmpty());
+		return this.sections.stream().allMatch((section) -> section.items.isEmpty());
 	}
 
 	public GitIgnoreSection getGeneral() {
