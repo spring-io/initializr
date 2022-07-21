@@ -16,12 +16,13 @@
 
 package io.spring.initializr.generator.spring.scm.git;
 
-import io.spring.initializr.generator.io.text.Section;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import io.spring.initializr.generator.io.text.Section;
 
 /**
  * Project's {@code .gitignore}. Contain a general section and pre-defined section for
