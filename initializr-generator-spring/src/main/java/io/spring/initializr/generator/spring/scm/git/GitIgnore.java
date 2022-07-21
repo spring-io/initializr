@@ -16,12 +16,12 @@
 
 package io.spring.initializr.generator.spring.scm.git;
 
+import io.spring.initializr.generator.io.text.Section;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
-
-import io.spring.initializr.generator.io.text.Section;
+import java.util.List;
 
 /**
  * Project's {@code .gitignore}. Contain a general section and pre-defined section for
@@ -41,18 +41,32 @@ public class GitIgnore {
 
 	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
 
+	private final List<GitIgnoreSection> sections = new LinkedList<>(
+			Arrays.asList(general, sts, intellijIdea, netBeans, vscode));
+
 	public void write(PrintWriter writer) throws IOException {
-		this.general.write(writer);
-		this.sts.write(writer);
-		this.intellijIdea.write(writer);
-		this.netBeans.write(writer);
-		this.vscode.write(writer);
+		for (GitIgnoreSection section : sections) {
+			section.write(writer);
+		}
+	}
+
+	public void registerCustomizeSection(GitIgnoreSection section) {
+		sections.add(section);
+	}
+
+	public GitIgnoreSection getSection(String sectionName) {
+		if ("general".equalsIgnoreCase(sectionName)) {
+			return general;
+		}
+		else {
+			return sections.stream()
+					.filter(section -> section.name != null && section.name.equalsIgnoreCase(sectionName)).findAny()
+					.orElse(null);
+		}
 	}
 
 	public boolean isEmpty() {
-		return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty()
-				&& this.intellijIdea.getItems().isEmpty() && this.netBeans.getItems().isEmpty()
-				&& this.vscode.getItems().isEmpty();
+		return sections.stream().allMatch(section -> section.items.isEmpty());
 	}
 
 	public GitIgnoreSection getGeneral() {

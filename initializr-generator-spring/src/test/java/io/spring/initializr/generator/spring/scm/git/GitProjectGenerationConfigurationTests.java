@@ -16,21 +16,21 @@
 
 package io.spring.initializr.generator.spring.scm.git;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.file.Path;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.MutableProjectDescription;
+import io.spring.initializr.generator.spring.scm.git.GitIgnore.GitIgnoreSection;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.version.Version;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link GitProjectGenerationConfiguration}.
@@ -83,6 +83,14 @@ class GitProjectGenerationConfigurationTests {
 				.contains("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**/target/",
 						"!**/src/test/**/target/")
 				.doesNotContain(".gradle", "!gradle/wrapper/gradle-wrapper.jar", "/out/");
+	}
+
+	@Test
+	void gitIgnoreRegisterSections() {
+		GitIgnore gitIgnore = new GitIgnore();
+		GitIgnoreSection demoSection = new GitIgnoreSection("demo");
+		gitIgnore.registerCustomizeSection(demoSection);
+		assertThat(gitIgnore.getSection("demo")).isNotNull();
 	}
 
 	private List<String> generateGitIgnore(MutableProjectDescription description) {
