@@ -19,7 +19,7 @@
 		<commons-text.version>1.9</commons-text.version>
 		<maven-resolver.version>1.7.3</maven-resolver.version>
 		<maven-resolver-provider.version>3.8.6</maven-resolver-provider.version>
-		<spring-boot.version>2.7.2</spring-boot.version>
+		<spring-boot.version>2.7.3</spring-boot.version>
 		<spring-cloud-contract.version>3.0.5</spring-cloud-contract.version>
 	</properties>
 	<scm>
