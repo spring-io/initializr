@@ -264,22 +264,22 @@ public class MavenBuildWriter {
 			return null;
 		}
 		switch (type) {
-		case ANNOTATION_PROCESSOR:
-			return null;
-		case COMPILE:
-			return null;
-		case COMPILE_ONLY:
-			return null;
-		case PROVIDED_RUNTIME:
-			return "provided";
-		case RUNTIME:
-			return "runtime";
-		case TEST_COMPILE:
-			return "test";
-		case TEST_RUNTIME:
-			return "test";
-		default:
-			throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
+			case ANNOTATION_PROCESSOR:
+				return null;
+			case COMPILE:
+				return null;
+			case COMPILE_ONLY:
+				return null;
+			case PROVIDED_RUNTIME:
+				return "provided";
+			case RUNTIME:
+				return "runtime";
+			case TEST_COMPILE:
+				return "test";
+			case TEST_RUNTIME:
+				return "test";
+			default:
+				throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
 		}
 	}
 
@@ -613,23 +613,23 @@ public class MavenBuildWriter {
 		for (int i = 0; i < text.length(); i++) {
 			char character = text.charAt(i);
 			switch (character) {
-			case '\'':
-				sb.append("&apos;");
-				break;
-			case '\"':
-				sb.append("&quot;");
-				break;
-			case '<':
-				sb.append("&lt;");
-				break;
-			case '>':
-				sb.append("&gt;");
-				break;
-			case '&':
-				sb.append("&amp;");
-				break;
-			default:
-				sb.append(character);
+				case '\'':
+					sb.append("&apos;");
+					break;
+				case '\"':
+					sb.append("&quot;");
+					break;
+				case '<':
+					sb.append("&lt;");
+					break;
+				case '>':
+					sb.append("&gt;");
+					break;
+				case '&':
+					sb.append("&amp;");
+					break;
+				default:
+					sb.append(character);
 			}
 		}
 		return sb.toString();

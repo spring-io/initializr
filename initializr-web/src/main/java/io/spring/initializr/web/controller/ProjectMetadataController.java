@@ -156,12 +156,12 @@ public class ProjectMetadataController extends AbstractMetadataController {
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
 		switch (version) {
-		case V2:
-			return new InitializrMetadataV2JsonMapper();
-		case V2_1:
-			return new InitializrMetadataV21JsonMapper();
-		default:
-			return new InitializrMetadataV22JsonMapper();
+			case V2:
+				return new InitializrMetadataV2JsonMapper();
+			case V2_1:
+				return new InitializrMetadataV21JsonMapper();
+			default:
+				return new InitializrMetadataV22JsonMapper();
 		}
 	}
 

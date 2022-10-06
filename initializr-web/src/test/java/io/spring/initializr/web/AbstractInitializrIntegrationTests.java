@@ -239,12 +239,12 @@ public abstract class AbstractInitializrIntegrationTests {
 			Path archiveFile = writeArchive(content);
 			Path project = this.folder.resolve("project");
 			switch (archiveType) {
-			case ZIP:
-				unzip(archiveFile, project);
-				break;
-			case TGZ:
-				untar(archiveFile, project);
-				break;
+				case ZIP:
+					unzip(archiveFile, project);
+					break;
+				case TGZ:
+					untar(archiveFile, project);
+					break;
 			}
 			return new ProjectStructure(project);
 		}

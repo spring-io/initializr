@@ -164,22 +164,22 @@ public abstract class GradleBuildWriter {
 			return "implementation";
 		}
 		switch (type) {
-		case ANNOTATION_PROCESSOR:
-			return "annotationProcessor";
-		case COMPILE:
-			return "implementation";
-		case COMPILE_ONLY:
-			return "compileOnly";
-		case PROVIDED_RUNTIME:
-			return "providedRuntime";
-		case RUNTIME:
-			return "runtimeOnly";
-		case TEST_COMPILE:
-			return "testImplementation";
-		case TEST_RUNTIME:
-			return "testRuntimeOnly";
-		default:
-			throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
+			case ANNOTATION_PROCESSOR:
+				return "annotationProcessor";
+			case COMPILE:
+				return "implementation";
+			case COMPILE_ONLY:
+				return "compileOnly";
+			case PROVIDED_RUNTIME:
+				return "providedRuntime";
+			case RUNTIME:
+				return "runtimeOnly";
+			case TEST_COMPILE:
+				return "testImplementation";
+			case TEST_RUNTIME:
+				return "testRuntimeOnly";
+			default:
+				throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
 		}
 	}
 

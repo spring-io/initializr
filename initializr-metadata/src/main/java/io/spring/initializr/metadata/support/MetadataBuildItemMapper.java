@@ -52,18 +52,18 @@ public final class MetadataBuildItemMapper {
 
 	private static DependencyScope toDependencyScope(String scope) {
 		switch (scope) {
-		case Dependency.SCOPE_ANNOTATION_PROCESSOR:
-			return DependencyScope.ANNOTATION_PROCESSOR;
-		case Dependency.SCOPE_COMPILE:
-			return DependencyScope.COMPILE;
-		case Dependency.SCOPE_RUNTIME:
-			return DependencyScope.RUNTIME;
-		case Dependency.SCOPE_COMPILE_ONLY:
-			return DependencyScope.COMPILE_ONLY;
-		case Dependency.SCOPE_PROVIDED:
-			return DependencyScope.PROVIDED_RUNTIME;
-		case Dependency.SCOPE_TEST:
-			return DependencyScope.TEST_COMPILE;
+			case Dependency.SCOPE_ANNOTATION_PROCESSOR:
+				return DependencyScope.ANNOTATION_PROCESSOR;
+			case Dependency.SCOPE_COMPILE:
+				return DependencyScope.COMPILE;
+			case Dependency.SCOPE_RUNTIME:
+				return DependencyScope.RUNTIME;
+			case Dependency.SCOPE_COMPILE_ONLY:
+				return DependencyScope.COMPILE_ONLY;
+			case Dependency.SCOPE_PROVIDED:
+				return DependencyScope.PROVIDED_RUNTIME;
+			case Dependency.SCOPE_TEST:
+				return DependencyScope.TEST_COMPILE;
 		}
 		return null;
 	}
