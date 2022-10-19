@@ -16,7 +16,7 @@
 		<main.basedir>${basedir}/..</main.basedir>
 		<java.version>1.8</java.version>
 		<commons-compress.version>1.21</commons-compress.version>
-		<commons-text.version>1.9</commons-text.version>
+		<commons-text.version>1.10.0</commons-text.version>
 		<maven-resolver.version>1.7.3</maven-resolver.version>
 		<maven-resolver-provider.version>3.8.6</maven-resolver-provider.version>
 		<spring-boot.version>2.7.4</spring-boot.version>
