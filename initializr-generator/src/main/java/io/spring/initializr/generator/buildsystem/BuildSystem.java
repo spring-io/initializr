@@ -47,13 +47,40 @@ public interface BuildSystem {
 	}
 
 	/**
+	 * Whether the build is a multi module build.
+	 * @return {@code true} if multi module build
+	 */
+	default boolean isMultiModuleBuild() {
+		return getApplicationModuleName() != null;
+	}
+
+	/**
+	 * Name of the application module; or {@code null} if a single module build.
+	 * @return name of the application module
+	 */
+	default String getApplicationModuleName() {
+		return null;
+	}
+
+	/**
+	 * Path of the application module; this may differ from the project root if the
+	 * application is multi-module.
+	 * @param projectRoot the root of the project structure
+	 * @return path for the application project
+	 */
+	default Path getApplicationModuleRoot(Path projectRoot) {
+		String sub = getApplicationModuleName();
+		return (sub != null) ? projectRoot.resolve(sub) : projectRoot;
+	}
+
+	/**
 	 * Returns a {@link SourceStructure} for main sources.
 	 * @param projectRoot the root of the project structure
 	 * @param language the language of the project
 	 * @return a {@link SourceStructure} for main assets
 	 */
 	default SourceStructure getMainSource(Path projectRoot, Language language) {
-		return new SourceStructure(projectRoot.resolve("src/main/"), language);
+		return new SourceStructure(getApplicationModuleRoot(projectRoot).resolve("src/main/"), language);
 	}
 
 	/**
@@ -63,7 +90,7 @@ public interface BuildSystem {
 	 * @return a {@link SourceStructure} for test assets
 	 */
 	default SourceStructure getTestSource(Path projectRoot, Language language) {
-		return new SourceStructure(projectRoot.resolve("src/test/"), language);
+		return new SourceStructure(getApplicationModuleRoot(projectRoot).resolve("src/test/"), language);
 	}
 
 	static BuildSystem forId(String id) {

@@ -67,6 +67,33 @@ class BuildSystemTests {
 	}
 
 	@Test
+	void gradleMultiModuleApplicationRoot(@TempDir Path directory) {
+		Path applicationModuleRoot = new GradleBuildSystem(GradleBuildSystem.DIALECT_GROOVY, "my-project")
+				.getApplicationModuleRoot(directory);
+		assertThat(applicationModuleRoot).isEqualTo(directory.resolve("my-project"));
+	}
+
+	@Test
+	void gradleMultiModuleMainSource(@TempDir Path directory) {
+		SourceStructure mainCodeStructure = new GradleBuildSystem(GradleBuildSystem.DIALECT_GROOVY, "my-project")
+				.getMainSource(directory, new JavaLanguage());
+		assertThat(mainCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("my-project/src/main"));
+		assertThat(mainCodeStructure.getSourcesDirectory()).isEqualTo(directory.resolve("my-project/src/main/java"));
+		assertThat(mainCodeStructure.getResourcesDirectory())
+				.isEqualTo(directory.resolve("my-project/src/main/resources"));
+	}
+
+	@Test
+	void gradleMultiModuleTestSource(@TempDir Path directory) {
+		SourceStructure mainCodeStructure = new GradleBuildSystem(GradleBuildSystem.DIALECT_GROOVY, "my-project")
+				.getTestSource(directory, new JavaLanguage());
+		assertThat(mainCodeStructure.getRootDirectory()).isEqualTo(directory.resolve("my-project/src/test"));
+		assertThat(mainCodeStructure.getSourcesDirectory()).isEqualTo(directory.resolve("my-project/src/test/java"));
+		assertThat(mainCodeStructure.getResourcesDirectory())
+				.isEqualTo(directory.resolve("my-project/src/test/resources"));
+	}
+
+	@Test
 	void unknownBuildSystem() {
 		assertThatIllegalStateException().isThrownBy(() -> BuildSystem.forId("unknown"))
 				.withMessageContaining("Unrecognized build system id 'unknown'");

@@ -44,4 +44,11 @@ class ApplicationPropertiesContributorTests {
 				.isEmpty();
 	}
 
+	@Test
+	void applicationConfigurationWithCustomResourcesDirectory() throws IOException {
+		Path projectDir = Files.createTempDirectory(this.directory, "project-");
+		new ApplicationPropertiesContributor((root) -> root.resolve("foo")).contribute(projectDir);
+		assertThat(new ProjectStructure(projectDir)).textFile("foo/application.properties").lines().isEmpty();
+	}
+
 }

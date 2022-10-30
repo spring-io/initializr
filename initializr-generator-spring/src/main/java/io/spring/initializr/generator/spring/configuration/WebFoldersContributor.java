@@ -39,16 +39,25 @@ public class WebFoldersContributor implements ProjectContributor {
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
+	private final ResourcesPathProvider resourcesPathProvider;
+
 	public WebFoldersContributor(Build build, InitializrMetadata metadata) {
+		this(build, metadata, ResourcesPathProvider.DEFAULT);
+	}
+
+	public WebFoldersContributor(Build build, InitializrMetadata metadata,
+			ResourcesPathProvider resourcesPathProvider) {
 		this.build = build;
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+		this.resourcesPathProvider = resourcesPathProvider;
 	}
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
 		if (this.buildMetadataResolver.hasFacet(this.build, "web")) {
-			Files.createDirectories(projectRoot.resolve("src/main/resources/templates"));
-			Files.createDirectories(projectRoot.resolve("src/main/resources/static"));
+			Path resources = this.resourcesPathProvider.get(projectRoot);
+			Files.createDirectories(resources.resolve("templates"));
+			Files.createDirectories(resources.resolve("static"));
 		}
 	}
 

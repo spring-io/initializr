@@ -60,4 +60,12 @@ public @interface ConditionalOnBuildSystem {
 	 */
 	String dialect() default "";
 
+	/**
+	 * Whether the {@link BuildSystem} is configured for multi module builds. Use
+	 * {@code true} to indicate multi module, and {@code false} to indicate single module.
+	 * When not specified, either will be matched.
+	 * @return whether the build is multi module
+	 */
+	String multiModule() default "";
+
 }

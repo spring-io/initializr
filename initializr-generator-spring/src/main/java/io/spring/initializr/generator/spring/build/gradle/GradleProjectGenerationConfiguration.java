@@ -111,15 +111,28 @@ public class GradleProjectGenerationConfiguration {
 	@Bean
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	public GradleBuildProjectContributor gradleBuildProjectContributor(GroovyDslGradleBuildWriter buildWriter,
-			GradleBuild build) {
-		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle");
+			GradleBuild build, ProjectDescription description) {
+		String buildFileName = gradleBuildFilePath(description, "build.gradle");
+		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, buildFileName);
 	}
 
 	@Bean
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	public GradleBuildProjectContributor gradleKtsBuildProjectContributor(KotlinDslGradleBuildWriter buildWriter,
-			GradleBuild build) {
-		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, "build.gradle.kts");
+			GradleBuild build, ProjectDescription description) {
+		String buildFileName = gradleBuildFilePath(description, "build.gradle.kts");
+		return new GradleBuildProjectContributor(buildWriter, build, this.indentingWriterFactory, buildFileName);
+	}
+
+	private String gradleBuildFilePath(ProjectDescription description, String buildFileName) {
+		String module = description.getBuildSystem().getApplicationModuleName();
+		return (module != null) ? module + "/" + buildFileName : buildFileName;
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, multiModule = "true")
+	BuildCustomizer<GradleBuild> addSubmodulesToGradleBuild(ProjectDescription description) {
+		return (build) -> build.settings().submodule(description.getBuildSystem().getApplicationModuleName());
 	}
 
 	/**
