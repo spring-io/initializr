@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,9 +87,8 @@ public class ProjectRequestDocumentFactory {
 		}
 
 		// Let's make sure that the document is flagged as invalid no matter what
-		if (event instanceof ProjectFailedEvent) {
+		if (event instanceof ProjectFailedEvent failed) {
 			ErrorStateInformation errorState = document.triggerError();
-			ProjectFailedEvent failed = (ProjectFailedEvent) event;
 			if (failed.getCause() != null) {
 				errorState.setMessage(failed.getCause().getMessage());
 			}
@@ -112,8 +111,7 @@ public class ProjectRequestDocumentFactory {
 	}
 
 	private ClientInformation determineClientInformation(ProjectRequest request) {
-		if (request instanceof WebProjectRequest) {
-			WebProjectRequest webProjectRequest = (WebProjectRequest) request;
+		if (request instanceof WebProjectRequest webProjectRequest) {
 			Agent agent = determineAgent(webProjectRequest);
 			String ip = determineIp(webProjectRequest);
 			String country = determineCountry(webProjectRequest);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.Dependency;
@@ -135,7 +134,7 @@ public class CommandLineHelpGenerator {
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = new String[] { "Parameter", "Description", "Default value" };
 		int i = 1;
-		for (String id : defaults.keySet().stream().sorted().collect(Collectors.toList())) {
+		for (String id : defaults.keySet().stream().sorted().toList()) {
 			String[] data = new String[3];
 			data[0] = id;
 			data[1] = (String) parametersDescription.get(id);
@@ -159,7 +158,7 @@ public class CommandLineHelpGenerator {
 		String[][] parameterTable = new String[defaults.size() + 1][];
 		parameterTable[0] = new String[] { "Id", "Description", "Default value" };
 		int i = 1;
-		for (String id : defaults.keySet().stream().sorted().collect(Collectors.toList())) {
+		for (String id : defaults.keySet().stream().sorted().toList()) {
 			String[] data = new String[3];
 			data[0] = id;
 			data[1] = (String) parametersDescription.get(id);
@@ -175,7 +174,7 @@ public class CommandLineHelpGenerator {
 		dependencyTable[0] = new String[] { "Id", "Description", "Required version" };
 		int i = 1;
 		for (Dependency dep : metadata.getDependencies().getAll().stream()
-				.sorted(Comparator.comparing(MetadataElement::getId)).collect(Collectors.toList())) {
+				.sorted(Comparator.comparing(MetadataElement::getId)).toList()) {
 			String[] data = new String[3];
 			data[0] = dep.getId();
 			data[1] = (dep.getDescription() != null) ? dep.getDescription() : dep.getName();
@@ -195,7 +194,7 @@ public class CommandLineHelpGenerator {
 		}
 		int i = 1;
 		for (Type type : metadata.getTypes().getContent().stream().sorted(Comparator.comparing(MetadataElement::getId))
-				.collect(Collectors.toList())) {
+				.toList()) {
 			String[] data = new String[typeTable[0].length];
 			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());
 			data[1] = (type.getDescription() != null) ? type.getDescription() : type.getName();

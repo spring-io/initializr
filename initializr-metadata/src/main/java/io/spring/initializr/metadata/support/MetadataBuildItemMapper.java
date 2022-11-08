@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,21 +51,15 @@ public final class MetadataBuildItemMapper {
 	}
 
 	private static DependencyScope toDependencyScope(String scope) {
-		switch (scope) {
-			case Dependency.SCOPE_ANNOTATION_PROCESSOR:
-				return DependencyScope.ANNOTATION_PROCESSOR;
-			case Dependency.SCOPE_COMPILE:
-				return DependencyScope.COMPILE;
-			case Dependency.SCOPE_RUNTIME:
-				return DependencyScope.RUNTIME;
-			case Dependency.SCOPE_COMPILE_ONLY:
-				return DependencyScope.COMPILE_ONLY;
-			case Dependency.SCOPE_PROVIDED:
-				return DependencyScope.PROVIDED_RUNTIME;
-			case Dependency.SCOPE_TEST:
-				return DependencyScope.TEST_COMPILE;
-		}
-		return null;
+		return switch (scope) {
+			case Dependency.SCOPE_ANNOTATION_PROCESSOR -> DependencyScope.ANNOTATION_PROCESSOR;
+			case Dependency.SCOPE_COMPILE -> DependencyScope.COMPILE;
+			case Dependency.SCOPE_RUNTIME -> DependencyScope.RUNTIME;
+			case Dependency.SCOPE_COMPILE_ONLY -> DependencyScope.COMPILE_ONLY;
+			case Dependency.SCOPE_PROVIDED -> DependencyScope.PROVIDED_RUNTIME;
+			case Dependency.SCOPE_TEST -> DependencyScope.TEST_COMPILE;
+			default -> null;
+		};
 	}
 
 	/**

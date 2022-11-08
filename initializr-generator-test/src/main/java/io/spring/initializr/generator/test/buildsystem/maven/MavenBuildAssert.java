@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -354,9 +354,8 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	}
 
 	private static Dependency toDependency(Node item) {
-		if (item instanceof Element) {
+		if (item instanceof Element element) {
 			Dependency dependency = new Dependency();
-			Element element = (Element) item;
 			NodeList groupId = element.getElementsByTagName("groupId");
 			if (groupId.getLength() > 0) {
 				dependency.setGroupId(groupId.item(0).getTextContent());
@@ -383,8 +382,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	}
 
 	private static BillOfMaterials toBom(Node item) {
-		if (item instanceof Element) {
-			Element element = (Element) item;
+		if (item instanceof Element element) {
 			NodeList type = element.getElementsByTagName("type");
 			NodeList scope = element.getElementsByTagName("scope");
 			if (isBom(type, scope)) {

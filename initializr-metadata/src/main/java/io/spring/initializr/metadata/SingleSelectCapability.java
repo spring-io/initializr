@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,13 +85,11 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 
 	@Override
 	public void merge(List<DefaultMetadataElement> otherContent) {
-		withWritableContent((content) -> {
-			otherContent.forEach((it) -> {
-				if (get(it.getId()) == null) {
-					this.content.add(it);
-				}
-			});
-		});
+		withWritableContent((content) -> otherContent.forEach((it) -> {
+			if (get(it.getId()) == null) {
+				this.content.add(it);
+			}
+		}));
 	}
 
 	private <T> T withReadableContent(Function<List<DefaultMetadataElement>, T> consumer) {

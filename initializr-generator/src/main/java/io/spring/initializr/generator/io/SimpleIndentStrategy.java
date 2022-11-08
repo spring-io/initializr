@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,7 @@ public class SimpleIndentStrategy implements Function<Integer, String> {
 		if (level < 0) {
 			throw new IllegalArgumentException("Indent level must not be negative, got" + level);
 		}
-		StringBuilder indentBuilder = new StringBuilder();
-		for (int i = 0; i < level; i++) {
-			indentBuilder.append(this.indent);
-		}
-		return indentBuilder.toString();
+		return String.valueOf(this.indent).repeat(level);
 	}
 
 }

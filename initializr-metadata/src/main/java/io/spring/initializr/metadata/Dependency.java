@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package io.spring.initializr.metadata;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -74,8 +72,8 @@ public class Dependency extends MetadataElement implements Describable {
 	/**
 	 * All scope types.
 	 */
-	public static final List<String> SCOPE_ALL = Collections.unmodifiableList(Arrays.asList(SCOPE_COMPILE,
-			SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_ANNOTATION_PROCESSOR, SCOPE_PROVIDED, SCOPE_TEST));
+	public static final List<String> SCOPE_ALL = List.of(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_COMPILE_ONLY,
+			SCOPE_ANNOTATION_PROCESSOR, SCOPE_PROVIDED, SCOPE_TEST);
 
 	private List<String> aliases = new ArrayList<>();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.version.Version.Qualifier;
 
@@ -50,7 +49,7 @@ public class VersionParser {
 	private static final Pattern VERSION_REGEX = Pattern
 			.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:([.|-])([^0-9]+)(\\d+)?)?$");
 
-	private static final Pattern RANGE_REGEX = Pattern.compile("(\\(|\\[)(.*),(.*)(\\)|\\])");
+	private static final Pattern RANGE_REGEX = Pattern.compile("([(\\[])(.*),(.*)([)\\]])");
 
 	private final List<Version> latestVersions;
 
@@ -153,7 +152,7 @@ public class VersionParser {
 				return false;
 			}
 			return true;
-		}).collect(Collectors.toList());
+		}).toList();
 		return (matches.size() != 1) ? null : matches.get(0);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public abstract class GradleBuildWriter {
 	}
 
 	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks) {
-		List<String> imports = tasks.importedTypes().sorted().collect(Collectors.toList());
+		List<String> imports = tasks.importedTypes().sorted().toList();
 		imports.forEach((importedType) -> writer.println("import " + importedType));
 		if (!imports.isEmpty()) {
 			writer.println();
@@ -163,24 +163,15 @@ public abstract class GradleBuildWriter {
 		if (type == null) {
 			return "implementation";
 		}
-		switch (type) {
-			case ANNOTATION_PROCESSOR:
-				return "annotationProcessor";
-			case COMPILE:
-				return "implementation";
-			case COMPILE_ONLY:
-				return "compileOnly";
-			case PROVIDED_RUNTIME:
-				return "providedRuntime";
-			case RUNTIME:
-				return "runtimeOnly";
-			case TEST_COMPILE:
-				return "testImplementation";
-			case TEST_RUNTIME:
-				return "testRuntimeOnly";
-			default:
-				throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
-		}
+		return switch (type) {
+			case ANNOTATION_PROCESSOR -> "annotationProcessor";
+			case COMPILE -> "implementation";
+			case COMPILE_ONLY -> "compileOnly";
+			case PROVIDED_RUNTIME -> "providedRuntime";
+			case RUNTIME -> "runtimeOnly";
+			case TEST_COMPILE -> "testImplementation";
+			case TEST_RUNTIME -> "testRuntimeOnly";
+		};
 	}
 
 	private void writeBoms(IndentingWriter writer, GradleBuild build) {

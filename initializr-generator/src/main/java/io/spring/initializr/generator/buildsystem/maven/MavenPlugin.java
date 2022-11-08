@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -315,11 +315,10 @@ public class MavenPlugin {
 						this.settings.add(nestedSetting);
 						return nestedSetting;
 					}).getValue();
-			if (!(value instanceof ConfigurationBuilder)) {
+			if (!(value instanceof ConfigurationBuilder nestedConfiguration)) {
 				throw new IllegalArgumentException(String.format(
 						"Could not customize parameter '%s', a single value %s is already registered", name, value));
 			}
-			ConfigurationBuilder nestedConfiguration = (ConfigurationBuilder) value;
 			consumer.accept(nestedConfiguration);
 			return this;
 		}

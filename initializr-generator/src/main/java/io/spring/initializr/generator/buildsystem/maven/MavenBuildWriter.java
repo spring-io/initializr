@@ -263,24 +263,15 @@ public class MavenBuildWriter {
 		if (type == null) {
 			return null;
 		}
-		switch (type) {
-			case ANNOTATION_PROCESSOR:
-				return null;
-			case COMPILE:
-				return null;
-			case COMPILE_ONLY:
-				return null;
-			case PROVIDED_RUNTIME:
-				return "provided";
-			case RUNTIME:
-				return "runtime";
-			case TEST_COMPILE:
-				return "test";
-			case TEST_RUNTIME:
-				return "test";
-			default:
-				throw new IllegalStateException("Unrecognized dependency type '" + type + "'");
-		}
+		return switch (type) {
+			case ANNOTATION_PROCESSOR -> null;
+			case COMPILE -> null;
+			case COMPILE_ONLY -> null;
+			case PROVIDED_RUNTIME -> "provided";
+			case RUNTIME -> "runtime";
+			case TEST_COMPILE -> "test";
+			case TEST_RUNTIME -> "test";
+		};
 	}
 
 	private boolean isOptional(Dependency dependency) {
