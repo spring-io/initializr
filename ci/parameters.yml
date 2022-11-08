@@ -3,7 +3,7 @@ github-repo-name: "spring-io/initializr"
 docker-hub-organization: "springci"
 artifactory-server: "https://repo.spring.io"
 branch: "main"
-milestone: "0.13.x"
+milestone: "0.20.x"
 build-name: "initializr"
 concourse-url: "https://ci.spring.io"
 task-timeout: 30m
