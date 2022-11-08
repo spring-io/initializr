@@ -33,7 +33,7 @@ class GradleConfigurationBuildCustomizerTests {
 	void providedRuntimeConfigurationIsAddedWithNonWarProject() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("servlet", "jakarta.servlet", "jakarta.servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
 		assertThat(build.configurations().names()).containsOnly("providedRuntime");
 	}
@@ -43,7 +43,7 @@ class GradleConfigurationBuildCustomizerTests {
 		GradleBuild build = new GradleBuild();
 		build.plugins().add("war");
 		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("servlet", "javax.servlet", "servlet-api", DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies().add("servlet", "jakarta.servlet", "jakarta.servlet-api", DependencyScope.PROVIDED_RUNTIME);
 		customize(build);
 		assertThat(build.configurations().customizations()).isEmpty();
 	}
