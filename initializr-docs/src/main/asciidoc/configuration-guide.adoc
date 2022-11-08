@@ -263,15 +263,15 @@ Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
-implementation("org.springframework.boot:spring-boot-starter-web")
-implementation("io.spring.initializr:initializr-web")
-implementation("io.spring.initializr:initializr-generator-spring")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("io.spring.initializr:initializr-web")
+    implementation("io.spring.initializr:initializr-generator-spring")
 
-dependencyManagement {
-  imports {
-    mavenBom "io.spring.initializr:initializr-bom:{spring-initializr-version}"
-  }
-}
+    dependencyManagement {
+      imports {
+        mavenBom "io.spring.initializr:initializr-bom:{spring-initializr-version}"
+      }
+    }
 ----
 
 NOTE: It is assumed that the custom instance will be used to generate Spring Boot-based
@@ -303,17 +303,17 @@ Let's configure the languages and the JVM generations we want to support:
 ----
 	initializr:
 	  javaVersions:
-		- id: 11
-		  default: false
-		- id: 1.8
-		  default: true
+	    - id: 11
+	      default: false
+	    - id: 1.8
+	      default: true
 	  languages:
-		- name: Java
-		  id: java
-		  default: true
-		- name: Kotlin
-		  id: kotlin
-		  default: false
+	    - name: Java
+	      id: java
+	      default: true
+	    - name: Kotlin
+	      id: kotlin
+	      default: false
 ----
 
 If you restart the application and refresh http://localhost:8080, the language capability
@@ -329,12 +329,12 @@ The available packagings are also configurable that way:
 ----
 	initializr:
 	  packagings:
-		- name: Jar
-		  id: jar
-		  default: true
-		- name: War
-		  id: war
-		  default: false
+	    - name: Jar
+	      id: jar
+	      default: true
+	    - name: War
+	      id: war
+	      default: false
 ----
 
 NOTE: `Jar` and `War` packaging types are available out-of-the-box. For additional
@@ -351,11 +351,11 @@ defaults can be overridden as shown below:
 
 [source,yaml,indent=0]
 ----
- initializr:
-   group-id:
-     value: org.acme
-   artifact-id:
-     value: my-app
+     initializr:
+       group-id:
+         value: org.acme
+       artifact-id:
+         value: my-app
 ----
 
 
@@ -370,17 +370,17 @@ versions.
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  bootVersions:
-		- id: 2.4.0-SNAPSHOT
+    initializr:
+      bootVersions:
+        - id: 2.4.0-SNAPSHOT
           name: 2.4.0 (SNAPSHOT)
-		  default: false
-		- id: 2.3.3.BUILD-SNAPSHOT
+          default: false
+        - id: 2.3.3.BUILD-SNAPSHOT
           name: 2.3.3 (SNAPSHOT)
-		  default: false
-		- id: 2.3.2.RELEASE
+          default: false
+        - id: 2.3.2.RELEASE
           name: 2.3.2
-		  default: true
+          default: true
 ----
 
 The configuration above provides three versions, with `2.3.2` being used by default. In
@@ -435,22 +435,22 @@ project:
 ----
 	initializr:
 	  types:
-		- name: Maven Project
-		  id: maven-project
-		  description: Generate a Maven based project archive
-		  tags:
-			build: maven
-			format: project
-		  default: true
-		  action: /starter.zip
-		- name: Gradle Project
-		  id: gradle-project
-		  description: Generate a Gradle based project archive
-		  tags:
-			build: gradle
-			format: project
-		  default: false
-		  action: /starter.zip
+	    - name: Maven Project
+	      id: maven-project
+	      description: Generate a Maven based project archive
+	      tags:
+	        build: maven
+	        format: project
+	      default: true
+	      action: /starter.zip
+	    - name: Gradle Project
+	      id: gradle-project
+	      description: Generate a Gradle based project archive
+	      tags:
+	        build: gradle
+	        format: project
+	      default: false
+	      action: /starter.zip
 ----
 
 NOTE: If you intend to build a custom client against your service, you can add as many
@@ -495,13 +495,13 @@ For instance, the following configures the `spring-boot-starter-web` Starter:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Web
-		  content:
-			- name: Web
-			  id: web
-			  description: Full-stack web development with Tomcat and Spring MVC
+    initializr:
+      dependencies:
+        - name: Web
+          content:
+            - name: Web
+              id: web
+              description: Full-stack web development with Tomcat and Spring MVC
 ----
 
 Each dependency is contained in a _group_ that gathers dependencies sharing a common
@@ -518,16 +518,16 @@ If no BOM is available you can specify a version directly:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Tech
-		  content:
-			- name: Acme
-			  id: acme
-			  groupId: com.example.acme
-			  artifactId: acme
-			  version: 1.2.0.RELEASE
-			  description: A solid description for this dependency
+    initializr:
+      dependencies:
+        - name: Tech
+          content:
+            - name: Acme
+              id: acme
+              groupId: com.example.acme
+              artifactId: acme
+              version: 1.2.0.RELEASE
+              description: A solid description for this dependency
 ----
 
 If you add this configuration and search for "acme" (or "solid"), you'll find this extra
@@ -616,27 +616,27 @@ declared at the top level (under `env`) and given an id via the key in the confi
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-		repositories:
-		  my-api-repo-1:
-			name: repo1
-			url: https://example.com/repo1
+    initializr:
+      env:
+        repositories:
+          my-api-repo-1:
+            name: repo1
+            url: https://example.com/repo1
 ----
 
 Once defined, the repository can then be referred back to in a dependency
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Other
-		  content:
-			- name: Foo
-			  groupId: org.acme
-			  artifactId: foo
-			  version: 1.3.5
-			  repository: my-api-repo-1
+    initializr:
+      dependencies:
+        - name: Other
+          content:
+            - name: Foo
+              groupId: org.acme
+              artifactId: foo
+              version: 1.3.5
+              repository: my-api-repo-1
 ----
 
 It is usually preferable to have a BOM for every dependency, and attach the repository to
@@ -663,14 +663,14 @@ configuration key. Example:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-		boms:
-		  my-api-bom:
-			groupId: org.acme
-			artifactId: my-api-dependencies
-			version: 1.0.0.RELEASE
-			repositories: my-api-repo-1
+    initializr:
+      env:
+        boms:
+          my-api-bom:
+            groupId: org.acme
+            artifactId: my-api-dependencies
+            version: 1.0.0.RELEASE
+            repositories: my-api-repo-1
 ----
 
 If a BOM requires a special, non-default repository, then it can be referred to here,
@@ -680,15 +680,15 @@ BOMs by referring to the id:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Other
-		  content:
-			- name: My API
-			  id : my-api
-			  groupId: org.acme
-			  artifactId: my-api
-			  bom: my-api-bom
+    initializr:
+      dependencies:
+        - name: Other
+          content:
+            - name: My API
+              id : my-api
+              groupId: org.acme
+              artifactId: my-api
+              bom: my-api-bom
 ----
 
 
@@ -706,27 +706,27 @@ Here's an example of a BOM with mappings:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-		boms:
-		  cloud-bom:
-			groupId: com.example.foo
-			artifactId: acme-foo-dependencies
-			mappings:
-			  - compatibilityRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
-				groupId: com.example.bar
-				artifactId: acme-foo-bom
-				version: Arcturus.SR6
-			  - compatibilityRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
-				version: Botein.SR7
-			  - compatibilityRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
-				version: Castor.SR6
-			  - compatibilityRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
-				version: Diadem.RC1
-				repositories: spring-milestones
-			  - compatibilityRange: "1.5.x.BUILD-SNAPSHOT"
-				version: Diadem.BUILD-SNAPSHOT
-				repositories: spring-snapshots,spring-milestones
+    initializr:
+      env:
+        boms:
+          cloud-bom:
+            groupId: com.example.foo
+            artifactId: acme-foo-dependencies
+            mappings:
+              - compatibilityRange: "[1.2.3.RELEASE,1.3.0.RELEASE)"
+                groupId: com.example.bar
+                artifactId: acme-foo-bom
+                version: Arcturus.SR6
+              - compatibilityRange: "[1.3.0.RELEASE,1.4.0.RELEASE)"
+                version: Botein.SR7
+              - compatibilityRange: "[1.4.0.RELEASE,1.5.x.RELEASE)"
+                version: Castor.SR6
+              - compatibilityRange: "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT)"
+                version: Diadem.RC1
+                repositories: spring-milestones
+              - compatibilityRange: "1.5.x.BUILD-SNAPSHOT"
+                version: Diadem.BUILD-SNAPSHOT
+                repositories: spring-snapshots,spring-milestones
 ----
 
 The primary use case here is to map platform versions to the preferred or supported
@@ -750,14 +750,14 @@ an alias can be defined for ths dependency;
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Other
-		  content:
-			- name: Web Services
-			  id: web-services
-			  aliases:
-				- ws
+    initializr:
+      dependencies:
+        - name: Other
+          content:
+            - name: Web Services
+              id: web-services
+              aliases:
+                - ws
 ----
 
 The same project can now be generated with `dependencies=ws` or
@@ -804,22 +804,22 @@ Here is an example that adds two links to the `acme` dependency:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Tech
-		  content:
-			- name: Acme
-			  id: acme
-			  groupId: com.example.acme
-			  artifactId: acme
-			  version: 1.2.0.RELEASE
-			  description: A solid description for this dependency
-			  links:
-			    - rel: guide
-				  href: https://com.example/guides/acme/
-				  description: Getting started with Acme
-			    - rel: reference
-				  href: https://docs.example.com/acme/html
+    initializr:
+      dependencies:
+        - name: Tech
+          content:
+            - name: Acme
+              id: acme
+              groupId: com.example.acme
+              artifactId: acme
+              version: 1.2.0.RELEASE
+              description: A solid description for this dependency
+              links:
+                - rel: guide
+                  href: https://com.example/guides/acme/
+                  description: Getting started with Acme
+                - rel: reference
+                  href: https://docs.example.com/acme/html
 ----
 
 
@@ -924,16 +924,16 @@ a `version` property in a dependency):
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Tech
-		  content:
-			- name: Acme
-			  id: acme
-			  groupId: com.example.acme
-			  artifactId: acme
-			  version: 1.2.0.RELEASE
-			  description: A solid description for this dependency
+    initializr:
+      dependencies:
+        - name: Tech
+          content:
+            - name: Acme
+              id: acme
+              groupId: com.example.acme
+              artifactId: acme
+              version: 1.2.0.RELEASE
+              description: A solid description for this dependency
 ----
 
 
@@ -949,18 +949,18 @@ range of versions of the platform, not of your dependency. For example:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Stuff
-		  content:
-			- name: Foo
-			  id: foo
-			  ...
-			  compatibilityRange: 1.2.0.M1
-			- name: Bar
-			  id: bar
-			  ...
-			  compatibilityRange: "[1.5.0.RC1,2.0.0.M1)"
+    initializr:
+      dependencies:
+        - name: Stuff
+          content:
+            - name: Foo
+              id: foo
+              ...
+              compatibilityRange: 1.2.0.M1
+            - name: Bar
+              id: bar
+              ...
+              compatibilityRange: "[1.5.0.RC1,2.0.0.M1)"
 ----
 
 In this example `Foo` is available for as of `1.2.0` of the platform, and `Bar` is
@@ -974,20 +974,20 @@ the values defined at the top level. For example:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Stuff
-		  content:
-			- name: Foo
-			  id: foo
-			  groupId: org.acme.foo
-			  artifactId: foo-spring-boot-starter
-			  compatibilityRange: 1.3.0.RELEASE
-			  bom: cloud-task-bom
-			  mappings:
-				- compatibilityRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
-				  artifactId: foo-starter
-				- compatibilityRange: "1.4.0.RELEASE"
+        initializr:
+          dependencies:
+            - name: Stuff
+              content:
+                - name: Foo
+                  id: foo
+                  groupId: org.acme.foo
+                  artifactId: foo-spring-boot-starter
+                  compatibilityRange: 1.3.0.RELEASE
+                  bom: cloud-task-bom
+                  mappings:
+                    - compatibilityRange: "[1.3.0.RELEASE,1.3.x.RELEASE]"
+                      artifactId: foo-starter
+                    - compatibilityRange: "1.4.0.RELEASE"
 ----
 
 In this example, The artifact of `foo` was changed to `foo-spring-boot-starter` as of the
@@ -998,20 +998,20 @@ A mapping can also be applied to a BOM declaration. For example:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-		boms:
-		  my-api-bom:
-			groupId: org.acme
-			artifactId: my-api-bom
-			additionalBoms: ['my-api-dependencies-bom']
-			mappings:
-			  - compatibilityRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
-				version: 1.0.0.RELEASE
-				repositories: my-api-repo-1
-			  - compatibilityRange: "1.2.1.RELEASE"
-				version: 2.0.0.RELEASE
-				repositories: my-api-repo-2
+    initializr:
+      env:
+        boms:
+          my-api-bom:
+            groupId: org.acme
+            artifactId: my-api-bom
+            additionalBoms: ['my-api-dependencies-bom']
+            mappings:
+              - compatibilityRange: "[1.0.0.RELEASE,1.1.6.RELEASE)"
+                version: 1.0.0.RELEASE
+                repositories: my-api-repo-1
+              - compatibilityRange: "1.2.1.RELEASE"
+                version: 2.0.0.RELEASE
+                repositories: my-api-repo-2
 ----
 
 In this example, versions of the platform up to `1.1.6` select version `1.0.0` of the BOM,
@@ -1036,15 +1036,15 @@ For Maven projects, you can configure a custom parent POM as follows:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-		maven:
-		  parent:
-			groupId: com.example
-			artifactId: my-parent
-			version: 1.0.0
-			relativePath: ../pom.xml
-			includeSpringBootBom : true
+    initializr:
+      env:
+        maven:
+          parent:
+            groupId: com.example
+            artifactId: my-parent
+            version: 1.0.0
+            relativePath: ../pom.xml
+            includeSpringBootBom : true
 ----
 
 If the `relativePath` is not specified, the pom is resolved from the repository.
@@ -1061,15 +1061,15 @@ existing Spring Boot starter) you can flag it as a "non starter":
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Stuff
-		  content:
-			- name: Lib
-			  id: lib
-			  groupId: com.acme
-			  artifactId: lib
-			  starter: false
+    initializr:
+      dependencies:
+        - name: Stuff
+          content:
+            - name: Lib
+              id: lib
+              groupId: com.acme
+              artifactId: lib
+              starter: false
 ----
 
 When a project is generated that only has dependencies with this flag set, then the base
@@ -1086,13 +1086,13 @@ common settings in a group are the `groupId`, `compatibilityRange` and `bom`:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  dependencies:
-		- name: Stuff
-		  bom: stuff-bom
-		  compatibilityRange: "[1.3.0.RELEASE,2.0.0.M1)"
-		  content:
-	...
+    initializr:
+      dependencies:
+        - name: Stuff
+          bom: stuff-bom
+          compatibilityRange: "[1.3.0.RELEASE,2.0.0.M1)"
+          content:
+    ...
 ----
 
 These dependencies, by default, will be available only for versions of the platform as of
@@ -1106,14 +1106,14 @@ The following example shows how to map two versions of Kotlin based on the platf
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-	    kotlin:
-	      mappings:
-	        - compatibilityRange: "[2.0.0.RELEASE,2.4.0-M1)"
-	          version: 1.2
-	        - compatibilityRange: "2.4.0-M1"
-	          version: 1.3
+    initializr:
+      env:
+        kotlin:
+          mappings:
+            - compatibilityRange: "[2.0.0.RELEASE,2.4.0-M1)"
+              version: 1.2
+            - compatibilityRange: "2.4.0-M1"
+              version: 1.3
 ----
 
 For a more advanced resolution, consider implementing a `KotlinVersionResolver` bean.
@@ -1133,12 +1133,12 @@ automatically:
 
 [source,yaml,indent=0]
 ----
-	initializr:
-	  env:
-	    platform:
-	      compatibility-range: "2.0.0.RELEASE"
-	      v1-format-compatibility-range: "[2.0.0.RELEASE,2.4.0-M1)"
-	      v2-format-compatibility-range: "2.4.0-M1"
+    initializr:
+      env:
+        platform:
+          compatibility-range: "2.0.0.RELEASE"
+          v1-format-compatibility-range: "[2.0.0.RELEASE,2.4.0-M1)"
+          v2-format-compatibility-range: "2.4.0-M1"
 ----
 
 
