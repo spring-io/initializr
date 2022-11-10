@@ -18,8 +18,6 @@ package io.spring.initializr.generator.io;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,19 +27,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link IndentingWriter}.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 class IndentingWriterTests {
 
 	private final StringWriter stringWriter = new StringWriter();
 
-	private final IndentingWriter indentingWriter = new IndentingWriter(this.stringWriter);
+	private final IndentingWriter indentingWriter = new IndentingWriter(this.stringWriter,
+			new SimpleIndentStrategy("\t"));
 
 	@Test
 	void linesAreNotIndentedByDefault() {
 		this.indentingWriter.println("a");
 		this.indentingWriter.println("b");
 		this.indentingWriter.println("c");
-		assertThat(readLines()).containsSequence("a", "b", "c");
+		assertThat(content()).contains("""
+				a
+				b
+				c""");
 	}
 
 	@Test
@@ -49,7 +52,10 @@ class IndentingWriterTests {
 		this.indentingWriter.println("a");
 		this.indentingWriter.indented(() -> this.indentingWriter.println("b"));
 		this.indentingWriter.println("c");
-		assertThat(readLines()).containsSequence("a", "    b", "c");
+		assertThat(content()).contains("""
+				a
+					b
+				c""");
 	}
 
 	@Test
@@ -60,7 +66,11 @@ class IndentingWriterTests {
 			this.indentingWriter.println();
 		});
 		this.indentingWriter.println("c");
-		assertThat(readLines()).containsSequence("a", "    b", "", "c");
+		assertThat(content()).contains("""
+				a
+					b
+
+				c""");
 	}
 
 	@Test
@@ -72,13 +82,15 @@ class IndentingWriterTests {
 			this.indentingWriter.println("b");
 		});
 		this.indentingWriter.println("c");
-		assertThat(readLines()).containsSequence("a", "    bbb", "c");
+		assertThat(content()).contains("""
+				a
+					bbb
+				c""");
 	}
 
 	@Test
-	void customIndentStrategyIsUsed() throws IOException {
-		try (IndentingWriter customIndentingWriter = new IndentingWriter(this.stringWriter,
-				new SimpleIndentStrategy("\t"))) {
+	void defaultIndentStrategyIsUsed() throws IOException {
+		try (IndentingWriter customIndentingWriter = new IndentingWriter(this.stringWriter)) {
 			customIndentingWriter.println("a");
 			customIndentingWriter.indented(() -> {
 				customIndentingWriter.println("b");
@@ -88,12 +100,11 @@ class IndentingWriterTests {
 				});
 			});
 		}
-		assertThat(readLines()).containsSequence("a", "\tb", "\t\tce");
+		assertThat(content().lines()).contains("a", "    b", "        ce");
 	}
 
-	private List<String> readLines() {
-		String[] lines = this.stringWriter.toString().split("\\r?\\n");
-		return Arrays.asList(lines);
+	private String content() {
+		return this.stringWriter.toString();
 	}
 
 }
