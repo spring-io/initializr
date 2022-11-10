@@ -4,7 +4,7 @@ require 'net/http'
 require 'yaml'
 require 'logger'
 
-$main_branch = "0.13.x"
+$main_branch = "0.20.x"
 
 $log = Logger.new(STDOUT)
 $log.level = Logger::WARN
