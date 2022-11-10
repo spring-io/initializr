@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ public class GradleBuild extends Build {
 	private final GradleConfigurationContainer configurations = new GradleConfigurationContainer();
 
 	private final GradleTaskContainer tasks = new GradleTaskContainer();
+
+	private final GradleSnippetContainer snippets = new GradleSnippetContainer();
 
 	private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
 
@@ -90,6 +92,15 @@ public class GradleBuild extends Build {
 	 */
 	public GradleTaskContainer tasks() {
 		return this.tasks;
+	}
+
+	/**
+	 * Return the {@linkplain GradleSnippetContainer snippet container} to use to apply
+	 * snippets.
+	 * @return the {@link GradleSnippetContainer}
+	 */
+	public GradleSnippetContainer snippets() {
+		return this.snippets;
 	}
 
 	/**

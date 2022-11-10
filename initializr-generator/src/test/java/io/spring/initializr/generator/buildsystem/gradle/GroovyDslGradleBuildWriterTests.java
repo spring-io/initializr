@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Jean-Baptiste Nizet
  * @author Stephane Nicoll
  */
-class GroovyDslGradleBuildWriterTests {
+class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 
 	@Test
 	void gradleBuildWithCoordinates() {
@@ -556,7 +556,7 @@ class GroovyDslGradleBuildWriterTests {
 		assertThat(write(build)).contains("version = '1.2.4.RELEASE'");
 	}
 
-	private String write(GradleBuild build) {
+	protected String write(GradleBuild build) {
 		return write(new GroovyDslGradleBuildWriter(), build);
 	}
 
