@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package io.spring.initializr.generator.spring.build;
+
+import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Build;
 
@@ -36,6 +38,41 @@ public interface BuildCustomizer<B extends Build> extends Ordered {
 	@Override
 	default int getOrder() {
 		return 0;
+	}
+
+	/**
+	 * Create a {@link BuildCustomizer} that is ordered with the specified {@code order}
+	 * value.
+	 * @param order the order of the customizer
+	 * @param customizer the customizer
+	 * @param <B> the type of the build
+	 * @return a {@link BuildCustomizer} with the specified order
+	 */
+	static <B extends Build> BuildCustomizer<B> ordered(int order, Consumer<B> customizer) {
+		return new OrderedBuildCustomizer<>(order, customizer);
+	}
+
+	class OrderedBuildCustomizer<B extends Build> implements BuildCustomizer<B> {
+
+		private final int order;
+
+		private final Consumer<B> customizer;
+
+		public OrderedBuildCustomizer(int order, Consumer<B> customizer) {
+			this.order = order;
+			this.customizer = customizer;
+		}
+
+		@Override
+		public void customize(B build) {
+			this.customizer.accept(build);
+		}
+
+		@Override
+		public int getOrder() {
+			return this.order;
+		}
+
 	}
 
 }

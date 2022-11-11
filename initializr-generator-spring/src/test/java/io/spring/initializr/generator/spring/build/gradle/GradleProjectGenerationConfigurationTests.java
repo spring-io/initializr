@@ -24,6 +24,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GroovyDslGradleBuildWriter;
+import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -110,9 +111,9 @@ class GradleProjectGenerationConfigurationTests {
 		assertThat(project).textFile("build.gradle").containsExactly(
 		// @formatter:off
 				"plugins {",
+				"    id 'java'",
 				"    id 'org.springframework.boot' version '2.4.0'",
 				"    id 'io.spring.dependency-management' version '1.0.6.RELEASE'",
-				"    id 'java'",
 				"}",
 				"",
 				"group = 'com.example'",
@@ -132,6 +133,15 @@ class GradleProjectGenerationConfigurationTests {
 				"tasks.named('test') {",
 				"    useJUnitPlatform()",
 				"}"); // @formatter:on
+	}
+
+	@Test
+	void groovyPluginIsAppliedWhenBuildingProjectThatUsesGroovyLanguage() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.4.0.RELEASE"));
+		description.setLanguage(new GroovyLanguage());
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle").lines().containsOnlyOnce("    id 'groovy'");
 	}
 
 	@Test

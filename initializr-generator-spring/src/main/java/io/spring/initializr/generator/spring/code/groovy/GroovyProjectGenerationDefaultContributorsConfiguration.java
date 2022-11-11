@@ -19,7 +19,6 @@ package io.spring.initializr.generator.spring.code.groovy;
 import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.buildsystem.Build;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -112,20 +111,6 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 		@Bean
 		GroovyMavenBuildCustomizer groovyBuildCustomizer() {
 			return new GroovyMavenBuildCustomizer();
-		}
-
-	}
-
-	/**
-	 * Configuration for Groovy projects built with Gradle.
-	 */
-	@Configuration
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	static class GroovyGradleProjectConfiguration {
-
-		@Bean
-		GroovyGradleBuildCustomizer groovyBuildCustomizer() {
-			return new GroovyGradleBuildCustomizer();
 		}
 
 	}

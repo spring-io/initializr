@@ -113,9 +113,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 		assertThat(project).textFile("build.gradle.kts")
 				.containsExactly(// @formatter:off
 				"plugins {",
+				"    java",
 				"    id(\"org.springframework.boot\") version \"2.4.0\"",
 				"    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"",
-				"    java",
 				"}",
 				"",
 				"group = \"com.example\"",
