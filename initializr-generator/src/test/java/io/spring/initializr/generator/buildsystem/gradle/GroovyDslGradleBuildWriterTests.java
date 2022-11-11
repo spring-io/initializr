@@ -563,7 +563,7 @@ class GroovyDslGradleBuildWriterTests {
 	private String write(GroovyDslGradleBuildWriter writer, GradleBuild build) {
 		StringWriter out = new StringWriter();
 		writer.writeTo(new IndentingWriter(out, new SimpleIndentStrategy("\t")), build);
-		return out.toString();
+		return out.toString().replace("\r\n", "\n");
 	}
 
 }

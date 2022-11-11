@@ -104,7 +104,7 @@ class IndentingWriterTests {
 	}
 
 	private String content() {
-		return this.stringWriter.toString();
+		return this.stringWriter.toString().replace("\r\n", "\n");
 	}
 
 }
