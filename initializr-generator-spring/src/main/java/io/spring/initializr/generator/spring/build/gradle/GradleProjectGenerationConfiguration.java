@@ -185,17 +185,8 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return new BuildCustomizer<>() {
-				@Override
-				public void customize(GradleBuild build) {
-					build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform"));
-				}
-
-				@Override
-				public int getOrder() {
-					return TEST_ORDER;
-				}
-			};
+			return BuildCustomizer.ordered(TEST_ORDER,
+					(build) -> build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform")));
 		}
 
 		@Bean
@@ -228,17 +219,8 @@ public class GradleProjectGenerationConfiguration {
 		@Bean
 		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
-			return new BuildCustomizer<>() {
-				@Override
-				public void customize(GradleBuild build) {
-					build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform"));
-				}
-
-				@Override
-				public int getOrder() {
-					return TEST_ORDER;
-				}
-			};
+			return BuildCustomizer.ordered(TEST_ORDER,
+					(build) -> build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform")));
 		}
 
 		@Bean
