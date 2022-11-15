@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.spring.initializr.web.project;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -165,8 +166,10 @@ public class DefaultProjectRequestToDescriptionConverter
 	}
 
 	private BuildSystem getBuildSystem(ProjectRequest request, InitializrMetadata metadata) {
-		Type typeFromMetadata = metadata.getTypes().get(request.getType());
-		return BuildSystem.forId(typeFromMetadata.getTags().get("build"));
+		Map<String, String> typeTags = metadata.getTypes().get(request.getType()).getTags();
+		String id = typeTags.get("build");
+		String dialect = typeTags.get("dialect");
+		return BuildSystem.forIdAndDialect(id, dialect);
 	}
 
 	private Version getPlatformVersion(ProjectRequest request, InitializrMetadata metadata) {

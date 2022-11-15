@@ -421,8 +421,10 @@ By default, Spring Initializr exposes the following resources (all accessed via 
 The build system must be defined with a `build` tag providing the name of the
 `BuildSystem` to use (e.g. `maven`, `gradle`).
 
-Additional tags can be provided to further qualify the entry. Besides the mandatory `build`
-tag, a `format` tag is also available to define the format of the project (e.g. `project`
+Additional tags can be provided to further qualify the entry. If the build system supports
+multiple dialects, the chosen dialect can be specified using the `dialect` tag.
+
+A `format` tag is also available to define the format of the project (e.g. `project`
 for a full project, `build` for just a build file). By default, the HTML UI filters all
 the available types to only display the ones that have a `format` tag with value
 `project`.

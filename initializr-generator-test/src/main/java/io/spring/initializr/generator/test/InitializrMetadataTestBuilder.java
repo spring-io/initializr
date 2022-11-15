@@ -89,14 +89,14 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultTypes() {
-		return addType("maven-build", false, "/pom.xml", "maven", "build")
-				.addType("maven-project", true, "/starter.zip", "maven", "project")
-				.addType("gradle-build", false, "/build.gradle", "gradle", "build")
-				.addType("gradle-project", false, "/starter.zip", "gradle", "project");
+		return addType("maven-build", false, "/pom.xml", "maven", null, "build")
+				.addType("maven-project", true, "/starter.zip", "maven", null, "project")
+				.addType("gradle-build", false, "/build.gradle", "gradle", null, "build")
+				.addType("gradle-project", false, "/starter.zip", "gradle", null, "project");
 	}
 
 	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue, String action, String build,
-			String format) {
+			String dialect, String format) {
 		Type type = new Type();
 		type.setId(id);
 		type.setName(id);
@@ -104,6 +104,9 @@ public class InitializrMetadataTestBuilder {
 		type.setAction(action);
 		if (StringUtils.hasText(build)) {
 			type.getTags().put("build", build);
+		}
+		if (StringUtils.hasText(dialect)) {
+			type.getTags().put("dialect", dialect);
 		}
 		if (StringUtils.hasText(format)) {
 			type.getTags().put("format", format);

@@ -69,6 +69,27 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
+	void convertWhenTypeDoesNotDefineDialectTagShouldUseDefaultDialect() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, null, "test").build();
+		ProjectRequest request = createProjectRequest();
+		request.setType("foo");
+		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
+				.isEqualTo(GradleBuildSystem.DIALECT_GROOVY);
+	}
+
+	@Test
+	void convertWhenTypeDefinesDialectTagShouldUseDialect() {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+				.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN, "test")
+				.build();
+		ProjectRequest request = createProjectRequest();
+		request.setType("foo");
+		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
+				.isEqualTo(GradleBuildSystem.DIALECT_KOTLIN);
+	}
+
+	@Test
 	void convertWhenPlatformCompatibilityRangeIsNotSetShouldNotThrowException() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults().setPlatformCompatibilityRange(null).build();
 		ProjectRequest request = createProjectRequest();
