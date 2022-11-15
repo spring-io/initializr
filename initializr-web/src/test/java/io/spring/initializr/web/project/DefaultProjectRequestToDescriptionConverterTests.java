@@ -69,7 +69,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
-	void convertWhenPlatformCompatiblityRangeIsNotSetShouldNotThrowException() {
+	void convertWhenPlatformCompatibilityRangeIsNotSetShouldNotThrowException() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults().setPlatformCompatibilityRange(null).build();
 		ProjectRequest request = createProjectRequest();
 		request.setBootVersion("1.5.9.RELEASE");
