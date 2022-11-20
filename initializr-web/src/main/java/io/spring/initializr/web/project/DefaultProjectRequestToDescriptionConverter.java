@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web.project;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * A default {@link ProjectRequestToDescriptionConverter} implementation that uses the
@@ -44,6 +46,7 @@ import org.springframework.util.Assert;
  * @author Madhura Bhave
  * @author HaiTao Zhang
  * @author Stephane Nicoll
+ * @author Nirbhay Mishra
  */
 public class DefaultProjectRequestToDescriptionConverter
 		implements ProjectRequestToDescriptionConverter<ProjectRequest> {
@@ -82,14 +85,14 @@ public class DefaultProjectRequestToDescriptionConverter
 		validateDependencyRange(platformVersion, resolvedDependencies);
 
 		description.setApplicationName(request.getApplicationName());
-		description.setArtifactId(request.getArtifactId());
+		description.setArtifactId(cleanInputValue(request.getArtifactId()));
 		description.setBaseDirectory(request.getBaseDir());
 		description.setBuildSystem(getBuildSystem(request, metadata));
 		description.setDescription(request.getDescription());
-		description.setGroupId(request.getGroupId());
+		description.setGroupId(cleanInputValue(request.getGroupId()));
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
-		description.setName(request.getName());
-		description.setPackageName(request.getPackageName());
+		description.setName(cleanInputValue(request.getName()));
+		description.setPackageName(cleanInputValue(request.getPackageName()));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(platformVersion);
 		description.setVersion(request.getVersion());
@@ -186,6 +189,13 @@ public class DefaultProjectRequestToDescriptionConverter
 			Dependency dependency = metadata.getDependencies().get(it);
 			return dependency.resolve(platformVersion);
 		}).collect(Collectors.toList());
+	}
+
+	private String cleanInputValue(String inputString) {
+		if (StringUtils.hasText(inputString)) {
+			return Normalizer.normalize(inputString, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
+		}
+		return inputString;
 	}
 
 }
