@@ -110,7 +110,7 @@ all contributors found in `META-INF/spring.factories` and also registers an addi
 `ProjectContributor` programmatically.
 
 `ProjectContributor` is the highest level interface one can implement to contribute assets
-to a a project. The `SampleContributor` registered above generates a `test.txt` file at
+to a a project. The `SampleContributor` registered above generates a `hello.txt` file at
 the root of the project structure, as shown below:
 
 [source,java,indent=0,subs="verbatim,quotes,attributes"]
