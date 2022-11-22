@@ -790,7 +790,7 @@ The following `rel` value are currently officially supported:
 
 * `guide`: the link points to a guide describing how to use the related dependency. It
 can be a tutorial, a how-to or typically a guide available on https://spring.io/guides
-* reference: the link points to a section of a developer guide typically or any page that
+* `reference`: the link points to a section of a developer guide typically or any page that
 documents how to use the dependency
 
 The url can be templated if its actual value can change according to the environment. An
