@@ -66,7 +66,7 @@ public class ProjectRequest {
 	}
 
 	public String getName() {
-		return cleanInputValue(this.name);
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -90,7 +90,7 @@ public class ProjectRequest {
 	}
 
 	public String getGroupId() {
-		return cleanInputValue(this.groupId);
+		return this.groupId;
 	}
 
 	public void setGroupId(String groupId) {
@@ -98,7 +98,7 @@ public class ProjectRequest {
 	}
 
 	public String getArtifactId() {
-		return cleanInputValue(this.artifactId);
+		return this.artifactId;
 	}
 
 	public void setArtifactId(String artifactId) {
@@ -147,7 +147,7 @@ public class ProjectRequest {
 
 	public String getPackageName() {
 		if (StringUtils.hasText(this.packageName)) {
-			return cleanInputValue(this.packageName);
+			return this.packageName;
 		}
 		if (StringUtils.hasText(this.groupId) && StringUtils.hasText(this.artifactId)) {
 			return getGroupId() + "." + getArtifactId();
@@ -173,13 +173,6 @@ public class ProjectRequest {
 
 	public void setBaseDir(String baseDir) {
 		this.baseDir = baseDir;
-	}
-
-	private String cleanInputValue(String inputString) {
-		if (StringUtils.hasText(inputString)) {
-			return org.apache.commons.lang3.StringUtils.stripAccents(inputString);
-		}
-		return inputString;
 	}
 
 }
