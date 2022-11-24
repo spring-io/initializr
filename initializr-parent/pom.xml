@@ -152,6 +152,7 @@
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
+						<parameters>true</parameters>
 					</configuration>
 				</plugin>
 				<plugin>
