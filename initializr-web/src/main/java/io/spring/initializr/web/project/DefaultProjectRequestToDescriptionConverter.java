@@ -100,6 +100,16 @@ public class DefaultProjectRequestToDescriptionConverter
 				MetadataBuildItemMapper.toDependency(dependency)));
 	}
 
+	/**
+	 * Clean input value to rely on US-ascii character as much as possible.
+	 * @param value the input value to clean
+	 * @return a value that can be used as part of an identifier
+	 */
+	protected String cleanInputValue(String value) {
+		return StringUtils.hasText(value) ? Normalizer.normalize(value, Normalizer.Form.NFKD).replaceAll("\\p{M}", "")
+				: value;
+	}
+
 	private void validate(ProjectRequest request, InitializrMetadata metadata) {
 		validatePlatformVersion(request, metadata);
 		validateType(request.getType(), metadata);
@@ -189,13 +199,6 @@ public class DefaultProjectRequestToDescriptionConverter
 			Dependency dependency = metadata.getDependencies().get(it);
 			return dependency.resolve(platformVersion);
 		}).collect(Collectors.toList());
-	}
-
-	private String cleanInputValue(String inputString) {
-		if (StringUtils.hasText(inputString)) {
-			return Normalizer.normalize(inputString, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
-		}
-		return inputString;
 	}
 
 }

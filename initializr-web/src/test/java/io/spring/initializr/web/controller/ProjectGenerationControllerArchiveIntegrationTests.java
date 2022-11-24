@@ -36,10 +36,4 @@ public class ProjectGenerationControllerArchiveIntegrationTests extends Abstract
 		assertDefaultProject(project.resolveModule("demo trial"));
 	}
 
-	@Test
-	void projectNameWithAccentRemoved() {
-		ProjectStructure project = downloadZip("/starter.zip?artifactId=demo&baseDir=demo trial&name=Demö");
-		assertDefaultProject(project.resolveModule("demo trial"));
-	}
-
 }
