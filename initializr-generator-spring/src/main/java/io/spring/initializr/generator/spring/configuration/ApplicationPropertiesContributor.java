@@ -20,18 +20,18 @@ import io.spring.initializr.generator.project.contributor.SingleResourceProjectC
 
 /**
  * A {@link SingleResourceProjectContributor} that contributes a
- * {@code application.properties} file to a project.
+ * {@code application.yml} file to a project.
  *
  * @author Stephane Nicoll
  */
 public class ApplicationPropertiesContributor extends SingleResourceProjectContributor {
 
 	public ApplicationPropertiesContributor() {
-		this("classpath:configuration/application.properties");
+		this("classpath:configuration/application.yml");
 	}
 
 	public ApplicationPropertiesContributor(String resourcePattern) {
-		super("src/main/resources/application.properties", resourcePattern);
+		super("src/main/resources/application.yml", resourcePattern);
 	}
 
 }

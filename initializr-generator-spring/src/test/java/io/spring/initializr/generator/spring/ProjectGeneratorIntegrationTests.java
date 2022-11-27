@@ -63,7 +63,7 @@ class ProjectGeneratorIntegrationTests {
 				"test/demo-app/mvnw", "test/demo-app/mvnw.cmd", "test/demo-app/.mvn/wrapper/maven-wrapper.properties",
 				"test/demo-app/.mvn/wrapper/maven-wrapper.jar",
 				"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
-				"test/demo-app/src/main/resources/application.properties",
+				"test/demo-app/src/main/resources/application.yml",
 				"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java");
 	}
 
