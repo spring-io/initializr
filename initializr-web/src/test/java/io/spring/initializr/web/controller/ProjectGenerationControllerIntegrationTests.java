@@ -139,7 +139,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&language=kotlin&bootVersion=2.4.0");
 		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
 				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
-				"src/main/resources/application.properties");
+				"src/main/resources/application.yml");
 		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.4.31");
 	}
 
@@ -151,7 +151,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java",
 				"src/main/java/com/example/demo/ServletInitializer.java",
 				"src/test/java/com/example/demo/DemoApplicationTests.java",
-				"src/main/resources/application.properties");
+				"src/main/resources/application.yml");
 		assertHasWebResources(project);
 	}
 

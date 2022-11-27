@@ -40,7 +40,7 @@ class ApplicationPropertiesContributorTests {
 	void applicationConfigurationWithDefaultSettings() throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new ApplicationPropertiesContributor().contribute(projectDir);
-		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties").lines()
+		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.yml").lines()
 				.isEmpty();
 	}
 
