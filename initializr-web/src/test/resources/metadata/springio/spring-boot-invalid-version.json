@@ -1,0 +1,44 @@
+{
+  "_embedded": {
+    "releases": [
+      {
+        "version": "invalid version",
+        "status": "SNAPSHOT",
+        "current": false,
+        "referenceDocUrl": "https://docs.spring.io/spring-boot/docs/3.0.2-SNAPSHOT/reference/html/",
+        "apiDocUrl": "https://docs.spring.io/spring-boot/docs/3.0.2-SNAPSHOT/api/",
+        "_links": {
+          "self": {
+            "href": "https://spring.io/api/projects/spring-boot/releases/3.0.2-SNAPSHOT"
+          },
+          "repository": {
+            "href": "https://spring.io/api/repositories/spring-snapshots"
+          }
+        }
+      },
+      {
+        "version": "3.0.1",
+        "status": "GENERAL_AVAILABILITY",
+        "current": true,
+        "referenceDocUrl": "https://docs.spring.io/spring-boot/docs/current/reference/html/",
+        "apiDocUrl": "https://docs.spring.io/spring-boot/docs/current/api/",
+        "_links": {
+          "self": {
+            "href": "https://spring.io/api/projects/spring-boot/releases/3.0.1"
+          },
+          "repository": {
+            "href": "https://spring.io/api/repositories/spring-releases"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "current": {
+      "href": "https://spring.io/api/projects/spring-boot/releases/current"
+    },
+    "project": {
+      "href": "https://spring.io/api/projects/spring-boot"
+    }
+  }
+}

@@ -137,7 +137,7 @@
         "version": "1.0.0.RELEASE"
       }
     },
-    "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot"
+    "springBootMetadataUrl": "https://spring.io/api/projects/spring-boot/releases"
   }},
   "dependencies": {
     "content": [

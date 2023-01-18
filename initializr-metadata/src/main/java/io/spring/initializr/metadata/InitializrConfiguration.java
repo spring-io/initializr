@@ -179,7 +179,7 @@ public class InitializrConfiguration {
 		/**
 		 * The metadata url of the Spring Boot project.
 		 */
-		private String springBootMetadataUrl = "https://spring.io/project_metadata/spring-boot";
+		private String springBootMetadataUrl = "https://spring.io/api/projects/spring-boot/releases";
 
 		/**
 		 * Tracking code for Google Analytics. Only enabled if a value is explicitly

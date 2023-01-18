@@ -46,12 +46,12 @@ Finally, you can configure your IDE to point to another service instance.
 There are two main customizations to the sample.
 
 === Metadata Update Strategy
-First, `ServiceApplication` has a dedicated strategy to update the metadata with the available Spring Boot versions from Sagan (`spring.io`).
+First, `ServiceApplication` has a dedicated strategy to update the metadata with the available Spring Boot versions from `https://spring.io`.
 When you issue your first request, you should see something like the following:
 
 [indent=0]
 ----
-Fetching Spring Boot metadata from https://spring.io/project_metadata/spring-boot
+Fetching Spring Boot metadata from https://spring.io/api/projects/spring-boot/releases
 ----
 
 On further request, you won't see this log entry as the content is cached.

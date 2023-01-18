@@ -17,7 +17,7 @@
 package sample.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.spring.initializr.web.support.SaganInitializrMetadataUpdateStrategy;
+import io.spring.initializr.web.support.SpringIoInitializrMetadataUpdateStrategy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,11 +40,11 @@ public class ServiceApplication {
 		SpringApplication.run(ServiceApplication.class, args);
 	}
 
-	// This bean opt-in for fetching available Spring Boot versions from Sagan (spring.io)
+	// This bean opt-in for fetching available Spring Boot versions from https://spring.io
 	@Bean
-	SaganInitializrMetadataUpdateStrategy saganInitializrMetadataUpdateStrategy(RestTemplateBuilder restTemplateBuilder,
-			ObjectMapper objectMapper) {
-		return new SaganInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
+	SpringIoInitializrMetadataUpdateStrategy springIoInitializrMetadataUpdateStrategy(
+			RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
+		return new SpringIoInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
 	}
 
 }

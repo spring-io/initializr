@@ -389,7 +389,7 @@ to redeploy the application every time. Implementing your own
 `InitializrMetadataUpdateStrategy` bean allows you to update the metadata at runtime.
 
 If you look at https://spring.io/projects/spring-boot[the project home page for Spring
-Boot], the latest versions are displayed. `SaganInitializrMetadataUpdateStrategy` is an
+Boot], the latest versions are displayed. `SpringIoInitializrMetadataUpdateStrategy` is an
 implementation of that strategy that fetches the latest Spring Boot versions and update
 the metadata to make sure a running instance using those conventions always get the latest
 available versions.
@@ -399,7 +399,7 @@ scenes, you can define a `RestTemplateCustomizer` bean in your configuration. Fo
 details, {spring-boot-reference}/#boot-features-restclient-customization[check the
 documentation].
 
-NOTE: If you opt-in for `SaganInitializrMetadataUpdateStrategy`, you have to
+NOTE: If you opt-in for `SpringIoInitializrMetadataUpdateStrategy`, you have to
 <<create-instance-advanced-config-caching,configure caching>> to avoid requesting that
 service too often.
 
@@ -1153,7 +1153,7 @@ automatically:
 [[create-instance-advanced-config-caching]]
 === Caching configuration
 If you use the service, you'll notice that the logs have lots of entries with the message
-`Fetching boot metadata from https://spring.io/project_metadata/spring-boot`. To avoid
+`Fetching boot metadata from https://spring.io/api/projects/spring-boot/releases`. To avoid
 checking for the latest Spring Boot versions too often, you should enable caching on your
 service. Spring Initializr has some auto-configuration to apply the proper caches if you
 are willing to use a JCache (JSR-107) implementation.
