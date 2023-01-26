@@ -1153,7 +1153,7 @@ automatically:
 [[create-instance-advanced-config-caching]]
 === Caching configuration
 If you use the service, you'll notice that the logs have lots of entries with the message
-`Fetching boot metadata from https://spring.io/api/projects/spring-boot/releases`. To avoid
+`Fetching boot metadata from https://api.spring.io/projects/spring-boot/releases`. To avoid
 checking for the latest Spring Boot versions too often, you should enable caching on your
 service. Spring Initializr has some auto-configuration to apply the proper caches if you
 are willing to use a JCache (JSR-107) implementation.

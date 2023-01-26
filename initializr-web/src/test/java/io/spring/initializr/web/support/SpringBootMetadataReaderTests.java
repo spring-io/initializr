@@ -52,7 +52,7 @@ class SpringBootMetadataReaderTests {
 
 	@Test
 	void readAvailableVersions() throws IOException {
-		this.server.expect(requestTo("https://spring.io/api/projects/spring-boot/releases")).andRespond(
+		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases")).andRespond(
 				withSuccess(new ClassPathResource("metadata/springio/spring-boot.json"), MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
@@ -69,7 +69,7 @@ class SpringBootMetadataReaderTests {
 
 	@Test
 	void readAvailableVersionsWithInvalidVersion() throws IOException {
-		this.server.expect(requestTo("https://spring.io/api/projects/spring-boot/releases"))
+		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
 				.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot-invalid-version.json"),
 						MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,

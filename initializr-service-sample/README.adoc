@@ -51,7 +51,7 @@ When you issue your first request, you should see something like the following:
 
 [indent=0]
 ----
-Fetching Spring Boot metadata from https://spring.io/api/projects/spring-boot/releases
+Fetching Spring Boot metadata from https://api.spring.io/projects/spring-boot/releases
 ----
 
 On further request, you won't see this log entry as the content is cached.
