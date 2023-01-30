@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class ProjectRequestDocumentFactory {
 	private String determineBuildSystem(ProjectRequest request) {
 		String type = request.getType();
 		String[] elements = type.split("-");
-		return (elements.length == 2) ? elements[0] : null;
+		return (elements.length >= 2) ? elements[0] : null;
 	}
 
 	private VersionInformation determineVersionInformation(ProjectRequest request) {
