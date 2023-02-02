@@ -32,7 +32,6 @@ anchors:
   registry-image-resource-source: &registry-image-resource-source
     username: ((docker-hub-username))
     password: ((docker-hub-password))
-    tag: ((milestone))
   slack-fail-params: &slack-fail-params
     text: ":concourse-failed: <!here> <https://ci.spring.io/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}|failure: ${BUILD_PIPELINE_NAME} ${BUILD_JOB_NAME}>"
     silent: true
@@ -48,36 +47,37 @@ anchors:
     SONATYPE_PASSWORD: ((sonatype-password))
     SONATYPE_URL: ((sonatype-url))
     SONATYPE_STAGING_PROFILE_ID: ((sonatype-staging-profile-id))
-  registry-mirror-vars: &registry-mirror-vars
-    registry-mirror-host: ((registry-mirror-host))
-    registry-mirror-username: ((registry-mirror-username))
-    registry-mirror-password: ((registry-mirror-password))
 resource_types:
 - name: artifactory-resource
   type: registry-image
   source:
     repository: springio/artifactory-resource
-    tag: 0.0.14
+    tag: 0.0.17
+    <<: *registry-image-resource-source
 - name: pull-request
   type: registry-image
   source:
     repository: teliaoss/github-pr-resource
     tag: v0.23.0
+    <<: *registry-image-resource-source
 - name: github-release
   type: registry-image
   source:
     repository: concourse/github-release-resource
     tag: 1.5.5
+    <<: *registry-image-resource-source
 - name: github-status-resource
   type: registry-image
   source:
     repository: dpb587/github-status-resource
     tag: master
+    <<: *registry-image-resource-source
 - name: slack-notification
   type: registry-image
   source:
     repository: cfcommunity/slack-notification-resource
     tag: latest
+    <<: *registry-image-resource-source
 resources:
 - name: git-repo
   type: git
@@ -121,6 +121,7 @@ resources:
   source:
     <<: *registry-image-resource-source
     repository: ((docker-hub-organization))/initializr-ci
+    tag: ((milestone))
 - name: artifactory-repo
   type: artifactory-resource
   icon: package-variant
@@ -160,7 +161,7 @@ jobs:
         image: ci-image
       vars:
         ci-image-name: ci-image
-        <<: *registry-mirror-vars
+        <<: *registry-image-resource-source
   - in_parallel:
     - put: ci-image
       params:
@@ -303,7 +304,7 @@ jobs:
       GITHUB_USERNAME: ((github-username))
       GITHUB_TOKEN: ((github-ci-release-token))
     vars:
-      <<: *registry-mirror-vars
+      <<: *registry-image-resource-source
   - put: github-release
     params:
       name: generated-changelog/tag
