@@ -18,6 +18,8 @@ package io.spring.initializr.actuate.stat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.ClientInformation;
@@ -38,8 +40,11 @@ import org.springframework.util.StringUtils;
  * Create {@link ProjectRequestDocument} instances.
  *
  * @author Stephane Nicoll
+ * @author Brian Clozel
  */
 public class ProjectRequestDocumentFactory {
+
+	private static final Pattern PROJECT_TYPE_PATTERN = Pattern.compile("([a-z]*)-[a-z-]*");
 
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
 		InitializrMetadata metadata = event.getMetadata();
@@ -97,9 +102,11 @@ public class ProjectRequestDocumentFactory {
 	}
 
 	private String determineBuildSystem(ProjectRequest request) {
-		String type = request.getType();
-		String[] elements = type.split("-");
-		return (elements.length >= 2) ? elements[0] : null;
+		Matcher typeMatcher = PROJECT_TYPE_PATTERN.matcher(request.getType());
+		if (typeMatcher.matches()) {
+			return typeMatcher.group(1);
+		}
+		return null;
 	}
 
 	private VersionInformation determineVersionInformation(ProjectRequest request) {

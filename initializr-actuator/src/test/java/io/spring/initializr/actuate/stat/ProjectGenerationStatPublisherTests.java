@@ -185,7 +185,7 @@ class ProjectGenerationStatPublisherTests {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("com.example.acme");
 		request.setArtifactId("test");
-		request.setType("not-a-type");
+		request.setType("not_a_type");
 		request.setBootVersion("2.1.0.RELEASE");
 		request.setDependencies(Arrays.asList("web", "data-jpa"));
 		request.setLanguage("java");
