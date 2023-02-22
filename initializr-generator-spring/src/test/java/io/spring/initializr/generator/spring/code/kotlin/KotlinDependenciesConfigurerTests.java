@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import org.junit.jupiter.api.Test;
@@ -35,12 +34,7 @@ class KotlinDependenciesConfigurerTests {
 	void configuresDependenciesForGradleBuild() {
 		GradleBuild build = new GradleBuild();
 		new KotlinDependenciesConfigurer().customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib", "kotlin-reflect");
-		Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
-		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
-		assertThat(kotlinStdlib.getVersion()).isNull();
-		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-reflect");
 		Dependency kotlinReflect = build.dependencies().get("kotlin-reflect");
 		assertThat(kotlinReflect.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinReflect.getArtifactId()).isEqualTo("kotlin-reflect");
@@ -51,12 +45,7 @@ class KotlinDependenciesConfigurerTests {
 	void configuresDependenciesForMavenBuild() {
 		MavenBuild build = new MavenBuild();
 		new KotlinDependenciesConfigurer().customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib", "kotlin-reflect");
-		Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
-		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
-		assertThat(kotlinStdlib.getVersion()).isNull();
-		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-reflect");
 		Dependency kotlinReflect = build.dependencies().get("kotlin-reflect");
 		assertThat(kotlinReflect.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinReflect.getArtifactId()).isEqualTo("kotlin-reflect");

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
@@ -50,6 +52,8 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 			});
 			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 		});
+		build.dependencies().add("kotlin-stdlib", Dependency
+				.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8").scope(DependencyScope.COMPILE));
 	}
 
 }
