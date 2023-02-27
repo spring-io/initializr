@@ -118,7 +118,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
 			return "mavenCentral()";
 		}
-		return "maven { url = uri(\"" + repository.getUrl() + "\") }";
+		return "maven(\"" + repository.getUrl() + "\")";
 	}
 
 	@Override

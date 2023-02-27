@@ -61,7 +61,7 @@ class KotlinDslGradleSettingsWriterTests {
 		assertThat(generateSettings(build)).contains("""
 				pluginManagement {
 					repositories {
-						maven { url = uri("https://repo.spring.io/milestone") }
+						maven("https://repo.spring.io/milestone")
 						gradlePluginPortal()
 					}
 				}""");
@@ -76,7 +76,7 @@ class KotlinDslGradleSettingsWriterTests {
 		assertThat(generateSettings(build)).contains("""
 				pluginManagement {
 					repositories {
-						maven { url = uri("https://repo.spring.io/snapshot") }
+						maven("https://repo.spring.io/snapshot")
 						gradlePluginPortal()
 					}
 				}""");
