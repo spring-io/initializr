@@ -86,7 +86,7 @@ class KotlinMavenBuildCustomizerTests {
 	@Test
 	void kotlinMavenPluginWithSeveralArgs() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
+		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
 		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
 			Configuration configuration = kotlinPlugin.getConfiguration();
 			Setting args = configuration.getSettings().get(0);
@@ -100,9 +100,9 @@ class KotlinMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void kotlinMavenKotlinStdlibIsConfigured() {
+	void kotlinMavenKotlinStdlibIsConfiguredWithKotlinOneEight() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
+		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
 		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
@@ -112,21 +112,21 @@ class KotlinMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void kotlinMavenKotlinStdlibIsConfiguredWithOldKotlin() {
+	void kotlinMavenKotlinStdlibJdk8IsConfiguredWithKotlinOneSeven() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettingsOldKotlin()).customize(build);
+		new KotlinMavenBuildCustomizer(new KotlinOneSevenProjectSettings()).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
 		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jvm8");
+		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
 		assertThat(kotlinStdlib.getVersion()).isNull();
 		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
 	}
 
-	private static class TestKotlinProjectSettings extends SimpleKotlinProjectSettings {
+	private static class KotlinOneEightProjectSettings extends SimpleKotlinProjectSettings {
 
-		TestKotlinProjectSettings() {
-			super("1.8.10");
+		KotlinOneEightProjectSettings() {
+			super("1.8.0");
 		}
 
 		@Override
@@ -136,10 +136,10 @@ class KotlinMavenBuildCustomizerTests {
 
 	}
 
-	private static class TestKotlinProjectSettingsOldKotlin extends SimpleKotlinProjectSettings {
+	private static class KotlinOneSevenProjectSettings extends SimpleKotlinProjectSettings {
 
-		TestKotlinProjectSettingsOldKotlin() {
-			super("1.3.20");
+		KotlinOneSevenProjectSettings() {
+			super("1.7.22");
 		}
 
 		@Override
