@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 import java.util.Arrays;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
@@ -96,6 +97,18 @@ class KotlinMavenBuildCustomizerTests {
 			assertThat(args.getValue()).asList().element(1).hasFieldOrPropertyWithValue("name", "arg")
 					.hasFieldOrPropertyWithValue("value", "-Dtwo=2");
 		});
+	}
+
+	@Test
+	void kotlinMavenKotlinStdlibIsConfigured() {
+		MavenBuild build = new MavenBuild();
+		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
+		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
+		assertThat(kotlinStdlib.getVersion()).isNull();
+		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
 	}
 
 	private static class TestKotlinProjectSettings extends SimpleKotlinProjectSettings {
