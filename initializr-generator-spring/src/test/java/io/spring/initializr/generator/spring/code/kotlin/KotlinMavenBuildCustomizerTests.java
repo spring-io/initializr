@@ -86,7 +86,7 @@ class KotlinMavenBuildCustomizerTests {
 	@Test
 	void kotlinMavenPluginWithSeveralArgs() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
+		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
 		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
 			Configuration configuration = kotlinPlugin.getConfiguration();
 			Setting args = configuration.getSettings().get(0);
@@ -100,9 +100,21 @@ class KotlinMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void kotlinMavenKotlinStdlibIsConfigured() {
+	void kotlinMavenKotlinStdlibIsConfiguredWithKotlinOneEight() {
 		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new TestKotlinProjectSettings()).customize(build);
+		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
+		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
+		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib");
+		assertThat(kotlinStdlib.getVersion()).isNull();
+		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
+	}
+
+	@Test
+	void kotlinMavenKotlinStdlibJdk8IsConfiguredWithKotlinOneSeven() {
+		MavenBuild build = new MavenBuild();
+		new KotlinMavenBuildCustomizer(new KotlinOneSevenProjectSettings()).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
 		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
@@ -111,10 +123,23 @@ class KotlinMavenBuildCustomizerTests {
 		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
 	}
 
-	private static class TestKotlinProjectSettings extends SimpleKotlinProjectSettings {
+	private static class KotlinOneEightProjectSettings extends SimpleKotlinProjectSettings {
 
-		TestKotlinProjectSettings() {
-			super("1.3.20");
+		KotlinOneEightProjectSettings() {
+			super("1.8.0");
+		}
+
+		@Override
+		public List<String> getCompilerArgs() {
+			return Arrays.asList("-Done=1", "-Dtwo=2");
+		}
+
+	}
+
+	private static class KotlinOneSevenProjectSettings extends SimpleKotlinProjectSettings {
+
+		KotlinOneSevenProjectSettings() {
+			super("1.7.22");
 		}
 
 		@Override

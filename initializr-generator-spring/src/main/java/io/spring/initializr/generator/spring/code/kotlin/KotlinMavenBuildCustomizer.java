@@ -20,6 +20,8 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionRange;
 
 /**
  * {@link BuildCustomizer} for Kotlin projects build with Maven when Kotlin is supported
@@ -31,6 +33,8 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  * @author Stephane Nicoll
  */
 class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
+
+	private static final VersionRange KOTLIN_ONE_EIGHT_OR_LATER = new VersionRange(Version.parse("1.8.0"));
 
 	private final KotlinProjectSettings settings;
 
@@ -52,8 +56,11 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 			});
 			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 		});
-		build.dependencies().add("kotlin-stdlib", Dependency
-				.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8").scope(DependencyScope.COMPILE));
+		String artifactId = KotlinMavenBuildCustomizer.KOTLIN_ONE_EIGHT_OR_LATER
+				.match(Version.parse(this.settings.getVersion())) ? "kotlin-stdlib" : "kotlin-stdlib-jdk8";
+		build.dependencies().add("kotlin-stdlib",
+				Dependency.withCoordinates("org.jetbrains.kotlin", artifactId).scope(DependencyScope.COMPILE));
+
 	}
 
 }
