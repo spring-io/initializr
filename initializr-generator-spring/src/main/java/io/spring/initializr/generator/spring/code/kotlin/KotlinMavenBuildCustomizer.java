@@ -52,8 +52,13 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 			});
 			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 		});
-		build.dependencies().add("kotlin-stdlib", Dependency
-				.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8").scope(DependencyScope.COMPILE));
+		String[] version = this.settings.getVersion().split("\\.");
+		String artifactId = (Integer.parseInt(version[0]) >= 2
+				|| Integer.parseInt(version[0]) == 1 && Integer.parseInt(version[1]) >= 8) ? "kotlin-stdlib"
+						: "kotlin-stdlib-jdk8";
+		build.dependencies().add("kotlin-stdlib",
+				Dependency.withCoordinates("org.jetbrains.kotlin", artifactId).scope(DependencyScope.COMPILE));
+
 	}
 
 }
