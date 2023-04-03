@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,9 @@ class MavenRepositoryTests {
 
 	@Test
 	void repositoryWithDetails() {
-		MavenRepository repo = MavenRepository.withIdAndUrl("test", "https://repo.example.com").name("Test repository")
-				.build();
+		MavenRepository repo = MavenRepository.withIdAndUrl("test", "https://repo.example.com")
+			.name("Test repository")
+			.build();
 		assertThat(repo.getId()).isEqualTo("test");
 		assertThat(repo.getUrl()).isEqualTo("https://repo.example.com");
 		assertThat(repo.getName()).isEqualTo("Test repository");
@@ -59,8 +60,10 @@ class MavenRepositoryTests {
 
 	@Test
 	void repositoryWithReleasesAndSnapshots() {
-		MavenRepository repo = MavenRepository.withIdAndUrl("test", "https://repo.example.com").releasesEnabled(true)
-				.snapshotsEnabled(true).build();
+		MavenRepository repo = MavenRepository.withIdAndUrl("test", "https://repo.example.com")
+			.releasesEnabled(true)
+			.snapshotsEnabled(true)
+			.build();
 		assertThat(repo.isReleasesEnabled()).isTrue();
 		assertThat(repo.isSnapshotsEnabled()).isTrue();
 	}

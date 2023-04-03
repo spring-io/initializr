@@ -45,8 +45,9 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 	@Override
 	public void customize(MavenBuild build) {
 		build.properties().version("kotlin.version", this.settings.getVersion());
-		build.settings().sourceDirectory("${project.basedir}/src/main/kotlin")
-				.testSourceDirectory("${project.basedir}/src/test/kotlin");
+		build.settings()
+			.sourceDirectory("${project.basedir}/src/main/kotlin")
+			.testSourceDirectory("${project.basedir}/src/test/kotlin");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinMavenPlugin) -> {
 			kotlinMavenPlugin.configuration((configuration) -> {
 				configuration.configure("args",
@@ -57,9 +58,10 @@ class KotlinMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
 		});
 		String artifactId = KotlinMavenBuildCustomizer.KOTLIN_ONE_EIGHT_OR_LATER
-				.match(Version.parse(this.settings.getVersion())) ? "kotlin-stdlib" : "kotlin-stdlib-jdk8";
-		build.dependencies().add("kotlin-stdlib",
-				Dependency.withCoordinates("org.jetbrains.kotlin", artifactId).scope(DependencyScope.COMPILE));
+			.match(Version.parse(this.settings.getVersion())) ? "kotlin-stdlib" : "kotlin-stdlib-jdk8";
+		build.dependencies()
+			.add("kotlin-stdlib",
+					Dependency.withCoordinates("org.jetbrains.kotlin", artifactId).scope(DependencyScope.COMPILE));
 
 	}
 

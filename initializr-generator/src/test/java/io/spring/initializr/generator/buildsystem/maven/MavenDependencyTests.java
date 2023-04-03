@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,11 @@ class MavenDependencyTests {
 	@Test
 	void initializeFromStandardDependency() {
 		Dependency original = Dependency.withCoordinates("com.example", "test")
-				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME).classifier("test-jar")
-				.type("zip").build();
+			.version(VersionReference.ofValue("1.0.0"))
+			.scope(DependencyScope.RUNTIME)
+			.classifier("test-jar")
+			.type("zip")
+			.build();
 		MavenDependency dependency = MavenDependency.from(original).build();
 		assertThat(original).isNotSameAs(dependency);
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
@@ -49,8 +52,12 @@ class MavenDependencyTests {
 	@Test
 	void initializeFromMavenDependency() {
 		Dependency original = MavenDependency.withCoordinates("com.example", "test")
-				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME).classifier("test-jar")
-				.type("zip").optional(true).build();
+			.version(VersionReference.ofValue("1.0.0"))
+			.scope(DependencyScope.RUNTIME)
+			.classifier("test-jar")
+			.type("zip")
+			.optional(true)
+			.build();
 		MavenDependency dependency = MavenDependency.from(original).build();
 		assertThat(original).isNotSameAs(dependency);
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");

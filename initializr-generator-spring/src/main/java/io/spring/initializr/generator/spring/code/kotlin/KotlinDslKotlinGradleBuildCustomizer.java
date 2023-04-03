@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,10 @@ class KotlinDslKotlinGradleBuildCustomizer extends KotlinGradleBuildCustomizer {
 	@Override
 	protected void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile) {
 		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = settings.getCompilerArgs().stream().map((arg) -> "\"" + arg + "\"")
-					.collect(Collectors.joining(", "));
+			String compilerArgs = settings.getCompilerArgs()
+				.stream()
+				.map((arg) -> "\"" + arg + "\"")
+				.collect(Collectors.joining(", "));
 			kotlinOptions.attribute("freeCompilerArgs", "listOf(" + compilerArgs + ")");
 			kotlinOptions.attribute("jvmTarget", "\"" + settings.getJvmTarget() + "\"");
 		});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,8 @@ class DefaultMavenBuildCustomizerTests {
 	@Test
 	void customizeWithCustomParentAndSpringBootBomShouldAddBom() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", "../pom.xml", true).build();
+			.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", "../pom.xml", true)
+			.build();
 		MavenBuild build = customizeBuild(metadata);
 		MavenParent parent = build.getSettings().getParent();
 		assertThat(parent.getGroupId()).isEqualTo("com.foo");
@@ -93,13 +94,14 @@ class DefaultMavenBuildCustomizerTests {
 		assertThat(boms.items()).hasSize(1);
 		assertThat(boms.ids()).contains("spring-boot");
 		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
-				.contains(entry("spring-boot.version", "2.0.0"));
+			.contains(entry("spring-boot.version", "2.0.0"));
 	}
 
 	@Test
 	void customizeWithNoSpringBootBomShouldNotAddBom() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", null, false).build();
+			.setMavenParent("com.foo", "foo-parent", "1.0.0-SNAPSHOT", null, false)
+			.build();
 		MavenBuild build = customizeBuild(metadata);
 		BomContainer boms = build.boms();
 		assertThat(boms.items()).hasSize(0);

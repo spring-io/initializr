@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DependencyComparatorTests {
 
 	private static final Dependency SPRING_BOOT_A = Dependency
-			.withCoordinates("org.springframework.boot", "spring-boot-a").build();
+		.withCoordinates("org.springframework.boot", "spring-boot-a")
+		.build();
 
 	private static final Dependency SPRING_BOOT_B = Dependency
-			.withCoordinates("org.springframework.boot", "spring-boot-b").build();
+		.withCoordinates("org.springframework.boot", "spring-boot-b")
+		.build();
 
 	private static final Dependency LIB_ALPHA = Dependency.withCoordinates("com.example.alpha", "test").build();
 
@@ -62,7 +64,7 @@ class DependencyComparatorTests {
 	@Test
 	void compareLibSameGroupId() {
 		assertThat(this.comparator.compare(LIB_BETA, Dependency.withCoordinates("com.example.beta", "a").build()))
-				.isPositive();
+			.isPositive();
 	}
 
 }

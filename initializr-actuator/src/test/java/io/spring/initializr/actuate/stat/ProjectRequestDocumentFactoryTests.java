@@ -36,9 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProjectRequestDocumentFactoryTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("core", "security", "validation", "aop")
-			.addDependencyGroup("web", "web", "data-rest", "jersey").addDependencyGroup("data", "data-jpa", "jdbc")
-			.addDependencyGroup("database", "h2", "mysql").build();
+		.addDependencyGroup("core", "security", "validation", "aop")
+		.addDependencyGroup("web", "web", "data-rest", "jersey")
+		.addDependencyGroup("data", "data-jpa", "jdbc")
+		.addDependencyGroup("database", "h2", "mysql")
+		.build();
 
 	private final ProjectRequestDocumentFactory factory = new ProjectRequestDocumentFactory();
 

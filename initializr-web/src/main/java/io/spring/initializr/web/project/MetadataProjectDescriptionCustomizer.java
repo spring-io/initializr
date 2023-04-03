@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 	@Override
 	public void customize(MutableProjectDescription description) {
 		if (!StringUtils.hasText(description.getApplicationName())) {
-			description.setApplicationName(
-					this.metadata.getConfiguration().generateApplicationName(description.getName()));
+			description
+				.setApplicationName(this.metadata.getConfiguration().generateApplicationName(description.getName()));
 		}
 		String targetArtifactId = determineValue(description.getArtifactId(),
 				() -> this.metadata.getArtifactId().getContent());
@@ -64,8 +64,8 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		else if (targetArtifactId.equals(description.getName())) {
 			description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
 		}
-		description.setPackageName(this.metadata.getConfiguration().cleanPackageName(description.getPackageName(),
-				this.metadata.getPackageName().getContent()));
+		description.setPackageName(this.metadata.getConfiguration()
+			.cleanPackageName(description.getPackageName(), this.metadata.getPackageName().getContent()));
 		if (description.getPlatformVersion() == null) {
 			description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
 		}

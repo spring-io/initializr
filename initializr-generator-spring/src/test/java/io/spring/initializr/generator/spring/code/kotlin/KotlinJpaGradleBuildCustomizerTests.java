@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 
 	private GradleBuild getCustomizedBuild(Dependency dependency) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings);
 		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));

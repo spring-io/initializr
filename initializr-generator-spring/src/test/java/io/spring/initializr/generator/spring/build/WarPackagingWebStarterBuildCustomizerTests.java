@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ class WarPackagingWebStarterBuildCustomizerTests {
 	void addWebStarterWhenNoWebFacetIsPresent() {
 		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
 		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
@@ -52,7 +53,8 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
 		Dependency web = Dependency.withId("web", "com.example", "custom-web-starter", null, Dependency.SCOPE_COMPILE);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency, web).build();
+			.addDependencyGroup("test", dependency, web)
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
 		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
@@ -64,7 +66,8 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
 		dependency.setFacets(Collections.singletonList("web"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
 		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);

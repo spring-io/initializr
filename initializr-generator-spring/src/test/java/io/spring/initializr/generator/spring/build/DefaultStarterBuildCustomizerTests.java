@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ class DefaultStarterBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("acme", "com.example", "acme");
 		dependency.setStarter(false);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("acme");
 		new DefaultStarterBuildCustomizer(metadata).customize(build);
@@ -51,7 +52,8 @@ class DefaultStarterBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("runtime", "org.springframework.boot", "runtime-starter", null,
 				Dependency.SCOPE_RUNTIME);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("runtime");
 		new DefaultStarterBuildCustomizer(metadata).customize(build);
@@ -61,7 +63,8 @@ class DefaultStarterBuildCustomizerTests {
 	@Test
 	void defaultStarterIsNotAddedIfCompileScopedStarterExists() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", "web", "security").build();
+			.addDependencyGroup("test", "web", "security")
+			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("web");
 		new DefaultStarterBuildCustomizer(metadata).customize(build);

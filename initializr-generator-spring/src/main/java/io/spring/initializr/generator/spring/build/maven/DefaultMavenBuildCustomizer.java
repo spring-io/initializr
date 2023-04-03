@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,23 +54,27 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 		if (parentPom.isIncludeSpringBootBom()) {
 			String versionProperty = "spring-boot.version";
 			BillOfMaterials springBootBom = MetadataBuildItemMapper
-					.toBom(this.metadata.createSpringBootBom(springBootVersion, versionProperty));
+				.toBom(this.metadata.createSpringBootBom(springBootVersion, versionProperty));
 			if (!hasBom(build, springBootBom)) {
 				build.properties().version(VersionProperty.of(versionProperty, true), springBootVersion);
 				build.boms().add("spring-boot", springBootBom);
 			}
 		}
 		if (!maven.isSpringBootStarterParent(parentPom)) {
-			build.properties().property("project.build.sourceEncoding", "UTF-8")
-					.property("project.reporting.outputEncoding", "UTF-8");
+			build.properties()
+				.property("project.build.sourceEncoding", "UTF-8")
+				.property("project.reporting.outputEncoding", "UTF-8");
 		}
-		build.settings().parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion(),
-				parentPom.getRelativePath());
+		build.settings()
+			.parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion(),
+					parentPom.getRelativePath());
 	}
 
 	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {
-		return build.boms().items().anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
-				&& candidate.getArtifactId().equals(bom.getArtifactId()));
+		return build.boms()
+			.items()
+			.anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
+					&& candidate.getArtifactId().equals(bom.getArtifactId()));
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class BomContainerTests {
 	void addBom() {
 		BomContainer container = createTestContainer();
 		container.add("root", BillOfMaterials.withCoordinates("org.springframework.boot", "spring-boot-dependencies")
-				.version(VersionReference.ofProperty("spring-boot.version")));
+			.version(VersionReference.ofProperty("spring-boot.version")));
 		assertThat(container.ids()).containsOnly("root");
 		assertThat(container.items()).hasSize(1);
 		assertThat(container.isEmpty()).isFalse();
@@ -48,8 +48,10 @@ class BomContainerTests {
 	@Test
 	void addBomWithOrder() {
 		BomContainer container = createTestContainer();
-		container.add("custom", BillOfMaterials.withCoordinates("com.example", "acme")
-				.version(VersionReference.ofValue("1.0.0")).order(42));
+		container.add("custom",
+				BillOfMaterials.withCoordinates("com.example", "acme")
+					.version(VersionReference.ofValue("1.0.0"))
+					.order(42));
 		assertThat(container.ids()).containsOnly("custom");
 		assertThat(container.items()).hasSize(1);
 		assertThat(container.isEmpty()).isFalse();

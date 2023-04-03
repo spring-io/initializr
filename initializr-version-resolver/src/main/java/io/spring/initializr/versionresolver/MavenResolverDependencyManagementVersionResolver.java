@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,13 +54,16 @@ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
 class MavenResolverDependencyManagementVersionResolver implements DependencyManagementVersionResolver {
 
 	private static final RemoteRepository mavenCentral = new RemoteRepository.Builder("central", "default",
-			"https://repo1.maven.org/maven2").build();
+			"https://repo1.maven.org/maven2")
+		.build();
 
 	private static final RemoteRepository springMilestones = new RemoteRepository.Builder("spring-milestones",
-			"default", "https://repo.spring.io/milestone").build();
+			"default", "https://repo.spring.io/milestone")
+		.build();
 
 	private static final RemoteRepository springSnapshots = new RemoteRepository.Builder("spring-snapshots", "default",
-			"https://repo.spring.io/snapshot").build();
+			"https://repo.spring.io/snapshot")
+		.build();
 
 	private static final List<RemoteRepository> repositories = Arrays.asList(mavenCentral, springMilestones,
 			springSnapshots);
@@ -86,8 +89,11 @@ class MavenResolverDependencyManagementVersionResolver implements DependencyMana
 	public Map<String, String> resolve(String groupId, String artifactId, String version) {
 		ArtifactDescriptorResult bom = resolveBom(groupId, artifactId, version);
 		Map<String, String> managedVersions = new HashMap<>();
-		bom.getManagedDependencies().stream().map(Dependency::getArtifact).forEach((artifact) -> managedVersions
-				.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getVersion()));
+		bom.getManagedDependencies()
+			.stream()
+			.map(Dependency::getArtifact)
+			.forEach((artifact) -> managedVersions.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(),
+					artifact.getVersion()));
 		return managedVersions;
 	}
 

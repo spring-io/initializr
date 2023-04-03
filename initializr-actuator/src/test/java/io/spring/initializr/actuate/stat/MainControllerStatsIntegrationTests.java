@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		this.statsMockController.stats.clear();
 		// Make sure our mock is going to be invoked with the stats
 		this.projectGenerationStatPublisher
-				.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic/test/my-entity"));
+			.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic/test/my-entity"));
 	}
 
 	@Test
@@ -105,7 +105,8 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	@Test
 	void requestIpIsSetWhenHeaderIsPresent() throws Exception {
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-				.header("X-FORWARDED-FOR", "10.0.0.123").build();
+			.header("X-FORWARDED-FOR", "10.0.0.123")
+			.build();
 		getRestTemplate().exchange(request, String.class);
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
@@ -117,34 +118,36 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	@Test
 	void requestIpv4IsNotSetWhenHeaderHasGarbage() throws Exception {
 		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-				.header("x-forwarded-for", "foo-bar").build();
+			.header("x-forwarded-for", "foo-bar")
+			.build();
 		getRestTemplate().exchange(request, String.class);
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertThat(json.has("requestIpv4")).as("requestIpv4 property should not be set if value is not a valid IPv4")
-				.isFalse();
+			.isFalse();
 	}
 
 	@Test
 	void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip"))).header("cf-ipcountry", "XX")
-				.build();
+		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
+			.header("cf-ipcountry", "XX")
+			.build();
 		getRestTemplate().exchange(request, String.class);
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
 		assertThat(json.has("requestCountry")).as("requestCountry property should not be set if value is set to xx")
-				.isFalse();
+			.isFalse();
 	}
 
 	@Test
 	void invalidProjectSillHasStats() {
 		assertThatExceptionOfType(HttpClientErrorException.class)
-				.isThrownBy(() -> downloadArchive("/starter.zip?type=invalid-type"))
-				.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
+			.isThrownBy(() -> downloadArchive("/starter.zip?type=invalid-type"))
+			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -162,7 +165,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	@Test
 	void errorPublishingStatsDoesNotBubbleUp() {
 		this.projectGenerationStatPublisher
-				.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic-error"));
+			.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic-error"));
 		downloadArchive("/starter.zip");
 		assertThat(this.statsMockController.stats).as("No stat should be available").isEmpty();
 	}

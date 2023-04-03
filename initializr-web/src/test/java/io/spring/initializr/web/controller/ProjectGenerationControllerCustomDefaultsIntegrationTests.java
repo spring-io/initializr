@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,12 @@ class ProjectGenerationControllerCustomDefaultsIntegrationTests extends Abstract
 	void generateDefaultPom() {
 		String content = getRestTemplate().getForObject(createUrl("/pom.xml?dependencies=web"), String.class);
 		MavenBuildAssert pomAssert = new MavenBuildAssert(content);
-		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar").hasVersion("1.2.4-SNAPSHOT")
-				.doesNotHaveNode("/project/packaging").hasName("FooBar").hasDescription("FooBar Project");
+		pomAssert.hasGroupId("org.foo")
+			.hasArtifactId("foo-bar")
+			.hasVersion("1.2.4-SNAPSHOT")
+			.doesNotHaveNode("/project/packaging")
+			.hasName("FooBar")
+			.hasDescription("FooBar Project");
 	}
 
 }

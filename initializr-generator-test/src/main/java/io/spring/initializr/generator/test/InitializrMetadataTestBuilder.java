@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,15 +84,17 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addBasicDefaults() {
-		return addDefaultTypes().addDefaultPackagings().addDefaultJavaVersions().addDefaultLanguages()
-				.addDefaultBootVersions();
+		return addDefaultTypes().addDefaultPackagings()
+			.addDefaultJavaVersions()
+			.addDefaultLanguages()
+			.addDefaultBootVersions();
 	}
 
 	public InitializrMetadataTestBuilder addDefaultTypes() {
 		return addType("maven-build", false, "/pom.xml", "maven", null, "build")
-				.addType("maven-project", true, "/starter.zip", "maven", null, "project")
-				.addType("gradle-build", false, "/build.gradle", "gradle", null, "build")
-				.addType("gradle-project", false, "/starter.zip", "gradle", null, "project");
+			.addType("maven-project", true, "/starter.zip", "maven", null, "project")
+			.addType("gradle-build", false, "/build.gradle", "gradle", null, "build")
+			.addType("gradle-project", false, "/starter.zip", "gradle", null, "project");
 	}
 
 	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue, String action, String build,
@@ -166,7 +168,8 @@ public class InitializrMetadataTestBuilder {
 
 	public InitializrMetadataTestBuilder addDefaultBootVersions() {
 		return addBootVersion("2.2.17.RELEASE", false).addBootVersion("2.3.3.RELEASE", false)
-				.addBootVersion("2.4.1", true).addBootVersion("2.5.0-SNAPSHOT", false);
+			.addBootVersion("2.4.1", true)
+			.addBootVersion("2.5.0-SNAPSHOT", false);
 	}
 
 	public InitializrMetadataTestBuilder addBootVersion(String id, boolean defaultValue) {
@@ -206,8 +209,10 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder setGradleEnv(String dependencyManagementPluginVersion) {
-		this.builder.withCustomizer((it) -> it.getConfiguration().getEnv().getGradle()
-				.setDependencyManagementPluginVersion(dependencyManagementPluginVersion));
+		this.builder.withCustomizer((it) -> it.getConfiguration()
+			.getEnv()
+			.getGradle()
+			.setDependencyManagementPluginVersion(dependencyManagementPluginVersion));
 		return this;
 	}
 

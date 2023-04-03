@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -309,12 +309,15 @@ public class MavenPlugin {
 		 * @see #add(String, Consumer)
 		 */
 		public ConfigurationBuilder configure(String name, Consumer<ConfigurationBuilder> consumer) {
-			Object value = this.settings.stream().filter((candidate) -> candidate.getName().equals(name)).findFirst()
-					.orElseGet(() -> {
-						Setting nestedSetting = new Setting(name, new ConfigurationBuilder());
-						this.settings.add(nestedSetting);
-						return nestedSetting;
-					}).getValue();
+			Object value = this.settings.stream()
+				.filter((candidate) -> candidate.getName().equals(name))
+				.findFirst()
+				.orElseGet(() -> {
+					Setting nestedSetting = new Setting(name, new ConfigurationBuilder());
+					this.settings.add(nestedSetting);
+					return nestedSetting;
+				})
+				.getValue();
 			if (!(value instanceof ConfigurationBuilder nestedConfiguration)) {
 				throw new IllegalArgumentException(String.format(
 						"Could not customize parameter '%s', a single value %s is already registered", name, value));
@@ -328,14 +331,16 @@ public class MavenPlugin {
 		 * @return a {@link Configuration}
 		 */
 		Configuration build() {
-			return new Configuration(this.settings.stream().map((entry) -> resolve(entry.getName(), entry.getValue()))
-					.collect(Collectors.toList()));
+			return new Configuration(this.settings.stream()
+				.map((entry) -> resolve(entry.getName(), entry.getValue()))
+				.collect(Collectors.toList()));
 		}
 
 		private Setting resolve(String key, Object value) {
 			if (value instanceof ConfigurationBuilder) {
 				List<Setting> values = ((ConfigurationBuilder) value).settings.stream()
-						.map((entry) -> resolve(entry.getName(), entry.getValue())).collect(Collectors.toList());
+					.map((entry) -> resolve(entry.getName(), entry.getValue()))
+					.collect(Collectors.toList());
 				return new Setting(key, values);
 			}
 			else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,10 @@ class MavenLicenseTests {
 	@Test
 	void licenseWithFullDetails() {
 		MavenLicense license = new MavenLicense.Builder().name("Apache License, Version 2.0")
-				.url("https://www.apache.org/licenses/LICENSE-2.0").distribution(Distribution.MANUAL)
-				.comments("A business-friendly OSS license").build();
+			.url("https://www.apache.org/licenses/LICENSE-2.0")
+			.distribution(Distribution.MANUAL)
+			.comments("A business-friendly OSS license")
+			.build();
 		assertThat(license.getName()).isEqualTo("Apache License, Version 2.0");
 		assertThat(license.getUrl()).isEqualTo("https://www.apache.org/licenses/LICENSE-2.0");
 		assertThat(license.getDistribution()).isEqualTo(Distribution.MANUAL);

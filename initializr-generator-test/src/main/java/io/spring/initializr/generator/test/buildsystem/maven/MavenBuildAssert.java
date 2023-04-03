@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	 */
 	public MavenBuildAssert hasParent(String groupId, String artifactId, String version) {
 		return hasText("/project/parent/groupId", groupId).hasText("/project/parent/artifactId", artifactId)
-				.hasText("/project/parent/version", version);
+			.hasText("/project/parent/version", version);
 	}
 
 	/**
@@ -248,12 +248,12 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	 * @return {@code this} assertion object
 	 */
 	public MavenBuildAssert hasBom(String groupId, String artifactId, String version) {
-		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency").areExactly(1,
-				new Condition<>((candidate) -> {
-					BillOfMaterials actual = toBom(candidate);
-					return (actual != null && actual.getGroupId().equals(groupId)
-							&& actual.getArtifactId().equals(artifactId) && actual.getVersion().equals(version));
-				}, "matching bom"));
+		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency")
+			.areExactly(1, new Condition<>((candidate) -> {
+				BillOfMaterials actual = toBom(candidate);
+				return (actual != null && actual.getGroupId().equals(groupId)
+						&& actual.getArtifactId().equals(artifactId) && actual.getVersion().equals(version));
+			}, "matching bom"));
 		return this;
 	}
 
@@ -317,8 +317,8 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	 * @return {@code this} assertion object
 	 */
 	public MavenBuildAssert hasProfile(String id) {
-		this.pom.nodesAtPath("/project/profiles/profile").areExactly(1,
-				new Condition<>(profile(id), "matching profile"));
+		this.pom.nodesAtPath("/project/profiles/profile")
+			.areExactly(1, new Condition<>(profile(id), "matching profile"));
 		return this;
 	}
 

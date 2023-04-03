@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,10 @@ class ProjectGenerationControllerCustomEnvIntegrationTests extends AbstractIniti
 		assertThat(project).doesNotContainFiles("src/main/java/com/example/demo/DemoApplication.java",
 				"src/test/java/com/example/demo/DemoApplicationTests.java");
 		assertDoesNotHaveWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(2)
-				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(2)
+			.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test

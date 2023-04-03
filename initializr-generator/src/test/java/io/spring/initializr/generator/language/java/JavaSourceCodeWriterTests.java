@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,9 +110,11 @@ class JavaSourceCodeWriterTests {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addMethodDeclaration(JavaMethodDeclaration.method("trim").returning("java.lang.String")
-				.modifiers(Modifier.PUBLIC).parameters(new Parameter("java.lang.String", "value"))
-				.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
+		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
+			.returning("java.lang.String")
+			.modifiers(Modifier.PUBLIC)
+			.parameters(new Parameter("java.lang.String", "value"))
+			.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
 				"    public String trim(String value) {", "        return value.trim();", "    }", "", "}");
@@ -149,8 +151,9 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.modifiers(Modifier.PUBLIC);
-		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
-				.returning("java.lang.String");
+		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString")
+			.modifiers(Modifier.PRIVATE)
+			.returning("java.lang.String");
 		field.annotate(Annotation.name("org.springframework.beans.factory.annotation.Autowired"));
 		test.addFieldDeclaration(field);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
@@ -165,12 +168,18 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.modifiers(Modifier.PUBLIC);
-		test.addFieldDeclaration(JavaFieldDeclaration.field("testString").modifiers(Modifier.PRIVATE)
-				.value("\"Test String\"").returning("java.lang.String"));
-		test.addFieldDeclaration(JavaFieldDeclaration.field("testChar").modifiers(Modifier.PRIVATE | Modifier.TRANSIENT)
-				.value("'\\u03a9'").returning("char"));
-		test.addFieldDeclaration(JavaFieldDeclaration.field("testInt").modifiers(Modifier.PRIVATE | Modifier.FINAL)
-				.value(1337).returning("int"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testString")
+			.modifiers(Modifier.PRIVATE)
+			.value("\"Test String\"")
+			.returning("java.lang.String"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testChar")
+			.modifiers(Modifier.PRIVATE | Modifier.TRANSIENT)
+			.value("'\\u03a9'")
+			.returning("char"));
+		test.addFieldDeclaration(JavaFieldDeclaration.field("testInt")
+			.modifiers(Modifier.PRIVATE | Modifier.FINAL)
+			.value(1337)
+			.returning("int"));
 		test.addFieldDeclaration(
 				JavaFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE).value("3.14").returning("Double"));
 		test.addFieldDeclaration(
@@ -192,10 +201,12 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
-		test.addMethodDeclaration(JavaMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC)
-				.returning("void").parameters(new Parameter("java.lang.String[]", "args"))
-				.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
-						"run", "Test.class", "args"))));
+		test.addMethodDeclaration(JavaMethodDeclaration.method("main")
+			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
+			.returning("void")
+			.parameters(new Parameter("java.lang.String[]", "args"))
+			.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
+					"run", "Test.class", "args"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.boot.SpringApplication;",
@@ -252,8 +263,8 @@ class JavaSourceCodeWriterTests {
 	@Test
 	void annotationWithSeveralAttributes() throws IOException {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
-				(builder) -> builder.attribute("target", Class.class, "com.example.One").attribute("unit",
-						ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
+				(builder) -> builder.attribute("target", Class.class, "com.example.One")
+					.attribute("unit", ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.One;",
 				"import java.time.temporal.ChronoUnit;", "import org.springframework.test.TestApplication;", "",
 				"@TestApplication(target = One.class, unit = ChronoUnit.NANOS)", "class Test {", "", "}");

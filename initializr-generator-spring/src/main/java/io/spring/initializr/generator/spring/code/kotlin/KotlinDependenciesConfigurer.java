@@ -31,8 +31,9 @@ class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 
 	@Override
 	public void customize(Build build) {
-		build.dependencies().add("kotlin-reflect",
-				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect").scope(DependencyScope.COMPILE));
+		build.dependencies()
+			.add("kotlin-reflect", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
+				.scope(DependencyScope.COMPILE));
 	}
 
 }

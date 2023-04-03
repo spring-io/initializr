@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Joachim Pasquali
  */
-public class MavenScmTest {
+public class MavenScmTests {
 
 	@Test
 	void isEmptyWithNoData() {
@@ -41,8 +41,11 @@ public class MavenScmTest {
 
 	@Test
 	void allElementsTest() {
-		MavenScm mavenScm = new MavenScm.Builder().connection("connection").developerConnection("developerConnection")
-				.url("url").tag("tag").build();
+		MavenScm mavenScm = new MavenScm.Builder().connection("connection")
+			.developerConnection("developerConnection")
+			.url("url")
+			.tag("tag")
+			.build();
 		assertThat(mavenScm.getConnection()).isEqualTo("connection");
 		assertThat(mavenScm.getDeveloperConnection()).isEqualTo("developerConnection");
 		assertThat(mavenScm.getTag()).isEqualTo("tag");

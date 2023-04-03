@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,12 +53,12 @@ class DependencyMetadataJsonMapperTests {
 		JSONObject content = new JSONObject(this.mapper.write(metadata));
 		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("bom")).isEqualTo("my-bom");
 		assertThat(content.getJSONObject("dependencies").getJSONObject("foo").getString("repository"))
-				.isEqualTo("my-repo");
+			.isEqualTo("my-repo");
 		assertThat(content.getJSONObject("repositories").getJSONObject("repo-id").getString("name"))
-				.isEqualTo("foo-repo");
+			.isEqualTo("foo-repo");
 		assertThat(content.getJSONObject("boms").getJSONObject("bom-id").getString("artifactId")).isEqualTo("foo-bom");
 		assertThat(content.getJSONObject("boms").getJSONObject("bom-id").getString("version"))
-				.isEqualTo("1.0.0.RELEASE");
+			.isEqualTo("1.0.0.RELEASE");
 	}
 
 }

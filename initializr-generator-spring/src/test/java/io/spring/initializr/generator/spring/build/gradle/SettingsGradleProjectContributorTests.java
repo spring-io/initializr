@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,9 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		assertSettings(groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
-				.lines().containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
-						"        gradlePluginPortal()", "    }", "}");
+			.lines()
+			.containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
+					"        gradlePluginPortal()", "    }", "}");
 	}
 
 	@Test
@@ -56,8 +57,8 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		assertSettings(groovyDslSettingsGradleProjectContributor(build, indentingWriterFactory)).lines()
-				.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
-						"    gradlePluginPortal()", "  }", "}");
+			.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
+					"    gradlePluginPortal()", "  }", "}");
 	}
 
 	@Test
@@ -65,7 +66,7 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
 		assertSettings(groovyDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
-				.doesNotContain("pluginManagement");
+			.doesNotContain("pluginManagement");
 	}
 
 	@Test
@@ -73,8 +74,9 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		assertSettings(kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
-				.lines().containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
-						"        gradlePluginPortal()", "    }", "}");
+			.lines()
+			.containsSequence("pluginManagement {", "    repositories {", "        mavenCentral()",
+					"        gradlePluginPortal()", "    }", "}");
 	}
 
 	@Test
@@ -84,8 +86,8 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories().add("maven-central");
 		assertSettings(kotlinDslSettingsGradleProjectContributor(build, indentingWriterFactory)).lines()
-				.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
-						"    gradlePluginPortal()", "  }", "}");
+			.containsSequence("pluginManagement {", "  repositories {", "    mavenCentral()",
+					"    gradlePluginPortal()", "  }", "}");
 	}
 
 	@Test
@@ -93,7 +95,7 @@ class SettingsGradleProjectContributorTests {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
 		assertSettings(kotlinDslSettingsGradleProjectContributor(build, IndentingWriterFactory.withDefaultSettings()))
-				.doesNotContain("pluginManagement");
+			.doesNotContain("pluginManagement");
 	}
 
 	private TextAssert assertSettings(SettingsGradleProjectContributor contributor) throws IOException {

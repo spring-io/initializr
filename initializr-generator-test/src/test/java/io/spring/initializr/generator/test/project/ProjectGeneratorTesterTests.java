@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ class ProjectGeneratorTesterTests {
 
 	@Test
 	void testerHasNoRegisteredContributorByDefault() {
-		Map<String, ProjectContributor> contributors = new ProjectGeneratorTester().generate(
-				new MutableProjectDescription(), (context) -> context.getBeansOfType(ProjectContributor.class));
+		Map<String, ProjectContributor> contributors = new ProjectGeneratorTester()
+			.generate(new MutableProjectDescription(), (context) -> context.getBeansOfType(ProjectContributor.class));
 		assertThat(contributors).isEmpty();
 	}
 
@@ -60,15 +60,15 @@ class ProjectGeneratorTesterTests {
 	@Test
 	void testerWithExplicitProjectContributors(@TempDir Path directory) {
 		ProjectGeneratorTester tester = new ProjectGeneratorTester().withDirectory(directory)
-				.withContextInitializer((context) -> {
-					context.registerBean("contributor1", ProjectContributor.class,
-							() -> (projectDirectory) -> Files.createFile(projectDirectory.resolve("test.text")));
-					context.registerBean("contributor2", ProjectContributor.class, () -> (projectDirectory) -> {
-						Path subDir = projectDirectory.resolve("src/main/test");
-						Files.createDirectories(subDir);
-						Files.createFile(subDir.resolve("Test.src"));
-					});
+			.withContextInitializer((context) -> {
+				context.registerBean("contributor1", ProjectContributor.class,
+						() -> (projectDirectory) -> Files.createFile(projectDirectory.resolve("test.text")));
+				context.registerBean("contributor2", ProjectContributor.class, () -> (projectDirectory) -> {
+					Path subDir = projectDirectory.resolve("src/main/test");
+					Files.createDirectories(subDir);
+					Files.createFile(subDir.resolve("Test.src"));
 				});
+			});
 		ProjectStructure project = tester.generate(new MutableProjectDescription());
 		assertThat(project).filePaths().containsOnly("test.text", "src/main/test/Test.src");
 	}

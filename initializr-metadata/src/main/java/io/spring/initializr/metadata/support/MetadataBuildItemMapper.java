@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,12 @@ public final class MetadataBuildItemMapper {
 		VersionReference versionReference = (dependency.getVersion() != null)
 				? VersionReference.ofValue(dependency.getVersion()) : null;
 		return io.spring.initializr.generator.buildsystem.Dependency
-				.withCoordinates(dependency.getGroupId(), dependency.getArtifactId()).version(versionReference)
-				.scope(toDependencyScope(dependency.getScope())).classifier(dependency.getClassifier())
-				.type(dependency.getType()).build();
+			.withCoordinates(dependency.getGroupId(), dependency.getArtifactId())
+			.version(versionReference)
+			.scope(toDependencyScope(dependency.getScope()))
+			.classifier(dependency.getClassifier())
+			.type(dependency.getType())
+			.build();
 	}
 
 	private static DependencyScope toDependencyScope(String scope) {
@@ -74,7 +77,10 @@ public final class MetadataBuildItemMapper {
 		VersionReference version = (bom.getVersionProperty() != null)
 				? VersionReference.ofProperty(bom.getVersionProperty()) : VersionReference.ofValue(bom.getVersion());
 		return io.spring.initializr.generator.buildsystem.BillOfMaterials
-				.withCoordinates(bom.getGroupId(), bom.getArtifactId()).version(version).order(bom.getOrder()).build();
+			.withCoordinates(bom.getGroupId(), bom.getArtifactId())
+			.version(version)
+			.order(bom.getOrder())
+			.build();
 	}
 
 	/**
@@ -89,9 +95,11 @@ public final class MetadataBuildItemMapper {
 			return null;
 		}
 		return io.spring.initializr.generator.buildsystem.MavenRepository
-				.withIdAndUrl(id, repository.getUrl().toExternalForm()).name(repository.getName())
-				.releasesEnabled(repository.isReleasesEnabled()).snapshotsEnabled(repository.isSnapshotsEnabled())
-				.build();
+			.withIdAndUrl(id, repository.getUrl().toExternalForm())
+			.name(repository.getName())
+			.releasesEnabled(repository.isReleasesEnabled())
+			.snapshotsEnabled(repository.isSnapshotsEnabled())
+			.build();
 	}
 
 }

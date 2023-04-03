@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,9 +49,11 @@ class MavenDistributionManagementTests {
 	@Test
 	void distributionManagementWithRepository() {
 		MavenDistributionManagement mdm = builder()
-				.repository((repository) -> repository.id("released-repo").name("released repo")
-						.url("https://upload.example.com/releases"))
-				.repository((repository) -> repository.layout("default")).build();
+			.repository((repository) -> repository.id("released-repo")
+				.name("released repo")
+				.url("https://upload.example.com/releases"))
+			.repository((repository) -> repository.layout("default"))
+			.build();
 		DeploymentRepository repository = mdm.getRepository();
 		assertThat(repository.getId()).isEqualTo("released-repo");
 		assertThat(repository.getName()).isEqualTo("released repo");
@@ -63,9 +65,11 @@ class MavenDistributionManagementTests {
 	@Test
 	void distributionManagementWithSnapshotRepository() {
 		MavenDistributionManagement mdm = builder()
-				.snapshotRepository((repository) -> repository.id("snapshot-repo").name("snapshot repo")
-						.url("scp://upload.example.com/snapshots"))
-				.snapshotRepository((repository) -> repository.uniqueVersion(true)).build();
+			.snapshotRepository((repository) -> repository.id("snapshot-repo")
+				.name("snapshot repo")
+				.url("scp://upload.example.com/snapshots"))
+			.snapshotRepository((repository) -> repository.uniqueVersion(true))
+			.build();
 		DeploymentRepository snapshotRepository = mdm.getSnapshotRepository();
 		assertThat(snapshotRepository.getId()).isEqualTo("snapshot-repo");
 		assertThat(snapshotRepository.getName()).isEqualTo("snapshot repo");
@@ -77,7 +81,8 @@ class MavenDistributionManagementTests {
 	@Test
 	void distributionManagementWithSite() {
 		MavenDistributionManagement mdm = builder().site((site) -> site.id("website").name("web site"))
-				.site((site) -> site.url("scp://www.example.com/www/docs/project")).build();
+			.site((site) -> site.url("scp://www.example.com/www/docs/project"))
+			.build();
 		Site site = mdm.getSite();
 		assertThat(site.getId()).isEqualTo("website");
 		assertThat(site.getName()).isEqualTo("web site");
@@ -87,9 +92,9 @@ class MavenDistributionManagementTests {
 	@Test
 	void distributionManagementWithRelocation() {
 		MavenDistributionManagement mdm = builder()
-				.relocation(
-						(relocation) -> relocation.groupId("com.example.new").artifactId("project").version("1.0.0"))
-				.relocation((relocation) -> relocation.message("Moved to com.example.new")).build();
+			.relocation((relocation) -> relocation.groupId("com.example.new").artifactId("project").version("1.0.0"))
+			.relocation((relocation) -> relocation.message("Moved to com.example.new"))
+			.build();
 		assertThat(mdm.getRelocation().getGroupId()).isEqualTo("com.example.new");
 		assertThat(mdm.getRelocation().getArtifactId()).isEqualTo("project");
 		assertThat(mdm.getRelocation().getVersion()).isEqualTo("1.0.0");

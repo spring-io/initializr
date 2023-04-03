@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.repositories().add("maven-central");
 		build.buildscript((buildscript) -> buildscript
-				.dependency("org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE"));
+			.dependency("org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE"));
 		assertThat(write(build)).contains("""
 				buildscript {
 					repositories {
@@ -134,8 +134,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSnapshotRepository() {
 		GradleBuild build = new GradleBuild();
-		build.repositories().add(
-				MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").onlySnapshots());
+		build.repositories()
+			.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").onlySnapshots());
 		assertThat(write(build)).contains("""
 				repositories {
 					maven { url 'https://repo.spring.io/snapshot' }
@@ -146,18 +146,19 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithPluginRepository() {
 		GradleBuild build = new GradleBuild();
 		build.pluginRepositories()
-				.add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
+			.add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		assertThat(write(build)).doesNotContain("repositories {");
 	}
 
 	@Test
 	void gradleBuildWithTaskWithTypesCustomizedWithNestedAssignments() {
 		GradleBuild build = new GradleBuild();
-		build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-				(task) -> task.nested("kotlinOptions",
-						(kotlinOptions) -> kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']")));
-		build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile", (task) -> task
-				.nested("kotlinOptions", (kotlinOptions) -> kotlinOptions.attribute("jvmTarget", "'1.8'")));
+		build.tasks()
+			.customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile", (task) -> task.nested("kotlinOptions",
+					(kotlinOptions) -> kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']")));
+		build.tasks()
+			.customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile", (task) -> task.nested("kotlinOptions",
+					(kotlinOptions) -> kotlinOptions.attribute("jvmTarget", "'1.8'")));
 		assertThat(write(build)).containsOnlyOnce("import org.jetbrains.kotlin.gradle.tasks.KotlinCompile").contains("""
 				tasks.withType(KotlinCompile) {
 					kotlinOptions {
@@ -218,11 +219,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTaskCustomizedWithNestedCustomization() {
 		GradleBuild build = new GradleBuild();
-		build.tasks().customize("compileKotlin",
-				(compileKotlin) -> compileKotlin.nested("kotlinOptions", (kotlinOptions) -> {
-					kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']");
-					kotlinOptions.attribute("jvmTarget", "'1.8'");
-				}));
+		build.tasks()
+			.customize("compileKotlin", (compileKotlin) -> compileKotlin.nested("kotlinOptions", (kotlinOptions) -> {
+				kotlinOptions.attribute("freeCompilerArgs", "['-Xjsr305=strict']");
+				kotlinOptions.attribute("jvmTarget", "'1.8'");
+			}));
 		assertThat(write(build)).contains("""
 				tasks.named('compileKotlin') {
 					kotlinOptions {
@@ -246,8 +247,10 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithVersionProperties() {
 		GradleBuild build = new GradleBuild();
-		build.properties().version(VersionProperty.of("version.property", false), "1.2.3")
-				.version(VersionProperty.of("internal.property", true), "4.5.6").version("external.property", "7.8.9");
+		build.properties()
+			.version(VersionProperty.of("version.property", false), "1.2.3")
+			.version(VersionProperty.of("internal.property", true), "4.5.6")
+			.version("external.property", "7.8.9");
 		assertThat(write(build)).contains("""
 				ext {
 					set('external.property', "7.8.9")
@@ -259,9 +262,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithVersionedDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("kotlin-stdlib",
-				Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-						.version(VersionReference.ofProperty("kotlin.version")).scope(DependencyScope.COMPILE));
+		build.dependencies()
+			.add("kotlin-stdlib",
+					Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+						.version(VersionReference.ofProperty("kotlin.version"))
+						.scope(DependencyScope.COMPILE));
 		assertThat(write(build)).contains("""
 				dependencies {
 					implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
@@ -271,8 +276,9 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExternalVersionedDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("acme",
-				Dependency.withCoordinates("com.example", "acme")
+		build.dependencies()
+			.add("acme",
+					Dependency.withCoordinates("com.example", "acme")
 						.version(VersionReference.ofProperty(VersionProperty.of("acme.version", false)))
 						.scope(DependencyScope.COMPILE));
 		assertThat(write(build)).contains("""
@@ -284,8 +290,10 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExtAndVersionProperties() {
 		GradleBuild build = new GradleBuild();
-		build.properties().version(VersionProperty.of("test-version"), "1.0").version("alpha-version", "0.1")
-				.property("myProperty", "'42'");
+		build.properties()
+			.version(VersionProperty.of("test-version"), "1.0")
+			.version("alpha-version", "0.1")
+			.property("myProperty", "'42'");
 		assertThat(write(build)).contains("""
 				ext {
 					set('myProperty', '42')
@@ -308,8 +316,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithConfigurationCustomization() {
 		GradleBuild build = new GradleBuild();
 		build.configurations().customize("developmentOnly", (configuration) -> configuration.extendsFrom("compile"));
-		build.configurations().customize("developmentOnly",
-				(configuration) -> configuration.extendsFrom("testCompile"));
+		build.configurations()
+			.customize("developmentOnly", (configuration) -> configuration.extendsFrom("testCompile"));
 		assertThat(write(build)).contains("""
 				configurations {
 					developmentOnly {
@@ -337,8 +345,9 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithAnnotationProcessorDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("annotation-processor", "org.springframework.boot",
-				"spring-boot-configuration-processor", DependencyScope.ANNOTATION_PROCESSOR);
+		build.dependencies()
+			.add("annotation-processor", "org.springframework.boot", "spring-boot-configuration-processor",
+					DependencyScope.ANNOTATION_PROCESSOR);
 		assertThat(write(build)).contains("""
 				dependencies {
 					annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -368,8 +377,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("driver", Dependency.withCoordinates("com.example", "jdbc-driver")
-				.version(VersionReference.ofValue("1.0.0")).scope(DependencyScope.RUNTIME));
+		build.dependencies()
+			.add("driver",
+					Dependency.withCoordinates("com.example", "jdbc-driver")
+						.version(VersionReference.ofValue("1.0.0"))
+						.scope(DependencyScope.RUNTIME));
 		assertThat(write(build)).contains("""
 				dependencies {
 					runtimeOnly 'com.example:jdbc-driver:1.0.0'
@@ -379,8 +391,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithProvidedRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat",
-				DependencyScope.PROVIDED_RUNTIME);
+		build.dependencies()
+			.add("tomcat", "org.springframework.boot", "spring-boot-starter-tomcat", DependencyScope.PROVIDED_RUNTIME);
 		assertThat(write(build)).contains("""
 				dependencies {
 					providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
@@ -390,8 +402,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTestCompileDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-test",
-				DependencyScope.TEST_COMPILE);
+		build.dependencies()
+			.add("test", "org.springframework.boot", "spring-boot-starter-test", DependencyScope.TEST_COMPILE);
 		assertThat(write(build)).contains("""
 				dependencies {
 					testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -401,8 +413,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithCompileOnlyDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test", "org.springframework.boot", "spring-boot-starter-foobar",
-				DependencyScope.COMPILE_ONLY);
+		build.dependencies()
+			.add("test", "org.springframework.boot", "spring-boot-starter-foobar", DependencyScope.COMPILE_ONLY);
 		assertThat(write(build)).contains("""
 				dependencies {
 					compileOnly 'org.springframework.boot:spring-boot-starter-foobar'
@@ -412,8 +424,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithTestRuntimeDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo",
-				DependencyScope.TEST_RUNTIME);
+		build.dependencies()
+			.add("embed-mongo", "de.flapdoodle.embed", "de.flapdoodle.embed.mongo", DependencyScope.TEST_RUNTIME);
 		assertThat(write(build)).contains("""
 				dependencies {
 					testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
@@ -433,10 +445,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithExclusions() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test",
-				Dependency.withCoordinates("com.example", "test").scope(DependencyScope.COMPILE).exclusions(
-						new Exclusion("com.example.legacy", "legacy-one"),
-						new Exclusion("com.example.another", "legacy-two")));
+		build.dependencies()
+			.add("test",
+					Dependency.withCoordinates("com.example", "test")
+						.scope(DependencyScope.COMPILE)
+						.exclusions(new Exclusion("com.example.legacy", "legacy-one"),
+								new Exclusion("com.example.another", "legacy-two")));
 		assertThat(write(build)).contains("""
 				dependencies {
 					implementation('com.example:test') {
@@ -449,9 +463,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithCustomDependencyConfiguration() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("test",
-				GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
-						.scope(DependencyScope.RUNTIME).configuration("myRuntime"));
+		build.dependencies()
+			.add("test",
+					GradleDependency.withCoordinates("org.springframework.boot", "spring-boot-starter-foobar")
+						.scope(DependencyScope.RUNTIME)
+						.configuration("myRuntime"));
 		assertThat(write(build)).contains("""
 				dependencies {
 					myRuntime 'org.springframework.boot:spring-boot-starter-foobar'
@@ -461,8 +477,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
-				.scope(DependencyScope.COMPILE).type("tar.gz"));
+		build.dependencies()
+			.add("root",
+					Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter")
+						.scope(DependencyScope.COMPILE)
+						.type("tar.gz"));
 		assertThat(write(build)).contains("""
 				dependencies {
 					implementation 'org.springframework.boot:spring-boot-starter@tar.gz'
@@ -472,8 +491,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithNonNullArtifactTypeAndClassifierDependency() {
 		GradleBuild build = new GradleBuild();
-		build.dependencies().add("root", Dependency.withCoordinates("com.example", "acme")
-				.scope(DependencyScope.COMPILE).type("tar.gz").classifier("test-jar"));
+		build.dependencies()
+			.add("root",
+					Dependency.withCoordinates("com.example", "acme")
+						.scope(DependencyScope.COMPILE)
+						.type("tar.gz")
+						.classifier("test-jar"));
 		assertThat(write(build)).contains("""
 				dependencies {
 					implementation 'com.example:acme:test-jar@tar.gz'
@@ -485,8 +508,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("beta", Dependency.withCoordinates("com.example", "beta"));
 		build.dependencies().add("alpha", Dependency.withCoordinates("com.example", "alpha"));
-		build.dependencies().add("web",
-				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
+		build.dependencies()
+			.add("web", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
 		assertThat(write(build)).contains("""
 				dependencies {
@@ -502,8 +525,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("beta", Dependency.withCoordinates("com.example", "beta"));
 		build.dependencies().add("alpha", Dependency.withCoordinates("com.example", "alpha"));
-		build.dependencies().add("web",
-				Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
+		build.dependencies()
+			.add("web", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-web"));
 		build.dependencies().add("root", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter"));
 		GroovyDslGradleBuildWriter writer = new GroovyDslGradleBuildWriter() {
 			@Override
@@ -523,7 +546,8 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithBom() {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+		build.boms()
+			.add("test", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
 				.version(VersionReference.ofValue("1.0.0.RELEASE")));
 		assertThat(write(build)).contains("""
 				dependencyManagement {
@@ -536,10 +560,16 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithOrderedBoms() {
 		GradleBuild build = new GradleBuild();
-		build.boms().add("bom1", BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
-				.version(VersionReference.ofValue("1.0.0.RELEASE")).order(5));
-		build.boms().add("bom2", BillOfMaterials.withCoordinates("com.example", "root-dependencies")
-				.version(VersionReference.ofProperty("root.version")).order(2));
+		build.boms()
+			.add("bom1",
+					BillOfMaterials.withCoordinates("com.example", "my-project-dependencies")
+						.version(VersionReference.ofValue("1.0.0.RELEASE"))
+						.order(5));
+		build.boms()
+			.add("bom2",
+					BillOfMaterials.withCoordinates("com.example", "root-dependencies")
+						.version(VersionReference.ofProperty("root.version"))
+						.order(2));
 		assertThat(write(build)).contains("""
 				dependencyManagement {
 					imports {

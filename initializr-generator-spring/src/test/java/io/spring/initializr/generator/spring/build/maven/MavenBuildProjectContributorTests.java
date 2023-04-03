@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,9 @@ class MavenBuildProjectContributorTests {
 	@Test
 	void pomIsContributedToProject() throws Exception {
 		MavenBuild build = new MavenBuild();
-		build.settings().coordinates("com.example.demo", "demo").parent("org.springframework.boot",
-				"spring-boot-starter-parent", "2.1.0.RELEASE");
+		build.settings()
+			.coordinates("com.example.demo", "demo")
+			.parent("org.springframework.boot", "spring-boot-starter-parent", "2.1.0.RELEASE");
 		List<String> lines = generatePom(build);
 		assertThat(lines).containsSequence("    <parent>", "        <groupId>org.springframework.boot</groupId>",
 				"        <artifactId>spring-boot-starter-parent</artifactId>",
@@ -62,8 +63,9 @@ class MavenBuildProjectContributorTests {
 		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
 				(factory) -> factory.indentingStrategy("maven", new SimpleIndentStrategy("\t")));
 		MavenBuild build = new MavenBuild();
-		build.settings().coordinates("com.example.demo", "demo").parent("org.springframework.boot",
-				"spring-boot-starter-parent", "2.1.0.RELEASE");
+		build.settings()
+			.coordinates("com.example.demo", "demo")
+			.parent("org.springframework.boot", "spring-boot-starter-parent", "2.1.0.RELEASE");
 		List<String> lines = generatePom(build, indentingWriterFactory);
 		assertThat(lines).containsSequence("\t<parent>", "\t\t<groupId>org.springframework.boot</groupId>",
 				"\t\t<artifactId>spring-boot-starter-parent</artifactId>", "\t\t<version>2.1.0.RELEASE</version>");

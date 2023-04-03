@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,12 +41,21 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	public String write(DependencyMetadata metadata) {
 		ObjectNode json = nodeFactory.objectNode();
 		json.put("bootVersion", metadata.getBootVersion().toString());
-		json.set("dependencies", mapNode(metadata.getDependencies().entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapDependency(entry.getValue())))));
-		json.set("repositories", mapNode(metadata.getRepositories().entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapRepository(entry.getValue())))));
-		json.set("boms", mapNode(metadata.getBoms().entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapBom(entry.getValue())))));
+		json.set("dependencies",
+				mapNode(metadata.getDependencies()
+					.entrySet()
+					.stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapDependency(entry.getValue())))));
+		json.set("repositories",
+				mapNode(metadata.getRepositories()
+					.entrySet()
+					.stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapRepository(entry.getValue())))));
+		json.set("boms",
+				mapNode(metadata.getBoms()
+					.entrySet()
+					.stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapBom(entry.getValue())))));
 		return json.toString();
 	}
 
@@ -69,8 +78,9 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 
 	private static JsonNode mapRepository(Repository repo) {
 		ObjectNode node = nodeFactory.objectNode();
-		node.put("name", repo.getName()).put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
-				.put("snapshotEnabled", repo.isSnapshotsEnabled());
+		node.put("name", repo.getName())
+			.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
+			.put("snapshotEnabled", repo.isSnapshotsEnabled());
 		return node;
 	}
 

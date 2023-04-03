@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,12 @@ public interface Packaging {
 	String id();
 
 	static Packaging forId(String id) {
-		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader()).stream()
-				.map((factory) -> factory.createPackaging(id)).filter(Objects::nonNull).findFirst()
-				.orElseThrow(() -> new IllegalStateException("Unrecognized packaging id '" + id + "'"));
+		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader())
+			.stream()
+			.map((factory) -> factory.createPackaging(id))
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElseThrow(() -> new IllegalStateException("Unrecognized packaging id '" + id + "'"));
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ public class InitializrAutoConfiguration {
 				ApplicationContext applicationContext) {
 			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
 					applicationContext, new DefaultProjectRequestToDescriptionConverter(platformVersionTransformer
-							.getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new)));
+						.getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new)));
 			return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
 		}
 
@@ -204,15 +204,16 @@ public class InitializrAutoConfiguration {
 		private void createMissingCache(javax.cache.CacheManager cacheManager, String cacheName,
 				Supplier<MutableConfiguration<Object, Object>> config) {
 			boolean cacheExist = StreamSupport.stream(cacheManager.getCacheNames().spliterator(), true)
-					.anyMatch((name) -> name.equals(cacheName));
+				.anyMatch((name) -> name.equals(cacheName));
 			if (!cacheExist) {
 				cacheManager.createCache(cacheName, config.get());
 			}
 		}
 
 		private MutableConfiguration<Object, Object> config() {
-			return new MutableConfiguration<>().setStoreByValue(false).setManagementEnabled(true)
-					.setStatisticsEnabled(true);
+			return new MutableConfiguration<>().setStoreByValue(false)
+				.setManagementEnabled(true)
+				.setStatisticsEnabled(true);
 		}
 
 	}

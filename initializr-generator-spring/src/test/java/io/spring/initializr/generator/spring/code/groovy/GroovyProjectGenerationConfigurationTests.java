@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,15 +44,16 @@ class GroovyProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
-						GroovyProjectGenerationConfiguration.class)
-				.withDirectory(directory).withDescriptionCustomizer((description) -> {
-					description.setLanguage(new GroovyLanguage());
-					if (description.getPlatformVersion() == null) {
-						description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-					}
-					description.setBuildSystem(new MavenBuildSystem());
-				});
+			.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
+					GroovyProjectGenerationConfiguration.class)
+			.withDirectory(directory)
+			.withDescriptionCustomizer((description) -> {
+				description.setLanguage(new GroovyLanguage());
+				if (description.getPlatformVersion() == null) {
+					description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+				}
+				description.setBuildSystem(new MavenBuildSystem());
+			});
 	}
 
 	@Test
@@ -66,10 +67,10 @@ class GroovyProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/test/groovy/com/example/demo/DemoApplicationTests.groovy").containsExactly(
-				"package com.example.demo", "", "import org.junit.jupiter.api.Test",
-				"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
-				"class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {", "    }", "", "}");
+		assertThat(project).textFile("src/test/groovy/com/example/demo/DemoApplicationTests.groovy")
+			.containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
+					"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
+					"class DemoApplicationTests {", "", "    @Test", "    void contextLoads() {", "    }", "", "}");
 	}
 
 	@Test
@@ -78,12 +79,13 @@ class GroovyProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("Demo2Application");
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/main/groovy/com/example/demo/ServletInitializer.groovy").containsExactly(
-				"package com.example.demo", "", "import org.springframework.boot.builder.SpringApplicationBuilder",
-				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
-				"class ServletInitializer extends SpringBootServletInitializer {", "", "    @Override",
-				"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
-				"        application.sources(Demo2Application)", "    }", "", "}");
+		assertThat(project).textFile("src/main/groovy/com/example/demo/ServletInitializer.groovy")
+			.containsExactly("package com.example.demo", "",
+					"import org.springframework.boot.builder.SpringApplicationBuilder",
+					"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
+					"class ServletInitializer extends SpringBootServletInitializer {", "", "    @Override",
+					"    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {",
+					"        application.sources(Demo2Application)", "    }", "", "}");
 	}
 
 }

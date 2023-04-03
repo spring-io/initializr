@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,9 +110,10 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse").returning("java.lang.String")
-				.parameters(new Parameter("java.lang.String", "echo"))
-				.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
+		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
+			.returning("java.lang.String")
+			.parameters(new Parameter("java.lang.String", "echo"))
+			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    fun reverse(echo: String): String {", "        return echo.reversed()", "    }", "", "}");
@@ -124,9 +125,9 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("toString")
-				.modifiers(KotlinModifier.OVERRIDE, KotlinModifier.PUBLIC, KotlinModifier.OPEN)
-				.returning("java.lang.String")
-				.body(new KotlinReturnStatement(new KotlinFunctionInvocation("super", "toString"))));
+			.modifiers(KotlinModifier.OVERRIDE, KotlinModifier.PUBLIC, KotlinModifier.OPEN)
+			.returning("java.lang.String")
+			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("super", "toString"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    open override fun toString(): String {", "        return super.toString()", "    }", "", "}");
@@ -163,9 +164,12 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
 				KotlinPropertyDeclaration.val("testProp").returning("java.lang.String").value("\"This is a TEST\""));
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("withGetter").returning("java.lang.String").getter()
-				.withBody(new KotlinExpressionStatement(new KotlinFunctionInvocation("testProp", "toLowerCase")))
-				.buildAccessor().emptyValue());
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("withGetter")
+			.returning("java.lang.String")
+			.getter()
+			.withBody(new KotlinExpressionStatement(new KotlinFunctionInvocation("testProp", "toLowerCase")))
+			.buildAccessor()
+			.emptyValue());
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    val testProp: String = \"This is a TEST\"", "", "    val withGetter: String",
@@ -189,8 +193,11 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp").returning("java.lang.String").setter()
-				.buildAccessor().value("\"This is a test\""));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp")
+			.returning("java.lang.String")
+			.setter()
+			.buildAccessor()
+			.value("\"This is a test\""));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        set", "", "}");
@@ -201,9 +208,12 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp").returning("java.lang.String").setter()
-				.withAnnotation(Annotation.name("org.springframework.beans.factory.annotation.Autowired"))
-				.buildAccessor().value("\"This is a test\""));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp")
+			.returning("java.lang.String")
+			.setter()
+			.withAnnotation(Annotation.name("org.springframework.beans.factory.annotation.Autowired"))
+			.buildAccessor()
+			.value("\"This is a test\""));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        @Autowired set", "", "}");
@@ -253,10 +263,10 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
-		compilationUnit.addTopLevelFunction(
-				KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
-						.body(new KotlinExpressionStatement(new KotlinReifiedFunctionInvocation(
-								"org.springframework.boot.runApplication", "Test", "*args"))));
+		compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
+			.parameters(new Parameter("Array<String>", "args"))
+			.body(new KotlinExpressionStatement(
+					new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication", "Test", "*args"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.boot.autoconfigure.SpringBootApplication",
@@ -309,8 +319,8 @@ class KotlinSourceCodeWriterTests {
 	@Test
 	void annotationWithSeveralAttributes() throws IOException {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
-				(builder) -> builder.attribute("target", Class.class, "com.example.One").attribute("unit",
-						ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
+				(builder) -> builder.attribute("target", Class.class, "com.example.One")
+					.attribute("unit", ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.One",
 				"import java.time.temporal.ChronoUnit", "import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One::class, unit = ChronoUnit.NANOS)", "class Test");

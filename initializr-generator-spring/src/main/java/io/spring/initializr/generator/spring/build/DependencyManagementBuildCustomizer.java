@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,8 +71,9 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key));
 			}
 		});
-		resolvedBoms.values().forEach(
-				(bom) -> bom.getRepositories().forEach((repositoryId) -> repositories.computeIfAbsent(repositoryId,
+		resolvedBoms.values()
+			.forEach((bom) -> bom.getRepositories()
+				.forEach((repositoryId) -> repositories.computeIfAbsent(repositoryId,
 						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key))));
 		resolvedBoms.forEach((key, bom) -> {
 			build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
@@ -84,14 +85,20 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 	}
 
 	private Stream<Dependency> mapDependencies(Build build) {
-		return build.dependencies().ids().map((id) -> this.metadata.getDependencies().get(id)).filter(Objects::nonNull)
-				.map((dependency) -> dependency.resolve(this.description.getPlatformVersion()));
+		return build.dependencies()
+			.ids()
+			.map((id) -> this.metadata.getDependencies().get(id))
+			.filter(Objects::nonNull)
+			.map((dependency) -> dependency.resolve(this.description.getPlatformVersion()));
 	}
 
 	private void resolveBom(Map<String, BillOfMaterials> boms, String bomId, Version requestedVersion) {
 		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(bomId)
-					.resolve(requestedVersion);
+			BillOfMaterials bom = this.metadata.getConfiguration()
+				.getEnv()
+				.getBoms()
+				.get(bomId)
+				.resolve(requestedVersion);
 			bom.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
 			boms.put(bomId, bom);
 		}

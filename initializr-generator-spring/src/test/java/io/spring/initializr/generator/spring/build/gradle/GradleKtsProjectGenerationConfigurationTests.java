@@ -57,12 +57,11 @@ class GradleKtsProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-				.withConfiguration(BuildProjectGenerationConfiguration.class,
-						GradleProjectGenerationConfiguration.class)
-				.withDirectory(directory)
-				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
-				.withDescriptionCustomizer((description) -> description
-						.setBuildSystem(new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN)));
+			.withConfiguration(BuildProjectGenerationConfiguration.class, GradleProjectGenerationConfiguration.class)
+			.withDirectory(directory)
+			.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
+			.withDescriptionCustomizer((description) -> description
+				.setBuildSystem(new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN)));
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
@@ -77,10 +76,11 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse(platformVersion));
 		description.setLanguage(new JavaLanguage());
 		this.projectTester.configure(description, (context) -> {
-			assertThat(context).hasSingleBean(BuildWriter.class).getBean(BuildWriter.class)
-					.isInstanceOf(GradleBuildProjectContributor.class);
+			assertThat(context).hasSingleBean(BuildWriter.class)
+				.getBean(BuildWriter.class)
+				.isInstanceOf(GradleBuildProjectContributor.class);
 			assertThat(ReflectionTestUtils.getField(context.getBean(BuildWriter.class), "buildWriter"))
-					.isInstanceOf(KotlinDslGradleBuildWriter.class);
+				.isInstanceOf(KotlinDslGradleBuildWriter.class);
 		});
 	}
 
@@ -99,7 +99,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 		assertThat(project).containsFiles("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
 		assertThat(project).textFile("gradle/wrapper/gradle-wrapper.properties")
-				.containsOnlyOnce(String.format("gradle-%s-bin.zip", expectedGradleVersion));
+			.containsOnlyOnce(String.format("gradle-%s-bin.zip", expectedGradleVersion));
 	}
 
 	@Test
@@ -111,7 +111,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 				Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.COMPILE));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("build.gradle.kts")
-				.containsExactly(// @formatter:off
+			.containsExactly(// @formatter:off
 				"plugins {",
 				"    java",
 				"    id(\"org.springframework.boot\") version \"2.4.0\"",
@@ -143,8 +143,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.4.0"));
 		description.setLanguage(new JavaLanguage("11"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle.kts").lines()
-				.contains("    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"");
+		assertThat(project).textFile("build.gradle.kts")
+			.lines()
+			.contains("    id(\"io.spring.dependency-management\") version \"1.0.6.RELEASE\"");
 	}
 
 	@Test
@@ -153,10 +154,11 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.4.0"));
 		description.setLanguage(new JavaLanguage("11"));
 		ProjectStructure project = this.projectTester
-				.withBean(DependencyManagementPluginVersionResolver.class, () -> (d) -> "1.5.1.RC1")
-				.generate(description);
-		assertThat(project).textFile("build.gradle.kts").lines()
-				.contains("    id(\"io.spring.dependency-management\") version \"1.5.1.RC1\"");
+			.withBean(DependencyManagementPluginVersionResolver.class, () -> (d) -> "1.5.1.RC1")
+			.generate(description);
+		assertThat(project).textFile("build.gradle.kts")
+			.lines()
+			.contains("    id(\"io.spring.dependency-management\") version \"1.5.1.RC1\"");
 	}
 
 	@Test
@@ -175,8 +177,9 @@ class GradleKtsProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle.kts").lines().containsSequence("tasks.withType<Test> {",
-				"    useJUnitPlatform()", "}");
+		assertThat(project).textFile("build.gradle.kts")
+			.lines()
+			.containsSequence("tasks.withType<Test> {", "    useJUnitPlatform()", "}");
 	}
 
 }

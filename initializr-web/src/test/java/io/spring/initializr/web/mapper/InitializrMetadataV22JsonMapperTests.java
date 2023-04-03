@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,9 @@ class InitializrMetadataV22JsonMapperTests {
 	@Test
 	void platformVersionUsingSemVerUIsNotChanged() throws JsonProcessingException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("2.5.0-SNAPSHOT", false)
-				.addBootVersion("2.5.0-M2", false).addBootVersion("2.4.2", true).build();
+			.addBootVersion("2.5.0-M2", false)
+			.addBootVersion("2.4.2", true)
+			.build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
 		JsonNode platformVersions = result.get("bootVersion");

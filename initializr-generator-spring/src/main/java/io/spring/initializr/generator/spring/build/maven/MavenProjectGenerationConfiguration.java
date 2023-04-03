@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class MavenProjectGenerationConfiguration {
 	private MavenBuild createBuild(BuildItemResolver buildItemResolver, List<BuildCustomizer<?>> buildCustomizers) {
 		MavenBuild build = (buildItemResolver != null) ? new MavenBuild(buildItemResolver) : new MavenBuild();
 		LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
-				.invoke((customizer) -> customizer.customize(build));
+			.invoke((customizer) -> customizer.customize(build));
 		return build;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,9 @@ class ProjectAssetTesterTests {
 
 	@Test
 	void testerWithIndentingWriterFactory() {
-		new ProjectAssetTester().withIndentingWriterFactory().configure(new MutableProjectDescription(),
-				(context) -> assertThat(context).hasSingleBean(IndentingWriterFactory.class));
+		new ProjectAssetTester().withIndentingWriterFactory()
+			.configure(new MutableProjectDescription(),
+					(context) -> assertThat(context).hasSingleBean(IndentingWriterFactory.class));
 	}
 
 	@Test
@@ -58,25 +59,26 @@ class ProjectAssetTesterTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setName("test.text");
 		ProjectStructure project = new ProjectAssetTester().withDirectory(directory)
-				.withConfiguration(ContributorsConfiguration.class).generate(description);
+			.withConfiguration(ContributorsConfiguration.class)
+			.generate(description);
 		assertThat(project).filePaths().containsOnly("test.text", "test2.text");
 	}
 
 	@Test
 	void testerWithContextFailureIsProperlyReported() {
 		new ProjectAssetTester().withConfiguration(ContributorFailureConfiguration.class)
-				.configure(new MutableProjectDescription(), (context) -> {
-					assertThat(context).hasFailed();
-					assertThat(context.getStartupFailure()).isInstanceOf(UnsatisfiedDependencyException.class);
-					assertThat(context.getStartupFailure().getMessage()).doesNotContain("Should not be invoked");
-				});
+			.configure(new MutableProjectDescription(), (context) -> {
+				assertThat(context).hasFailed();
+				assertThat(context.getStartupFailure()).isInstanceOf(UnsatisfiedDependencyException.class);
+				assertThat(context.getStartupFailure().getMessage()).doesNotContain("Should not be invoked");
+			});
 	}
 
 	@Test
 	void testerWithContextSuccessFailToAssertFailure() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> new ProjectAssetTester().withConfiguration(ContributorsConfiguration.class)
-						.configure(new MutableProjectDescription(), (context) -> assertThat(context).hasFailed()));
+			.isThrownBy(() -> new ProjectAssetTester().withConfiguration(ContributorsConfiguration.class)
+				.configure(new MutableProjectDescription(), (context) -> assertThat(context).hasFailed()));
 	}
 
 	@Configuration

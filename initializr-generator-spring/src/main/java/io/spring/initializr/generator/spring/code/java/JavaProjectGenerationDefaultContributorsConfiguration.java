@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,12 +48,12 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 	MainApplicationTypeCustomizer<JavaTypeDeclaration> mainMethodContributor() {
 		return (typeDeclaration) -> {
 			typeDeclaration.modifiers(Modifier.PUBLIC);
-			typeDeclaration.addMethodDeclaration(
-					JavaMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
-							.parameters(new Parameter("java.lang.String[]", "args"))
-							.body(new JavaExpressionStatement(
-									new JavaMethodInvocation("org.springframework.boot.SpringApplication", "run",
-											typeDeclaration.getName() + ".class", "args"))));
+			typeDeclaration.addMethodDeclaration(JavaMethodDeclaration.method("main")
+				.modifiers(Modifier.PUBLIC | Modifier.STATIC)
+				.returning("void")
+				.parameters(new Parameter("java.lang.String[]", "args"))
+				.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
+						"run", typeDeclaration.getName() + ".class", "args"))));
 		};
 	}
 
@@ -79,12 +79,12 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 			return (typeDeclaration) -> {
 				typeDeclaration.modifiers(Modifier.PUBLIC);
 				JavaMethodDeclaration configure = JavaMethodDeclaration.method("configure")
-						.modifiers(Modifier.PROTECTED)
-						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
-								"application"))
-						.body(new JavaReturnStatement(new JavaMethodInvocation("application", "sources",
-								description.getApplicationName() + ".class")));
+					.modifiers(Modifier.PROTECTED)
+					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
+					.parameters(
+							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
+					.body(new JavaReturnStatement(new JavaMethodInvocation("application", "sources",
+							description.getApplicationName() + ".class")));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

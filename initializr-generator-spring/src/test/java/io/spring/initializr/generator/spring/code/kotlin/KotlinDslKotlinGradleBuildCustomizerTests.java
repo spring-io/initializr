@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 	void kotlinPluginsAreConfigured() {
 		GradleBuild build = new GradleBuild();
 		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.plugins().values()).extracting("id", "version").containsExactlyInAnyOrder(
-				Tuple.tuple("org.jetbrains.kotlin.jvm", "1.2.70"),
-				Tuple.tuple("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
+		assertThat(build.plugins().values()).extracting("id", "version")
+			.containsExactlyInAnyOrder(Tuple.tuple("org.jetbrains.kotlin.jvm", "1.2.70"),
+					Tuple.tuple("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
 	}
 
 	@Test
@@ -59,7 +59,7 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 		assertThat(kotlinOptions.getNested()).hasSize(0);
 		assertThat(kotlinOptions.getAttributes()).hasSize(2);
 		assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
-				.containsEntry("jvmTarget", String.format("\"%s\"", jvmTarget));
+			.containsEntry("jvmTarget", String.format("\"%s\"", jvmTarget));
 	}
 
 }

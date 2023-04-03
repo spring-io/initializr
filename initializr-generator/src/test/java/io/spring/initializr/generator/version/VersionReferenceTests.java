@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,13 +73,13 @@ class VersionReferenceTests {
 	@Test
 	void equalsWithDifferentProperty() {
 		assertThat(VersionReference.ofProperty("test.version"))
-				.isNotEqualTo(VersionReference.ofProperty("another.version"));
+			.isNotEqualTo(VersionReference.ofProperty("another.version"));
 	}
 
 	@Test
 	void equalsWithDifferentPropertyScope() {
 		assertThat(VersionReference.ofProperty(VersionProperty.of("test.version", false)))
-				.isNotEqualTo(VersionReference.ofProperty(VersionProperty.of("test.version", true)));
+			.isNotEqualTo(VersionReference.ofProperty(VersionProperty.of("test.version", true)));
 	}
 
 }

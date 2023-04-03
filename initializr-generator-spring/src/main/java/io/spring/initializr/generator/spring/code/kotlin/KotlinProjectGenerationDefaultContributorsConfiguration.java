@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,10 +97,11 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ProjectDescription description) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
-					KotlinFunctionDeclaration.function("main").parameters(new Parameter("Array<String>", "args"))
-							.body(new KotlinExpressionStatement(
-									new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication",
-											description.getApplicationName(), "*args"))));
+					KotlinFunctionDeclaration.function("main")
+						.parameters(new Parameter("Array<String>", "args"))
+						.body(new KotlinExpressionStatement(
+								new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication",
+										description.getApplicationName(), "*args"))));
 		}
 
 	}
@@ -117,12 +118,12 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
-						.modifiers(KotlinModifier.OVERRIDE)
-						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
-								"application"))
-						.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
-								description.getApplicationName() + "::class.java")));
+					.modifiers(KotlinModifier.OVERRIDE)
+					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
+					.parameters(
+							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
+					.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
+							description.getApplicationName() + "::class.java")));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};
 		}

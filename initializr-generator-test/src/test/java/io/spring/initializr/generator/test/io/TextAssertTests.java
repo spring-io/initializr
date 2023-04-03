@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ class TextAssertTests {
 		given(resource.isReadable()).willReturn(false);
 		given(resource.toString()).willReturn("project/does-not-exist");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forContent("Hello")).hasSameContentAs(resource))
-				.withMessageContaining("project/does-not-exist");
+			.isThrownBy(() -> assertThat(forContent("Hello")).hasSameContentAs(resource))
+			.withMessageContaining("project/does-not-exist");
 	}
 
 	@Test
@@ -57,8 +57,8 @@ class TextAssertTests {
 		given(resource.isReadable()).willReturn(true);
 		given(resource.getInputStream()).willThrow(new IOException("Test exception"));
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forContent("Hello")).hasSameContentAs(resource))
-				.withMessageContaining("Cannot read expected content");
+			.isThrownBy(() -> assertThat(forContent("Hello")).hasSameContentAs(resource))
+			.withMessageContaining("Cannot read expected content");
 	}
 
 	@Test
@@ -79,8 +79,9 @@ class TextAssertTests {
 	@Test
 	void sameContentAsWithNonMatchingResource() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forContent("Test")).hasSameContentAs(createResource("Hello")))
-				.withMessageContaining("Test").withMessageContaining("Hello");
+			.isThrownBy(() -> assertThat(forContent("Test")).hasSameContentAs(createResource("Hello")))
+			.withMessageContaining("Test")
+			.withMessageContaining("Hello");
 	}
 
 	@Test
@@ -99,8 +100,10 @@ class TextAssertTests {
 			writer.println("Test");
 		}
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forContent(file)).hasSameContentAs(createResource("Hello")))
-				.withMessageContaining("Test").withMessageContaining("Hello").withMessageContaining(file.toString());
+			.isThrownBy(() -> assertThat(forContent(file)).hasSameContentAs(createResource("Hello")))
+			.withMessageContaining("Test")
+			.withMessageContaining("Hello")
+			.withMessageContaining(file.toString());
 	}
 
 	private AssertProvider<TextAssert> forContent(String content) {

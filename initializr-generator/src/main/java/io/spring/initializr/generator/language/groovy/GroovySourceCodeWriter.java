@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,8 +151,8 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			}
 			else {
 				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
+					.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+					.collect(Collectors.joining(", ")));
 			}
 			writer.print(")");
 		}
@@ -203,8 +203,8 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		List<Parameter> parameters = methodDeclaration.getParameters();
 		if (!parameters.isEmpty()) {
 			writer.print(parameters.stream()
-					.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
-					.collect(Collectors.joining(", ")));
+				.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
+				.collect(Collectors.joining(", ")));
 		}
 		writer.println(") {");
 		writer.indented(() -> {
@@ -225,9 +225,11 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
 			int declaredModifiers) {
-		String modifiers = availableModifiers.entrySet().stream()
-				.filter((entry) -> entry.getKey().test(declaredModifiers)).map(Entry::getValue)
-				.collect(Collectors.joining(" "));
+		String modifiers = availableModifiers.entrySet()
+			.stream()
+			.filter((entry) -> entry.getKey().test(declaredModifiers))
+			.map(Entry::getValue)
+			.collect(Collectors.joining(" "));
 		if (!modifiers.isEmpty()) {
 			writer.print(modifiers);
 			writer.print(" ");
@@ -265,10 +267,14 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
-				imports.addAll(getRequiredImports(methodDeclaration.getStatements().stream()
-						.filter(GroovyExpressionStatement.class::isInstance).map(GroovyExpressionStatement.class::cast)
-						.map(GroovyExpressionStatement::getExpression).filter(GroovyMethodInvocation.class::isInstance)
-						.map(GroovyMethodInvocation.class::cast),
+				imports.addAll(getRequiredImports(
+						methodDeclaration.getStatements()
+							.stream()
+							.filter(GroovyExpressionStatement.class::isInstance)
+							.map(GroovyExpressionStatement.class::cast)
+							.map(GroovyExpressionStatement::getExpression)
+							.filter(GroovyMethodInvocation.class::isInstance)
+							.map(GroovyMethodInvocation.class::cast),
 						(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
 			}
 		}
@@ -284,8 +290,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				imports.addAll(attribute.getValues());
 			}
 			if (Enum.class.isAssignableFrom(attribute.getType())) {
-				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
-						.toList());
+				imports.addAll(attribute.getValues()
+					.stream()
+					.map((value) -> value.substring(0, value.lastIndexOf(".")))
+					.toList());
 			}
 		});
 		return imports;
@@ -296,8 +304,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	}
 
 	private <T> List<String> getRequiredImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping).flatMap(Collection::stream).filter(this::requiresImport)
-				.collect(Collectors.toList());
+		return candidates.map(mapping)
+			.flatMap(Collection::stream)
+			.filter(this::requiresImport)
+			.collect(Collectors.toList());
 	}
 
 	private String getUnqualifiedName(String name) {

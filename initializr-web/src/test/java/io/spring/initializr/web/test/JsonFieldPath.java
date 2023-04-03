@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 final class JsonFieldPath {
 
 	private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern
-			.compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
+		.compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
 
 	private static final Pattern ARRAY_INDEX_PATTERN = Pattern.compile("\\[([0-9]+|\\*){0,1}\\]");
 

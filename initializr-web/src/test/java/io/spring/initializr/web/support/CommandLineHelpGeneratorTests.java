@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,10 @@ class CommandLineHelpGeneratorTests {
 
 	@Test
 	void generateGenericCapabilities() throws IOException {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
-				createDependency("id-b", "depB"), createDependency("id-a", "depA", "and some description")).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("test", createDependency("id-b", "depB"),
+					createDependency("id-a", "depA", "and some description"))
+			.build();
 		String content = this.generator.generateGenericCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content).contains("id-a | and some description |");
@@ -71,7 +73,8 @@ class CommandLineHelpGeneratorTests {
 		Dependency dependency = createDependency("dep", "some description");
 		dependency.setAliases(Arrays.asList("legacy", "another"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		String content = this.generator.generateGenericCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content).contains("dep | some description |");
@@ -80,8 +83,10 @@ class CommandLineHelpGeneratorTests {
 
 	@Test
 	void generateCurlCapabilities() throws IOException {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
-				createDependency("id-b", "depB"), createDependency("id-a", "depA", "and some description")).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("test", createDependency("id-b", "depB"),
+					createDependency("id-a", "depA", "and some description"))
+			.build();
 		String content = this.generator.generateCurlCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content).contains("id-a | and some description |");
@@ -95,9 +100,9 @@ class CommandLineHelpGeneratorTests {
 	void generateGeneralCapabilitiesWithDefaultLineWrap() throws IOException {
 		CommandLineHelpGenerator lineWrapTemplateGenerator = new CommandLineHelpGenerator(template);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
-						"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
-				.build();
+			.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
+					"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
+			.build();
 		String content = lineWrapTemplateGenerator.generateGenericCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(readAllLines(content)).containsSequence(
@@ -113,9 +118,9 @@ class CommandLineHelpGeneratorTests {
 	void generateGeneralCapabilitiesWithCustomLineWrap() throws IOException {
 		CommandLineHelpGenerator lineWrapTemplateGenerator = new CommandLineHelpGenerator(template, 100);
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
-						"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
-				.build();
+			.addDependencyGroup("test", createDependency("id-a", "Short description"), createDependency("id-b",
+					"Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema."))
+			.build();
 		String content = lineWrapTemplateGenerator.generateGenericCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(readAllLines(content)).containsSequence(
@@ -128,8 +133,10 @@ class CommandLineHelpGeneratorTests {
 
 	@Test
 	void generateHttpCapabilities() throws IOException {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
-				createDependency("id-b", "depB"), createDependency("id-a", "depA", "and some description")).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("test", createDependency("id-b", "depB"),
+					createDependency("id-a", "depA", "and some description"))
+			.build();
 		String content = this.generator.generateHttpieCapabilities(metadata, "https://fake-service");
 		assertCommandLineCapabilities(content);
 		assertThat(content).contains("id-a | and some description |");
@@ -142,8 +149,10 @@ class CommandLineHelpGeneratorTests {
 
 	@Test
 	void generateSpringBootCliCapabilities() throws IOException {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test",
-				createDependency("id-b", "depB"), createDependency("id-a", "depA", "and some description")).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("test", createDependency("id-b", "depB"),
+					createDependency("id-a", "depA", "and some description"))
+			.build();
 		String content = this.generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");
 		assertThat(content).contains("| Id");
 		assertThat(content).contains("| Tags");
@@ -167,7 +176,8 @@ class CommandLineHelpGeneratorTests {
 		second.setDescription("second desc");
 		second.setCompatibilityRange(" [1.2.0.RELEASE,1.3.0.M1)  ");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", first, second).build();
+			.addDependencyGroup("test", first, second)
+			.build();
 		String content = this.generator.generateSpringBootCliCapabilities(metadata, "https://fake-service");
 		assertThat(content).contains("| first  | first desc  | >=1.2.0.RELEASE               |");
 		assertThat(content).contains("| second | second desc | >=1.2.0.RELEASE and <1.3.0.M1 |");

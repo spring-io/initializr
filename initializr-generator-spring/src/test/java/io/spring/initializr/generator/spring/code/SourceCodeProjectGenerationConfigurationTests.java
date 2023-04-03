@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 class SourceCodeProjectGenerationConfigurationTests {
 
 	private final ProjectAssetTester projectTester = new ProjectAssetTester()
-			.withConfiguration(SourceCodeProjectGenerationConfiguration.class);
+		.withConfiguration(SourceCodeProjectGenerationConfiguration.class);
 
 	@Test
 	@SuppressWarnings("unchecked")
@@ -52,8 +52,8 @@ class SourceCodeProjectGenerationConfigurationTests {
 		});
 		assertThat(declaration.getAnnotations()).hasSize(1);
 		assertThat(declaration.getAnnotations()).singleElement()
-				.satisfies((annotation) -> assertThat(annotation.getName())
-						.isEqualTo("org.springframework.boot.autoconfigure.SpringBootApplication"));
+			.satisfies((annotation) -> assertThat(annotation.getName())
+				.isEqualTo("org.springframework.boot.autoconfigure.SpringBootApplication"));
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class SourceCodeProjectGenerationConfigurationTests {
 		TypeDeclaration declaration = generateTestTypeDeclaration("2.2.0.RELEASE");
 		assertThat(declaration.getAnnotations()).hasSize(1);
 		assertThat(declaration.getAnnotations().get(0).getName())
-				.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
+			.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
 	}
 
 	@SuppressWarnings("unchecked")

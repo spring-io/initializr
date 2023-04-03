@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,8 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 					HttpStatus status = HttpStatus.valueOf(servletResponse.getStatus());
 					if (status.value() >= 400) {
 						requestBuilder = request(HttpMethod.GET, "/error")
-								.requestAttr(RequestDispatcher.ERROR_STATUS_CODE, status.value())
-								.requestAttr(RequestDispatcher.ERROR_REQUEST_URI, uri.toString());
+							.requestAttr(RequestDispatcher.ERROR_STATUS_CODE, status.value())
+							.requestAttr(RequestDispatcher.ERROR_REQUEST_URI, uri.toString());
 						if (servletResponse.getErrorMessage() != null) {
 							requestBuilder.requestAttr(RequestDispatcher.ERROR_MESSAGE,
 									servletResponse.getErrorMessage());

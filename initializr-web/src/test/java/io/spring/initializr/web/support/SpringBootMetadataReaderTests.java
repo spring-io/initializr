@@ -52,10 +52,12 @@ class SpringBootMetadataReaderTests {
 
 	@Test
 	void readAvailableVersions() throws IOException {
-		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases")).andRespond(
-				withSuccess(new ClassPathResource("metadata/springio/spring-boot.json"), MediaType.APPLICATION_JSON));
+		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
+			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot.json"),
+					MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
-				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
+				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
+			.getBootVersions();
 		assertThat(versions).hasSize(7);
 		assertSpringBootVersion(versions.get(0), "3.0.2-SNAPSHOT", "3.0.2 (SNAPSHOT)", false);
 		assertSpringBootVersion(versions.get(1), "3.0.1", "3.0.1", true);
@@ -70,10 +72,11 @@ class SpringBootMetadataReaderTests {
 	@Test
 	void readAvailableVersionsWithInvalidVersion() throws IOException {
 		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
-				.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot-invalid-version.json"),
-						MediaType.APPLICATION_JSON));
+			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot-invalid-version.json"),
+					MediaType.APPLICATION_JSON));
 		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
-				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl()).getBootVersions();
+				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
+			.getBootVersions();
 		assertThat(versions).hasSize(1);
 		assertSpringBootVersion(versions.get(0), "3.0.1", "3.0.1", true);
 		this.server.verify();

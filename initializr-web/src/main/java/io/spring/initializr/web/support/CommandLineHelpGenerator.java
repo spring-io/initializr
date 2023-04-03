@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,8 +173,11 @@ public class CommandLineHelpGenerator {
 		String[][] dependencyTable = new String[metadata.getDependencies().getAll().size() + 1][];
 		dependencyTable[0] = new String[] { "Id", "Description", "Required version" };
 		int i = 1;
-		for (Dependency dep : metadata.getDependencies().getAll().stream()
-				.sorted(Comparator.comparing(MetadataElement::getId)).toList()) {
+		for (Dependency dep : metadata.getDependencies()
+			.getAll()
+			.stream()
+			.sorted(Comparator.comparing(MetadataElement::getId))
+			.toList()) {
 			String[] data = new String[3];
 			data[0] = dep.getId();
 			data[1] = (dep.getDescription() != null) ? dep.getDescription() : dep.getName();
@@ -193,8 +196,11 @@ public class CommandLineHelpGenerator {
 			typeTable[0] = new String[] { linkHeader, "Description" };
 		}
 		int i = 1;
-		for (Type type : metadata.getTypes().getContent().stream().sorted(Comparator.comparing(MetadataElement::getId))
-				.toList()) {
+		for (Type type : metadata.getTypes()
+			.getContent()
+			.stream()
+			.sorted(Comparator.comparing(MetadataElement::getId))
+			.toList()) {
 			String[] data = new String[typeTable[0].length];
 			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());
 			data[1] = (type.getDescription() != null) ? type.getDescription() : type.getName();
@@ -225,8 +231,12 @@ public class CommandLineHelpGenerator {
 		if (type.getTags().isEmpty()) {
 			return "";
 		}
-		return String.join(",", type.getTags().entrySet().stream()
-				.map((entry) -> entry.getKey() + ":" + entry.getValue()).toArray(String[]::new));
+		return String.join(",",
+				type.getTags()
+					.entrySet()
+					.stream()
+					.map((entry) -> entry.getKey() + ":" + entry.getValue())
+					.toArray(String[]::new));
 	}
 
 	/**

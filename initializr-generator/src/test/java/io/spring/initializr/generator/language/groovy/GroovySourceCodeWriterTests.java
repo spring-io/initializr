@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,9 +111,10 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim").returning("java.lang.String")
-				.parameters(new Parameter("java.lang.String", "value"))
-				.body(new GroovyReturnStatement(new GroovyMethodInvocation("value", "trim"))));
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
+			.returning("java.lang.String")
+			.parameters(new Parameter("java.lang.String", "value"))
+			.body(new GroovyReturnStatement(new GroovyMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    String trim(String value) {", "        value.trim()", "    }", "", "}");
@@ -125,10 +126,12 @@ class GroovySourceCodeWriterTests {
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
-		test.addMethodDeclaration(GroovyMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC)
-				.returning("void").parameters(new Parameter("java.lang.String[]", "args"))
-				.body(new GroovyExpressionStatement(new GroovyMethodInvocation(
-						"org.springframework.boot.SpringApplication", "run", "Test", "args"))));
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("main")
+			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
+			.returning("void")
+			.parameters(new Parameter("java.lang.String[]", "args"))
+			.body(new GroovyExpressionStatement(
+					new GroovyMethodInvocation("org.springframework.boot.SpringApplication", "run", "Test", "args"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.boot.SpringApplication",
@@ -156,8 +159,10 @@ class GroovySourceCodeWriterTests {
 		test.addFieldDeclaration(GroovyFieldDeclaration.field("testNoInit").returning("boolean"));
 		test.addFieldDeclaration(
 				GroovyFieldDeclaration.field("testInteger").value("42").returning("java.lang.Integer"));
-		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble").modifiers(Modifier.PRIVATE).value("1986.0")
-				.returning("double"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testDouble")
+			.modifiers(Modifier.PRIVATE)
+			.value("1986.0")
+			.returning("double"));
 		test.addFieldDeclaration(GroovyFieldDeclaration.field("testLong").value("1986L").returning("long"));
 		test.addFieldDeclaration(
 				GroovyFieldDeclaration.field("testNullBoolean").value(null).returning("java.lang.Boolean"));
@@ -250,8 +255,8 @@ class GroovySourceCodeWriterTests {
 	@Test
 	void annotationWithSeveralAttributes() throws IOException {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
-				(builder) -> builder.attribute("target", Class.class, "com.example.One").attribute("unit",
-						ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
+				(builder) -> builder.attribute("target", Class.class, "com.example.One")
+					.attribute("unit", ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.One",
 				"import java.time.temporal.ChronoUnit", "import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One, unit = ChronoUnit.NANOS)", "class Test {", "", "}");
@@ -270,8 +275,10 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		GroovyMethodDeclaration method = GroovyMethodDeclaration.method("something").returning("void").parameters()
-				.body();
+		GroovyMethodDeclaration method = GroovyMethodDeclaration.method("something")
+			.returning("void")
+			.parameters()
+			.body();
 		method.annotate(Annotation.name("com.example.test.TestAnnotation"));
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");

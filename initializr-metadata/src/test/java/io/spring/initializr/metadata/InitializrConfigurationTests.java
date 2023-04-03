@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,31 +90,31 @@ class InitializrConfigurationTests {
 	@Test
 	void generateApplicationNameNull() {
 		assertThat(this.properties.generateApplicationName(null))
-				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
+			.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	void generateApplicationNameInvalidStartCharacter() {
 		assertThat(this.properties.generateApplicationName("1MyDemo"))
-				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
+			.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	void generateApplicationNameInvalidPartCharacter() {
 		assertThat(this.properties.generateApplicationName("MyDe|mo"))
-				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
+			.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	void generateApplicationNameInvalidApplicationName() {
 		assertThat(this.properties.generateApplicationName("SpringBoot"))
-				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
+			.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test
 	void generateApplicationNameAnotherInvalidApplicationName() {
 		assertThat(this.properties.generateApplicationName("Spring"))
-				.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
+			.isEqualTo(this.properties.getEnv().getFallbackApplicationName());
 	}
 
 	@Test

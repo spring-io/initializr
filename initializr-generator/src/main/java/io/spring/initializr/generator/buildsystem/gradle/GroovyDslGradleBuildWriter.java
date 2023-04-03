@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	protected void writeConfiguration(IndentingWriter writer, GradleConfiguration configuration) {
 		writer.println(configuration.getName() + " {");
 		writer.indented(() -> writer
-				.println(String.format("extendsFrom %s", String.join(", ", configuration.getExtendsFrom()))));
+			.println(String.format("extendsFrom %s", String.join(", ", configuration.getExtendsFrom()))));
 		writer.println("}");
 	}
 
@@ -144,8 +144,8 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 				+ ((type != null) ? "@" + type : "") + quoteStyle);
 		if (hasExclusions) {
 			writer.println(") {");
-			writer.indented(
-					() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
+			writer
+				.indented(() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
 			writer.println("}");
 		}
 		else {

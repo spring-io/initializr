@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,10 +58,10 @@ import static org.mockito.Mockito.mock;
 class InitializrAutoConfigurationTests {
 
 	private static final AutoConfigurations BASIC_AUTO_CONFIGURATIONS = AutoConfigurations
-			.of(RestTemplateAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
+		.of(RestTemplateAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
+		.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 
 	@Test
 	void autoConfigRegistersTemplateRenderer() {
@@ -84,12 +84,11 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void metadataProviderWithCustomInitializrMetadataUpdateStrategyIsRegistered() {
 		this.contextRunner.withUserConfiguration(CustomInitializrMetadataUpdateStrategyConfiguration.class)
-				.run((context) -> {
-					assertThat(context).hasSingleBean(DefaultInitializrMetadataProvider.class);
-					assertThat(context.getBean(DefaultInitializrMetadataProvider.class)).hasFieldOrPropertyWithValue(
-							"initializrMetadataUpdateStrategy",
-							context.getBean("testInitializrMetadataUpdateStrategy"));
-				});
+			.run((context) -> {
+				assertThat(context).hasSingleBean(DefaultInitializrMetadataProvider.class);
+				assertThat(context.getBean(DefaultInitializrMetadataProvider.class)).hasFieldOrPropertyWithValue(
+						"initializrMetadataUpdateStrategy", context.getBean("testInitializrMetadataUpdateStrategy"));
+			});
 	}
 
 	@Test
@@ -116,7 +115,7 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void webConfiguration() {
 		WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner()
-				.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
+			.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
 		webContextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(InitializrWebConfig.class);
 			assertThat(context).hasSingleBean(ProjectGenerationController.class);
@@ -129,11 +128,12 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void autoConfigWithCustomProjectGenerationController() {
 		new WebApplicationContextRunner().withConfiguration(BASIC_AUTO_CONFIGURATIONS)
-				.withUserConfiguration(CustomProjectGenerationController.class).run((context) -> {
-					assertThat(context).hasSingleBean(ProjectGenerationController.class);
-					assertThat(context.getBean(ProjectGenerationController.class))
-							.isSameAs(context.getBean("testProjectGenerationController"));
-				});
+			.withUserConfiguration(CustomProjectGenerationController.class)
+			.run((context) -> {
+				assertThat(context).hasSingleBean(ProjectGenerationController.class);
+				assertThat(context.getBean(ProjectGenerationController.class))
+					.isSameAs(context.getBean("testProjectGenerationController"));
+			});
 
 	}
 
@@ -151,34 +151,35 @@ class InitializrAutoConfigurationTests {
 	@Test
 	void cacheConfigurationCreatesInitializrCachesIfNecessary() {
 		this.contextRunner.withConfiguration(AutoConfigurations.of(CacheAutoConfiguration.class))
-				.withUserConfiguration(CacheTestConfiguration.class).run((context) -> {
-					assertThat(context).hasSingleBean(JCacheManagerCustomizer.class)
-							.hasSingleBean(JCacheCacheManager.class);
-					JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
-					assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
-							"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates");
-					assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isTrue();
-				});
+			.withUserConfiguration(CacheTestConfiguration.class)
+			.run((context) -> {
+				assertThat(context).hasSingleBean(JCacheManagerCustomizer.class)
+					.hasSingleBean(JCacheCacheManager.class);
+				JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
+				assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
+						"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates");
+				assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isTrue();
+			});
 	}
 
 	@Test
 	void cacheConfigurationDoesNotOverrideExistingCaches() {
 		this.contextRunner.withConfiguration(AutoConfigurations.of(CacheAutoConfiguration.class))
-				.withUserConfiguration(CacheTestConfiguration.class, CustomJCacheManagerCustomizer.class)
-				.run((context) -> {
-					assertThat(context).getBeans(JCacheManagerCustomizer.class).hasSize(2);
-					JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
-					assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
-							"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates",
-							"custom.cache");
-					assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isFalse();
-				});
+			.withUserConfiguration(CacheTestConfiguration.class, CustomJCacheManagerCustomizer.class)
+			.run((context) -> {
+				assertThat(context).getBeans(JCacheManagerCustomizer.class).hasSize(2);
+				JCacheCacheManager cacheManager = context.getBean(JCacheCacheManager.class);
+				assertThat(cacheManager.getCacheNames()).containsOnly("initializr.metadata",
+						"initializr.dependency-metadata", "initializr.project-resources", "initializr.templates",
+						"custom.cache");
+				assertThat(getConfiguration(cacheManager, "initializr.metadata").isStatisticsEnabled()).isFalse();
+			});
 	}
 
 	@Test
 	void cacheConfigurationConditionalOnClass() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader("javax.cache.CacheManager"))
-				.run((context) -> assertThat(context).doesNotHaveBean(JCacheManagerCustomizer.class));
+			.run((context) -> assertThat(context).doesNotHaveBean(JCacheManagerCustomizer.class));
 	}
 
 	@SuppressWarnings("unchecked")

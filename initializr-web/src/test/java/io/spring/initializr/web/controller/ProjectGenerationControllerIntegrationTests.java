@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,10 +47,12 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ProjectStructure project = projectFromArchive(entity.getBody());
 		assertDefaultProject(project);
 		assertHasWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
-				// alias: jpa -> data-jpa
-				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(3)
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			// alias: jpa -> data-jpa
+			.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 
 	}
 
@@ -106,10 +108,11 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ProjectStructure project = downloadZip("/starter.zip");
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(2)
-				// the root dep is added if none is specified
-				.hasDependency(Dependency.createSpringBootStarter(""))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(2)
+			// the root dep is added if none is specified
+			.hasDependency(Dependency.createSpringBootStarter(""))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
@@ -117,10 +120,12 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&dependencies=jpa");
 		assertDefaultProject(project);
 		assertHasWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
-				// alias: jpa -> data-jpa
-				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(3)
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			// alias: jpa -> data-jpa
+			.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
@@ -128,10 +133,12 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web,jpa");
 		assertDefaultProject(project);
 		assertHasWebResources(project);
-		assertThat(project).mavenBuild().hasDependenciesSize(3).hasDependency(Dependency.createSpringBootStarter("web"))
-				// alias: jpa -> data-jpa
-				.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(3)
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			// alias: jpa -> data-jpa
+			.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
 	}
 
 	@Test
@@ -158,21 +165,23 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void missingDependencyProperException() {
 		assertThatExceptionOfType(HttpClientErrorException.class)
-				.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo:bar")).satisfies((ex) -> {
-					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-					assertStandardErrorBody(ex.getResponseBodyAsString(),
-							"Unknown dependency 'foo:bar' check project metadata");
-				});
+			.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo:bar"))
+			.satisfies((ex) -> {
+				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertStandardErrorBody(ex.getResponseBodyAsString(),
+						"Unknown dependency 'foo:bar' check project metadata");
+			});
 	}
 
 	@Test
 	void invalidDependencyProperException() {
 		assertThatExceptionOfType(HttpClientErrorException.class)
-				.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo")).satisfies((ex) -> {
-					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-					assertStandardErrorBody(ex.getResponseBodyAsString(),
-							"Unknown dependency 'foo' check project metadata");
-				});
+			.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo"))
+			.satisfies((ex) -> {
+				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertStandardErrorBody(ex.getResponseBodyAsString(),
+						"Unknown dependency 'foo' check project metadata");
+			});
 	}
 
 	@Test
@@ -197,11 +206,12 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	private void assertUsingStyleIsFailingForUrl(String url) {
 		assertThatExceptionOfType(HttpClientErrorException.class)
-				.isThrownBy(() -> getRestTemplate().getForEntity(createUrl(url), byte[].class)).satisfies((ex) -> {
-					assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-					assertStandardErrorBody(ex.getResponseBodyAsString(),
-							"Dependencies must be specified using 'dependencies'");
-				});
+			.isThrownBy(() -> getRestTemplate().getForEntity(createUrl(url), byte[].class))
+			.satisfies((ex) -> {
+				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertStandardErrorBody(ex.getResponseBodyAsString(),
+						"Dependencies must be specified using 'dependencies'");
+			});
 	}
 
 	@Test

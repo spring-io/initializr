@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,22 +156,23 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 				"." + fileExtension);
 		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		try (ArchiveOutputStream output = archiveOutputStream.apply(Files.newOutputStream(archive))) {
-			Files.walk(result.getRootDirectory()).filter((path) -> !result.getRootDirectory().equals(path))
-					.forEach((path) -> {
-						try {
-							String entryName = getEntryName(result.getRootDirectory(), path);
-							T entry = archiveEntry.apply(path.toFile(), entryName);
-							setMode.accept(entry, getUnixMode(wrapperScript, entryName, path));
-							output.putArchiveEntry(entry);
-							if (!Files.isDirectory(path)) {
-								Files.copy(path, output);
-							}
-							output.closeArchiveEntry();
+			Files.walk(result.getRootDirectory())
+				.filter((path) -> !result.getRootDirectory().equals(path))
+				.forEach((path) -> {
+					try {
+						String entryName = getEntryName(result.getRootDirectory(), path);
+						T entry = archiveEntry.apply(path.toFile(), entryName);
+						setMode.accept(entry, getUnixMode(wrapperScript, entryName, path));
+						output.putArchiveEntry(entry);
+						if (!Files.isDirectory(path)) {
+							Files.copy(path, output);
 						}
-						catch (IOException ex) {
-							throw new IllegalStateException(ex);
-						}
-					});
+						output.closeArchiveEntry();
+					}
+					catch (IOException ex) {
+						throw new IllegalStateException(ex);
+					}
+				});
 		}
 		return archive;
 	}
@@ -220,8 +221,10 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	private ResponseEntity<byte[]> createResponseEntity(byte[] content, String contentType, String fileName) {
 		String contentDispositionValue = "attachment; filename=\"" + fileName + "\"";
-		return ResponseEntity.ok().header("Content-Type", contentType)
-				.header("Content-Disposition", contentDispositionValue).body(content);
+		return ResponseEntity.ok()
+			.header("Content-Type", contentType)
+			.header("Content-Disposition", contentDispositionValue)
+			.body(content);
 	}
 
 }

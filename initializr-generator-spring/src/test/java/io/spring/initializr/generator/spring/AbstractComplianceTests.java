@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,16 +61,18 @@ public abstract class AbstractComplianceTests {
 
 	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<MutableProjectDescription> descriptionCustomizer) {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("web", WEB)
+			.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata);
 	}
 
 	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
 			Consumer<MutableProjectDescription> descriptionCustomizer,
 			Consumer<ProjectGenerationContext> contextCustomizer) {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB)
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("web", WEB)
+			.build();
 		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, contextCustomizer);
 	}
 
@@ -86,11 +88,11 @@ public abstract class AbstractComplianceTests {
 			Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata,
 			Consumer<ProjectGenerationContext> contextCustomizer) {
 		ProjectGeneratorTester projectTester = new ProjectGeneratorTester().withDirectory(this.tempDir)
-				.withDescriptionCustomizer(
-						(description) -> setupProjectDescription(language, version, buildSystem, description))
-				.withDescriptionCustomizer(descriptionCustomizer)
-				.withContextInitializer((context) -> setupProjectGenerationContext(metadata, context))
-				.withContextInitializer(contextCustomizer);
+			.withDescriptionCustomizer(
+					(description) -> setupProjectDescription(language, version, buildSystem, description))
+			.withDescriptionCustomizer(descriptionCustomizer)
+			.withContextInitializer((context) -> setupProjectGenerationContext(metadata, context))
+			.withContextInitializer(contextCustomizer);
 		return projectTester.generate(new MutableProjectDescription());
 	}
 

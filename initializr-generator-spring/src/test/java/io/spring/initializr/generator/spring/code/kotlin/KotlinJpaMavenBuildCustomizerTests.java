@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,10 @@ class KotlinJpaMavenBuildCustomizerTests {
 			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
-			assertThat(settings.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
-					.hasFieldOrPropertyWithValue("value", "jpa");
+			assertThat(settings.getValue()).asList()
+				.element(0)
+				.hasFieldOrPropertyWithValue("name", "plugin")
+				.hasFieldOrPropertyWithValue("value", "jpa");
 			assertThat(plugin.getDependencies()).hasSize(1);
 			MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
 			assertThat(pluginDependency.getGroupId()).isEqualTo("org.jetbrains.kotlin");
@@ -65,7 +67,8 @@ class KotlinJpaMavenBuildCustomizerTests {
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(metadata);
 		MavenBuild build = new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");

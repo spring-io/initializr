@@ -83,10 +83,12 @@ public class ProjectRequestDocumentFactory {
 		// Let's not rely on the resolved dependencies here
 		List<String> dependencies = new ArrayList<>(request.getDependencies());
 		List<String> validDependencies = dependencies.stream()
-				.filter((id) -> metadata.getDependencies().get(id) != null).collect(Collectors.toList());
+			.filter((id) -> metadata.getDependencies().get(id) != null)
+			.collect(Collectors.toList());
 		document.setDependencies(new DependencyInformation(validDependencies));
-		List<String> invalidDependencies = dependencies.stream().filter((id) -> (!validDependencies.contains(id)))
-				.collect(Collectors.toList());
+		List<String> invalidDependencies = dependencies.stream()
+			.filter((id) -> (!validDependencies.contains(id)))
+			.collect(Collectors.toList());
 		if (!invalidDependencies.isEmpty()) {
 			document.triggerError().triggerInvalidDependencies(invalidDependencies);
 		}

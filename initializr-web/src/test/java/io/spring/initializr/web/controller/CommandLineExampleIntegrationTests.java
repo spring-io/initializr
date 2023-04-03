@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,10 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 		ProjectStructure project = downloadZip("/starter.zip");
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
-		assertThat(project).mavenBuild().hasDependency(Dependency.createSpringBootStarter(""))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
-				.hasDependenciesSize(2);
+		assertThat(project).mavenBuild()
+			.hasDependency(Dependency.createSpringBootStarter(""))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
+			.hasDependenciesSize(2);
 	}
 
 	@Test
@@ -53,19 +54,22 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&javaVersion=1.8");
 		assertDefaultProject(project);
 		assertHasWebResources(project);
-		assertThat(project).mavenBuild().hasProperty("java.version", "1.8")
-				.hasDependency(Dependency.createSpringBootStarter("web"))
-				.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
-				.hasDependenciesSize(2);
+		assertThat(project).mavenBuild()
+			.hasProperty("java.version", "1.8")
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
+			.hasDependenciesSize(2);
 	}
 
 	@Test
 	void generateWebDataJpaGradleProject() {
 		ProjectStructure project = downloadTgz(
-				"/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir").resolveModule("my-dir");
+				"/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir")
+			.resolveModule("my-dir");
 		assertHasWebResources(project);
-		assertThat(project).groovyDslGradleBuild().contains("spring-boot-starter-web")
-				.contains("spring-boot-starter-data-jpa");
+		assertThat(project).groovyDslGradleBuild()
+			.contains("spring-boot-starter-web")
+			.contains("spring-boot-starter-data-jpa");
 	}
 
 	@Test

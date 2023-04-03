@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,9 +63,11 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 class ProjectGenerationStatPublisherTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("core", "security", "validation", "aop")
-			.addDependencyGroup("web", "web", "data-rest", "jersey").addDependencyGroup("data", "data-jpa", "jdbc")
-			.addDependencyGroup("database", "h2", "mysql").build();
+		.addDependencyGroup("core", "security", "validation", "aop")
+		.addDependencyGroup("web", "web", "data-rest", "jersey")
+		.addDependencyGroup("data", "data-jpa", "jdbc")
+		.addDependencyGroup("database", "h2", "mysql")
+		.build();
 
 	private RetryTemplate retryTemplate;
 
@@ -131,10 +133,11 @@ class ProjectGenerationStatPublisherTests {
 		request.setGroupId("com.example.foo");
 		request.setArtifactId("my-project");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
-		this.mockServer.expect(requestTo(expectedUri)).andExpect(method(HttpMethod.POST))
-				.andExpect(authorizationMatcher)
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+		this.mockServer.expect(requestTo(expectedUri))
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(authorizationMatcher)
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
 	}
@@ -153,9 +156,10 @@ class ProjectGenerationStatPublisherTests {
 		request.getParameters().put("cf-ipcountry", "BE");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andExpect(json("stat/request-simple.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-simple.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -172,9 +176,10 @@ class ProjectGenerationStatPublisherTests {
 		request.setLanguage("java");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andExpect(json("stat/request-no-client.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-no-client.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -191,10 +196,10 @@ class ProjectGenerationStatPublisherTests {
 		request.setLanguage("java");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(json("stat/request-invalid-type.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-invalid-type.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -211,10 +216,10 @@ class ProjectGenerationStatPublisherTests {
 		request.setLanguage("c");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(json("stat/request-invalid-language.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-invalid-language.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -232,10 +237,10 @@ class ProjectGenerationStatPublisherTests {
 		request.setJavaVersion("1.2");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(json("stat/request-invalid-java-version.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-invalid-java-version.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -252,10 +257,10 @@ class ProjectGenerationStatPublisherTests {
 		request.setLanguage("java");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(json("stat/request-invalid-dependencies.json", event.getTimestamp()))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andExpect(json("stat/request-invalid-dependencies.json", event.getTimestamp()))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -266,15 +271,17 @@ class ProjectGenerationStatPublisherTests {
 		ProjectRequest request = createProjectRequest();
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+			.andExpect(method(HttpMethod.POST))
+			.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+			.andExpect(method(HttpMethod.POST))
+			.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+			.andExpect(method(HttpMethod.POST))
+			.andRespond(withStatus(HttpStatus.CREATED).body(mockResponse(UUID.randomUUID().toString(), true))
+				.contentType(MediaType.APPLICATION_JSON));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();
@@ -287,10 +294,12 @@ class ProjectGenerationStatPublisherTests {
 		this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2, Collections.singletonMap(Exception.class, true)));
 
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+			.andExpect(method(HttpMethod.POST))
+			.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
-				.andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+			.andExpect(method(HttpMethod.POST))
+			.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		this.statPublisher.handleEvent(event);
 		this.mockServer.verify();

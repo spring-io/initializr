@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,8 +73,10 @@ class BuildMetadataResolverTests {
 		web.getFacets().addAll(Arrays.asList("test", "web", "another"));
 		Dependency custom = Dependency.withId("my-custom");
 		custom.getFacets().add("custom");
-		return InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("core", "one", "two", "three")
-				.addDependencyGroup("test", web, custom).build();
+		return InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("core", "one", "two", "three")
+			.addDependencyGroup("test", web, custom)
+			.build();
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {

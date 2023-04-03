@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,21 +50,23 @@ class KotlinProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-				.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
-						KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
-						MavenProjectGenerationConfiguration.class)
-				.withDirectory(directory).withBean(InitializrMetadata.class, () -> {
-					io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
-							.withId("foo");
-					dependency.setFacets(Collections.singletonList("json"));
-					return InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
-				}).withDescriptionCustomizer((description) -> {
-					description.setLanguage(new KotlinLanguage());
-					if (description.getPlatformVersion() == null) {
-						description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-					}
-					description.setBuildSystem(new MavenBuildSystem());
-				});
+			.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
+					KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
+					MavenProjectGenerationConfiguration.class)
+			.withDirectory(directory)
+			.withBean(InitializrMetadata.class, () -> {
+				io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
+					.withId("foo");
+				dependency.setFacets(Collections.singletonList("json"));
+				return InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
+			})
+			.withDescriptionCustomizer((description) -> {
+				description.setLanguage(new KotlinLanguage());
+				if (description.getPlatformVersion() == null) {
+					description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+				}
+				description.setBuildSystem(new MavenBuildSystem());
+			});
 	}
 
 	@Test
@@ -75,9 +77,10 @@ class KotlinProjectGenerationConfigurationTests {
 
 	@Test
 	void kotlinVersionResolverIsUsedIfPresent() {
-		this.projectTester.withBean(KotlinVersionResolver.class, () -> (description) -> "0.9.12").configure(
-				new MutableProjectDescription(),
-				(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion()).isEqualTo("0.9.12"));
+		this.projectTester.withBean(KotlinVersionResolver.class, () -> (description) -> "0.9.12")
+			.configure(new MutableProjectDescription(),
+					(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion())
+						.isEqualTo("0.9.12"));
 	}
 
 	@Test
@@ -91,10 +94,10 @@ class KotlinProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt").containsExactly(
-				"package com.example.demo", "", "import org.junit.jupiter.api.Test",
-				"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
-				"class DemoApplicationTests {", "", "    @Test", "    fun contextLoads() {", "    }", "", "}");
+		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt")
+			.containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
+					"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
+					"class DemoApplicationTests {", "", "    @Test", "    fun contextLoads() {", "    }", "", "}");
 	}
 
 	@Test
@@ -103,12 +106,13 @@ class KotlinProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("KotlinDemoApplication");
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/main/kotlin/com/example/demo/ServletInitializer.kt").containsExactly(
-				"package com.example.demo", "", "import org.springframework.boot.builder.SpringApplicationBuilder",
-				"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
-				"class ServletInitializer : SpringBootServletInitializer() {", "",
-				"    override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {",
-				"        return application.sources(KotlinDemoApplication::class.java)", "    }", "", "}");
+		assertThat(project).textFile("src/main/kotlin/com/example/demo/ServletInitializer.kt")
+			.containsExactly("package com.example.demo", "",
+					"import org.springframework.boot.builder.SpringApplicationBuilder",
+					"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",
+					"class ServletInitializer : SpringBootServletInitializer() {", "",
+					"    override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {",
+					"        return application.sources(KotlinDemoApplication::class.java)", "    }", "", "}");
 	}
 
 	@Test
@@ -116,9 +120,9 @@ class KotlinProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").contains("        <dependency>",
-				"            <groupId>com.fasterxml.jackson.module</groupId>",
-				"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
+		assertThat(project).textFile("pom.xml")
+			.contains("        <dependency>", "            <groupId>com.fasterxml.jackson.module</groupId>",
+					"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
 	}
 
 }

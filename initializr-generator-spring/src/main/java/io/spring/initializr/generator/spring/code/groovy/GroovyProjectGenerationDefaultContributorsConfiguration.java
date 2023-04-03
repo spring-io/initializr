@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,12 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
-		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(
-				GroovyMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void")
-						.parameters(new Parameter("java.lang.String[]", "args"))
-						.body(new GroovyExpressionStatement(
-								new GroovyMethodInvocation("org.springframework.boot.SpringApplication", "run",
-										typeDeclaration.getName(), "args"))));
+		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(GroovyMethodDeclaration.method("main")
+			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
+			.returning("void")
+			.parameters(new Parameter("java.lang.String[]", "args"))
+			.body(new GroovyExpressionStatement(new GroovyMethodInvocation("org.springframework.boot.SpringApplication",
+					"run", typeDeclaration.getName(), "args"))));
 	}
 
 	@Bean
@@ -88,12 +88,12 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
-						.modifiers(Modifier.PROTECTED)
-						.returning("org.springframework.boot.builder.SpringApplicationBuilder")
-						.parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder",
-								"application"))
-						.body(new GroovyReturnStatement(new GroovyMethodInvocation("application", "sources",
-								description.getApplicationName())));
+					.modifiers(Modifier.PROTECTED)
+					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
+					.parameters(
+							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
+					.body(new GroovyReturnStatement(
+							new GroovyMethodInvocation("application", "sources", description.getApplicationName())));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

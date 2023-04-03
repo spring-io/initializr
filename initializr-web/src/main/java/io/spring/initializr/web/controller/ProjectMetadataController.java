@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,8 +137,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		}
 		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
 		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
-		return ResponseEntity.ok().contentType(version.getMediaType()).eTag(createUniqueId(content))
-				.cacheControl(determineCacheControlFor(metadata)).body(content);
+		return ResponseEntity.ok()
+			.contentType(version.getMediaType())
+			.eTag(createUniqueId(content))
+			.cacheControl(determineCacheControlFor(metadata))
+			.body(content);
 	}
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
@@ -149,8 +152,12 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
 		String content = getJsonMapper(version).write(metadata, appUrl);
-		return ResponseEntity.ok().contentType(contentType).eTag(createUniqueId(content)).varyBy("Accept")
-				.cacheControl(determineCacheControlFor(metadata)).body(content);
+		return ResponseEntity.ok()
+			.contentType(contentType)
+			.eTag(createUniqueId(content))
+			.varyBy("Accept")
+			.cacheControl(determineCacheControlFor(metadata))
+			.body(content);
 	}
 
 	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,12 @@ public class SimpleBuildCustomizer implements BuildCustomizer<Build> {
 
 	@Override
 	public void customize(Build build) {
-		build.settings().group(this.description.getGroupId()).artifact(this.description.getArtifactId())
-				.version(this.description.getVersion());
+		build.settings()
+			.group(this.description.getGroupId())
+			.artifact(this.description.getArtifactId())
+			.version(this.description.getVersion());
 		this.description.getRequestedDependencies()
-				.forEach((id, dependency) -> build.dependencies().add(id, dependency));
+			.forEach((id, dependency) -> build.dependencies().add(id, dependency));
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,10 @@ class DependencyTests {
 
 	@Test
 	void dependencyWithScopeAndVersionValue() {
-		Dependency dependency = Dependency.withCoordinates("com.example", "acme").scope(DependencyScope.RUNTIME)
-				.version(VersionReference.ofValue("1.0.0")).build();
+		Dependency dependency = Dependency.withCoordinates("com.example", "acme")
+			.scope(DependencyScope.RUNTIME)
+			.version(VersionReference.ofValue("1.0.0"))
+			.build();
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
 		assertThat(dependency.getArtifactId()).isEqualTo("acme");
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
@@ -81,7 +83,8 @@ class DependencyTests {
 	@Test
 	void dependencyWithExclusions() {
 		Dependency dependency = Dependency.withCoordinates("com.example", "acme")
-				.exclusions(new Exclusion("com.example", "exclude1"), new Exclusion("com.example", "exclude2")).build();
+			.exclusions(new Exclusion("com.example", "exclude1"), new Exclusion("com.example", "exclude2"))
+			.build();
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
 		assertThat(dependency.getArtifactId()).isEqualTo("acme");
 		assertThat(dependency.getScope()).isNull();

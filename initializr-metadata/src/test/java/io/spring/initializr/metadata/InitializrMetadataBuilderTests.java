@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ class InitializrMetadataBuilderTests {
 	void mergeIdenticalConfig() {
 		InitializrProperties bean = load(new ClassPathResource("application-test-default.yml"));
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(bean)
-				.withInitializrProperties(bean, true).build();
+			.withInitializrProperties(bean, true)
+			.build();
 		assertDefaultConfig(metadata);
 	}
 
@@ -58,7 +59,8 @@ class InitializrMetadataBuilderTests {
 		InitializrProperties config = load(new ClassPathResource("application-test-default.yml"));
 		InitializrProperties customDefaultsConfig = load(new ClassPathResource("application-test-custom-defaults.yml"));
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(config)
-				.withInitializrProperties(customDefaultsConfig).build();
+			.withInitializrProperties(customDefaultsConfig)
+			.build();
 		assertDefaultConfig(metadata);
 		assertThat(metadata.getGroupId().getContent()).isEqualTo("org.foo");
 		assertThat(metadata.getArtifactId().getContent()).isEqualTo("foo-bar");
@@ -71,7 +73,8 @@ class InitializrMetadataBuilderTests {
 	@Test
 	void mergeMetadata() {
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new ClassPathResource("metadata/config/test-min.json")).build();
+			.withInitializrMetadata(new ClassPathResource("metadata/config/test-min.json"))
+			.build();
 		assertThat(metadata.getConfiguration().getEnv().isForceSsl()).isEqualTo(true);
 		assertThat(metadata.getDependencies().getContent()).hasSize(1);
 		Dependency dependency = metadata.getDependencies().get("test");
@@ -93,7 +96,8 @@ class InitializrMetadataBuilderTests {
 	@Test
 	void mergeMetadataWithBom() {
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new ClassPathResource("metadata/config/test-bom.json")).build();
+			.withInitializrMetadata(new ClassPathResource("metadata/config/test-bom.json"))
+			.build();
 
 		Map<String, BillOfMaterials> boms = metadata.getConfiguration().getEnv().getBoms();
 		assertThat(boms).hasSize(2);
@@ -113,7 +117,8 @@ class InitializrMetadataBuilderTests {
 	@Test
 	void mergeMetadataWithRepository() throws Exception {
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new ClassPathResource("metadata/config/test-repository.json")).build();
+			.withInitializrMetadata(new ClassPathResource("metadata/config/test-repository.json"))
+			.build();
 
 		Map<String, Repository> repositories = metadata.getConfiguration().getEnv().getRepositories();
 		assertThat(repositories).hasSize(4); // 2 standard repos
@@ -135,7 +140,8 @@ class InitializrMetadataBuilderTests {
 		InitializrProperties config = load(new ClassPathResource("application-test-default.yml"));
 		InitializrProperties customDefaultsConfig = load(new ClassPathResource("application-test-custom-env.yml"));
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(config)
-				.withInitializrProperties(customDefaultsConfig).build();
+			.withInitializrProperties(customDefaultsConfig)
+			.build();
 		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
 		assertThat(actualEnv.getArtifactRepository()).isEqualTo(defaultEnv.getArtifactRepository());
@@ -149,7 +155,8 @@ class InitializrMetadataBuilderTests {
 		InitializrProperties config = load(new ClassPathResource("application-test-default.yml"));
 		InitializrProperties customDefaultsConfig = load(new ClassPathResource("application-test-custom-env.yml"));
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(config)
-				.withInitializrProperties(customDefaultsConfig, true).build();
+			.withInitializrProperties(customDefaultsConfig, true)
+			.build();
 		InitializrConfiguration.Env defaultEnv = new InitializrConfiguration().getEnv();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
 		assertThat(actualEnv.getArtifactRepository()).isEqualTo("https://repo.spring.io/lib-release/");
@@ -164,7 +171,8 @@ class InitializrMetadataBuilderTests {
 		InitializrProperties config = load(new ClassPathResource("application-test-default.yml"));
 		InitializrProperties forceSslConfig = load(new ClassPathResource("application-test-ssl.yml"));
 		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(config)
-				.withInitializrProperties(forceSslConfig, true).build();
+			.withInitializrProperties(forceSslConfig, true)
+			.build();
 		InitializrConfiguration.Env actualEnv = metadata.getConfiguration().getEnv();
 		assertThat(actualEnv.isForceSsl()).isEqualTo(true);
 	}
@@ -175,7 +183,8 @@ class InitializrMetadataBuilderTests {
 		Dependency dependency = Dependency.withId("com.foo:foo:1.0.0");
 		group.getContent().add(dependency);
 		InitializrMetadata metadata = InitializrMetadataBuilder.create()
-				.withCustomizer((m) -> m.getDependencies().getContent().add(group)).build();
+			.withCustomizer((m) -> m.getDependencies().getContent().add(group))
+			.build();
 		assertThat(metadata.getDependencies().getContent()).hasSize(1);
 		assertThat(metadata.getDependencies().getContent().get(0)).isEqualTo(group);
 	}

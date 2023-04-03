@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class ModuleAssertTests {
 	void containDirectoriesWithMissingDirectory(@TempDir Path dir) throws IOException {
 		createDirectories(dir, "test", "test/another", "another");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).containsDirectories("test", "wrong"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).containsDirectories("test", "wrong"));
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class ModuleAssertTests {
 	void doesNotContainDirectoriesWithExistingDirectory(@TempDir Path dir) throws IOException {
 		createDirectories(dir, "test", "test/another");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).doesNotContainDirectories("another", "test/another"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).doesNotContainDirectories("another", "test/another"));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ class ModuleAssertTests {
 	void containFilesWithMissingFile(@TempDir Path dir) throws IOException {
 		createFiles(dir, "test.xml", "src/Test.java", "another");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).containsFiles("test.xml", "wrong"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).containsFiles("test.xml", "wrong"));
 	}
 
 	@Test
@@ -89,15 +89,15 @@ class ModuleAssertTests {
 	void doesNotContainFilesWithExistingFile(@TempDir Path dir) throws IOException {
 		createFiles(dir, "test.xml", "src/Test.java");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).doesNotContainFiles("another", "src/Test.java"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).doesNotContainFiles("another", "src/Test.java"));
 	}
 
 	@Test
 	void filePaths(@TempDir Path dir) throws IOException {
 		createFiles(dir, "src/One.java", "src/com/example/Two.java", "pom.xml", ".gitignore");
 		createDirectories(dir, "test/unrelated");
-		assertThat(forDirectory(dir)).filePaths().containsOnly("src/One.java", "src/com/example/Two.java", "pom.xml",
-				".gitignore");
+		assertThat(forDirectory(dir)).filePaths()
+			.containsOnly("src/One.java", "src/com/example/Two.java", "pom.xml", ".gitignore");
 	}
 
 	@Test
@@ -109,7 +109,7 @@ class ModuleAssertTests {
 	@Test
 	void fileWithMissingFile(@TempDir Path dir) {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).file("som/file/does-not-exist.txt"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).file("som/file/does-not-exist.txt"));
 	}
 
 	@Test
@@ -121,14 +121,15 @@ class ModuleAssertTests {
 	@Test
 	void textFileWithMissingFile(@TempDir Path dir) {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).textFile("som/file/does-not-exist.txt"));
+			.isThrownBy(() -> assertThat(forDirectory(dir)).textFile("som/file/does-not-exist.txt"));
 	}
 
 	@Test
 	void asJavaProject(@TempDir Path dir) throws IOException {
 		createFiles(dir, "src/main/java/com/example/Test.java");
-		assertThat(forDirectory(dir)).asJvmModule(new JavaLanguage()).hasMainPackage("com.example")
-				.hasMainSource("com.example", "Test");
+		assertThat(forDirectory(dir)).asJvmModule(new JavaLanguage())
+			.hasMainPackage("com.example")
+			.hasMainSource("com.example", "Test");
 	}
 
 	@Test
@@ -153,14 +154,14 @@ class ModuleAssertTests {
 	void hasMavenWrapperWithMissingScript(@TempDir Path dir) throws IOException {
 		createFiles(dir, ".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).hasMavenWrapper());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasMavenWrapper());
 	}
 
 	@Test
 	void hasMavenWrapperWithMissingDotMvnDir(@TempDir Path dir) throws IOException {
 		createFiles(dir, "mvnw", "mvnw.cmd");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).hasMavenWrapper());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasMavenWrapper());
 	}
 
 	@Test
@@ -184,7 +185,7 @@ class ModuleAssertTests {
 	void hasGroovyDslGradleBuildWithMissingBuildFile(@TempDir Path dir) throws IOException {
 		createFiles(dir, "build.wrong");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).hasGroovyDslGradleBuild());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasGroovyDslGradleBuild());
 	}
 
 	@Test
@@ -198,14 +199,14 @@ class ModuleAssertTests {
 	void hasGradleWrapperWithMissingScript(@TempDir Path dir) throws IOException {
 		createFiles(dir, "gradle/wrapper/gradle-wrapper.properties", "gradle/wrapper/gradle-wrapper.jar");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).hasGradleWrapper());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasGradleWrapper());
 	}
 
 	@Test
 	void hasGradleWrapperWithMissingGradleDir(@TempDir Path dir) throws IOException {
 		createFiles(dir, "gradlew", "gradlew.bat");
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).hasGradleWrapper());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasGradleWrapper());
 	}
 
 	@Test
@@ -217,7 +218,7 @@ class ModuleAssertTests {
 	@Test
 	void groovyDslGradleBuildWithMissingBuildFile(@TempDir Path dir) {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forDirectory(dir)).groovyDslGradleBuild());
+			.isThrownBy(() -> assertThat(forDirectory(dir)).groovyDslGradleBuild());
 	}
 
 	private AssertProvider<ModuleAssert> forDirectory(Path projectDirectory) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,8 @@ class DefaultDependencyMetadataProviderTests {
 		Dependency third = Dependency.withId("third", "org.foo", "third");
 		third.setCompatibilityRange("2.1.8.RELEASE");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", first, second, third).build();
+			.addDependencyGroup("test", first, second, third)
+			.build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("2.1.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
 		assertThat(dependencyMetadata.getRepositories()).isEmpty();
@@ -54,13 +55,15 @@ class DefaultDependencyMetadataProviderTests {
 	@Test
 	void resolveDependencies() {
 		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.getMappings().add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "org.bar", "second",
-				"0.1.0.RELEASE", null, null, null));
 		first.getMappings()
-				.add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null, null));
+			.add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "org.bar", "second", "0.1.0.RELEASE", null,
+					null, null));
+		first.getMappings()
+			.add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null, null));
 		Dependency second = Dependency.withId("second", "org.foo", "second");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", first, second).build();
+			.addDependencyGroup("test", first, second)
+			.build();
 
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.0.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
@@ -83,14 +86,15 @@ class DefaultDependencyMetadataProviderTests {
 		Dependency third = Dependency.withId("third", "org.foo", "third");
 		third.setRepository("repo-foo");
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addReleasesRepository("repo-foo", "my-repo", "http://localhost")
-				.addDependencyGroup("test", first, second, third).build();
+			.addReleasesRepository("repo-foo", "my-repo", "http://localhost")
+			.addDependencyGroup("test", first, second, third)
+			.build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).hasSize(1);
 		assertThat(dependencyMetadata.getBoms()).isEmpty();
 		assertThat(dependencyMetadata.getRepositories().get("repo-foo"))
-				.isSameAs(metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"));
+			.isSameAs(metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"));
 	}
 
 	@Test
@@ -104,8 +108,10 @@ class DefaultDependencyMetadataProviderTests {
 		BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
 		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.8.RELEASE)", "1.0.0.RELEASE"));
 		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.8.RELEASE", "2.0.0.RELEASE"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom)
-				.addDependencyGroup("test", first, second, third).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addBom("bom-foo", bom)
+			.addDependencyGroup("test", first, second, third)
+			.build();
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).isEmpty();
@@ -151,14 +157,17 @@ class DefaultDependencyMetadataProviderTests {
 		third.setBom("bom-foo");
 
 		BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "2.0.0.RELEASE",
-				"repo-foo", "repo-bar"));
+		bom.getMappings()
+			.add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "2.0.0.RELEASE", "repo-foo",
+					"repo-bar"));
 		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.0.RELEASE", "3.0.0.RELEASE", "repo-biz"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom)
-				.addReleasesRepository("repo-foo", "foo", "http://localhost")
-				.addReleasesRepository("repo-bar", "bar", "http://localhost")
-				.addReleasesRepository("repo-biz", "biz", "http://localhost")
-				.addDependencyGroup("test", first, second, third).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addBom("bom-foo", bom)
+			.addReleasesRepository("repo-foo", "foo", "http://localhost")
+			.addReleasesRepository("repo-bar", "bar", "http://localhost")
+			.addReleasesRepository("repo-biz", "biz", "http://localhost")
+			.addDependencyGroup("test", first, second, third)
+			.build();
 		return this.provider.get(metadata, Version.parse(bootVersion));
 	}
 

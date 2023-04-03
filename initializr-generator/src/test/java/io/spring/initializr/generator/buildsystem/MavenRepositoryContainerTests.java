@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,9 @@ class MavenRepositoryContainerTests {
 	@Test
 	void addMavenRepositoryInstance() {
 		MavenRepositoryContainer container = createTestContainer();
-		MavenRepository instance = MavenRepository.withIdAndUrl("test", "https://example.com/releases").name("my repo")
-				.build();
+		MavenRepository instance = MavenRepository.withIdAndUrl("test", "https://example.com/releases")
+			.name("my repo")
+			.build();
 		container.add(instance);
 		assertThat(container.ids()).containsOnly("test");
 		assertThat(container.items()).hasSize(1);
@@ -64,8 +65,9 @@ class MavenRepositoryContainerTests {
 	@Test
 	void addMavenRepositoryWithSnapshotsEnabled() {
 		MavenRepositoryContainer container = createTestContainer();
-		container.add(MavenRepository.withIdAndUrl("custom", "https://example.com/snapshots").name("custom-snapshots")
-				.onlySnapshots());
+		container.add(MavenRepository.withIdAndUrl("custom", "https://example.com/snapshots")
+			.name("custom-snapshots")
+			.onlySnapshots());
 		assertThat(container.ids()).containsOnly("custom");
 		assertThat(container.items()).hasSize(1);
 		assertThat(container.isEmpty()).isFalse();

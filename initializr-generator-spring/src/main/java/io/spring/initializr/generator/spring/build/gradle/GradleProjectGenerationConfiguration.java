@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class GradleProjectGenerationConfiguration {
 			List<BuildCustomizer<?>> buildCustomizers) {
 		GradleBuild build = (buildItemResolver != null) ? new GradleBuild(buildItemResolver) : new GradleBuild();
 		LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
-				.invoke((customizer) -> customizer.customize(build));
+			.invoke((customizer) -> customizer.customize(build));
 		return build;
 	}
 
@@ -117,7 +117,7 @@ public class GradleProjectGenerationConfiguration {
 	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
 		return new SpringBootPluginBuildCustomizer(description, versionResolver
-				.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
+			.getIfAvailable(() -> new InitializrDependencyManagementPluginVersionResolver(metadata)));
 	}
 
 	@Bean

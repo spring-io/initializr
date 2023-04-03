@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,20 +47,23 @@ class MavenProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-				.withConfiguration(BuildProjectGenerationConfiguration.class, MavenProjectGenerationConfiguration.class)
-				.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
-				.withDirectory(directory).withDescriptionCustomizer((description) -> {
-					description.setBuildSystem(new MavenBuildSystem());
-					description.setLanguage(new JavaLanguage());
-				});
+			.withConfiguration(BuildProjectGenerationConfiguration.class, MavenProjectGenerationConfiguration.class)
+			.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
+			.withDirectory(directory)
+			.withDescriptionCustomizer((description) -> {
+				description.setBuildSystem(new MavenBuildSystem());
+				description.setLanguage(new JavaLanguage());
+			});
 	}
 
 	@Test
 	void buildWriterIsContributed() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(BuildWriter.class)
-				.getBean(BuildWriter.class).isInstanceOf(MavenBuildProjectContributor.class));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(BuildWriter.class)
+					.getBean(BuildWriter.class)
+					.isInstanceOf(MavenBuildProjectContributor.class));
 	}
 
 	@Test
@@ -68,8 +71,8 @@ class MavenProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
-				".mvn/wrapper/maven-wrapper.jar");
+		assertThat(project).filePaths()
+			.contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
 	}
 
 	@Test
@@ -95,10 +98,12 @@ class MavenProjectGenerationConfigurationTests {
 		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
 		description.setLanguage(new JavaLanguage());
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>",
-				"                <exclusion>", "                    <groupId>org.junit.vintage</groupId>",
-				"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
-				"            </exclusions>");
+		assertThat(project).textFile("pom.xml")
+			.lines()
+			.containsSequence("            <exclusions>", "                <exclusion>",
+					"                    <groupId>org.junit.vintage</groupId>",
+					"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
+					"            </exclusions>");
 	}
 
 	@Test

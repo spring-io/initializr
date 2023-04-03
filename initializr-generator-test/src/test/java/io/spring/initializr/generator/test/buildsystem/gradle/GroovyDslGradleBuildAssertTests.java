@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,13 +49,13 @@ class GroovyDslGradleBuildAssertTests {
 	@Test
 	void hasPluginWrongId() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasPlugin("com.another", "1.0.0.RELEASE"));
+			.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasPlugin("com.another", "1.0.0.RELEASE"));
 	}
 
 	@Test
 	void hasPluginWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasPlugin("com.example", "2.0.0.RELEASE"));
+			.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasPlugin("com.example", "2.0.0.RELEASE"));
 	}
 
 	@Test
@@ -66,7 +66,7 @@ class GroovyDslGradleBuildAssertTests {
 	@Test
 	void hasVersionWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasVersion("0.0.3-SNAPSHOT"));
+			.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasVersion("0.0.3-SNAPSHOT"));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class GroovyDslGradleBuildAssertTests {
 	@Test
 	void hasSourceCompatibilityWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasSourceCompatibility("11"));
+			.isThrownBy(() -> assertThat(forSampleGradleBuild()).hasSourceCompatibility("11"));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ class GroovyDslGradleBuildAssertTests {
 	@Test
 	void containsOnlyExtPropertiesWithExtraValue() {
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> assertThat(forSampleGradleBuild())
-				.containsOnlyExtProperties("acmeVersion", "Brussels.SR2", "wrong", "1.0.0"));
+			.containsOnlyExtProperties("acmeVersion", "Brussels.SR2", "wrong", "1.0.0"));
 	}
 
 	private AssertProvider<GroovyDslGradleBuildAssert> forSampleGradleBuild() {

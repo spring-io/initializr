@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,8 @@ public abstract class AbstractInitializrIntegrationTests {
 		MediaType actual = response.getHeaders().getContentType();
 		assertThat(actual).isNotNull();
 		assertThat(actual.isCompatibleWith(expected))
-				.as("Non compatible media-type, expected " + expected + ", got " + actual).isTrue();
+			.as("Non compatible media-type, expected " + expected + ", got " + actual)
+			.isTrue();
 	}
 
 	protected JsonNode parseJson(String text) {
@@ -290,8 +291,10 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	private Set<PosixFilePermission> getPosixFilePermissions(int unixMode) {
-		return Arrays.stream(BitMaskFilePermission.values()).filter((permission) -> permission.permitted(unixMode))
-				.map(BitMaskFilePermission::getFilePermission).collect(Collectors.toSet());
+		return Arrays.stream(BitMaskFilePermission.values())
+			.filter((permission) -> permission.permitted(unixMode))
+			.map(BitMaskFilePermission::getFilePermission)
+			.collect(Collectors.toSet());
 	}
 
 	private void applyPermissions(Path target, Set<PosixFilePermission> permissions) throws IOException {

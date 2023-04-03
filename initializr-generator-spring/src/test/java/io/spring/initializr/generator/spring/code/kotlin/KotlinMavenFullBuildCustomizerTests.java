@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class KotlinMavenFullBuildCustomizerTests {
 		MavenBuild build = new MavenBuild();
 		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
 		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
-				.containsOnly(entry("kotlin.version", "1.2.70"));
+			.containsOnly(entry("kotlin.version", "1.2.70"));
 	}
 
 	@Test
@@ -64,13 +64,17 @@ class KotlinMavenFullBuildCustomizerTests {
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");
 			assertThat(args.getValue()).asList().hasSize(1);
-			assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg")
-					.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
+			assertThat(args.getValue()).asList()
+				.element(0)
+				.hasFieldOrPropertyWithValue("name", "arg")
+				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
 			Setting compilerPlugins = configuration.getSettings().get(1);
 			assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
 			assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-			assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin")
-					.hasFieldOrPropertyWithValue("value", "spring");
+			assertThat(compilerPlugins.getValue()).asList()
+				.element(0)
+				.hasFieldOrPropertyWithValue("name", "plugin")
+				.hasFieldOrPropertyWithValue("value", "spring");
 			Setting jvmTarget = configuration.getSettings().get(2);
 			assertThat(jvmTarget.getName()).isEqualTo("jvmTarget");
 			assertThat(jvmTarget.getValue()).isEqualTo("1.6");

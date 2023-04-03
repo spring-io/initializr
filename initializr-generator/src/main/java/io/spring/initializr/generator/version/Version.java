@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -256,8 +256,11 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder().append(this.major).append(".").append(this.minor).append(".")
-				.append(this.patch);
+		StringBuilder sb = new StringBuilder().append(this.major)
+			.append(".")
+			.append(this.minor)
+			.append(".")
+			.append(this.patch);
 		if (this.qualifier != null) {
 			sb.append(this.qualifier.getSeparator()).append(this.qualifier.getId());
 			if (this.qualifier.getVersion() != null) {
@@ -321,7 +324,9 @@ public final class Version implements Serializable, Comparable<Version> {
 		@Override
 		public String toString() {
 			return new StringJoiner(", ", Qualifier.class.getSimpleName() + "[", "]").add("id='" + this.id + "'")
-					.add("version=" + this.version).add("separator='" + this.separator + "'").toString();
+				.add("version=" + this.version)
+				.add("separator='" + this.separator + "'")
+				.toString();
 		}
 
 	}

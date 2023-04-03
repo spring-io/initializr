@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,9 @@ class GradleWrapperContributorTests {
 		assertThat(projectDir.resolve("gradlew")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("gradlew.bat")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.jar")).isRegularFile()
-				.satisfies(isNotExecutable());
+			.satisfies(isNotExecutable());
 		assertThat(projectDir.resolve("gradle/wrapper/gradle-wrapper.properties")).isRegularFile()
-				.satisfies(isNotExecutable());
+			.satisfies(isNotExecutable());
 	}
 
 	private Consumer<Path> isNotExecutable() {

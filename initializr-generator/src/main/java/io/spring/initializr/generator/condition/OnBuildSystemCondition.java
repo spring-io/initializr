@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class OnBuildSystemCondition extends ProjectGenerationCondition {
 	protected boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata) {
 		MultiValueMap<String, Object> attributes = metadata
-				.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
+			.getAllAnnotationAttributes(ConditionalOnBuildSystem.class.getName());
 		String buildSystemId = (String) attributes.getFirst("value");
 		String dialect = (String) attributes.getFirst("dialect");
 		BuildSystem buildSystem = description.getBuildSystem();

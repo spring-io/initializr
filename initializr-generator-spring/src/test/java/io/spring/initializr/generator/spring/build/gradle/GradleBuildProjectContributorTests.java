@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class GradleBuildProjectContributorTests {
 	void groovyDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		GradleBuild build = new GradleBuild();
 		groovyDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings())
-				.contribute(projectDir);
+			.contribute(projectDir);
 		Path buildGradle = projectDir.resolve("build.gradle");
 		assertThat(buildGradle).isRegularFile();
 	}
@@ -75,7 +75,7 @@ class GradleBuildProjectContributorTests {
 	void kotlinDslGradleBuildIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		GradleBuild build = new GradleBuild();
 		kotlinDslGradleBuildProjectContributor(build, IndentingWriterFactory.withDefaultSettings())
-				.contribute(projectDir);
+			.contribute(projectDir);
 		Path buildGradleKts = projectDir.resolve("build.gradle.kts");
 		assertThat(buildGradleKts).isRegularFile();
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,8 @@ public class ProjectGeneratorTests {
 		IOException exception = new IOException("test");
 		given(assetGenerator.generate(any())).willThrow(exception);
 		assertThatThrownBy(() -> generator.generate(new MutableProjectDescription(), assetGenerator))
-				.isInstanceOf(ProjectGenerationException.class).hasCause(exception);
+			.isInstanceOf(ProjectGenerationException.class)
+			.hasCause(exception);
 	}
 
 	@Test
@@ -158,7 +159,8 @@ public class ProjectGeneratorTests {
 		});
 		ProjectAssetGenerator<?> assetGenerator = mock(ProjectAssetGenerator.class);
 		assertThatThrownBy(() -> generator.generate(new MutableProjectDescription(), assetGenerator))
-				.isInstanceOf(BeanDefinitionOverrideException.class).hasMessageContaining("testBean");
+			.isInstanceOf(BeanDefinitionOverrideException.class)
+			.hasMessageContaining("testBean");
 	}
 
 	@Test

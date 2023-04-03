@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,13 +142,14 @@ public class ProjectGenerator {
 		return () -> {
 			if (description instanceof MutableProjectDescription mutableDescription) {
 				ProjectDescriptionDiffFactory diffFactory = context.getBeanProvider(ProjectDescriptionDiffFactory.class)
-						.getIfAvailable(DefaultProjectDescriptionDiffFactory::new);
+					.getIfAvailable(DefaultProjectDescriptionDiffFactory::new);
 				// Create the diff here so that it takes a copy of the description
 				// immediately
 				ProjectDescriptionDiff diff = diffFactory.create(mutableDescription);
 				context.registerBean(ProjectDescriptionDiff.class, () -> diff);
-				context.getBeanProvider(ProjectDescriptionCustomizer.class).orderedStream()
-						.forEach((customizer) -> customizer.customize(mutableDescription));
+				context.getBeanProvider(ProjectDescriptionCustomizer.class)
+					.orderedStream()
+					.forEach((customizer) -> customizer.customize(mutableDescription));
 			}
 			return description;
 		};

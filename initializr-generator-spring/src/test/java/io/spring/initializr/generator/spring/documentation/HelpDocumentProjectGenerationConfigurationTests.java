@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,10 @@ class HelpDocumentProjectGenerationConfigurationTests {
 	@BeforeEach
 	void setup(@TempDir Path directory) {
 		this.projectTester = new ProjectAssetTester()
-				.withConfiguration(HelpDocumentProjectGenerationConfiguration.class)
-				.withBean(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"))
-				.withBean(InitializrMetadata.class, () -> this.metadataBuilder.build()).withDirectory(directory);
+			.withConfiguration(HelpDocumentProjectGenerationConfiguration.class)
+			.withBean(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"))
+			.withBean(InitializrMetadata.class, () -> this.metadataBuilder.build())
+			.withDirectory(directory);
 	}
 
 	@Test
@@ -76,7 +77,8 @@ class HelpDocumentProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		this.projectTester.configure(description,
 				(context) -> assertThat(context).hasSingleBean(GitIgnoreCustomizer.class)
-						.getBean(GitIgnoreCustomizer.class).isInstanceOf(HelpDocumentGitIgnoreCustomizer.class));
+					.getBean(GitIgnoreCustomizer.class)
+					.isInstanceOf(HelpDocumentGitIgnoreCustomizer.class));
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,8 +84,8 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo-build");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Unknown type 'foo-build' check project metadata");
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage("Unknown type 'foo-build' check project metadata");
 	}
 
 	@Test
@@ -96,29 +96,30 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setType("example-project");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, testMetadata))
-				.withMessage("Invalid type 'example-project' (missing build tag) check project metadata");
+			.isThrownBy(() -> this.converter.convert(request, testMetadata))
+			.withMessage("Invalid type 'example-project' (missing build tag) check project metadata");
 	}
 
 	@Test
 	void convertWhenTypeDoesNotDefineDialectTagShouldUseDefaultDialect() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, null, "test").build();
+			.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, null, "test")
+			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo");
 		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
-				.isEqualTo(GradleBuildSystem.DIALECT_GROOVY);
+			.isEqualTo(GradleBuildSystem.DIALECT_GROOVY);
 	}
 
 	@Test
 	void convertWhenTypeDefinesDialectTagShouldUseDialect() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN, "test")
-				.build();
+			.addType("foo", true, "/foo.zip", GradleBuildSystem.ID, GradleBuildSystem.DIALECT_KOTLIN, "test")
+			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo");
 		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
-				.isEqualTo(GradleBuildSystem.DIALECT_KOTLIN);
+			.isEqualTo(GradleBuildSystem.DIALECT_KOTLIN);
 	}
 
 	@Test
@@ -127,7 +128,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setBootVersion("1.5.9.RELEASE");
 		assertThat(this.converter.convert(request, this.metadata).getPlatformVersion())
-				.isEqualTo(Version.parse("1.5.9.RELEASE"));
+			.isEqualTo(Version.parse("1.5.9.RELEASE"));
 	}
 
 	@Test
@@ -146,12 +147,14 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	@Test
 	void convertWhenSpringBootVersionInvalidShouldThrowException() {
 		this.metadata = InitializrMetadataTestBuilder.withDefaults()
-				.setPlatformCompatibilityRange("[2.0.0.RELEASE,2.3.0.M1)").build();
+			.setPlatformCompatibilityRange("[2.0.0.RELEASE,2.3.0.M1)")
+			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setBootVersion("1.5.9.RELEASE");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata)).withMessage(
-						"Invalid Spring Boot version '1.5.9.RELEASE', Spring Boot compatibility range is >=2.0.0.RELEASE and <2.3.0.M1");
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage(
+					"Invalid Spring Boot version '1.5.9.RELEASE', Spring Boot compatibility range is >=2.0.0.RELEASE and <2.3.0.M1");
 	}
 
 	@Test
@@ -159,8 +162,8 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("star");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Unknown packaging 'star' check project metadata");
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage("Unknown packaging 'star' check project metadata");
 	}
 
 	@Test
@@ -168,8 +171,8 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setLanguage("english");
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Unknown language 'english' check project metadata");
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage("Unknown language 'english' check project metadata");
 	}
 
 	@Test
@@ -177,21 +180,22 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Collections.singletonList("invalid"));
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, this.metadata))
-				.withMessage("Unknown dependency 'invalid' check project metadata");
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage("Unknown dependency 'invalid' check project metadata");
 	}
 
 	@Test
 	void convertWhenDependencyOutOfRangeShouldThrowException() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setRange(new VersionRange(Version.parse("2.5.0.M1")));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("foo", dependency)
+			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setDependencies(Collections.singletonList("foo"));
 		assertThatExceptionOfType(InvalidProjectRequestException.class)
-				.isThrownBy(() -> this.converter.convert(request, metadata))
-				.withMessage("Dependency 'foo' is not compatible " + "with Spring Boot 2.4.1");
+			.isThrownBy(() -> this.converter.convert(request, metadata))
+			.withMessage("Dependency 'foo' is not compatible " + "with Spring Boot 2.4.1");
 	}
 
 	@Test

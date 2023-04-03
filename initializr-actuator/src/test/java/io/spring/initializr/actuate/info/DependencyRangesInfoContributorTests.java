@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,9 @@ class DependencyRangesInfoContributorTests {
 	@Test
 	void dependencyWithNoMapping() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("foo", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("dependency-ranges");
 	}
@@ -57,9 +58,10 @@ class DependencyRangesInfoContributorTests {
 	void dependencyWithRangeOnArtifact() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, "foo2", null, null, null, null));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
-				.build();
+			.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, "foo2", null, null, null, null));
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("foo", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("dependency-ranges");
 	}
@@ -68,11 +70,14 @@ class DependencyRangesInfoContributorTests {
 	void dependencyWithRangeAndBom() {
 		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null,
-				"0.1.0.RELEASE", null, null, null));
+		dependency.getMappings()
+			.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null, null,
+					null));
 		dependency.setBom("bom");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom", bom)
-				.addDependencyGroup("foo", dependency).build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addBom("bom", bom)
+			.addDependencyGroup("foo", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).doesNotContainKeys("dependency-ranges");
 	}
@@ -81,8 +86,9 @@ class DependencyRangesInfoContributorTests {
 	void dependencyNoMappingSimpleRange() {
 		Dependency dependency = Dependency.withId("foo", "com.example", "foo", "1.2.3.RELEASE");
 		dependency.setCompatibilityRange("[1.1.0.RELEASE, 1.5.0.RELEASE)");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("foo", dependency)
-				.build();
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("foo", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertThat(info.getDetails()).containsKeys("dependency-ranges");
 		@SuppressWarnings("unchecked")
@@ -96,12 +102,14 @@ class DependencyRangesInfoContributorTests {
 	@Test
 	void dependencyWithMappingAndOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null,
-				"0.1.0.RELEASE", null, null, null));
 		dependency.getMappings()
-				.add(Dependency.Mapping.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE", null, null, null));
+			.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null, null,
+					null));
+		dependency.getMappings()
+			.add(Dependency.Mapping.create("1.2.0.RELEASE", null, null, "0.2.0.RELEASE", null, null, null));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertDependencyId(info, "foo");
 		Map<String, Object> foo = getDependencyRangeInfo(info, "foo");
@@ -112,12 +120,15 @@ class DependencyRangesInfoContributorTests {
 	@Test
 	void dependencyWithMappingAndNoOpenRange() {
 		Dependency dependency = Dependency.withId("foo", null, null, "0.3.0.RELEASE");
-		dependency.getMappings().add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null,
-				"0.1.0.RELEASE", null, null, null));
-		dependency.getMappings().add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null,
-				"0.2.0.RELEASE", null, null, null));
+		dependency.getMappings()
+			.add(Dependency.Mapping.create("[1.1.0.RELEASE, 1.2.0.RELEASE)", null, null, "0.1.0.RELEASE", null, null,
+					null));
+		dependency.getMappings()
+			.add(Dependency.Mapping.create("[1.2.0.RELEASE, 1.3.0.RELEASE)", null, null, "0.2.0.RELEASE", null, null,
+					null));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		Info info = getInfo(metadata);
 		assertDependencyId(info, "foo");
 		Map<String, Object> foo = getDependencyRangeInfo(info, "foo");

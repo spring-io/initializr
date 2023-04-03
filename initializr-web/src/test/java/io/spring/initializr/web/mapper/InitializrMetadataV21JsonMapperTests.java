@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,23 +44,27 @@ class InitializrMetadataV21JsonMapperTests {
 	@Test
 	void withNoAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", null, "test").addDependencyGroup("foo", "one", "two").build();
+			.addType("foo", true, "/foo.zip", "none", null, "test")
+			.addDependencyGroup("foo", "one", "two")
+			.build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
 		assertThat(get(result, "_links.foo.href"))
-				.isEqualTo("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
-						+ "groupId,artifactId,version,name,description,packageName}");
+			.isEqualTo("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
+					+ "groupId,artifactId,version,name,description,packageName}");
 	}
 
 	@Test
 	void withAppUrl() throws IOException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", null, "test").addDependencyGroup("foo", "one", "two").build();
+			.addType("foo", true, "/foo.zip", "none", null, "test")
+			.addDependencyGroup("foo", "one", "two")
+			.build();
 		String json = this.jsonMapper.write(metadata, "http://server:8080/my-app");
 		JsonNode result = objectMapper.readTree(json);
 		assertThat(get(result, "_links.foo.href"))
-				.isEqualTo("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
-						+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
+			.isEqualTo("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
+					+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
 	}
 
 	@Test
@@ -69,7 +73,8 @@ class InitializrMetadataV21JsonMapperTests {
 		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
 		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
+			.addDependencyGroup("test", dependency)
+			.build();
 		String json = this.jsonMapper.write(metadata, null);
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
@@ -99,7 +104,9 @@ class InitializrMetadataV21JsonMapperTests {
 	@Test
 	void platformVersionUsingSemVerUseBackwardCompatibleFormat() throws JsonProcessingException {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("2.5.0-SNAPSHOT", false)
-				.addBootVersion("2.5.0-M2", false).addBootVersion("2.4.2", true).build();
+			.addBootVersion("2.5.0-M2", false)
+			.addBootVersion("2.4.2", true)
+			.build();
 		String json = this.jsonMapper.write(metadata, null);
 		JsonNode result = objectMapper.readTree(json);
 		JsonNode platformVersions = result.get("bootVersion");

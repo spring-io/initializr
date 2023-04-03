@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,9 @@ class ApplicationPropertiesContributorTests {
 	void applicationConfigurationWithDefaultSettings() throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
 		new ApplicationPropertiesContributor().contribute(projectDir);
-		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties").lines()
-				.isEmpty();
+		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties")
+			.lines()
+			.isEmpty();
 	}
 
 }

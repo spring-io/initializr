@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,9 +119,10 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 	private ProjectAssetGenerator<ProjectStructure> runAllAvailableContributors() {
 		return (context) -> {
 			Path projectDirectory = context.getBean(ProjectDirectoryFactory.class)
-					.createProjectDirectory(context.getBean(ProjectDescription.class));
+				.createProjectDirectory(context.getBean(ProjectDescription.class));
 			List<ProjectContributor> projectContributors = context.getBeanProvider(ProjectContributor.class)
-					.orderedStream().collect(Collectors.toList());
+				.orderedStream()
+				.collect(Collectors.toList());
 			for (ProjectContributor projectContributor : projectContributors) {
 				projectContributor.contribute(projectDirectory);
 			}

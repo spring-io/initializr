@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,14 +124,14 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations) {
 		configurations.names()
-				.forEach((configuration) -> writer.println("val " + configuration + " by configurations.creating"));
+			.forEach((configuration) -> writer.println("val " + configuration + " by configurations.creating"));
 		if (configurations.customizations().findFirst().isEmpty()) {
 			return;
 		}
 		writer.println("configurations {");
 		List<String> customConfigurations = configurations.names().collect(Collectors.toList());
 		writer.indented(() -> configurations.customizations()
-				.forEach((configuration) -> writeConfiguration(writer, configuration, customConfigurations)));
+			.forEach((configuration) -> writeConfiguration(writer, configuration, customConfigurations)));
 		writer.println("}");
 		writer.println("");
 	}
@@ -144,9 +144,10 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		else {
 			writer.println(configuration.getName() + " {");
 			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
-					configuration.getExtendsFrom().stream()
-							.map((name) -> configurationReference(name, customConfigurations))
-							.collect(Collectors.joining(", ")))));
+					configuration.getExtendsFrom()
+						.stream()
+						.map((name) -> configurationReference(name, customConfigurations))
+						.collect(Collectors.joining(", ")))));
 			writer.println("}");
 		}
 	}
@@ -161,8 +162,8 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 				+ ((classifier != null) ? ":" + classifier : "") + ((type != null) ? "@" + type : "") + "\")");
 		if (!dependency.getExclusions().isEmpty()) {
 			writer.println(" {");
-			writer.indented(
-					() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
+			writer
+				.indented(() -> writeCollection(writer, dependency.getExclusions(), this::dependencyExclusionAsString));
 			writer.println("}");
 		}
 		else {

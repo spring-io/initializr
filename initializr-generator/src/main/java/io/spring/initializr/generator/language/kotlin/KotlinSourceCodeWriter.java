@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,8 +170,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		List<Parameter> parameters = functionDeclaration.getParameters();
 		if (!parameters.isEmpty()) {
 			writer.print(parameters.stream()
-					.map((parameter) -> parameter.getName() + ": " + getUnqualifiedName(parameter.getType()))
-					.collect(Collectors.joining(", ")));
+				.map((parameter) -> parameter.getName() + ": " + getUnqualifiedName(parameter.getType()))
+				.collect(Collectors.joining(", ")));
 		}
 		writer.print(")");
 		if (functionDeclaration.getReturnType() != null) {
@@ -210,8 +210,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 			else {
 				writer.print(attributes.stream()
-						.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-						.collect(Collectors.joining(", ")));
+					.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
+					.collect(Collectors.joining(", ")));
 			}
 			writer.print(")");
 		}
@@ -247,8 +247,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
-		String modifiers = declaredModifiers.stream().filter((entry) -> !entry.equals(KotlinModifier.PUBLIC)).sorted()
-				.map((entry) -> entry.toString().toLowerCase(Locale.ENGLISH)).collect(Collectors.joining(" "));
+		String modifiers = declaredModifiers.stream()
+			.filter((entry) -> !entry.equals(KotlinModifier.PUBLIC))
+			.sorted()
+			.map((entry) -> entry.toString().toLowerCase(Locale.ENGLISH))
+			.collect(Collectors.joining(" "));
 		if (!modifiers.isEmpty()) {
 			writer.print(modifiers);
 			writer.print(" ");
@@ -287,12 +290,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
 			typeDeclaration.getPropertyDeclarations()
-					.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
+				.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
 			typeDeclaration.getFunctionDeclarations()
-					.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
+				.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		}
 		compilationUnit.getTopLevelFunctions()
-				.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
+			.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
 	}
@@ -315,11 +318,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				(parameter) -> Collections.singleton(parameter.getType())));
 		imports.addAll(getRequiredImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
-						.map(KotlinFunctionInvocation.class::cast),
+					.map(KotlinFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getTarget())));
 		imports.addAll(getRequiredImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
-						.map(KotlinReifiedFunctionInvocation.class::cast),
+					.map(KotlinReifiedFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getName())));
 		return imports;
 	}
@@ -332,16 +335,21 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				imports.addAll(attribute.getValues());
 			}
 			if (Enum.class.isAssignableFrom(attribute.getType())) {
-				imports.addAll(attribute.getValues().stream().map((value) -> value.substring(0, value.lastIndexOf(".")))
-						.toList());
+				imports.addAll(attribute.getValues()
+					.stream()
+					.map((value) -> value.substring(0, value.lastIndexOf(".")))
+					.toList());
 			}
 		});
 		return imports;
 	}
 
 	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
-		return functionDeclaration.getStatements().stream().filter(KotlinExpressionStatement.class::isInstance)
-				.map(KotlinExpressionStatement.class::cast).map(KotlinExpressionStatement::getExpression);
+		return functionDeclaration.getStatements()
+			.stream()
+			.filter(KotlinExpressionStatement.class::isInstance)
+			.map(KotlinExpressionStatement.class::cast)
+			.map(KotlinExpressionStatement::getExpression);
 	}
 
 	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
@@ -349,8 +357,10 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private <T> List<String> getRequiredImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping).flatMap(Collection::stream).filter(this::requiresImport)
-				.collect(Collectors.toList());
+		return candidates.map(mapping)
+			.flatMap(Collection::stream)
+			.filter(this::requiresImport)
+			.collect(Collectors.toList());
 	}
 
 	private String getUnqualifiedName(String name) {

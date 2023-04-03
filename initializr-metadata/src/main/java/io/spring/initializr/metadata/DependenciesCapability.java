@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	 * @return all dependencies
 	 */
 	public Collection<Dependency> getAll() {
-		return Collections.unmodifiableCollection(
-				this.indexedDependencies.values().stream().distinct().collect(Collectors.toList()));
+		return Collections
+			.unmodifiableCollection(this.indexedDependencies.values().stream().distinct().collect(Collectors.toList()));
 	}
 
 	public void validate() {
@@ -81,7 +81,7 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	public void merge(List<DependencyGroup> otherContent) {
 		otherContent.forEach((group) -> {
 			if (this.content.stream()
-					.noneMatch((it) -> group.getName() != null && group.getName().equals(it.getName()))) {
+				.noneMatch((it) -> group.getName() != null && group.getName().equals(it.getName()))) {
 				this.content.add(group);
 			}
 		});

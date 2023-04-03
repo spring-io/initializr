@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class VersionParser {
 	public static final VersionParser DEFAULT = new VersionParser(Collections.emptyList());
 
 	private static final Pattern VERSION_REGEX = Pattern
-			.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:([.|-])([^0-9]+)(\\d+)?)?$");
+		.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x)(?:([.|-])([^0-9]+)(\\d+)?)?$");
 
 	private static final Pattern RANGE_REGEX = Pattern.compile("([(\\[])(.*),(.*)([)\\]])");
 

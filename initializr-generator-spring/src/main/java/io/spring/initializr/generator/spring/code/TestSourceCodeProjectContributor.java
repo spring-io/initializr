@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,17 +80,17 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	@SuppressWarnings("unchecked")
 	private void customizeTestApplicationType(TypeDeclaration testApplicationType) {
 		List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers.orderedStream()
-				.collect(Collectors.toList());
+			.collect(Collectors.toList());
 		LambdaSafe.callbacks(TestApplicationTypeCustomizer.class, customizers, testApplicationType)
-				.invoke((customizer) -> customizer.customize(testApplicationType));
+			.invoke((customizer) -> customizer.customize(testApplicationType));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeTestSourceCode(S sourceCode) {
 		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream()
-				.collect(Collectors.toList());
+			.collect(Collectors.toList());
 		LambdaSafe.callbacks(TestSourceCodeCustomizer.class, customizers, sourceCode)
-				.invoke((customizer) -> customizer.customize(sourceCode));
+			.invoke((customizer) -> customizer.customize(sourceCode));
 	}
 
 }

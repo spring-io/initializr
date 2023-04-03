@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasParentWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> assertThat(forSampleMavenBuild())
-				.hasParent("com.example.wrong", "infrastructure-parent", "1.0.0.RELEASE"));
+			.hasParent("com.example.wrong", "infrastructure-parent", "1.0.0.RELEASE"));
 	}
 
 	@Test
@@ -57,7 +57,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasGroupIdWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasGroupId("com.wrong"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasGroupId("com.wrong"));
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasArtifactIdWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasArtifactId("wrong"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasArtifactId("wrong"));
 	}
 
 	@Test
@@ -79,7 +79,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasVersionWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasVersion("1.0.0"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasVersion("1.0.0"));
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasPackagingWithNoValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasPackaging("jar"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasPackaging("jar"));
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasNameWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasName("wrong"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasName("wrong"));
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasDescriptionWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDescription("Wrong description"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDescription("Wrong description"));
 	}
 
 	@Test
@@ -123,7 +123,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasPropertyWithWrongValue() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasProperty("acme.version", "Wrong.SR2"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasProperty("acme.version", "Wrong.SR2"));
 	}
 
 	@Test
@@ -134,7 +134,7 @@ class MavenBuildAssertTests {
 	@Test
 	void doesNotHavePropertyWithExistingProperty() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).doesNotHaveProperty("acme.version"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).doesNotHaveProperty("acme.version"));
 	}
 
 	@Test
@@ -145,7 +145,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasDependenciesSizeWithWrongSize() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDependenciesSize(3));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDependenciesSize(3));
 	}
 
 	@Test
@@ -156,7 +156,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasDependencyWithWrongScope() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDependency("com.example.acme", "library-test"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasDependency("com.example.acme", "library-test"));
 	}
 
 	@Test
@@ -168,8 +168,8 @@ class MavenBuildAssertTests {
 	@Test
 	void hasDependencyWithVersionWithWrongVersion() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-dependency-version-pom.xml"))
-						.hasDependency("com.example.acme", "library", "1.3.0"));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-dependency-version-pom.xml"))
+				.hasDependency("com.example.acme", "library", "1.3.0"));
 	}
 
 	@Test
@@ -181,8 +181,8 @@ class MavenBuildAssertTests {
 	@Test
 	void hasDependencyWithVersionAndScopeWithWrongScope() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-dependency-version-pom.xml"))
-						.hasDependency("com.example.acme", "library-test", "1.3.0", "runtime"));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-dependency-version-pom.xml"))
+				.hasDependency("com.example.acme", "library-test", "1.3.0", "runtime"));
 	}
 
 	@Test
@@ -191,7 +191,7 @@ class MavenBuildAssertTests {
 		Dependency test = Dependency.withId("acme", "com.example.acme", "library", "1.2.0", "test");
 		test.setType("test-jar");
 		assertThat(forMavenBuild("sample-dependency-multiple-identical-gav-pom.xml")).hasDependency(main)
-				.hasDependency(test);
+			.hasDependency(test);
 	}
 
 	@Test
@@ -206,8 +206,8 @@ class MavenBuildAssertTests {
 
 	@Test
 	void doesNotHaveDependencyWithMatchingDependency() {
-		assertThatExceptionOfType(AssertionError.class).isThrownBy(
-				() -> assertThat(forSampleMavenBuild()).doesNotHaveDependency("com.example.acme", "library"));
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).doesNotHaveDependency("com.example.acme", "library"));
 	}
 
 	@Test
@@ -218,7 +218,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasBomsSizeWithWrongSize() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasBomsSize(3));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).hasBomsSize(3));
 	}
 
 	@Test
@@ -257,7 +257,7 @@ class MavenBuildAssertTests {
 	@Test
 	void doesNotHaveBomWithMatchingBom() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forSampleMavenBuild()).doesNotHaveBom("com.example.acme", "library-bom"));
+			.isThrownBy(() -> assertThat(forSampleMavenBuild()).doesNotHaveBom("com.example.acme", "library-bom"));
 	}
 
 	@Test
@@ -273,7 +273,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasRepositoriesSizeWrongSize() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(2));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepositoriesSize(2));
 	}
 
 	@Test
@@ -291,37 +291,37 @@ class MavenBuildAssertTests {
 	@Test
 	void hasRepositoryWithWrongId() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-wrong",
-						"Acme Milestones", "https://repo.example.com/milestone", false));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-wrong",
+					"Acme Milestones", "https://repo.example.com/milestone", false));
 	}
 
 	@Test
 	void hasRepositoryWithWrongName() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml"))
-						.hasRepository("acme-milestones", "Acme Wrong", "https://repo.example.com/milestone", false));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
+					"Acme Wrong", "https://repo.example.com/milestone", false));
 	}
 
 	@Test
 	void hasRepositoryWithWrongUrl() {
-		assertThatExceptionOfType(AssertionError.class).isThrownBy(
-				() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
-						"Acme Milestones", "https://repo.wrong.com/milestone", false));
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
+					"Acme Milestones", "https://repo.wrong.com/milestone", false));
 	}
 
 	@Test
 	void hasRepositoryWithNullUrl() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-empty",
-						"Acme Empty", "https://repo.wrong.com/milestone", null))
-				.withMessageContaining("URL of repository acme-empty");
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-empty",
+					"Acme Empty", "https://repo.wrong.com/milestone", null))
+			.withMessageContaining("URL of repository acme-empty");
 	}
 
 	@Test
 	void hasRepositoryWithWrongSnapshotFlag() {
-		assertThatExceptionOfType(AssertionError.class).isThrownBy(
-				() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
-						"Acme Milestones", "https://repo.example.com/milestone", true));
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-repositories-pom.xml")).hasRepository("acme-milestones",
+					"Acme Milestones", "https://repo.example.com/milestone", true));
 	}
 
 	@Test
@@ -332,7 +332,7 @@ class MavenBuildAssertTests {
 	@Test
 	void hasProfileWithUnknownId() {
 		assertThatExceptionOfType(AssertionError.class)
-				.isThrownBy(() -> assertThat(forMavenBuild("sample-profiles-pom.xml")).hasProfile("unknown"));
+			.isThrownBy(() -> assertThat(forMavenBuild("sample-profiles-pom.xml")).hasProfile("unknown"));
 	}
 
 	private AssertProvider<MavenBuildAssert> forSampleMavenBuild() {
