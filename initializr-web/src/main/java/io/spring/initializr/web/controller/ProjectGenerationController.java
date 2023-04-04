@@ -65,7 +65,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @param <R> the {@link ProjectRequest} type to use to bind request parameters
  * @author Stephane Nicoll
  */
-@Controller
+@RestController
 public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	private static final Log logger = LogFactory.getLog(ProjectGenerationController.class);

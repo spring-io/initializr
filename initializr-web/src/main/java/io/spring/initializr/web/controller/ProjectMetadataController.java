@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author Stephane Nicoll
  */
-@Controller
+@RestController
 public class ProjectMetadataController extends AbstractMetadataController {
 
 	/**
@@ -67,7 +67,6 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	}
 
 	@RequestMapping(path = "/metadata/config", produces = "application/json")
-	@ResponseBody
 	public InitializrMetadata config() {
 		return this.metadataProvider.get();
 	}

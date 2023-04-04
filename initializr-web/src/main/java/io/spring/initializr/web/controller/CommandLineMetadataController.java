@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author Stephane Nicoll
  */
-@Controller
+@RestController
 public class CommandLineMetadataController extends AbstractMetadataController {
 
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
