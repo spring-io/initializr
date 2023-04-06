@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,17 +29,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * {@link Controller} that handles assistance for CLI support using a
+ * {@link RestController} that handles assistance for CLI support using a
  * {@link CommandLineHelpGenerator}.
  *
  * @author Stephane Nicoll
  */
-@Controller
+@RestController
 public class CommandLineMetadataController extends AbstractMetadataController {
 
 	private final CommandLineHelpGenerator commandLineHelpGenerator;
