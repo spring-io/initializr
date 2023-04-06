@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author Stephane Nicoll
  */
-@RestController
+@Controller
 public class SpringCliDistributionController {
 
 	private final InitializrMetadataProvider metadataProvider;
