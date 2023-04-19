@@ -38,13 +38,13 @@ public abstract class AbstractJvmModuleAssert<SELF extends AbstractJvmModuleAsse
 
 	private final SourceStructure testDirectory;
 
-	private final String sourceFileExtension;
+	private final Language language;
 
 	protected AbstractJvmModuleAssert(Path projectDirectory, Language language, Class<?> selfType) {
 		super(projectDirectory, selfType);
 		this.mainDirectory = new SourceStructure(projectDirectory.resolve("src/main/"), language);
 		this.testDirectory = new SourceStructure(projectDirectory.resolve("src/test/"), language);
-		this.sourceFileExtension = language.sourceFileExtension();
+		this.language = language;
 	}
 
 	/**
@@ -128,11 +128,9 @@ public abstract class AbstractJvmModuleAssert<SELF extends AbstractJvmModuleAsse
 	}
 
 	private Path validateAndGetAsset(Path baseDir, String packageName, String name) {
-		Path source = resolveSource(baseDir, packageName, name);
-		new PathAssert(source)
-			.as("Source '%s.%s' not found in package '%s'", name, this.sourceFileExtension, packageName)
-			.exists()
-			.isRegularFile();
+		var file = "%s.%s".formatted(name, this.language.sourceFileExtension());
+		Path source = resolveSource(baseDir, packageName, file);
+		new PathAssert(source).as("Source '%s' not found in package '%s'", file, packageName).exists().isRegularFile();
 		return source;
 	}
 
@@ -142,12 +140,13 @@ public abstract class AbstractJvmModuleAssert<SELF extends AbstractJvmModuleAsse
 		return this.myself;
 	}
 
-	private Path resolveSource(Path baseDir, String packageName, String name) {
-		return baseDir.resolve(createSourceRelativePath(packageName, name));
+	private Path resolveSource(Path baseDir, String packageName, String file) {
+		return ("kotlin".equals(this.language.id())) ? baseDir.resolve(file)
+				: baseDir.resolve(createSourceRelativePath(packageName, file));
 	}
 
-	private String createSourceRelativePath(String packageName, String name) {
-		return packageToPath(packageName) + "/" + name + "." + this.sourceFileExtension;
+	private String createSourceRelativePath(String packageName, String file) {
+		return packageToPath(packageName) + "/" + file;
 	}
 
 	private static String packageToPath(String packageName) {

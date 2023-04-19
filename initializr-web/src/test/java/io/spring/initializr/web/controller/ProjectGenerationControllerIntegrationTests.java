@@ -144,9 +144,8 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void kotlinRange() {
 		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&language=kotlin&bootVersion=2.4.0");
-		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
-				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
-				"src/main/resources/application.properties");
+		assertThat(project).containsFiles("src/main/kotlin/DemoApplication.kt",
+				"src/test/kotlin/DemoApplicationTests.kt", "src/main/resources/application.properties");
 		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.4.31");
 	}
 

@@ -61,8 +61,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
-		Path output = structure.createSourceFile(compilationUnit.getPackageName(), compilationUnit.getName());
-		Files.createDirectories(output.getParent());
+		Path output = structure.createSourceFile("", compilationUnit.getName());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",
 				Files.newBufferedWriter(output))) {
 			writer.println("package " + compilationUnit.getPackageName());

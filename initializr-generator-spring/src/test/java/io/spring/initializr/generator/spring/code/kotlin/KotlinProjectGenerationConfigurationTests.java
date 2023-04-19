@@ -86,7 +86,7 @@ class KotlinProjectGenerationConfigurationTests {
 	@Test
 	void mainClassIsContributedWhenGeneratingProject() {
 		ProjectStructure project = this.projectTester.generate(new MutableProjectDescription());
-		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt");
+		assertThat(project).containsFiles("src/main/kotlin/DemoApplication.kt");
 	}
 
 	@Test
@@ -94,7 +94,7 @@ class KotlinProjectGenerationConfigurationTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/test/kotlin/com/example/demo/DemoApplicationTests.kt")
+		assertThat(project).textFile("src/test/kotlin/DemoApplicationTests.kt")
 			.containsExactly("package com.example.demo", "", "import org.junit.jupiter.api.Test",
 					"import org.springframework.boot.test.context.SpringBootTest", "", "@SpringBootTest",
 					"class DemoApplicationTests {", "", "    @Test", "    fun contextLoads() {", "    }", "", "}");
@@ -106,7 +106,7 @@ class KotlinProjectGenerationConfigurationTests {
 		description.setPackaging(new WarPackaging());
 		description.setApplicationName("KotlinDemoApplication");
 		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("src/main/kotlin/com/example/demo/ServletInitializer.kt")
+		assertThat(project).textFile("src/main/kotlin/ServletInitializer.kt")
 			.containsExactly("package com.example.demo", "",
 					"import org.springframework.boot.builder.SpringApplicationBuilder",
 					"import org.springframework.boot.web.servlet.support.SpringBootServletInitializer", "",

@@ -71,7 +71,7 @@ class KotlinSourceCodeWriterTests {
 	void emptyCompilationUnit() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		sourceCode.createCompilationUnit("com.example", "Test");
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example");
 	}
 
@@ -80,7 +80,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		compilationUnit.createTypeDeclaration("Test");
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test");
 	}
 
@@ -90,7 +90,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.modifiers(KotlinModifier.PUBLIC, KotlinModifier.ABSTRACT);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "abstract class Test");
 	}
 
@@ -100,7 +100,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.extend("com.example.build.TestParent");
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.build.TestParent", "",
 				"class Test : TestParent()");
 	}
@@ -114,7 +114,7 @@ class KotlinSourceCodeWriterTests {
 			.returning("java.lang.String")
 			.parameters(new Parameter("java.lang.String", "echo"))
 			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    fun reverse(echo: String): String {", "        return echo.reversed()", "    }", "", "}");
 	}
@@ -128,7 +128,7 @@ class KotlinSourceCodeWriterTests {
 			.modifiers(KotlinModifier.OVERRIDE, KotlinModifier.PUBLIC, KotlinModifier.OPEN)
 			.returning("java.lang.String")
 			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("super", "toString"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    open override fun toString(): String {", "        return super.toString()", "    }", "", "}");
 	}
@@ -140,7 +140,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
 				KotlinPropertyDeclaration.val("testProp").returning("java.lang.String").emptyValue());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    val testProp: String", "",
 				"}");
 	}
@@ -152,7 +152,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
 				KotlinPropertyDeclaration.val("testProp").returning("com.example.One").emptyValue());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "", "class Test {", "",
 				"    val testProp: One", "", "}");
 	}
@@ -170,7 +170,7 @@ class KotlinSourceCodeWriterTests {
 			.withBody(new KotlinExpressionStatement(new KotlinFunctionInvocation("testProp", "toLowerCase")))
 			.buildAccessor()
 			.emptyValue());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    val testProp: String = \"This is a TEST\"", "", "    val withGetter: String",
 				"        get() = testProp.toLowerCase()", "", "}");
@@ -183,7 +183,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
 				KotlinPropertyDeclaration.var("testProp").returning("java.lang.String").value("\"This is a test\""));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "", "}");
 	}
@@ -198,7 +198,7 @@ class KotlinSourceCodeWriterTests {
 			.setter()
 			.buildAccessor()
 			.value("\"This is a test\""));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        set", "", "}");
 	}
@@ -214,7 +214,7 @@ class KotlinSourceCodeWriterTests {
 			.withAnnotation(Annotation.name("org.springframework.beans.factory.annotation.Autowired"))
 			.buildAccessor()
 			.value("\"This is a test\""));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        @Autowired set", "", "}");
 	}
@@ -228,7 +228,7 @@ class KotlinSourceCodeWriterTests {
 		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testDouble").returning("Double").value("1986.0"));
 		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testFloat").value("99.999f"));
 		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testLong").returning("Long").value("1986L"));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    var testProp: Int = 42",
 				"", "    var testDouble: Double = 1986.0", "", "    var testFloat = 99.999f", "",
 				"    var testLong: Long = 1986L", "", "}");
@@ -240,7 +240,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp").returning("Int").empty());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    var testProp: Int", "",
 				"}");
 	}
@@ -252,7 +252,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
 				KotlinPropertyDeclaration.var("testProp").modifiers(KotlinModifier.LATEINIT).returning("Int").empty());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    lateinit var testProp: Int", "", "}");
 	}
@@ -267,7 +267,7 @@ class KotlinSourceCodeWriterTests {
 			.parameters(new Parameter("Array<String>", "args"))
 			.body(new KotlinExpressionStatement(
 					new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication", "Test", "*args"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.boot.autoconfigure.SpringBootApplication",
 				"import org.springframework.boot.runApplication", "", "@SpringBootApplication", "class Test", "",
@@ -331,7 +331,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotate(annotation);
-		return writeSingleType(sourceCode, "com/example/Test.kt");
+		return writeSingleType(sourceCode, "Test.kt");
 	}
 
 	@Test
@@ -342,7 +342,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("something").body();
 		function.annotate(Annotation.name("com.example.test.TestAnnotation"));
 		test.addFunctionDeclaration(function);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		List<String> lines = writeSingleType(sourceCode, "Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.test.TestAnnotation", "",
 				"class Test {", "", "    @TestAnnotation", "    fun something() {", "    }", "", "}");
 	}

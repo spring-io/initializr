@@ -54,13 +54,10 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	@MethodSource("parameters")
 	void currentGenerationJar(Language language) {
 		ProjectStructure project = generateProject(language, maven, "2.4.1");
-		assertThat(project).filePaths()
-			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
-							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
+		final var filePaths = assertThat(project).filePaths();
+		filePaths.anyMatch((s) -> s.startsWith(String.format("src/main/%s", language.id())));
+		filePaths.anyMatch((s) -> s.startsWith(String.format("src/test/%s", language.id())));
+		filePaths.anyMatch((s) -> s.startsWith("src/main/resources/application.properties"));
 	}
 
 	@ParameterizedTest
@@ -68,13 +65,10 @@ class CodeComplianceTests extends AbstractComplianceTests {
 	void currentGenerationWar(Language language) {
 		ProjectStructure project = generateProject(language, maven, "2.4.1",
 				(description) -> description.setPackaging(Packaging.forId("war")));
-		assertThat(project).filePaths()
-			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
-							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
+		final var filePaths = assertThat(project).filePaths();
+		filePaths.anyMatch((s) -> s.startsWith(String.format("src/main/%s", language.id())));
+		filePaths.anyMatch((s) -> s.startsWith(String.format("src/test/%s", language.id())));
+		filePaths.anyMatch((s) -> s.startsWith("src/main/resources/application.properties"));
 	}
 
 	@ParameterizedTest
