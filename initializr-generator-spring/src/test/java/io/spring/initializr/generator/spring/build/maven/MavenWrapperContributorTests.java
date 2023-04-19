@@ -20,10 +20,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.assertj.core.internal.Failures;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,9 +40,14 @@ class MavenWrapperContributorTests {
 	@TempDir
 	Path directory;
 
-	@Test
-	void mavenWrapperSetExecutableFlagOnScripts() throws IOException {
-		Path projectDir = contribute();
+	static Stream<Arguments> parameters() {
+		return Stream.of(Arguments.arguments("3.8"), Arguments.arguments("3"));
+	}
+
+	@ParameterizedTest(name = "Maven {0}")
+	@MethodSource("parameters")
+	void mavenWrapperSetExecutableFlagOnScripts(String mavenVersion) throws IOException {
+		Path projectDir = contribute(mavenVersion);
 		assertThat(projectDir.resolve("mvnw")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("mvnw.cmd")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile().satisfies(isNotExecutable());
@@ -59,9 +67,9 @@ class MavenWrapperContributorTests {
 		return !System.getProperty("os.name").startsWith("Windows");
 	}
 
-	Path contribute() throws IOException {
+	Path contribute(String mavenVersion) throws IOException {
 		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new MavenWrapperContributor().contribute(projectDir);
+		new MavenWrapperContributor(mavenVersion).contribute(projectDir);
 		return projectDir;
 	}
 
