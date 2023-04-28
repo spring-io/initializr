@@ -14,7 +14,7 @@
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
 		<maven.test.skip>true</maven.test.skip>
-		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
+		<spring-asciidoctor-backends.version>0.0.6-SNAPSHOT</spring-asciidoctor-backends.version>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
