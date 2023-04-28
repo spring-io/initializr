@@ -20,12 +20,15 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenDependency;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.spring.dependency.OptionalDependencyMavenBuildCustomizer;
 
 /**
  * Maven {@link BuildCustomizer} that sets the "optional" flag when devtools is selected.
  *
  * @author Stephane Nicoll
+ * @deprecated in favor of {@link OptionalDependencyMavenBuildCustomizer}
  */
+@Deprecated
 public class DevToolsMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
 	private final String devtoolsDependencyId;

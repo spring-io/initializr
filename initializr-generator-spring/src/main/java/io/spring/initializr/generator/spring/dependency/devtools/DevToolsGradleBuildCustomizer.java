@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleDependency;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.spring.dependency.DevelopmentOnlyDependencyGradleBuildCustomizer;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
@@ -29,7 +30,9 @@ import io.spring.initializr.generator.version.VersionRange;
  * when devtools is selected.
  *
  * @author Stephane Nicoll
+ * @deprecated in favor of {@link DevelopmentOnlyDependencyGradleBuildCustomizer}
  */
+@Deprecated
 public class DevToolsGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private static final VersionRange SPRING_BOOT_2_3_0_RC1_OR_LATER = VersionParser.DEFAULT.parseRange("2.3.0.RC1");
