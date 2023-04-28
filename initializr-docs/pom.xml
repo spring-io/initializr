@@ -14,7 +14,7 @@
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
 		<maven.test.skip>true</maven.test.skip>
-		<spring-doc-resources.version>0.2.2.RELEASE</spring-doc-resources.version>
+		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
@@ -120,24 +120,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>com.googlecode.maven-download-plugin</groupId>
-						<artifactId>download-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>unpack-doc-resources</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>wget</goal>
-								</goals>
-								<configuration>
-									<url>https://repo.spring.io/release/io/spring/docresources/spring-doc-resources/${spring-doc-resources.version}/spring-doc-resources-${spring-doc-resources.version}.zip</url>
-									<unpack>true</unpack>
-									<outputDirectory>${refdocs.build.directory}</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
@@ -208,7 +190,7 @@
 									<goal>process-asciidoc</goal>
 								</goals>
 								<configuration>
-									<backend>html5</backend>
+									<backend>spring-html</backend>
 									<doctype>book</doctype>
 									<attributes>
 										<highlightjsdir>js/highlight</highlightjsdir>
@@ -223,6 +205,13 @@
 								</configuration>
 							</execution>
 						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>io.spring.asciidoctor.backends</groupId>
+								<artifactId>spring-asciidoctor-backends</artifactId>
+								<version>${spring-asciidoctor-backends.version}</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
