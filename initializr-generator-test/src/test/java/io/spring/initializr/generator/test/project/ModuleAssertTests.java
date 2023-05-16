@@ -189,6 +189,19 @@ class ModuleAssertTests {
 	}
 
 	@Test
+	void hasKotlinDslGradleBuild(@TempDir Path dir) throws IOException {
+		createFiles(dir, "build.gradle.kts");
+		assertThat(forDirectory(dir)).hasKotlinDslGradleBuild();
+	}
+
+	@Test
+	void hasKotlinDslGradleBuildWithMissingBuildFile(@TempDir Path dir) throws IOException {
+		createFiles(dir, "build.gradle.wrongkts");
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forDirectory(dir)).hasKotlinDslGradleBuild());
+	}
+
+	@Test
 	void hasGradleWrapper(@TempDir Path dir) throws IOException {
 		createFiles(dir, "gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
@@ -219,6 +232,19 @@ class ModuleAssertTests {
 	void groovyDslGradleBuildWithMissingBuildFile(@TempDir Path dir) {
 		assertThatExceptionOfType(AssertionError.class)
 			.isThrownBy(() -> assertThat(forDirectory(dir)).groovyDslGradleBuild());
+	}
+
+	@Test
+	void kotlinDslGradleBuild(@TempDir Path dir) throws IOException {
+		createFileFrom(new ClassPathResource("project/build/gradle/sample-build.gradle.kts"),
+				dir.resolve("build.gradle.kts"));
+		assertThat(forDirectory(dir)).kotlinDslGradleBuild().hasVersion("0.0.1-SNAPSHOT").hasSourceCompatibility("1.8");
+	}
+
+	@Test
+	void kotlinDslGradleBuildWithMissingBuildFile(@TempDir Path dir) {
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forDirectory(dir)).kotlinDslGradleBuild());
 	}
 
 	private AssertProvider<ModuleAssert> forDirectory(Path projectDirectory) {
