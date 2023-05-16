@@ -22,66 +22,66 @@ import io.spring.initializr.generator.test.io.AbstractTextAssert;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 
 /**
- * Simple assertions for a gradle build using the Groovy DSL.
+ * Simple assertions for a kotlin build using the kotlin DSL.
  *
- * @author Stephane Nicoll
+ * @author Prithvi singh
  */
-public class GroovyDslGradleBuildAssert extends AbstractTextAssert<GroovyDslGradleBuildAssert> {
+public class KotlinDslGradleBuildAssert extends AbstractTextAssert<KotlinDslGradleBuildAssert> {
 
-	public GroovyDslGradleBuildAssert(String content) {
-		super(content, GroovyDslGradleBuildAssert.class);
+	public KotlinDslGradleBuildAssert(String content) {
+		super(content, KotlinDslGradleBuildAssert.class);
 	}
 
-	public GroovyDslGradleBuildAssert(Path buildGradleFile) {
+	public KotlinDslGradleBuildAssert(Path buildGradleFile) {
 		this(TextTestUtils.readContent(buildGradleFile));
 	}
 
 	/**
-	 * Assert {@code build.gradle} defines a plugin with the specified id and version.
+	 * Assert {@code build.gradle.kts} defines a plugin with the specified id and version.
 	 * @param id the id of the plugin
 	 * @param version the version of the plugin
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasPlugin(String id, String version) {
-		return contains(String.format("id '%s' version '%s'", id, version));
+	public KotlinDslGradleBuildAssert hasPlugin(String id, String version) {
+		return contains(String.format("id('%s') version '%s'", id, version));
 	}
 
 	/**
-	 * Assert {@code build.gradle} defines a plugin with the specified id.
+	 * Assert {@code build.gradle.kts} defines a plugin with the specified id.
 	 * @param id the id of the plugin
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasPlugin(String id) {
-		return contains(String.format("id '%s'", id));
+	public KotlinDslGradleBuildAssert hasPlugin(String id) {
+		return contains(String.format("id('%s')", id));
 	}
 
 	/**
-	 * Assert {@code build.gradle} uses the specified {@code version}.
+	 * Assert {@code build.gradle.kts} uses the specified {@code version}.
 	 * @param version the version of the build
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasVersion(String version) {
+	public KotlinDslGradleBuildAssert hasVersion(String version) {
 		return hasProperty("version", version);
 	}
 
 	/**
-	 * Assert {@code build.gradle} uses a source compatibility for the specified java
+	 * Assert {@code build.gradle.kts} uses a source compatibility for the specified java
 	 * version.
 	 * @param javaVersion the java version
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasSourceCompatibility(String javaVersion) {
+	public KotlinDslGradleBuildAssert hasSourceCompatibility(String javaVersion) {
 		return hasProperty("sourceCompatibility", javaVersion);
 	}
 
 	/**
-	 * Assert {@code build.gradle} defines a top-level property with the specified name
-	 * and value.
+	 * Assert {@code build.gradle.kts} defines a top-level property with the specified
+	 * name and value.
 	 * @param name the name of the property
 	 * @param value the value
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasProperty(String name, String value) {
+	public KotlinDslGradleBuildAssert hasProperty(String name, String value) {
 		return contains(String.format("%s = '%s'", name, value));
 	}
 
