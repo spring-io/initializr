@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
@@ -81,6 +82,15 @@ class MavenResolverDependencyManagementVersionResolver implements DependencyMana
 		LocalRepository localRepository = new LocalRepository(cacheLocation.toFile());
 		this.repositorySystem = serviceLocator.getService(RepositorySystem.class);
 		session.setLocalRepositoryManager(this.repositorySystem.newLocalRepositoryManager(session, localRepository));
+		final Properties systemProperties = new Properties();
+
+		Properties sysProp = System.getProperties();
+		synchronized (sysProp) {
+			systemProperties.putAll(sysProp);
+		}
+
+		session.setSystemProperties(systemProperties);
+		session.setConfigProperties(systemProperties);
 		session.setReadOnly();
 		this.repositorySystemSession = session;
 	}
