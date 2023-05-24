@@ -108,7 +108,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-checkstyle-plugin</artifactId>
-						<version>3.1.2</version>
+						<version>3.2.1</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
@@ -149,7 +149,6 @@
 									<configLocation>src/checkstyle/nohttp-checkstyle.xml</configLocation>
 									<suppressionsLocation>src/checkstyle/nohttp-checkstyle-suppressions.xml</suppressionsLocation>
 									<propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
-									<encoding>UTF-8</encoding>
 									<sourceDirectories>${basedir}</sourceDirectories>
 									<includes>**/*</includes>
 									<excludes>**/.git/**/*,**/.idea/**/*,**/target/**/,**/.flattened-pom.xml,**/*.class</excludes>
