@@ -29,6 +29,8 @@ import static org.mockito.Mockito.mock;
  *
  * @author Stephane Nicoll
  */
+@Deprecated
+@SuppressWarnings("removal")
 class DevToolsMavenBuildCustomizerTests {
 
 	private static final Dependency DEVTOOLS_DEPENDENCY = Dependency

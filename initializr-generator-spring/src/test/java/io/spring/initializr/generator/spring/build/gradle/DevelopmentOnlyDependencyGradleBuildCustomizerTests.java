@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.dependency;
+package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenDependency;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradleDependency;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link OptionalDependencyMavenBuildCustomizer}.
+ * Tests for {@link DevelopmentOnlyDependencyGradleBuildCustomizer}.
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
  */
-class OptionalDependencyMavenBuildCustomizerTests {
+class DevelopmentOnlyDependencyGradleBuildCustomizerTests {
 
 	private static final Dependency WEB_DEPENDENCY = Dependency
 		.withCoordinates("org.springframework.boot", "spring-boot-starter-web")
@@ -40,44 +40,45 @@ class OptionalDependencyMavenBuildCustomizerTests {
 		.build();
 
 	@Test
-	void shouldAddOptionalScope() {
-		MavenBuild build = new MavenBuild();
+	void shouldAddDevelopmentOnlyConfiguration() {
+		GradleBuild build = new GradleBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
+		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(MavenDependency.class);
-		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
+		assertThat(devtools).isInstanceOf(GradleDependency.class);
+		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
 	}
 
 	@Test
 	void shouldNotFailOnDuplicateDependencies() {
-		MavenBuild build = new MavenBuild();
+		GradleBuild build = new GradleBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
+		build.dependencies().add("web", WEB_DEPENDENCY);
+		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(MavenDependency.class);
-		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
+		assertThat(devtools).isInstanceOf(GradleDependency.class);
+		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
 	}
 
 	@Test
 	void shouldIgnoreOtherDependencies() {
-		MavenBuild build = new MavenBuild();
+		GradleBuild build = new GradleBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
 		build.dependencies().add("web", WEB_DEPENDENCY);
-		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
+		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(MavenDependency.class);
-		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
+		assertThat(devtools).isInstanceOf(GradleDependency.class);
+		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
 		Dependency web = build.dependencies().get("web");
-		assertThat(web).isNotInstanceOf(MavenDependency.class);
+		assertThat(web).isNotInstanceOf(GradleDependency.class);
 	}
 
 	@Test
 	void shouldNotChangeDependencies() {
-		MavenBuild build = new MavenBuild();
+		GradleBuild build = new GradleBuild();
 		build.dependencies().add("web", WEB_DEPENDENCY);
-		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
+		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("web");
 	}
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.dependency;
+package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;

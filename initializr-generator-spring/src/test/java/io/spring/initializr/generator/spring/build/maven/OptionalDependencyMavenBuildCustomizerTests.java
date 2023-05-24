@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.dependency;
+package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleDependency;
+import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.buildsystem.maven.MavenDependency;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link DevelopmentOnlyDependencyGradleBuildCustomizer}.
+ * Tests for {@link OptionalDependencyMavenBuildCustomizer}.
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
  */
-class DevelopmentOnlyDependencyGradleBuildCustomizerTests {
+class OptionalDependencyMavenBuildCustomizerTests {
 
 	private static final Dependency WEB_DEPENDENCY = Dependency
 		.withCoordinates("org.springframework.boot", "spring-boot-starter-web")
@@ -40,45 +40,44 @@ class DevelopmentOnlyDependencyGradleBuildCustomizerTests {
 		.build();
 
 	@Test
-	void shouldAddDevelopmentOnlyConfiguration() {
-		GradleBuild build = new GradleBuild();
+	void shouldAddOptionalScope() {
+		MavenBuild build = new MavenBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
+		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(GradleDependency.class);
-		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
+		assertThat(devtools).isInstanceOf(MavenDependency.class);
+		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
 	}
 
 	@Test
 	void shouldNotFailOnDuplicateDependencies() {
-		GradleBuild build = new GradleBuild();
+		MavenBuild build = new MavenBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		build.dependencies().add("web", WEB_DEPENDENCY);
-		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
+		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(GradleDependency.class);
-		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
+		assertThat(devtools).isInstanceOf(MavenDependency.class);
+		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
 	}
 
 	@Test
 	void shouldIgnoreOtherDependencies() {
-		GradleBuild build = new GradleBuild();
+		MavenBuild build = new MavenBuild();
 		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
 		build.dependencies().add("web", WEB_DEPENDENCY);
-		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
+		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
 		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(GradleDependency.class);
-		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
+		assertThat(devtools).isInstanceOf(MavenDependency.class);
+		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
 		Dependency web = build.dependencies().get("web");
-		assertThat(web).isNotInstanceOf(GradleDependency.class);
+		assertThat(web).isNotInstanceOf(MavenDependency.class);
 	}
 
 	@Test
 	void shouldNotChangeDependencies() {
-		GradleBuild build = new GradleBuild();
+		MavenBuild build = new MavenBuild();
 		build.dependencies().add("web", WEB_DEPENDENCY);
-		new DevelopmentOnlyDependencyGradleBuildCustomizer("devtools").customize(build);
+		new OptionalDependencyMavenBuildCustomizer("devtools").customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("web");
 	}
 
