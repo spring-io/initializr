@@ -16,27 +16,19 @@
 
 package io.spring.initializr.generator.spring.dependency.devtools;
 
-import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
-import io.spring.initializr.generator.buildsystem.gradle.GradleDependency;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.spring.build.gradle.DevelopmentOnlyDependencyGradleBuildCustomizer;
 import io.spring.initializr.generator.version.Version;
-import io.spring.initializr.generator.version.VersionParser;
-import io.spring.initializr.generator.version.VersionRange;
 
 /**
  * Gradle {@link BuildCustomizer} that creates a dedicated "developmentOnly" configuration
  * when devtools is selected.
  *
  * @author Stephane Nicoll
+ * @deprecated in favor of {@link DevelopmentOnlyDependencyGradleBuildCustomizer}
  */
-public class DevToolsGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
-
-	private static final VersionRange SPRING_BOOT_2_3_0_RC1_OR_LATER = VersionParser.DEFAULT.parseRange("2.3.0.RC1");
-
-	private final Version platformVersion;
-
-	private final String devtoolsDependencyId;
+@Deprecated(since = "0.20.0", forRemoval = true)
+public class DevToolsGradleBuildCustomizer extends DevelopmentOnlyDependencyGradleBuildCustomizer {
 
 	/**
 	 * Create a new instance with the requested {@link Version platform version} and the
@@ -45,23 +37,7 @@ public class DevToolsGradleBuildCustomizer implements BuildCustomizer<GradleBuil
 	 * @param devtoolsDependencyId the id of the devtools dependency
 	 */
 	public DevToolsGradleBuildCustomizer(Version platformVersion, String devtoolsDependencyId) {
-		this.platformVersion = platformVersion;
-		this.devtoolsDependencyId = devtoolsDependencyId;
-	}
-
-	@Override
-	public void customize(GradleBuild build) {
-		Dependency devtools = build.dependencies().get(this.devtoolsDependencyId);
-		if (devtools == null) {
-			return;
-		}
-		if (!SPRING_BOOT_2_3_0_RC1_OR_LATER.match(this.platformVersion)) {
-			build.configurations().add("developmentOnly");
-			build.configurations()
-				.customize("runtimeClasspath", (runtimeClasspath) -> runtimeClasspath.extendsFrom("developmentOnly"));
-		}
-		build.dependencies()
-			.add(this.devtoolsDependencyId, GradleDependency.from(devtools).configuration("developmentOnly"));
+		super(devtoolsDependencyId);
 	}
 
 }
