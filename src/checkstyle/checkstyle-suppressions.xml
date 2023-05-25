@@ -6,4 +6,6 @@
 	<suppress files=".+Application\.java" checks="HideUtilityClassConstructor"/>
 	<suppress files="[\\/]initializr-service-sample[\\/]" checks="JavadocType"/>
 	<suppress files="[\\/]initializr-service-sample[\\/]" checks="ImportControl"/>
+	<suppress files="initializr-generator-spring/src/test/java/io/spring/initializr/generator/spring/container/dockercompose/DockerComposeServiceTests.java" checks="SpringLeadingWhitespace"/>
+	<suppress files="initializr-generator-spring/src/test/java/io/spring/initializr/generator/spring/container/dockercompose/DockerComposeFileTests." checks="SpringLeadingWhitespace"/>
 </suppressions>
