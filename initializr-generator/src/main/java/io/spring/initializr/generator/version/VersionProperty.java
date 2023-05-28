@@ -88,7 +88,7 @@ public final class VersionProperty implements Serializable, Comparable<VersionPr
     }
 
     public String toStandardFormat() {
-        return this.property;
+        return getProperty();
     }
 
     private static String validateFormat(String property) {
@@ -127,6 +127,10 @@ public final class VersionProperty implements Serializable, Comparable<VersionPr
 
     @Override
     public String toString() {
+        return getProperty();
+    }
+
+    private String getProperty() {
         return this.property;
     }
 }

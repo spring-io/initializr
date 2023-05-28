@@ -41,7 +41,7 @@ public class Agent {
     }
 
     public AgentId getId() {
-        return this.id;
+        return getIdentity();
     }
 
     public String getVersion() {
@@ -112,7 +112,7 @@ public class Agent {
         final String name;
 
         public String getId() {
-            return this.id;
+            return getIdentity();
         }
 
         public String getName() {
@@ -161,5 +161,9 @@ public class Agent {
             }
             return null;
         }
+    }
+
+    private AgentId getIdentity() {
+        return this.id;
     }
 }

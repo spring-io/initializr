@@ -164,8 +164,7 @@ class VersionTests {
 
     @Test
     void formatNoQualifierToV1() {
-        Version version = Version.parse("1.2.0");
-        assertThat(version.format(Format.V1)).hasToString("1.2.0.RELEASE");
+        parseAndAssertVersion();
     }
 
     @Test
@@ -182,8 +181,7 @@ class VersionTests {
 
     @Test
     void formatV2GAToV1() {
-        Version version = Version.parse("1.2.0");
-        assertThat(version.format(Format.V1)).hasToString("1.2.0.RELEASE");
+        parseAndAssertVersion();
     }
 
     @Test
@@ -194,5 +192,10 @@ class VersionTests {
 
     private Version parse(String text) {
         return this.parser.parse(text);
+    }
+
+    private void parseAndAssertVersion() {
+        Version version = Version.parse("1.2.0");
+        assertThat(version.format(Format.V1)).hasToString("1.2.0.RELEASE");
     }
 }
