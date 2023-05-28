@@ -65,10 +65,8 @@ public class InitializrWebConfig implements WebMvcConfigurer {
             String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
             if (userAgent != null) {
                 Agent agent = Agent.fromUserAgent(userAgent);
-                if (agent != null) {
-                    if (AgentId.CURL.equals(agent.getId()) || AgentId.HTTPIE.equals(agent.getId())) {
-                        return Collections.singletonList(MediaType.TEXT_PLAIN);
-                    }
+                if (agent != null && AgentId.CURL.equals(agent.getId()) || AgentId.HTTPIE.equals(agent.getId())) {
+                    return Collections.singletonList(MediaType.TEXT_PLAIN);
                 }
             }
             return Collections.singletonList(MediaType.APPLICATION_JSON);
