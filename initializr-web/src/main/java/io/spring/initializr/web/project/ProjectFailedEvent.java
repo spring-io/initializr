@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -25,19 +24,18 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class ProjectFailedEvent extends ProjectRequestEvent {
 
-	private final Exception cause;
+    private final Exception cause;
 
-	public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
-		super(request, metadata);
-		this.cause = cause;
-	}
+    public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
+        super(request, metadata);
+        this.cause = cause;
+    }
 
-	/**
-	 * Return the cause of the failure.
-	 * @return the cause of the failure
-	 */
-	public Exception getCause() {
-		return this.cause;
-	}
-
+    /**
+     * Return the cause of the failure.
+     * @return the cause of the failure
+     */
+    public Exception getCause() {
+        return this.cause;
+    }
 }

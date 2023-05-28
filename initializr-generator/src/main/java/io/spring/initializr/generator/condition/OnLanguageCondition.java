@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -30,16 +28,13 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 class OnLanguageCondition extends ProjectGenerationCondition {
 
-	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		if (description.getLanguage() == null) {
-			return false;
-		}
-		String languageId = (String) metadata.getAllAnnotationAttributes(ConditionalOnLanguage.class.getName())
-			.getFirst("value");
-		Language language = Language.forId(languageId, null);
-		return description.getLanguage().id().equals(language.id());
-	}
-
+    @Override
+    protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata) {
+        if (description.getLanguage() == null) {
+            return false;
+        }
+        String languageId = (String) metadata.getAllAnnotationAttributes(ConditionalOnLanguage.class.getName()).getFirst("value");
+        Language language = Language.forId(languageId, null);
+        return description.getLanguage().id().equals(language.id());
+    }
 }

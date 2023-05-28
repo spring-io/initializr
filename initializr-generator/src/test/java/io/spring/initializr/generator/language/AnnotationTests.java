@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -27,23 +25,21 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class AnnotationTests {
 
-	@Test
-	void annotationWithNoAttribute() {
-		Annotation annotation = Annotation.name("com.example.Test");
-		assertThat(annotation.getName()).isEqualTo("com.example.Test");
-		assertThat(annotation.getAttributes()).isEmpty();
-	}
+    @Test
+    void annotationWithNoAttribute() {
+        Annotation annotation = Annotation.name("com.example.Test");
+        assertThat(annotation.getName()).isEqualTo("com.example.Test");
+        assertThat(annotation.getAttributes()).isEmpty();
+    }
 
-	@Test
-	void annotationWithSingleAttribute() {
-		Annotation annotation = Annotation.name("com.example.Test", (builder) -> builder.attribute("test", Enum.class,
-				"com.example.Unit.CENTURIES, com.example.Unit.NANOS"));
-		assertThat(annotation.getName()).isEqualTo("com.example.Test");
-		assertThat(annotation.getAttributes()).hasSize(1);
-		Annotation.Attribute attribute = annotation.getAttributes().get(0);
-		assertThat(attribute.getName()).isEqualTo("test");
-		assertThat(attribute.getType()).isEqualTo(Enum.class);
-		assertThat(attribute.getValues()).containsExactly("com.example.Unit.CENTURIES, com.example.Unit.NANOS");
-	}
-
+    @Test
+    void annotationWithSingleAttribute() {
+        Annotation annotation = Annotation.name("com.example.Test", (builder) -> builder.attribute("test", Enum.class, "com.example.Unit.CENTURIES, com.example.Unit.NANOS"));
+        assertThat(annotation.getName()).isEqualTo("com.example.Test");
+        assertThat(annotation.getAttributes()).hasSize(1);
+        Annotation.Attribute attribute = annotation.getAttributes().get(0);
+        assertThat(attribute.getName()).isEqualTo("test");
+        assertThat(attribute.getType()).isEqualTo(Enum.class);
+        assertThat(attribute.getValues()).containsExactly("com.example.Unit.CENTURIES, com.example.Unit.NANOS");
+    }
 }

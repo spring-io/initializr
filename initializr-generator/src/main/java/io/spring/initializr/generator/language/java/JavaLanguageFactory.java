@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.Language;
@@ -26,12 +25,11 @@ import io.spring.initializr.generator.language.LanguageFactory;
  */
 class JavaLanguageFactory implements LanguageFactory {
 
-	@Override
-	public Language createLanguage(String id, String jvmVersion) {
-		if (JavaLanguage.ID.equals(id)) {
-			return new JavaLanguage(jvmVersion);
-		}
-		return null;
-	}
-
+    @Override
+    public Language createLanguage(String id, String jvmVersion) {
+        if (JavaLanguage.ID.equals(id)) {
+            return new JavaLanguage(jvmVersion);
+        }
+        return null;
+    }
 }

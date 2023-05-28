@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -29,29 +27,28 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class GradleAnnotationProcessorScopeBuildCustomizerTests {
 
-	@Test
-	void compileOnlyConfigurationIsAddedWithAnnotationProcessorDependency() {
-		GradleBuild build = new GradleBuild();
-		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("ap", "com.example", "model-generator", DependencyScope.ANNOTATION_PROCESSOR);
-		customize(build);
-		assertThat(build.configurations().customizations()).singleElement().satisfies((configuration) -> {
-			assertThat(configuration.getName()).isEqualTo("compileOnly");
-			assertThat(configuration.getExtendsFrom()).containsOnly("annotationProcessor");
-		});
-	}
+    @Test
+    void compileOnlyConfigurationIsAddedWithAnnotationProcessorDependency() {
+        GradleBuild build = new GradleBuild();
+        build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
+        build.dependencies().add("ap", "com.example", "model-generator", DependencyScope.ANNOTATION_PROCESSOR);
+        customize(build);
+        assertThat(build.configurations().customizations()).singleElement().satisfies((configuration) -> {
+            assertThat(configuration.getName()).isEqualTo("compileOnly");
+            assertThat(configuration.getExtendsFrom()).containsOnly("annotationProcessor");
+        });
+    }
 
-	@Test
-	void compileOnlyConfigurationIsNotAddedWithNonMatchingDependency() {
-		GradleBuild build = new GradleBuild();
-		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
-		build.dependencies().add("another", "com.example", "another", DependencyScope.RUNTIME);
-		customize(build);
-		assertThat(build.configurations().isEmpty()).isTrue();
-	}
+    @Test
+    void compileOnlyConfigurationIsNotAddedWithNonMatchingDependency() {
+        GradleBuild build = new GradleBuild();
+        build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
+        build.dependencies().add("another", "com.example", "another", DependencyScope.RUNTIME);
+        customize(build);
+        assertThat(build.configurations().isEmpty()).isTrue();
+    }
 
-	private void customize(GradleBuild build) {
-		new GradleAnnotationProcessorScopeBuildCustomizer().customize(build);
-	}
-
+    private void customize(GradleBuild build) {
+        new GradleAnnotationProcessorScopeBuildCustomizer().customize(build);
+    }
 }

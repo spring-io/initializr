@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
@@ -27,17 +26,16 @@ import io.spring.initializr.generator.language.Language;
  */
 public final class JavaLanguage extends AbstractLanguage {
 
-	/**
-	 * Java {@link Language} identifier.
-	 */
-	public static final String ID = "java";
+    /**
+     * Java {@link Language} identifier.
+     */
+    public static final String ID = "java";
 
-	public JavaLanguage() {
-		this(DEFAULT_JVM_VERSION);
-	}
+    public JavaLanguage() {
+        this(DEFAULT_JVM_VERSION);
+    }
 
-	public JavaLanguage(String jvmVersion) {
-		super(ID, jvmVersion, "java");
-	}
-
+    public JavaLanguage(String jvmVersion) {
+        super(ID, jvmVersion, "java");
+    }
 }

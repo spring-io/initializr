@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.dependency.devtools;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -21,7 +20,6 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleDependency;
 import io.spring.initializr.generator.version.Version;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -33,26 +31,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("removal")
 class DevToolsGradleBuildCustomizerTests {
 
-	private static final Dependency DEVTOOLS_DEPENDENCY = Dependency
-		.withCoordinates("org.springframework.boot", "spring-boot-devtools")
-		.build();
+    private static final Dependency DEVTOOLS_DEPENDENCY = Dependency.withCoordinates("org.springframework.boot", "spring-boot-devtools").build();
 
-	@Test
-	void gradleWithDevtoolsFlagDependencyAsDevelopmentOnly() {
-		GradleBuild build = new GradleBuild();
-		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		new DevToolsGradleBuildCustomizer(Version.parse("3.0.0"), "devtools").customize(build);
-		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(GradleDependency.class);
-		assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
-	}
+    @Test
+    void gradleWithDevtoolsFlagDependencyAsDevelopmentOnly() {
+        GradleBuild build = new GradleBuild();
+        build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
+        new DevToolsGradleBuildCustomizer(Version.parse("3.0.0"), "devtools").customize(build);
+        Dependency devtools = build.dependencies().get("devtools");
+        assertThat(devtools).isInstanceOf(GradleDependency.class);
+        assertThat(((GradleDependency) devtools).getConfiguration()).isEqualTo("developmentOnly");
+    }
 
-	@Test
-	void gradleWithoutDevtoolsDoesNotModifyDependencies() {
-		GradleBuild build = new GradleBuild();
-		build.dependencies().add("ignored", DEVTOOLS_DEPENDENCY);
-		new DevToolsGradleBuildCustomizer(Version.parse("3.0.0"), "devtools").customize(build);
-		assertThat(build.dependencies().get("devtools")).isNull();
-	}
-
+    @Test
+    void gradleWithoutDevtoolsDoesNotModifyDependencies() {
+        GradleBuild build = new GradleBuild();
+        build.dependencies().add("ignored", DEVTOOLS_DEPENDENCY);
+        new DevToolsGradleBuildCustomizer(Version.parse("3.0.0"), "devtools").customize(build);
+        assertThat(build.dependencies().get("devtools")).isNull();
+    }
 }

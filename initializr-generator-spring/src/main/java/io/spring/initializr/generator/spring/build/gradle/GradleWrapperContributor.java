@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.project.contributor.MultipleResourcesProjectContributor;
@@ -26,9 +25,7 @@ import io.spring.initializr.generator.project.contributor.MultipleResourcesProje
  */
 class GradleWrapperContributor extends MultipleResourcesProjectContributor {
 
-	GradleWrapperContributor(String gradleVersion) {
-		super("classpath:gradle/" + gradleVersion + "/wrapper",
-				(filename) -> filename.equals("gradlew") || filename.equals("gradlew.bat"));
-	}
-
+    GradleWrapperContributor(String gradleVersion) {
+        super("classpath:gradle/" + gradleVersion + "/wrapper", (filename) -> filename.equals("gradlew") || filename.equals("gradlew.bat"));
+    }
 }

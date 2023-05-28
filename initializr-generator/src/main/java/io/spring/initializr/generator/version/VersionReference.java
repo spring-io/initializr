@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.version;
 
 import java.util.Objects;
@@ -25,72 +24,71 @@ import java.util.Objects;
  */
 public final class VersionReference {
 
-	private final VersionProperty property;
+    private final VersionProperty property;
 
-	private final String value;
+    private final String value;
 
-	private VersionReference(VersionProperty property, String value) {
-		this.property = property;
-		this.value = value;
-	}
+    private VersionReference(VersionProperty property, String value) {
+        this.property = property;
+        this.value = value;
+    }
 
-	public static VersionReference ofProperty(VersionProperty property) {
-		return new VersionReference(property, null);
-	}
+    public static VersionReference ofProperty(VersionProperty property) {
+        return new VersionReference(property, null);
+    }
 
-	public static VersionReference ofProperty(String internalProperty) {
-		return ofProperty(VersionProperty.of(internalProperty));
-	}
+    public static VersionReference ofProperty(String internalProperty) {
+        return ofProperty(VersionProperty.of(internalProperty));
+    }
 
-	public static VersionReference ofValue(String value) {
-		return new VersionReference(null, value);
-	}
+    public static VersionReference ofValue(String value) {
+        return new VersionReference(null, value);
+    }
 
-	/**
-	 * Specify if this reference defines a property.
-	 * @return {@code true} if this version is backed by a property
-	 */
-	public boolean isProperty() {
-		return this.property != null;
-	}
+    /**
+     * Specify if this reference defines a property.
+     * @return {@code true} if this version is backed by a property
+     */
+    public boolean isProperty() {
+        return this.property != null;
+    }
 
-	/**
-	 * Return the {@link VersionProperty} or {@code null} if this reference is not a
-	 * property.
-	 * @return the version property or {@code null}
-	 */
-	public VersionProperty getProperty() {
-		return this.property;
-	}
+    /**
+     * Return the {@link VersionProperty} or {@code null} if this reference is not a
+     * property.
+     * @return the version property or {@code null}
+     */
+    public VersionProperty getProperty() {
+        return this.property;
+    }
 
-	/**
-	 * Return the version of {@code null} if this reference is backed by a property.
-	 * @return the version or {@code null}
-	 */
-	public String getValue() {
-		return this.value;
-	}
+    /**
+     * Return the version of {@code null} if this reference is backed by a property.
+     * @return the version or {@code null}
+     */
+    public String getValue() {
+        return this.value;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		VersionReference that = (VersionReference) o;
-		return Objects.equals(this.property, that.property) && Objects.equals(this.value, that.value);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        VersionReference that = (VersionReference) o;
+        return Objects.equals(this.property, that.property) && Objects.equals(this.value, that.value);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.property, this.value);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.property, this.value);
+    }
 
-	@Override
-	public String toString() {
-		return (this.property != null) ? "${" + this.property.toStandardFormat() + "}" : this.value;
-	}
-
+    @Override
+    public String toString() {
+        return (this.property != null) ? "${" + this.property.toStandardFormat() + "}" : this.value;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -24,5 +23,4 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author Stephane Nicoll
  */
 public class ProjectGenerationContext extends AnnotationConfigApplicationContext {
-
 }

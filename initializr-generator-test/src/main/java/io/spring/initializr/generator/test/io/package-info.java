@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Support for testing project assets.
  */
 package io.spring.initializr.generator.test.io;
+

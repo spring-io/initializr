@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -27,73 +25,72 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MavenResourceContainerTests {
 
-	@Test
-	void mavenResourceCanBeConfigured() {
-		MavenResourceContainer container = new MavenResourceContainer();
-		container.add("src/main/resources", (resource) -> {
-			resource.targetPath("targetPath");
-			resource.filtering(true);
-			resource.includes("**/*.yml");
-			resource.excludes("**/*.properties");
-		});
-		assertThat(container.values()).singleElement().satisfies((resource) -> {
-			assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
-			assertThat(resource.getTargetPath()).isEqualTo("targetPath");
-			assertThat(resource.isFiltering()).isTrue();
-			assertThat(resource.getIncludes()).containsExactly("**/*.yml");
-			assertThat(resource.getExcludes()).containsExactly("**/*.properties");
-		});
-	}
+    @Test
+    void mavenResourceCanBeConfigured() {
+        MavenResourceContainer container = new MavenResourceContainer();
+        container.add("src/main/resources", (resource) -> {
+            resource.targetPath("targetPath");
+            resource.filtering(true);
+            resource.includes("**/*.yml");
+            resource.excludes("**/*.properties");
+        });
+        assertThat(container.values()).singleElement().satisfies((resource) -> {
+            assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
+            assertThat(resource.getTargetPath()).isEqualTo("targetPath");
+            assertThat(resource.isFiltering()).isTrue();
+            assertThat(resource.getIncludes()).containsExactly("**/*.yml");
+            assertThat(resource.getExcludes()).containsExactly("**/*.properties");
+        });
+    }
 
-	@Test
-	void mavenResourceCanBeAmended() {
-		MavenResourceContainer container = new MavenResourceContainer();
-		container.add("src/main/resources", (resource) -> {
-			resource.filtering(true);
-			resource.includes("**/*.yml");
-		});
-		container.add("src/main/resources", (resource) -> {
-			resource.includes("**/*.yaml");
-			resource.excludes("**/*.properties");
-		});
-		assertThat(container.values()).singleElement().satisfies((resource) -> {
-			assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
-			assertThat(resource.getTargetPath()).isNull();
-			assertThat(resource.isFiltering()).isTrue();
-			assertThat(resource.getIncludes()).containsExactly("**/*.yaml");
-			assertThat(resource.getExcludes()).containsExactly("**/*.properties");
-		});
-		assertThat(container.isEmpty()).isFalse();
-	}
+    @Test
+    void mavenResourceCanBeAmended() {
+        MavenResourceContainer container = new MavenResourceContainer();
+        container.add("src/main/resources", (resource) -> {
+            resource.filtering(true);
+            resource.includes("**/*.yml");
+        });
+        container.add("src/main/resources", (resource) -> {
+            resource.includes("**/*.yaml");
+            resource.excludes("**/*.properties");
+        });
+        assertThat(container.values()).singleElement().satisfies((resource) -> {
+            assertThat(resource.getDirectory()).isEqualTo("src/main/resources");
+            assertThat(resource.getTargetPath()).isNull();
+            assertThat(resource.isFiltering()).isTrue();
+            assertThat(resource.getIncludes()).containsExactly("**/*.yaml");
+            assertThat(resource.getExcludes()).containsExactly("**/*.properties");
+        });
+        assertThat(container.isEmpty()).isFalse();
+    }
 
-	@Test
-	void mavenResourceDefaultValues() {
-		MavenResourceContainer container = new MavenResourceContainer();
-		container.add("src/main/custom");
-		assertThat(container.values()).singleElement().satisfies((resource) -> {
-			assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
-			assertThat(resource.getTargetPath()).isNull();
-			assertThat(resource.isFiltering()).isFalse();
-			assertThat(resource.getIncludes()).isEmpty();
-			assertThat(resource.getExcludes()).isEmpty();
-		});
-	}
+    @Test
+    void mavenResourceDefaultValues() {
+        MavenResourceContainer container = new MavenResourceContainer();
+        container.add("src/main/custom");
+        assertThat(container.values()).singleElement().satisfies((resource) -> {
+            assertThat(resource.getDirectory()).isEqualTo("src/main/custom");
+            assertThat(resource.getTargetPath()).isNull();
+            assertThat(resource.isFiltering()).isFalse();
+            assertThat(resource.getIncludes()).isEmpty();
+            assertThat(resource.getExcludes()).isEmpty();
+        });
+    }
 
-	@Test
-	void mavenResourceCanBeSearched() {
-		MavenResourceContainer container = new MavenResourceContainer();
-		assertThat(container.has("src/main/test")).isFalse();
-		container.add("src/main/test");
-		assertThat(container.has("src/main/test")).isTrue();
-	}
+    @Test
+    void mavenResourceCanBeSearched() {
+        MavenResourceContainer container = new MavenResourceContainer();
+        assertThat(container.has("src/main/test")).isFalse();
+        container.add("src/main/test");
+        assertThat(container.has("src/main/test")).isTrue();
+    }
 
-	@Test
-	void mavenResourceCanBeRemoved() {
-		MavenResourceContainer container = new MavenResourceContainer();
-		container.add("src/main/test");
-		assertThat(container.has("src/main/test")).isTrue();
-		assertThat(container.remove("src/main/test")).isTrue();
-		assertThat(container.has("src/main/test")).isFalse();
-	}
-
+    @Test
+    void mavenResourceCanBeRemoved() {
+        MavenResourceContainer container = new MavenResourceContainer();
+        container.add("src/main/test");
+        assertThat(container.has("src/main/test")).isTrue();
+        assertThat(container.remove("src/main/test")).isTrue();
+        assertThat(container.has("src/main/test")).isFalse();
+    }
 }

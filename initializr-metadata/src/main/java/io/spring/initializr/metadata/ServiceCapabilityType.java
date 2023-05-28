@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -23,35 +22,31 @@ package io.spring.initializr.metadata;
  */
 public enum ServiceCapabilityType {
 
-	/**
-	 * A special type that defines the action to use.
-	 */
-	ACTION("action"),
+    /**
+     * A special type that defines the action to use.
+     */
+    ACTION("action"),
+    /**
+     * A simple text value with no option.
+     */
+    TEXT("text"),
+    /**
+     * A simple value to be chosen amongst the specified options.
+     */
+    SINGLE_SELECT("single-select"),
+    /**
+     * A hierarchical set of values (values in values) with the ability to select multiple
+     * values.
+     */
+    HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
 
-	/**
-	 * A simple text value with no option.
-	 */
-	TEXT("text"),
+    private final String name;
 
-	/**
-	 * A simple value to be chosen amongst the specified options.
-	 */
-	SINGLE_SELECT("single-select"),
+    ServiceCapabilityType(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * A hierarchical set of values (values in values) with the ability to select multiple
-	 * values.
-	 */
-	HIERARCHICAL_MULTI_SELECT("hierarchical-multi-select");
-
-	private final String name;
-
-	ServiceCapabilityType(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
+    public String getName() {
+        return this.name;
+    }
 }

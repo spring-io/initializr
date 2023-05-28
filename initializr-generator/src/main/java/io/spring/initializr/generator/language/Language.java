@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 import java.util.Objects;
-
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
@@ -27,36 +25,30 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  */
 public interface Language {
 
-	/**
-	 * The default JVM version to use if none is specified.
-	 */
-	String DEFAULT_JVM_VERSION = "1.8";
+    /**
+     * The default JVM version to use if none is specified.
+     */
+    String DEFAULT_JVM_VERSION = "1.8";
 
-	/**
-	 * Return the language identifier.
-	 * @return the language id
-	 */
-	String id();
+    /**
+     * Return the language identifier.
+     * @return the language id
+     */
+    String id();
 
-	/**
-	 * Return the JVM version level to use.
-	 * @return the JVM version or {@value DEFAULT_JVM_VERSION} if not set
-	 */
-	String jvmVersion();
+    /**
+     * Return the JVM version level to use.
+     * @return the JVM version or {@value DEFAULT_JVM_VERSION} if not set
+     */
+    String jvmVersion();
 
-	/**
-	 * Return the file extension to use for source file of this language.
-	 * @return the source file extension
-	 */
-	String sourceFileExtension();
+    /**
+     * Return the file extension to use for source file of this language.
+     * @return the source file extension
+     */
+    String sourceFileExtension();
 
-	static Language forId(String id, String jvmVersion) {
-		return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader())
-			.stream()
-			.map((factory) -> factory.createLanguage(id, jvmVersion))
-			.filter(Objects::nonNull)
-			.findFirst()
-			.orElseThrow(() -> new IllegalStateException("Unrecognized language id '" + id + "'"));
-	}
-
+    static Language forId(String id, String jvmVersion) {
+        return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader()).stream().map((factory) -> factory.createLanguage(id, jvmVersion)).filter(Objects::nonNull).findFirst().orElseThrow(() -> new IllegalStateException("Unrecognized language id '" + id + "'"));
+    }
 }

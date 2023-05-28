@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 /**
@@ -23,18 +22,17 @@ package io.spring.initializr.generator.buildsystem.gradle;
  */
 public class StandardGradlePlugin extends GradlePlugin {
 
-	private String version;
+    private String version;
 
-	public StandardGradlePlugin(String id) {
-		super(id, false);
-	}
+    public StandardGradlePlugin(String id) {
+        super(id, false);
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public String getVersion() {
-		return this.version;
-	}
-
+    public String getVersion() {
+        return this.version;
+    }
 }

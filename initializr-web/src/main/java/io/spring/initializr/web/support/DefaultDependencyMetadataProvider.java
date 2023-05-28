@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.support;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
@@ -26,7 +24,6 @@ import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
-
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -36,39 +33,33 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class DefaultDependencyMetadataProvider implements DependencyMetadataProvider {
 
-	@Override
-	@Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
-	public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
-		Map<String, Dependency> dependencies = new LinkedHashMap<>();
-		for (Dependency dependency : metadata.getDependencies().getAll()) {
-			if (dependency.match(bootVersion)) {
-				dependencies.put(dependency.getId(), dependency.resolve(bootVersion));
-			}
-		}
-
-		Map<String, Repository> repositories = new LinkedHashMap<>();
-		for (Dependency dependency : dependencies.values()) {
-			if (dependency.getRepository() != null) {
-				repositories.put(dependency.getRepository(),
-						metadata.getConfiguration().getEnv().getRepositories().get(dependency.getRepository()));
-			}
-		}
-
-		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
-		for (Dependency dependency : dependencies.values()) {
-			if (dependency.getBom() != null) {
-				boms.put(dependency.getBom(),
-						metadata.getConfiguration().getEnv().getBoms().get(dependency.getBom()).resolve(bootVersion));
-			}
-		}
-		// Each resolved bom may require additional repositories
-		for (BillOfMaterials bom : boms.values()) {
-			for (String id : bom.getRepositories()) {
-				repositories.put(id, metadata.getConfiguration().getEnv().getRepositories().get(id));
-			}
-		}
-
-		return new DependencyMetadata(bootVersion, dependencies, repositories, boms);
-	}
-
+    @Override
+    @Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
+    public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
+        Map<String, Dependency> dependencies = new LinkedHashMap<>();
+        for (Dependency dependency : metadata.getDependencies().getAll()) {
+            if (dependency.match(bootVersion)) {
+                dependencies.put(dependency.getId(), dependency.resolve(bootVersion));
+            }
+        }
+        Map<String, Repository> repositories = new LinkedHashMap<>();
+        for (Dependency dependency : dependencies.values()) {
+            if (dependency.getRepository() != null) {
+                repositories.put(dependency.getRepository(), metadata.getConfiguration().getEnv().getRepositories().get(dependency.getRepository()));
+            }
+        }
+        Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
+        for (Dependency dependency : dependencies.values()) {
+            if (dependency.getBom() != null) {
+                boms.put(dependency.getBom(), metadata.getConfiguration().getEnv().getBoms().get(dependency.getBom()).resolve(bootVersion));
+            }
+        }
+        // Each resolved bom may require additional repositories
+        for (BillOfMaterials bom : boms.values()) {
+            for (String id : bom.getRepositories()) {
+                repositories.put(id, metadata.getConfiguration().getEnv().getRepositories().get(id));
+            }
+        }
+        return new DependencyMetadata(bootVersion, dependencies, repositories, boms);
+    }
 }

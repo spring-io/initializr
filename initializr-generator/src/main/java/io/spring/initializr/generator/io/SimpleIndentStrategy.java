@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.io;
 
 import java.util.function.Function;
-
 import org.springframework.util.Assert;
 
 /**
@@ -27,23 +25,22 @@ import org.springframework.util.Assert;
  */
 public class SimpleIndentStrategy implements Function<Integer, String> {
 
-	private final String indent;
+    private final String indent;
 
-	/**
-	 * Create a new instance with the indent style to apply.
-	 * @param indent the indent to apply for each indent level
-	 */
-	public SimpleIndentStrategy(String indent) {
-		Assert.notNull(indent, "Indent must be provided");
-		this.indent = indent;
-	}
+    /**
+     * Create a new instance with the indent style to apply.
+     * @param indent the indent to apply for each indent level
+     */
+    public SimpleIndentStrategy(String indent) {
+        Assert.notNull(indent, "Indent must be provided");
+        this.indent = indent;
+    }
 
-	@Override
-	public String apply(Integer level) {
-		if (level < 0) {
-			throw new IllegalArgumentException("Indent level must not be negative, got" + level);
-		}
-		return String.valueOf(this.indent).repeat(level);
-	}
-
+    @Override
+    public String apply(Integer level) {
+        if (level < 0) {
+            throw new IllegalArgumentException("Indent level must not be negative, got" + level);
+        }
+        return String.valueOf(this.indent).repeat(level);
+    }
 }

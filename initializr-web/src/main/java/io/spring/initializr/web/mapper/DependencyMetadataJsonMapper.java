@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.mapper;
 
 import io.spring.initializr.metadata.DependencyMetadata;
@@ -25,11 +24,10 @@ import io.spring.initializr.metadata.DependencyMetadata;
  */
 interface DependencyMetadataJsonMapper {
 
-	/**
-	 * Write a json representation of the specified metadata.
-	 * @param metadata the dependency metadata
-	 * @return the JSON representation
-	 */
-	String write(DependencyMetadata metadata);
-
+    /**
+     * Write a json representation of the specified metadata.
+     * @param metadata the dependency metadata
+     * @return the JSON representation
+     */
+    String write(DependencyMetadata metadata);
 }

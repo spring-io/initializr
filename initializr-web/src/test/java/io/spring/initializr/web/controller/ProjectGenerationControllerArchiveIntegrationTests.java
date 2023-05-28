@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -30,10 +28,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test-default")
 public class ProjectGenerationControllerArchiveIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
-	@Test
-	void baseDirectorySeparatedBySpace() {
-		ProjectStructure project = downloadZip("/starter.zip?artifactId=demo&baseDir=demo trial");
-		assertDefaultProject(project.resolveModule("demo trial"));
-	}
-
+    @Test
+    void baseDirectorySeparatedBySpace() {
+        ProjectStructure project = downloadZip("/starter.zip?artifactId=demo&baseDir=demo trial");
+        assertDefaultProject(project.resolveModule("demo trial"));
+    }
 }

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -30,13 +28,11 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public abstract class ProjectGenerationCondition implements Condition {
 
-	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ProjectDescription description = context.getBeanFactory().getBean(ProjectDescription.class);
-		return matches(description, context, metadata);
-	}
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        ProjectDescription description = context.getBeanFactory().getBean(ProjectDescription.class);
+        return matches(description, context, metadata);
+    }
 
-	protected abstract boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata);
-
+    protected abstract boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata);
 }

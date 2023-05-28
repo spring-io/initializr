@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
@@ -27,12 +26,11 @@ import java.io.IOException;
 @FunctionalInterface
 public interface ProjectAssetGenerator<T> {
 
-	/**
-	 * Generate project assets using the specified {@link ProjectGenerationContext}.
-	 * @param context the context to use
-	 * @return the type that gathers the project assets
-	 * @throws IOException if writing project assets failed
-	 */
-	T generate(ProjectGenerationContext context) throws IOException;
-
+    /**
+     * Generate project assets using the specified {@link ProjectGenerationContext}.
+     * @param context the context to use
+     * @return the type that gathers the project assets
+     * @throws IOException if writing project assets failed
+     */
+    T generate(ProjectGenerationContext context) throws IOException;
 }

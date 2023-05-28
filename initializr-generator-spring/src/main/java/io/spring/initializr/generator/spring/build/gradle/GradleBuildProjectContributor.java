@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildWriter;
@@ -36,33 +34,31 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 public class GradleBuildProjectContributor implements BuildWriter, ProjectContributor {
 
-	private final GradleBuildWriter buildWriter;
+    private final GradleBuildWriter buildWriter;
 
-	private final GradleBuild build;
+    private final GradleBuild build;
 
-	private final IndentingWriterFactory indentingWriterFactory;
+    private final IndentingWriterFactory indentingWriterFactory;
 
-	private final String buildFileName;
+    private final String buildFileName;
 
-	GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build,
-			IndentingWriterFactory indentingWriterFactory, String buildFileName) {
-		this.buildWriter = buildWriter;
-		this.build = build;
-		this.indentingWriterFactory = indentingWriterFactory;
-		this.buildFileName = buildFileName;
-	}
+    GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build, IndentingWriterFactory indentingWriterFactory, String buildFileName) {
+        this.buildWriter = buildWriter;
+        this.build = build;
+        this.indentingWriterFactory = indentingWriterFactory;
+        this.buildFileName = buildFileName;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Path buildGradle = Files.createFile(projectRoot.resolve(this.buildFileName));
-		writeBuild(Files.newBufferedWriter(buildGradle));
-	}
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        Path buildGradle = Files.createFile(projectRoot.resolve(this.buildFileName));
+        writeBuild(Files.newBufferedWriter(buildGradle));
+    }
 
-	@Override
-	public void writeBuild(Writer out) throws IOException {
-		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle", out)) {
-			this.buildWriter.writeTo(writer, this.build);
-		}
-	}
-
+    @Override
+    public void writeBuild(Writer out) throws IOException {
+        try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle", out)) {
+            this.buildWriter.writeTo(writer, this.build);
+        }
+    }
 }

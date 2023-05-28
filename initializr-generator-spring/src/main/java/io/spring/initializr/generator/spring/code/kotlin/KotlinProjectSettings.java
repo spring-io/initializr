@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
@@ -27,24 +26,23 @@ import java.util.List;
  */
 public interface KotlinProjectSettings {
 
-	/**
-	 * Return the version of Kotlin to use.
-	 * @return the kotlin version
-	 */
-	String getVersion();
+    /**
+     * Return the version of Kotlin to use.
+     * @return the kotlin version
+     */
+    String getVersion();
 
-	/**
-	 * Return the {@code jvmTarget} to use.
-	 * @return the jvm target
-	 */
-	String getJvmTarget();
+    /**
+     * Return the {@code jvmTarget} to use.
+     * @return the jvm target
+     */
+    String getJvmTarget();
 
-	/**
-	 * Return the compiler arguments.
-	 * @return the compiler arguments
-	 */
-	default List<String> getCompilerArgs() {
-		return Collections.singletonList("-Xjsr305=strict");
-	}
-
+    /**
+     * Return the compiler arguments.
+     * @return the compiler arguments
+     */
+    default List<String> getCompilerArgs() {
+        return Collections.singletonList("-Xjsr305=strict");
+    }
 }

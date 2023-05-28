@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -34,18 +32,15 @@ import org.springframework.context.annotation.Import;
 @Import(HelpDocumentProjectGenerationDefaultContributorsConfiguration.class)
 public class HelpDocumentProjectGenerationConfiguration {
 
-	@Bean
-	public HelpDocument helpDocument(ObjectProvider<MustacheTemplateRenderer> templateRenderer,
-			ObjectProvider<HelpDocumentCustomizer> helpDocumentCustomizers) {
-		HelpDocument helpDocument = new HelpDocument(
-				templateRenderer.getIfAvailable(() -> new MustacheTemplateRenderer("classpath:/templates")));
-		helpDocumentCustomizers.orderedStream().forEach((customizer) -> customizer.customize(helpDocument));
-		return helpDocument;
-	}
+    @Bean
+    public HelpDocument helpDocument(ObjectProvider<MustacheTemplateRenderer> templateRenderer, ObjectProvider<HelpDocumentCustomizer> helpDocumentCustomizers) {
+        HelpDocument helpDocument = new HelpDocument(templateRenderer.getIfAvailable(() -> new MustacheTemplateRenderer("classpath:/templates")));
+        helpDocumentCustomizers.orderedStream().forEach((customizer) -> customizer.customize(helpDocument));
+        return helpDocument;
+    }
 
-	@Bean
-	public HelpDocumentProjectContributor helpDocumentProjectContributor(HelpDocument helpDocument) {
-		return new HelpDocumentProjectContributor(helpDocument);
-	}
-
+    @Bean
+    public HelpDocumentProjectContributor helpDocumentProjectContributor(HelpDocument helpDocument) {
+        return new HelpDocumentProjectContributor(helpDocument);
+    }
 }

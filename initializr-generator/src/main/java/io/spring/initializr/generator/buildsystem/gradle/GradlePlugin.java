@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 /**
@@ -23,34 +22,33 @@ package io.spring.initializr.generator.buildsystem.gradle;
  */
 public class GradlePlugin {
 
-	private final String id;
+    private final String id;
 
-	private final boolean apply;
+    private final boolean apply;
 
-	/**
-	 * Create a new instance.
-	 * @param id the id of the plugin
-	 * @param apply whether the plugin should be applied or not
-	 */
-	public GradlePlugin(String id, boolean apply) {
-		this.id = id;
-		this.apply = apply;
-	}
+    /**
+     * Create a new instance.
+     * @param id the id of the plugin
+     * @param apply whether the plugin should be applied or not
+     */
+    public GradlePlugin(String id, boolean apply) {
+        this.id = id;
+        this.apply = apply;
+    }
 
-	/**
-	 * Return the plugin identifier.
-	 * @return the plugin id
-	 */
-	public String getId() {
-		return this.id;
-	}
+    /**
+     * Return the plugin identifier.
+     * @return the plugin id
+     */
+    public String getId() {
+        return this.id;
+    }
 
-	/**
-	 * Return whether the plugin should be applied.
-	 * @return {@code true} to use {@code apply}, {@code false} to register it
-	 */
-	public boolean isApply() {
-		return this.apply;
-	}
-
+    /**
+     * Return whether the plugin should be applied.
+     * @return {@code true} to use {@code apply}, {@code false} to register it
+     */
+    public boolean isApply() {
+        return this.apply;
+    }
 }

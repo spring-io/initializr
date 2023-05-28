@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -29,11 +28,8 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 
-	@Override
-	public void customize(Build build) {
-		build.dependencies()
-			.add("kotlin-reflect", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
-				.scope(DependencyScope.COMPILE));
-	}
-
+    @Override
+    public void customize(Build build) {
+        build.dependencies().add("kotlin-reflect", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect").scope(DependencyScope.COMPILE));
+    }
 }

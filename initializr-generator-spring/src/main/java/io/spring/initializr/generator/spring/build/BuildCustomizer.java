@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.buildsystem.Build;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -33,46 +30,44 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface BuildCustomizer<B extends Build> extends Ordered {
 
-	void customize(B build);
+    void customize(B build);
 
-	@Override
-	default int getOrder() {
-		return 0;
-	}
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 
-	/**
-	 * Create a {@link BuildCustomizer} that is ordered with the specified {@code order}
-	 * value.
-	 * @param order the order of the customizer
-	 * @param customizer the customizer
-	 * @param <B> the type of the build
-	 * @return a {@link BuildCustomizer} with the specified order
-	 */
-	static <B extends Build> BuildCustomizer<B> ordered(int order, Consumer<B> customizer) {
-		return new OrderedBuildCustomizer<>(order, customizer);
-	}
+    /**
+     * Create a {@link BuildCustomizer} that is ordered with the specified {@code order}
+     * value.
+     * @param order the order of the customizer
+     * @param customizer the customizer
+     * @param <B> the type of the build
+     * @return a {@link BuildCustomizer} with the specified order
+     */
+    static <B extends Build> BuildCustomizer<B> ordered(int order, Consumer<B> customizer) {
+        return new OrderedBuildCustomizer<>(order, customizer);
+    }
 
-	class OrderedBuildCustomizer<B extends Build> implements BuildCustomizer<B> {
+    class OrderedBuildCustomizer<B extends Build> implements BuildCustomizer<B> {
 
-		private final int order;
+        private final int order;
 
-		private final Consumer<B> customizer;
+        private final Consumer<B> customizer;
 
-		public OrderedBuildCustomizer(int order, Consumer<B> customizer) {
-			this.order = order;
-			this.customizer = customizer;
-		}
+        public OrderedBuildCustomizer(int order, Consumer<B> customizer) {
+            this.order = order;
+            this.customizer = customizer;
+        }
 
-		@Override
-		public void customize(B build) {
-			this.customizer.accept(build);
-		}
+        @Override
+        public void customize(B build) {
+            this.customizer.accept(build);
+        }
 
-		@Override
-		public int getOrder() {
-			return this.order;
-		}
-
-	}
-
+        @Override
+        public int getOrder() {
+            return this.order;
+        }
+    }
 }

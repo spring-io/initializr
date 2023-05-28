@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project.contributor;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -31,16 +29,15 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface ProjectContributor extends Ordered {
 
-	/**
-	 * Contribute additional resources to the project in the specified root directory.
-	 * @param projectRoot the root directory of the project
-	 * @throws IOException if contributing a resource failed
-	 */
-	void contribute(Path projectRoot) throws IOException;
+    /**
+     * Contribute additional resources to the project in the specified root directory.
+     * @param projectRoot the root directory of the project
+     * @throws IOException if contributing a resource failed
+     */
+    void contribute(Path projectRoot) throws IOException;
 
-	@Override
-	default int getOrder() {
-		return 0;
-	}
-
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 }

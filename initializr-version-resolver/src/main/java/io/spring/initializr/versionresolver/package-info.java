@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Classes relating to version resolution.
  */
 package io.spring.initializr.versionresolver;
+

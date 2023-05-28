@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Project generation {@code Condition} annotations and supporting classes.
  */
 package io.spring.initializr.generator.condition;
+

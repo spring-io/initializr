@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleTask;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -30,36 +28,32 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class KotlinDslKotlinGradleBuildCustomizerTests {
 
-	@Test
-	void kotlinPluginsAreConfigured() {
-		GradleBuild build = new GradleBuild();
-		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.plugins().values()).extracting("id", "version")
-			.containsExactlyInAnyOrder(Tuple.tuple("org.jetbrains.kotlin.jvm", "1.2.70"),
-					Tuple.tuple("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
-	}
+    @Test
+    void kotlinPluginsAreConfigured() {
+        GradleBuild build = new GradleBuild();
+        new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.plugins().values()).extracting("id", "version").containsExactlyInAnyOrder(Tuple.tuple("org.jetbrains.kotlin.jvm", "1.2.70"), Tuple.tuple("org.jetbrains.kotlin.plugin.spring", "1.2.70"));
+    }
 
-	@Test
-	void kotlinCompilationTasksAreCustomized() {
-		GradleBuild build = new GradleBuild();
-		new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "11")).customize(build);
-		assertThat(build.tasks().importedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
-		assertThat(build.tasks().values()).singleElement().satisfies((task) -> {
-			assertThat(task.getName()).isEqualTo("KotlinCompile");
-			assertKotlinOptions(task, "11");
-		});
-	}
+    @Test
+    void kotlinCompilationTasksAreCustomized() {
+        GradleBuild build = new GradleBuild();
+        new KotlinDslKotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "11")).customize(build);
+        assertThat(build.tasks().importedTypes()).contains("org.jetbrains.kotlin.gradle.tasks.KotlinCompile");
+        assertThat(build.tasks().values()).singleElement().satisfies((task) -> {
+            assertThat(task.getName()).isEqualTo("KotlinCompile");
+            assertKotlinOptions(task, "11");
+        });
+    }
 
-	private void assertKotlinOptions(GradleTask compileTask, String jvmTarget) {
-		assertThat(compileTask.getAttributes()).isEmpty();
-		assertThat(compileTask.getInvocations()).isEmpty();
-		assertThat(compileTask.getNested()).hasSize(1);
-		GradleTask kotlinOptions = compileTask.getNested().get("kotlinOptions");
-		assertThat(kotlinOptions.getInvocations()).hasSize(0);
-		assertThat(kotlinOptions.getNested()).hasSize(0);
-		assertThat(kotlinOptions.getAttributes()).hasSize(2);
-		assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
-			.containsEntry("jvmTarget", String.format("\"%s\"", jvmTarget));
-	}
-
+    private void assertKotlinOptions(GradleTask compileTask, String jvmTarget) {
+        assertThat(compileTask.getAttributes()).isEmpty();
+        assertThat(compileTask.getInvocations()).isEmpty();
+        assertThat(compileTask.getNested()).hasSize(1);
+        GradleTask kotlinOptions = compileTask.getNested().get("kotlinOptions");
+        assertThat(kotlinOptions.getInvocations()).hasSize(0);
+        assertThat(kotlinOptions.getNested()).hasSize(0);
+        assertThat(kotlinOptions.getAttributes()).hasSize(2);
+        assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")").containsEntry("jvmTarget", String.format("\"%s\"", jvmTarget));
+    }
 }

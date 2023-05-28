@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -28,46 +27,37 @@ import io.spring.initializr.generator.version.Version;
  */
 class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Build> {
 
-	private static final MavenRepository SPRING_MILESTONES = MavenRepository
-		.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone")
-		.name("Spring Milestones")
-		.onlyReleases()
-		.build();
+    private static final MavenRepository SPRING_MILESTONES = MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone").name("Spring Milestones").onlyReleases().build();
 
-	private static final MavenRepository SPRING_SNAPSHOTS = MavenRepository
-		.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
-		.name("Spring Snapshots")
-		.onlySnapshots()
-		.build();
+    private static final MavenRepository SPRING_SNAPSHOTS = MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").name("Spring Snapshots").onlySnapshots().build();
 
-	private final Version springBootVersion;
+    private final Version springBootVersion;
 
-	SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
-		this.springBootVersion = springBootVersion;
-	}
+    SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
+        this.springBootVersion = springBootVersion;
+    }
 
-	@Override
-	public void customize(Build build) {
-		build.repositories().add("maven-central");
-		if (this.springBootVersion.getQualifier() != null) {
-			String qualifier = this.springBootVersion.getQualifier().getId();
-			if (!qualifier.equals("RELEASE")) {
-				addMilestoneRepository(build);
-				if (qualifier.contains("SNAPSHOT")) {
-					addSnapshotRepository(build);
-				}
-			}
-		}
-	}
+    @Override
+    public void customize(Build build) {
+        build.repositories().add("maven-central");
+        if (this.springBootVersion.getQualifier() != null) {
+            String qualifier = this.springBootVersion.getQualifier().getId();
+            if (!qualifier.equals("RELEASE")) {
+                addMilestoneRepository(build);
+                if (qualifier.contains("SNAPSHOT")) {
+                    addSnapshotRepository(build);
+                }
+            }
+        }
+    }
 
-	private void addSnapshotRepository(Build build) {
-		build.repositories().add(SPRING_SNAPSHOTS);
-		build.pluginRepositories().add(SPRING_SNAPSHOTS);
-	}
+    private void addSnapshotRepository(Build build) {
+        build.repositories().add(SPRING_SNAPSHOTS);
+        build.pluginRepositories().add(SPRING_SNAPSHOTS);
+    }
 
-	private void addMilestoneRepository(Build build) {
-		build.repositories().add(SPRING_MILESTONES);
-		build.pluginRepositories().add(SPRING_MILESTONES);
-	}
-
+    private void addMilestoneRepository(Build build) {
+        build.repositories().add(SPRING_MILESTONES);
+        build.pluginRepositories().add(SPRING_MILESTONES);
+    }
 }

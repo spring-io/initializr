@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.util.Arrays;
-
 import io.spring.initializr.generator.condition.ProjectGenerationCondition;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
-
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -36,36 +33,29 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
 
-	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
-		.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
+    private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
 
-	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-RC1");
+    private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-RC1");
 
-	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		String gradleGeneration = determineGradleGeneration(description.getPlatformVersion());
-		if (gradleGeneration == null) {
-			return false;
-		}
-		String[] values = (String[]) metadata.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName())
-			.get("value");
-		return Arrays.asList(values).contains(gradleGeneration);
-	}
+    @Override
+    protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata) {
+        String gradleGeneration = determineGradleGeneration(description.getPlatformVersion());
+        if (gradleGeneration == null) {
+            return false;
+        }
+        String[] values = (String[]) metadata.getAnnotationAttributes(ConditionalOnGradleVersion.class.getName()).get("value");
+        return Arrays.asList(values).contains(gradleGeneration);
+    }
 
-	private String determineGradleGeneration(Version platformVersion) {
-		if (platformVersion == null) {
-			return null;
-		}
-		else if (GRADLE_6_VERSION_RANGE.match(platformVersion)) {
-			return "6";
-		}
-		else if (GRADLE_7_VERSION_RANGE.match(platformVersion)) {
-			return "7";
-		}
-		else {
-			return null;
-		}
-	}
-
+    private String determineGradleGeneration(Version platformVersion) {
+        if (platformVersion == null) {
+            return null;
+        } else if (GRADLE_6_VERSION_RANGE.match(platformVersion)) {
+            return "6";
+        } else if (GRADLE_7_VERSION_RANGE.match(platformVersion)) {
+            return "7";
+        } else {
+            return null;
+        }
+    }
 }

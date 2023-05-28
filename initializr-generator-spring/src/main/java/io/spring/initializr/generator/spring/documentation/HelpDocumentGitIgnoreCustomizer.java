@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import io.spring.initializr.generator.spring.scm.git.GitIgnore;
@@ -27,17 +26,16 @@ import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
  */
 class HelpDocumentGitIgnoreCustomizer implements GitIgnoreCustomizer {
 
-	private final HelpDocument document;
+    private final HelpDocument document;
 
-	HelpDocumentGitIgnoreCustomizer(HelpDocument document) {
-		this.document = document;
-	}
+    HelpDocumentGitIgnoreCustomizer(HelpDocument document) {
+        this.document = document;
+    }
 
-	@Override
-	public void customize(GitIgnore gitIgnore) {
-		if (!this.document.isEmpty()) {
-			gitIgnore.getGeneral().add("HELP.md");
-		}
-	}
-
+    @Override
+    public void customize(GitIgnore gitIgnore) {
+        if (!this.document.isEmpty()) {
+            gitIgnore.getGeneral().add("HELP.md");
+        }
+    }
 }

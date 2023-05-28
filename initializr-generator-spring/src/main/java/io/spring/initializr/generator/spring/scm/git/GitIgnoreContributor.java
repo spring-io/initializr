@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.scm.git;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.project.contributor.SingleResourceProjectContributor;
 
@@ -33,21 +31,20 @@ import io.spring.initializr.generator.project.contributor.SingleResourceProjectC
  */
 public class GitIgnoreContributor implements ProjectContributor {
 
-	private final GitIgnore gitIgnore;
+    private final GitIgnore gitIgnore;
 
-	public GitIgnoreContributor(GitIgnore gitIgnore) {
-		this.gitIgnore = gitIgnore;
-	}
+    public GitIgnoreContributor(GitIgnore gitIgnore) {
+        this.gitIgnore = gitIgnore;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		if (this.gitIgnore.isEmpty()) {
-			return;
-		}
-		Path file = Files.createFile(projectRoot.resolve(".gitignore"));
-		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
-			this.gitIgnore.write(writer);
-		}
-	}
-
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        if (this.gitIgnore.isEmpty()) {
+            return;
+        }
+        Path file = Files.createFile(projectRoot.resolve(".gitignore"));
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
+            this.gitIgnore.write(writer);
+        }
+    }
 }

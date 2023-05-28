@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.configuration;
 
 import io.spring.initializr.generator.project.contributor.SingleResourceProjectContributor;
@@ -26,12 +25,11 @@ import io.spring.initializr.generator.project.contributor.SingleResourceProjectC
  */
 public class ApplicationPropertiesContributor extends SingleResourceProjectContributor {
 
-	public ApplicationPropertiesContributor() {
-		this("classpath:configuration/application.properties");
-	}
+    public ApplicationPropertiesContributor() {
+        this("classpath:configuration/application.properties");
+    }
 
-	public ApplicationPropertiesContributor(String resourcePattern) {
-		super("src/main/resources/application.properties", resourcePattern);
-	}
-
+    public ApplicationPropertiesContributor(String resourcePattern) {
+        super("src/main/resources/application.properties", resourcePattern);
+    }
 }

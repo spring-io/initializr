@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 import java.util.List;
@@ -25,8 +24,7 @@ import java.util.List;
  */
 public interface Annotatable {
 
-	void annotate(Annotation annotation);
+    void annotate(Annotation annotation);
 
-	List<Annotation> getAnnotations();
-
+    List<Annotation> getAnnotations();
 }

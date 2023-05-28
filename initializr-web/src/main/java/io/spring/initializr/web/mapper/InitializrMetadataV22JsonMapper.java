@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.mapper;
 
 import io.spring.initializr.generator.version.Version;
@@ -29,14 +28,13 @@ import io.spring.initializr.generator.version.VersionRange;
  */
 public class InitializrMetadataV22JsonMapper extends InitializrMetadataV21JsonMapper {
 
-	@Override
-	protected String formatVersion(String versionId) {
-		return versionId;
-	}
+    @Override
+    protected String formatVersion(String versionId) {
+        return versionId;
+    }
 
-	@Override
-	protected String formatVersionRange(VersionRange versionRange) {
-		return versionRange.toRangeString();
-	}
-
+    @Override
+    protected String formatVersionRange(VersionRange versionRange) {
+        return versionRange.toRangeString();
+    }
 }

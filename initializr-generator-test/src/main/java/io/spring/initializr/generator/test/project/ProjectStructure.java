@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import org.assertj.core.api.AssertProvider;
 
 /**
@@ -29,41 +27,39 @@ import org.assertj.core.api.AssertProvider;
  */
 public final class ProjectStructure implements AssertProvider<ModuleAssert> {
 
-	private final Path projectDirectory;
+    private final Path projectDirectory;
 
-	/**
-	 * Create an instance based on the specified project {@link Path directory}.
-	 * @param projectDirectory the project's root directory
-	 */
-	public ProjectStructure(Path projectDirectory) {
-		this.projectDirectory = projectDirectory;
-	}
+    /**
+     * Create an instance based on the specified project {@link Path directory}.
+     * @param projectDirectory the project's root directory
+     */
+    public ProjectStructure(Path projectDirectory) {
+        this.projectDirectory = projectDirectory;
+    }
 
-	@Override
-	public ModuleAssert assertThat() {
-		return new ModuleAssert(this.getProjectDirectory());
-	}
+    @Override
+    public ModuleAssert assertThat() {
+        return new ModuleAssert(this.getProjectDirectory());
+    }
 
-	/**
-	 * Return the project directory.
-	 * @return the project directory
-	 */
-	public Path getProjectDirectory() {
-		return this.projectDirectory;
-	}
+    /**
+     * Return the project directory.
+     * @return the project directory
+     */
+    public Path getProjectDirectory() {
+        return this.projectDirectory;
+    }
 
-	/**
-	 * Resolve a {@link ProjectStructure} based on the specified module name.
-	 * @param name the name of a sub-directory of the current project
-	 * @return a new {@link ProjectStructure} for the sub-directory
-	 */
-	public ProjectStructure resolveModule(String name) {
-		Path projectDir = this.projectDirectory.resolve(name);
-		if (!Files.isDirectory(projectDir)) {
-			throw new IllegalArgumentException(
-					String.format("No directory '%s' found in '%s'", name, this.projectDirectory));
-		}
-		return new ProjectStructure(projectDir);
-	}
-
+    /**
+     * Resolve a {@link ProjectStructure} based on the specified module name.
+     * @param name the name of a sub-directory of the current project
+     * @return a new {@link ProjectStructure} for the sub-directory
+     */
+    public ProjectStructure resolveModule(String name) {
+        Path projectDir = this.projectDirectory.resolve(name);
+        if (!Files.isDirectory(projectDir)) {
+            throw new IllegalArgumentException(String.format("No directory '%s' found in '%s'", name, this.projectDirectory));
+        }
+        return new ProjectStructure(projectDir);
+    }
 }

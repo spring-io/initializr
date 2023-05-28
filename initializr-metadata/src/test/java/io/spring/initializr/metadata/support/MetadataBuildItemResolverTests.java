@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata.support;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.version.Version;
@@ -29,7 +27,6 @@ import io.spring.initializr.metadata.DependencyGroup;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -39,144 +36,128 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MetadataBuildItemResolverTests {
 
-	private static final Version VERSION_2_0_0 = Version.parse("2.0.0.RELEASE");
+    private static final Version VERSION_2_0_0 = Version.parse("2.0.0.RELEASE");
 
-	@Test
-	void resoleDependencyWithMatchingEntry() {
-		InitializrMetadata metadata = new InitializrMetadata();
-		DependencyGroup group = DependencyGroup.create("test");
-		Dependency target = Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime");
-		target.setClassifier("test-jar");
-		group.getContent().add(target);
-		metadata.getDependencies().getContent().add(group);
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		io.spring.initializr.generator.buildsystem.Dependency dependency = resolver.resolveDependency("test-dep");
-		assertThat(dependency.getGroupId()).isEqualTo("com.example");
-		assertThat(dependency.getArtifactId()).isEqualTo("test");
-		assertThat(dependency.getVersion()).hasToString("1.0.0");
-		assertThat(dependency.getClassifier()).hasToString("test-jar");
-		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
-	}
+    @Test
+    void resoleDependencyWithMatchingEntry() {
+        InitializrMetadata metadata = new InitializrMetadata();
+        DependencyGroup group = DependencyGroup.create("test");
+        Dependency target = Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime");
+        target.setClassifier("test-jar");
+        group.getContent().add(target);
+        metadata.getDependencies().getContent().add(group);
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        io.spring.initializr.generator.buildsystem.Dependency dependency = resolver.resolveDependency("test-dep");
+        assertThat(dependency.getGroupId()).isEqualTo("com.example");
+        assertThat(dependency.getArtifactId()).isEqualTo("test");
+        assertThat(dependency.getVersion()).hasToString("1.0.0");
+        assertThat(dependency.getClassifier()).hasToString("test-jar");
+        assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
+    }
 
-	@Test
-	void resoleDependencyWithMatchingEntryAndCompatibilityRange() {
-		InitializrMetadata metadata = new InitializrMetadata();
-		DependencyGroup group = DependencyGroup.create("test");
-		Dependency dependency = Dependency.withId("test-dep", "com.example", "test");
-		dependency.getMappings()
-			.add(Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", null, null, "1.0.0.RELEASE", null, null, null));
-		dependency.getMappings()
-			.add(Mapping.create("2.0.0.RELEASE", "com.example.override", "test-override", null, null, null, null));
-		group.getContent().add(dependency);
-		metadata.getDependencies().getContent().add(group);
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		io.spring.initializr.generator.buildsystem.Dependency resolveDependency = resolver
-			.resolveDependency("test-dep");
-		assertThat(resolveDependency.getGroupId()).isEqualTo("com.example.override");
-		assertThat(resolveDependency.getArtifactId()).isEqualTo("test-override");
-		assertThat(resolveDependency.getVersion()).isNull();
-		assertThat(resolveDependency.getScope()).isEqualTo(DependencyScope.COMPILE);
-	}
+    @Test
+    void resoleDependencyWithMatchingEntryAndCompatibilityRange() {
+        InitializrMetadata metadata = new InitializrMetadata();
+        DependencyGroup group = DependencyGroup.create("test");
+        Dependency dependency = Dependency.withId("test-dep", "com.example", "test");
+        dependency.getMappings().add(Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", null, null, "1.0.0.RELEASE", null, null, null));
+        dependency.getMappings().add(Mapping.create("2.0.0.RELEASE", "com.example.override", "test-override", null, null, null, null));
+        group.getContent().add(dependency);
+        metadata.getDependencies().getContent().add(group);
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        io.spring.initializr.generator.buildsystem.Dependency resolveDependency = resolver.resolveDependency("test-dep");
+        assertThat(resolveDependency.getGroupId()).isEqualTo("com.example.override");
+        assertThat(resolveDependency.getArtifactId()).isEqualTo("test-override");
+        assertThat(resolveDependency.getVersion()).isNull();
+        assertThat(resolveDependency.getScope()).isEqualTo(DependencyScope.COMPILE);
+    }
 
-	@Test
-	void resoleDependencyWithNotMatchingEntry() {
-		InitializrMetadata metadata = new InitializrMetadata();
-		DependencyGroup group = DependencyGroup.create("test");
-		group.getContent().add(Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime"));
-		metadata.getDependencies().getContent().add(group);
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		assertThat(resolver.resolveDependency("does-not-exist")).isNull();
-	}
+    @Test
+    void resoleDependencyWithNotMatchingEntry() {
+        InitializrMetadata metadata = new InitializrMetadata();
+        DependencyGroup group = DependencyGroup.create("test");
+        group.getContent().add(Dependency.withId("test-dep", "com.example", "test", "1.0.0", "runtime"));
+        metadata.getDependencies().getContent().add(group);
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        assertThat(resolver.resolveDependency("does-not-exist")).isNull();
+    }
 
-	@Test
-	void resoleBomWithMatchingEntry() {
-		InitializrMetadata metadata = new InitializrMetadata();
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "2.0.0");
-		metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
-		assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
-		assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
-		assertThat(resolvedBom.getVersion()).hasToString("2.0.0");
-	}
+    @Test
+    void resoleBomWithMatchingEntry() {
+        InitializrMetadata metadata = new InitializrMetadata();
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "2.0.0");
+        metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
+        assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
+        assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
+        assertThat(resolvedBom.getVersion()).hasToString("2.0.0");
+    }
 
-	@Test
-	void resoleBomWithMatchingEntryAndCompatibilityRange() throws MalformedURLException {
-		InitializrMetadata metadata = new InitializrMetadata();
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "0.0.1");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", "1.0.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("2.0.0.RELEASE", "1.1.0"));
-		metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
-		metadata.getConfiguration()
-			.getEnv()
-			.getRepositories()
-			.put("test-repo", new Repository("test", new URL("https://example.com/repo")));
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
-		assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
-		assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
-		assertThat(resolvedBom.getVersion()).hasToString("1.1.0");
-	}
+    @Test
+    void resoleBomWithMatchingEntryAndCompatibilityRange() throws MalformedURLException {
+        InitializrMetadata metadata = new InitializrMetadata();
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "0.0.1");
+        bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 2.0.0.RELEASE)", "1.0.0"));
+        bom.getMappings().add(BillOfMaterials.Mapping.create("2.0.0.RELEASE", "1.1.0"));
+        metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
+        metadata.getConfiguration().getEnv().getRepositories().put("test-repo", new Repository("test", new URL("https://example.com/repo")));
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
+        assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
+        assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
+        assertThat(resolvedBom.getVersion()).hasToString("1.1.0");
+    }
 
-	@Test
-	void resoleBomWithNotMatchingEntry() {
-		InitializrMetadata metadata = new InitializrMetadata();
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "2.0.0");
-		metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		assertThat(resolver.resolveBom("does-not-exost")).isNull();
-	}
+    @Test
+    void resoleBomWithNotMatchingEntry() {
+        InitializrMetadata metadata = new InitializrMetadata();
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "2.0.0");
+        metadata.getConfiguration().getEnv().getBoms().put("test-bom", bom);
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        assertThat(resolver.resolveBom("does-not-exost")).isNull();
+    }
 
-	@Test
-	void resoleRepositoryWithMatchingReleasesOnlyRepository() throws MalformedURLException {
-		InitializrMetadata metadata = new InitializrMetadata();
-		metadata.getConfiguration()
-			.getEnv()
-			.getRepositories()
-			.put("test-repo", new Repository("test", new URL("https://example.com/repo")));
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		MavenRepository repository = resolver.resolveRepository("test-repo");
-		assertThat(repository.getId()).isEqualTo("test-repo");
-		assertThat(repository.getName()).isEqualTo("test");
-		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
-		assertThat(repository.isReleasesEnabled()).isTrue();
-		assertThat(repository.isSnapshotsEnabled()).isFalse();
-	}
+    @Test
+    void resoleRepositoryWithMatchingReleasesOnlyRepository() throws MalformedURLException {
+        InitializrMetadata metadata = new InitializrMetadata();
+        metadata.getConfiguration().getEnv().getRepositories().put("test-repo", new Repository("test", new URL("https://example.com/repo")));
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        MavenRepository repository = resolver.resolveRepository("test-repo");
+        assertThat(repository.getId()).isEqualTo("test-repo");
+        assertThat(repository.getName()).isEqualTo("test");
+        assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
+        assertThat(repository.isReleasesEnabled()).isTrue();
+        assertThat(repository.isSnapshotsEnabled()).isFalse();
+    }
 
-	@Test
-	void resoleRepositoryWithMatchingSnapshotsOnlyRepository() throws MalformedURLException {
-		InitializrMetadata metadata = new InitializrMetadata();
-		metadata.getConfiguration()
-			.getEnv()
-			.getRepositories()
-			.put("test-repo", new Repository("test", new URL("https://example.com/repo"), false, true));
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		MavenRepository repository = resolver.resolveRepository("test-repo");
-		assertThat(repository.getId()).isEqualTo("test-repo");
-		assertThat(repository.getName()).isEqualTo("test");
-		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
-		assertThat(repository.isReleasesEnabled()).isFalse();
-		assertThat(repository.isSnapshotsEnabled()).isTrue();
-	}
+    @Test
+    void resoleRepositoryWithMatchingSnapshotsOnlyRepository() throws MalformedURLException {
+        InitializrMetadata metadata = new InitializrMetadata();
+        metadata.getConfiguration().getEnv().getRepositories().put("test-repo", new Repository("test", new URL("https://example.com/repo"), false, true));
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        MavenRepository repository = resolver.resolveRepository("test-repo");
+        assertThat(repository.getId()).isEqualTo("test-repo");
+        assertThat(repository.getName()).isEqualTo("test");
+        assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
+        assertThat(repository.isReleasesEnabled()).isFalse();
+        assertThat(repository.isSnapshotsEnabled()).isTrue();
+    }
 
-	@Test
-	void resoleRepositoryWithNonMatchingEntry() throws MalformedURLException {
-		InitializrMetadata metadata = new InitializrMetadata();
-		metadata.getConfiguration()
-			.getEnv()
-			.getRepositories()
-			.put("test-repo", new Repository("test", new URL("https://example.com/repo")));
-		metadata.validate();
-		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
-		assertThat(resolver.resolveRepository("does-not-exist")).isNull();
-	}
-
+    @Test
+    void resoleRepositoryWithNonMatchingEntry() throws MalformedURLException {
+        InitializrMetadata metadata = new InitializrMetadata();
+        metadata.getConfiguration().getEnv().getRepositories().put("test-repo", new Repository("test", new URL("https://example.com/repo")));
+        metadata.validate();
+        MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
+        assertThat(resolver.resolveRepository("does-not-exist")).isNull();
+    }
 }

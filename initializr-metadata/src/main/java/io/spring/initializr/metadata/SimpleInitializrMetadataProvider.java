@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -23,15 +22,14 @@ package io.spring.initializr.metadata;
  */
 public class SimpleInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public SimpleInitializrMetadataProvider(InitializrMetadata metadata) {
-		this.metadata = metadata;
-	}
+    public SimpleInitializrMetadataProvider(InitializrMetadata metadata) {
+        this.metadata = metadata;
+    }
 
-	@Override
-	public InitializrMetadata get() {
-		return this.metadata;
-	}
-
+    @Override
+    public InitializrMetadata get() {
+        return this.metadata;
+    }
 }

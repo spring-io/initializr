@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 /**
@@ -23,36 +22,35 @@ package io.spring.initializr.generator.language;
  */
 public abstract class AbstractLanguage implements Language {
 
-	private final String id;
+    private final String id;
 
-	private final String jvmVersion;
+    private final String jvmVersion;
 
-	private final String sourceFileExtension;
+    private final String sourceFileExtension;
 
-	protected AbstractLanguage(String id, String jvmVersion, String sourceFileExtension) {
-		this.id = id;
-		this.jvmVersion = (jvmVersion != null) ? jvmVersion : DEFAULT_JVM_VERSION;
-		this.sourceFileExtension = sourceFileExtension;
-	}
+    protected AbstractLanguage(String id, String jvmVersion, String sourceFileExtension) {
+        this.id = id;
+        this.jvmVersion = (jvmVersion != null) ? jvmVersion : DEFAULT_JVM_VERSION;
+        this.sourceFileExtension = sourceFileExtension;
+    }
 
-	@Override
-	public String id() {
-		return this.id;
-	}
+    @Override
+    public String id() {
+        return this.id;
+    }
 
-	@Override
-	public String jvmVersion() {
-		return this.jvmVersion;
-	}
+    @Override
+    public String jvmVersion() {
+        return this.jvmVersion;
+    }
 
-	@Override
-	public String sourceFileExtension() {
-		return this.sourceFileExtension;
-	}
+    @Override
+    public String sourceFileExtension() {
+        return this.sourceFileExtension;
+    }
 
-	@Override
-	public String toString() {
-		return id();
-	}
-
+    @Override
+    public String toString() {
+        return id();
+    }
 }

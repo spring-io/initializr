@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
@@ -25,12 +24,11 @@ import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
  */
 class MavenBuildSystemFactory implements BuildSystemFactory {
 
-	@Override
-	public MavenBuildSystem createBuildSystem(String id) {
-		if (MavenBuildSystem.ID.equals(id)) {
-			return new MavenBuildSystem();
-		}
-		return null;
-	}
-
+    @Override
+    public MavenBuildSystem createBuildSystem(String id) {
+        if (MavenBuildSystem.ID.equals(id)) {
+            return new MavenBuildSystem();
+        }
+        return null;
+    }
 }

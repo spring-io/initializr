@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,22 +27,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SpringCliDistributionController {
 
-	private final InitializrMetadataProvider metadataProvider;
+    private final InitializrMetadataProvider metadataProvider;
 
-	public SpringCliDistributionController(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
+    public SpringCliDistributionController(InitializrMetadataProvider metadataProvider) {
+        this.metadataProvider = metadataProvider;
+    }
 
-	@RequestMapping(path = { "/spring", "/spring.zip" })
-	public String spring() {
-		String url = this.metadataProvider.get().createCliDistributionURl("zip");
-		return "redirect:" + url;
-	}
+    @RequestMapping(path = { "/spring", "/spring.zip" })
+    public String spring() {
+        String url = this.metadataProvider.get().createCliDistributionURl("zip");
+        return "redirect:" + url;
+    }
 
-	@RequestMapping(path = { "/spring.tar.gz", "spring.tgz" })
-	public String springTgz() {
-		String url = this.metadataProvider.get().createCliDistributionURl("tar.gz");
-		return "redirect:" + url;
-	}
-
+    @RequestMapping(path = { "/spring.tar.gz", "spring.tgz" })
+    public String springTgz() {
+        String url = this.metadataProvider.get().createCliDistributionURl("tar.gz");
+        return "redirect:" + url;
+    }
 }

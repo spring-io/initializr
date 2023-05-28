@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -23,11 +22,10 @@ package io.spring.initializr.metadata;
  */
 public interface InitializrMetadataCustomizer {
 
-	/**
-	 * Customize the {@link InitializrMetadata}, updating or moving around capabilities
-	 * before they are validated.
-	 * @param metadata the initializr metadata
-	 */
-	void customize(InitializrMetadata metadata);
-
+    /**
+     * Customize the {@link InitializrMetadata}, updating or moving around capabilities
+     * before they are validated.
+     * @param metadata the initializr metadata
+     */
+    void customize(InitializrMetadata metadata);
 }

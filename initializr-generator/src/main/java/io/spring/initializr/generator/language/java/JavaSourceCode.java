@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.SourceCode;
@@ -25,8 +24,7 @@ import io.spring.initializr.generator.language.SourceCode;
  */
 public class JavaSourceCode extends SourceCode<JavaTypeDeclaration, JavaCompilationUnit> {
 
-	public JavaSourceCode() {
-		super(JavaCompilationUnit::new);
-	}
-
+    public JavaSourceCode() {
+        super(JavaCompilationUnit::new);
+    }
 }

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Project contribution abstraction.
  */
 package io.spring.initializr.generator.project.contributor;
+

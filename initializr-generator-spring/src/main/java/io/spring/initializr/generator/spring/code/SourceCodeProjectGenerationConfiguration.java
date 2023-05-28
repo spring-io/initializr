@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
@@ -23,7 +22,6 @@ import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,40 +34,33 @@ import org.springframework.context.annotation.Configuration;
 @ProjectGenerationConfiguration
 public class SourceCodeProjectGenerationConfiguration {
 
-	@Bean
-	public MainApplicationTypeCustomizer<TypeDeclaration> springBootApplicationAnnotator() {
-		return (typeDeclaration) -> typeDeclaration
-			.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
-	}
+    @Bean
+    public MainApplicationTypeCustomizer<TypeDeclaration> springBootApplicationAnnotator() {
+        return (typeDeclaration) -> typeDeclaration.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
+    }
 
-	@Bean
-	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
-		return (typeDeclaration) -> typeDeclaration
-			.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
-	}
+    @Bean
+    public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
+        return (typeDeclaration) -> typeDeclaration.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
+    }
 
-	/**
-	 * Language-agnostic source code contributions for projects using war packaging.
-	 */
-	@Configuration
-	@ConditionalOnPackaging(WarPackaging.ID)
-	static class WarPackagingConfiguration {
+    /**
+     * Language-agnostic source code contributions for projects using war packaging.
+     */
+    @Configuration
+    @ConditionalOnPackaging(WarPackaging.ID)
+    static class WarPackagingConfiguration {
 
-		private final ProjectDescription description;
+        private final ProjectDescription description;
 
-		WarPackagingConfiguration(ProjectDescription description) {
-			this.description = description;
-		}
+        WarPackagingConfiguration(ProjectDescription description) {
+            this.description = description;
+        }
 
-		@Bean
-		@ConditionalOnPlatformVersion("2.0.0.M1")
-		ServletInitializerContributor boot20ServletInitializerContributor(
-				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(this.description.getPackageName(),
-					"org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
-					servletInitializerCustomizers);
-		}
-
-	}
-
+        @Bean
+        @ConditionalOnPlatformVersion("2.0.0.M1")
+        ServletInitializerContributor boot20ServletInitializerContributor(ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
+            return new ServletInitializerContributor(this.description.getPackageName(), "org.springframework.boot.web.servlet.support.SpringBootServletInitializer", servletInitializerCustomizers);
+        }
+    }
 }

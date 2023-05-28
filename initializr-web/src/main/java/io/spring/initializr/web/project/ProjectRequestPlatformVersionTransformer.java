@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.generator.version.Version;
@@ -27,12 +26,11 @@ import io.spring.initializr.metadata.InitializrMetadata;
 @FunctionalInterface
 public interface ProjectRequestPlatformVersionTransformer {
 
-	/**
-	 * Transform the platform version of a {@link ProjectRequest} if necessary.
-	 * @param platformVersion the candidate platform version
-	 * @param metadata the metadata instance to use
-	 * @return the platform version to use
-	 */
-	Version transform(Version platformVersion, InitializrMetadata metadata);
-
+    /**
+     * Transform the platform version of a {@link ProjectRequest} if necessary.
+     * @param platformVersion the candidate platform version
+     * @param metadata the metadata instance to use
+     * @return the platform version to use
+     */
+    Version transform(Version platformVersion, InitializrMetadata metadata);
 }

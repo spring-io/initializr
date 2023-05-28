@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.io;
 
 import java.io.Writer;
@@ -31,83 +30,79 @@ import java.util.function.Function;
  */
 public final class IndentingWriterFactory {
 
-	private final Function<Integer, String> defaultIndentingStrategy;
+    private final Function<Integer, String> defaultIndentingStrategy;
 
-	private final Map<String, Function<Integer, String>> indentingStrategies;
+    private final Map<String, Function<Integer, String>> indentingStrategies;
 
-	private IndentingWriterFactory(Builder builder) {
-		this.defaultIndentingStrategy = builder.defaultIndentingStrategy;
-		this.indentingStrategies = new HashMap<>(builder.indentingStrategies);
-	}
+    private IndentingWriterFactory(Builder builder) {
+        this.defaultIndentingStrategy = builder.defaultIndentingStrategy;
+        this.indentingStrategies = new HashMap<>(builder.indentingStrategies);
+    }
 
-	/**
-	 * Create an {@link IndentingWriter} for the specified content and output.
-	 * @param contentId the identifier of the content
-	 * @param out the output to use
-	 * @return a configured {@link IndentingWriter}
-	 */
-	public IndentingWriter createIndentingWriter(String contentId, Writer out) {
-		Function<Integer, String> indentingStrategy = this.indentingStrategies.getOrDefault(contentId,
-				this.defaultIndentingStrategy);
-		return new IndentingWriter(out, indentingStrategy);
-	}
+    /**
+     * Create an {@link IndentingWriter} for the specified content and output.
+     * @param contentId the identifier of the content
+     * @param out the output to use
+     * @return a configured {@link IndentingWriter}
+     */
+    public IndentingWriter createIndentingWriter(String contentId, Writer out) {
+        Function<Integer, String> indentingStrategy = this.indentingStrategies.getOrDefault(contentId, this.defaultIndentingStrategy);
+        return new IndentingWriter(out, indentingStrategy);
+    }
 
-	/**
-	 * Create an {@link IndentingWriterFactory} with a default indentation strategy of 4
-	 * spaces.
-	 * @return an {@link IndentingWriterFactory} with default settings
-	 */
-	public static IndentingWriterFactory withDefaultSettings() {
-		return create(new SimpleIndentStrategy("    "));
-	}
+    /**
+     * Create an {@link IndentingWriterFactory} with a default indentation strategy of 4
+     * spaces.
+     * @return an {@link IndentingWriterFactory} with default settings
+     */
+    public static IndentingWriterFactory withDefaultSettings() {
+        return create(new SimpleIndentStrategy("    "));
+    }
 
-	/**
-	 * Create a {@link IndentingWriterFactory} with a single indenting strategy.
-	 * @param defaultIndentingStrategy the default indenting strategy to use
-	 * @return an {@link IndentingWriterFactory}
-	 */
-	public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy) {
-		return new IndentingWriterFactory(new Builder(defaultIndentingStrategy));
-	}
+    /**
+     * Create a {@link IndentingWriterFactory} with a single indenting strategy.
+     * @param defaultIndentingStrategy the default indenting strategy to use
+     * @return an {@link IndentingWriterFactory}
+     */
+    public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy) {
+        return new IndentingWriterFactory(new Builder(defaultIndentingStrategy));
+    }
 
-	/**
-	 * Create a {@link IndentingWriterFactory}.
-	 * @param defaultIndentingStrategy the default indenting strategy to use
-	 * @param factory a consumer of the builder to apply further customizations
-	 * @return an {@link IndentingWriterFactory}
-	 */
-	public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy,
-			Consumer<Builder> factory) {
-		Builder factoryBuilder = new Builder(defaultIndentingStrategy);
-		factory.accept(factoryBuilder);
-		return new IndentingWriterFactory(factoryBuilder);
-	}
+    /**
+     * Create a {@link IndentingWriterFactory}.
+     * @param defaultIndentingStrategy the default indenting strategy to use
+     * @param factory a consumer of the builder to apply further customizations
+     * @return an {@link IndentingWriterFactory}
+     */
+    public static IndentingWriterFactory create(Function<Integer, String> defaultIndentingStrategy, Consumer<Builder> factory) {
+        Builder factoryBuilder = new Builder(defaultIndentingStrategy);
+        factory.accept(factoryBuilder);
+        return new IndentingWriterFactory(factoryBuilder);
+    }
 
-	/**
-	 * Settings customizer for {@link IndentingWriterFactory}.
-	 */
-	public static final class Builder {
+    /**
+     * Settings customizer for {@link IndentingWriterFactory}.
+     */
+    public static final class Builder {
 
-		private final Function<Integer, String> defaultIndentingStrategy;
+        private final Function<Integer, String> defaultIndentingStrategy;
 
-		private final Map<String, Function<Integer, String>> indentingStrategies = new HashMap<>();
+        private final Map<String, Function<Integer, String>> indentingStrategies = new HashMap<>();
 
-		private Builder(Function<Integer, String> defaultIndentingStrategy) {
-			this.defaultIndentingStrategy = defaultIndentingStrategy;
-		}
+        private Builder(Function<Integer, String> defaultIndentingStrategy) {
+            this.defaultIndentingStrategy = defaultIndentingStrategy;
+        }
 
-		/**
-		 * Register an indenting strategy for the specified content.
-		 * @param contentId the identifier of the content to configure
-		 * @param indentingStrategy the indent strategy for that particular content
-		 * @return this for method chaining
-		 * @see #createIndentingWriter(String, Writer)
-		 */
-		public Builder indentingStrategy(String contentId, Function<Integer, String> indentingStrategy) {
-			this.indentingStrategies.put(contentId, indentingStrategy);
-			return this;
-		}
-
-	}
-
+        /**
+         * Register an indenting strategy for the specified content.
+         * @param contentId the identifier of the content to configure
+         * @param indentingStrategy the indent strategy for that particular content
+         * @return this for method chaining
+         * @see #createIndentingWriter(String, Writer)
+         */
+        public Builder indentingStrategy(String contentId, Function<Integer, String> indentingStrategy) {
+            this.indentingStrategies.put(contentId, indentingStrategy);
+            return this;
+        }
+    }
 }

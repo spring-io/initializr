@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.test.io.TextAssert;
 import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -36,78 +33,64 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class HelpDocumentProjectContributorTests {
 
-	private Path directory;
+    private Path directory;
 
-	private MustacheTemplateRenderer templateRenderer;
+    private MustacheTemplateRenderer templateRenderer;
 
-	@BeforeEach
-	void setup(@TempDir Path directory) {
-		this.directory = directory;
-		this.templateRenderer = new MustacheTemplateRenderer("classpath:/templates");
-	}
+    @BeforeEach
+    void setup(@TempDir Path directory) {
+        this.directory = directory;
+        this.templateRenderer = new MustacheTemplateRenderer("classpath:/templates");
+    }
 
-	@Test
-	void helpDocumentEmptyDoesNotCreateFile() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		assertThat(document.isEmpty()).isTrue();
-		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new HelpDocumentProjectContributor(document).contribute(projectDir);
-		Path helpDocument = projectDir.resolve("HELP.md");
-		assertThat(helpDocument).doesNotExist();
-	}
+    @Test
+    void helpDocumentEmptyDoesNotCreateFile() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        assertThat(document.isEmpty()).isTrue();
+        Path projectDir = Files.createTempDirectory(this.directory, "project-");
+        new HelpDocumentProjectContributor(document).contribute(projectDir);
+        Path helpDocument = projectDir.resolve("HELP.md");
+        assertThat(helpDocument).doesNotExist();
+    }
 
-	@Test
-	void helpDocumentWithLinksToGuide() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.gettingStarted()
-			.addGuideLink("https://test.example.com", "test")
-			.addGuideLink("https://test2.example.com", "test2");
-		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides",
-				"The following guides illustrate how to use some features concretely:", "",
-				"* [test](https://test.example.com)", "* [test2](https://test2.example.com)");
-	}
+    @Test
+    void helpDocumentWithLinksToGuide() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        document.gettingStarted().addGuideLink("https://test.example.com", "test").addGuideLink("https://test2.example.com", "test2");
+        assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides", "The following guides illustrate how to use some features concretely:", "", "* [test](https://test.example.com)", "* [test2](https://test2.example.com)");
+    }
 
-	@Test
-	void helpDocumentWithLinksToReferenceDoc() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.gettingStarted()
-			.addReferenceDocLink("https://test.example.com", "doc")
-			.addReferenceDocLink("https://test2.example.com", "doc2");
-		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Reference Documentation",
-				"For further reference, please consider the following sections:", "",
-				"* [doc](https://test.example.com)", "* [doc2](https://test2.example.com)");
-	}
+    @Test
+    void helpDocumentWithLinksToReferenceDoc() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        document.gettingStarted().addReferenceDocLink("https://test.example.com", "doc").addReferenceDocLink("https://test2.example.com", "doc2");
+        assertHelpDocument(document).containsExactly("# Getting Started", "", "### Reference Documentation", "For further reference, please consider the following sections:", "", "* [doc](https://test.example.com)", "* [doc2](https://test2.example.com)");
+    }
 
-	@Test
-	void helpDocumentWithLinksToOtherLinks() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.gettingStarted().addAdditionalLink("https://test.example.com", "Something");
-		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Additional Links",
-				"These additional references should also help you:", "", "* [Something](https://test.example.com)");
-	}
+    @Test
+    void helpDocumentWithLinksToOtherLinks() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        document.gettingStarted().addAdditionalLink("https://test.example.com", "Something");
+        assertHelpDocument(document).containsExactly("# Getting Started", "", "### Additional Links", "These additional references should also help you:", "", "* [Something](https://test.example.com)");
+    }
 
-	@Test
-	void helpDocumentWithSimpleSection() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
-		assertHelpDocument(document).containsExactly("# My test section", "", "    * Test");
-	}
+    @Test
+    void helpDocumentWithSimpleSection() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        document.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
+        assertHelpDocument(document).containsExactly("# My test section", "", "    * Test");
+    }
 
-	@Test
-	void helpDocumentWithLinksAndSimpleSection() throws IOException {
-		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.gettingStarted()
-			.addGuideLink("https://test.example.com", "test")
-			.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
-		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides",
-				"The following guides illustrate how to use some features concretely:", "",
-				"* [test](https://test.example.com)", "", "# My test section", "", "    * Test");
-	}
+    @Test
+    void helpDocumentWithLinksAndSimpleSection() throws IOException {
+        HelpDocument document = new HelpDocument(this.templateRenderer);
+        document.gettingStarted().addGuideLink("https://test.example.com", "test").addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
+        assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides", "The following guides illustrate how to use some features concretely:", "", "* [test](https://test.example.com)", "", "# My test section", "", "    * Test");
+    }
 
-	private ListAssert<String> assertHelpDocument(HelpDocument document) throws IOException {
-		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new HelpDocumentProjectContributor(document).contribute(projectDir);
-		return new TextAssert(projectDir.resolve("HELP.md")).lines();
-	}
-
+    private ListAssert<String> assertHelpDocument(HelpDocument document) throws IOException {
+        Path projectDir = Files.createTempDirectory(this.directory, "project-");
+        new HelpDocumentProjectContributor(document).contribute(projectDir);
+        return new TextAssert(projectDir.resolve("HELP.md")).lines();
+    }
 }

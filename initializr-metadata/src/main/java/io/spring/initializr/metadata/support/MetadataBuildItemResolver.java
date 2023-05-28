@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata.support;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -31,46 +30,44 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public final class MetadataBuildItemResolver implements BuildItemResolver {
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	private final Version platformVersion;
+    private final Version platformVersion;
 
-	/**
-	 * Creates an instance for the specified {@link InitializrMetadata} and {@link Version
-	 * platform version}.
-	 * @param metadata the metadata to use
-	 * @param platformVersion the platform version to consider
-	 */
-	public MetadataBuildItemResolver(InitializrMetadata metadata, Version platformVersion) {
-		this.metadata = metadata;
-		this.platformVersion = platformVersion;
-	}
+    /**
+     * Creates an instance for the specified {@link InitializrMetadata} and {@link Version
+     * platform version}.
+     * @param metadata the metadata to use
+     * @param platformVersion the platform version to consider
+     */
+    public MetadataBuildItemResolver(InitializrMetadata metadata, Version platformVersion) {
+        this.metadata = metadata;
+        this.platformVersion = platformVersion;
+    }
 
-	@Override
-	public Dependency resolveDependency(String id) {
-		io.spring.initializr.metadata.Dependency dependency = this.metadata.getDependencies().get(id);
-		if (dependency != null) {
-			return MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion));
-		}
-		return null;
-	}
+    @Override
+    public Dependency resolveDependency(String id) {
+        io.spring.initializr.metadata.Dependency dependency = this.metadata.getDependencies().get(id);
+        if (dependency != null) {
+            return MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion));
+        }
+        return null;
+    }
 
-	@Override
-	public BillOfMaterials resolveBom(String id) {
-		io.spring.initializr.metadata.BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(id);
-		if (bom != null) {
-			return MetadataBuildItemMapper.toBom(bom.resolve(this.platformVersion));
-		}
-		return null;
-	}
+    @Override
+    public BillOfMaterials resolveBom(String id) {
+        io.spring.initializr.metadata.BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(id);
+        if (bom != null) {
+            return MetadataBuildItemMapper.toBom(bom.resolve(this.platformVersion));
+        }
+        return null;
+    }
 
-	@Override
-	public MavenRepository resolveRepository(String id) {
-		if (id.equals(MavenRepository.MAVEN_CENTRAL.getId())) {
-			return MavenRepository.MAVEN_CENTRAL;
-		}
-		return MetadataBuildItemMapper.toRepository(id,
-				this.metadata.getConfiguration().getEnv().getRepositories().get(id));
-	}
-
+    @Override
+    public MavenRepository resolveRepository(String id) {
+        if (id.equals(MavenRepository.MAVEN_CENTRAL.getId())) {
+            return MavenRepository.MAVEN_CENTRAL;
+        }
+        return MetadataBuildItemMapper.toRepository(id, this.metadata.getConfiguration().getEnv().getRepositories().get(id));
+    }
 }

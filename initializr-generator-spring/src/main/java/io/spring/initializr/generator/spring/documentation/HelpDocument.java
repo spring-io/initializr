@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import java.io.IOException;
@@ -23,7 +22,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.io.text.MustacheSection;
@@ -38,73 +36,71 @@ import io.spring.initializr.generator.io.text.Section;
  */
 public class HelpDocument {
 
-	private final MustacheTemplateRenderer templateRenderer;
+    private final MustacheTemplateRenderer templateRenderer;
 
-	private final BulletedSection<String> warnings;
+    private final BulletedSection<String> warnings;
 
-	private final GettingStartedSection gettingStarted;
+    private final GettingStartedSection gettingStarted;
 
-	private final PreDefinedSection nextSteps;
+    private final PreDefinedSection nextSteps;
 
-	private final LinkedList<Section> sections = new LinkedList<>();
+    private final LinkedList<Section> sections = new LinkedList<>();
 
-	public HelpDocument(MustacheTemplateRenderer templateRenderer) {
-		this.templateRenderer = templateRenderer;
-		this.warnings = new BulletedSection<>(templateRenderer, "documentation/warnings");
-		this.gettingStarted = new GettingStartedSection(templateRenderer);
-		this.nextSteps = new PreDefinedSection("Next Steps");
-	}
+    public HelpDocument(MustacheTemplateRenderer templateRenderer) {
+        this.templateRenderer = templateRenderer;
+        this.warnings = new BulletedSection<>(templateRenderer, "documentation/warnings");
+        this.gettingStarted = new GettingStartedSection(templateRenderer);
+        this.nextSteps = new PreDefinedSection("Next Steps");
+    }
 
-	/**
-	 * Return a section that can be used to inform the user that something happened when
-	 * building this project.
-	 * @return a warnings section rendered as bullet points
-	 */
-	public BulletedSection<String> getWarnings() {
-		return this.warnings;
-	}
+    /**
+     * Return a section that can be used to inform the user that something happened when
+     * building this project.
+     * @return a warnings section rendered as bullet points
+     */
+    public BulletedSection<String> getWarnings() {
+        return this.warnings;
+    }
 
-	public GettingStartedSection gettingStarted() {
-		return this.gettingStarted;
-	}
+    public GettingStartedSection gettingStarted() {
+        return this.gettingStarted;
+    }
 
-	public PreDefinedSection nextSteps() {
-		return this.nextSteps;
-	}
+    public PreDefinedSection nextSteps() {
+        return this.nextSteps;
+    }
 
-	public HelpDocument addSection(Section section) {
-		this.sections.add(section);
-		return this;
-	}
+    public HelpDocument addSection(Section section) {
+        this.sections.add(section);
+        return this;
+    }
 
-	/**
-	 * Add a section rendered by the specified mustache template and model.
-	 * @param templateName the name of the mustache template to render
-	 * @param model the model that should be used for the rendering
-	 * @return this document
-	 */
-	public HelpDocument addSection(String templateName, Map<String, Object> model) {
-		return addSection(new MustacheSection(this.templateRenderer, templateName, model));
-	}
+    /**
+     * Add a section rendered by the specified mustache template and model.
+     * @param templateName the name of the mustache template to render
+     * @param model the model that should be used for the rendering
+     * @return this document
+     */
+    public HelpDocument addSection(String templateName, Map<String, Object> model) {
+        return addSection(new MustacheSection(this.templateRenderer, templateName, model));
+    }
 
-	public List<Section> getSections() {
-		return Collections.unmodifiableList(this.sections);
-	}
+    public List<Section> getSections() {
+        return Collections.unmodifiableList(this.sections);
+    }
 
-	public void write(PrintWriter writer) throws IOException {
-		List<Section> allSections = new ArrayList<>();
-		allSections.add(this.warnings);
-		allSections.add(this.gettingStarted);
-		allSections.addAll(this.sections);
-		allSections.add(this.nextSteps);
-		for (Section section : allSections) {
-			section.write(writer);
-		}
-	}
+    public void write(PrintWriter writer) throws IOException {
+        List<Section> allSections = new ArrayList<>();
+        allSections.add(this.warnings);
+        allSections.add(this.gettingStarted);
+        allSections.addAll(this.sections);
+        allSections.add(this.nextSteps);
+        for (Section section : allSections) {
+            section.write(writer);
+        }
+    }
 
-	public boolean isEmpty() {
-		return getWarnings().isEmpty() && gettingStarted().isEmpty() && this.sections.isEmpty()
-				&& nextSteps().isEmpty();
-	}
-
+    public boolean isEmpty() {
+        return getWarnings().isEmpty() && gettingStarted().isEmpty() && this.sections.isEmpty() && nextSteps().isEmpty();
+    }
 }

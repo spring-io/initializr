@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller.custom;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
-
 import io.spring.initializr.generator.project.ProjectDescriptionDiff;
 
 /**
@@ -30,23 +28,22 @@ import io.spring.initializr.generator.project.ProjectDescriptionDiff;
  */
 class CustomProjectDescriptionDiff extends ProjectDescriptionDiff {
 
-	private final CustomProjectDescription original;
+    private final CustomProjectDescription original;
 
-	CustomProjectDescriptionDiff(CustomProjectDescription original) {
-		super(original);
-		this.original = original;
-	}
+    CustomProjectDescriptionDiff(CustomProjectDescription original) {
+        super(original);
+        this.original = original;
+    }
 
-	/**
-	 * Calls the specified consumer if the {@code customFlag} is different on the original
-	 * source project description than the specified project description.
-	 * @param current the project description to test against
-	 * @param consumer to call if the property has changed
-	 */
-	void ifCustomFlagChanged(CustomProjectDescription current, BiConsumer<Boolean, Boolean> consumer) {
-		if (!Objects.equals(this.original.isCustomFlag(), current.isCustomFlag())) {
-			consumer.accept(this.original.isCustomFlag(), current.isCustomFlag());
-		}
-	}
-
+    /**
+     * Calls the specified consumer if the {@code customFlag} is different on the original
+     * source project description than the specified project description.
+     * @param current the project description to test against
+     * @param consumer to call if the property has changed
+     */
+    void ifCustomFlagChanged(CustomProjectDescription current, BiConsumer<Boolean, Boolean> consumer) {
+        if (!Objects.equals(this.original.isCustomFlag(), current.isCustomFlag())) {
+            consumer.accept(this.original.isCustomFlag(), current.isCustomFlag());
+        }
+    }
 }

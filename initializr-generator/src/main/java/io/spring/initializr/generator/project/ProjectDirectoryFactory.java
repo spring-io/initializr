@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
@@ -27,12 +26,11 @@ import java.nio.file.Path;
 @FunctionalInterface
 public interface ProjectDirectoryFactory {
 
-	/**
-	 * Create a dedicated project directory for the specified {@link ProjectDescription}.
-	 * @param description the description of a project to generate
-	 * @return a dedicated existing directory
-	 * @throws IOException if creating the directory failed
-	 */
-	Path createProjectDirectory(ProjectDescription description) throws IOException;
-
+    /**
+     * Create a dedicated project directory for the specified {@link ProjectDescription}.
+     * @param description the description of a project to generate
+     * @return a dedicated existing directory
+     * @throws IOException if creating the directory failed
+     */
+    Path createProjectDirectory(ProjectDescription description) throws IOException;
 }

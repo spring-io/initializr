@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.support;
 
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -27,11 +26,10 @@ import io.spring.initializr.metadata.InitializrMetadata;
 @FunctionalInterface
 public interface InitializrMetadataUpdateStrategy {
 
-	/**
-	 * Update the current {@link InitializrMetadata}.
-	 * @param current the metadata to update
-	 * @return the updated metadata, or {@code current} (never {@code null})
-	 */
-	InitializrMetadata update(InitializrMetadata current);
-
+    /**
+     * Update the current {@link InitializrMetadata}.
+     * @param current the metadata to update
+     * @return the updated metadata, or {@code current} (never {@code null})
+     */
+    InitializrMetadata update(InitializrMetadata current);
 }

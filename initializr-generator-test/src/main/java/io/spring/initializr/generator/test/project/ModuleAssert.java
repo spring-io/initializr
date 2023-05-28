@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Path;
@@ -25,8 +24,7 @@ import java.nio.file.Path;
  */
 public class ModuleAssert extends AbstractModuleAssert<ModuleAssert> {
 
-	public ModuleAssert(Path projectDirectory) {
-		super(projectDirectory, ModuleAssert.class);
-	}
-
+    public ModuleAssert(Path projectDirectory) {
+        super(projectDirectory, ModuleAssert.class);
+    }
 }

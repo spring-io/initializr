@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -29,12 +27,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 class OnRequestedDependencyCondition extends ProjectGenerationCondition {
 
-	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		String id = (String) metadata.getAnnotationAttributes(ConditionalOnRequestedDependency.class.getName())
-			.get("value");
-		return description.getRequestedDependencies().containsKey(id);
-	}
-
+    @Override
+    protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata) {
+        String id = (String) metadata.getAnnotationAttributes(ConditionalOnRequestedDependency.class.getName()).get("value");
+        return description.getRequestedDependencies().containsKey(id);
+    }
 }

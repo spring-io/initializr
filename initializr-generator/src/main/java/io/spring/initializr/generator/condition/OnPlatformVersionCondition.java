@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import java.util.Arrays;
-
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
-
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -34,17 +31,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 class OnPlatformVersionCondition extends ProjectGenerationCondition {
 
-	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		Version platformVersion = description.getPlatformVersion();
-		if (platformVersion == null) {
-			return false;
-		}
-		return Arrays.stream(
-				(String[]) metadata.getAnnotationAttributes(ConditionalOnPlatformVersion.class.getName()).get("value"))
-			.anyMatch((range) -> VersionParser.DEFAULT.parseRange(range).match(platformVersion));
-
-	}
-
+    @Override
+    protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata) {
+        Version platformVersion = description.getPlatformVersion();
+        if (platformVersion == null) {
+            return false;
+        }
+        return Arrays.stream((String[]) metadata.getAnnotationAttributes(ConditionalOnPlatformVersion.class.getName()).get("value")).anyMatch((range) -> VersionParser.DEFAULT.parseRange(range).match(platformVersion));
+    }
 }

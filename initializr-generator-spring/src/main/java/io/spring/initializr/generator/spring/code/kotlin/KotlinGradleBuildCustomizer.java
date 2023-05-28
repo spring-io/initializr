@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
@@ -30,22 +29,18 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 abstract class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	private final KotlinProjectSettings settings;
+    private final KotlinProjectSettings settings;
 
-	KotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
-		this.settings = kotlinProjectSettings;
-	}
+    KotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+        this.settings = kotlinProjectSettings;
+    }
 
-	@Override
-	public void customize(GradleBuild build) {
-		build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-		build.plugins()
-			.add("org.jetbrains.kotlin.plugin.spring", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-		build.tasks()
-			.customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile",
-					(compile) -> customizeKotlinOptions(this.settings, compile));
-	}
+    @Override
+    public void customize(GradleBuild build) {
+        build.plugins().add("org.jetbrains.kotlin.jvm", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+        build.plugins().add("org.jetbrains.kotlin.plugin.spring", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+        build.tasks().customizeWithType("org.jetbrains.kotlin.gradle.tasks.KotlinCompile", (compile) -> customizeKotlinOptions(this.settings, compile));
+    }
 
-	protected abstract void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile);
-
+    protected abstract void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile);
 }

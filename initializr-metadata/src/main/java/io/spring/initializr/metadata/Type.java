@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 import java.util.LinkedHashMap;
@@ -27,35 +26,34 @@ import java.util.Map;
  */
 public class Type extends DefaultMetadataElement implements Describable {
 
-	private String description;
+    private String description;
 
-	private String action;
+    private String action;
 
-	private final Map<String, String> tags = new LinkedHashMap<>();
+    private final Map<String, String> tags = new LinkedHashMap<>();
 
-	public void setAction(String action) {
-		String actionToUse = action;
-		if (!actionToUse.startsWith("/")) {
-			actionToUse = "/" + actionToUse;
-		}
-		this.action = actionToUse;
-	}
+    public void setAction(String action) {
+        String actionToUse = action;
+        if (!actionToUse.startsWith("/")) {
+            actionToUse = "/" + actionToUse;
+        }
+        this.action = actionToUse;
+    }
 
-	@Override
-	public String getDescription() {
-		return this.description;
-	}
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getAction() {
-		return this.action;
-	}
+    public String getAction() {
+        return this.action;
+    }
 
-	public Map<String, String> getTags() {
-		return this.tags;
-	}
-
+    public Map<String, String> getTags() {
+        return this.tags;
+    }
 }

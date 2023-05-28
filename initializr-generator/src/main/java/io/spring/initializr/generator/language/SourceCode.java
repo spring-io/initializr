@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 import java.util.ArrayList;
@@ -30,26 +29,25 @@ import java.util.function.BiFunction;
  */
 public abstract class SourceCode<T extends TypeDeclaration, C extends CompilationUnit<T>> {
 
-	private final List<C> compilationUnits = new ArrayList<>();
+    private final List<C> compilationUnits = new ArrayList<>();
 
-	private final BiFunction<String, String, C> compilationUnitFactory;
+    private final BiFunction<String, String, C> compilationUnitFactory;
 
-	protected SourceCode(BiFunction<String, String, C> compilationUnitFactory) {
-		this.compilationUnitFactory = compilationUnitFactory;
-	}
+    protected SourceCode(BiFunction<String, String, C> compilationUnitFactory) {
+        this.compilationUnitFactory = compilationUnitFactory;
+    }
 
-	public C createCompilationUnit(String packageName, String name) {
-		C compilationUnit = this.compilationUnitFactory.apply(packageName, name);
-		this.compilationUnits.add(compilationUnit);
-		return compilationUnit;
-	}
+    public C createCompilationUnit(String packageName, String name) {
+        C compilationUnit = this.compilationUnitFactory.apply(packageName, name);
+        this.compilationUnits.add(compilationUnit);
+        return compilationUnit;
+    }
 
-	/**
-	 * Returns an unmodifiable view of the {@link CompilationUnit compilation units}.
-	 * @return the compilation units
-	 */
-	public List<C> getCompilationUnits() {
-		return Collections.unmodifiableList(this.compilationUnits);
-	}
-
+    /**
+     * Returns an unmodifiable view of the {@link CompilationUnit compilation units}.
+     * @return the compilation units
+     */
+    public List<C> getCompilationUnits() {
+        return Collections.unmodifiableList(this.compilationUnits);
+    }
 }

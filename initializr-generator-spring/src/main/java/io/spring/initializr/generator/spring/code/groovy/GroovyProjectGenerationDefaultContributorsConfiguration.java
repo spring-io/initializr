@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.groovy;
 
 import java.lang.reflect.Modifier;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
@@ -37,7 +35,6 @@ import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,69 +47,54 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class GroovyProjectGenerationDefaultContributorsConfiguration {
 
-	private static final VersionRange GROOVY4 = VersionParser.DEFAULT.parseRange("3.0.0-M2");
+    private static final VersionRange GROOVY4 = VersionParser.DEFAULT.parseRange("3.0.0-M2");
 
-	@Bean
-	MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
-		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(GroovyMethodDeclaration.method("main")
-			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
-			.returning("void")
-			.parameters(new Parameter("java.lang.String[]", "args"))
-			.body(new GroovyExpressionStatement(new GroovyMethodInvocation("org.springframework.boot.SpringApplication",
-					"run", typeDeclaration.getName(), "args"))));
-	}
+    @Bean
+    MainApplicationTypeCustomizer<GroovyTypeDeclaration> mainMethodContributor() {
+        return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(GroovyMethodDeclaration.method("main").modifiers(Modifier.PUBLIC | Modifier.STATIC).returning("void").parameters(new Parameter("java.lang.String[]", "args")).body(new GroovyExpressionStatement(new GroovyMethodInvocation("org.springframework.boot.SpringApplication", "run", typeDeclaration.getName(), "args"))));
+    }
 
-	@Bean
-	TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
-		return (typeDeclaration) -> {
-			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").returning("void").body();
-			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
-			typeDeclaration.addMethodDeclaration(method);
-		};
-	}
+    @Bean
+    TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
+        return (typeDeclaration) -> {
+            GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").returning("void").body();
+            method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
+            typeDeclaration.addMethodDeclaration(method);
+        };
+    }
 
-	@Bean
-	BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description) {
-		return new GroovyDependenciesConfigurer(GROOVY4.match(description.getPlatformVersion()));
-	}
+    @Bean
+    BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description) {
+        return new GroovyDependenciesConfigurer(GROOVY4.match(description.getPlatformVersion()));
+    }
 
-	/**
-	 * Groovy source code contributions for projects using war packaging.
-	 */
-	@Configuration
-	@ConditionalOnPackaging(WarPackaging.ID)
-	static class WarPackagingConfiguration {
+    /**
+     * Groovy source code contributions for projects using war packaging.
+     */
+    @Configuration
+    @ConditionalOnPackaging(WarPackaging.ID)
+    static class WarPackagingConfiguration {
 
-		@Bean
-		ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
-				ProjectDescription description) {
-			return (typeDeclaration) -> {
-				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
-					.modifiers(Modifier.PROTECTED)
-					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
-					.parameters(
-							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
-					.body(new GroovyReturnStatement(
-							new GroovyMethodInvocation("application", "sources", description.getApplicationName())));
-				configure.annotate(Annotation.name("java.lang.Override"));
-				typeDeclaration.addMethodDeclaration(configure);
-			};
-		}
+        @Bean
+        ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(ProjectDescription description) {
+            return (typeDeclaration) -> {
+                GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure").modifiers(Modifier.PROTECTED).returning("org.springframework.boot.builder.SpringApplicationBuilder").parameters(new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application")).body(new GroovyReturnStatement(new GroovyMethodInvocation("application", "sources", description.getApplicationName())));
+                configure.annotate(Annotation.name("java.lang.Override"));
+                typeDeclaration.addMethodDeclaration(configure);
+            };
+        }
+    }
 
-	}
+    /**
+     * Configuration for Groovy projects built with Maven.
+     */
+    @Configuration
+    @ConditionalOnBuildSystem(MavenBuildSystem.ID)
+    static class GroovyMavenProjectConfiguration {
 
-	/**
-	 * Configuration for Groovy projects built with Maven.
-	 */
-	@Configuration
-	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-	static class GroovyMavenProjectConfiguration {
-
-		@Bean
-		GroovyMavenBuildCustomizer groovyBuildCustomizer() {
-			return new GroovyMavenBuildCustomizer();
-		}
-
-	}
-
+        @Bean
+        GroovyMavenBuildCustomizer groovyBuildCustomizer() {
+            return new GroovyMavenBuildCustomizer();
+        }
+    }
 }

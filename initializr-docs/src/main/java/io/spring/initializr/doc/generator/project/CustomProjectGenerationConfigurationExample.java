@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -23,7 +22,6 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,24 +34,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CustomProjectGenerationConfigurationExample {
 
-	// tag::code[]
-	@Bean
-	public CustomProjectGenerationController projectGenerationController(InitializrMetadataProvider metadataProvider,
-			ApplicationContext applicationContext) {
-		ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
-				applicationContext, new CustomProjectRequestToDescriptionConverter());
-		return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
-	}
-	// end::code[]
+    // tag::code[]
+    @Bean
+    public CustomProjectGenerationController projectGenerationController(InitializrMetadataProvider metadataProvider, ApplicationContext applicationContext) {
+        ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(applicationContext, new CustomProjectRequestToDescriptionConverter());
+        return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
+    }
 
-	static class CustomProjectRequestToDescriptionConverter
-			implements ProjectRequestToDescriptionConverter<CustomProjectRequest> {
+    // end::code[]
+    static class CustomProjectRequestToDescriptionConverter implements ProjectRequestToDescriptionConverter<CustomProjectRequest> {
 
-		@Override
-		public ProjectDescription convert(CustomProjectRequest request, InitializrMetadata metadata) {
-			return new MutableProjectDescription();
-		}
-
-	}
-
+        @Override
+        public ProjectDescription convert(CustomProjectRequest request, InitializrMetadata metadata) {
+            return new MutableProjectDescription();
+        }
+    }
 }

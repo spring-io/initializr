@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Document code snippet for project generation.
  */
 package io.spring.initializr.doc.generator.project;
+

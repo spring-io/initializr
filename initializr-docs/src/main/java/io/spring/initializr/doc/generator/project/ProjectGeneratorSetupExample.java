@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import io.spring.initializr.generator.project.ProjectGenerator;
-
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -27,13 +25,12 @@ import org.springframework.context.ApplicationContext;
  */
 public class ProjectGeneratorSetupExample {
 
-	// tag::code[]
-	public ProjectGenerator createProjectGenerator(ApplicationContext appContext) {
-		return new ProjectGenerator((context) -> {
-			context.setParent(appContext);
-			context.registerBean(SampleContributor.class, SampleContributor::new);
-		});
-	}
-	// end::code[]
-
+    // tag::code[]
+    public ProjectGenerator createProjectGenerator(ApplicationContext appContext) {
+        return new ProjectGenerator((context) -> {
+            context.setParent(appContext);
+            context.registerBean(SampleContributor.class, SampleContributor::new);
+        });
+    }
+    // end::code[]
 }

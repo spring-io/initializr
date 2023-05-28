@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -31,74 +30,70 @@ import io.spring.initializr.generator.io.IndentingWriter;
  */
 public abstract class GradleSettingsWriter {
 
-	/**
-	 * Write a {@linkplain GradleBuild settings.gradle} using the specified
-	 * {@linkplain IndentingWriter writer}.
-	 * @param writer the writer to use
-	 * @param build the gradle build to write
-	 */
-	public final void writeTo(IndentingWriter writer, GradleBuild build) {
-		writePluginManagement(writer, build);
-		writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
-	}
+    /**
+     * Write a {@linkplain GradleBuild settings.gradle} using the specified
+     * {@linkplain IndentingWriter writer}.
+     * @param writer the writer to use
+     * @param build the gradle build to write
+     */
+    public final void writeTo(IndentingWriter writer, GradleBuild build) {
+        writePluginManagement(writer, build);
+        writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
+    }
 
-	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
-		if (build.pluginRepositories().isEmpty() && build.getSettings().getPluginMappings().isEmpty()) {
-			return;
-		}
-		writer.println("pluginManagement {");
-		writer.indented(() -> {
-			writeRepositories(writer, build);
-			writeResolutionStrategy(writer, build);
-		});
-		writer.println("}");
-	}
+    private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
+        if (build.pluginRepositories().isEmpty() && build.getSettings().getPluginMappings().isEmpty()) {
+            return;
+        }
+        writer.println("pluginManagement {");
+        writer.indented(() -> {
+            writeRepositories(writer, build);
+            writeResolutionStrategy(writer, build);
+        });
+        writer.println("}");
+    }
 
-	private void writeRepositories(IndentingWriter writer, GradleBuild build) {
-		if (build.pluginRepositories().isEmpty()) {
-			return;
-		}
-		writer.println("repositories {");
-		writer.indented(() -> {
-			build.pluginRepositories().items().map(this::repositoryAsString).forEach(writer::println);
-			writer.println("gradlePluginPortal()");
-		});
-		writer.println("}");
-	}
+    private void writeRepositories(IndentingWriter writer, GradleBuild build) {
+        if (build.pluginRepositories().isEmpty()) {
+            return;
+        }
+        writer.println("repositories {");
+        writer.indented(() -> {
+            build.pluginRepositories().items().map(this::repositoryAsString).forEach(writer::println);
+            writer.println("gradlePluginPortal()");
+        });
+        writer.println("}");
+    }
 
-	private void writeResolutionStrategy(IndentingWriter writer, GradleBuild build) {
-		if (build.getSettings().getPluginMappings().isEmpty()) {
-			return;
-		}
-		writer.println("resolutionStrategy {");
-		writer.indented(() -> {
-			writer.println("eachPlugin {");
-			writer.indented(() -> build.getSettings()
-				.getPluginMappings()
-				.forEach((pluginMapping) -> writePluginMapping(writer, pluginMapping)));
-			writer.println("}");
-		});
-		writer.println("}");
-	}
+    private void writeResolutionStrategy(IndentingWriter writer, GradleBuild build) {
+        if (build.getSettings().getPluginMappings().isEmpty()) {
+            return;
+        }
+        writer.println("resolutionStrategy {");
+        writer.indented(() -> {
+            writer.println("eachPlugin {");
+            writer.indented(() -> build.getSettings().getPluginMappings().forEach((pluginMapping) -> writePluginMapping(writer, pluginMapping)));
+            writer.println("}");
+        });
+        writer.println("}");
+    }
 
-	private void writePluginMapping(IndentingWriter writer, PluginMapping pluginMapping) {
-		writer.println("if (requested.id.id == " + wrapWithQuotes(pluginMapping.getId()) + ") {");
-		Dependency dependency = pluginMapping.getDependency();
-		String module = String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(),
-				dependency.getVersion().getValue());
-		writer.indented(() -> writer.println("useModule(" + wrapWithQuotes(module) + ")"));
-		writer.println("}");
-	}
+    private void writePluginMapping(IndentingWriter writer, PluginMapping pluginMapping) {
+        writer.println("if (requested.id.id == " + wrapWithQuotes(pluginMapping.getId()) + ") {");
+        Dependency dependency = pluginMapping.getDependency();
+        String module = String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion().getValue());
+        writer.indented(() -> writer.println("useModule(" + wrapWithQuotes(module) + ")"));
+        writer.println("}");
+    }
 
-	private String repositoryAsString(MavenRepository repository) {
-		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
-			return "mavenCentral()";
-		}
-		return "maven { " + urlAssignment(repository.getUrl()) + " }";
-	}
+    private String repositoryAsString(MavenRepository repository) {
+        if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
+            return "mavenCentral()";
+        }
+        return "maven { " + urlAssignment(repository.getUrl()) + " }";
+    }
 
-	protected abstract String wrapWithQuotes(String value);
+    protected abstract String wrapWithQuotes(String value);
 
-	protected abstract String urlAssignment(String url);
-
+    protected abstract String urlAssignment(String url);
 }

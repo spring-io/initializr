@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.autoconfigure;
 
 import java.util.Collections;
-
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
 import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -41,37 +38,33 @@ import org.springframework.retry.support.RetryTemplate;
  *
  * @author Stephane Nicoll
  */
-@AutoConfiguration(after = RestTemplateAutoConfiguration.class,
-		afterName = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
+@AutoConfiguration(after = RestTemplateAutoConfiguration.class, afterName = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 @EnableConfigurationProperties(StatsProperties.class)
 @ConditionalOnProperty("initializr.stats.elastic.uri")
 class InitializrStatsAutoConfiguration {
 
-	private final StatsProperties statsProperties;
+    private final StatsProperties statsProperties;
 
-	InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
-		this.statsProperties = statsProperties;
-	}
+    InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
+        this.statsProperties = statsProperties;
+    }
 
-	@Bean
-	@ConditionalOnBean(InitializrMetadataProvider.class)
-	ProjectGenerationStatPublisher projectRequestStatHandler(RestTemplateBuilder restTemplateBuilder) {
-		return new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(), this.statsProperties,
-				restTemplateBuilder, statsRetryTemplate());
-	}
+    @Bean
+    @ConditionalOnBean(InitializrMetadataProvider.class)
+    ProjectGenerationStatPublisher projectRequestStatHandler(RestTemplateBuilder restTemplateBuilder) {
+        return new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(), this.statsProperties, restTemplateBuilder, statsRetryTemplate());
+    }
 
-	@Bean
-	@ConditionalOnMissingBean(name = "statsRetryTemplate")
-	RetryTemplate statsRetryTemplate() {
-		RetryTemplate retryTemplate = new RetryTemplate();
-		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-		backOffPolicy.setInitialInterval(3000L);
-		backOffPolicy.setMultiplier(3);
-		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(this.statsProperties.getElastic().getMaxAttempts(),
-				Collections.singletonMap(Exception.class, true));
-		retryTemplate.setBackOffPolicy(backOffPolicy);
-		retryTemplate.setRetryPolicy(retryPolicy);
-		return retryTemplate;
-	}
-
+    @Bean
+    @ConditionalOnMissingBean(name = "statsRetryTemplate")
+    RetryTemplate statsRetryTemplate() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(3000L);
+        backOffPolicy.setMultiplier(3);
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(this.statsProperties.getElastic().getMaxAttempts(), Collections.singletonMap(Exception.class, true));
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+        retryTemplate.setRetryPolicy(retryPolicy);
+        return retryTemplate;
+    }
 }

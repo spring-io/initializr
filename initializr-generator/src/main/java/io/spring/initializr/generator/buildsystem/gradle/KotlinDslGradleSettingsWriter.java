@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 /**
@@ -23,14 +22,13 @@ package io.spring.initializr.generator.buildsystem.gradle;
  */
 public class KotlinDslGradleSettingsWriter extends GradleSettingsWriter {
 
-	@Override
-	protected String wrapWithQuotes(String value) {
-		return "\"" + value + "\"";
-	}
+    @Override
+    protected String wrapWithQuotes(String value) {
+        return "\"" + value + "\"";
+    }
 
-	@Override
-	protected String urlAssignment(String url) {
-		return "url = uri(\"" + url + "\")";
-	}
-
+    @Override
+    protected String urlAssignment(String url) {
+        return "url = uri(\"" + url + "\")";
+    }
 }

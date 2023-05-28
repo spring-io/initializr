@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 /**
@@ -24,12 +23,11 @@ package io.spring.initializr.generator.project;
 @SuppressWarnings("serial")
 public class ProjectGenerationException extends RuntimeException {
 
-	public ProjectGenerationException(String message) {
-		super(message);
-	}
+    public ProjectGenerationException(String message) {
+        super(message);
+    }
 
-	public ProjectGenerationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
+    public ProjectGenerationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

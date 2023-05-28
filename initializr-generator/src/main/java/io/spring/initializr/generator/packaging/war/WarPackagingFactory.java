@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.packaging.war;
 
 import io.spring.initializr.generator.packaging.Packaging;
@@ -26,12 +25,11 @@ import io.spring.initializr.generator.packaging.PackagingFactory;
  */
 class WarPackagingFactory implements PackagingFactory {
 
-	@Override
-	public Packaging createPackaging(String id) {
-		if (WarPackaging.ID.equals(id)) {
-			return new WarPackaging();
-		}
-		return null;
-	}
-
+    @Override
+    public Packaging createPackaging(String id) {
+        if (WarPackaging.ID.equals(id)) {
+            return new WarPackaging();
+        }
+        return null;
+    }
 }

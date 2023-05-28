@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -30,20 +28,16 @@ import org.springframework.core.Ordered;
  */
 public class GradleAnnotationProcessorScopeBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	@Override
-	public void customize(GradleBuild build) {
-		boolean annotationProcessorUsed = build.dependencies()
-			.items()
-			.anyMatch((dependency) -> dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
-		if (annotationProcessorUsed) {
-			build.configurations()
-				.customize("compileOnly", (configuration) -> configuration.extendsFrom("annotationProcessor"));
-		}
-	}
+    @Override
+    public void customize(GradleBuild build) {
+        boolean annotationProcessorUsed = build.dependencies().items().anyMatch((dependency) -> dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR);
+        if (annotationProcessorUsed) {
+            build.configurations().customize("compileOnly", (configuration) -> configuration.extendsFrom("annotationProcessor"));
+        }
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
-
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
+    }
 }

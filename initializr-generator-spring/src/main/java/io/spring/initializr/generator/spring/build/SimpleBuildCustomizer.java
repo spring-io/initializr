@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -30,25 +28,20 @@ import org.springframework.core.Ordered;
  */
 public class SimpleBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	public SimpleBuildCustomizer(ProjectDescription description) {
-		this.description = description;
-	}
+    public SimpleBuildCustomizer(ProjectDescription description) {
+        this.description = description;
+    }
 
-	@Override
-	public void customize(Build build) {
-		build.settings()
-			.group(this.description.getGroupId())
-			.artifact(this.description.getArtifactId())
-			.version(this.description.getVersion());
-		this.description.getRequestedDependencies()
-			.forEach((id, dependency) -> build.dependencies().add(id, dependency));
-	}
+    @Override
+    public void customize(Build build) {
+        build.settings().group(this.description.getGroupId()).artifact(this.description.getArtifactId()).version(this.description.getVersion());
+        this.description.getRequestedDependencies().forEach((id, dependency) -> build.dependencies().add(id, dependency));
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.HIGHEST_PRECEDENCE;
-	}
-
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
 }

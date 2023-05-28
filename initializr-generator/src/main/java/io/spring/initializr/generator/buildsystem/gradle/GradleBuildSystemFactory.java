@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -26,22 +25,21 @@ import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
  */
 class GradleBuildSystemFactory implements BuildSystemFactory {
 
-	@Override
-	public BuildSystem createBuildSystem(String id) {
-		return createBuildSystem(id, null);
-	}
+    @Override
+    public BuildSystem createBuildSystem(String id) {
+        return createBuildSystem(id, null);
+    }
 
-	@Override
-	public BuildSystem createBuildSystem(String id, String dialect) {
-		if (GradleBuildSystem.ID.equals(id)) {
-			if (dialect == null) {
-				return new GradleBuildSystem();
-			}
-			if (dialect.equals(GradleBuildSystem.DIALECT_GROOVY) || dialect.equals(GradleBuildSystem.DIALECT_KOTLIN)) {
-				return new GradleBuildSystem(dialect);
-			}
-		}
-		return null;
-	}
-
+    @Override
+    public BuildSystem createBuildSystem(String id, String dialect) {
+        if (GradleBuildSystem.ID.equals(id)) {
+            if (dialect == null) {
+                return new GradleBuildSystem();
+            }
+            if (dialect.equals(GradleBuildSystem.DIALECT_GROOVY) || dialect.equals(GradleBuildSystem.DIALECT_KOTLIN)) {
+                return new GradleBuildSystem(dialect);
+            }
+        }
+        return null;
+    }
 }

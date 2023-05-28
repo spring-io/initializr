@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.mapper;
 
 import org.springframework.http.MediaType;
@@ -25,31 +24,28 @@ import org.springframework.http.MediaType;
  */
 public enum InitializrMetadataVersion {
 
-	/**
-	 * HAL-compliant metadata.
-	 */
-	V2("application/vnd.initializr.v2+json"),
+    /**
+     * HAL-compliant metadata.
+     */
+    V2("application/vnd.initializr.v2+json"),
+    /**
+     * Add "compatibilityRange" attribute to any dependency to specify which Spring Boot
+     * versions are compatible with it. Also provide a separate "dependencies" endpoint to
+     * query dependencies metadata.
+     */
+    V2_1("application/vnd.initializr.v2.1+json"),
+    /**
+     * Add support for SemVer compliant version format.
+     */
+    V2_2("application/vnd.initializr.v2.2+json");
 
-	/**
-	 * Add "compatibilityRange" attribute to any dependency to specify which Spring Boot
-	 * versions are compatible with it. Also provide a separate "dependencies" endpoint to
-	 * query dependencies metadata.
-	 */
-	V2_1("application/vnd.initializr.v2.1+json"),
+    private final MediaType mediaType;
 
-	/**
-	 * Add support for SemVer compliant version format.
-	 */
-	V2_2("application/vnd.initializr.v2.2+json");
+    InitializrMetadataVersion(String mediaType) {
+        this.mediaType = MediaType.parseMediaType(mediaType);
+    }
 
-	private final MediaType mediaType;
-
-	InitializrMetadataVersion(String mediaType) {
-		this.mediaType = MediaType.parseMediaType(mediaType);
-	}
-
-	public MediaType getMediaType() {
-		return this.mediaType;
-	}
-
+    public MediaType getMediaType() {
+        return this.mediaType;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -25,19 +24,18 @@ import io.spring.initializr.generator.buildsystem.BuildSystem;
  */
 public final class MavenBuildSystem implements BuildSystem {
 
-	/**
-	 * Maven {@link BuildSystem} identifier.
-	 */
-	public static final String ID = "maven";
+    /**
+     * Maven {@link BuildSystem} identifier.
+     */
+    public static final String ID = "maven";
 
-	@Override
-	public String id() {
-		return ID;
-	}
+    @Override
+    public String id() {
+        return ID;
+    }
 
-	@Override
-	public String toString() {
-		return id();
-	}
-
+    @Override
+    public String toString() {
+        return id();
+    }
 }

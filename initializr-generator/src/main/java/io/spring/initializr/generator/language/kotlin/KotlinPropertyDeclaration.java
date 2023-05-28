@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 
@@ -32,243 +30,236 @@ import io.spring.initializr.generator.language.Annotation;
  */
 public final class KotlinPropertyDeclaration implements Annotatable {
 
-	private final List<Annotation> annotations = new ArrayList<>();
+    private final List<Annotation> annotations = new ArrayList<>();
 
-	private final boolean isVal;
+    private final boolean isVal;
 
-	private final String name;
+    private final String name;
 
-	private final String returnType;
+    private final String returnType;
 
-	private final List<KotlinModifier> modifiers;
+    private final List<KotlinModifier> modifiers;
 
-	private final KotlinExpressionStatement valueExpression;
+    private final KotlinExpressionStatement valueExpression;
 
-	private final Accessor getter;
+    private final Accessor getter;
 
-	private final Accessor setter;
+    private final Accessor setter;
 
-	private KotlinPropertyDeclaration(Builder<?> builder) {
-		this.name = builder.name;
-		this.returnType = builder.returnType;
-		this.modifiers = new ArrayList<>(builder.modifiers);
-		this.isVal = builder.isVal;
-		this.valueExpression = builder.initializerStatement;
-		this.getter = builder.getter;
-		this.setter = builder.setter;
-	}
+    private KotlinPropertyDeclaration(Builder<?> builder) {
+        this.name = builder.name;
+        this.returnType = builder.returnType;
+        this.modifiers = new ArrayList<>(builder.modifiers);
+        this.isVal = builder.isVal;
+        this.valueExpression = builder.initializerStatement;
+        this.getter = builder.getter;
+        this.setter = builder.setter;
+    }
 
-	public static ValBuilder val(String name) {
-		return new ValBuilder(name);
-	}
+    public static ValBuilder val(String name) {
+        return new ValBuilder(name);
+    }
 
-	public static VarBuilder var(String name) {
-		return new VarBuilder(name);
-	}
+    public static VarBuilder var(String name) {
+        return new VarBuilder(name);
+    }
 
-	boolean isVal() {
-		return this.isVal;
-	}
+    boolean isVal() {
+        return this.isVal;
+    }
 
-	String getName() {
-		return this.name;
-	}
+    String getName() {
+        return this.name;
+    }
 
-	String getReturnType() {
-		return this.returnType;
-	}
+    String getReturnType() {
+        return this.returnType;
+    }
 
-	public List<KotlinModifier> getModifiers() {
-		return this.modifiers;
-	}
+    public List<KotlinModifier> getModifiers() {
+        return this.modifiers;
+    }
 
-	KotlinExpressionStatement getValueExpression() {
-		return this.valueExpression;
-	}
+    KotlinExpressionStatement getValueExpression() {
+        return this.valueExpression;
+    }
 
-	Accessor getGetter() {
-		return this.getter;
-	}
+    Accessor getGetter() {
+        return this.getter;
+    }
 
-	Accessor getSetter() {
-		return this.setter;
-	}
+    Accessor getSetter() {
+        return this.setter;
+    }
 
-	@Override
-	public void annotate(Annotation annotation) {
-		this.annotations.add(annotation);
-	}
+    @Override
+    public void annotate(Annotation annotation) {
+        this.annotations.add(annotation);
+    }
 
-	@Override
-	public List<Annotation> getAnnotations() {
-		return Collections.unmodifiableList(this.annotations);
-	}
+    @Override
+    public List<Annotation> getAnnotations() {
+        return Collections.unmodifiableList(this.annotations);
+    }
 
-	/**
-	 * Builder for creating a {@link KotlinPropertyDeclaration}.
-	 *
-	 * @param <T> a {@link Builder} subclass.
-	 */
-	public abstract static class Builder<T extends Builder<T>> {
+    /**
+     * Builder for creating a {@link KotlinPropertyDeclaration}.
+     *
+     * @param <T> a {@link Builder} subclass.
+     */
+    public abstract static class Builder<T extends Builder<T>> {
 
-		private final boolean isVal;
+        private final boolean isVal;
 
-		private final String name;
+        private final String name;
 
-		private String returnType;
+        private String returnType;
 
-		private List<KotlinModifier> modifiers = new ArrayList<>();
+        private List<KotlinModifier> modifiers = new ArrayList<>();
 
-		private KotlinExpressionStatement initializerStatement;
+        private KotlinExpressionStatement initializerStatement;
 
-		private Accessor getter;
+        private Accessor getter;
 
-		private Accessor setter;
+        private Accessor setter;
 
-		private Builder(String name, boolean isVal) {
-			this.name = name;
-			this.isVal = isVal;
-		}
+        private Builder(String name, boolean isVal) {
+            this.name = name;
+            this.isVal = isVal;
+        }
 
-		protected abstract T self();
+        protected abstract T self();
 
-		@SuppressWarnings("unchecked")
-		public AccessorBuilder<T> getter() {
-			return new AccessorBuilder<>((T) this, (created) -> this.getter = created);
-		}
+        @SuppressWarnings("unchecked")
+        public AccessorBuilder<T> getter() {
+            return new AccessorBuilder<>((T) this, (created) -> this.getter = created);
+        }
 
-		@SuppressWarnings("unchecked")
-		public AccessorBuilder<T> setter() {
-			return new AccessorBuilder<>((T) this, (created) -> this.setter = created);
-		}
+        @SuppressWarnings("unchecked")
+        public AccessorBuilder<T> setter() {
+            return new AccessorBuilder<>((T) this, (created) -> this.setter = created);
+        }
 
-		public T returning(String returnType) {
-			this.returnType = returnType;
-			return self();
-		}
+        public T returning(String returnType) {
+            this.returnType = returnType;
+            return self();
+        }
 
-		public T modifiers(KotlinModifier... modifiers) {
-			this.modifiers = Arrays.asList(modifiers);
-			return self();
-		}
+        public T modifiers(KotlinModifier... modifiers) {
+            this.modifiers = Arrays.asList(modifiers);
+            return self();
+        }
 
-		public KotlinPropertyDeclaration emptyValue() {
-			return new KotlinPropertyDeclaration(this);
-		}
+        public KotlinPropertyDeclaration emptyValue() {
+            return new KotlinPropertyDeclaration(this);
+        }
 
-		public KotlinPropertyDeclaration value(Object value) {
-			this.initializerStatement = new KotlinExpressionStatement(new SimpleValueExpression(value));
-			return new KotlinPropertyDeclaration(this);
-		}
+        public KotlinPropertyDeclaration value(Object value) {
+            this.initializerStatement = new KotlinExpressionStatement(new SimpleValueExpression(value));
+            return new KotlinPropertyDeclaration(this);
+        }
+    }
 
-	}
+    public static final class ValBuilder extends Builder<ValBuilder> {
 
-	public static final class ValBuilder extends Builder<ValBuilder> {
+        private ValBuilder(String name) {
+            super(name, true);
+        }
 
-		private ValBuilder(String name) {
-			super(name, true);
-		}
+        @Override
+        protected ValBuilder self() {
+            return this;
+        }
+    }
 
-		@Override
-		protected ValBuilder self() {
-			return this;
-		}
+    public static final class VarBuilder extends Builder<VarBuilder> {
 
-	}
+        private VarBuilder(String name) {
+            super(name, false);
+        }
 
-	public static final class VarBuilder extends Builder<VarBuilder> {
+        public KotlinPropertyDeclaration empty() {
+            return new KotlinPropertyDeclaration(this);
+        }
 
-		private VarBuilder(String name) {
-			super(name, false);
-		}
+        @Override
+        protected VarBuilder self() {
+            return this;
+        }
+    }
 
-		public KotlinPropertyDeclaration empty() {
-			return new KotlinPropertyDeclaration(this);
-		}
+    public static final class AccessorBuilder<T extends Builder<T>> {
 
-		@Override
-		protected VarBuilder self() {
-			return this;
-		}
+        private final List<Annotation> annotations = new ArrayList<>();
 
-	}
+        private KotlinExpressionStatement body;
 
-	public static final class AccessorBuilder<T extends Builder<T>> {
+        private final T parent;
 
-		private final List<Annotation> annotations = new ArrayList<>();
+        private final Consumer<Accessor> accessorFunction;
 
-		private KotlinExpressionStatement body;
+        private AccessorBuilder(T parent, Consumer<Accessor> accessorFunction) {
+            this.parent = parent;
+            this.accessorFunction = accessorFunction;
+        }
 
-		private final T parent;
+        public AccessorBuilder<?> withAnnotation(Annotation annotation) {
+            this.annotations.add(annotation);
+            return this;
+        }
 
-		private final Consumer<Accessor> accessorFunction;
+        public AccessorBuilder<?> withBody(KotlinExpressionStatement expressionStatement) {
+            this.body = expressionStatement;
+            return this;
+        }
 
-		private AccessorBuilder(T parent, Consumer<Accessor> accessorFunction) {
-			this.parent = parent;
-			this.accessorFunction = accessorFunction;
-		}
+        public T buildAccessor() {
+            this.accessorFunction.accept(new Accessor(this));
+            return this.parent;
+        }
+    }
 
-		public AccessorBuilder<?> withAnnotation(Annotation annotation) {
-			this.annotations.add(annotation);
-			return this;
-		}
+    static final class Accessor implements Annotatable {
 
-		public AccessorBuilder<?> withBody(KotlinExpressionStatement expressionStatement) {
-			this.body = expressionStatement;
-			return this;
-		}
+        private final List<Annotation> annotations = new ArrayList<>();
 
-		public T buildAccessor() {
-			this.accessorFunction.accept(new Accessor(this));
-			return this.parent;
-		}
+        private final KotlinExpressionStatement body;
 
-	}
+        Accessor(AccessorBuilder<?> builder) {
+            this.annotations.addAll(builder.annotations);
+            this.body = builder.body;
+        }
 
-	static final class Accessor implements Annotatable {
+        boolean isEmptyBody() {
+            return this.body == null;
+        }
 
-		private final List<Annotation> annotations = new ArrayList<>();
+        KotlinExpressionStatement getBody() {
+            return this.body;
+        }
 
-		private final KotlinExpressionStatement body;
+        @Override
+        public void annotate(Annotation annotation) {
+            this.annotations.add(annotation);
+        }
 
-		Accessor(AccessorBuilder<?> builder) {
-			this.annotations.addAll(builder.annotations);
-			this.body = builder.body;
-		}
+        @Override
+        public List<Annotation> getAnnotations() {
+            return Collections.unmodifiableList(this.annotations);
+        }
+    }
 
-		boolean isEmptyBody() {
-			return this.body == null;
-		}
+    private static class SimpleValueExpression extends KotlinExpression {
 
-		KotlinExpressionStatement getBody() {
-			return this.body;
-		}
+        private final Object value;
 
-		@Override
-		public void annotate(Annotation annotation) {
-			this.annotations.add(annotation);
-		}
+        SimpleValueExpression(Object value) {
+            this.value = value;
+        }
 
-		@Override
-		public List<Annotation> getAnnotations() {
-			return Collections.unmodifiableList(this.annotations);
-		}
-
-	}
-
-	private static class SimpleValueExpression extends KotlinExpression {
-
-		private final Object value;
-
-		SimpleValueExpression(Object value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(this.value);
-		}
-
-	}
-
+        @Override
+        public String toString() {
+            return String.valueOf(this.value);
+        }
+    }
 }

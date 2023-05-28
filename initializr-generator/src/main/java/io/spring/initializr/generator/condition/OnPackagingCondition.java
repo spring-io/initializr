@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -30,16 +28,13 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 class OnPackagingCondition extends ProjectGenerationCondition {
 
-	@Override
-	protected boolean matches(ProjectDescription description, ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		if (description.getPackaging() == null) {
-			return false;
-		}
-		String packagingId = (String) metadata.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName())
-			.getFirst("value");
-		Packaging packaging = Packaging.forId(packagingId);
-		return description.getPackaging().id().equals(packaging.id());
-	}
-
+    @Override
+    protected boolean matches(ProjectDescription description, ConditionContext context, AnnotatedTypeMetadata metadata) {
+        if (description.getPackaging() == null) {
+            return false;
+        }
+        String packagingId = (String) metadata.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName()).getFirst("value");
+        Packaging packaging = Packaging.forId(packagingId);
+        return description.getPackaging().id().equals(packaging.id());
+    }
 }

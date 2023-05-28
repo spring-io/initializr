@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller.custom;
 
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -30,14 +29,12 @@ import io.spring.initializr.web.project.DefaultProjectRequestToDescriptionConver
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequestToDescriptionConverter;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.Assert;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -50,82 +47,73 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(CustomProjectGenerationConfiguration.class)
 class ProjectGenerationControllerCustomRequestIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	void createProjectWithCustomFlagEnabled() {
-		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&customFlag=true");
-		assertThat(project).containsFiles("custom.txt");
-	}
+    @Test
+    void createProjectWithCustomFlagEnabled() {
+        ProjectStructure project = downloadZip("/starter.zip?dependencies=web&customFlag=true");
+        assertThat(project).containsFiles("custom.txt");
+    }
 
-	@Test
-	void createProjectWithCustomFlagDisabled() {
-		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&customFlag=false");
-		assertThat(project).doesNotContainFiles("custom.txt");
-	}
+    @Test
+    void createProjectWithCustomFlagDisabled() {
+        ProjectStructure project = downloadZip("/starter.zip?dependencies=web&customFlag=false");
+        assertThat(project).doesNotContainFiles("custom.txt");
+    }
 
-	@Test
-	void createProjectWithOverriddenRequestParams() {
-		ProjectStructure project = downloadZip("/starter.zip?groupId=com.acme&artifactId=test");
-		assertThat(project).containsFiles("src/main/java/org/example/custom/CustomApp.java",
-				"src/test/java/org/example/custom/CustomAppTests.java");
-		assertThat(project).doesNotContainDirectories("src/main/java/com", "src/test/java/com");
-		assertThat(project).doesNotContainFiles("custom.txt");
-	}
+    @Test
+    void createProjectWithOverriddenRequestParams() {
+        ProjectStructure project = downloadZip("/starter.zip?groupId=com.acme&artifactId=test");
+        assertThat(project).containsFiles("src/main/java/org/example/custom/CustomApp.java", "src/test/java/org/example/custom/CustomAppTests.java");
+        assertThat(project).doesNotContainDirectories("src/main/java/com", "src/test/java/com");
+        assertThat(project).doesNotContainFiles("custom.txt");
+    }
 
-	@Configuration
-	static class CustomProjectGenerationConfiguration {
+    @Configuration
+    static class CustomProjectGenerationConfiguration {
 
-		@Bean
-		CustomProjectGenerationController customProjectGenerationController(InitializrMetadataProvider metadataProvider,
-				ApplicationContext applicationContext) {
-			ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
-					applicationContext, new CustomProjectRequestToDescriptionConverter());
-			return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
-		}
+        @Bean
+        CustomProjectGenerationController customProjectGenerationController(InitializrMetadataProvider metadataProvider, ApplicationContext applicationContext) {
+            ProjectGenerationInvoker<CustomProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(applicationContext, new CustomProjectRequestToDescriptionConverter());
+            return new CustomProjectGenerationController(metadataProvider, projectGenerationInvoker);
+        }
 
-		@Bean
-		CustomProjectDescriptionCustomizer customProjectDescriptionCustomizer() {
-			return new CustomProjectDescriptionCustomizer();
-		}
+        @Bean
+        CustomProjectDescriptionCustomizer customProjectDescriptionCustomizer() {
+            return new CustomProjectDescriptionCustomizer();
+        }
 
-		@Bean
-		CustomProjectDescriptionDiffFactory customProjectDescriptionDiffFactory() {
-			return new CustomProjectDescriptionDiffFactory();
-		}
+        @Bean
+        CustomProjectDescriptionDiffFactory customProjectDescriptionDiffFactory() {
+            return new CustomProjectDescriptionDiffFactory();
+        }
+    }
 
-	}
+    static class CustomProjectRequestToDescriptionConverter implements ProjectRequestToDescriptionConverter<CustomProjectRequest> {
 
-	static class CustomProjectRequestToDescriptionConverter
-			implements ProjectRequestToDescriptionConverter<CustomProjectRequest> {
+        @Override
+        public ProjectDescription convert(CustomProjectRequest request, InitializrMetadata metadata) {
+            CustomProjectDescription description = new CustomProjectDescription();
+            new DefaultProjectRequestToDescriptionConverter().convert(request, description, metadata);
+            description.setCustomFlag(request.isCustomFlag());
+            // Override attributes for test purposes
+            description.setPackageName("org.example.custom");
+            return description;
+        }
+    }
 
-		@Override
-		public ProjectDescription convert(CustomProjectRequest request, InitializrMetadata metadata) {
-			CustomProjectDescription description = new CustomProjectDescription();
-			new DefaultProjectRequestToDescriptionConverter().convert(request, description, metadata);
-			description.setCustomFlag(request.isCustomFlag());
-			// Override attributes for test purposes
-			description.setPackageName("org.example.custom");
-			return description;
-		}
+    static class CustomProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {
 
-	}
+        @Override
+        public void customize(MutableProjectDescription description) {
+            description.setApplicationName("CustomApp");
+        }
+    }
 
-	static class CustomProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {
+    static class CustomProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory {
 
-		@Override
-		public void customize(MutableProjectDescription description) {
-			description.setApplicationName("CustomApp");
-		}
-
-	}
-
-	static class CustomProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory {
-
-		@Override
-		public CustomProjectDescriptionDiff create(ProjectDescription description) {
-			Assert.isInstanceOf(CustomProjectDescription.class, description);
-			return new CustomProjectDescriptionDiff((CustomProjectDescription) description);
-		}
-
-	}
-
+        @Override
+        public CustomProjectDescriptionDiff create(ProjectDescription description) {
+            Assert.isInstanceOf(CustomProjectDescription.class, description);
+            return new CustomProjectDescriptionDiff((CustomProjectDescription) description);
+        }
+    }
 }

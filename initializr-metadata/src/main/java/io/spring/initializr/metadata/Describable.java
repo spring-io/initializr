@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -23,10 +22,9 @@ package io.spring.initializr.metadata;
  */
 public interface Describable {
 
-	/**
-	 * Returns the item description.
-	 * @return the description
-	 */
-	String getDescription();
-
+    /**
+     * Returns the item description.
+     * @return the description
+     */
+    String getDescription();
 }

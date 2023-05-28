@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Groovy language. Provides a
  * {@link io.spring.initializr.generator.language.groovy.GroovyCompilationUnit compilation
@@ -21,3 +20,4 @@
  * {@link io.spring.initializr.generator.language.groovy.GroovySourceCode source code}.
  */
 package io.spring.initializr.generator.language.groovy;
+

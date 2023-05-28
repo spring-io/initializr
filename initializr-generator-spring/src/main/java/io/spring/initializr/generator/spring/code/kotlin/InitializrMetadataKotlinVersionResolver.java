@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -27,18 +26,14 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class InitializrMetadataKotlinVersionResolver implements KotlinVersionResolver {
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public InitializrMetadataKotlinVersionResolver(InitializrMetadata metadata) {
-		this.metadata = metadata;
-	}
+    public InitializrMetadataKotlinVersionResolver(InitializrMetadata metadata) {
+        this.metadata = metadata;
+    }
 
-	@Override
-	public String resolveKotlinVersion(ProjectDescription description) {
-		return this.metadata.getConfiguration()
-			.getEnv()
-			.getKotlin()
-			.resolveKotlinVersion(description.getPlatformVersion());
-	}
-
+    @Override
+    public String resolveKotlinVersion(ProjectDescription description) {
+        return this.metadata.getConfiguration().getEnv().getKotlin().resolveKotlinVersion(description.getPlatformVersion());
+    }
 }

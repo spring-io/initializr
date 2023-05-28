@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.mapper;
 
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -25,12 +24,11 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public interface InitializrMetadataJsonMapper {
 
-	/**
-	 * Write a json representation of the specified metadata.
-	 * @param metadata the initializr metadata
-	 * @param appUrl the app URL
-	 * @return the JSON representation
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
-
+    /**
+     * Write a json representation of the specified metadata.
+     * @param metadata the initializr metadata
+     * @param appUrl the app URL
+     * @return the JSON representation
+     */
+    String write(InitializrMetadata metadata, String appUrl);
 }

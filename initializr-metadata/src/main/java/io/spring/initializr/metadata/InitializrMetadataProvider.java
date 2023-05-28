@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -23,11 +22,10 @@ package io.spring.initializr.metadata;
  */
 public interface InitializrMetadataProvider {
 
-	/**
-	 * Return the metadata to use. Rather than keeping a handle to a particular instance,
-	 * implementations may decide to refresh or recompute the metadata if necessary.
-	 * @return the initializr metadata
-	 */
-	InitializrMetadata get();
-
+    /**
+     * Return the metadata to use. Rather than keeping a handle to a particular instance,
+     * implementations may decide to refresh or recompute the metadata if necessary.
+     * @return the initializr metadata
+     */
+    InitializrMetadata get();
 }

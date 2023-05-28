@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -25,8 +24,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class ProjectGeneratedEvent extends ProjectRequestEvent {
 
-	public ProjectGeneratedEvent(ProjectRequest request, InitializrMetadata metadata) {
-		super(request, metadata);
-	}
-
+    public ProjectGeneratedEvent(ProjectRequest request, InitializrMetadata metadata) {
+        super(request, metadata);
+    }
 }

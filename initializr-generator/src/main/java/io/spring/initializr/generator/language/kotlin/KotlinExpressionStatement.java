@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 /**
@@ -23,14 +22,13 @@ package io.spring.initializr.generator.language.kotlin;
  */
 public class KotlinExpressionStatement extends KotlinStatement {
 
-	private final KotlinExpression expression;
+    private final KotlinExpression expression;
 
-	public KotlinExpressionStatement(KotlinExpression expression) {
-		this.expression = expression;
-	}
+    public KotlinExpressionStatement(KotlinExpression expression) {
+        this.expression = expression;
+    }
 
-	public KotlinExpression getExpression() {
-		return this.expression;
-	}
-
+    public KotlinExpression getExpression() {
+        return this.expression;
+    }
 }

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
-
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
 import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
@@ -27,7 +25,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -37,36 +34,33 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class KotlinJpaGradleBuildCustomizerTests {
 
-	@Test
-	void customizeWhenJpaFacetPresentShouldAddKotlinJpaPlugin() {
-		Dependency dependency = Dependency.withId("foo");
-		dependency.setFacets(Collections.singletonList("jpa"));
-		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
-		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
-			assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
-			assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("1.2.70");
-		});
-	}
+    @Test
+    void customizeWhenJpaFacetPresentShouldAddKotlinJpaPlugin() {
+        Dependency dependency = Dependency.withId("foo");
+        dependency.setFacets(Collections.singletonList("jpa"));
+        GradleBuild build = getCustomizedBuild(dependency);
+        assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
+        assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+            assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
+            assertThat(((StandardGradlePlugin) plugin).getVersion()).isEqualTo("1.2.70");
+        });
+    }
 
-	@Test
-	void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
-		Dependency dependency = Dependency.withId("foo");
-		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
-		assertThat(build.plugins().values()).isEmpty();
-	}
+    @Test
+    void customizeWhenJpaFacetAbsentShouldNotAddKotlinJpaPlugin() {
+        Dependency dependency = Dependency.withId("foo");
+        GradleBuild build = getCustomizedBuild(dependency);
+        assertThat(build.plugins().values().filter(GradlePlugin::isApply)).isEmpty();
+        assertThat(build.plugins().values()).isEmpty();
+    }
 
-	private GradleBuild getCustomizedBuild(Dependency dependency) {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", dependency)
-			.build();
-		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
-		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings);
-		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
-		build.dependencies().add("foo");
-		customizer.customize(build);
-		return build;
-	}
-
+    private GradleBuild getCustomizedBuild(Dependency dependency) {
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
+        SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
+        KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings);
+        GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+        build.dependencies().add("foo");
+        customizer.customize(build);
+        return build;
+    }
 }

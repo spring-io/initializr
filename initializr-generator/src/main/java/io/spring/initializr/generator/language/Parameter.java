@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 /**
@@ -23,21 +22,20 @@ package io.spring.initializr.generator.language;
  */
 public class Parameter {
 
-	private final String type;
+    private final String type;
 
-	private final String name;
+    private final String name;
 
-	public Parameter(String type, String name) {
-		this.type = type;
-		this.name = name;
-	}
+    public Parameter(String type, String name) {
+        this.type = type;
+        this.name = name;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public String getType() {
+        return this.type;
+    }
 
-	public String getName() {
-		return this.name;
-	}
-
+    public String getName() {
+        return this.name;
+    }
 }

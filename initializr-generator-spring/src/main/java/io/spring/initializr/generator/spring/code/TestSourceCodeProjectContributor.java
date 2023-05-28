@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -29,7 +27,6 @@ import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
-
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -40,57 +37,46 @@ import org.springframework.beans.factory.ObjectProvider;
  * @param <S> language-specific source code
  * @author Stephane Nicoll
  */
-public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
-		implements ProjectContributor {
+public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>> implements ProjectContributor {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	private final Supplier<S> sourceFactory;
+    private final Supplier<S> sourceFactory;
 
-	private final SourceCodeWriter<S> sourceWriter;
+    private final SourceCodeWriter<S> sourceWriter;
 
-	private final ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers;
+    private final ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers;
 
-	private final ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers;
+    private final ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers;
 
-	public TestSourceCodeProjectContributor(ProjectDescription description, Supplier<S> sourceFactory,
-			SourceCodeWriter<S> sourceWriter,
-			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
-			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		this.description = description;
-		this.sourceFactory = sourceFactory;
-		this.sourceWriter = sourceWriter;
-		this.testApplicationTypeCustomizers = testApplicationTypeCustomizers;
-		this.testSourceCodeCustomizers = testSourceCodeCustomizers;
-	}
+    public TestSourceCodeProjectContributor(ProjectDescription description, Supplier<S> sourceFactory, SourceCodeWriter<S> sourceWriter, ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers, ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
+        this.description = description;
+        this.sourceFactory = sourceFactory;
+        this.sourceWriter = sourceWriter;
+        this.testApplicationTypeCustomizers = testApplicationTypeCustomizers;
+        this.testSourceCodeCustomizers = testSourceCodeCustomizers;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		S sourceCode = this.sourceFactory.get();
-		String testName = this.description.getApplicationName() + "Tests";
-		C compilationUnit = sourceCode.createCompilationUnit(this.description.getPackageName(), testName);
-		T testApplicationType = compilationUnit.createTypeDeclaration(testName);
-		customizeTestApplicationType(testApplicationType);
-		customizeTestSourceCode(sourceCode);
-		this.sourceWriter.writeTo(
-				this.description.getBuildSystem().getTestSource(projectRoot, this.description.getLanguage()),
-				sourceCode);
-	}
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        S sourceCode = this.sourceFactory.get();
+        String testName = this.description.getApplicationName() + "Tests";
+        C compilationUnit = sourceCode.createCompilationUnit(this.description.getPackageName(), testName);
+        T testApplicationType = compilationUnit.createTypeDeclaration(testName);
+        customizeTestApplicationType(testApplicationType);
+        customizeTestSourceCode(sourceCode);
+        this.sourceWriter.writeTo(this.description.getBuildSystem().getTestSource(projectRoot, this.description.getLanguage()), sourceCode);
+    }
 
-	@SuppressWarnings("unchecked")
-	private void customizeTestApplicationType(TypeDeclaration testApplicationType) {
-		List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers.orderedStream()
-			.collect(Collectors.toList());
-		LambdaSafe.callbacks(TestApplicationTypeCustomizer.class, customizers, testApplicationType)
-			.invoke((customizer) -> customizer.customize(testApplicationType));
-	}
+    @SuppressWarnings("unchecked")
+    private void customizeTestApplicationType(TypeDeclaration testApplicationType) {
+        List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers.orderedStream().collect(Collectors.toList());
+        LambdaSafe.callbacks(TestApplicationTypeCustomizer.class, customizers, testApplicationType).invoke((customizer) -> customizer.customize(testApplicationType));
+    }
 
-	@SuppressWarnings("unchecked")
-	private void customizeTestSourceCode(S sourceCode) {
-		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream()
-			.collect(Collectors.toList());
-		LambdaSafe.callbacks(TestSourceCodeCustomizer.class, customizers, sourceCode)
-			.invoke((customizer) -> customizer.customize(sourceCode));
-	}
-
+    @SuppressWarnings("unchecked")
+    private void customizeTestSourceCode(S sourceCode) {
+        List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream().collect(Collectors.toList());
+        LambdaSafe.callbacks(TestSourceCodeCustomizer.class, customizers, sourceCode).invoke((customizer) -> customizer.customize(sourceCode));
+    }
 }

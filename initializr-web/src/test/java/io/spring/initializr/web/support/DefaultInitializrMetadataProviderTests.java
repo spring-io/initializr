@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.support;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -31,15 +29,14 @@ import static org.mockito.Mockito.verify;
  */
 class DefaultInitializrMetadataProviderTests {
 
-	@Test
-	void strategyIsInvokedOnGet() {
-		InitializrMetadata metadata = mock(InitializrMetadata.class);
-		InitializrMetadata updatedMetadata = mock(InitializrMetadata.class);
-		InitializrMetadataUpdateStrategy updateStrategy = mock(InitializrMetadataUpdateStrategy.class);
-		given(updateStrategy.update(metadata)).willReturn(updatedMetadata);
-		DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata, updateStrategy);
-		assertThat(provider.get()).isEqualTo(updatedMetadata);
-		verify(updateStrategy).update(metadata);
-	}
-
+    @Test
+    void strategyIsInvokedOnGet() {
+        InitializrMetadata metadata = mock(InitializrMetadata.class);
+        InitializrMetadata updatedMetadata = mock(InitializrMetadata.class);
+        InitializrMetadataUpdateStrategy updateStrategy = mock(InitializrMetadataUpdateStrategy.class);
+        given(updateStrategy.update(metadata)).willReturn(updatedMetadata);
+        DefaultInitializrMetadataProvider provider = new DefaultInitializrMetadataProvider(metadata, updateStrategy);
+        assertThat(provider.get()).isEqualTo(updatedMetadata);
+        verify(updateStrategy).update(metadata);
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -29,22 +28,21 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 public class OptionalDependencyMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
-	private final String dependencyId;
+    private final String dependencyId;
 
-	/**
-	 * Create a new instance with the identifier for the dependency.
-	 * @param dependencyId the id of the dependency
-	 */
-	public OptionalDependencyMavenBuildCustomizer(String dependencyId) {
-		this.dependencyId = dependencyId;
-	}
+    /**
+     * Create a new instance with the identifier for the dependency.
+     * @param dependencyId the id of the dependency
+     */
+    public OptionalDependencyMavenBuildCustomizer(String dependencyId) {
+        this.dependencyId = dependencyId;
+    }
 
-	@Override
-	public void customize(MavenBuild build) {
-		Dependency dependency = build.dependencies().get(this.dependencyId);
-		if (dependency != null) {
-			build.dependencies().add(this.dependencyId, MavenDependency.from(dependency).optional(true));
-		}
-	}
-
+    @Override
+    public void customize(MavenBuild build) {
+        Dependency dependency = build.dependencies().get(this.dependencyId);
+        if (dependency != null) {
+            build.dependencies().add(this.dependencyId, MavenDependency.from(dependency).optional(true));
+        }
+    }
 }

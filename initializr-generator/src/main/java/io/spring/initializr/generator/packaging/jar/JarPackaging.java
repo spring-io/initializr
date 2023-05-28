@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.packaging.jar;
 
 import io.spring.initializr.generator.packaging.Packaging;
@@ -25,19 +24,18 @@ import io.spring.initializr.generator.packaging.Packaging;
  */
 public final class JarPackaging implements Packaging {
 
-	/**
-	 * Jar {@link Packaging} identifier.
-	 */
-	public static final String ID = "jar";
+    /**
+     * Jar {@link Packaging} identifier.
+     */
+    public static final String ID = "jar";
 
-	@Override
-	public String id() {
-		return ID;
-	}
+    @Override
+    public String id() {
+        return ID;
+    }
 
-	@Override
-	public String toString() {
-		return id();
-	}
-
+    @Override
+    public String toString() {
+        return id();
+    }
 }

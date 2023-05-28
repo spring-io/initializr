@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 import java.util.Arrays;
@@ -26,28 +25,27 @@ import java.util.List;
  */
 public class GroovyMethodInvocation extends GroovyExpression {
 
-	private final String target;
+    private final String target;
 
-	private final String name;
+    private final String name;
 
-	private final List<String> arguments;
+    private final List<String> arguments;
 
-	public GroovyMethodInvocation(String target, String name, String... arguments) {
-		this.target = target;
-		this.name = name;
-		this.arguments = Arrays.asList(arguments);
-	}
+    public GroovyMethodInvocation(String target, String name, String... arguments) {
+        this.target = target;
+        this.name = name;
+        this.arguments = Arrays.asList(arguments);
+    }
 
-	public String getTarget() {
-		return this.target;
-	}
+    public String getTarget() {
+        return this.target;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public List<String> getArguments() {
-		return this.arguments;
-	}
-
+    public List<String> getArguments() {
+        return this.arguments;
+    }
 }

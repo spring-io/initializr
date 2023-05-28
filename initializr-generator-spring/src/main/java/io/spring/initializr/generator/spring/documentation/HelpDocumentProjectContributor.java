@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
@@ -31,21 +29,20 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 public class HelpDocumentProjectContributor implements ProjectContributor {
 
-	private final HelpDocument helpDocument;
+    private final HelpDocument helpDocument;
 
-	public HelpDocumentProjectContributor(HelpDocument helpDocument) {
-		this.helpDocument = helpDocument;
-	}
+    public HelpDocumentProjectContributor(HelpDocument helpDocument) {
+        this.helpDocument = helpDocument;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		if (this.helpDocument.isEmpty()) {
-			return;
-		}
-		Path file = Files.createFile(projectRoot.resolve("HELP.md"));
-		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
-			this.helpDocument.write(writer);
-		}
-	}
-
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        if (this.helpDocument.isEmpty()) {
+            return;
+        }
+        Path file = Files.createFile(projectRoot.resolve("HELP.md"));
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
+            this.helpDocument.write(writer);
+        }
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.io.IOException;
@@ -21,13 +20,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
 import org.assertj.core.internal.Failures;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -37,40 +34,38 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MavenWrapperContributorTests {
 
-	@TempDir
-	Path directory;
+    @TempDir
+    Path directory;
 
-	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments("3.8"), Arguments.arguments("3"));
-	}
+    static Stream<Arguments> parameters() {
+        return Stream.of(Arguments.arguments("3.8"), Arguments.arguments("3"));
+    }
 
-	@ParameterizedTest(name = "Maven {0}")
-	@MethodSource("parameters")
-	void mavenWrapperSetExecutableFlagOnScripts(String mavenVersion) throws IOException {
-		Path projectDir = contribute(mavenVersion);
-		assertThat(projectDir.resolve("mvnw")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve("mvnw.cmd")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile().satisfies(isNotExecutable());
-		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.properties")).isRegularFile()
-			.satisfies(isNotExecutable());
-	}
+    @ParameterizedTest(name = "Maven {0}")
+    @MethodSource("parameters")
+    void mavenWrapperSetExecutableFlagOnScripts(String mavenVersion) throws IOException {
+        Path projectDir = contribute(mavenVersion);
+        assertThat(projectDir.resolve("mvnw")).isRegularFile().isExecutable();
+        assertThat(projectDir.resolve("mvnw.cmd")).isRegularFile().isExecutable();
+        assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile().satisfies(isNotExecutable());
+        assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.properties")).isRegularFile().satisfies(isNotExecutable());
+    }
 
-	private Consumer<Path> isNotExecutable() {
-		return (path) -> {
-			if (supportsExecutableFlag() && Files.isExecutable(path)) {
-				throw Failures.instance().failure(String.format("%nExpecting:%n  <%s>%nto not be executable.", path));
-			}
-		};
-	}
+    private Consumer<Path> isNotExecutable() {
+        return (path) -> {
+            if (supportsExecutableFlag() && Files.isExecutable(path)) {
+                throw Failures.instance().failure(String.format("%nExpecting:%n  <%s>%nto not be executable.", path));
+            }
+        };
+    }
 
-	private static boolean supportsExecutableFlag() {
-		return !System.getProperty("os.name").startsWith("Windows");
-	}
+    private static boolean supportsExecutableFlag() {
+        return !System.getProperty("os.name").startsWith("Windows");
+    }
 
-	Path contribute(String mavenVersion) throws IOException {
-		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new MavenWrapperContributor(mavenVersion).contribute(projectDir);
-		return projectDir;
-	}
-
+    Path contribute(String mavenVersion) throws IOException {
+        Path projectDir = Files.createTempDirectory(this.directory, "project-");
+        new MavenWrapperContributor(mavenVersion).contribute(projectDir);
+        return projectDir;
+    }
 }

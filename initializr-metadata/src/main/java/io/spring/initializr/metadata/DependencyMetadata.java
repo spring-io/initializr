@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 import java.util.Map;
-
 import io.spring.initializr.generator.version.Version;
 
 /**
@@ -27,40 +25,38 @@ import io.spring.initializr.generator.version.Version;
  */
 public class DependencyMetadata {
 
-	final Version bootVersion;
+    final Version bootVersion;
 
-	final Map<String, Dependency> dependencies;
+    final Map<String, Dependency> dependencies;
 
-	final Map<String, Repository> repositories;
+    final Map<String, Repository> repositories;
 
-	final Map<String, BillOfMaterials> boms;
+    final Map<String, BillOfMaterials> boms;
 
-	public DependencyMetadata() {
-		this(null, null, null, null);
-	}
+    public DependencyMetadata() {
+        this(null, null, null, null);
+    }
 
-	public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies,
-			Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
-		this.bootVersion = bootVersion;
-		this.dependencies = dependencies;
-		this.repositories = repositories;
-		this.boms = boms;
-	}
+    public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies, Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
+        this.bootVersion = bootVersion;
+        this.dependencies = dependencies;
+        this.repositories = repositories;
+        this.boms = boms;
+    }
 
-	public Version getBootVersion() {
-		return this.bootVersion;
-	}
+    public Version getBootVersion() {
+        return this.bootVersion;
+    }
 
-	public Map<String, Dependency> getDependencies() {
-		return this.dependencies;
-	}
+    public Map<String, Dependency> getDependencies() {
+        return this.dependencies;
+    }
 
-	public Map<String, Repository> getRepositories() {
-		return this.repositories;
-	}
+    public Map<String, Repository> getRepositories() {
+        return this.repositories;
+    }
 
-	public Map<String, BillOfMaterials> getBoms() {
-		return this.boms;
-	}
-
+    public Map<String, BillOfMaterials> getBoms() {
+        return this.boms;
+    }
 }

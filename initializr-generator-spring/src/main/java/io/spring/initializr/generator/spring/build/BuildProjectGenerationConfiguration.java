@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -27,7 +26,6 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.DefaultMavenBuildCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -39,55 +37,46 @@ import org.springframework.context.annotation.Bean;
 @ProjectGenerationConfiguration
 public class BuildProjectGenerationConfiguration {
 
-	@Bean
-	@ConditionalOnPlatformVersion("[2.2.0.M5,2.4.0-SNAPSHOT)")
-	public BuildCustomizer<Build> junit5TestStarterContributor() {
-		return (build) -> build.dependencies()
-			.add("test",
-					Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
-						.scope(DependencyScope.TEST_COMPILE)
-						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine")));
-	}
+    @Bean
+    @ConditionalOnPlatformVersion("[2.2.0.M5,2.4.0-SNAPSHOT)")
+    public BuildCustomizer<Build> junit5TestStarterContributor() {
+        return (build) -> build.dependencies().add("test", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test").scope(DependencyScope.TEST_COMPILE).exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine")));
+    }
 
-	@Bean
-	@ConditionalOnPlatformVersion("2.4.0-M1")
-	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
-		return (build) -> build.dependencies()
-			.add("test", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
-				.scope(DependencyScope.TEST_COMPILE));
-	}
+    @Bean
+    @ConditionalOnPlatformVersion("2.4.0-M1")
+    public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
+        return (build) -> build.dependencies().add("test", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test").scope(DependencyScope.TEST_COMPILE));
+    }
 
-	@Bean
-	public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata) {
-		return new DefaultStarterBuildCustomizer(metadata);
-	}
+    @Bean
+    public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata) {
+        return new DefaultStarterBuildCustomizer(metadata);
+    }
 
-	@Bean
-	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description,
-			InitializrMetadata metadata) {
-		return new DefaultMavenBuildCustomizer(description, metadata);
-	}
+    @Bean
+    public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+        return new DefaultMavenBuildCustomizer(description, metadata);
+    }
 
-	@Bean
-	@ConditionalOnPackaging(WarPackaging.ID)
-	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
-		return new WarPackagingWebStarterBuildCustomizer(metadata);
-	}
+    @Bean
+    @ConditionalOnPackaging(WarPackaging.ID)
+    public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
+        return new WarPackagingWebStarterBuildCustomizer(metadata);
+    }
 
-	@Bean
-	public DependencyManagementBuildCustomizer dependencyManagementBuildCustomizer(ProjectDescription description,
-			InitializrMetadata metadata) {
-		return new DependencyManagementBuildCustomizer(description, metadata);
-	}
+    @Bean
+    public DependencyManagementBuildCustomizer dependencyManagementBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+        return new DependencyManagementBuildCustomizer(description, metadata);
+    }
 
-	@Bean
-	public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ProjectDescription description) {
-		return new SimpleBuildCustomizer(description);
-	}
+    @Bean
+    public SimpleBuildCustomizer projectDescriptionBuildCustomizer(ProjectDescription description) {
+        return new SimpleBuildCustomizer(description);
+    }
 
-	@Bean
-	public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(ProjectDescription description) {
-		return new SpringBootVersionRepositoriesBuildCustomizer(description.getPlatformVersion());
-	}
-
+    @Bean
+    public SpringBootVersionRepositoriesBuildCustomizer repositoriesBuilderCustomizer(ProjectDescription description) {
+        return new SpringBootVersionRepositoriesBuildCustomizer(description.getPlatformVersion());
+    }
 }

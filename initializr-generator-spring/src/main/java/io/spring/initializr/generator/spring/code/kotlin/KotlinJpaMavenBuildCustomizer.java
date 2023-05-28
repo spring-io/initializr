@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
@@ -30,21 +29,19 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
-	private final BuildMetadataResolver buildMetadataResolver;
+    private final BuildMetadataResolver buildMetadataResolver;
 
-	public KotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
-	}
+    public KotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
+        this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+    }
 
-	@Override
-	public void customize(MavenBuild build) {
-		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinPlugin) -> {
-				kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins",
-						(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
-				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
-			});
-		}
-	}
-
+    @Override
+    public void customize(MavenBuild build) {
+        if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
+            build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinPlugin) -> {
+                kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins", (compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
+                kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
+            });
+        }
+    }
 }

@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.util.Set;
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.io.IndentingWriter;
 
 /**
@@ -28,25 +26,24 @@ import io.spring.initializr.generator.io.IndentingWriter;
  */
 public class GradleSnippet {
 
-	private final Set<String> importedTypes;
+    private final Set<String> importedTypes;
 
-	private final Consumer<IndentingWriter> writer;
+    private final Consumer<IndentingWriter> writer;
 
-	GradleSnippet(Set<String> importedTypes, Consumer<IndentingWriter> writer) {
-		this.importedTypes = Set.copyOf(importedTypes);
-		this.writer = writer;
-	}
+    GradleSnippet(Set<String> importedTypes, Consumer<IndentingWriter> writer) {
+        this.importedTypes = Set.copyOf(importedTypes);
+        this.writer = writer;
+    }
 
-	Set<String> getImportedTypes() {
-		return this.importedTypes;
-	}
+    Set<String> getImportedTypes() {
+        return this.importedTypes;
+    }
 
-	/**
-	 * Apply the snippet using the specified {@link IndentingWriter}.
-	 * @param indentingWriter the writer to use
-	 */
-	public void apply(IndentingWriter indentingWriter) {
-		this.writer.accept(indentingWriter);
-	}
-
+    /**
+     * Apply the snippet using the specified {@link IndentingWriter}.
+     * @param indentingWriter the writer to use
+     */
+    public void apply(IndentingWriter indentingWriter) {
+        this.writer.accept(indentingWriter);
+    }
 }

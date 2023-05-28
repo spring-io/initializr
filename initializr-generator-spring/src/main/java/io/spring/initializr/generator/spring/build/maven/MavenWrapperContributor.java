@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.project.contributor.MultipleResourcesProjectContributor;
@@ -26,9 +25,7 @@ import io.spring.initializr.generator.project.contributor.MultipleResourcesProje
  */
 class MavenWrapperContributor extends MultipleResourcesProjectContributor {
 
-	MavenWrapperContributor(String mavenVersion) {
-		super("classpath:maven/" + mavenVersion + "/wrapper",
-				(filename) -> filename.equals("mvnw") || filename.equals("mvnw.cmd"));
-	}
-
+    MavenWrapperContributor(String mavenVersion) {
+        super("classpath:maven/" + mavenVersion + "/wrapper", (filename) -> filename.equals("mvnw") || filename.equals("mvnw.cmd"));
+    }
 }

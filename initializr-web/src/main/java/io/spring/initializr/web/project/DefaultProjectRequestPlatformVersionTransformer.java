@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.generator.version.Version;
@@ -27,9 +26,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class DefaultProjectRequestPlatformVersionTransformer implements ProjectRequestPlatformVersionTransformer {
 
-	@Override
-	public Version transform(Version platformVersion, InitializrMetadata metadata) {
-		return metadata.getConfiguration().getEnv().getPlatform().formatPlatformVersion(platformVersion);
-	}
-
+    @Override
+    public Version transform(Version platformVersion, InitializrMetadata metadata) {
+        return metadata.getConfiguration().getEnv().getPlatform().formatPlatformVersion(platformVersion);
+    }
 }

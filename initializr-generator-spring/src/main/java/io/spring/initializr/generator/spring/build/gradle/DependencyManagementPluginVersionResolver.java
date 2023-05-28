@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -26,13 +25,12 @@ import io.spring.initializr.generator.project.ProjectDescription;
 @FunctionalInterface
 public interface DependencyManagementPluginVersionResolver {
 
-	/**
-	 * Resolves the dependency management plugin version to use for the generation of the
-	 * project with the given {@code description}.
-	 * @param description the description of the project being generated
-	 * @return the corresponding version for the {@code io.spring.dependency-management}
-	 * plugin
-	 */
-	String resolveDependencyManagementPluginVersion(ProjectDescription description);
-
+    /**
+     * Resolves the dependency management plugin version to use for the generation of the
+     * project with the given {@code description}.
+     * @param description the description of the project being generated
+     * @return the corresponding version for the {@code io.spring.dependency-management}
+     * plugin
+     */
+    String resolveDependencyManagementPluginVersion(ProjectDescription description);
 }

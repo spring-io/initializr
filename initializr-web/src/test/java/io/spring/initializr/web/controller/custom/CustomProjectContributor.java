@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller.custom;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
@@ -32,18 +30,16 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 class CustomProjectContributor implements ProjectContributor {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	CustomProjectContributor(ProjectDescription description) {
-		this.description = description;
-	}
+    CustomProjectContributor(ProjectDescription description) {
+        this.description = description;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		if (this.description instanceof CustomProjectDescription
-				&& ((CustomProjectDescription) this.description).isCustomFlag()) {
-			Files.createFile(projectRoot.resolve("custom.txt"));
-		}
-	}
-
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        if (this.description instanceof CustomProjectDescription && ((CustomProjectDescription) this.description).isCustomFlag()) {
+            Files.createFile(projectRoot.resolve("custom.txt"));
+        }
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import org.springframework.core.Ordered;
@@ -28,15 +27,14 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface ProjectDescriptionCustomizer extends Ordered {
 
-	/**
-	 * Customize the {@linkplain MutableProjectDescription project description}.
-	 * @param description the project description to customize
-	 */
-	void customize(MutableProjectDescription description);
+    /**
+     * Customize the {@linkplain MutableProjectDescription project description}.
+     * @param description the project description to customize
+     */
+    void customize(MutableProjectDescription description);
 
-	@Override
-	default int getOrder() {
-		return 0;
-	}
-
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 }

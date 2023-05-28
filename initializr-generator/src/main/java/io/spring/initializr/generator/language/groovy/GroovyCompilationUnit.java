@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 import io.spring.initializr.generator.language.CompilationUnit;
@@ -25,13 +24,12 @@ import io.spring.initializr.generator.language.CompilationUnit;
  */
 public class GroovyCompilationUnit extends CompilationUnit<GroovyTypeDeclaration> {
 
-	GroovyCompilationUnit(String packageName, String name) {
-		super(packageName, name);
-	}
+    GroovyCompilationUnit(String packageName, String name) {
+        super(packageName, name);
+    }
 
-	@Override
-	protected GroovyTypeDeclaration doCreateTypeDeclaration(String name) {
-		return new GroovyTypeDeclaration(name);
-	}
-
+    @Override
+    protected GroovyTypeDeclaration doCreateTypeDeclaration(String name) {
+        return new GroovyTypeDeclaration(name);
+    }
 }

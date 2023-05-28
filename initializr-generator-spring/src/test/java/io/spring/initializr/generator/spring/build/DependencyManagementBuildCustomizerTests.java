@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -26,7 +25,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -36,71 +34,58 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DependencyManagementBuildCustomizerTests {
 
-	@Test
-	void contributeBom() { // ProjectRequestTests#resolveAdditionalBoms
-		Dependency dependency = Dependency.withId("foo");
-		dependency.setBom("foo-bom");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
-		bom.getAdditionalBoms().add("bar-bom");
-		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addBom("foo-bom", bom)
-			.addBom("bar-bom", additionalBom)
-			.addDependencyGroup("test", dependency)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
-		customizeBuild(build, metadata);
-		assertThat(build.boms().items()).hasSize(2);
-	}
+    @Test
+    void contributeBom() {
+        // ProjectRequestTests#resolveAdditionalBoms
+        Dependency dependency = Dependency.withId("foo");
+        dependency.setBom("foo-bom");
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+        bom.getAdditionalBoms().add("bar-bom");
+        BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom).addBom("bar-bom", additionalBom).addDependencyGroup("test", dependency).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add(dependency.getId());
+        customizeBuild(build, metadata);
+        assertThat(build.boms().items()).hasSize(2);
+    }
 
-	@Test
-	void contributeBomFromMapping() {
-		Dependency dependency = Dependency.withId("foo");
-		dependency.getMappings()
-			.add(Dependency.Mapping.create("[2.4.0,2.5.0-M1)", null, null, null, null, "foo-bom", null));
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
-		bom.getAdditionalBoms().add("bar-bom");
-		BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addBom("foo-bom", bom)
-			.addBom("bar-bom", additionalBom)
-			.addDependencyGroup("test", dependency)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
-		customizeBuild(build, metadata);
-		assertThat(build.boms().items()).hasSize(2);
-	}
+    @Test
+    void contributeBomFromMapping() {
+        Dependency dependency = Dependency.withId("foo");
+        dependency.getMappings().add(Dependency.Mapping.create("[2.4.0,2.5.0-M1)", null, null, null, null, "foo-bom", null));
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+        bom.getAdditionalBoms().add("bar-bom");
+        BillOfMaterials additionalBom = BillOfMaterials.create("com.example", "bar-bom", "1.1.0");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom).addBom("bar-bom", additionalBom).addDependencyGroup("test", dependency).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add(dependency.getId());
+        customizeBuild(build, metadata);
+        assertThat(build.boms().items()).hasSize(2);
+    }
 
-	@Test
-	void contributeRepositories() { // ProjectRequestTests#resolveAdditionalRepositories
-		Dependency dependency = Dependency.withId("foo");
-		dependency.setBom("foo-bom");
-		dependency.setRepository("foo-repo");
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
-		bom.getRepositories().add("bar-repo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addBom("foo-bom", bom)
-			.addReleasesRepository("foo-repo", "foo-repo", "https://example.com/foo")
-			.addReleasesRepository("bar-repo", "bar-repo", "https://example.com/bar")
-			.addDependencyGroup("test", dependency)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
-		customizeBuild(build, metadata);
-		assertThat(build.repositories().items()).hasSize(2);
-		assertThat(build.pluginRepositories().items()).isEmpty();
-	}
+    @Test
+    void contributeRepositories() {
+        // ProjectRequestTests#resolveAdditionalRepositories
+        Dependency dependency = Dependency.withId("foo");
+        dependency.setBom("foo-bom");
+        dependency.setRepository("foo-repo");
+        BillOfMaterials bom = BillOfMaterials.create("com.example", "foo-bom", "1.0.0");
+        bom.getRepositories().add("bar-repo");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("foo-bom", bom).addReleasesRepository("foo-repo", "foo-repo", "https://example.com/foo").addReleasesRepository("bar-repo", "bar-repo", "https://example.com/bar").addDependencyGroup("test", dependency).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add(dependency.getId());
+        customizeBuild(build, metadata);
+        assertThat(build.repositories().items()).hasSize(2);
+        assertThat(build.pluginRepositories().items()).isEmpty();
+    }
 
-	private MavenBuild createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.4.0")));
-	}
+    private MavenBuild createBuild(InitializrMetadata metadata) {
+        return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.4.0")));
+    }
 
-	private void customizeBuild(Build build, InitializrMetadata metadata) {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0"));
-		new DependencyManagementBuildCustomizer(description, metadata).customize(build);
-	}
-
+    private void customizeBuild(Build build, InitializrMetadata metadata) {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.4.0"));
+        new DependencyManagementBuildCustomizer(description, metadata).customize(build);
+    }
 }

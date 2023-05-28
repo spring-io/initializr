@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.scm.git;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
-
 import io.spring.initializr.generator.io.text.Section;
 
 /**
@@ -31,83 +29,79 @@ import io.spring.initializr.generator.io.text.Section;
  */
 public class GitIgnore {
 
-	private final GitIgnoreSection general = new GitIgnoreSection(null);
+    private final GitIgnoreSection general = new GitIgnoreSection(null);
 
-	private final GitIgnoreSection sts = new GitIgnoreSection("STS");
+    private final GitIgnoreSection sts = new GitIgnoreSection("STS");
 
-	private final GitIgnoreSection intellijIdea = new GitIgnoreSection("IntelliJ IDEA");
+    private final GitIgnoreSection intellijIdea = new GitIgnoreSection("IntelliJ IDEA");
 
-	private final GitIgnoreSection netBeans = new GitIgnoreSection("NetBeans");
+    private final GitIgnoreSection netBeans = new GitIgnoreSection("NetBeans");
 
-	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
+    private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
 
-	public void write(PrintWriter writer) throws IOException {
-		this.general.write(writer);
-		this.sts.write(writer);
-		this.intellijIdea.write(writer);
-		this.netBeans.write(writer);
-		this.vscode.write(writer);
-	}
+    public void write(PrintWriter writer) throws IOException {
+        this.general.write(writer);
+        this.sts.write(writer);
+        this.intellijIdea.write(writer);
+        this.netBeans.write(writer);
+        this.vscode.write(writer);
+    }
 
-	public boolean isEmpty() {
-		return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty()
-				&& this.intellijIdea.getItems().isEmpty() && this.netBeans.getItems().isEmpty()
-				&& this.vscode.getItems().isEmpty();
-	}
+    public boolean isEmpty() {
+        return this.general.getItems().isEmpty() && this.sts.getItems().isEmpty() && this.intellijIdea.getItems().isEmpty() && this.netBeans.getItems().isEmpty() && this.vscode.getItems().isEmpty();
+    }
 
-	public GitIgnoreSection getGeneral() {
-		return this.general;
-	}
+    public GitIgnoreSection getGeneral() {
+        return this.general;
+    }
 
-	public GitIgnoreSection getSts() {
-		return this.sts;
-	}
+    public GitIgnoreSection getSts() {
+        return this.sts;
+    }
 
-	public GitIgnoreSection getIntellijIdea() {
-		return this.intellijIdea;
-	}
+    public GitIgnoreSection getIntellijIdea() {
+        return this.intellijIdea;
+    }
 
-	public GitIgnoreSection getNetBeans() {
-		return this.netBeans;
-	}
+    public GitIgnoreSection getNetBeans() {
+        return this.netBeans;
+    }
 
-	public GitIgnoreSection getVscode() {
-		return this.vscode;
-	}
+    public GitIgnoreSection getVscode() {
+        return this.vscode;
+    }
 
-	/**
-	 * Representation of a section of a {@code .gitignore} file.
-	 */
-	public static class GitIgnoreSection implements Section {
+    /**
+     * Representation of a section of a {@code .gitignore} file.
+     */
+    public static class GitIgnoreSection implements Section {
 
-		private final String name;
+        private final String name;
 
-		private final LinkedList<String> items;
+        private final LinkedList<String> items;
 
-		public GitIgnoreSection(String name) {
-			this.name = name;
-			this.items = new LinkedList<>();
-		}
+        public GitIgnoreSection(String name) {
+            this.name = name;
+            this.items = new LinkedList<>();
+        }
 
-		public void add(String... items) {
-			this.items.addAll(Arrays.asList(items));
-		}
+        public void add(String... items) {
+            this.items.addAll(Arrays.asList(items));
+        }
 
-		public LinkedList<String> getItems() {
-			return this.items;
-		}
+        public LinkedList<String> getItems() {
+            return this.items;
+        }
 
-		@Override
-		public void write(PrintWriter writer) {
-			if (!this.items.isEmpty()) {
-				if (this.name != null) {
-					writer.println();
-					writer.println(String.format("### %s ###", this.name));
-				}
-				this.items.forEach(writer::println);
-			}
-		}
-
-	}
-
+        @Override
+        public void write(PrintWriter writer) {
+            if (!this.items.isEmpty()) {
+                if (this.name != null) {
+                    writer.println();
+                    writer.println(String.format("### %s ###", this.name));
+                }
+                this.items.forEach(writer::println);
+            }
+        }
+    }
 }

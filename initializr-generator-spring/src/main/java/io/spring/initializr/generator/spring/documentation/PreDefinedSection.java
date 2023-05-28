@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import io.spring.initializr.generator.io.text.Section;
 
 /**
@@ -31,41 +29,40 @@ import io.spring.initializr.generator.io.text.Section;
  */
 public class PreDefinedSection implements Section {
 
-	private final String title;
+    private final String title;
 
-	private final List<Section> subSections = new ArrayList<>();
+    private final List<Section> subSections = new ArrayList<>();
 
-	public PreDefinedSection(String title) {
-		this.title = title;
-	}
+    public PreDefinedSection(String title) {
+        this.title = title;
+    }
 
-	public PreDefinedSection addSection(Section section) {
-		this.subSections.add(section);
-		return this;
-	}
+    public PreDefinedSection addSection(Section section) {
+        this.subSections.add(section);
+        return this;
+    }
 
-	@Override
-	public void write(PrintWriter writer) throws IOException {
-		if (!isEmpty()) {
-			writer.println("# " + this.title);
-			writer.println("");
-			for (Section section : resolveSubSections(this.subSections)) {
-				section.write(writer);
-			}
-		}
-	}
+    @Override
+    public void write(PrintWriter writer) throws IOException {
+        if (!isEmpty()) {
+            writer.println("# " + this.title);
+            writer.println("");
+            for (Section section : resolveSubSections(this.subSections)) {
+                section.write(writer);
+            }
+        }
+    }
 
-	public boolean isEmpty() {
-		return this.subSections.isEmpty();
-	}
+    public boolean isEmpty() {
+        return this.subSections.isEmpty();
+    }
 
-	/**
-	 * Resolve the sections to render based on the current registered sections.
-	 * @param sections the registered sections
-	 * @return the sections to render
-	 */
-	protected List<Section> resolveSubSections(List<Section> sections) {
-		return sections;
-	}
-
+    /**
+     * Resolve the sections to render based on the current registered sections.
+     * @param sections the registered sections
+     * @return the sections to render
+     */
+    protected List<Section> resolveSubSections(List<Section> sections) {
+        return sections;
+    }
 }

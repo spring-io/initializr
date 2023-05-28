@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Auto-configuration for Actuator concerns.
  */
 package io.spring.initializr.actuate.autoconfigure;
+

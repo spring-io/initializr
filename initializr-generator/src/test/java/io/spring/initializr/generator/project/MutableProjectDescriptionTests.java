@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -29,22 +27,21 @@ import static org.mockito.Mockito.mock;
  */
 class MutableProjectDescriptionTests {
 
-	@Test
-	void removeDependencyWithExistingDependencyReturnsDependency() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("core", mock(Dependency.class));
-		Dependency testDependency = mock(Dependency.class);
-		description.addDependency("test", testDependency);
-		assertThat(description.removeDependency("test")).isSameAs(testDependency);
-		assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
-	}
+    @Test
+    void removeDependencyWithExistingDependencyReturnsDependency() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.addDependency("core", mock(Dependency.class));
+        Dependency testDependency = mock(Dependency.class);
+        description.addDependency("test", testDependency);
+        assertThat(description.removeDependency("test")).isSameAs(testDependency);
+        assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
+    }
 
-	@Test
-	void removeDependencyWithUnknownDependencyReturnsNull() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("core", mock(Dependency.class));
-		assertThat(description.removeDependency("unknown")).isNull();
-		assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
-	}
-
+    @Test
+    void removeDependencyWithUnknownDependencyReturnsNull() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.addDependency("core", mock(Dependency.class));
+        assertThat(description.removeDependency("unknown")).isNull();
+        assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -23,7 +22,6 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.util.ClassUtils;
 
 /**
@@ -35,23 +33,20 @@ import org.springframework.util.ClassUtils;
  */
 public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final BuildMetadataResolver buildMetadataResolver;
+    private final BuildMetadataResolver buildMetadataResolver;
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
-		this.description = description;
-	}
+    public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
+        this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+        this.description = description;
+    }
 
-	@Override
-	public void customize(Build build) {
-		boolean isKotlin = ClassUtils.isAssignableValue(KotlinLanguage.class, this.description.getLanguage());
-		if (this.buildMetadataResolver.hasFacet(build, "json") && isKotlin) {
-			build.dependencies()
-				.add("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin",
-						DependencyScope.COMPILE);
-		}
-	}
-
+    @Override
+    public void customize(Build build) {
+        boolean isKotlin = ClassUtils.isAssignableValue(KotlinLanguage.class, this.description.getLanguage());
+        if (this.buildMetadataResolver.hasFacet(build, "json") && isKotlin) {
+            build.dependencies().add("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin", DependencyScope.COMPILE);
+        }
+    }
 }

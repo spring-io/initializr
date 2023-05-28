@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import java.util.function.Supplier;
-
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.util.StringUtils;
 
 /**
@@ -33,77 +30,72 @@ import org.springframework.util.StringUtils;
  */
 public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionCustomizer {
 
-	private static final char[] VALID_MAVEN_SPECIAL_CHARACTERS = new char[] { '_', '-', '.' };
+    private static final char[] VALID_MAVEN_SPECIAL_CHARACTERS = new char[] { '_', '-', '.' };
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public MetadataProjectDescriptionCustomizer(InitializrMetadata metadata) {
-		this.metadata = metadata;
-	}
+    public MetadataProjectDescriptionCustomizer(InitializrMetadata metadata) {
+        this.metadata = metadata;
+    }
 
-	@Override
-	public void customize(MutableProjectDescription description) {
-		if (!StringUtils.hasText(description.getApplicationName())) {
-			description
-				.setApplicationName(this.metadata.getConfiguration().generateApplicationName(description.getName()));
-		}
-		String targetArtifactId = determineValue(description.getArtifactId(),
-				() -> this.metadata.getArtifactId().getContent());
-		description.setArtifactId(cleanMavenCoordinate(targetArtifactId, "-"));
-		if (targetArtifactId.equals(description.getBaseDirectory())) {
-			description.setBaseDirectory(cleanMavenCoordinate(targetArtifactId, "-"));
-		}
-		if (!StringUtils.hasText(description.getDescription())) {
-			description.setDescription(this.metadata.getDescription().getContent());
-		}
-		String targetGroupId = determineValue(description.getGroupId(), () -> this.metadata.getGroupId().getContent());
-		description.setGroupId(cleanMavenCoordinate(targetGroupId, "."));
-		if (!StringUtils.hasText(description.getName())) {
-			description.setName(this.metadata.getName().getContent());
-		}
-		else if (targetArtifactId.equals(description.getName())) {
-			description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
-		}
-		description.setPackageName(this.metadata.getConfiguration()
-			.cleanPackageName(description.getPackageName(), this.metadata.getPackageName().getContent()));
-		if (description.getPlatformVersion() == null) {
-			description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
-		}
-		if (!StringUtils.hasText(description.getVersion())) {
-			description.setVersion(this.metadata.getVersion().getContent());
-		}
-	}
+    @Override
+    public void customize(MutableProjectDescription description) {
+        if (!StringUtils.hasText(description.getApplicationName())) {
+            description.setApplicationName(this.metadata.getConfiguration().generateApplicationName(description.getName()));
+        }
+        String targetArtifactId = determineValue(description.getArtifactId(), () -> this.metadata.getArtifactId().getContent());
+        description.setArtifactId(cleanMavenCoordinate(targetArtifactId, "-"));
+        if (targetArtifactId.equals(description.getBaseDirectory())) {
+            description.setBaseDirectory(cleanMavenCoordinate(targetArtifactId, "-"));
+        }
+        if (!StringUtils.hasText(description.getDescription())) {
+            description.setDescription(this.metadata.getDescription().getContent());
+        }
+        String targetGroupId = determineValue(description.getGroupId(), () -> this.metadata.getGroupId().getContent());
+        description.setGroupId(cleanMavenCoordinate(targetGroupId, "."));
+        if (!StringUtils.hasText(description.getName())) {
+            description.setName(this.metadata.getName().getContent());
+        } else if (targetArtifactId.equals(description.getName())) {
+            description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
+        }
+        description.setPackageName(this.metadata.getConfiguration().cleanPackageName(description.getPackageName(), this.metadata.getPackageName().getContent()));
+        if (description.getPlatformVersion() == null) {
+            description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
+        }
+        if (!StringUtils.hasText(description.getVersion())) {
+            description.setVersion(this.metadata.getVersion().getContent());
+        }
+    }
 
-	private String cleanMavenCoordinate(String coordinate, String delimiter) {
-		String[] elements = coordinate.split("[^\\w\\-.]+");
-		if (elements.length == 1) {
-			return coordinate;
-		}
-		StringBuilder builder = new StringBuilder();
-		for (String element : elements) {
-			if (shouldAppendDelimiter(element, builder)) {
-				builder.append(delimiter);
-			}
-			builder.append(element);
-		}
-		return builder.toString();
-	}
+    private String cleanMavenCoordinate(String coordinate, String delimiter) {
+        String[] elements = coordinate.split("[^\\w\\-.]+");
+        if (elements.length == 1) {
+            return coordinate;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String element : elements) {
+            if (shouldAppendDelimiter(element, builder)) {
+                builder.append(delimiter);
+            }
+            builder.append(element);
+        }
+        return builder.toString();
+    }
 
-	private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
-		if (builder.length() == 0) {
-			return false;
-		}
-		for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {
-			int prevIndex = builder.length() - 1;
-			if (element.charAt(0) == c || builder.charAt(prevIndex) == c) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
+        if (builder.length() == 0) {
+            return false;
+        }
+        for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {
+            int prevIndex = builder.length() - 1;
+            if (element.charAt(0) == c || builder.charAt(prevIndex) == c) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	private String determineValue(String candidate, Supplier<String> fallback) {
-		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
-	}
-
+    private String determineValue(String candidate, Supplier<String> fallback) {
+        return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
+    }
 }

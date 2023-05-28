@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.stub;
 
 import io.spring.initializr.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -26,8 +24,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author Stephane Nicoll
  */
-@SpringBootApplication(
-		exclude = { InitializrAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class })
+@SpringBootApplication(exclude = { InitializrAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class })
 public class SampleApp {
-
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.language.Language;
@@ -25,37 +24,36 @@ import io.spring.initializr.generator.language.Language;
  */
 public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 
-	private final String version;
+    private final String version;
 
-	private final String jvmTarget;
+    private final String jvmTarget;
 
-	/**
-	 * Create an instance with the kotlin version to use.
-	 * @param version the kotlin version to use
-	 */
-	public SimpleKotlinProjectSettings(String version) {
-		this(version, Language.DEFAULT_JVM_VERSION);
-	}
+    /**
+     * Create an instance with the kotlin version to use.
+     * @param version the kotlin version to use
+     */
+    public SimpleKotlinProjectSettings(String version) {
+        this(version, Language.DEFAULT_JVM_VERSION);
+    }
 
-	/**
-	 * Create an instance with the kotlin version and the target version of the generated
-	 * JVM bytecode.
-	 * @param version the kotlin version to use
-	 * @param jvmTarget the target version of the generated JVM bytecode
-	 */
-	public SimpleKotlinProjectSettings(String version, String jvmTarget) {
-		this.version = version;
-		this.jvmTarget = jvmTarget;
-	}
+    /**
+     * Create an instance with the kotlin version and the target version of the generated
+     * JVM bytecode.
+     * @param version the kotlin version to use
+     * @param jvmTarget the target version of the generated JVM bytecode
+     */
+    public SimpleKotlinProjectSettings(String version, String jvmTarget) {
+        this.version = version;
+        this.jvmTarget = jvmTarget;
+    }
 
-	@Override
-	public String getVersion() {
-		return this.version;
-	}
+    @Override
+    public String getVersion() {
+        return this.version;
+    }
 
-	@Override
-	public String getJvmTarget() {
-		return this.jvmTarget;
-	}
-
+    @Override
+    public String getJvmTarget() {
+        return this.jvmTarget;
+    }
 }

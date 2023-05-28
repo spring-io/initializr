@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
@@ -22,7 +21,6 @@ import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
-
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -32,13 +30,12 @@ import org.springframework.context.annotation.Bean;
  */
 public class ProjectCustomizationExamples {
 
-	// tag::war-plugin-contributor[]
-	@Bean
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	@ConditionalOnPackaging(WarPackaging.ID)
-	public BuildCustomizer<GradleBuild> warPluginContributor() {
-		return (build) -> build.plugins().add("war");
-	}
-	// end::war-plugin-contributor[]
-
+    // tag::war-plugin-contributor[]
+    @Bean
+    @ConditionalOnBuildSystem(GradleBuildSystem.ID)
+    @ConditionalOnPackaging(WarPackaging.ID)
+    public BuildCustomizer<GradleBuild> warPluginContributor() {
+        return (build) -> build.plugins().add("war");
+    }
+    // end::war-plugin-contributor[]
 }

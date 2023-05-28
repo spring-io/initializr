@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.language.Language;
 
 /**
@@ -27,8 +25,7 @@ import io.spring.initializr.generator.language.Language;
  */
 public class JvmModuleAssert extends AbstractJvmModuleAssert<JvmModuleAssert> {
 
-	public JvmModuleAssert(Path projectDirectory, Language language) {
-		super(projectDirectory, language, JvmModuleAssert.class);
-	}
-
+    public JvmModuleAssert(Path projectDirectory, Language language) {
+        super(projectDirectory, language, JvmModuleAssert.class);
+    }
 }

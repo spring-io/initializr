@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
@@ -26,17 +25,16 @@ import io.spring.initializr.generator.language.Language;
  */
 public final class GroovyLanguage extends AbstractLanguage {
 
-	/**
-	 * Groovy {@link Language} identifier.
-	 */
-	public static final String ID = "groovy";
+    /**
+     * Groovy {@link Language} identifier.
+     */
+    public static final String ID = "groovy";
 
-	public GroovyLanguage() {
-		this(DEFAULT_JVM_VERSION);
-	}
+    public GroovyLanguage() {
+        this(DEFAULT_JVM_VERSION);
+    }
 
-	public GroovyLanguage(String jvmVersion) {
-		super(ID, jvmVersion, "groovy");
-	}
-
+    public GroovyLanguage(String jvmVersion) {
+        super(ID, jvmVersion, "groovy");
+    }
 }

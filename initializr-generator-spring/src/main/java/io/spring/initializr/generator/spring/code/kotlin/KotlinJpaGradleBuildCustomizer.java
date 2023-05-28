@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
@@ -22,7 +21,6 @@ import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
- *
  * {@link BuildCustomizer} for Gradle that configures the JPA Kotlin plugin if a JPA
  * related dependency is present.
  *
@@ -30,21 +28,19 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	private final BuildMetadataResolver buildMetadataResolver;
+    private final BuildMetadataResolver buildMetadataResolver;
 
-	private final KotlinProjectSettings settings;
+    private final KotlinProjectSettings settings;
 
-	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
-		this.settings = settings;
-	}
+    public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings) {
+        this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+        this.settings = settings;
+    }
 
-	@Override
-	public void customize(GradleBuild build) {
-		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			build.plugins()
-				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-		}
-	}
-
+    @Override
+    public void customize(GradleBuild build) {
+        if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
+            build.plugins().add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+        }
+    }
 }

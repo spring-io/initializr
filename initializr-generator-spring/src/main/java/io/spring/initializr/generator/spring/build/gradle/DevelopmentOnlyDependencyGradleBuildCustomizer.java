@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -30,23 +29,21 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 public class DevelopmentOnlyDependencyGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	private final String dependencyId;
+    private final String dependencyId;
 
-	/**
-	 * Create a new instance with the identifier for the dependency.
-	 * @param dependencyId the id of the dependency
-	 */
-	public DevelopmentOnlyDependencyGradleBuildCustomizer(String dependencyId) {
-		this.dependencyId = dependencyId;
-	}
+    /**
+     * Create a new instance with the identifier for the dependency.
+     * @param dependencyId the id of the dependency
+     */
+    public DevelopmentOnlyDependencyGradleBuildCustomizer(String dependencyId) {
+        this.dependencyId = dependencyId;
+    }
 
-	@Override
-	public void customize(GradleBuild build) {
-		Dependency dependency = build.dependencies().get(this.dependencyId);
-		if (dependency != null) {
-			build.dependencies()
-				.add(this.dependencyId, GradleDependency.from(dependency).configuration("developmentOnly"));
-		}
-	}
-
+    @Override
+    public void customize(GradleBuild build) {
+        Dependency dependency = build.dependencies().get(this.dependencyId);
+        if (dependency != null) {
+            build.dependencies().add(this.dependencyId, GradleDependency.from(dependency).configuration("developmentOnly"));
+        }
+    }
 }

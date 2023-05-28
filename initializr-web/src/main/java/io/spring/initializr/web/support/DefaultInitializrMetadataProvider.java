@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.support;
 
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -30,21 +28,19 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	private InitializrMetadata metadata;
+    private InitializrMetadata metadata;
 
-	private final InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy;
+    private final InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy;
 
-	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
-			InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
-		this.metadata = metadata;
-		this.initializrMetadataUpdateStrategy = initializrMetadataUpdateStrategy;
-	}
+    public DefaultInitializrMetadataProvider(InitializrMetadata metadata, InitializrMetadataUpdateStrategy initializrMetadataUpdateStrategy) {
+        this.metadata = metadata;
+        this.initializrMetadataUpdateStrategy = initializrMetadataUpdateStrategy;
+    }
 
-	@Override
-	@Cacheable(value = "initializr.metadata", key = "'metadata'")
-	public InitializrMetadata get() {
-		this.metadata = this.initializrMetadataUpdateStrategy.update(this.metadata);
-		return this.metadata;
-	}
-
+    @Override
+    @Cacheable(value = "initializr.metadata", key = "'metadata'")
+    public InitializrMetadata get() {
+        this.metadata = this.initializrMetadataUpdateStrategy.update(this.metadata);
+        return this.metadata;
+    }
 }

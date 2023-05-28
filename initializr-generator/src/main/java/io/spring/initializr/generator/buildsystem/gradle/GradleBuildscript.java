@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.util.ArrayList;
@@ -29,64 +28,62 @@ import java.util.Map;
  */
 public class GradleBuildscript {
 
-	private final List<String> dependencies;
+    private final List<String> dependencies;
 
-	private final Map<String, String> ext;
+    private final Map<String, String> ext;
 
-	protected GradleBuildscript(Builder builder) {
-		this.dependencies = Collections.unmodifiableList(new ArrayList<>(builder.dependencies));
-		this.ext = Collections.unmodifiableMap(new LinkedHashMap<>(builder.ext));
-	}
+    protected GradleBuildscript(Builder builder) {
+        this.dependencies = Collections.unmodifiableList(new ArrayList<>(builder.dependencies));
+        this.ext = Collections.unmodifiableMap(new LinkedHashMap<>(builder.ext));
+    }
 
-	/**
-	 * Return the dependencies required by this build.
-	 * @return the dependencies.
-	 */
-	public List<String> getDependencies() {
-		return this.dependencies;
-	}
+    /**
+     * Return the dependencies required by this build.
+     * @return the dependencies.
+     */
+    public List<String> getDependencies() {
+        return this.dependencies;
+    }
 
-	/**
-	 * Return additional properties this build uses.
-	 * @return build properties
-	 */
-	public Map<String, String> getExt() {
-		return this.ext;
-	}
+    /**
+     * Return additional properties this build uses.
+     * @return build properties
+     */
+    public Map<String, String> getExt() {
+        return this.ext;
+    }
 
-	/**
-	 * Builder for {@link GradleBuildscript}.
-	 */
-	public static class Builder {
+    /**
+     * Builder for {@link GradleBuildscript}.
+     */
+    public static class Builder {
 
-		private final List<String> dependencies = new ArrayList<>();
+        private final List<String> dependencies = new ArrayList<>();
 
-		private final Map<String, String> ext = new LinkedHashMap<>();
+        private final Map<String, String> ext = new LinkedHashMap<>();
 
-		public Builder dependency(String coordinates) {
-			this.dependencies.add(coordinates);
-			return this;
-		}
+        public Builder dependency(String coordinates) {
+            this.dependencies.add(coordinates);
+            return this;
+        }
 
-		/**
-		 * Set a {@code ext} property.
-		 * @param name the name of the property
-		 * @param value the value of the property
-		 * @return this for method chaining
-		 */
-		public Builder ext(String name, String value) {
-			this.ext.put(name, value);
-			return this;
-		}
+        /**
+         * Set a {@code ext} property.
+         * @param name the name of the property
+         * @param value the value of the property
+         * @return this for method chaining
+         */
+        public Builder ext(String name, String value) {
+            this.ext.put(name, value);
+            return this;
+        }
 
-		/**
-		 * Build a {@link GradleBuildscript} with the current state of this builder.
-		 * @return a {@link GradleBuildscript}
-		 */
-		public GradleBuildscript build() {
-			return new GradleBuildscript(this);
-		}
-
-	}
-
+        /**
+         * Build a {@link GradleBuildscript} with the current state of this builder.
+         * @return a {@link GradleBuildscript}
+         */
+        public GradleBuildscript build() {
+            return new GradleBuildscript(this);
+        }
+    }
 }

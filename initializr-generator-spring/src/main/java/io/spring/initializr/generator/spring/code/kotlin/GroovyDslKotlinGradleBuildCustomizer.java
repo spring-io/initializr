@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.stream.Collectors;
-
 import io.spring.initializr.generator.buildsystem.gradle.GradleTask;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
@@ -28,20 +26,16 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  */
 class GroovyDslKotlinGradleBuildCustomizer extends KotlinGradleBuildCustomizer {
 
-	GroovyDslKotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
-		super(kotlinProjectSettings);
-	}
+    GroovyDslKotlinGradleBuildCustomizer(KotlinProjectSettings kotlinProjectSettings) {
+        super(kotlinProjectSettings);
+    }
 
-	@Override
-	protected void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile) {
-		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = settings.getCompilerArgs()
-				.stream()
-				.map((arg) -> "'" + arg + "'")
-				.collect(Collectors.joining(", "));
-			kotlinOptions.attribute("freeCompilerArgs", "[" + compilerArgs + "]");
-			kotlinOptions.attribute("jvmTarget", "'" + settings.getJvmTarget() + "'");
-		});
-	}
-
+    @Override
+    protected void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile) {
+        compile.nested("kotlinOptions", (kotlinOptions) -> {
+            String compilerArgs = settings.getCompilerArgs().stream().map((arg) -> "'" + arg + "'").collect(Collectors.joining(", "));
+            kotlinOptions.attribute("freeCompilerArgs", "[" + compilerArgs + "]");
+            kotlinOptions.attribute("jvmTarget", "'" + settings.getJvmTarget() + "'");
+        });
+    }
 }

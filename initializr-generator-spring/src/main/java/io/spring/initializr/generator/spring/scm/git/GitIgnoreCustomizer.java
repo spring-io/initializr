@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.scm.git;
 
 import org.springframework.core.Ordered;
@@ -28,11 +27,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface GitIgnoreCustomizer extends Ordered {
 
-	void customize(GitIgnore gitIgnore);
+    void customize(GitIgnore gitIgnore);
 
-	@Override
-	default int getOrder() {
-		return 0;
-	}
-
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 }

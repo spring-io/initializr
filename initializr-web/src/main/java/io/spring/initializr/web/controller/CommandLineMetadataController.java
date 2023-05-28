@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import java.io.IOException;
-
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.support.Agent;
 import io.spring.initializr.web.support.Agent.AgentId;
 import io.spring.initializr.web.support.CommandLineHelpGenerator;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,40 +39,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommandLineMetadataController extends AbstractMetadataController {
 
-	private final CommandLineHelpGenerator commandLineHelpGenerator;
+    private final CommandLineHelpGenerator commandLineHelpGenerator;
 
-	public CommandLineMetadataController(InitializrMetadataProvider metadataProvider,
-			TemplateRenderer templateRenderer) {
-		super(metadataProvider);
-		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
-	}
+    public CommandLineMetadataController(InitializrMetadataProvider metadataProvider, TemplateRenderer templateRenderer) {
+        super(metadataProvider);
+        this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
+    }
 
-	@RequestMapping(path = "/", produces = "text/plain")
-	public ResponseEntity<String> serviceCapabilitiesText(
-			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) throws IOException {
-		String appUrl = generateAppUrl();
-		InitializrMetadata metadata = this.metadataProvider.get();
-
-		BodyBuilder builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN);
-		if (userAgent != null) {
-			Agent agent = Agent.fromUserAgent(userAgent);
-			if (agent != null) {
-				if (AgentId.CURL.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl);
-					return builder.eTag(createUniqueId(content)).body(content);
-				}
-				if (AgentId.HTTPIE.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl);
-					return builder.eTag(createUniqueId(content)).body(content);
-				}
-				if (AgentId.SPRING_BOOT_CLI.equals(agent.getId())) {
-					String content = this.commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl);
-					return builder.eTag(createUniqueId(content)).body(content);
-				}
-			}
-		}
-		String content = this.commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl);
-		return builder.eTag(createUniqueId(content)).body(content);
-	}
-
+    @RequestMapping(path = "/", produces = "text/plain")
+    public ResponseEntity<String> serviceCapabilitiesText(@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) throws IOException {
+        String appUrl = generateAppUrl();
+        InitializrMetadata metadata = this.metadataProvider.get();
+        BodyBuilder builder = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN);
+        if (userAgent != null) {
+            Agent agent = Agent.fromUserAgent(userAgent);
+            if (agent != null) {
+                if (AgentId.CURL.equals(agent.getId())) {
+                    String content = this.commandLineHelpGenerator.generateCurlCapabilities(metadata, appUrl);
+                    return builder.eTag(createUniqueId(content)).body(content);
+                }
+                if (AgentId.HTTPIE.equals(agent.getId())) {
+                    String content = this.commandLineHelpGenerator.generateHttpieCapabilities(metadata, appUrl);
+                    return builder.eTag(createUniqueId(content)).body(content);
+                }
+                if (AgentId.SPRING_BOOT_CLI.equals(agent.getId())) {
+                    String content = this.commandLineHelpGenerator.generateSpringBootCliCapabilities(metadata, appUrl);
+                    return builder.eTag(createUniqueId(content)).body(content);
+                }
+            }
+        }
+        String content = this.commandLineHelpGenerator.generateGenericCapabilities(metadata, appUrl);
+        return builder.eTag(createUniqueId(content)).body(content);
+    }
 }

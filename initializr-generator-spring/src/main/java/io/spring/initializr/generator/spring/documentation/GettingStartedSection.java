@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.io.text.Section;
@@ -31,83 +29,81 @@ import io.spring.initializr.generator.io.text.Section;
  */
 public final class GettingStartedSection extends PreDefinedSection {
 
-	private final BulletedSection<Link> referenceDocs;
+    private final BulletedSection<Link> referenceDocs;
 
-	private final BulletedSection<Link> guides;
+    private final BulletedSection<Link> guides;
 
-	private final BulletedSection<Link> additionalLinks;
+    private final BulletedSection<Link> additionalLinks;
 
-	GettingStartedSection(MustacheTemplateRenderer templateRenderer) {
-		super("Getting Started");
-		this.referenceDocs = new BulletedSection<>(templateRenderer, "documentation/reference-documentation");
-		this.guides = new BulletedSection<>(templateRenderer, "documentation/guides");
-		this.additionalLinks = new BulletedSection<>(templateRenderer, "documentation/additional-links");
-	}
+    GettingStartedSection(MustacheTemplateRenderer templateRenderer) {
+        super("Getting Started");
+        this.referenceDocs = new BulletedSection<>(templateRenderer, "documentation/reference-documentation");
+        this.guides = new BulletedSection<>(templateRenderer, "documentation/guides");
+        this.additionalLinks = new BulletedSection<>(templateRenderer, "documentation/additional-links");
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return referenceDocs().isEmpty() && guides().isEmpty() && additionalLinks().isEmpty() && super.isEmpty();
-	}
+    @Override
+    public boolean isEmpty() {
+        return referenceDocs().isEmpty() && guides().isEmpty() && additionalLinks().isEmpty() && super.isEmpty();
+    }
 
-	@Override
-	protected List<Section> resolveSubSections(List<Section> sections) {
-		List<Section> allSections = new ArrayList<>();
-		allSections.add(this.referenceDocs);
-		allSections.add(this.guides);
-		allSections.add(this.additionalLinks);
-		allSections.addAll(sections);
-		return allSections;
-	}
+    @Override
+    protected List<Section> resolveSubSections(List<Section> sections) {
+        List<Section> allSections = new ArrayList<>();
+        allSections.add(this.referenceDocs);
+        allSections.add(this.guides);
+        allSections.add(this.additionalLinks);
+        allSections.addAll(sections);
+        return allSections;
+    }
 
-	public GettingStartedSection addReferenceDocLink(String href, String description) {
-		this.referenceDocs.addItem(new Link(href, description));
-		return this;
-	}
+    public GettingStartedSection addReferenceDocLink(String href, String description) {
+        this.referenceDocs.addItem(new Link(href, description));
+        return this;
+    }
 
-	public BulletedSection<Link> referenceDocs() {
-		return this.referenceDocs;
-	}
+    public BulletedSection<Link> referenceDocs() {
+        return this.referenceDocs;
+    }
 
-	public GettingStartedSection addGuideLink(String href, String description) {
-		this.guides.addItem(new Link(href, description));
-		return this;
-	}
+    public GettingStartedSection addGuideLink(String href, String description) {
+        this.guides.addItem(new Link(href, description));
+        return this;
+    }
 
-	public BulletedSection<Link> guides() {
-		return this.guides;
-	}
+    public BulletedSection<Link> guides() {
+        return this.guides;
+    }
 
-	public GettingStartedSection addAdditionalLink(String href, String description) {
-		this.additionalLinks.addItem(new Link(href, description));
-		return this;
-	}
+    public GettingStartedSection addAdditionalLink(String href, String description) {
+        this.additionalLinks.addItem(new Link(href, description));
+        return this;
+    }
 
-	public BulletedSection<Link> additionalLinks() {
-		return this.additionalLinks;
-	}
+    public BulletedSection<Link> additionalLinks() {
+        return this.additionalLinks;
+    }
 
-	/**
-	 * Internal representation of a link.
-	 */
-	public static class Link {
+    /**
+     * Internal representation of a link.
+     */
+    public static class Link {
 
-		private final String href;
+        private final String href;
 
-		private final String description;
+        private final String description;
 
-		Link(String href, String description) {
-			this.href = href;
-			this.description = description;
-		}
+        Link(String href, String description) {
+            this.href = href;
+            this.description = description;
+        }
 
-		public String getHref() {
-			return this.href;
-		}
+        public String getHref() {
+            return this.href;
+        }
 
-		public String getDescription() {
-			return this.description;
-		}
-
-	}
-
+        public String getDescription() {
+            return this.description;
+        }
+    }
 }

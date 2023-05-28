@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code;
 
 import java.util.stream.Stream;
-
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
@@ -31,9 +29,7 @@ import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import org.springframework.core.io.ClassPathResource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -43,103 +39,68 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class CodeComplianceTests extends AbstractComplianceTests {
 
-	private static final BuildSystem maven = BuildSystem.forId(MavenBuildSystem.ID);
+    private static final BuildSystem maven = BuildSystem.forId(MavenBuildSystem.ID);
 
-	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments(new JavaLanguage(), "java"),
-				Arguments.arguments(new GroovyLanguage(), "groovy"), Arguments.arguments(new KotlinLanguage(), "kt"));
-	}
+    static Stream<Arguments> parameters() {
+        return Stream.of(Arguments.arguments(new JavaLanguage(), "java"), Arguments.arguments(new GroovyLanguage(), "groovy"), Arguments.arguments(new KotlinLanguage(), "kt"));
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationJar(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1");
-		assertThat(project).filePaths()
-			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
-							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationJar(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1");
+        assertThat(project).filePaths().contains(String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(), language.sourceFileExtension()), String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(), language.sourceFileExtension()), "src/main/resources/application.properties");
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationWar(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1",
-				(description) -> description.setPackaging(Packaging.forId("war")));
-		assertThat(project).filePaths()
-			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
-							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationWar(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1", (description) -> description.setPackaging(Packaging.forId("war")));
+        assertThat(project).filePaths().contains(String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(), language.sourceFileExtension()), String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(), language.sourceFileExtension()), "src/main/resources/application.properties");
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationMainClass(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1");
-		assertThat(project).asJvmModule(language)
-			.mainSource("com.example.demo", "DemoApplication")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/DemoApplication." + getExpectedExtension(language)));
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationMainClass(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1");
+        assertThat(project).asJvmModule(language).mainSource("com.example.demo", "DemoApplication").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/DemoApplication." + getExpectedExtension(language)));
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationTestClass(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1");
-		assertThat(project).asJvmModule(language)
-			.testSource("com.example.demo", "DemoApplicationTests")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/DemoApplicationTests." + getExpectedExtension(language)));
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationTestClass(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1");
+        assertThat(project).asJvmModule(language).testSource("com.example.demo", "DemoApplicationTests").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/DemoApplicationTests." + getExpectedExtension(language)));
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationTestClassWeb(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1",
-				(description) -> description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB)));
-		assertThat(project).asJvmModule(language)
-			.testSource("com.example.demo", "DemoApplicationTests")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/DemoApplicationTestsWeb." + getExpectedExtension(language)));
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationTestClassWeb(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1", (description) -> description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB)));
+        assertThat(project).asJvmModule(language).testSource("com.example.demo", "DemoApplicationTests").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/DemoApplicationTestsWeb." + getExpectedExtension(language)));
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationServletInitializer(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1",
-				(description) -> description.setPackaging(Packaging.forId("war")));
-		assertThat(project).asJvmModule(language)
-			.mainSource("com.example.demo", "ServletInitializer")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/" + "ServletInitializer." + getExpectedExtension(language)));
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationServletInitializer(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1", (description) -> description.setPackaging(Packaging.forId("war")));
+        assertThat(project).asJvmModule(language).mainSource("com.example.demo", "ServletInitializer").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/" + "ServletInitializer." + getExpectedExtension(language)));
+    }
 
-	@ParameterizedTest
-	@MethodSource("parameters")
-	void currentGenerationCustomCoordinates(Language language) {
-		ProjectStructure project = generateProject(language, maven, "2.4.1", (description) -> {
-			description.setGroupId("com.example.acme");
-			description.setArtifactId("my-project");
-			description.setPackageName("com.example.acme.myproject");
-			description.setApplicationName("MyProjectApplication");
-		});
-		assertThat(project).asJvmModule(language)
-			.mainSource("com.example.acme.myproject", "MyProjectApplication")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/MyProjectApplication." + getExpectedExtension(language)));
-		assertThat(project).asJvmModule(language)
-			.testSource("com.example.acme.myproject", "MyProjectApplicationTests")
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + language + "/standard/MyProjectApplicationTests." + getExpectedExtension(language)));
-	}
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void currentGenerationCustomCoordinates(Language language) {
+        ProjectStructure project = generateProject(language, maven, "2.4.1", (description) -> {
+            description.setGroupId("com.example.acme");
+            description.setArtifactId("my-project");
+            description.setPackageName("com.example.acme.myproject");
+            description.setApplicationName("MyProjectApplication");
+        });
+        assertThat(project).asJvmModule(language).mainSource("com.example.acme.myproject", "MyProjectApplication").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/MyProjectApplication." + getExpectedExtension(language)));
+        assertThat(project).asJvmModule(language).testSource("com.example.acme.myproject", "MyProjectApplicationTests").hasSameContentAs(new ClassPathResource("project/" + language + "/standard/MyProjectApplicationTests." + getExpectedExtension(language)));
+    }
 
-	private String getExpectedExtension(Language language) {
-		return language.sourceFileExtension() + ".gen";
-	}
-
+    private String getExpectedExtension(Language language) {
+        return language.sourceFileExtension() + ".gen";
+    }
 }

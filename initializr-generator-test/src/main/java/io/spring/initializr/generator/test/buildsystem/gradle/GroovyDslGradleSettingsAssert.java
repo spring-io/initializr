@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.buildsystem.gradle;
 
 import io.spring.initializr.generator.test.io.AbstractTextAssert;
@@ -25,28 +24,27 @@ import io.spring.initializr.generator.test.io.AbstractTextAssert;
  */
 public class GroovyDslGradleSettingsAssert extends AbstractTextAssert<GroovyDslGradleSettingsAssert> {
 
-	public GroovyDslGradleSettingsAssert(String content) {
-		super(content, GroovyDslGradleSettingsAssert.class);
-	}
+    public GroovyDslGradleSettingsAssert(String content) {
+        super(content, GroovyDslGradleSettingsAssert.class);
+    }
 
-	/**
-	 * Assert {@code settings.gradle} defines the specified project name.
-	 * @param name the name of the project
-	 * @return {@code this} assertion object
-	 */
-	public GroovyDslGradleSettingsAssert hasProjectName(String name) {
-		return hasProperty("rootProject.name", name);
-	}
+    /**
+     * Assert {@code settings.gradle} defines the specified project name.
+     * @param name the name of the project
+     * @return {@code this} assertion object
+     */
+    public GroovyDslGradleSettingsAssert hasProjectName(String name) {
+        return hasProperty("rootProject.name", name);
+    }
 
-	/**
-	 * Assert {@code settings.gradle} defines a property with the specified name and
-	 * value.
-	 * @param name the name of the property
-	 * @param value the value
-	 * @return {@code this} assertion object
-	 */
-	public GroovyDslGradleSettingsAssert hasProperty(String name, String value) {
-		return contains(String.format("%s = '%s", name, value));
-	}
-
+    /**
+     * Assert {@code settings.gradle} defines a property with the specified name and
+     * value.
+     * @param name the name of the property
+     * @param value the value
+     * @return {@code this} assertion object
+     */
+    public GroovyDslGradleSettingsAssert hasProperty(String name, String value) {
+        return contains(String.format("%s = '%s", name, value));
+    }
 }

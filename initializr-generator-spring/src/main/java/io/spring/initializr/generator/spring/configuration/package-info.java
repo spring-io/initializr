@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Configuration contributors. Generate additional project structure or configuration
  * assets based on requested dependencies.
  */
 package io.spring.initializr.generator.spring.configuration;
+

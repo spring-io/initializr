@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.info;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 
@@ -32,28 +29,27 @@ import org.springframework.boot.actuate.info.InfoContributor;
  */
 public class BomRangesInfoContributor implements InfoContributor {
 
-	private final InitializrMetadataProvider metadataProvider;
+    private final InitializrMetadataProvider metadataProvider;
 
-	public BomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
+    public BomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
+        this.metadataProvider = metadataProvider;
+    }
 
-	@Override
-	public void contribute(Info.Builder builder) {
-		Map<String, Object> details = new LinkedHashMap<>();
-		this.metadataProvider.get().getConfiguration().getEnv().getBoms().forEach((k, v) -> {
-			if (v.getMappings() != null && !v.getMappings().isEmpty()) {
-				Map<String, Object> bom = new LinkedHashMap<>();
-				v.getMappings().forEach((it) -> {
-					String requirement = "Spring Boot " + it.determineCompatibilityRangeRequirement();
-					bom.put(it.getVersion(), requirement);
-				});
-				details.put(k, bom);
-			}
-		});
-		if (!details.isEmpty()) {
-			builder.withDetail("bom-ranges", details);
-		}
-	}
-
+    @Override
+    public void contribute(Info.Builder builder) {
+        Map<String, Object> details = new LinkedHashMap<>();
+        this.metadataProvider.get().getConfiguration().getEnv().getBoms().forEach((k, v) -> {
+            if (v.getMappings() != null && !v.getMappings().isEmpty()) {
+                Map<String, Object> bom = new LinkedHashMap<>();
+                v.getMappings().forEach((it) -> {
+                    String requirement = "Spring Boot " + it.determineCompatibilityRangeRequirement();
+                    bom.put(it.getVersion(), requirement);
+                });
+                details.put(k, bom);
+            }
+        });
+        if (!details.isEmpty()) {
+            builder.withDetail("bom-ranges", details);
+        }
+    }
 }

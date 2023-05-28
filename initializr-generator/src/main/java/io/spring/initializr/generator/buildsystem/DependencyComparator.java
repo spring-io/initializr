@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem;
 
 import java.util.Comparator;
@@ -26,31 +25,30 @@ import java.util.Comparator;
  */
 public class DependencyComparator implements Comparator<Dependency> {
 
-	/**
-	 * A default stateless instance.
-	 */
-	public static final DependencyComparator INSTANCE = new DependencyComparator();
+    /**
+     * A default stateless instance.
+     */
+    public static final DependencyComparator INSTANCE = new DependencyComparator();
 
-	@Override
-	public int compare(Dependency o1, Dependency o2) {
-		if (isSpringBootDependency(o1) && isSpringBootDependency(o2)) {
-			return o1.getArtifactId().compareTo(o2.getArtifactId());
-		}
-		if (isSpringBootDependency(o1)) {
-			return -1;
-		}
-		if (isSpringBootDependency(o2)) {
-			return 1;
-		}
-		int group = o1.getGroupId().compareTo(o2.getGroupId());
-		if (group != 0) {
-			return group;
-		}
-		return o1.getArtifactId().compareTo(o2.getArtifactId());
-	}
+    @Override
+    public int compare(Dependency o1, Dependency o2) {
+        if (isSpringBootDependency(o1) && isSpringBootDependency(o2)) {
+            return o1.getArtifactId().compareTo(o2.getArtifactId());
+        }
+        if (isSpringBootDependency(o1)) {
+            return -1;
+        }
+        if (isSpringBootDependency(o2)) {
+            return 1;
+        }
+        int group = o1.getGroupId().compareTo(o2.getGroupId());
+        if (group != 0) {
+            return group;
+        }
+        return o1.getArtifactId().compareTo(o2.getArtifactId());
+    }
 
-	private boolean isSpringBootDependency(Dependency dependency) {
-		return dependency.getGroupId().startsWith("org.springframework.boot");
-	}
-
+    private boolean isSpringBootDependency(Dependency dependency) {
+        return dependency.getGroupId().startsWith("org.springframework.boot");
+    }
 }

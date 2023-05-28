@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller.custom;
 
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -26,27 +25,26 @@ import io.spring.initializr.generator.project.ProjectDescription;
  */
 class CustomProjectDescription extends MutableProjectDescription {
 
-	private boolean customFlag;
+    private boolean customFlag;
 
-	CustomProjectDescription() {
-	}
+    CustomProjectDescription() {
+    }
 
-	CustomProjectDescription(CustomProjectDescription source) {
-		super(source);
-		this.customFlag = source.isCustomFlag();
-	}
+    CustomProjectDescription(CustomProjectDescription source) {
+        super(source);
+        this.customFlag = source.isCustomFlag();
+    }
 
-	@Override
-	public CustomProjectDescription createCopy() {
-		return new CustomProjectDescription(this);
-	}
+    @Override
+    public CustomProjectDescription createCopy() {
+        return new CustomProjectDescription(this);
+    }
 
-	boolean isCustomFlag() {
-		return this.customFlag;
-	}
+    boolean isCustomFlag() {
+        return this.customFlag;
+    }
 
-	void setCustomFlag(boolean customFlag) {
-		this.customFlag = customFlag;
-	}
-
+    void setCustomFlag(boolean customFlag) {
+        this.customFlag = customFlag;
+    }
 }

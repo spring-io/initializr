@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -29,38 +27,37 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  */
 public class JavaTypeDeclaration extends TypeDeclaration {
 
-	private int modifiers;
+    private int modifiers;
 
-	private final List<JavaFieldDeclaration> fieldDeclarations = new ArrayList<>();
+    private final List<JavaFieldDeclaration> fieldDeclarations = new ArrayList<>();
 
-	private final List<JavaMethodDeclaration> methodDeclarations = new ArrayList<>();
+    private final List<JavaMethodDeclaration> methodDeclarations = new ArrayList<>();
 
-	JavaTypeDeclaration(String name) {
-		super(name);
-	}
+    JavaTypeDeclaration(String name) {
+        super(name);
+    }
 
-	public void modifiers(int modifiers) {
-		this.modifiers = modifiers;
-	}
+    public void modifiers(int modifiers) {
+        this.modifiers = modifiers;
+    }
 
-	public int getModifiers() {
-		return this.modifiers;
-	}
+    public int getModifiers() {
+        return this.modifiers;
+    }
 
-	public void addFieldDeclaration(JavaFieldDeclaration fieldDeclaration) {
-		this.fieldDeclarations.add(fieldDeclaration);
-	}
+    public void addFieldDeclaration(JavaFieldDeclaration fieldDeclaration) {
+        this.fieldDeclarations.add(fieldDeclaration);
+    }
 
-	public List<JavaFieldDeclaration> getFieldDeclarations() {
-		return this.fieldDeclarations;
-	}
+    public List<JavaFieldDeclaration> getFieldDeclarations() {
+        return this.fieldDeclarations;
+    }
 
-	public void addMethodDeclaration(JavaMethodDeclaration methodDeclaration) {
-		this.methodDeclarations.add(methodDeclaration);
-	}
+    public void addMethodDeclaration(JavaMethodDeclaration methodDeclaration) {
+        this.methodDeclarations.add(methodDeclaration);
+    }
 
-	public List<JavaMethodDeclaration> getMethodDeclarations() {
-		return this.methodDeclarations;
-	}
-
+    public List<JavaMethodDeclaration> getMethodDeclarations() {
+        return this.methodDeclarations;
+    }
 }

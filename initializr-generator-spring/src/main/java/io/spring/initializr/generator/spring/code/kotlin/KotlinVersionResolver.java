@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -26,12 +25,11 @@ import io.spring.initializr.generator.project.ProjectDescription;
 @FunctionalInterface
 public interface KotlinVersionResolver {
 
-	/**
-	 * Resolves the Kotlin version to use for the generation of the project with the given
-	 * {@code description}.
-	 * @param description the description of the project being generated
-	 * @return the corresponding Kotlin version
-	 */
-	String resolveKotlinVersion(ProjectDescription description);
-
+    /**
+     * Resolves the Kotlin version to use for the generation of the project with the given
+     * {@code description}.
+     * @param description the description of the project being generated
+     * @return the corresponding Kotlin version
+     */
+    String resolveKotlinVersion(ProjectDescription description);
 }

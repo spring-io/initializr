@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.lang.annotation.Documented;
@@ -21,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.springframework.context.annotation.Conditional;
 
 /**
@@ -36,11 +34,10 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OnGradleVersionCondition.class)
 public @interface ConditionalOnGradleVersion {
 
-	/**
-	 * The Gradle generations that should be checked. The condition matches when at least
-	 * one gradle generation matches.
-	 * @return the gradle generations to check
-	 */
-	String[] value();
-
+    /**
+     * The Gradle generations that should be checked. The condition matches when at least
+     * one gradle generation matches.
+     * @return the gradle generations to check
+     */
+    String[] value();
 }

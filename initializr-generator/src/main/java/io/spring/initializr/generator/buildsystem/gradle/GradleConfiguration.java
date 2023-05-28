@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.util.Collections;
@@ -28,61 +27,59 @@ import java.util.Set;
  */
 public class GradleConfiguration {
 
-	private final String name;
+    private final String name;
 
-	private final Set<String> extendsFrom;
+    private final Set<String> extendsFrom;
 
-	protected GradleConfiguration(Builder builder) {
-		this.name = builder.name;
-		this.extendsFrom = Collections.unmodifiableSet(new LinkedHashSet<>(builder.extendsFrom));
-	}
+    protected GradleConfiguration(Builder builder) {
+        this.name = builder.name;
+        this.extendsFrom = Collections.unmodifiableSet(new LinkedHashSet<>(builder.extendsFrom));
+    }
 
-	/**
-	 * Return the name of the configuration.
-	 * @return the configuration name
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Return the name of the configuration.
+     * @return the configuration name
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Return the configuration names that this configuration should extend from.
-	 * @return the configuration names that this configuration should extend from
-	 */
-	public Set<String> getExtendsFrom() {
-		return this.extendsFrom;
-	}
+    /**
+     * Return the configuration names that this configuration should extend from.
+     * @return the configuration names that this configuration should extend from
+     */
+    public Set<String> getExtendsFrom() {
+        return this.extendsFrom;
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private final String name;
+        private final String name;
 
-		private final Set<String> extendsFrom = new LinkedHashSet<>();
+        private final Set<String> extendsFrom = new LinkedHashSet<>();
 
-		protected Builder(String name) {
-			this.name = name;
-		}
+        protected Builder(String name) {
+            this.name = name;
+        }
 
-		/**
-		 * Add a configuration name that this configuration should extend from. Does
-		 * nothing if such configuration is already present.
-		 * @param configurationName the name of a configuration this configuration should
-		 * extend from
-		 * @return this for method chaining
-		 */
-		public Builder extendsFrom(String configurationName) {
-			this.extendsFrom.add(configurationName);
-			return this;
-		}
+        /**
+         * Add a configuration name that this configuration should extend from. Does
+         * nothing if such configuration is already present.
+         * @param configurationName the name of a configuration this configuration should
+         * extend from
+         * @return this for method chaining
+         */
+        public Builder extendsFrom(String configurationName) {
+            this.extendsFrom.add(configurationName);
+            return this;
+        }
 
-		/**
-		 * Build a {@link GradleConfiguration} with the current state of this builder.
-		 * @return a {@link GradleConfiguration}
-		 */
-		public GradleConfiguration build() {
-			return new GradleConfiguration(this);
-		}
-
-	}
-
+        /**
+         * Build a {@link GradleConfiguration} with the current state of this builder.
+         * @return a {@link GradleConfiguration}
+         */
+        public GradleConfiguration build() {
+            return new GradleConfiguration(this);
+        }
+    }
 }

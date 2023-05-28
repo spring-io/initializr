@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 import io.spring.initializr.generator.language.SourceCode;
@@ -25,8 +24,7 @@ import io.spring.initializr.generator.language.SourceCode;
  */
 public class GroovySourceCode extends SourceCode<GroovyTypeDeclaration, GroovyCompilationUnit> {
 
-	public GroovySourceCode() {
-		super(GroovyCompilationUnit::new);
-	}
-
+    public GroovySourceCode() {
+        super(GroovyCompilationUnit::new);
+    }
 }

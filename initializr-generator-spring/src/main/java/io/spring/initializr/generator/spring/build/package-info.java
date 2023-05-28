@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Build contributors. Generate a build according to the chosen Spring Boot generation.
  */
 package io.spring.initializr.generator.spring.build;
+

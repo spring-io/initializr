@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.io.text;
 
 import java.io.IOException;
@@ -27,11 +26,10 @@ import java.io.PrintWriter;
  */
 public interface Section {
 
-	/**
-	 * Write the content of the section to the specified {@link PrintWriter writer}.
-	 * @param writer the writer to use
-	 * @throws IOException if writing the section failed
-	 */
-	void write(PrintWriter writer) throws IOException;
-
+    /**
+     * Write the content of the section to the specified {@link PrintWriter writer}.
+     * @param writer the writer to use
+     * @throws IOException if writing the section failed
+     */
+    void write(PrintWriter writer) throws IOException;
 }

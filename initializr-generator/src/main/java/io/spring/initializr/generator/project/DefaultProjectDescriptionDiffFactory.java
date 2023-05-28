@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 /**
@@ -24,9 +23,8 @@ package io.spring.initializr.generator.project;
  */
 public class DefaultProjectDescriptionDiffFactory implements ProjectDescriptionDiffFactory {
 
-	@Override
-	public ProjectDescriptionDiff create(ProjectDescription description) {
-		return new ProjectDescriptionDiff(description);
-	}
-
+    @Override
+    public ProjectDescriptionDiff create(ProjectDescription description) {
+        return new ProjectDescriptionDiff(description);
+    }
 }

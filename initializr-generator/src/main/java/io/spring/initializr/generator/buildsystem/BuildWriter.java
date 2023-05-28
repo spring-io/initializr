@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem;
 
 import java.io.IOException;
@@ -27,11 +26,10 @@ import java.io.Writer;
  */
 public interface BuildWriter {
 
-	/**
-	 * Write the {@link Build} to the specified {@link Writer}.
-	 * @param out the writer to use
-	 * @throws IOException if writing the build to {@code out} failed
-	 */
-	void writeBuild(Writer out) throws IOException;
-
+    /**
+     * Write the {@link Build} to the specified {@link Writer}.
+     * @param out the writer to use
+     * @throws IOException if writing the build to {@code out} failed
+     */
+    void writeBuild(Writer out) throws IOException;
 }

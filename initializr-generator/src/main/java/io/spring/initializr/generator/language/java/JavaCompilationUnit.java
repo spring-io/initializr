@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.CompilationUnit;
@@ -25,13 +24,12 @@ import io.spring.initializr.generator.language.CompilationUnit;
  */
 public class JavaCompilationUnit extends CompilationUnit<JavaTypeDeclaration> {
 
-	JavaCompilationUnit(String packageName, String name) {
-		super(packageName, name);
-	}
+    JavaCompilationUnit(String packageName, String name) {
+        super(packageName, name);
+    }
 
-	@Override
-	protected JavaTypeDeclaration doCreateTypeDeclaration(String name) {
-		return new JavaTypeDeclaration(name);
-	}
-
+    @Override
+    protected JavaTypeDeclaration doCreateTypeDeclaration(String name) {
+        return new JavaTypeDeclaration(name);
+    }
 }

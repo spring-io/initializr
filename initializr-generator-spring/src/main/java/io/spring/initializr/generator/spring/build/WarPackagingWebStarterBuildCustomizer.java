@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -32,36 +30,35 @@ import org.springframework.core.Ordered;
  */
 public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	private final BuildMetadataResolver buildMetadataResolver;
+    private final BuildMetadataResolver buildMetadataResolver;
 
-	public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
-		this.metadata = metadata;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
-	}
+    public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
+        this.metadata = metadata;
+        this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+    }
 
-	@Override
-	public void customize(Build build) {
-		if (!this.buildMetadataResolver.hasFacet(build, "web")) {
-			// Need to be able to bootstrap the web app
-			Dependency dependency = determineWebDependency(this.metadata);
-			build.dependencies().add(dependency.getId(), MetadataBuildItemMapper.toDependency(dependency));
-		}
-		// Add the tomcat starter in provided scope
-		Dependency tomcat = Dependency.createSpringBootStarter("tomcat");
-		tomcat.setScope(Dependency.SCOPE_PROVIDED);
-		build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat));
-	}
+    @Override
+    public void customize(Build build) {
+        if (!this.buildMetadataResolver.hasFacet(build, "web")) {
+            // Need to be able to bootstrap the web app
+            Dependency dependency = determineWebDependency(this.metadata);
+            build.dependencies().add(dependency.getId(), MetadataBuildItemMapper.toDependency(dependency));
+        }
+        // Add the tomcat starter in provided scope
+        Dependency tomcat = Dependency.createSpringBootStarter("tomcat");
+        tomcat.setScope(Dependency.SCOPE_PROVIDED);
+        build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat));
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE - 10;
-	}
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 10;
+    }
 
-	private Dependency determineWebDependency(InitializrMetadata metadata) {
-		Dependency web = metadata.getDependencies().get("web");
-		return (web != null) ? web : Dependency.createSpringBootStarter("web");
-	}
-
+    private Dependency determineWebDependency(InitializrMetadata metadata) {
+        Dependency web = metadata.getDependencies().get("web");
+        return (web != null) ? web : Dependency.createSpringBootStarter("web");
+    }
 }

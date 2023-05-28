@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.dependency.devtools;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenDependency;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -33,27 +31,23 @@ import static org.mockito.Mockito.mock;
 @SuppressWarnings("removal")
 class DevToolsMavenBuildCustomizerTests {
 
-	private static final Dependency DEVTOOLS_DEPENDENCY = Dependency
-		.withCoordinates("org.springframework.boot", "spring-boot-devtools")
-		.build();
+    private static final Dependency DEVTOOLS_DEPENDENCY = Dependency.withCoordinates("org.springframework.boot", "spring-boot-devtools").build();
 
-	@Test
-	void mavenWithDevtoolsSwitchOptionalFlag() {
-		MavenBuild build = new MavenBuild();
-		build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
-		new DevToolsMavenBuildCustomizer("devtools").customize(build);
-		Dependency devtools = build.dependencies().get("devtools");
-		assertThat(devtools).isInstanceOf(MavenDependency.class);
-		assertThat(((MavenDependency) devtools).isOptional()).isTrue();
+    @Test
+    void mavenWithDevtoolsSwitchOptionalFlag() {
+        MavenBuild build = new MavenBuild();
+        build.dependencies().add("devtools", DEVTOOLS_DEPENDENCY);
+        new DevToolsMavenBuildCustomizer("devtools").customize(build);
+        Dependency devtools = build.dependencies().get("devtools");
+        assertThat(devtools).isInstanceOf(MavenDependency.class);
+        assertThat(((MavenDependency) devtools).isOptional()).isTrue();
+    }
 
-	}
-
-	@Test
-	void mavenWithoutDevtoolsDoesNotChangeDependencies() {
-		MavenBuild build = new MavenBuild();
-		build.dependencies().add("web", mock(Dependency.class));
-		new DevToolsMavenBuildCustomizer("devtools").customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("web");
-	}
-
+    @Test
+    void mavenWithoutDevtoolsDoesNotChangeDependencies() {
+        MavenBuild build = new MavenBuild();
+        build.dependencies().add("web", mock(Dependency.class));
+        new DevToolsMavenBuildCustomizer("devtools").customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("web");
+    }
 }

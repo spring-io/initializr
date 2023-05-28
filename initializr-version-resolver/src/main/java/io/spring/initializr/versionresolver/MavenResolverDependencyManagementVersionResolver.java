@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.versionresolver;
 
 import java.nio.file.Path;
@@ -21,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
@@ -53,71 +51,55 @@ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
  */
 class MavenResolverDependencyManagementVersionResolver implements DependencyManagementVersionResolver {
 
-	private static final RemoteRepository mavenCentral = new RemoteRepository.Builder("central", "default",
-			"https://repo1.maven.org/maven2")
-		.build();
+    private static final RemoteRepository mavenCentral = new RemoteRepository.Builder("central", "default", "https://repo1.maven.org/maven2").build();
 
-	private static final RemoteRepository springMilestones = new RemoteRepository.Builder("spring-milestones",
-			"default", "https://repo.spring.io/milestone")
-		.build();
+    private static final RemoteRepository springMilestones = new RemoteRepository.Builder("spring-milestones", "default", "https://repo.spring.io/milestone").build();
 
-	private static final RemoteRepository springSnapshots = new RemoteRepository.Builder("spring-snapshots", "default",
-			"https://repo.spring.io/snapshot")
-		.build();
+    private static final RemoteRepository springSnapshots = new RemoteRepository.Builder("spring-snapshots", "default", "https://repo.spring.io/snapshot").build();
 
-	private static final List<RemoteRepository> repositories = Arrays.asList(mavenCentral, springMilestones,
-			springSnapshots);
+    private static final List<RemoteRepository> repositories = Arrays.asList(mavenCentral, springMilestones, springSnapshots);
 
-	private final Object monitor = new Object();
+    private final Object monitor = new Object();
 
-	private final RepositorySystemSession repositorySystemSession;
+    private final RepositorySystemSession repositorySystemSession;
 
-	private final RepositorySystem repositorySystem;
+    private final RepositorySystem repositorySystem;
 
-	MavenResolverDependencyManagementVersionResolver(Path cacheLocation) {
-		ServiceLocator serviceLocator = createServiceLocator();
-		DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
-		session.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(false, false));
-		LocalRepository localRepository = new LocalRepository(cacheLocation.toFile());
-		this.repositorySystem = serviceLocator.getService(RepositorySystem.class);
-		session.setLocalRepositoryManager(this.repositorySystem.newLocalRepositoryManager(session, localRepository));
-		session.setUserProperties(System.getProperties());
-		session.setReadOnly();
-		this.repositorySystemSession = session;
-	}
+    MavenResolverDependencyManagementVersionResolver(Path cacheLocation) {
+        ServiceLocator serviceLocator = createServiceLocator();
+        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+        session.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(false, false));
+        LocalRepository localRepository = new LocalRepository(cacheLocation.toFile());
+        this.repositorySystem = serviceLocator.getService(RepositorySystem.class);
+        session.setLocalRepositoryManager(this.repositorySystem.newLocalRepositoryManager(session, localRepository));
+        session.setUserProperties(System.getProperties());
+        session.setReadOnly();
+        this.repositorySystemSession = session;
+    }
 
-	@Override
-	public Map<String, String> resolve(String groupId, String artifactId, String version) {
-		ArtifactDescriptorResult bom = resolveBom(groupId, artifactId, version);
-		Map<String, String> managedVersions = new HashMap<>();
-		bom.getManagedDependencies()
-			.stream()
-			.map(Dependency::getArtifact)
-			.forEach((artifact) -> managedVersions.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(),
-					artifact.getVersion()));
-		return managedVersions;
-	}
+    @Override
+    public Map<String, String> resolve(String groupId, String artifactId, String version) {
+        ArtifactDescriptorResult bom = resolveBom(groupId, artifactId, version);
+        Map<String, String> managedVersions = new HashMap<>();
+        bom.getManagedDependencies().stream().map(Dependency::getArtifact).forEach((artifact) -> managedVersions.putIfAbsent(artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getVersion()));
+        return managedVersions;
+    }
 
-	private ArtifactDescriptorResult resolveBom(String groupId, String artifactId, String version) {
-		synchronized (this.monitor) {
-			try {
-				return this.repositorySystem.readArtifactDescriptor(this.repositorySystemSession,
-						new ArtifactDescriptorRequest(new DefaultArtifact(groupId, artifactId, "pom", version),
-								repositories, null));
-			}
-			catch (ArtifactDescriptorException ex) {
-				throw new IllegalStateException(
-						"Bom '" + groupId + ":" + artifactId + ":" + version + "' could not be resolved", ex);
-			}
-		}
-	}
+    private ArtifactDescriptorResult resolveBom(String groupId, String artifactId, String version) {
+        synchronized (this.monitor) {
+            try {
+                return this.repositorySystem.readArtifactDescriptor(this.repositorySystemSession, new ArtifactDescriptorRequest(new DefaultArtifact(groupId, artifactId, "pom", version), repositories, null));
+            } catch (ArtifactDescriptorException ex) {
+                throw new IllegalStateException("Bom '" + groupId + ":" + artifactId + ":" + version + "' could not be resolved", ex);
+            }
+        }
+    }
 
-	private static ServiceLocator createServiceLocator() {
-		DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
-		locator.addService(RepositorySystem.class, DefaultRepositorySystem.class);
-		locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
-		locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
-		return locator;
-	}
-
+    private static ServiceLocator createServiceLocator() {
+        DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
+        locator.addService(RepositorySystem.class, DefaultRepositorySystem.class);
+        locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
+        locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
+        return locator;
+    }
 }

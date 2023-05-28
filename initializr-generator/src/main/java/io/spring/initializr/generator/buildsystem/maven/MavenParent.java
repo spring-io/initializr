@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 /**
@@ -23,51 +22,50 @@ package io.spring.initializr.generator.buildsystem.maven;
  */
 public class MavenParent {
 
-	private final String groupId;
+    private final String groupId;
 
-	private final String artifactId;
+    private final String artifactId;
 
-	private final String version;
+    private final String version;
 
-	private final String relativePath;
+    private final String relativePath;
 
-	MavenParent(String groupId, String artifactId, String version, String relativePath) {
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
-		this.relativePath = relativePath;
-	}
+    MavenParent(String groupId, String artifactId, String version, String relativePath) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.relativePath = relativePath;
+    }
 
-	/**
-	 * Return the group ID of the parent.
-	 * @return the group ID
-	 */
-	public String getGroupId() {
-		return this.groupId;
-	}
+    /**
+     * Return the group ID of the parent.
+     * @return the group ID
+     */
+    public String getGroupId() {
+        return this.groupId;
+    }
 
-	/**
-	 * Return the artifact ID of the parent.
-	 * @return the artifact ID
-	 */
-	public String getArtifactId() {
-		return this.artifactId;
-	}
+    /**
+     * Return the artifact ID of the parent.
+     * @return the artifact ID
+     */
+    public String getArtifactId() {
+        return this.artifactId;
+    }
 
-	/**
-	 * Return the version of the parent.
-	 * @return the version
-	 */
-	public String getVersion() {
-		return this.version;
-	}
+    /**
+     * Return the version of the parent.
+     * @return the version
+     */
+    public String getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Return the relative path of this parent.
-	 * @return the relative path of this parent or {@code null}.
-	 */
-	public String getRelativePath() {
-		return this.relativePath;
-	}
-
+    /**
+     * Return the relative path of this parent.
+     * @return the relative path of this parent or {@code null}.
+     */
+    public String getRelativePath() {
+        return this.relativePath;
+    }
 }

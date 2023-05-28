@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
@@ -32,9 +30,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
 import org.springframework.context.support.StaticApplicationContext;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -44,31 +40,29 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ProjectGeneratorSetupExampleTests {
 
-	@Test
-	void generateSimpleProjectStructure(@TempDir Path tempDir) {
-		StaticApplicationContext context = new StaticApplicationContext();
-		context.registerBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build());
-		context.registerBean(IndentingWriterFactory.class, IndentingWriterFactory::withDefaultSettings);
-		context.registerBean(MustacheTemplateRenderer.class,
-				() -> new MustacheTemplateRenderer("classpath:/templates"));
-		context.refresh();
-		DefaultProjectAssetGenerator assetGenerator = new DefaultProjectAssetGenerator((description) -> tempDir);
-		ProjectGenerator projectGenerator = new ProjectGeneratorSetupExample().createProjectGenerator(context);
-		Path directory = projectGenerator.generate(createProjectDescription(), assetGenerator);
-		assertThat(directory).isSameAs(tempDir);
-		Path helloFile = directory.resolve("hello.txt");
-		assertThat(helloFile).exists().isRegularFile().hasContent("Test");
-	}
+    @Test
+    void generateSimpleProjectStructure(@TempDir Path tempDir) {
+        StaticApplicationContext context = new StaticApplicationContext();
+        context.registerBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build());
+        context.registerBean(IndentingWriterFactory.class, IndentingWriterFactory::withDefaultSettings);
+        context.registerBean(MustacheTemplateRenderer.class, () -> new MustacheTemplateRenderer("classpath:/templates"));
+        context.refresh();
+        DefaultProjectAssetGenerator assetGenerator = new DefaultProjectAssetGenerator((description) -> tempDir);
+        ProjectGenerator projectGenerator = new ProjectGeneratorSetupExample().createProjectGenerator(context);
+        Path directory = projectGenerator.generate(createProjectDescription(), assetGenerator);
+        assertThat(directory).isSameAs(tempDir);
+        Path helloFile = directory.resolve("hello.txt");
+        assertThat(helloFile).exists().isRegularFile().hasContent("Test");
+    }
 
-	private MutableProjectDescription createProjectDescription() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setGroupId("com.example");
-		description.setArtifactId("demo");
-		description.setApplicationName("DemoApplication");
-		description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
-		description.setLanguage(Language.forId(JavaLanguage.ID, "11"));
-		description.setBuildSystem(BuildSystem.forId(MavenBuildSystem.ID));
-		return description;
-	}
-
+    private MutableProjectDescription createProjectDescription() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setGroupId("com.example");
+        description.setArtifactId("demo");
+        description.setApplicationName("DemoApplication");
+        description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
+        description.setLanguage(Language.forId(JavaLanguage.ID, "11"));
+        description.setBuildSystem(BuildSystem.forId(MavenBuildSystem.ID));
+        return description;
+    }
 }

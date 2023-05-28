@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -37,41 +33,39 @@ import static org.mockito.Mockito.mock;
  */
 class ConditionalOnRequestedDependencyTests {
 
-	@Test
-	void outcomeWithMatchingDependency() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("web", mock(Dependency.class));
-		assertCondition(description, (context) -> {
-			assertThat(context.getBeansOfType(String.class)).hasSize(1);
-			assertThat(context.getBean(String.class)).isEqualTo("webDependency");
-		});
-	}
+    @Test
+    void outcomeWithMatchingDependency() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.addDependency("web", mock(Dependency.class));
+        assertCondition(description, (context) -> {
+            assertThat(context.getBeansOfType(String.class)).hasSize(1);
+            assertThat(context.getBean(String.class)).isEqualTo("webDependency");
+        });
+    }
 
-	@Test
-	void outcomeWithNoMatch() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.addDependency("another", mock(Dependency.class));
-		assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
-	}
+    @Test
+    void outcomeWithNoMatch() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.addDependency("another", mock(Dependency.class));
+        assertCondition(description, (context) -> assertThat(context.getBeansOfType(String.class)).isEmpty());
+    }
 
-	private void assertCondition(MutableProjectDescription description, Consumer<ProjectGenerationContext> context) {
-		try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
-			projectContext.registerBean(ProjectDescription.class, () -> description);
-			projectContext.register(RequestedDependencyTestConfiguration.class);
-			projectContext.refresh();
-			context.accept(projectContext);
-		}
-	}
+    private void assertCondition(MutableProjectDescription description, Consumer<ProjectGenerationContext> context) {
+        try (ProjectGenerationContext projectContext = new ProjectGenerationContext()) {
+            projectContext.registerBean(ProjectDescription.class, () -> description);
+            projectContext.register(RequestedDependencyTestConfiguration.class);
+            projectContext.refresh();
+            context.accept(projectContext);
+        }
+    }
 
-	@Configuration
-	static class RequestedDependencyTestConfiguration {
+    @Configuration
+    static class RequestedDependencyTestConfiguration {
 
-		@Bean
-		@ConditionalOnRequestedDependency("web")
-		String webActive() {
-			return "webDependency";
-		}
-
-	}
-
+        @Bean
+        @ConditionalOnRequestedDependency("web")
+        String webActive() {
+            return "webDependency";
+        }
+    }
 }

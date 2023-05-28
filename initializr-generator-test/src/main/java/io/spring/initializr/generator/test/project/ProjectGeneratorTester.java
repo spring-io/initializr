@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.project;
 
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
@@ -40,34 +38,27 @@ import io.spring.initializr.generator.project.ProjectGenerator;
  */
 public class ProjectGeneratorTester extends AbstractProjectGenerationTester<ProjectGeneratorTester> {
 
-	public ProjectGeneratorTester() {
-		super();
-	}
+    public ProjectGeneratorTester() {
+        super();
+    }
 
-	private ProjectGeneratorTester(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<MutableProjectDescription> descriptionCustomizer) {
-		super(beanDefinitions, contextInitializer, descriptionCustomizer);
-	}
+    private ProjectGeneratorTester(Map<Class<?>, Supplier<?>> beanDefinitions, Consumer<ProjectGenerationContext> contextInitializer, Consumer<MutableProjectDescription> descriptionCustomizer) {
+        super(beanDefinitions, contextInitializer, descriptionCustomizer);
+    }
 
-	@Override
-	protected ProjectGeneratorTester newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
-			Consumer<ProjectGenerationContext> contextInitializer,
-			Consumer<MutableProjectDescription> descriptionCustomizer) {
-		return new ProjectGeneratorTester(beanDefinitions, contextInitializer, descriptionCustomizer);
-	}
+    @Override
+    protected ProjectGeneratorTester newInstance(Map<Class<?>, Supplier<?>> beanDefinitions, Consumer<ProjectGenerationContext> contextInitializer, Consumer<MutableProjectDescription> descriptionCustomizer) {
+        return new ProjectGeneratorTester(beanDefinitions, contextInitializer, descriptionCustomizer);
+    }
 
-	public ProjectStructure generate(MutableProjectDescription description) {
-		return invokeProjectGeneration(description, (contextInitializer) -> {
-			Path directory = new ProjectGenerator(contextInitializer).generate(description,
-					new DefaultProjectAssetGenerator());
-			return new ProjectStructure(directory);
-		});
-	}
+    public ProjectStructure generate(MutableProjectDescription description) {
+        return invokeProjectGeneration(description, (contextInitializer) -> {
+            Path directory = new ProjectGenerator(contextInitializer).generate(description, new DefaultProjectAssetGenerator());
+            return new ProjectStructure(directory);
+        });
+    }
 
-	public <T> T generate(MutableProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
-		return invokeProjectGeneration(description, (contextInitializer) -> new ProjectGenerator(contextInitializer)
-			.generate(description, projectAssetGenerator));
-	}
-
+    public <T> T generate(MutableProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
+        return invokeProjectGeneration(description, (contextInitializer) -> new ProjectGenerator(contextInitializer).generate(description, projectAssetGenerator));
+    }
 }

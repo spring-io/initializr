@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
@@ -33,54 +31,50 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path> {
 
-	private final ProjectDirectoryFactory projectDirectoryFactory;
+    private final ProjectDirectoryFactory projectDirectoryFactory;
 
-	/**
-	 * Create a new instance with the {@link ProjectDirectoryFactory} to use.
-	 * @param projectDirectoryFactory the project directory factory to use
-	 */
-	public DefaultProjectAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
-		this.projectDirectoryFactory = projectDirectoryFactory;
-	}
+    /**
+     * Create a new instance with the {@link ProjectDirectoryFactory} to use.
+     * @param projectDirectoryFactory the project directory factory to use
+     */
+    public DefaultProjectAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
+        this.projectDirectoryFactory = projectDirectoryFactory;
+    }
 
-	/**
-	 * Create a new instance without an explicit {@link ProjectDirectoryFactory}. A bean
-	 * of that type is expected to be available in the context.
-	 */
-	public DefaultProjectAssetGenerator() {
-		this(null);
-	}
+    /**
+     * Create a new instance without an explicit {@link ProjectDirectoryFactory}. A bean
+     * of that type is expected to be available in the context.
+     */
+    public DefaultProjectAssetGenerator() {
+        this(null);
+    }
 
-	@Override
-	public Path generate(ProjectGenerationContext context) throws IOException {
-		ProjectDescription description = context.getBean(ProjectDescription.class);
-		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(description);
-		Path projectDirectory = initializerProjectDirectory(projectRoot, description);
-		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class)
-			.orderedStream()
-			.toList();
-		for (ProjectContributor contributor : contributors) {
-			contributor.contribute(projectDirectory);
-		}
-		return projectRoot;
-	}
+    @Override
+    public Path generate(ProjectGenerationContext context) throws IOException {
+        ProjectDescription description = context.getBean(ProjectDescription.class);
+        Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(description);
+        Path projectDirectory = initializerProjectDirectory(projectRoot, description);
+        List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class).orderedStream().toList();
+        for (ProjectContributor contributor : contributors) {
+            contributor.contribute(projectDirectory);
+        }
+        return projectRoot;
+    }
 
-	private ProjectDirectoryFactory resolveProjectDirectoryFactory(ProjectGenerationContext context) {
-		return (this.projectDirectoryFactory != null) ? this.projectDirectoryFactory
-				: context.getBean(ProjectDirectoryFactory.class);
-	}
+    private ProjectDirectoryFactory resolveProjectDirectoryFactory(ProjectGenerationContext context) {
+        return (this.projectDirectoryFactory != null) ? this.projectDirectoryFactory : context.getBean(ProjectDirectoryFactory.class);
+    }
 
-	private Path initializerProjectDirectory(Path rootDir, ProjectDescription description) throws IOException {
-		Path projectDirectory = resolveProjectDirectory(rootDir, description);
-		Files.createDirectories(projectDirectory);
-		return projectDirectory;
-	}
+    private Path initializerProjectDirectory(Path rootDir, ProjectDescription description) throws IOException {
+        Path projectDirectory = resolveProjectDirectory(rootDir, description);
+        Files.createDirectories(projectDirectory);
+        return projectDirectory;
+    }
 
-	private Path resolveProjectDirectory(Path rootDir, ProjectDescription description) {
-		if (description.getBaseDirectory() != null) {
-			return rootDir.resolve(description.getBaseDirectory());
-		}
-		return rootDir;
-	}
-
+    private Path resolveProjectDirectory(Path rootDir, ProjectDescription description) {
+        if (description.getBaseDirectory() != null) {
+            return rootDir.resolve(description.getBaseDirectory());
+        }
+        return rootDir;
+    }
 }

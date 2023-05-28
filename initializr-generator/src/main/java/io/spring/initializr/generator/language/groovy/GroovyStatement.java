@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 /**
@@ -22,5 +21,4 @@ package io.spring.initializr.generator.language.groovy;
  * @author Stephane Nicoll
  */
 public class GroovyStatement {
-
 }

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import java.util.Map;
-
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.project.ProjectGenerationInvoker;
 import io.spring.initializr.web.project.ProjectRequest;
@@ -31,17 +29,15 @@ import io.spring.initializr.web.project.WebProjectRequest;
  */
 public class DefaultProjectGenerationController extends ProjectGenerationController<ProjectRequest> {
 
-	public DefaultProjectGenerationController(InitializrMetadataProvider metadataProvider,
-			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker) {
-		super(metadataProvider, projectGenerationInvoker);
-	}
+    public DefaultProjectGenerationController(InitializrMetadataProvider metadataProvider, ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker) {
+        super(metadataProvider, projectGenerationInvoker);
+    }
 
-	@Override
-	public ProjectRequest projectRequest(Map<String, String> headers) {
-		WebProjectRequest request = new WebProjectRequest();
-		request.getParameters().putAll(headers);
-		request.initialize(getMetadata());
-		return request;
-	}
-
+    @Override
+    public ProjectRequest projectRequest(Map<String, String> headers) {
+        WebProjectRequest request = new WebProjectRequest();
+        request.getParameters().putAll(headers);
+        request.initialize(getMetadata());
+        return request;
+    }
 }

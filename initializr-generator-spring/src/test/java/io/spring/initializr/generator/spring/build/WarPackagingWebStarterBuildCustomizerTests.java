@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import java.util.Collections;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -26,7 +24,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -36,46 +33,39 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class WarPackagingWebStarterBuildCustomizerTests {
 
-	@Test
-	void addWebStarterWhenNoWebFacetIsPresent() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", dependency)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
-	}
+    @Test
+    void addWebStarterWhenNoWebFacetIsPresent() {
+        Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add("test");
+        new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
+    }
 
-	@Test
-	void addWebStarterWhenNoWebFacetIsPresentWithCustomWebStarter() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
-		Dependency web = Dependency.withId("web", "com.example", "custom-web-starter", null, Dependency.SCOPE_COMPILE);
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", dependency, web)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
-	}
+    @Test
+    void addWebStarterWhenNoWebFacetIsPresentWithCustomWebStarter() {
+        Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
+        Dependency web = Dependency.withId("web", "com.example", "custom-web-starter", null, Dependency.SCOPE_COMPILE);
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency, web).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add("test");
+        new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
+    }
 
-	@Test
-	void addWebStarterDoesNotReplaceWebFacetDependency() {
-		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
-		dependency.setFacets(Collections.singletonList("web"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", dependency)
-			.build();
-		Build build = createBuild(metadata);
-		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("test", "tomcat");
-	}
+    @Test
+    void addWebStarterDoesNotReplaceWebFacetDependency() {
+        Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
+        dependency.setFacets(Collections.singletonList("web"));
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", dependency).build();
+        Build build = createBuild(metadata);
+        build.dependencies().add("test");
+        new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("test", "tomcat");
+    }
 
-	private Build createBuild(InitializrMetadata metadata) {
-		return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
-	}
-
+    private Build createBuild(InitializrMetadata metadata) {
+        return new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
+    }
 }

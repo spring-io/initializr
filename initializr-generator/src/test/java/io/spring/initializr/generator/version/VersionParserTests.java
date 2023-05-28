@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.version;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -32,104 +29,97 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  */
 class VersionParserTests {
 
-	private VersionParser parser = new VersionParser(Collections.emptyList());
+    private VersionParser parser = new VersionParser(Collections.emptyList());
 
-	@Test
-	void versionWithNoQualifier() {
-		Version version = this.parser.parse("1.2.0");
-		assertThat(version.toString()).isEqualTo("1.2.0");
-	}
+    @Test
+    void versionWithNoQualifier() {
+        Version version = this.parser.parse("1.2.0");
+        assertThat(version.toString()).isEqualTo("1.2.0");
+    }
 
-	@Test
-	void versionWithQualifierAndDotSeparator() {
-		Version version = this.parser.parse("1.2.0.RELEASE");
-		assertThat(version.toString()).isEqualTo("1.2.0.RELEASE");
-	}
+    @Test
+    void versionWithQualifierAndDotSeparator() {
+        Version version = this.parser.parse("1.2.0.RELEASE");
+        assertThat(version.toString()).isEqualTo("1.2.0.RELEASE");
+    }
 
-	@Test
-	void versionWithQualifierAndDashSeparator() {
-		Version version = this.parser.parse("1.2.0-SNAPSHOT");
-		assertThat(version.toString()).isEqualTo("1.2.0-SNAPSHOT");
-	}
+    @Test
+    void versionWithQualifierAndDashSeparator() {
+        Version version = this.parser.parse("1.2.0-SNAPSHOT");
+        assertThat(version.toString()).isEqualTo("1.2.0-SNAPSHOT");
+    }
 
-	@Test
-	void versionWithQualifierVersionAndDotSeparator() {
-		Version version = this.parser.parse("1.2.0.RC2");
-		assertThat(version.toString()).isEqualTo("1.2.0.RC2");
-	}
+    @Test
+    void versionWithQualifierVersionAndDotSeparator() {
+        Version version = this.parser.parse("1.2.0.RC2");
+        assertThat(version.toString()).isEqualTo("1.2.0.RC2");
+    }
 
-	@Test
-	void versionWithQualifierVersionAndDashSeparator() {
-		Version version = this.parser.parse("1.2.0-M3");
-		assertThat(version.toString()).isEqualTo("1.2.0-M3");
-	}
+    @Test
+    void versionWithQualifierVersionAndDashSeparator() {
+        Version version = this.parser.parse("1.2.0-M3");
+        assertThat(version.toString()).isEqualTo("1.2.0-M3");
+    }
 
-	@Test
-	void parseInvalidVersion() {
-		assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parse("foo"));
-	}
+    @Test
+    void parseInvalidVersion() {
+        assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parse("foo"));
+    }
 
-	@Test
-	void safeParseInvalidVersion() {
-		assertThat(this.parser.safeParse("foo")).isNull();
-	}
+    @Test
+    void safeParseInvalidVersion() {
+        assertThat(this.parser.safeParse("foo")).isNull();
+    }
 
-	@Test
-	void parseVersionWithSpaces() {
-		assertThat(this.parser.parse("    1.2.0.RC3  ")).isLessThan(this.parser.parse("1.3.0.RELEASE"));
-	}
+    @Test
+    void parseVersionWithSpaces() {
+        assertThat(this.parser.parse("    1.2.0.RC3  ")).isLessThan(this.parser.parse("1.3.0.RELEASE"));
+    }
 
-	@Test
-	void parseVariableVersionMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("1.3.x.BUILD-SNAPSHOT").toString()).isEqualTo("1.3.9.BUILD-SNAPSHOT");
-	}
+    @Test
+    void parseVariableVersionMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("1.3.x.BUILD-SNAPSHOT").toString()).isEqualTo("1.3.9.BUILD-SNAPSHOT");
+    }
 
-	@Test
-	void parseVariableVersionNoPatchMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("1.x.x.RELEASE").toString()).isEqualTo("1.3.8.RELEASE");
-	}
+    @Test
+    void parseVariableVersionNoPatchMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("1.x.x.RELEASE").toString()).isEqualTo("1.3.8.RELEASE");
+    }
 
-	@Test
-	void parseVariableVersionNoQualifierMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.4.0.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("1.4.x").toString()).isEqualTo("1.4.0.BUILD-SNAPSHOT");
-	}
+    @Test
+    void parseVariableVersionNoQualifierMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.4.0.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("1.4.x").toString()).isEqualTo("1.4.0.BUILD-SNAPSHOT");
+    }
 
-	@Test
-	void parseVariableVersionNoMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("1.4.x.BUILD-SNAPSHOT").toString()).isEqualTo("1.4.999.BUILD-SNAPSHOT");
-	}
+    @Test
+    void parseVariableVersionNoMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("1.4.x.BUILD-SNAPSHOT").toString()).isEqualTo("1.4.999.BUILD-SNAPSHOT");
+    }
 
-	@Test
-	void parseVariableVersionNoPatchNoMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("2.x.x.RELEASE").toString()).isEqualTo("2.999.999.RELEASE");
-	}
+    @Test
+    void parseVariableVersionNoPatchNoMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.3.9.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("2.x.x.RELEASE").toString()).isEqualTo("2.999.999.RELEASE");
+    }
 
-	@Test
-	void parseVariableVersionNoQualifierNoMatch() {
-		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"),
-				this.parser.parse("1.4.0.BUILD-SNAPSHOT"));
-		this.parser = new VersionParser(currentVersions);
-		assertThat(this.parser.parse("1.2.x").toString()).isEqualTo("1.2.999");
-	}
+    @Test
+    void parseVariableVersionNoQualifierNoMatch() {
+        List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.RELEASE"), this.parser.parse("1.4.0.BUILD-SNAPSHOT"));
+        this.parser = new VersionParser(currentVersions);
+        assertThat(this.parser.parse("1.2.x").toString()).isEqualTo("1.2.999");
+    }
 
-	@Test
-	void invalidRange() {
-		assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parseRange("foo-bar"));
-	}
-
+    @Test
+    void invalidRange() {
+        assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parseRange("foo-bar"));
+    }
 }

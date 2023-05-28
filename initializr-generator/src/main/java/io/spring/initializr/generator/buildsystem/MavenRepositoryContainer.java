@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem;
 
 import java.util.LinkedHashMap;
@@ -27,30 +26,29 @@ import java.util.function.Function;
  */
 public class MavenRepositoryContainer extends BuildItemContainer<String, MavenRepository> {
 
-	/**
-	 * Create an instance with the specified {@code itemResolver}.
-	 * @param itemResolver the function that returns a {@link MavenRepository} based on an
-	 * identifier.
-	 */
-	public MavenRepositoryContainer(Function<String, MavenRepository> itemResolver) {
-		super(new LinkedHashMap<>(), itemResolver);
-	}
+    /**
+     * Create an instance with the specified {@code itemResolver}.
+     * @param itemResolver the function that returns a {@link MavenRepository} based on an
+     * identifier.
+     */
+    public MavenRepositoryContainer(Function<String, MavenRepository> itemResolver) {
+        super(new LinkedHashMap<>(), itemResolver);
+    }
 
-	/**
-	 * Register the specified {@link MavenRepository repository}.
-	 * @param repository the repository to register
-	 */
-	public void add(MavenRepository repository) {
-		add(repository.getId(), repository);
-	}
+    /**
+     * Register the specified {@link MavenRepository repository}.
+     * @param repository the repository to register
+     */
+    public void add(MavenRepository repository) {
+        add(repository.getId(), repository);
+    }
 
-	/**
-	 * Register a {@link MavenRepository repository} with the specified
-	 * {@linkplain MavenRepository.Builder state}.
-	 * @param builder the state of the repository
-	 */
-	public void add(MavenRepository.Builder builder) {
-		add(builder.build());
-	}
-
+    /**
+     * Register a {@link MavenRepository repository} with the specified
+     * {@linkplain MavenRepository.Builder state}.
+     * @param builder the state of the repository
+     */
+    public void add(MavenRepository.Builder builder) {
+        add(builder.build());
+    }
 }

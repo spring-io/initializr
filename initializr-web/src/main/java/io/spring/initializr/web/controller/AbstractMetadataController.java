@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import java.nio.charset.StandardCharsets;
-
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,39 +27,37 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 public abstract class AbstractMetadataController {
 
-	protected final InitializrMetadataProvider metadataProvider;
+    protected final InitializrMetadataProvider metadataProvider;
 
-	private Boolean forceSsl;
+    private Boolean forceSsl;
 
-	protected AbstractMetadataController(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
+    protected AbstractMetadataController(InitializrMetadataProvider metadataProvider) {
+        this.metadataProvider = metadataProvider;
+    }
 
-	/**
-	 * Generate a full URL of the service, mostly for use in templates.
-	 * @return the app URL
-	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
-	 */
-	protected String generateAppUrl() {
-		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-		if (isForceSsl()) {
-			builder.scheme("https");
-		}
-		return builder.build().toString();
-	}
+    /**
+     * Generate a full URL of the service, mostly for use in templates.
+     * @return the app URL
+     * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
+     */
+    protected String generateAppUrl() {
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
+        if (isForceSsl()) {
+            builder.scheme("https");
+        }
+        return builder.build().toString();
+    }
 
-	protected String createUniqueId(String content) {
-		StringBuilder builder = new StringBuilder();
-		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);
-		return builder.toString();
-	}
+    protected String createUniqueId(String content) {
+        StringBuilder builder = new StringBuilder();
+        DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);
+        return builder.toString();
+    }
 
-	private boolean isForceSsl() {
-		if (this.forceSsl == null) {
-			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
-		}
-		return this.forceSsl;
-
-	}
-
+    private boolean isForceSsl() {
+        if (this.forceSsl == null) {
+            this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
+        }
+        return this.forceSsl;
+    }
 }

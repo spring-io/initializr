@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -24,10 +23,9 @@ package io.spring.initializr.metadata;
  */
 public interface Defaultable<T> {
 
-	/**
-	 * Return the default value.
-	 * @return the default value
-	 */
-	T getDefault();
-
+    /**
+     * Return the default value.
+     * @return the default value
+     */
+    T getDefault();
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.Arrays;
@@ -26,28 +25,27 @@ import java.util.List;
  */
 public class KotlinReifiedFunctionInvocation extends KotlinExpression {
 
-	private final String name;
+    private final String name;
 
-	private final String targetClass;
+    private final String targetClass;
 
-	private final List<String> arguments;
+    private final List<String> arguments;
 
-	public KotlinReifiedFunctionInvocation(String name, String targetClass, String... arguments) {
-		this.name = name;
-		this.targetClass = targetClass;
-		this.arguments = Arrays.asList(arguments);
-	}
+    public KotlinReifiedFunctionInvocation(String name, String targetClass, String... arguments) {
+        this.name = name;
+        this.targetClass = targetClass;
+        this.arguments = Arrays.asList(arguments);
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getTargetClass() {
-		return this.targetClass;
-	}
+    public String getTargetClass() {
+        return this.targetClass;
+    }
 
-	public List<String> getArguments() {
-		return this.arguments;
-	}
-
+    public List<String> getArguments() {
+        return this.arguments;
+    }
 }

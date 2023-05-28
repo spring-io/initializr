@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Gradle build system. Provides a {@link io.spring.initializr.generator.buildsystem.Build
  * Build} abstraction and a writer for {@code build.gradle} and {@code settings.gradle}.
  */
 package io.spring.initializr.generator.buildsystem.gradle;
+

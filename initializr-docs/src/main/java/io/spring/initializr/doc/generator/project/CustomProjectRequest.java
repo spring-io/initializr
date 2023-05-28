@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import io.spring.initializr.web.project.WebProjectRequest;
@@ -24,5 +23,4 @@ import io.spring.initializr.web.project.WebProjectRequest;
  * @author Stephane Nicoll
  */
 public class CustomProjectRequest extends WebProjectRequest {
-
 }

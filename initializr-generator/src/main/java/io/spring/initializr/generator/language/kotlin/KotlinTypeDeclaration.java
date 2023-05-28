@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -29,38 +27,37 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  */
 public class KotlinTypeDeclaration extends TypeDeclaration {
 
-	private List<KotlinModifier> modifiers = new ArrayList<>();
+    private List<KotlinModifier> modifiers = new ArrayList<>();
 
-	private final List<KotlinPropertyDeclaration> propertyDeclarations = new ArrayList<>();
+    private final List<KotlinPropertyDeclaration> propertyDeclarations = new ArrayList<>();
 
-	private final List<KotlinFunctionDeclaration> functionDeclarations = new ArrayList<>();
+    private final List<KotlinFunctionDeclaration> functionDeclarations = new ArrayList<>();
 
-	KotlinTypeDeclaration(String name) {
-		super(name);
-	}
+    KotlinTypeDeclaration(String name) {
+        super(name);
+    }
 
-	public void modifiers(KotlinModifier... modifiers) {
-		this.modifiers = Arrays.asList(modifiers);
-	}
+    public void modifiers(KotlinModifier... modifiers) {
+        this.modifiers = Arrays.asList(modifiers);
+    }
 
-	List<KotlinModifier> getModifiers() {
-		return this.modifiers;
-	}
+    List<KotlinModifier> getModifiers() {
+        return this.modifiers;
+    }
 
-	public void addPropertyDeclaration(KotlinPropertyDeclaration propertyDeclaration) {
-		this.propertyDeclarations.add(propertyDeclaration);
-	}
+    public void addPropertyDeclaration(KotlinPropertyDeclaration propertyDeclaration) {
+        this.propertyDeclarations.add(propertyDeclaration);
+    }
 
-	public List<KotlinPropertyDeclaration> getPropertyDeclarations() {
-		return this.propertyDeclarations;
-	}
+    public List<KotlinPropertyDeclaration> getPropertyDeclarations() {
+        return this.propertyDeclarations;
+    }
 
-	public void addFunctionDeclaration(KotlinFunctionDeclaration methodDeclaration) {
-		this.functionDeclarations.add(methodDeclaration);
-	}
+    public void addFunctionDeclaration(KotlinFunctionDeclaration methodDeclaration) {
+        this.functionDeclarations.add(methodDeclaration);
+    }
 
-	public List<KotlinFunctionDeclaration> getFunctionDeclarations() {
-		return this.functionDeclarations;
-	}
-
+    public List<KotlinFunctionDeclaration> getFunctionDeclarations() {
+        return this.functionDeclarations;
+    }
 }

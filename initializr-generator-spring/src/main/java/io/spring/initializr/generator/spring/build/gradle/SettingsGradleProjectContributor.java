@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleSettingsWriter;
 import io.spring.initializr.generator.io.IndentingWriter;
@@ -34,29 +32,26 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 class SettingsGradleProjectContributor implements ProjectContributor {
 
-	private final GradleBuild build;
+    private final GradleBuild build;
 
-	private final IndentingWriterFactory indentingWriterFactory;
+    private final IndentingWriterFactory indentingWriterFactory;
 
-	private final GradleSettingsWriter settingsWriter;
+    private final GradleSettingsWriter settingsWriter;
 
-	private final String settingsFileName;
+    private final String settingsFileName;
 
-	SettingsGradleProjectContributor(GradleBuild build, IndentingWriterFactory indentingWriterFactory,
-			GradleSettingsWriter settingsWriter, String settingsFileName) {
-		this.build = build;
-		this.indentingWriterFactory = indentingWriterFactory;
-		this.settingsWriter = settingsWriter;
-		this.settingsFileName = settingsFileName;
-	}
+    SettingsGradleProjectContributor(GradleBuild build, IndentingWriterFactory indentingWriterFactory, GradleSettingsWriter settingsWriter, String settingsFileName) {
+        this.build = build;
+        this.indentingWriterFactory = indentingWriterFactory;
+        this.settingsWriter = settingsWriter;
+        this.settingsFileName = settingsFileName;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Path settingsGradle = Files.createFile(projectRoot.resolve(this.settingsFileName));
-		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle",
-				Files.newBufferedWriter(settingsGradle))) {
-			this.settingsWriter.writeTo(writer, this.build);
-		}
-	}
-
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        Path settingsGradle = Files.createFile(projectRoot.resolve(this.settingsFileName));
+        try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("gradle", Files.newBufferedWriter(settingsGradle))) {
+            this.settingsWriter.writeTo(writer, this.build);
+        }
+    }
 }

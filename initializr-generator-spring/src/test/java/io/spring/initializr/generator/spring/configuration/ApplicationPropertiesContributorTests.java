@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.configuration;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -33,16 +30,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ApplicationPropertiesContributorTests {
 
-	@TempDir
-	Path directory;
+    @TempDir
+    Path directory;
 
-	@Test
-	void applicationConfigurationWithDefaultSettings() throws IOException {
-		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new ApplicationPropertiesContributor().contribute(projectDir);
-		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties")
-			.lines()
-			.isEmpty();
-	}
-
+    @Test
+    void applicationConfigurationWithDefaultSettings() throws IOException {
+        Path projectDir = Files.createTempDirectory(this.directory, "project-");
+        new ApplicationPropertiesContributor().contribute(projectDir);
+        assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties").lines().isEmpty();
+    }
 }

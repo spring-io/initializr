@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code;
 
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -33,14 +31,12 @@ import org.springframework.core.Ordered;
  * @author Andy Wilkinson
  */
 @FunctionalInterface
-public interface MainSourceCodeCustomizer<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
-		extends Ordered {
+public interface MainSourceCodeCustomizer<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>> extends Ordered {
 
-	void customize(S sourceCode);
+    void customize(S sourceCode);
 
-	@Override
-	default int getOrder() {
-		return 0;
-	}
-
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 }

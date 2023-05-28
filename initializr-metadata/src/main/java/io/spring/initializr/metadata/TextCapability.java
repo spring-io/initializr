@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -26,31 +25,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TextCapability extends ServiceCapability<String> {
 
-	private String content;
+    private String content;
 
-	@JsonCreator
-	TextCapability(@JsonProperty("id") String id) {
-		this(id, null, null);
-	}
+    @JsonCreator
+    TextCapability(@JsonProperty("id") String id) {
+        this(id, null, null);
+    }
 
-	TextCapability(String id, String title, String description) {
-		super(id, ServiceCapabilityType.TEXT, title, description);
-	}
+    TextCapability(String id, String title, String description) {
+        super(id, ServiceCapabilityType.TEXT, title, description);
+    }
 
-	@Override
-	public String getContent() {
-		return this.content;
-	}
+    @Override
+    public String getContent() {
+        return this.content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	@Override
-	public void merge(String otherContent) {
-		if (otherContent != null) {
-			this.content = otherContent;
-		}
-	}
-
+    @Override
+    public void merge(String otherContent) {
+        if (otherContent != null) {
+            this.content = otherContent;
+        }
+    }
 }

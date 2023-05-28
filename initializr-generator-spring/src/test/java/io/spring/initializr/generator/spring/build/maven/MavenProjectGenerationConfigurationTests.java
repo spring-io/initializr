@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.buildsystem.BuildWriter;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.java.JavaLanguage;
@@ -32,7 +30,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -42,95 +39,81 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MavenProjectGenerationConfigurationTests {
 
-	private ProjectAssetTester projectTester;
+    private ProjectAssetTester projectTester;
 
-	@BeforeEach
-	void setup(@TempDir Path directory) {
-		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
-			.withConfiguration(BuildProjectGenerationConfiguration.class, MavenProjectGenerationConfiguration.class)
-			.withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build())
-			.withDirectory(directory)
-			.withDescriptionCustomizer((description) -> {
-				description.setBuildSystem(new MavenBuildSystem());
-				description.setLanguage(new JavaLanguage());
-			});
-	}
+    @BeforeEach
+    void setup(@TempDir Path directory) {
+        this.projectTester = new ProjectAssetTester().withIndentingWriterFactory().withConfiguration(BuildProjectGenerationConfiguration.class, MavenProjectGenerationConfiguration.class).withBean(InitializrMetadata.class, () -> InitializrMetadataTestBuilder.withDefaults().build()).withDirectory(directory).withDescriptionCustomizer((description) -> {
+            description.setBuildSystem(new MavenBuildSystem());
+            description.setLanguage(new JavaLanguage());
+        });
+    }
 
-	@Test
-	void buildWriterIsContributed() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(BuildWriter.class)
-					.getBean(BuildWriter.class)
-					.isInstanceOf(MavenBuildProjectContributor.class));
-	}
+    @Test
+    void buildWriterIsContributed() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+        this.projectTester.configure(description, (context) -> assertThat(context).hasSingleBean(BuildWriter.class).getBean(BuildWriter.class).isInstanceOf(MavenBuildProjectContributor.class));
+    }
 
-	@Test
-	void mavenWrapperIsContributedWhenGeneratingMavenProject() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).filePaths()
-			.contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
-	}
+    @Test
+    void mavenWrapperIsContributedWhenGeneratingMavenProject() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties", ".mvn/wrapper/maven-wrapper.jar");
+    }
 
-	@Test
-	void mavenPomIsContributedWhenGeneratingMavenProject() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).filePaths().contains("pom.xml");
-	}
+    @Test
+    void mavenPomIsContributedWhenGeneratingMavenProject() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).filePaths().contains("pom.xml");
+    }
 
-	@Test
-	void warPackagingIsUsedWhenBuildingProjectThatUsesWarPackaging() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
-		description.setPackaging(new WarPackaging());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").containsOnlyOnce("    <packaging>war</packaging>");
-	}
+    @Test
+    void warPackagingIsUsedWhenBuildingProjectThatUsesWarPackaging() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
+        description.setPackaging(new WarPackaging());
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).textFile("pom.xml").containsOnlyOnce("    <packaging>war</packaging>");
+    }
 
-	@Test
-	void testStarterExcludesVintageEngineWithCompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml")
-			.lines()
-			.containsSequence("            <exclusions>", "                <exclusion>",
-					"                    <groupId>org.junit.vintage</groupId>",
-					"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
-					"            </exclusions>");
-	}
+    @Test
+    void testStarterExcludesVintageEngineWithCompatibleVersion() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
+        description.setLanguage(new JavaLanguage());
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).textFile("pom.xml").lines().containsSequence("            <exclusions>", "                <exclusion>", "                    <groupId>org.junit.vintage</groupId>", "                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>", "            </exclusions>");
+    }
 
-	@Test
-	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
-	}
+    @Test
+    void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));
+        description.setLanguage(new JavaLanguage());
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
+    }
 
-	@Test
-	void testStarterDoesNotExcludeVintageEngineWith24Snapshot() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0-SNAPSHOT"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
-	}
+    @Test
+    void testStarterDoesNotExcludeVintageEngineWith24Snapshot() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.4.0-SNAPSHOT"));
+        description.setLanguage(new JavaLanguage());
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
+    }
 
-	@Test
-	void testStarterDoesNotExcludeVintageEngineWith24Milestone() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0-M1"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
-	}
-
+    @Test
+    void testStarterDoesNotExcludeVintageEngineWith24Milestone() {
+        MutableProjectDescription description = new MutableProjectDescription();
+        description.setPlatformVersion(Version.parse("2.4.0-M1"));
+        description.setLanguage(new JavaLanguage());
+        ProjectStructure project = this.projectTester.generate(description);
+        assertThat(project).textFile("pom.xml").doesNotContain("            <exclusions>");
+    }
 }

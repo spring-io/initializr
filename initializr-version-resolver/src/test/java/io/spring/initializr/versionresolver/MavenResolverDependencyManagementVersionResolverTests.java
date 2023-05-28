@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.versionresolver;
 
 import java.nio.file.Path;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
@@ -33,46 +30,39 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  */
 class MavenResolverDependencyManagementVersionResolverTests {
 
-	private DependencyManagementVersionResolver resolver;
+    private DependencyManagementVersionResolver resolver;
 
-	@BeforeEach
-	void createResolver(@TempDir Path temp) {
-		this.resolver = new MavenResolverDependencyManagementVersionResolver(temp);
-	}
+    @BeforeEach
+    void createResolver(@TempDir Path temp) {
+        this.resolver = new MavenResolverDependencyManagementVersionResolver(temp);
+    }
 
-	@Test
-	void springBootDependencies() {
-		Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies",
-				"2.1.5.RELEASE");
-		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
-	}
+    @Test
+    void springBootDependencies() {
+        Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies", "2.1.5.RELEASE");
+        assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
+    }
 
-	@Test
-	void springCloudDependencies() {
-		Map<String, String> versions = this.resolver.resolve("org.springframework.cloud", "spring-cloud-dependencies",
-				"Greenwich.SR1");
-		assertThat(versions).containsEntry("com.netflix.ribbon:ribbon", "2.3.0");
-	}
+    @Test
+    void springCloudDependencies() {
+        Map<String, String> versions = this.resolver.resolve("org.springframework.cloud", "spring-cloud-dependencies", "Greenwich.SR1");
+        assertThat(versions).containsEntry("com.netflix.ribbon:ribbon", "2.3.0");
+    }
 
-	@Test
-	void milestoneBomCanBeResolved() {
-		Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies",
-				"2.2.0.M3");
-		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
-	}
+    @Test
+    void milestoneBomCanBeResolved() {
+        Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies", "2.2.0.M3");
+        assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
+    }
 
-	@Test
-	void snapshotBomCanBeResolved() {
-		Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies",
-				"2.4.0-SNAPSHOT");
-		assertThat(versions).isNotEmpty();
-	}
+    @Test
+    void snapshotBomCanBeResolved() {
+        Map<String, String> versions = this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies", "2.4.0-SNAPSHOT");
+        assertThat(versions).isNotEmpty();
+    }
 
-	@Test
-	void nonExistentDependency() {
-		assertThatIllegalStateException()
-			.isThrownBy(() -> this.resolver.resolve("org.springframework.boot", "spring-boot-bom", "1.0"))
-			.withMessage("Bom 'org.springframework.boot:spring-boot-bom:1.0' could not be resolved");
-	}
-
+    @Test
+    void nonExistentDependency() {
+        assertThatIllegalStateException().isThrownBy(() -> this.resolver.resolve("org.springframework.boot", "spring-boot-bom", "1.0")).withMessage("Bom 'org.springframework.boot:spring-boot-bom:1.0' could not be resolved");
+    }
 }

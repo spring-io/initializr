@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 /**
@@ -23,14 +22,13 @@ package io.spring.initializr.generator.language.groovy;
  */
 public class GroovyReturnStatement extends GroovyStatement {
 
-	private final GroovyExpression expression;
+    private final GroovyExpression expression;
 
-	public GroovyReturnStatement(GroovyExpression expression) {
-		this.expression = expression;
-	}
+    public GroovyReturnStatement(GroovyExpression expression) {
+        this.expression = expression;
+    }
 
-	public GroovyExpression getExpression() {
-		return this.expression;
-	}
-
+    public GroovyExpression getExpression() {
+        return this.expression;
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.groovy;
 
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
@@ -32,7 +31,6 @@ import io.spring.initializr.generator.spring.code.MainSourceCodeProjectContribut
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeProjectContributor;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -48,33 +46,22 @@ import org.springframework.context.annotation.Import;
 @Import(GroovyProjectGenerationDefaultContributorsConfiguration.class)
 public class GroovyProjectGenerationConfiguration {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	private final IndentingWriterFactory indentingWriterFactory;
+    private final IndentingWriterFactory indentingWriterFactory;
 
-	public GroovyProjectGenerationConfiguration(ProjectDescription description,
-			IndentingWriterFactory indentingWriterFactory) {
-		this.description = description;
-		this.indentingWriterFactory = indentingWriterFactory;
-	}
+    public GroovyProjectGenerationConfiguration(ProjectDescription description, IndentingWriterFactory indentingWriterFactory) {
+        this.description = description;
+        this.indentingWriterFactory = indentingWriterFactory;
+    }
 
-	@Bean
-	public MainSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> mainGroovySourceCodeProjectContributor(
-			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
-			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
-			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
-				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
-	}
+    @Bean
+    public MainSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> mainGroovySourceCodeProjectContributor(ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers, ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers, ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
+        return new MainSourceCodeProjectContributor<>(this.description, GroovySourceCode::new, new GroovySourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers, mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
+    }
 
-	@Bean
-	public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
-			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
-			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
-				testSourceCodeCustomizers);
-	}
-
+    @Bean
+    public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers, ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
+        return new TestSourceCodeProjectContributor<>(this.description, GroovySourceCode::new, new GroovySourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers, testSourceCodeCustomizers);
+    }
 }

@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.configuration;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -35,26 +32,25 @@ import org.springframework.core.Ordered;
  */
 public class WebFoldersContributor implements ProjectContributor {
 
-	private final Build build;
+    private final Build build;
 
-	private final BuildMetadataResolver buildMetadataResolver;
+    private final BuildMetadataResolver buildMetadataResolver;
 
-	public WebFoldersContributor(Build build, InitializrMetadata metadata) {
-		this.build = build;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
-	}
+    public WebFoldersContributor(Build build, InitializrMetadata metadata) {
+        this.build = build;
+        this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		if (this.buildMetadataResolver.hasFacet(this.build, "web")) {
-			Files.createDirectories(projectRoot.resolve("src/main/resources/templates"));
-			Files.createDirectories(projectRoot.resolve("src/main/resources/static"));
-		}
-	}
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        if (this.buildMetadataResolver.hasFacet(this.build, "web")) {
+            Files.createDirectories(projectRoot.resolve("src/main/resources/templates"));
+            Files.createDirectories(projectRoot.resolve("src/main/resources/static"));
+        }
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE - 10;
-	}
-
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 10;
+    }
 }

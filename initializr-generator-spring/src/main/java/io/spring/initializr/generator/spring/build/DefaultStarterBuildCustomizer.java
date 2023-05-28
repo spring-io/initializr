@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -30,34 +28,33 @@ import org.springframework.core.Ordered;
  */
 class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 
-	/**
-	 * The id of the starter to use if no dependency is defined.
-	 */
-	static final String DEFAULT_STARTER = "root_starter";
+    /**
+     * The id of the starter to use if no dependency is defined.
+     */
+    static final String DEFAULT_STARTER = "root_starter";
 
-	private final BuildMetadataResolver buildResolver;
+    private final BuildMetadataResolver buildResolver;
 
-	DefaultStarterBuildCustomizer(InitializrMetadata metadata) {
-		this.buildResolver = new BuildMetadataResolver(metadata);
-	}
+    DefaultStarterBuildCustomizer(InitializrMetadata metadata) {
+        this.buildResolver = new BuildMetadataResolver(metadata);
+    }
 
-	@Override
-	public void customize(Build build) {
-		boolean hasStarter = this.buildResolver.dependencies(build).anyMatch(this::isValidStarter);
-		if (!hasStarter) {
-			Dependency root = Dependency.createSpringBootStarter("");
-			root.setId(DEFAULT_STARTER);
-			build.dependencies().add(DEFAULT_STARTER, MetadataBuildItemMapper.toDependency(root));
-		}
-	}
+    @Override
+    public void customize(Build build) {
+        boolean hasStarter = this.buildResolver.dependencies(build).anyMatch(this::isValidStarter);
+        if (!hasStarter) {
+            Dependency root = Dependency.createSpringBootStarter("");
+            root.setId(DEFAULT_STARTER);
+            build.dependencies().add(DEFAULT_STARTER, MetadataBuildItemMapper.toDependency(root));
+        }
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
+    }
 
-	private boolean isValidStarter(Dependency dependency) {
-		return dependency.isStarter() && Dependency.SCOPE_COMPILE.equals(dependency.getScope());
-	}
-
+    private boolean isValidStarter(Dependency dependency) {
+        return dependency.isStarter() && Dependency.SCOPE_COMPILE.equals(dependency.getScope());
+    }
 }

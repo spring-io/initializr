@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.doc.generator.project;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
@@ -32,13 +30,12 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
 // tag::code[]
 public class SampleContributor implements ProjectContributor {
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Path file = Files.createFile(projectRoot.resolve("hello.txt"));
-		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
-			writer.println("Test");
-		}
-	}
-
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        Path file = Files.createFile(projectRoot.resolve("hello.txt"));
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
+            writer.println("Test");
+        }
+    }
 }
 // end::code[]

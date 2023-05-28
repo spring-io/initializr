@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.condition;
 
 import java.lang.annotation.Documented;
@@ -21,9 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import io.spring.initializr.generator.project.ProjectDescription;
-
 import org.springframework.context.annotation.Conditional;
 
 /**
@@ -42,10 +39,9 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OnRequestedDependencyCondition.class)
 public @interface ConditionalOnRequestedDependency {
 
-	/**
-	 * The identifier of the dependency.
-	 * @return the dependency ID
-	 */
-	String value();
-
+    /**
+     * The identifier of the dependency.
+     * @return the dependency ID
+     */
+    String value();
 }

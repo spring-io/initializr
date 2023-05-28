@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.Build;
@@ -29,89 +28,88 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
  */
 public class MavenBuild extends Build {
 
-	private final MavenBuildSettings.Builder settings = new Builder();
+    private final MavenBuildSettings.Builder settings = new Builder();
 
-	private final MavenResourceContainer resources = new MavenResourceContainer();
+    private final MavenResourceContainer resources = new MavenResourceContainer();
 
-	private final MavenResourceContainer testResources = new MavenResourceContainer();
+    private final MavenResourceContainer testResources = new MavenResourceContainer();
 
-	private final MavenPluginContainer plugins = new MavenPluginContainer();
+    private final MavenPluginContainer plugins = new MavenPluginContainer();
 
-	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
+    private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
-	private final MavenProfileContainer profiles;
+    private final MavenProfileContainer profiles;
 
-	public MavenBuild(BuildItemResolver buildItemResolver) {
-		super(buildItemResolver);
-		this.profiles = new MavenProfileContainer(determineBuildItemResolver(buildItemResolver));
-	}
+    public MavenBuild(BuildItemResolver buildItemResolver) {
+        super(buildItemResolver);
+        this.profiles = new MavenProfileContainer(determineBuildItemResolver(buildItemResolver));
+    }
 
-	public MavenBuild() {
-		this(null);
-	}
+    public MavenBuild() {
+        this(null);
+    }
 
-	@Override
-	public MavenBuildSettings.Builder settings() {
-		return this.settings;
-	}
+    @Override
+    public MavenBuildSettings.Builder settings() {
+        return this.settings;
+    }
 
-	@Override
-	public MavenBuildSettings getSettings() {
-		return this.settings.build();
-	}
+    @Override
+    public MavenBuildSettings getSettings() {
+        return this.settings.build();
+    }
 
-	/**
-	 * Return a builder to configure the {@linkplain MavenDistributionManagement
-	 * distribution management} of this build.
-	 * @return a builder for {@link MavenDistributionManagement}
-	 */
-	public MavenDistributionManagement.Builder distributionManagement() {
-		return this.distributionManagement;
-	}
+    /**
+     * Return a builder to configure the {@linkplain MavenDistributionManagement
+     * distribution management} of this build.
+     * @return a builder for {@link MavenDistributionManagement}
+     */
+    public MavenDistributionManagement.Builder distributionManagement() {
+        return this.distributionManagement;
+    }
 
-	/**
-	 * Return the {@linkplain MavenDistributionManagement distribution management} of this
-	 * build.
-	 * @return the {@link MavenDistributionManagement}
-	 */
-	public MavenDistributionManagement getDistributionManagement() {
-		return this.distributionManagement.build();
-	}
+    /**
+     * Return the {@linkplain MavenDistributionManagement distribution management} of this
+     * build.
+     * @return the {@link MavenDistributionManagement}
+     */
+    public MavenDistributionManagement getDistributionManagement() {
+        return this.distributionManagement.build();
+    }
 
-	/**
-	 * Return the {@linkplain MavenResource resource container} to use to configure main
-	 * resources.
-	 * @return the {@link MavenRepositoryContainer} for main resources
-	 */
-	public MavenResourceContainer resources() {
-		return this.resources;
-	}
+    /**
+     * Return the {@linkplain MavenResource resource container} to use to configure main
+     * resources.
+     * @return the {@link MavenRepositoryContainer} for main resources
+     */
+    public MavenResourceContainer resources() {
+        return this.resources;
+    }
 
-	/**
-	 * Return the {@linkplain MavenResource resource container} to use to configure test
-	 * resources.
-	 * @return the {@link MavenRepositoryContainer} for test resources
-	 */
-	public MavenResourceContainer testResources() {
-		return this.testResources;
-	}
+    /**
+     * Return the {@linkplain MavenResource resource container} to use to configure test
+     * resources.
+     * @return the {@link MavenRepositoryContainer} for test resources
+     */
+    public MavenResourceContainer testResources() {
+        return this.testResources;
+    }
 
-	/**
-	 * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
-	 * plugins.
-	 * @return the {@link MavenPluginContainer}
-	 */
-	public MavenPluginContainer plugins() {
-		return this.plugins;
-	}
+    /**
+     * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
+     * plugins.
+     * @return the {@link MavenPluginContainer}
+     */
+    public MavenPluginContainer plugins() {
+        return this.plugins;
+    }
 
-	/**
-	 * Return the {@linkplain MavenProfileContainer profile container} to use to configure
-	 * profiles.
-	 * @return the {@link MavenProfileContainer}
-	 */
-	public MavenProfileContainer profiles() {
-		return this.profiles;
-	}
-
+    /**
+     * Return the {@linkplain MavenProfileContainer profile container} to use to configure
+     * profiles.
+     * @return the {@link MavenProfileContainer}
+     */
+    public MavenProfileContainer profiles() {
+        return this.profiles;
+    }
 }

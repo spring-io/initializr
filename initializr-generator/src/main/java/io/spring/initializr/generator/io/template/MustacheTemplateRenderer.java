@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.io.template;
 
 import java.io.InputStreamReader;
@@ -21,12 +20,10 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Function;
-
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Mustache.Compiler;
 import com.samskivert.mustache.Mustache.TemplateLoader;
 import com.samskivert.mustache.Template;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueRetrievalException;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -40,70 +37,67 @@ import org.springframework.core.io.ResourceLoader;
  */
 public class MustacheTemplateRenderer implements TemplateRenderer {
 
-	private final Compiler mustache;
+    private final Compiler mustache;
 
-	private final Function<String, String> keyGenerator;
+    private final Function<String, String> keyGenerator;
 
-	private final Cache templateCache;
+    private final Cache templateCache;
 
-	/**
-	 * Create a new instance with the resource prefix and the {@link Cache} to use.
-	 * @param resourcePrefix the resource prefix to apply to locate a template based on
-	 * its name
-	 * @param templateCache the cache to use for compiled templates (can be {@code null}
-	 * to not use caching)
-	 */
-	public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
-		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix : resourcePrefix + "/");
-		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix)).escapeHTML(false);
-		this.keyGenerator = (name) -> String.format("%s%s", prefix, name);
-		this.templateCache = templateCache;
-	}
+    /**
+     * Create a new instance with the resource prefix and the {@link Cache} to use.
+     * @param resourcePrefix the resource prefix to apply to locate a template based on
+     * its name
+     * @param templateCache the cache to use for compiled templates (can be {@code null}
+     * to not use caching)
+     */
+    public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
+        String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix : resourcePrefix + "/");
+        this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix)).escapeHTML(false);
+        this.keyGenerator = (name) -> String.format("%s%s", prefix, name);
+        this.templateCache = templateCache;
+    }
 
-	/**
-	 * Create a new instance with the resource prefix to use.
-	 * @param resourcePrefix the resource prefix to apply to locate a template based on
-	 * its name
-	 * @see #MustacheTemplateRenderer(String, Cache)
-	 */
-	public MustacheTemplateRenderer(String resourcePrefix) {
-		this(resourcePrefix, null);
-	}
+    /**
+     * Create a new instance with the resource prefix to use.
+     * @param resourcePrefix the resource prefix to apply to locate a template based on
+     * its name
+     * @see #MustacheTemplateRenderer(String, Cache)
+     */
+    public MustacheTemplateRenderer(String resourcePrefix) {
+        this(resourcePrefix, null);
+    }
 
-	private static TemplateLoader mustacheTemplateLoader(String prefix) {
-		ResourceLoader resourceLoader = new DefaultResourceLoader();
-		return (name) -> {
-			String location = prefix + name + ".mustache";
-			return new InputStreamReader(resourceLoader.getResource(location).getInputStream(), StandardCharsets.UTF_8);
-		};
-	}
+    private static TemplateLoader mustacheTemplateLoader(String prefix) {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        return (name) -> {
+            String location = prefix + name + ".mustache";
+            return new InputStreamReader(resourceLoader.getResource(location).getInputStream(), StandardCharsets.UTF_8);
+        };
+    }
 
-	@Override
-	public String render(String templateName, Map<String, ?> model) {
-		Template template = getTemplate(templateName);
-		return template.execute(model);
-	}
+    @Override
+    public String render(String templateName, Map<String, ?> model) {
+        Template template = getTemplate(templateName);
+        return template.execute(model);
+    }
 
-	private Template getTemplate(String name) {
-		try {
-			if (this.templateCache != null) {
-				try {
-					return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
-				}
-				catch (ValueRetrievalException ex) {
-					throw ex.getCause();
-				}
-			}
-			return loadTemplate(name);
-		}
-		catch (Throwable ex) {
-			throw new IllegalStateException("Cannot load template " + name, ex);
-		}
-	}
+    private Template getTemplate(String name) {
+        try {
+            if (this.templateCache != null) {
+                try {
+                    return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
+                } catch (ValueRetrievalException ex) {
+                    throw ex.getCause();
+                }
+            }
+            return loadTemplate(name);
+        } catch (Throwable ex) {
+            throw new IllegalStateException("Cannot load template " + name, ex);
+        }
+    }
 
-	private Template loadTemplate(String name) throws Exception {
-		Reader template = this.mustache.loader.getTemplate(name);
-		return this.mustache.compile(template);
-	}
-
+    private Template loadTemplate(String name) throws Exception {
+        Reader template = this.mustache.loader.getTemplate(name);
+        return this.mustache.compile(template);
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
@@ -26,17 +25,16 @@ import io.spring.initializr.generator.language.Language;
  */
 public final class KotlinLanguage extends AbstractLanguage {
 
-	/**
-	 * Kotlin {@link Language} identifier.
-	 */
-	public static final String ID = "kotlin";
+    /**
+     * Kotlin {@link Language} identifier.
+     */
+    public static final String ID = "kotlin";
 
-	public KotlinLanguage() {
-		this(DEFAULT_JVM_VERSION);
-	}
+    public KotlinLanguage() {
+        this(DEFAULT_JVM_VERSION);
+    }
 
-	public KotlinLanguage(String jvmVersion) {
-		super(ID, jvmVersion, "kt");
-	}
-
+    public KotlinLanguage(String jvmVersion) {
+        super(ID, jvmVersion, "kt");
+    }
 }

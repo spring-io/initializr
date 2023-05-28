@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
@@ -33,7 +32,6 @@ import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeProjectContributor;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -50,47 +48,33 @@ import org.springframework.context.annotation.Import;
 @Import(KotlinProjectGenerationDefaultContributorsConfiguration.class)
 public class KotlinProjectGenerationConfiguration {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	private final IndentingWriterFactory indentingWriterFactory;
+    private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinProjectGenerationConfiguration(ProjectDescription description,
-			IndentingWriterFactory indentingWriterFactory) {
-		this.description = description;
-		this.indentingWriterFactory = indentingWriterFactory;
-	}
+    public KotlinProjectGenerationConfiguration(ProjectDescription description, IndentingWriterFactory indentingWriterFactory) {
+        this.description = description;
+        this.indentingWriterFactory = indentingWriterFactory;
+    }
 
-	@Bean
-	public MainSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> mainKotlinSourceCodeProjectContributor(
-			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
-			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
-			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
-				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
-	}
+    @Bean
+    public MainSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> mainKotlinSourceCodeProjectContributor(ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers, ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers, ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
+        return new MainSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new, new KotlinSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers, mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
+    }
 
-	@Bean
-	public TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(
-			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
-			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
-				testSourceCodeCustomizers);
-	}
+    @Bean
+    public TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers, ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
+        return new TestSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new, new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers, testSourceCodeCustomizers);
+    }
 
-	@Bean
-	public KotlinProjectSettings kotlinProjectSettings(ObjectProvider<KotlinVersionResolver> kotlinVersionResolver,
-			InitializrMetadata metadata) {
-		String kotlinVersion = kotlinVersionResolver
-			.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
-			.resolveKotlinVersion(this.description);
-		return new SimpleKotlinProjectSettings(kotlinVersion, this.description.getLanguage().jvmVersion());
-	}
+    @Bean
+    public KotlinProjectSettings kotlinProjectSettings(ObjectProvider<KotlinVersionResolver> kotlinVersionResolver, InitializrMetadata metadata) {
+        String kotlinVersion = kotlinVersionResolver.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata)).resolveKotlinVersion(this.description);
+        return new SimpleKotlinProjectSettings(kotlinVersion, this.description.getLanguage().jvmVersion());
+    }
 
-	@Bean
-	public KotlinJacksonBuildCustomizer kotlinJacksonBuildCustomizer(InitializrMetadata metadata) {
-		return new KotlinJacksonBuildCustomizer(metadata, this.description);
-	}
-
+    @Bean
+    public KotlinJacksonBuildCustomizer kotlinJacksonBuildCustomizer(InitializrMetadata metadata) {
+        return new KotlinJacksonBuildCustomizer(metadata, this.description);
+    }
 }

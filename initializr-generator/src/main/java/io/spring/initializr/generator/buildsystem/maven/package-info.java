@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Maven build system. Provides a {@link io.spring.initializr.generator.buildsystem.Build
  * Build} abstraction and a writer for {@code pom.xml}.
  */
 package io.spring.initializr.generator.buildsystem.maven;
+

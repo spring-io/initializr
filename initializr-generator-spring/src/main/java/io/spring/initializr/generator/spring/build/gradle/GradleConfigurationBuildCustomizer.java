@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -29,20 +27,17 @@ import org.springframework.core.Ordered;
  */
 public class GradleConfigurationBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
-	@Override
-	public void customize(GradleBuild build) {
-		boolean providedRuntimeUsed = build.dependencies()
-			.items()
-			.anyMatch((dependency) -> DependencyScope.PROVIDED_RUNTIME.equals(dependency.getScope()));
-		boolean war = build.plugins().values().anyMatch((plugin) -> plugin.getId().equals("war"));
-		if (providedRuntimeUsed && !war) {
-			build.configurations().add("providedRuntime");
-		}
-	}
+    @Override
+    public void customize(GradleBuild build) {
+        boolean providedRuntimeUsed = build.dependencies().items().anyMatch((dependency) -> DependencyScope.PROVIDED_RUNTIME.equals(dependency.getScope()));
+        boolean war = build.plugins().values().anyMatch((plugin) -> plugin.getId().equals("war"));
+        if (providedRuntimeUsed && !war) {
+            build.configurations().add("providedRuntime");
+        }
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
-	}
-
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
+    }
 }

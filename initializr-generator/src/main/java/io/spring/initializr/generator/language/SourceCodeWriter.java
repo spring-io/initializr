@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language;
 
 import java.io.IOException;
@@ -26,13 +25,12 @@ import java.io.IOException;
  */
 public interface SourceCodeWriter<S extends SourceCode<?, ?>> {
 
-	/**
-	 * Write, to the given {@code structure}, the given {@code sourceCode}.
-	 * @param structure the {@link SourceStructure} beneath which the source code is
-	 * written
-	 * @param sourceCode the source code to write
-	 * @throws IOException if writing fails
-	 */
-	void writeTo(SourceStructure structure, S sourceCode) throws IOException;
-
+    /**
+     * Write, to the given {@code structure}, the given {@code sourceCode}.
+     * @param structure the {@link SourceStructure} beneath which the source code is
+     * written
+     * @param sourceCode the source code to write
+     * @throws IOException if writing fails
+     */
+    void writeTo(SourceStructure structure, S sourceCode) throws IOException;
 }

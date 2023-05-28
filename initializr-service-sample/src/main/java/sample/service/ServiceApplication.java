@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package sample.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.web.support.SpringIoInitializrMetadataUpdateStrategy;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -36,15 +34,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceApplication.class, args);
+    }
 
-	// This bean opt-in for fetching available Spring Boot versions from https://spring.io
-	@Bean
-	SpringIoInitializrMetadataUpdateStrategy springIoInitializrMetadataUpdateStrategy(
-			RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
-		return new SpringIoInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
-	}
-
+    // This bean opt-in for fetching available Spring Boot versions from https://spring.io
+    @Bean
+    SpringIoInitializrMetadataUpdateStrategy springIoInitializrMetadataUpdateStrategy(RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
+        return new SpringIoInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
+    }
 }

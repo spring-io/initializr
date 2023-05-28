@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Documentation contributors. Generate a {@code HELP.md} at the root of the project with
  * additional information based on requested dependencies.
  */
 package io.spring.initializr.generator.spring.documentation;
+

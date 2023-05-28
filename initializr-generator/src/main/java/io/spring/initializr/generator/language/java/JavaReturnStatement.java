@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.java;
 
 /**
@@ -23,14 +22,13 @@ package io.spring.initializr.generator.language.java;
  */
 public class JavaReturnStatement extends JavaStatement {
 
-	private final JavaExpression expression;
+    private final JavaExpression expression;
 
-	public JavaReturnStatement(JavaExpression expression) {
-		this.expression = expression;
-	}
+    public JavaReturnStatement(JavaExpression expression) {
+        this.expression = expression;
+    }
 
-	public JavaExpression getExpression() {
-		return this.expression;
-	}
-
+    public JavaExpression getExpression() {
+        return this.expression;
+    }
 }

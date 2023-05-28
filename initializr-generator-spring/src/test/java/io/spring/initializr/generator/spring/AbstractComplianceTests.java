@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
@@ -44,74 +42,52 @@ import org.junit.jupiter.api.io.TempDir;
  */
 public abstract class AbstractComplianceTests {
 
-	private Path tempDir;
+    private Path tempDir;
 
-	protected static final Dependency WEB = Dependency.withId("web", "org.springframework.boot",
-			"spring-boot-starter-web");
+    protected static final Dependency WEB = Dependency.withId("web", "org.springframework.boot", "spring-boot-starter-web");
 
-	@BeforeEach
-	void setup(@TempDir Path dir) {
-		this.tempDir = dir;
-	}
+    @BeforeEach
+    void setup(@TempDir Path dir) {
+        this.tempDir = dir;
+    }
 
-	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version) {
-		return generateProject(language, buildSystem, version, (description) -> {
-		});
-	}
+    protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version) {
+        return generateProject(language, buildSystem, version, (description) -> {
+        });
+    }
 
-	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<MutableProjectDescription> descriptionCustomizer) {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("web", WEB)
-			.build();
-		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata);
-	}
+    protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version, Consumer<MutableProjectDescription> descriptionCustomizer) {
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB).build();
+        return generateProject(language, buildSystem, version, descriptionCustomizer, metadata);
+    }
 
-	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<MutableProjectDescription> descriptionCustomizer,
-			Consumer<ProjectGenerationContext> contextCustomizer) {
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("web", WEB)
-			.build();
-		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, contextCustomizer);
-	}
+    protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version, Consumer<MutableProjectDescription> descriptionCustomizer, Consumer<ProjectGenerationContext> contextCustomizer) {
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("web", WEB).build();
+        return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, contextCustomizer);
+    }
 
-	protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata) {
-		return generateProject(language, buildSystem, version, descriptionCustomizer, metadata,
-				(projectGenerationContext) -> {
-				});
+    protected ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version, Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata) {
+        return generateProject(language, buildSystem, version, descriptionCustomizer, metadata, (projectGenerationContext) -> {
+        });
+    }
 
-	}
+    private ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version, Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata, Consumer<ProjectGenerationContext> contextCustomizer) {
+        ProjectGeneratorTester projectTester = new ProjectGeneratorTester().withDirectory(this.tempDir).withDescriptionCustomizer((description) -> setupProjectDescription(language, version, buildSystem, description)).withDescriptionCustomizer(descriptionCustomizer).withContextInitializer((context) -> setupProjectGenerationContext(metadata, context)).withContextInitializer(contextCustomizer);
+        return projectTester.generate(new MutableProjectDescription());
+    }
 
-	private ProjectStructure generateProject(Language language, BuildSystem buildSystem, String version,
-			Consumer<MutableProjectDescription> descriptionCustomizer, InitializrMetadata metadata,
-			Consumer<ProjectGenerationContext> contextCustomizer) {
-		ProjectGeneratorTester projectTester = new ProjectGeneratorTester().withDirectory(this.tempDir)
-			.withDescriptionCustomizer(
-					(description) -> setupProjectDescription(language, version, buildSystem, description))
-			.withDescriptionCustomizer(descriptionCustomizer)
-			.withContextInitializer((context) -> setupProjectGenerationContext(metadata, context))
-			.withContextInitializer(contextCustomizer);
-		return projectTester.generate(new MutableProjectDescription());
-	}
+    private void setupProjectGenerationContext(InitializrMetadata metadata, ProjectGenerationContext context) {
+        context.registerBean(InitializrMetadata.class, () -> metadata);
+        context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata, context.getBean(ProjectDescription.class).getPlatformVersion()));
+        context.registerBean(IndentingWriterFactory.class, () -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
+    }
 
-	private void setupProjectGenerationContext(InitializrMetadata metadata, ProjectGenerationContext context) {
-		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
-				context.getBean(ProjectDescription.class).getPlatformVersion()));
-		context.registerBean(IndentingWriterFactory.class,
-				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
-	}
-
-	private void setupProjectDescription(Language language, String version, BuildSystem buildSystem,
-			MutableProjectDescription description) {
-		description.setLanguage(language);
-		description.setBuildSystem(buildSystem);
-		description.setPlatformVersion(Version.parse(version));
-		description.setVersion("0.0.1-SNAPSHOT");
-		description.setName("demo");
-		description.setDescription("Demo project for Spring Boot");
-	}
-
+    private void setupProjectDescription(Language language, String version, BuildSystem buildSystem, MutableProjectDescription description) {
+        description.setLanguage(language);
+        description.setBuildSystem(buildSystem);
+        description.setPlatformVersion(Version.parse(version));
+        description.setVersion("0.0.1-SNAPSHOT");
+        description.setName("demo");
+        description.setDescription("Demo project for Spring Boot");
+    }
 }

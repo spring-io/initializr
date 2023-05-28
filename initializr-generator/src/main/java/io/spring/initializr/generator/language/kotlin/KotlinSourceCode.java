@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import io.spring.initializr.generator.language.SourceCode;
@@ -25,8 +24,7 @@ import io.spring.initializr.generator.language.SourceCode;
  */
 public class KotlinSourceCode extends SourceCode<KotlinTypeDeclaration, KotlinCompilationUnit> {
 
-	public KotlinSourceCode() {
-		super(KotlinCompilationUnit::new);
-	}
-
+    public KotlinSourceCode() {
+        super(KotlinCompilationUnit::new);
+    }
 }

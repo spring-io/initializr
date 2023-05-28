@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.autoconfigure;
 
 import io.spring.initializr.actuate.info.BomRangesInfoContributor;
 import io.spring.initializr.actuate.info.DependencyRangesInfoContributor;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -32,15 +30,13 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 public class InitializrActuatorEndpointsAutoConfiguration {
 
-	@Bean
-	public BomRangesInfoContributor bomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
-		return new BomRangesInfoContributor(metadataProvider);
-	}
+    @Bean
+    public BomRangesInfoContributor bomRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
+        return new BomRangesInfoContributor(metadataProvider);
+    }
 
-	@Bean
-	public DependencyRangesInfoContributor dependencyRangesInfoContributor(
-			InitializrMetadataProvider metadataProvider) {
-		return new DependencyRangesInfoContributor(metadataProvider);
-	}
-
+    @Bean
+    public DependencyRangesInfoContributor dependencyRangesInfoContributor(InitializrMetadataProvider metadataProvider) {
+        return new DependencyRangesInfoContributor(metadataProvider);
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller.custom;
 
 import io.spring.initializr.web.project.ProjectRequest;
@@ -27,14 +26,13 @@ import io.spring.initializr.web.project.WebProjectRequest;
  */
 public class CustomProjectRequest extends WebProjectRequest {
 
-	private boolean customFlag;
+    private boolean customFlag;
 
-	public boolean isCustomFlag() {
-		return this.customFlag;
-	}
+    public boolean isCustomFlag() {
+        return this.customFlag;
+    }
 
-	public void setCustomFlag(boolean customFlag) {
-		this.customFlag = customFlag;
-	}
-
+    public void setCustomFlag(boolean customFlag) {
+        this.customFlag = customFlag;
+    }
 }

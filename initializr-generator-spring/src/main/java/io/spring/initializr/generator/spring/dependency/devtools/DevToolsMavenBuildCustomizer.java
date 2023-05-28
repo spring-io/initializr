@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.dependency.devtools;
 
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
@@ -28,12 +27,11 @@ import io.spring.initializr.generator.spring.build.maven.OptionalDependencyMaven
 @Deprecated(since = "0.20.0", forRemoval = true)
 public class DevToolsMavenBuildCustomizer extends OptionalDependencyMavenBuildCustomizer {
 
-	/**
-	 * Create a new instance with the identifier for the devtools dependency.
-	 * @param devtoolsDependencyId the id of the devtools dependency
-	 */
-	public DevToolsMavenBuildCustomizer(String devtoolsDependencyId) {
-		super(devtoolsDependencyId);
-	}
-
+    /**
+     * Create a new instance with the identifier for the devtools dependency.
+     * @param devtoolsDependencyId the id of the devtools dependency
+     */
+    public DevToolsMavenBuildCustomizer(String devtoolsDependencyId) {
+        super(devtoolsDependencyId);
+    }
 }

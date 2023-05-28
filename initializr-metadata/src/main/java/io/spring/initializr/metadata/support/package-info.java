@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Project metadata support classes.
  */
 package io.spring.initializr.metadata.support;
+

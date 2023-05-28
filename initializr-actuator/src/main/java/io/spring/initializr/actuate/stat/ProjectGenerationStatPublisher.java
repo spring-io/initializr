@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.stat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +24,6 @@ import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.web.project.ProjectRequestEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -44,99 +41,88 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public class ProjectGenerationStatPublisher {
 
-	private static final Log logger = LogFactory.getLog(ProjectGenerationStatPublisher.class);
+    private static final Log logger = LogFactory.getLog(ProjectGenerationStatPublisher.class);
 
-	private final ProjectRequestDocumentFactory documentFactory;
+    private final ProjectRequestDocumentFactory documentFactory;
 
-	private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-	private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-	private URI requestUrl;
+    private URI requestUrl;
 
-	private final RetryTemplate retryTemplate;
+    private final RetryTemplate retryTemplate;
 
-	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
-			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
-		this.documentFactory = documentFactory;
-		this.objectMapper = createObjectMapper();
-		StatsProperties.Elastic elastic = statsProperties.getElastic();
-		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(determineEntityUrl(elastic));
-		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic, uriBuilder).build();
-		this.requestUrl = uriBuilder.userInfo(null).build().toUri();
-		this.retryTemplate = retryTemplate;
-	}
+    public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory, StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
+        this.documentFactory = documentFactory;
+        this.objectMapper = createObjectMapper();
+        StatsProperties.Elastic elastic = statsProperties.getElastic();
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(determineEntityUrl(elastic));
+        this.restTemplate = configureAuthorization(restTemplateBuilder, elastic, uriBuilder).build();
+        this.requestUrl = uriBuilder.userInfo(null).build().toUri();
+        this.retryTemplate = retryTemplate;
+    }
 
-	@EventListener
-	@Async
-	public void handleEvent(ProjectRequestEvent event) {
-		String json = null;
-		try {
-			ProjectRequestDocument document = this.documentFactory.createDocument(event);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Publishing " + document);
-			}
-			json = toJson(document);
+    @EventListener
+    @Async
+    public void handleEvent(ProjectRequestEvent event) {
+        String json = null;
+        try {
+            ProjectRequestDocument document = this.documentFactory.createDocument(event);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Publishing " + document);
+            }
+            json = toJson(document);
+            RequestEntity<String> request = RequestEntity.post(this.requestUrl).contentType(MediaType.APPLICATION_JSON).body(json);
+            this.retryTemplate.execute((context) -> {
+                this.restTemplate.exchange(request, String.class);
+                return null;
+            });
+        } catch (Exception ex) {
+            logger.warn(String.format("Failed to publish stat to index, document follows %n%n%s%n", json), ex);
+        }
+    }
 
-			RequestEntity<String> request = RequestEntity.post(this.requestUrl)
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(json);
+    private String toJson(ProjectRequestDocument stats) {
+        try {
+            return this.objectMapper.writeValueAsString(stats);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalStateException("Cannot convert to JSON", ex);
+        }
+    }
 
-			this.retryTemplate.execute((context) -> {
-				this.restTemplate.exchange(request, String.class);
-				return null;
-			});
-		}
-		catch (Exception ex) {
-			logger.warn(String.format("Failed to publish stat to index, document follows %n%n%s%n", json), ex);
-		}
-	}
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return mapper;
+    }
 
-	private String toJson(ProjectRequestDocument stats) {
-		try {
-			return this.objectMapper.writeValueAsString(stats);
-		}
-		catch (JsonProcessingException ex) {
-			throw new IllegalStateException("Cannot convert to JSON", ex);
-		}
-	}
+    // For testing purposes only
+    protected RestTemplate getRestTemplate() {
+        return this.restTemplate;
+    }
 
-	private static ObjectMapper createObjectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		return mapper;
-	}
+    protected void updateRequestUrl(URI requestUrl) {
+        this.requestUrl = requestUrl;
+    }
 
-	// For testing purposes only
-	protected RestTemplate getRestTemplate() {
-		return this.restTemplate;
-	}
+    private static RestTemplateBuilder configureAuthorization(RestTemplateBuilder restTemplateBuilder, Elastic elastic, UriComponentsBuilder uriComponentsBuilder) {
+        String userInfo = uriComponentsBuilder.build().getUserInfo();
+        if (StringUtils.hasText(userInfo)) {
+            String[] credentials = userInfo.split(":");
+            return restTemplateBuilder.basicAuthentication(credentials[0], credentials[1]);
+        } else if (StringUtils.hasText(elastic.getUsername())) {
+            return restTemplateBuilder.basicAuthentication(elastic.getUsername(), elastic.getPassword());
+        }
+        return restTemplateBuilder;
+    }
 
-	protected void updateRequestUrl(URI requestUrl) {
-		this.requestUrl = requestUrl;
-	}
-
-	private static RestTemplateBuilder configureAuthorization(RestTemplateBuilder restTemplateBuilder, Elastic elastic,
-			UriComponentsBuilder uriComponentsBuilder) {
-		String userInfo = uriComponentsBuilder.build().getUserInfo();
-		if (StringUtils.hasText(userInfo)) {
-			String[] credentials = userInfo.split(":");
-			return restTemplateBuilder.basicAuthentication(credentials[0], credentials[1]);
-		}
-		else if (StringUtils.hasText(elastic.getUsername())) {
-			return restTemplateBuilder.basicAuthentication(elastic.getUsername(), elastic.getPassword());
-		}
-		return restTemplateBuilder;
-	}
-
-	private static URI determineEntityUrl(Elastic elastic) {
-		String entityUrl = elastic.getUri() + "/" + elastic.getIndexName() + "/_doc/";
-		try {
-			return new URI(entityUrl);
-		}
-		catch (URISyntaxException ex) {
-			throw new IllegalStateException("Cannot create entity URL: " + entityUrl, ex);
-		}
-	}
-
+    private static URI determineEntityUrl(Elastic elastic) {
+        String entityUrl = elastic.getUri() + "/" + elastic.getIndexName() + "/_doc/";
+        try {
+            return new URI(entityUrl);
+        } catch (URISyntaxException ex) {
+            throw new IllegalStateException("Cannot create entity URL: " + entityUrl, ex);
+        }
+    }
 }

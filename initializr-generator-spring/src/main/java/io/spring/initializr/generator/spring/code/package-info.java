@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Code contributors. Generate a main and test classes as well as a
  * {@code ServletInitializer} class with {@code war} packaging.
  */
 package io.spring.initializr.generator.spring.code;
+

@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.groovy;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -28,38 +26,37 @@ import io.spring.initializr.generator.language.TypeDeclaration;
  */
 public class GroovyTypeDeclaration extends TypeDeclaration {
 
-	private int modifiers;
+    private int modifiers;
 
-	private final List<GroovyFieldDeclaration> fieldDeclarations = new ArrayList<>();
+    private final List<GroovyFieldDeclaration> fieldDeclarations = new ArrayList<>();
 
-	private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
+    private final List<GroovyMethodDeclaration> methodDeclarations = new ArrayList<>();
 
-	GroovyTypeDeclaration(String name) {
-		super(name);
-	}
+    GroovyTypeDeclaration(String name) {
+        super(name);
+    }
 
-	public void modifiers(int modifiers) {
-		this.modifiers = modifiers;
-	}
+    public void modifiers(int modifiers) {
+        this.modifiers = modifiers;
+    }
 
-	public int getModifiers() {
-		return this.modifiers;
-	}
+    public int getModifiers() {
+        return this.modifiers;
+    }
 
-	public void addFieldDeclaration(GroovyFieldDeclaration fieldDeclaration) {
-		this.fieldDeclarations.add(fieldDeclaration);
-	}
+    public void addFieldDeclaration(GroovyFieldDeclaration fieldDeclaration) {
+        this.fieldDeclarations.add(fieldDeclaration);
+    }
 
-	public List<GroovyFieldDeclaration> getFieldDeclarations() {
-		return this.fieldDeclarations;
-	}
+    public List<GroovyFieldDeclaration> getFieldDeclarations() {
+        return this.fieldDeclarations;
+    }
 
-	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {
-		this.methodDeclarations.add(methodDeclaration);
-	}
+    public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {
+        this.methodDeclarations.add(methodDeclaration);
+    }
 
-	public List<GroovyMethodDeclaration> getMethodDeclarations() {
-		return this.methodDeclarations;
-	}
-
+    public List<GroovyMethodDeclaration> getMethodDeclarations() {
+        return this.methodDeclarations;
+    }
 }

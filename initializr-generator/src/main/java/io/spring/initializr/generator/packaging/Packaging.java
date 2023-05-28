@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.packaging;
 
 import java.util.Objects;
-
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
@@ -27,15 +25,9 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  */
 public interface Packaging {
 
-	String id();
+    String id();
 
-	static Packaging forId(String id) {
-		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader())
-			.stream()
-			.map((factory) -> factory.createPackaging(id))
-			.filter(Objects::nonNull)
-			.findFirst()
-			.orElseThrow(() -> new IllegalStateException("Unrecognized packaging id '" + id + "'"));
-	}
-
+    static Packaging forId(String id) {
+        return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader()).stream().map((factory) -> factory.createPackaging(id)).filter(Objects::nonNull).findFirst().orElseThrow(() -> new IllegalStateException("Unrecognized packaging id '" + id + "'"));
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.io;
 
 import java.nio.file.Path;
@@ -25,12 +24,11 @@ import java.nio.file.Path;
  */
 public class TextAssert extends AbstractTextAssert<TextAssert> {
 
-	public TextAssert(String actual) {
-		super(actual, TextAssert.class);
-	}
+    public TextAssert(String actual) {
+        super(actual, TextAssert.class);
+    }
 
-	public TextAssert(Path textFile) {
-		super(textFile, TextAssert.class);
-	}
-
+    public TextAssert(Path textFile) {
+        super(textFile, TextAssert.class);
+    }
 }

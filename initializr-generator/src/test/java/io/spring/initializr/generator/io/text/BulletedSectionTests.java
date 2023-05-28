@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.io.text;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Map;
-
 import io.spring.initializr.generator.io.template.TemplateRenderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +27,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,52 +44,51 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @ExtendWith(MockitoExtension.class)
 class BulletedSectionTests {
 
-	@Mock
-	private TemplateRenderer renderer;
+    @Mock
+    private TemplateRenderer renderer;
 
-	@Captor
-	private ArgumentCaptor<Map<String, Object>> modelCaptor;
+    @Captor
+    private ArgumentCaptor<Map<String, Object>> modelCaptor;
 
-	@Test
-	void bulletedSectionEmpty() {
-		assertThat(new BulletedSection<String>(this.renderer, "test").isEmpty()).isTrue();
-	}
+    @Test
+    void bulletedSectionEmpty() {
+        assertThat(new BulletedSection<String>(this.renderer, "test").isEmpty()).isTrue();
+    }
 
-	@Test
-	void bulletedSectionEmptyDoesNotInvokeRender() throws IOException {
-		BulletedSection<String> section = new BulletedSection<>(this.renderer, "test");
-		PrintWriter writer = mock(PrintWriter.class);
-		section.write(writer);
-		verifyNoMoreInteractions(writer, this.renderer);
-	}
+    @Test
+    void bulletedSectionEmptyDoesNotInvokeRender() throws IOException {
+        BulletedSection<String> section = new BulletedSection<>(this.renderer, "test");
+        PrintWriter writer = mock(PrintWriter.class);
+        section.write(writer);
+        verifyNoMoreInteractions(writer, this.renderer);
+    }
 
-	@Test
-	void bulletedSectionWithItem() {
-		BulletedSection<String> section = new BulletedSection<>(this.renderer, "test");
-		section.addItem("test");
-		assertThat(section.isEmpty()).isFalse();
-	}
+    @Test
+    void bulletedSectionWithItem() {
+        BulletedSection<String> section = new BulletedSection<>(this.renderer, "test");
+        section.addItem("test");
+        assertThat(section.isEmpty()).isFalse();
+    }
 
-	@Test
-	void bulletedSectionWithDefaultItemName() throws IOException {
-		given(this.renderer.render(eq("template"), any())).willReturn("output");
-		BulletedSection<String> section = new BulletedSection<>(this.renderer, "template");
-		section.addItem("test");
-		section.write(new PrintWriter(new StringWriter()));
-		verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
-		Map<String, Object> model = this.modelCaptor.getValue();
-		assertThat(model).containsOnly(entry("items", Collections.singletonList("test")));
-	}
+    @Test
+    void bulletedSectionWithDefaultItemName() throws IOException {
+        given(this.renderer.render(eq("template"), any())).willReturn("output");
+        BulletedSection<String> section = new BulletedSection<>(this.renderer, "template");
+        section.addItem("test");
+        section.write(new PrintWriter(new StringWriter()));
+        verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
+        Map<String, Object> model = this.modelCaptor.getValue();
+        assertThat(model).containsOnly(entry("items", Collections.singletonList("test")));
+    }
 
-	@Test
-	void bulletedSectionWithCustomItemName() throws IOException {
-		given(this.renderer.render(eq("template"), any())).willReturn("output");
-		BulletedSection<String> section = new BulletedSection<>(this.renderer, "template", "elements");
-		section.addItem("test");
-		section.write(new PrintWriter(new StringWriter()));
-		verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
-		Map<String, Object> model = this.modelCaptor.getValue();
-		assertThat(model).containsOnly(entry("elements", Collections.singletonList("test")));
-	}
-
+    @Test
+    void bulletedSectionWithCustomItemName() throws IOException {
+        given(this.renderer.render(eq("template"), any())).willReturn("output");
+        BulletedSection<String> section = new BulletedSection<>(this.renderer, "template", "elements");
+        section.addItem("test");
+        section.write(new PrintWriter(new StringWriter()));
+        verify(this.renderer).render(eq("template"), this.modelCaptor.capture());
+        Map<String, Object> model = this.modelCaptor.getValue();
+        assertThat(model).containsOnly(entry("elements", Collections.singletonList("test")));
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 /**
@@ -23,44 +22,36 @@ package io.spring.initializr.generator.language.kotlin;
  */
 public enum KotlinModifier {
 
-	/**
-	 * Visible to anyone.
-	 */
-	PUBLIC,
-
-	/**
-	 * Visible inside that class and any subclass.
-	 */
-	PROTECTED,
-
-	/**
-	 * Visible inside this class only.
-	 */
-	PRIVATE,
-
-	/**
-	 * Final modifier.
-	 */
-	FINAL,
-
-	/**
-	 * Allow to override a member.
-	 */
-	OPEN,
-
-	/**
-	 * Declare a member without an implementation (infers open).
-	 */
-	ABSTRACT,
-
-	/**
-	 * Override a member.
-	 */
-	OVERRIDE,
-
-	/**
-	 * Declare a late-initialized property.
-	 */
-	LATEINIT
-
+    /**
+     * Visible to anyone.
+     */
+    PUBLIC,
+    /**
+     * Visible inside that class and any subclass.
+     */
+    PROTECTED,
+    /**
+     * Visible inside this class only.
+     */
+    PRIVATE,
+    /**
+     * Final modifier.
+     */
+    FINAL,
+    /**
+     * Allow to override a member.
+     */
+    OPEN,
+    /**
+     * Declare a member without an implementation (infers open).
+     */
+    ABSTRACT,
+    /**
+     * Override a member.
+     */
+    OVERRIDE,
+    /**
+     * Declare a late-initialized property.
+     */
+    LATEINIT
 }

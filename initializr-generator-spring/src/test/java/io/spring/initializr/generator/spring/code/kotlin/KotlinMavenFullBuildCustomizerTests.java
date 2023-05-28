@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
@@ -23,7 +22,6 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
@@ -34,67 +32,59 @@ import static org.assertj.core.api.Assertions.entry;
  */
 class KotlinMavenFullBuildCustomizerTests {
 
-	@Test
-	void kotlinVersionPropertyIsConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
-			.containsOnly(entry("kotlin.version", "1.2.70"));
-	}
+    @Test
+    void kotlinVersionPropertyIsConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.properties().versions(VersionProperty::toStandardFormat)).containsOnly(entry("kotlin.version", "1.2.70"));
+    }
 
-	@Test
-	void buildSourceDirectoriesAreConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getSettings().getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
-		assertThat(build.getSettings().getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
-	}
+    @Test
+    void buildSourceDirectoriesAreConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.getSettings().getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
+        assertThat(build.getSettings().getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
+    }
 
-	@Test
-	void kotlinMavenPluginIsConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "1.6")).customize(build);
-		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
-			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-			assertThat(kotlinPlugin.getVersion()).isEqualTo("${kotlin.version}");
-			Configuration configuration = kotlinPlugin.getConfiguration();
-			assertThat(configuration).isNotNull();
-			assertThat(configuration.getSettings()).hasSize(3);
-			Setting args = configuration.getSettings().get(0);
-			assertThat(args.getName()).isEqualTo("args");
-			assertThat(args.getValue()).asList().hasSize(1);
-			assertThat(args.getValue()).asList()
-				.element(0)
-				.hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
-			Setting compilerPlugins = configuration.getSettings().get(1);
-			assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
-			assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-			assertThat(compilerPlugins.getValue()).asList()
-				.element(0)
-				.hasFieldOrPropertyWithValue("name", "plugin")
-				.hasFieldOrPropertyWithValue("value", "spring");
-			Setting jvmTarget = configuration.getSettings().get(2);
-			assertThat(jvmTarget.getName()).isEqualTo("jvmTarget");
-			assertThat(jvmTarget.getValue()).isEqualTo("1.6");
-			assertThat(kotlinPlugin.getExecutions()).hasSize(2);
-			Execution compile = kotlinPlugin.getExecutions().get(0);
-			assertThat(compile.getId()).isEqualTo("compile");
-			assertThat(compile.getGoals()).containsExactly("compile");
-			assertThat(compile.getPhase()).isEqualTo("compile");
-			assertThat(compile.getConfiguration()).isNull();
-			Execution testCompile = kotlinPlugin.getExecutions().get(1);
-			assertThat(testCompile.getId()).isEqualTo("test-compile");
-			assertThat(testCompile.getGoals()).containsExactly("test-compile");
-			assertThat(testCompile.getPhase()).isEqualTo("test-compile");
-			assertThat(testCompile.getConfiguration()).isNull();
-			assertThat(kotlinPlugin.getDependencies()).hasSize(1);
-			Dependency allOpen = kotlinPlugin.getDependencies().get(0);
-			assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
-			assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
-		});
-	}
-
+    @Test
+    void kotlinMavenPluginIsConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenFullBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", "1.6")).customize(build);
+        assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
+            assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+            assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+            assertThat(kotlinPlugin.getVersion()).isEqualTo("${kotlin.version}");
+            Configuration configuration = kotlinPlugin.getConfiguration();
+            assertThat(configuration).isNotNull();
+            assertThat(configuration.getSettings()).hasSize(3);
+            Setting args = configuration.getSettings().get(0);
+            assertThat(args.getName()).isEqualTo("args");
+            assertThat(args.getValue()).asList().hasSize(1);
+            assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg").hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
+            Setting compilerPlugins = configuration.getSettings().get(1);
+            assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
+            assertThat(compilerPlugins.getValue()).asList().hasSize(1);
+            assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin").hasFieldOrPropertyWithValue("value", "spring");
+            Setting jvmTarget = configuration.getSettings().get(2);
+            assertThat(jvmTarget.getName()).isEqualTo("jvmTarget");
+            assertThat(jvmTarget.getValue()).isEqualTo("1.6");
+            assertThat(kotlinPlugin.getExecutions()).hasSize(2);
+            Execution compile = kotlinPlugin.getExecutions().get(0);
+            assertThat(compile.getId()).isEqualTo("compile");
+            assertThat(compile.getGoals()).containsExactly("compile");
+            assertThat(compile.getPhase()).isEqualTo("compile");
+            assertThat(compile.getConfiguration()).isNull();
+            Execution testCompile = kotlinPlugin.getExecutions().get(1);
+            assertThat(testCompile.getId()).isEqualTo("test-compile");
+            assertThat(testCompile.getGoals()).containsExactly("test-compile");
+            assertThat(testCompile.getPhase()).isEqualTo("test-compile");
+            assertThat(testCompile.getConfiguration()).isNull();
+            assertThat(kotlinPlugin.getDependencies()).hasSize(1);
+            Dependency allOpen = kotlinPlugin.getDependencies().get(0);
+            assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+            assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
+            assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
+        });
+    }
 }

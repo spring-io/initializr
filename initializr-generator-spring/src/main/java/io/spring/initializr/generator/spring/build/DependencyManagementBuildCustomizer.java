@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
@@ -29,7 +27,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
-
 import org.springframework.core.Ordered;
 
 /**
@@ -39,69 +36,56 @@ import org.springframework.core.Ordered;
  */
 public class DependencyManagementBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final ProjectDescription description;
+    private final ProjectDescription description;
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public DependencyManagementBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
-		this.description = description;
-		this.metadata = metadata;
-	}
+    public DependencyManagementBuildCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+        this.description = description;
+        this.metadata = metadata;
+    }
 
-	@Override
-	public void customize(Build build) {
-		contributeDependencyManagement(build);
-	}
+    @Override
+    public void customize(Build build) {
+        contributeDependencyManagement(build);
+    }
 
-	@Override
-	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE - 5;
-	}
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 5;
+    }
 
-	protected void contributeDependencyManagement(Build build) {
-		Map<String, BillOfMaterials> resolvedBoms = new LinkedHashMap<>();
-		Map<String, Repository> repositories = new LinkedHashMap<>();
-		mapDependencies(build).forEach((dependency) -> {
-			if (dependency.getBom() != null) {
-				resolveBom(resolvedBoms, dependency.getBom(), this.description.getPlatformVersion());
-			}
-			if (dependency.getRepository() != null) {
-				String repositoryId = dependency.getRepository();
-				repositories.computeIfAbsent(repositoryId,
-						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key));
-			}
-		});
-		resolvedBoms.values()
-			.forEach((bom) -> bom.getRepositories()
-				.forEach((repositoryId) -> repositories.computeIfAbsent(repositoryId,
-						(key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key))));
-		resolvedBoms.forEach((key, bom) -> {
-			build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
-			if (bom.getVersionProperty() != null) {
-				build.properties().version(bom.getVersionProperty(), bom.getVersion());
-			}
-		});
-		repositories.keySet().forEach((id) -> build.repositories().add(id));
-	}
+    protected void contributeDependencyManagement(Build build) {
+        Map<String, BillOfMaterials> resolvedBoms = new LinkedHashMap<>();
+        Map<String, Repository> repositories = new LinkedHashMap<>();
+        mapDependencies(build).forEach((dependency) -> {
+            if (dependency.getBom() != null) {
+                resolveBom(resolvedBoms, dependency.getBom(), this.description.getPlatformVersion());
+            }
+            if (dependency.getRepository() != null) {
+                String repositoryId = dependency.getRepository();
+                repositories.computeIfAbsent(repositoryId, (key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key));
+            }
+        });
+        resolvedBoms.values().forEach((bom) -> bom.getRepositories().forEach((repositoryId) -> repositories.computeIfAbsent(repositoryId, (key) -> this.metadata.getConfiguration().getEnv().getRepositories().get(key))));
+        resolvedBoms.forEach((key, bom) -> {
+            build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
+            if (bom.getVersionProperty() != null) {
+                build.properties().version(bom.getVersionProperty(), bom.getVersion());
+            }
+        });
+        repositories.keySet().forEach((id) -> build.repositories().add(id));
+    }
 
-	private Stream<Dependency> mapDependencies(Build build) {
-		return build.dependencies()
-			.ids()
-			.map((id) -> this.metadata.getDependencies().get(id))
-			.filter(Objects::nonNull)
-			.map((dependency) -> dependency.resolve(this.description.getPlatformVersion()));
-	}
+    private Stream<Dependency> mapDependencies(Build build) {
+        return build.dependencies().ids().map((id) -> this.metadata.getDependencies().get(id)).filter(Objects::nonNull).map((dependency) -> dependency.resolve(this.description.getPlatformVersion()));
+    }
 
-	private void resolveBom(Map<String, BillOfMaterials> boms, String bomId, Version requestedVersion) {
-		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = this.metadata.getConfiguration()
-				.getEnv()
-				.getBoms()
-				.get(bomId)
-				.resolve(requestedVersion);
-			bom.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
-			boms.put(bomId, bom);
-		}
-	}
-
+    private void resolveBom(Map<String, BillOfMaterials> boms, String bomId, Version requestedVersion) {
+        if (!boms.containsKey(bomId)) {
+            BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(bomId).resolve(requestedVersion);
+            bom.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
+            boms.put(bomId, bom);
+        }
+    }
 }

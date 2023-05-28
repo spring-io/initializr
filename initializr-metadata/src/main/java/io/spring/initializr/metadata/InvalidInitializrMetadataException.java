@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.metadata;
 
 /**
@@ -24,12 +23,11 @@ package io.spring.initializr.metadata;
 @SuppressWarnings("serial")
 public class InvalidInitializrMetadataException extends RuntimeException {
 
-	public InvalidInitializrMetadataException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public InvalidInitializrMetadataException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public InvalidInitializrMetadataException(String message) {
-		super(message);
-	}
-
+    public InvalidInitializrMetadataException(String message) {
+        super(message);
+    }
 }

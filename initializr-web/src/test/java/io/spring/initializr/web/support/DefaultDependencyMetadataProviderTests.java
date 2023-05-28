@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.support;
 
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -24,7 +23,6 @@ import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -32,143 +30,116 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DefaultDependencyMetadataProviderTests {
 
-	private final DependencyMetadataProvider provider = new DefaultDependencyMetadataProvider();
+    private final DependencyMetadataProvider provider = new DefaultDependencyMetadataProvider();
 
-	@Test
-	void filterDependencies() {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setCompatibilityRange("2.1.4.RELEASE");
-		Dependency second = Dependency.withId("second", "org.foo", "second");
-		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setCompatibilityRange("2.1.8.RELEASE");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", first, second, third)
-			.build();
-		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("2.1.5.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
-		assertThat(dependencyMetadata.getRepositories()).isEmpty();
-		assertThat(dependencyMetadata.getBoms()).isEmpty();
-		assertThat(dependencyMetadata.getDependencies().get("first")).isSameAs(first);
-		assertThat(dependencyMetadata.getDependencies().get("second")).isSameAs(second);
-	}
+    @Test
+    void filterDependencies() {
+        Dependency first = Dependency.withId("first", "org.foo", "first");
+        first.setCompatibilityRange("2.1.4.RELEASE");
+        Dependency second = Dependency.withId("second", "org.foo", "second");
+        Dependency third = Dependency.withId("third", "org.foo", "third");
+        third.setCompatibilityRange("2.1.8.RELEASE");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", first, second, third).build();
+        DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("2.1.5.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(2);
+        assertThat(dependencyMetadata.getRepositories()).isEmpty();
+        assertThat(dependencyMetadata.getBoms()).isEmpty();
+        assertThat(dependencyMetadata.getDependencies().get("first")).isSameAs(first);
+        assertThat(dependencyMetadata.getDependencies().get("second")).isSameAs(second);
+    }
 
-	@Test
-	void resolveDependencies() {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.getMappings()
-			.add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "org.bar", "second", "0.1.0.RELEASE", null,
-					null, null));
-		first.getMappings()
-			.add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null, null));
-		Dependency second = Dependency.withId("second", "org.foo", "second");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addDependencyGroup("test", first, second)
-			.build();
+    @Test
+    void resolveDependencies() {
+        Dependency first = Dependency.withId("first", "org.foo", "first");
+        first.getMappings().add(Dependency.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "org.bar", "second", "0.1.0.RELEASE", null, null, null));
+        first.getMappings().add(Dependency.Mapping.create("1.1.0.RELEASE", "org.biz", "third", "0.2.0.RELEASE", null, null, null));
+        Dependency second = Dependency.withId("second", "org.foo", "second");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addDependencyGroup("test", first, second).build();
+        DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.0.5.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(2);
+        assertThat(dependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.bar");
+        assertThat(dependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("second");
+        assertThat(dependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.1.0.RELEASE");
+        DependencyMetadata anotherDependencyMetadata = this.provider.get(metadata, Version.parse("1.1.0.RELEASE"));
+        assertThat(anotherDependencyMetadata.getDependencies()).hasSize(2);
+        assertThat(anotherDependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.biz");
+        assertThat(anotherDependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("third");
+        assertThat(anotherDependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.2.0.RELEASE");
+    }
 
-		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.0.5.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
-		assertThat(dependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.bar");
-		assertThat(dependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("second");
-		assertThat(dependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.1.0.RELEASE");
+    @Test
+    void addRepoAndRemoveDuplicates() {
+        Dependency first = Dependency.withId("first", "org.foo", "first");
+        first.setRepository("repo-foo");
+        Dependency second = Dependency.withId("second", "org.foo", "second");
+        Dependency third = Dependency.withId("third", "org.foo", "third");
+        third.setRepository("repo-foo");
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addReleasesRepository("repo-foo", "my-repo", "http://localhost").addDependencyGroup("test", first, second, third).build();
+        DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(3);
+        assertThat(dependencyMetadata.getRepositories()).hasSize(1);
+        assertThat(dependencyMetadata.getBoms()).isEmpty();
+        assertThat(dependencyMetadata.getRepositories().get("repo-foo")).isSameAs(metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"));
+    }
 
-		DependencyMetadata anotherDependencyMetadata = this.provider.get(metadata, Version.parse("1.1.0.RELEASE"));
-		assertThat(anotherDependencyMetadata.getDependencies()).hasSize(2);
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.biz");
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("third");
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.2.0.RELEASE");
-	}
+    @Test
+    void addBomAndRemoveDuplicates() {
+        Dependency first = Dependency.withId("first", "org.foo", "first");
+        first.setBom("bom-foo");
+        Dependency second = Dependency.withId("second", "org.foo", "second");
+        Dependency third = Dependency.withId("third", "org.foo", "third");
+        third.setBom("bom-foo");
+        BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
+        bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.8.RELEASE)", "1.0.0.RELEASE"));
+        bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.8.RELEASE", "2.0.0.RELEASE"));
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom).addDependencyGroup("test", first, second, third).build();
+        DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(3);
+        assertThat(dependencyMetadata.getRepositories()).isEmpty();
+        assertThat(dependencyMetadata.getBoms()).hasSize(1);
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("1.0.0.RELEASE");
+    }
 
-	@Test
-	void addRepoAndRemoveDuplicates() {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setRepository("repo-foo");
-		Dependency second = Dependency.withId("second", "org.foo", "second");
-		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setRepository("repo-foo");
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addReleasesRepository("repo-foo", "my-repo", "http://localhost")
-			.addDependencyGroup("test", first, second, third)
-			.build();
-		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
-		assertThat(dependencyMetadata.getRepositories()).hasSize(1);
-		assertThat(dependencyMetadata.getBoms()).isEmpty();
-		assertThat(dependencyMetadata.getRepositories().get("repo-foo"))
-			.isSameAs(metadata.getConfiguration().getEnv().getRepositories().get("repo-foo"));
-	}
+    @Test
+    void repoFromBomAccordingToVersion() {
+        DependencyMetadata dependencyMetadata = testRepoFromBomAccordingToVersion("1.0.9.RELEASE");
+        assertThat(dependencyMetadata.getBootVersion()).isEqualTo(Version.parse("1.0.9.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(3);
+        assertThat(dependencyMetadata.getRepositories()).hasSize(2);
+        assertThat(dependencyMetadata.getBoms()).hasSize(1);
+        assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
+        assertThat(dependencyMetadata.getRepositories().get("repo-bar").getName()).isEqualTo("bar");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("2.0.0.RELEASE");
+    }
 
-	@Test
-	void addBomAndRemoveDuplicates() {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setBom("bom-foo");
-		Dependency second = Dependency.withId("second", "org.foo", "second");
-		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setBom("bom-foo");
+    @Test
+    void repoFromBomAccordingToAnotherVersion() {
+        DependencyMetadata dependencyMetadata = testRepoFromBomAccordingToVersion("1.1.5.RELEASE");
+        assertThat(dependencyMetadata.getBootVersion()).isEqualTo(Version.parse("1.1.5.RELEASE"));
+        assertThat(dependencyMetadata.getDependencies()).hasSize(3);
+        assertThat(dependencyMetadata.getRepositories()).hasSize(2);
+        assertThat(dependencyMetadata.getBoms()).hasSize(1);
+        assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
+        assertThat(dependencyMetadata.getRepositories().get("repo-biz").getName()).isEqualTo("biz");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
+        assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("3.0.0.RELEASE");
+    }
 
-		BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
-		bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.8.RELEASE)", "1.0.0.RELEASE"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.8.RELEASE", "2.0.0.RELEASE"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addBom("bom-foo", bom)
-			.addDependencyGroup("test", first, second, third)
-			.build();
-		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.1.5.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
-		assertThat(dependencyMetadata.getRepositories()).isEmpty();
-		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("1.0.0.RELEASE");
-	}
-
-	@Test
-	void repoFromBomAccordingToVersion() {
-		DependencyMetadata dependencyMetadata = testRepoFromBomAccordingToVersion("1.0.9.RELEASE");
-		assertThat(dependencyMetadata.getBootVersion()).isEqualTo(Version.parse("1.0.9.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
-		assertThat(dependencyMetadata.getRepositories()).hasSize(2);
-		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
-		assertThat(dependencyMetadata.getRepositories().get("repo-bar").getName()).isEqualTo("bar");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("2.0.0.RELEASE");
-	}
-
-	@Test
-	void repoFromBomAccordingToAnotherVersion() {
-		DependencyMetadata dependencyMetadata = testRepoFromBomAccordingToVersion("1.1.5.RELEASE");
-		assertThat(dependencyMetadata.getBootVersion()).isEqualTo(Version.parse("1.1.5.RELEASE"));
-		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
-		assertThat(dependencyMetadata.getRepositories()).hasSize(2);
-		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
-		assertThat(dependencyMetadata.getRepositories().get("repo-biz").getName()).isEqualTo("biz");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("3.0.0.RELEASE");
-	}
-
-	private DependencyMetadata testRepoFromBomAccordingToVersion(String bootVersion) {
-		Dependency first = Dependency.withId("first", "org.foo", "first");
-		first.setRepository("repo-foo");
-		Dependency second = Dependency.withId("second", "org.foo", "second");
-		Dependency third = Dependency.withId("third", "org.foo", "third");
-		third.setBom("bom-foo");
-
-		BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
-		bom.getMappings()
-			.add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "2.0.0.RELEASE", "repo-foo",
-					"repo-bar"));
-		bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.0.RELEASE", "3.0.0.RELEASE", "repo-biz"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-			.addBom("bom-foo", bom)
-			.addReleasesRepository("repo-foo", "foo", "http://localhost")
-			.addReleasesRepository("repo-bar", "bar", "http://localhost")
-			.addReleasesRepository("repo-biz", "biz", "http://localhost")
-			.addDependencyGroup("test", first, second, third)
-			.build();
-		return this.provider.get(metadata, Version.parse(bootVersion));
-	}
-
+    private DependencyMetadata testRepoFromBomAccordingToVersion(String bootVersion) {
+        Dependency first = Dependency.withId("first", "org.foo", "first");
+        first.setRepository("repo-foo");
+        Dependency second = Dependency.withId("second", "org.foo", "second");
+        Dependency third = Dependency.withId("third", "org.foo", "third");
+        third.setBom("bom-foo");
+        BillOfMaterials bom = BillOfMaterials.create("org.foo", "bom");
+        bom.getMappings().add(BillOfMaterials.Mapping.create("[1.0.0.RELEASE, 1.1.0.RELEASE)", "2.0.0.RELEASE", "repo-foo", "repo-bar"));
+        bom.getMappings().add(BillOfMaterials.Mapping.create("1.1.0.RELEASE", "3.0.0.RELEASE", "repo-biz"));
+        InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().addBom("bom-foo", bom).addReleasesRepository("repo-foo", "foo", "http://localhost").addReleasesRepository("repo-bar", "bar", "http://localhost").addReleasesRepository("repo-biz", "biz", "http://localhost").addDependencyGroup("test", first, second, third).build();
+        return this.provider.get(metadata, Version.parse(bootVersion));
+    }
 }

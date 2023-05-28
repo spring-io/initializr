@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem;
 
 /**
@@ -23,24 +22,23 @@ package io.spring.initializr.generator.buildsystem;
  */
 public interface BuildSystemFactory {
 
-	/**
-	 * Creates and returns a {@link BuildSystem} for the given id. If the factory does not
-	 * recognise the given {@code id}, {@code null} should be returned.
-	 * @param id the id of the build system
-	 * @return the build system or {@code null}
-	 */
-	BuildSystem createBuildSystem(String id);
+    /**
+     * Creates and returns a {@link BuildSystem} for the given id. If the factory does not
+     * recognise the given {@code id}, {@code null} should be returned.
+     * @param id the id of the build system
+     * @return the build system or {@code null}
+     */
+    BuildSystem createBuildSystem(String id);
 
-	/**
-	 * Creates and returns a {@link BuildSystem} for the given {@code id} and
-	 * {@code dialect}. If the factory does not recognize the given {@code id} or
-	 * {@code dialect}, {@code null} should be returned.
-	 * @param id the id of the build system
-	 * @param dialect the dialect of the build system
-	 * @return the build system or {@code null}
-	 */
-	default BuildSystem createBuildSystem(String id, String dialect) {
-		return createBuildSystem(id);
-	}
-
+    /**
+     * Creates and returns a {@link BuildSystem} for the given {@code id} and
+     * {@code dialect}. If the factory does not recognize the given {@code id} or
+     * {@code dialect}, {@code null} should be returned.
+     * @param id the id of the build system
+     * @param dialect the dialect of the build system
+     * @return the build system or {@code null}
+     */
+    default BuildSystem createBuildSystem(String id, String dialect) {
+        return createBuildSystem(id);
+    }
 }

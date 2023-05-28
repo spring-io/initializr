@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
-
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -32,37 +29,31 @@ import org.springframework.beans.factory.ObjectProvider;
  *
  * @author Andy Wilkinson
  */
-class ServletInitializerContributor implements
-		MainSourceCodeCustomizer<TypeDeclaration, CompilationUnit<TypeDeclaration>, SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>>> {
+class ServletInitializerContributor implements MainSourceCodeCustomizer<TypeDeclaration, CompilationUnit<TypeDeclaration>, SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>>> {
 
-	private final String packageName;
+    private final String packageName;
 
-	private final String initializerClassName;
+    private final String initializerClassName;
 
-	private final ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers;
+    private final ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers;
 
-	ServletInitializerContributor(String packageName, String initializerClassName,
-			ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-		this.packageName = packageName;
-		this.initializerClassName = initializerClassName;
-		this.servletInitializerCustomizers = servletInitializerCustomizers;
-	}
+    ServletInitializerContributor(String packageName, String initializerClassName, ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
+        this.packageName = packageName;
+        this.initializerClassName = initializerClassName;
+        this.servletInitializerCustomizers = servletInitializerCustomizers;
+    }
 
-	@Override
-	public void customize(SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode) {
-		CompilationUnit<TypeDeclaration> compilationUnit = sourceCode.createCompilationUnit(this.packageName,
-				"ServletInitializer");
-		TypeDeclaration servletInitializer = compilationUnit.createTypeDeclaration("ServletInitializer");
-		servletInitializer.extend(this.initializerClassName);
-		customizeServletInitializer(servletInitializer);
-	}
+    @Override
+    public void customize(SourceCode<TypeDeclaration, CompilationUnit<TypeDeclaration>> sourceCode) {
+        CompilationUnit<TypeDeclaration> compilationUnit = sourceCode.createCompilationUnit(this.packageName, "ServletInitializer");
+        TypeDeclaration servletInitializer = compilationUnit.createTypeDeclaration("ServletInitializer");
+        servletInitializer.extend(this.initializerClassName);
+        customizeServletInitializer(servletInitializer);
+    }
 
-	@SuppressWarnings("unchecked")
-	private void customizeServletInitializer(TypeDeclaration servletInitializer) {
-		List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers.orderedStream()
-			.collect(Collectors.toList());
-		LambdaSafe.callbacks(ServletInitializerCustomizer.class, customizers, servletInitializer)
-			.invoke((customizer) -> customizer.customize(servletInitializer));
-	}
-
+    @SuppressWarnings("unchecked")
+    private void customizeServletInitializer(TypeDeclaration servletInitializer) {
+        List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers.orderedStream().collect(Collectors.toList());
+        LambdaSafe.callbacks(ServletInitializerCustomizer.class, customizers, servletInitializer).invoke((customizer) -> customizer.customize(servletInitializer));
+    }
 }

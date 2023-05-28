@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.maven;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.AssertProvider;
 import org.assertj.core.api.ListAssert;
@@ -42,70 +39,63 @@ import org.w3c.dom.NodeList;
  */
 class NodeAssert extends AbstractAssert<NodeAssert, Node> implements AssertProvider<NodeAssert> {
 
-	private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
 
-	private final XPathFactory xpathFactory = XPathFactory.newInstance();
+    private final XPathFactory xpathFactory = XPathFactory.newInstance();
 
-	private final XPath xpath = this.xpathFactory.newXPath();
+    private final XPath xpath = this.xpathFactory.newXPath();
 
-	NodeAssert(String xmlContent) {
-		this(read(xmlContent));
-	}
+    NodeAssert(String xmlContent) {
+        this(read(xmlContent));
+    }
 
-	NodeAssert(Node actual) {
-		super(actual, NodeAssert.class);
-	}
+    NodeAssert(Node actual) {
+        super(actual, NodeAssert.class);
+    }
 
-	private static Document read(String xmlContent) {
-		try {
-			return FACTORY.newDocumentBuilder()
-				.parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)));
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    private static Document read(String xmlContent) {
+        try {
+            return FACTORY.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	NodeAssert nodeAtPath(String xpath) {
-		try {
-			return new NodeAssert((Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
-		}
-		catch (XPathExpressionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    NodeAssert nodeAtPath(String xpath) {
+        try {
+            return new NodeAssert((Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
+        } catch (XPathExpressionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	ListAssert<Node> nodesAtPath(String xpath) {
-		try {
-			NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODESET);
-			return new ListAssert<>(toList(nodeList));
-		}
-		catch (XPathExpressionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    ListAssert<Node> nodesAtPath(String xpath) {
+        try {
+            NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODESET);
+            return new ListAssert<>(toList(nodeList));
+        } catch (XPathExpressionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	StringAssert textAtPath(String xpath) {
-		try {
-			return new StringAssert(
-					(String) this.xpath.evaluate(xpath + "/text()", this.actual, XPathConstants.STRING));
-		}
-		catch (XPathExpressionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    StringAssert textAtPath(String xpath) {
+        try {
+            return new StringAssert((String) this.xpath.evaluate(xpath + "/text()", this.actual, XPathConstants.STRING));
+        } catch (XPathExpressionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	@Override
-	public NodeAssert assertThat() {
-		return this;
-	}
+    @Override
+    public NodeAssert assertThat() {
+        return this;
+    }
 
-	private static List<Node> toList(NodeList nodeList) {
-		List<Node> nodes = new ArrayList<>();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			nodes.add(nodeList.item(i));
-		}
-		return nodes;
-	}
-
+    private static List<Node> toList(NodeList nodeList) {
+        List<Node> nodes = new ArrayList<>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            nodes.add(nodeList.item(i));
+        }
+        return nodes;
+    }
 }

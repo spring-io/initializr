@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Web Application archive packaging.
  */
 package io.spring.initializr.generator.packaging.war;
+

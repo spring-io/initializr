@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.language.kotlin;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import io.spring.initializr.generator.language.CompilationUnit;
 
 /**
@@ -28,23 +26,22 @@ import io.spring.initializr.generator.language.CompilationUnit;
  */
 public class KotlinCompilationUnit extends CompilationUnit<KotlinTypeDeclaration> {
 
-	private final List<KotlinFunctionDeclaration> topLevelFunctions = new ArrayList<>();
+    private final List<KotlinFunctionDeclaration> topLevelFunctions = new ArrayList<>();
 
-	KotlinCompilationUnit(String packageName, String name) {
-		super(packageName, name);
-	}
+    KotlinCompilationUnit(String packageName, String name) {
+        super(packageName, name);
+    }
 
-	@Override
-	protected KotlinTypeDeclaration doCreateTypeDeclaration(String name) {
-		return new KotlinTypeDeclaration(name);
-	}
+    @Override
+    protected KotlinTypeDeclaration doCreateTypeDeclaration(String name) {
+        return new KotlinTypeDeclaration(name);
+    }
 
-	public void addTopLevelFunction(KotlinFunctionDeclaration function) {
-		this.topLevelFunctions.add(function);
-	}
+    public void addTopLevelFunction(KotlinFunctionDeclaration function) {
+        this.topLevelFunctions.add(function);
+    }
 
-	public List<KotlinFunctionDeclaration> getTopLevelFunctions() {
-		return this.topLevelFunctions;
-	}
-
+    public List<KotlinFunctionDeclaration> getTopLevelFunctions() {
+        return this.topLevelFunctions;
+    }
 }

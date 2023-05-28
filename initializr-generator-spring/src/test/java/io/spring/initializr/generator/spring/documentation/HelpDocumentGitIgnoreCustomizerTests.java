@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -30,21 +28,20 @@ import static org.mockito.Mockito.mock;
  */
 class HelpDocumentGitIgnoreCustomizerTests {
 
-	private final GitIgnore gitIgnore = new GitIgnore();
+    private final GitIgnore gitIgnore = new GitIgnore();
 
-	@Test
-	void gitIgnoreIsUpdatedWithNonEmptyHelpDocument() {
-		HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
-		document.addSection((writer) -> writer.println("test"));
-		new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
-		assertThat(this.gitIgnore.getGeneral().getItems()).containsOnly("HELP.md");
-	}
+    @Test
+    void gitIgnoreIsUpdatedWithNonEmptyHelpDocument() {
+        HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
+        document.addSection((writer) -> writer.println("test"));
+        new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
+        assertThat(this.gitIgnore.getGeneral().getItems()).containsOnly("HELP.md");
+    }
 
-	@Test
-	void gitIgnoreIsNotUpdatedWithEmptyHelpDocument() {
-		HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
-		new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
-		assertThat(this.gitIgnore.getGeneral().getItems()).isEmpty();
-	}
-
+    @Test
+    void gitIgnoreIsNotUpdatedWithEmptyHelpDocument() {
+        HelpDocument document = new HelpDocument(mock(MustacheTemplateRenderer.class));
+        new HelpDocumentGitIgnoreCustomizer(document).customize(this.gitIgnore);
+        assertThat(this.gitIgnore.getGeneral().getItems()).isEmpty();
+    }
 }

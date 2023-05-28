@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.packaging;
 
 /**
@@ -23,12 +22,11 @@ package io.spring.initializr.generator.packaging;
  */
 public interface PackagingFactory {
 
-	/**
-	 * Creates and returns a {@link Packaging} for the given id. If the factory does not
-	 * recognise the given {@code id}, {@code null} should be returned.
-	 * @param id the id of the packaging
-	 * @return the packaging or {@code null}
-	 */
-	Packaging createPackaging(String id);
-
+    /**
+     * Creates and returns a {@link Packaging} for the given id. If the factory does not
+     * recognise the given {@code id}, {@code null} should be returned.
+     * @param id the id of the packaging
+     * @return the packaging or {@code null}
+     */
+    Packaging createPackaging(String id);
 }

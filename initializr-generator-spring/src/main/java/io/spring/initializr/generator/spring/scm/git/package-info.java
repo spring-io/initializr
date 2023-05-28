@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Git contributors. Generate a sensible {@code .gitignore}.
  */
 package io.spring.initializr.generator.spring.scm.git;
+

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -27,40 +26,39 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public abstract class ProjectRequestEvent {
 
-	private final ProjectRequest request;
+    private final ProjectRequest request;
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	private final long timestamp;
+    private final long timestamp;
 
-	protected ProjectRequestEvent(ProjectRequest request, InitializrMetadata metadata) {
-		this.request = request;
-		this.metadata = metadata;
-		this.timestamp = System.currentTimeMillis();
-	}
+    protected ProjectRequestEvent(ProjectRequest request, InitializrMetadata metadata) {
+        this.request = request;
+        this.metadata = metadata;
+        this.timestamp = System.currentTimeMillis();
+    }
 
-	/**
-	 * Return the {@link ProjectRequest} used to generate the project.
-	 * @return the project request
-	 */
-	public ProjectRequest getProjectRequest() {
-		return this.request;
-	}
+    /**
+     * Return the {@link ProjectRequest} used to generate the project.
+     * @return the project request
+     */
+    public ProjectRequest getProjectRequest() {
+        return this.request;
+    }
 
-	/**
-	 * Return the timestamp at which the request was processed.
-	 * @return the timestamp that the request was processed
-	 */
-	public long getTimestamp() {
-		return this.timestamp;
-	}
+    /**
+     * Return the timestamp at which the request was processed.
+     * @return the timestamp that the request was processed
+     */
+    public long getTimestamp() {
+        return this.timestamp;
+    }
 
-	/**
-	 * Return the metadata that was used to generate the project.
-	 * @return the metadata
-	 */
-	public InitializrMetadata getMetadata() {
-		return this.metadata;
-	}
-
+    /**
+     * Return the metadata that was used to generate the project.
+     * @return the metadata
+     */
+    public InitializrMetadata getMetadata() {
+        return this.metadata;
+    }
 }

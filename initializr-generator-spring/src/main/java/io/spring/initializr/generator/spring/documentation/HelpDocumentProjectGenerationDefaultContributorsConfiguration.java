@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.documentation;
 
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,15 +29,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HelpDocumentProjectGenerationDefaultContributorsConfiguration {
 
-	@Bean
-	public RequestedDependenciesHelpDocumentCustomizer dependenciesHelpDocumentCustomizer(
-			ProjectDescription description, InitializrMetadata metadata) {
-		return new RequestedDependenciesHelpDocumentCustomizer(description, metadata);
-	}
+    @Bean
+    public RequestedDependenciesHelpDocumentCustomizer dependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata) {
+        return new RequestedDependenciesHelpDocumentCustomizer(description, metadata);
+    }
 
-	@Bean
-	public GitIgnoreCustomizer helpDocumentGitIgnoreCustomizer(HelpDocument document) {
-		return new HelpDocumentGitIgnoreCustomizer(document);
-	}
-
+    @Bean
+    public GitIgnoreCustomizer helpDocumentGitIgnoreCustomizer(HelpDocument document) {
+        return new HelpDocumentGitIgnoreCustomizer(document);
+    }
 }

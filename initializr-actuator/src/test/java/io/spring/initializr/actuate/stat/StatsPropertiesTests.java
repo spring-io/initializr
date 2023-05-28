@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.stat;
 
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -27,12 +25,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class StatsPropertiesTests {
 
-	private final StatsProperties properties = new StatsProperties();
+    private final StatsProperties properties = new StatsProperties();
 
-	@Test
-	void cleanTrailingSlash() {
-		this.properties.getElastic().setUri("https://example.com/");
-		assertThat(this.properties.getElastic().getUri()).isEqualTo("https://example.com");
-	}
-
+    @Test
+    void cleanTrailingSlash() {
+        this.properties.getElastic().setUri("https://example.com/");
+        assertThat(this.properties.getElastic().getUri()).isEqualTo("https://example.com");
+    }
 }

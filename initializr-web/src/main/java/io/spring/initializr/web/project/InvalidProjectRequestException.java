@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.generator.project.ProjectGenerationException;
@@ -26,8 +25,7 @@ import io.spring.initializr.generator.project.ProjectGenerationException;
 @SuppressWarnings("serial")
 public class InvalidProjectRequestException extends ProjectGenerationException {
 
-	public InvalidProjectRequestException(String message) {
-		super(message);
-	}
-
+    public InvalidProjectRequestException(String message) {
+        super(message);
+    }
 }

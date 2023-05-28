@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.configuration;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.metadata.InitializrMetadata;
-
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -30,14 +28,13 @@ import org.springframework.context.annotation.Bean;
 @ProjectGenerationConfiguration
 public class ApplicationConfigurationProjectGenerationConfiguration {
 
-	@Bean
-	public ApplicationPropertiesContributor applicationPropertiesContributor() {
-		return new ApplicationPropertiesContributor();
-	}
+    @Bean
+    public ApplicationPropertiesContributor applicationPropertiesContributor() {
+        return new ApplicationPropertiesContributor();
+    }
 
-	@Bean
-	public WebFoldersContributor webFoldersContributor(Build build, InitializrMetadata metadata) {
-		return new WebFoldersContributor(build, metadata);
-	}
-
+    @Bean
+    public WebFoldersContributor webFoldersContributor(Build build, InitializrMetadata metadata) {
+        return new WebFoldersContributor(build, metadata);
+    }
 }

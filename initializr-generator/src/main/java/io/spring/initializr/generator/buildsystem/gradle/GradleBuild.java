@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.util.function.Consumer;
-
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
@@ -30,93 +28,92 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Bui
  */
 public class GradleBuild extends Build {
 
-	private final GradleBuildSettings.Builder settings = new Builder();
+    private final GradleBuildSettings.Builder settings = new Builder();
 
-	private final GradlePluginContainer plugins = new GradlePluginContainer();
+    private final GradlePluginContainer plugins = new GradlePluginContainer();
 
-	private final GradleConfigurationContainer configurations = new GradleConfigurationContainer();
+    private final GradleConfigurationContainer configurations = new GradleConfigurationContainer();
 
-	private final GradleTaskContainer tasks = new GradleTaskContainer();
+    private final GradleTaskContainer tasks = new GradleTaskContainer();
 
-	private final GradleSnippetContainer snippets = new GradleSnippetContainer();
+    private final GradleSnippetContainer snippets = new GradleSnippetContainer();
 
-	private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
+    private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
 
-	/**
-	 * Create a new Gradle build using the specified {@link BuildItemResolver}.
-	 * @param buildItemResolver the build item resolved to use
-	 */
-	public GradleBuild(BuildItemResolver buildItemResolver) {
-		super(buildItemResolver);
-	}
+    /**
+     * Create a new Gradle build using the specified {@link BuildItemResolver}.
+     * @param buildItemResolver the build item resolved to use
+     */
+    public GradleBuild(BuildItemResolver buildItemResolver) {
+        super(buildItemResolver);
+    }
 
-	/**
-	 * Create a new Gradle build without a build item resolver.
-	 */
-	public GradleBuild() {
-		this(null);
-	}
+    /**
+     * Create a new Gradle build without a build item resolver.
+     */
+    public GradleBuild() {
+        this(null);
+    }
 
-	@Override
-	public GradleBuildSettings.Builder settings() {
-		return this.settings;
-	}
+    @Override
+    public GradleBuildSettings.Builder settings() {
+        return this.settings;
+    }
 
-	@Override
-	public GradleBuildSettings getSettings() {
-		return this.settings.build();
-	}
+    @Override
+    public GradleBuildSettings getSettings() {
+        return this.settings.build();
+    }
 
-	/**
-	 * Return the {@linkplain GradlePluginContainer plugin container} to use to configure
-	 * plugins.
-	 * @return the {@link GradlePluginContainer}
-	 */
-	public GradlePluginContainer plugins() {
-		return this.plugins;
-	}
+    /**
+     * Return the {@linkplain GradlePluginContainer plugin container} to use to configure
+     * plugins.
+     * @return the {@link GradlePluginContainer}
+     */
+    public GradlePluginContainer plugins() {
+        return this.plugins;
+    }
 
-	/**
-	 * Return the {@linkplain GradleConfigurationContainer configuration container} to use
-	 * for configuration customizations.
-	 * @return the {@link GradleConfigurationContainer}
-	 */
-	public GradleConfigurationContainer configurations() {
-		return this.configurations;
-	}
+    /**
+     * Return the {@linkplain GradleConfigurationContainer configuration container} to use
+     * for configuration customizations.
+     * @return the {@link GradleConfigurationContainer}
+     */
+    public GradleConfigurationContainer configurations() {
+        return this.configurations;
+    }
 
-	/**
-	 * Return the {@linkplain GradleTaskContainer task container} to use to configure
-	 * tasks.
-	 * @return the {@link GradleTaskContainer}
-	 */
-	public GradleTaskContainer tasks() {
-		return this.tasks;
-	}
+    /**
+     * Return the {@linkplain GradleTaskContainer task container} to use to configure
+     * tasks.
+     * @return the {@link GradleTaskContainer}
+     */
+    public GradleTaskContainer tasks() {
+        return this.tasks;
+    }
 
-	/**
-	 * Return the {@linkplain GradleSnippetContainer snippet container} to use to apply
-	 * snippets.
-	 * @return the {@link GradleSnippetContainer}
-	 */
-	public GradleSnippetContainer snippets() {
-		return this.snippets;
-	}
+    /**
+     * Return the {@linkplain GradleSnippetContainer snippet container} to use to apply
+     * snippets.
+     * @return the {@link GradleSnippetContainer}
+     */
+    public GradleSnippetContainer snippets() {
+        return this.snippets;
+    }
 
-	/**
-	 * Customize the {@code buildscript} of the build using the specified consumer.
-	 * @param buildscript a consumer of the current buildscript
-	 */
-	public void buildscript(Consumer<GradleBuildscript.Builder> buildscript) {
-		buildscript.accept(this.buildscript);
-	}
+    /**
+     * Customize the {@code buildscript} of the build using the specified consumer.
+     * @param buildscript a consumer of the current buildscript
+     */
+    public void buildscript(Consumer<GradleBuildscript.Builder> buildscript) {
+        buildscript.accept(this.buildscript);
+    }
 
-	/**
-	 * Return the {@link GradleBuildscript buildscript} of this build.
-	 * @return the buildscript to use
-	 */
-	public GradleBuildscript getBuildscript() {
-		return this.buildscript.build();
-	}
-
+    /**
+     * Return the {@link GradleBuildscript buildscript} of this build.
+     * @return the buildscript to use
+     */
+    public GradleBuildscript getBuildscript() {
+        return this.buildscript.build();
+    }
 }

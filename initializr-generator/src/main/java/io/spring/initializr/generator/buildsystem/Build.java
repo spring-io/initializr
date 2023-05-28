@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.buildsystem;
 
 /**
@@ -24,88 +23,86 @@ package io.spring.initializr.generator.buildsystem;
  */
 public abstract class Build {
 
-	private final PropertyContainer properties;
+    private final PropertyContainer properties;
 
-	private final DependencyContainer dependencies;
+    private final DependencyContainer dependencies;
 
-	private final BomContainer boms;
+    private final BomContainer boms;
 
-	private final MavenRepositoryContainer repositories;
+    private final MavenRepositoryContainer repositories;
 
-	private final MavenRepositoryContainer pluginRepositories;
+    private final MavenRepositoryContainer pluginRepositories;
 
-	protected Build(BuildItemResolver buildItemResolver) {
-		BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
-		this.properties = new PropertyContainer();
-		this.dependencies = new DependencyContainer(resolver::resolveDependency);
-		this.boms = new BomContainer(resolver::resolveBom);
-		this.repositories = new MavenRepositoryContainer(resolver::resolveRepository);
-		this.pluginRepositories = new MavenRepositoryContainer(resolver::resolveRepository);
-	}
+    protected Build(BuildItemResolver buildItemResolver) {
+        BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
+        this.properties = new PropertyContainer();
+        this.dependencies = new DependencyContainer(resolver::resolveDependency);
+        this.boms = new BomContainer(resolver::resolveBom);
+        this.repositories = new MavenRepositoryContainer(resolver::resolveRepository);
+        this.pluginRepositories = new MavenRepositoryContainer(resolver::resolveRepository);
+    }
 
-	protected static BuildItemResolver determineBuildItemResolver(BuildItemResolver buildItemResolver) {
-		if (buildItemResolver != null) {
-			return buildItemResolver;
-		}
-		return new SimpleBuildItemResolver((id) -> null, (id) -> null,
-				(id) -> id.equals("maven-central") ? MavenRepository.MAVEN_CENTRAL : null);
-	}
+    protected static BuildItemResolver determineBuildItemResolver(BuildItemResolver buildItemResolver) {
+        if (buildItemResolver != null) {
+            return buildItemResolver;
+        }
+        return new SimpleBuildItemResolver((id) -> null, (id) -> null, (id) -> id.equals("maven-central") ? MavenRepository.MAVEN_CENTRAL : null);
+    }
 
-	/**
-	 * Return a builder to configure the general settings of this build.
-	 * @return a builder for {@link BuildSettings}.
-	 */
-	public abstract BuildSettings.Builder<?> settings();
+    /**
+     * Return a builder to configure the general settings of this build.
+     * @return a builder for {@link BuildSettings}.
+     */
+    public abstract BuildSettings.Builder<?> settings();
 
-	/**
-	 * Return the settings of this build.
-	 * @return a {@link BuildSettings}
-	 */
-	public abstract BuildSettings getSettings();
+    /**
+     * Return the settings of this build.
+     * @return a {@link BuildSettings}
+     */
+    public abstract BuildSettings getSettings();
 
-	/**
-	 * Return the {@linkplain PropertyContainer property container} to use to configure
-	 * properties.
-	 * @return the {@link PropertyContainer}
-	 */
-	public PropertyContainer properties() {
-		return this.properties;
-	}
+    /**
+     * Return the {@linkplain PropertyContainer property container} to use to configure
+     * properties.
+     * @return the {@link PropertyContainer}
+     */
+    public PropertyContainer properties() {
+        return this.properties;
+    }
 
-	/**
-	 * Return the {@linkplain DependencyContainer dependency container} to use to
-	 * configure dependencies.
-	 * @return the {@link DependencyContainer}
-	 */
-	public DependencyContainer dependencies() {
-		return this.dependencies;
-	}
+    /**
+     * Return the {@linkplain DependencyContainer dependency container} to use to
+     * configure dependencies.
+     * @return the {@link DependencyContainer}
+     */
+    public DependencyContainer dependencies() {
+        return this.dependencies;
+    }
 
-	/**
-	 * Return the {@linkplain BomContainer bom container} to use to configure Bill of
-	 * Materials.
-	 * @return the {@link BomContainer}
-	 */
-	public BomContainer boms() {
-		return this.boms;
-	}
+    /**
+     * Return the {@linkplain BomContainer bom container} to use to configure Bill of
+     * Materials.
+     * @return the {@link BomContainer}
+     */
+    public BomContainer boms() {
+        return this.boms;
+    }
 
-	/**
-	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
-	 * configure repositories.
-	 * @return the {@link MavenRepositoryContainer} for repositories
-	 */
-	public MavenRepositoryContainer repositories() {
-		return this.repositories;
-	}
+    /**
+     * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+     * configure repositories.
+     * @return the {@link MavenRepositoryContainer} for repositories
+     */
+    public MavenRepositoryContainer repositories() {
+        return this.repositories;
+    }
 
-	/**
-	 * Return the {@linkplain MavenRepositoryContainer repository container} to use to
-	 * configure plugin repositories.
-	 * @return the {@link MavenRepositoryContainer} for plugin repositories
-	 */
-	public MavenRepositoryContainer pluginRepositories() {
-		return this.pluginRepositories;
-	}
-
+    /**
+     * Return the {@linkplain MavenRepositoryContainer repository container} to use to
+     * configure plugin repositories.
+     * @return the {@link MavenRepositoryContainer} for plugin repositories
+     */
+    public MavenRepositoryContainer pluginRepositories() {
+        return this.pluginRepositories;
+    }
 }

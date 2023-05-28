@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
@@ -21,10 +20,8 @@ import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -38,46 +35,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test-default")
 class CommandLineExampleIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	void generateDefaultProject() {
-		ProjectStructure project = downloadZip("/starter.zip");
-		assertDefaultProject(project);
-		assertDoesNotHaveWebResources(project);
-		assertThat(project).mavenBuild()
-			.hasDependency(Dependency.createSpringBootStarter(""))
-			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
-			.hasDependenciesSize(2);
-	}
+    @Test
+    void generateDefaultProject() {
+        ProjectStructure project = downloadZip("/starter.zip");
+        assertDefaultProject(project);
+        assertDoesNotHaveWebResources(project);
+        assertThat(project).mavenBuild().hasDependency(Dependency.createSpringBootStarter("")).hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST)).hasDependenciesSize(2);
+    }
 
-	@Test
-	void generateWebProjectWithJava8() {
-		ProjectStructure project = downloadZip("/starter.zip?dependencies=web&javaVersion=1.8");
-		assertDefaultProject(project);
-		assertHasWebResources(project);
-		assertThat(project).mavenBuild()
-			.hasProperty("java.version", "1.8")
-			.hasDependency(Dependency.createSpringBootStarter("web"))
-			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST))
-			.hasDependenciesSize(2);
-	}
+    @Test
+    void generateWebProjectWithJava8() {
+        ProjectStructure project = downloadZip("/starter.zip?dependencies=web&javaVersion=1.8");
+        assertDefaultProject(project);
+        assertHasWebResources(project);
+        assertThat(project).mavenBuild().hasProperty("java.version", "1.8").hasDependency(Dependency.createSpringBootStarter("web")).hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST)).hasDependenciesSize(2);
+    }
 
-	@Test
-	void generateWebDataJpaGradleProject() {
-		ProjectStructure project = downloadTgz(
-				"/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir")
-			.resolveModule("my-dir");
-		assertHasWebResources(project);
-		assertThat(project).groovyDslGradleBuild()
-			.contains("spring-boot-starter-web")
-			.contains("spring-boot-starter-data-jpa");
-	}
+    @Test
+    void generateWebDataJpaGradleProject() {
+        ProjectStructure project = downloadTgz("/starter.tgz?dependencies=web,data-jpa&type=gradle-project&baseDir=my-dir").resolveModule("my-dir");
+        assertHasWebResources(project);
+        assertThat(project).groovyDslGradleBuild().contains("spring-boot-starter-web").contains("spring-boot-starter-data-jpa");
+    }
 
-	@Test
-	void generateMavenPomWithWarPackaging() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"),
-				String.class);
-		MavenBuildAssert pomAssert = new MavenBuildAssert(response.getBody());
-		pomAssert.hasPackaging("war");
-	}
-
+    @Test
+    void generateMavenPomWithWarPackaging() {
+        ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"), String.class);
+        MavenBuildAssert pomAssert = new MavenBuildAssert(response.getBody());
+        pomAssert.hasPackaging("war");
+    }
 }

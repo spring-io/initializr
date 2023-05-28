@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.autoconfigure;
 
 import java.nio.file.Files;
 import java.util.function.Supplier;
 import java.util.stream.StreamSupport;
-
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
@@ -47,7 +44,6 @@ import io.spring.initializr.web.project.ProjectRequestPlatformVersionTransformer
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
@@ -78,144 +74,124 @@ import org.springframework.core.env.Environment;
 @EnableConfigurationProperties(InitializrProperties.class)
 public class InitializrAutoConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean
-	public ProjectDirectoryFactory projectDirectoryFactory() {
-		return (description) -> Files.createTempDirectory("project-");
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public ProjectDirectoryFactory projectDirectoryFactory() {
+        return (description) -> Files.createTempDirectory("project-");
+    }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public IndentingWriterFactory indentingWriterFactory() {
-		return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"));
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public IndentingWriterFactory indentingWriterFactory() {
+        return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"));
+    }
 
-	@Bean
-	@ConditionalOnMissingBean(TemplateRenderer.class)
-	public MustacheTemplateRenderer templateRenderer(Environment environment,
-			ObjectProvider<CacheManager> cacheManager) {
-		return new MustacheTemplateRenderer("classpath:/templates",
-				determineCache(environment, cacheManager.getIfAvailable()));
-	}
+    @Bean
+    @ConditionalOnMissingBean(TemplateRenderer.class)
+    public MustacheTemplateRenderer templateRenderer(Environment environment, ObjectProvider<CacheManager> cacheManager) {
+        return new MustacheTemplateRenderer("classpath:/templates", determineCache(environment, cacheManager.getIfAvailable()));
+    }
 
-	private Cache determineCache(Environment environment, CacheManager cacheManager) {
-		if (cacheManager != null) {
-			Binder binder = Binder.get(environment);
-			boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);
-			if (cache) {
-				return cacheManager.getCache("initializr.templates");
-			}
-		}
-		return new NoOpCache("templates");
-	}
+    private Cache determineCache(Environment environment, CacheManager cacheManager) {
+        if (cacheManager != null) {
+            Binder binder = Binder.get(environment);
+            boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);
+            if (cache) {
+                return cacheManager.getCache("initializr.templates");
+            }
+        }
+        return new NoOpCache("templates");
+    }
 
-	@Bean
-	@ConditionalOnMissingBean(InitializrMetadataProvider.class)
-	public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties,
-			ObjectProvider<InitializrMetadataUpdateStrategy> initializrMetadataUpdateStrategy) {
-		InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build();
-		return new DefaultInitializrMetadataProvider(metadata,
-				initializrMetadataUpdateStrategy.getIfAvailable(() -> (current) -> current));
-	}
+    @Bean
+    @ConditionalOnMissingBean(InitializrMetadataProvider.class)
+    public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties, ObjectProvider<InitializrMetadataUpdateStrategy> initializrMetadataUpdateStrategy) {
+        InitializrMetadata metadata = InitializrMetadataBuilder.fromInitializrProperties(properties).build();
+        return new DefaultInitializrMetadataProvider(metadata, initializrMetadataUpdateStrategy.getIfAvailable(() -> (current) -> current));
+    }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DependencyMetadataProvider dependencyMetadataProvider() {
-		return new DefaultDependencyMetadataProvider();
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public DependencyMetadataProvider dependencyMetadataProvider() {
+        return new DefaultDependencyMetadataProvider();
+    }
 
-	/**
-	 * Initializr web configuration.
-	 */
-	@Configuration
-	@ConditionalOnWebApplication
-	static class InitializrWebConfiguration {
+    /**
+     * Initializr web configuration.
+     */
+    @Configuration
+    @ConditionalOnWebApplication
+    static class InitializrWebConfiguration {
 
-		@Bean
-		InitializrWebConfig initializrWebConfig() {
-			return new InitializrWebConfig();
-		}
+        @Bean
+        InitializrWebConfig initializrWebConfig() {
+            return new InitializrWebConfig();
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		ProjectGenerationController<ProjectRequest> projectGenerationController(
-				InitializrMetadataProvider metadataProvider,
-				ObjectProvider<ProjectRequestPlatformVersionTransformer> platformVersionTransformer,
-				ApplicationContext applicationContext) {
-			ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(
-					applicationContext, new DefaultProjectRequestToDescriptionConverter(platformVersionTransformer
-						.getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new)));
-			return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
-		}
+        @Bean
+        @ConditionalOnMissingBean
+        ProjectGenerationController<ProjectRequest> projectGenerationController(InitializrMetadataProvider metadataProvider, ObjectProvider<ProjectRequestPlatformVersionTransformer> platformVersionTransformer, ApplicationContext applicationContext) {
+            ProjectGenerationInvoker<ProjectRequest> projectGenerationInvoker = new ProjectGenerationInvoker<>(applicationContext, new DefaultProjectRequestToDescriptionConverter(platformVersionTransformer.getIfAvailable(DefaultProjectRequestPlatformVersionTransformer::new)));
+            return new DefaultProjectGenerationController(metadataProvider, projectGenerationInvoker);
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		ProjectMetadataController projectMetadataController(InitializrMetadataProvider metadataProvider,
-				DependencyMetadataProvider dependencyMetadataProvider) {
-			return new ProjectMetadataController(metadataProvider, dependencyMetadataProvider);
-		}
+        @Bean
+        @ConditionalOnMissingBean
+        ProjectMetadataController projectMetadataController(InitializrMetadataProvider metadataProvider, DependencyMetadataProvider dependencyMetadataProvider) {
+            return new ProjectMetadataController(metadataProvider, dependencyMetadataProvider);
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		CommandLineMetadataController commandLineMetadataController(InitializrMetadataProvider metadataProvider,
-				TemplateRenderer templateRenderer) {
-			return new CommandLineMetadataController(metadataProvider, templateRenderer);
-		}
+        @Bean
+        @ConditionalOnMissingBean
+        CommandLineMetadataController commandLineMetadataController(InitializrMetadataProvider metadataProvider, TemplateRenderer templateRenderer) {
+            return new CommandLineMetadataController(metadataProvider, templateRenderer);
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		SpringCliDistributionController cliDistributionController(InitializrMetadataProvider metadataProvider) {
-			return new SpringCliDistributionController(metadataProvider);
-		}
+        @Bean
+        @ConditionalOnMissingBean
+        SpringCliDistributionController cliDistributionController(InitializrMetadataProvider metadataProvider) {
+            return new SpringCliDistributionController(metadataProvider);
+        }
 
-		@Bean
-		InitializrModule InitializrJacksonModule() {
-			return new InitializrModule();
-		}
+        @Bean
+        InitializrModule InitializrJacksonModule() {
+            return new InitializrModule();
+        }
+    }
 
-	}
+    /**
+     * Initializr cache configuration.
+     */
+    @Configuration
+    @ConditionalOnClass(javax.cache.CacheManager.class)
+    static class InitializrCacheConfiguration {
 
-	/**
-	 * Initializr cache configuration.
-	 */
-	@Configuration
-	@ConditionalOnClass(javax.cache.CacheManager.class)
-	static class InitializrCacheConfiguration {
+        @Bean
+        JCacheManagerCustomizer initializrCacheManagerCustomizer() {
+            return new InitializrJCacheManagerCustomizer();
+        }
+    }
 
-		@Bean
-		JCacheManagerCustomizer initializrCacheManagerCustomizer() {
-			return new InitializrJCacheManagerCustomizer();
-		}
+    @Order(0)
+    private static class InitializrJCacheManagerCustomizer implements JCacheManagerCustomizer {
 
-	}
+        @Override
+        public void customize(javax.cache.CacheManager cacheManager) {
+            createMissingCache(cacheManager, "initializr.metadata", () -> config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
+            createMissingCache(cacheManager, "initializr.dependency-metadata", this::config);
+            createMissingCache(cacheManager, "initializr.project-resources", this::config);
+            createMissingCache(cacheManager, "initializr.templates", this::config);
+        }
 
-	@Order(0)
-	private static class InitializrJCacheManagerCustomizer implements JCacheManagerCustomizer {
+        private void createMissingCache(javax.cache.CacheManager cacheManager, String cacheName, Supplier<MutableConfiguration<Object, Object>> config) {
+            boolean cacheExist = StreamSupport.stream(cacheManager.getCacheNames().spliterator(), true).anyMatch((name) -> name.equals(cacheName));
+            if (!cacheExist) {
+                cacheManager.createCache(cacheName, config.get());
+            }
+        }
 
-		@Override
-		public void customize(javax.cache.CacheManager cacheManager) {
-			createMissingCache(cacheManager, "initializr.metadata",
-					() -> config().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES)));
-			createMissingCache(cacheManager, "initializr.dependency-metadata", this::config);
-			createMissingCache(cacheManager, "initializr.project-resources", this::config);
-			createMissingCache(cacheManager, "initializr.templates", this::config);
-		}
-
-		private void createMissingCache(javax.cache.CacheManager cacheManager, String cacheName,
-				Supplier<MutableConfiguration<Object, Object>> config) {
-			boolean cacheExist = StreamSupport.stream(cacheManager.getCacheNames().spliterator(), true)
-				.anyMatch((name) -> name.equals(cacheName));
-			if (!cacheExist) {
-				cacheManager.createCache(cacheName, config.get());
-			}
-		}
-
-		private MutableConfiguration<Object, Object> config() {
-			return new MutableConfiguration<>().setStoreByValue(false)
-				.setManagementEnabled(true)
-				.setStatisticsEnabled(true);
-		}
-
-	}
-
+        private MutableConfiguration<Object, Object> config() {
+            return new MutableConfiguration<>().setStoreByValue(false).setManagementEnabled(true).setStatisticsEnabled(true);
+        }
+    }
 }

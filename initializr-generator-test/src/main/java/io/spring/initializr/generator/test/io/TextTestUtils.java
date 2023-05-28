@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.test.io;
 
 import java.io.IOException;
@@ -23,9 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.util.StreamUtils;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -35,28 +32,26 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public final class TextTestUtils {
 
-	private TextTestUtils() {
-	}
+    private TextTestUtils() {
+    }
 
-	public static List<String> readAllLines(String source) {
-		String[] lines = source.split("\\r?\\n");
-		return Arrays.asList(lines);
-	}
+    public static List<String> readAllLines(String source) {
+        String[] lines = source.split("\\r?\\n");
+        return Arrays.asList(lines);
+    }
 
-	/**
-	 * Read the content from the specified {@link Path source}. Check the given
-	 * {@code source} is a regular file.
-	 * @param source a text file
-	 * @return the content of the file
-	 */
-	public static String readContent(Path source) {
-		assertThat(source).isRegularFile();
-		try (InputStream stream = Files.newInputStream(source)) {
-			return StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
-		}
-		catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-	}
-
+    /**
+     * Read the content from the specified {@link Path source}. Check the given
+     * {@code source} is a regular file.
+     * @param source a text file
+     * @return the content of the file
+     */
+    public static String readContent(Path source) {
+        assertThat(source).isRegularFile();
+        try (InputStream stream = Files.newInputStream(source)) {
+            return StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 }

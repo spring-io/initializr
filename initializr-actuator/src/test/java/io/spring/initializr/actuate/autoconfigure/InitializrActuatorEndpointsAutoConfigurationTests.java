@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.actuate.autoconfigure;
 
 import io.spring.initializr.actuate.info.BomRangesInfoContributor;
 import io.spring.initializr.actuate.info.DependencyRangesInfoContributor;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -35,18 +32,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class InitializrActuatorEndpointsAutoConfigurationTests {
 
-	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-		.withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class, InitializrAutoConfiguration.class,
-				RestTemplateAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class));
+    private ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class, InitializrAutoConfiguration.class, RestTemplateAutoConfiguration.class, InitializrActuatorEndpointsAutoConfiguration.class));
 
-	@Test
-	void autoConfigRegistersBomRangesInfoContributor() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(BomRangesInfoContributor.class));
-	}
+    @Test
+    void autoConfigRegistersBomRangesInfoContributor() {
+        this.contextRunner.run((context) -> assertThat(context).hasSingleBean(BomRangesInfoContributor.class));
+    }
 
-	@Test
-	void autoConfigRegistersDependencyRangesInfoContributor() {
-		this.contextRunner.run((context) -> assertThat(context).hasSingleBean(DependencyRangesInfoContributor.class));
-	}
-
+    @Test
+    void autoConfigRegistersDependencyRangesInfoContributor() {
+        this.contextRunner.run((context) -> assertThat(context).hasSingleBean(DependencyRangesInfoContributor.class));
+    }
 }

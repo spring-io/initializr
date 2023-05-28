@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Arrays;
 import java.util.List;
-
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuration;
@@ -26,7 +24,6 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
@@ -37,124 +34,108 @@ import static org.assertj.core.api.Assertions.entry;
  */
 class KotlinMavenBuildCustomizerTests {
 
-	@Test
-	void kotlinVersionPropertyIsConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.properties().versions(VersionProperty::toStandardFormat))
-			.containsOnly(entry("kotlin.version", "1.2.70"));
-	}
+    @Test
+    void kotlinVersionPropertyIsConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.properties().versions(VersionProperty::toStandardFormat)).containsOnly(entry("kotlin.version", "1.2.70"));
+    }
 
-	@Test
-	void buildSourceDirectoriesAreConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.getSettings().getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
-		assertThat(build.getSettings().getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
-	}
+    @Test
+    void buildSourceDirectoriesAreConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.getSettings().getSourceDirectory()).isEqualTo("${project.basedir}/src/main/kotlin");
+        assertThat(build.getSettings().getTestSourceDirectory()).isEqualTo("${project.basedir}/src/test/kotlin");
+    }
 
-	@Test
-	void kotlinMavenPluginIsConfigured() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
-		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
-			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-			assertThat(kotlinPlugin.getVersion()).isNull();
-			Configuration configuration = kotlinPlugin.getConfiguration();
-			assertThat(configuration).isNotNull();
-			assertThat(configuration.getSettings()).hasSize(2);
-			Setting args = configuration.getSettings().get(0);
-			assertThat(args.getName()).isEqualTo("args");
-			assertThat(args.getValue()).asList().hasSize(1);
-			assertThat(args.getValue()).asList()
-				.element(0)
-				.hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
-			Setting compilerPlugins = configuration.getSettings().get(1);
-			assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
-			assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-			assertThat(compilerPlugins.getValue()).asList()
-				.element(0)
-				.hasFieldOrPropertyWithValue("name", "plugin")
-				.hasFieldOrPropertyWithValue("value", "spring");
-			assertThat(kotlinPlugin.getExecutions()).isEmpty();
-			assertThat(kotlinPlugin.getDependencies()).hasSize(1);
-			Dependency allOpen = kotlinPlugin.getDependencies().get(0);
-			assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
-			assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
-		});
-	}
+    @Test
+    void kotlinMavenPluginIsConfigured() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70")).customize(build);
+        assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
+            assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+            assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+            assertThat(kotlinPlugin.getVersion()).isNull();
+            Configuration configuration = kotlinPlugin.getConfiguration();
+            assertThat(configuration).isNotNull();
+            assertThat(configuration.getSettings()).hasSize(2);
+            Setting args = configuration.getSettings().get(0);
+            assertThat(args.getName()).isEqualTo("args");
+            assertThat(args.getValue()).asList().hasSize(1);
+            assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg").hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
+            Setting compilerPlugins = configuration.getSettings().get(1);
+            assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
+            assertThat(compilerPlugins.getValue()).asList().hasSize(1);
+            assertThat(compilerPlugins.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "plugin").hasFieldOrPropertyWithValue("value", "spring");
+            assertThat(kotlinPlugin.getExecutions()).isEmpty();
+            assertThat(kotlinPlugin.getDependencies()).hasSize(1);
+            Dependency allOpen = kotlinPlugin.getDependencies().get(0);
+            assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+            assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
+            assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
+        });
+    }
 
-	@Test
-	void kotlinMavenPluginWithSeveralArgs() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
-		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
-			Configuration configuration = kotlinPlugin.getConfiguration();
-			Setting args = configuration.getSettings().get(0);
-			assertThat(args.getName()).isEqualTo("args");
-			assertThat(args.getValue()).asList().hasSize(2);
-			assertThat(args.getValue()).asList()
-				.element(0)
-				.hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Done=1");
-			assertThat(args.getValue()).asList()
-				.element(1)
-				.hasFieldOrPropertyWithValue("name", "arg")
-				.hasFieldOrPropertyWithValue("value", "-Dtwo=2");
-		});
-	}
+    @Test
+    void kotlinMavenPluginWithSeveralArgs() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
+        assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
+            Configuration configuration = kotlinPlugin.getConfiguration();
+            Setting args = configuration.getSettings().get(0);
+            assertThat(args.getName()).isEqualTo("args");
+            assertThat(args.getValue()).asList().hasSize(2);
+            assertThat(args.getValue()).asList().element(0).hasFieldOrPropertyWithValue("name", "arg").hasFieldOrPropertyWithValue("value", "-Done=1");
+            assertThat(args.getValue()).asList().element(1).hasFieldOrPropertyWithValue("name", "arg").hasFieldOrPropertyWithValue("value", "-Dtwo=2");
+        });
+    }
 
-	@Test
-	void kotlinMavenKotlinStdlibIsConfiguredWithKotlinOneEight() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
-		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
-		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib");
-		assertThat(kotlinStdlib.getVersion()).isNull();
-		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
-	}
+    @Test
+    void kotlinMavenKotlinStdlibIsConfiguredWithKotlinOneEight() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
+        io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+        assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+        assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib");
+        assertThat(kotlinStdlib.getVersion()).isNull();
+        assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
+    }
 
-	@Test
-	void kotlinMavenKotlinStdlibJdk8IsConfiguredWithKotlinOneSeven() {
-		MavenBuild build = new MavenBuild();
-		new KotlinMavenBuildCustomizer(new KotlinOneSevenProjectSettings()).customize(build);
-		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
-		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
-		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
-		assertThat(kotlinStdlib.getVersion()).isNull();
-		assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
-	}
+    @Test
+    void kotlinMavenKotlinStdlibJdk8IsConfiguredWithKotlinOneSeven() {
+        MavenBuild build = new MavenBuild();
+        new KotlinMavenBuildCustomizer(new KotlinOneSevenProjectSettings()).customize(build);
+        assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
+        io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+        assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+        assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
+        assertThat(kotlinStdlib.getVersion()).isNull();
+        assertThat(kotlinStdlib.getScope()).isEqualTo(DependencyScope.COMPILE);
+    }
 
-	private static class KotlinOneEightProjectSettings extends SimpleKotlinProjectSettings {
+    private static class KotlinOneEightProjectSettings extends SimpleKotlinProjectSettings {
 
-		KotlinOneEightProjectSettings() {
-			super("1.8.0");
-		}
+        KotlinOneEightProjectSettings() {
+            super("1.8.0");
+        }
 
-		@Override
-		public List<String> getCompilerArgs() {
-			return Arrays.asList("-Done=1", "-Dtwo=2");
-		}
+        @Override
+        public List<String> getCompilerArgs() {
+            return Arrays.asList("-Done=1", "-Dtwo=2");
+        }
+    }
 
-	}
+    private static class KotlinOneSevenProjectSettings extends SimpleKotlinProjectSettings {
 
-	private static class KotlinOneSevenProjectSettings extends SimpleKotlinProjectSettings {
+        KotlinOneSevenProjectSettings() {
+            super("1.7.22");
+        }
 
-		KotlinOneSevenProjectSettings() {
-			super("1.7.22");
-		}
-
-		@Override
-		public List<String> getCompilerArgs() {
-			return Arrays.asList("-Done=1", "-Dtwo=2");
-		}
-
-	}
-
+        @Override
+        public List<String> getCompilerArgs() {
+            return Arrays.asList("-Done=1", "-Dtwo=2");
+        }
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.generator.spring.build.gradle;
 
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -27,15 +26,14 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class InitializrDependencyManagementPluginVersionResolver implements DependencyManagementPluginVersionResolver {
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public InitializrDependencyManagementPluginVersionResolver(InitializrMetadata metadata) {
-		this.metadata = metadata;
-	}
+    public InitializrDependencyManagementPluginVersionResolver(InitializrMetadata metadata) {
+        this.metadata = metadata;
+    }
 
-	@Override
-	public String resolveDependencyManagementPluginVersion(ProjectDescription description) {
-		return this.metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion();
-	}
-
+    @Override
+    public String resolveDependencyManagementPluginVersion(ProjectDescription description) {
+        return this.metadata.getConfiguration().getEnv().getGradle().getDependencyManagementPluginVersion();
+    }
 }

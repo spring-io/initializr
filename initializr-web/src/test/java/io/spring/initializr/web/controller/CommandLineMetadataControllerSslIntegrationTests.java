@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.spring.initializr.web.controller;
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -33,12 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles({ "test-default", "test-ssl" })
 public class CommandLineMetadataControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	void forceSsl() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
-		assertThat(body).as("Must force https").contains("https://start.example.com/");
-		assertThat(body).as("Must force https").doesNotContain("http://");
-	}
-
+    @Test
+    void forceSsl() {
+        ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
+        String body = response.getBody();
+        assertThat(body).as("Must force https").contains("https://start.example.com/");
+        assertThat(body).as("Must force https").doesNotContain("http://");
+    }
 }
