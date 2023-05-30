@@ -17,10 +17,10 @@
 package io.spring.initializr.generator.spring.container.dockercompose;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * A Docker Compose file.
@@ -29,24 +29,35 @@ import java.util.List;
  */
 public class DockerComposeFile {
 
-	private final List<DockerComposeService> services = new ArrayList<>();
+	// TreeMap to sort services by name
+	private final Map<String, DockerComposeService> services = new TreeMap<>();
 
 	/**
-	 * Adds a {@link DockerComposeService service} to the file.
+	 * Adds a {@link DockerComposeService service} to the file. If a service with the same
+	 * {@link DockerComposeService#getName() name} already exists, it is replaced.
 	 * @param service the service to add
 	 * @return {@code this}
 	 */
 	public DockerComposeFile addService(DockerComposeService service) {
-		this.services.add(service);
+		this.services.put(service.getName(), service);
 		return this;
 	}
 
 	/**
-	 * Returns the services contained in the file.
-	 * @return the services contained in the file
+	 * Returns the service with the given name.
+	 * @param name the name
+	 * @return the service or {@code null} if no service with the given name exists
 	 */
-	public List<DockerComposeService> getServices() {
-		return Collections.unmodifiableList(this.services);
+	public DockerComposeService getService(String name) {
+		return this.services.get(name);
+	}
+
+	/**
+	 * Returns all services.
+	 * @return all services
+	 */
+	public Collection<DockerComposeService> getServices() {
+		return Collections.unmodifiableCollection(this.services.values());
 	}
 
 	/**
@@ -59,9 +70,9 @@ public class DockerComposeFile {
 
 	void write(PrintWriter writer) {
 		writer.println("services:");
-		this.services.stream()
-			.sorted(Comparator.comparing(DockerComposeService::getName))
-			.forEach((service) -> service.write(writer, 1));
+		for (DockerComposeService service : this.services.values()) {
+			service.write(writer, 1);
+		}
 	}
 
 }

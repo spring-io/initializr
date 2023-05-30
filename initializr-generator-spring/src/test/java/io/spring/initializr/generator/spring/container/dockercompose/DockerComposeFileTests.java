@@ -41,14 +41,26 @@ class DockerComposeFileTests {
 	@Test
 	void write() {
 		DockerComposeFile file = new DockerComposeFile();
-		file.addService(DockerComposeServiceFixtures.service());
+		file.addService(DockerComposeServiceFixtures.service(1));
+		file.addService(DockerComposeServiceFixtures.service(2));
 		StringWriter writer = new StringWriter();
 		file.write(new PrintWriter(writer));
 		assertThat(writer.toString()).isEqualToIgnoringNewLines("""
 				services:
 				  service-1:
 				    image: 'image-1:image-tag-1'
+				  service-2:
+				    image: 'image-2:image-tag-2'
 				""");
+	}
+
+	@Test
+	void servicesAreOrderedByName() {
+		DockerComposeFile file = new DockerComposeFile();
+		file.addService(DockerComposeServiceFixtures.service(2));
+		file.addService(DockerComposeServiceFixtures.service(1));
+		assertThat(file.getServices()).containsExactly(DockerComposeServiceFixtures.service(1),
+				DockerComposeServiceFixtures.service(2));
 	}
 
 }

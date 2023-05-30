@@ -30,10 +30,8 @@ import org.springframework.context.annotation.Bean;
 class DockerComposeProjectGenerationConfiguration {
 
 	@Bean
-	DockerComposeFile composeFile(ObjectProvider<DockerComposeService> services,
-			ObjectProvider<DockerComposeFileCustomizer> composeFileCustomizers) {
+	DockerComposeFile composeFile(ObjectProvider<DockerComposeFileCustomizer> composeFileCustomizers) {
 		DockerComposeFile composeFile = new DockerComposeFile();
-		services.orderedStream().forEach(composeFile::addService);
 		composeFileCustomizers.orderedStream().forEach((customizer) -> customizer.customize(composeFile));
 		return composeFile;
 	}
