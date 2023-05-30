@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.container.dockercompose;
 
+import io.spring.initializr.generator.spring.container.dockercompose.Markdown.MarkdownTable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

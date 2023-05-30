@@ -16,6 +16,9 @@
 
 package io.spring.initializr.generator.spring.container.dockercompose;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Helper class for Markdown.
  *
@@ -53,6 +56,103 @@ final class Markdown {
 	 */
 	static MarkdownTable table(String... headerCaptions) {
 		return new MarkdownTable(headerCaptions);
+	}
+
+	/**
+	 * A Markdown table.
+	 * <p>
+	 * The formatted table is pretty-printed, all the columns are padded with spaces to
+	 * have a consistent look.
+	 *
+	 * @author Moritz Halbritter
+	 */
+	static class MarkdownTable {
+
+		private final List<String> headerCaptions;
+
+		private final List<List<String>> rows;
+
+		/**
+		 * Creates a new table with the given header captions.
+		 * @param headerCaptions the header captions
+		 */
+		MarkdownTable(String... headerCaptions) {
+			this.headerCaptions = List.of(headerCaptions);
+			this.rows = new ArrayList<>();
+		}
+
+		/**
+		 * Adds a new row with the given cells.
+		 * @param cells the cells to add
+		 * @throws IllegalArgumentException if the cell size doesn't match the number of
+		 * header captions
+		 */
+		void addRow(String... cells) {
+			if (cells.length != this.headerCaptions.size()) {
+				throw new IllegalArgumentException(
+						"Expected %d cells, got %d".formatted(this.headerCaptions.size(), cells.length));
+			}
+			this.rows.add(List.of(cells));
+		}
+
+		/**
+		 * Formats the whole table as Markdown.
+		 * @return the table formatted as Markdown.
+		 */
+		String toMarkdown() {
+			int[] columnMaxLengths = calculateMaxColumnLengths();
+			StringBuilder result = new StringBuilder();
+			writeHeader(result, columnMaxLengths);
+			writeHeaderSeparator(result, columnMaxLengths);
+			writeRows(result, columnMaxLengths);
+			return result.toString();
+		}
+
+		private void writeHeader(StringBuilder result, int[] columnMaxLengths) {
+			for (int i = 0; i < this.headerCaptions.size(); i++) {
+				result.append((i > 0) ? " " : "| ")
+					.append(pad(this.headerCaptions.get(i), columnMaxLengths[i]))
+					.append(" |");
+			}
+			result.append(System.lineSeparator());
+		}
+
+		private void writeHeaderSeparator(StringBuilder result, int[] columnMaxLengths) {
+			for (int i = 0; i < this.headerCaptions.size(); i++) {
+				result.append((i > 0) ? " " : "| ").append("-".repeat(columnMaxLengths[i])).append(" |");
+			}
+			result.append(System.lineSeparator());
+		}
+
+		private void writeRows(StringBuilder result, int[] columnMaxLengths) {
+			for (List<String> row : this.rows) {
+				for (int i = 0; i < row.size(); i++) {
+					result.append((i > 0) ? " " : "| ").append(pad(row.get(i), columnMaxLengths[i])).append(" |");
+				}
+				result.append(System.lineSeparator());
+			}
+		}
+
+		private int[] calculateMaxColumnLengths() {
+			int[] columnMaxLengths = new int[this.headerCaptions.size()];
+			for (int i = 0; i < this.headerCaptions.size(); i++) {
+				columnMaxLengths[i] = this.headerCaptions.get(i).length();
+			}
+			for (List<String> row : this.rows) {
+				for (int i = 0; i < row.size(); i++) {
+					String cell = row.get(i);
+					if (cell.length() > columnMaxLengths[i]) {
+						columnMaxLengths[i] = cell.length();
+					}
+				}
+			}
+			return columnMaxLengths;
+		}
+
+		private String pad(String input, int length) {
+			return input + " ".repeat(length - input.length());
+		}
+
 	}
 
 }
