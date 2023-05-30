@@ -44,16 +44,6 @@ class DockerComposeProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void collectsServices() {
-		DockerComposeService service1 = DockerComposeServiceFixtures.service(1);
-		DockerComposeService service2 = DockerComposeServiceFixtures.service(2);
-		this.runner.withUserConfiguration(Services.class).run((context) -> {
-			DockerComposeFile composeFile = context.getBean(DockerComposeFile.class);
-			assertThat(composeFile.getServices()).containsExactlyInAnyOrder(service1, service2);
-		});
-	}
-
-	@Test
 	void callsCustomizers() {
 		DockerComposeService service = DockerComposeServiceFixtures.service(3);
 		DockerComposeFileCustomizer customizer = (composeFile) -> composeFile.addService(service);

@@ -25,8 +25,7 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
  * A {@link ProjectContributor} which contributes a 'compose.yaml' file through a
- * {@link DockerComposeFile}. The file only gets created when the
- * {@link DockerComposeFile#isEmpty() docker compose file isn't empty}.
+ * {@link DockerComposeFile}.
  *
  * @author Moritz Halbritter
  */
@@ -40,9 +39,6 @@ class DockerComposeProjectContributor implements ProjectContributor {
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		if (this.composeFile.isEmpty()) {
-			return;
-		}
 		Path file = Files.createFile(projectRoot.resolve("compose.yaml"));
 		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
 			this.composeFile.write(writer);

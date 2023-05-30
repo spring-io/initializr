@@ -44,12 +44,6 @@ class DockerComposeProjectContributorTests {
 	}
 
 	@Test
-	void doesNothingIfComposeFileIsEmpty(@TempDir Path tempDir) throws IOException {
-		this.contributor.contribute(tempDir);
-		assertThat(tempDir.resolve("compose.yaml")).doesNotExist();
-	}
-
-	@Test
 	void writesComposeYamlFile(@TempDir Path tempDir) throws IOException {
 		this.dockerComposeFile.addService(DockerComposeServiceFixtures.service());
 		this.contributor.contribute(tempDir);

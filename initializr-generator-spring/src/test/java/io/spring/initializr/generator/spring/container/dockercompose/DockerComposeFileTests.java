@@ -31,14 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DockerComposeFileTests {
 
 	@Test
-	void isEmpty() {
-		DockerComposeFile file = new DockerComposeFile();
-		assertThat(file.isEmpty()).isTrue();
-		file.addService(DockerComposeServiceFixtures.service());
-		assertThat(file.isEmpty()).isFalse();
-	}
-
-	@Test
 	void write() {
 		DockerComposeFile file = new DockerComposeFile();
 		file.addService(DockerComposeServiceFixtures.service(1));

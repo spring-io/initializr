@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
  * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
-class DockerComposeProjectGenerationConfiguration {
+public class DockerComposeProjectGenerationConfiguration {
 
 	@Bean
 	DockerComposeFile composeFile(ObjectProvider<DockerComposeFileCustomizer> composeFileCustomizers) {

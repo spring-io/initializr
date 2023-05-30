@@ -16,7 +16,7 @@
 
 package io.spring.initializr.generator.spring.container.dockercompose;
 
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,17 +40,22 @@ class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
 	@Override
 	public void customize(HelpDocument document) {
-		if (this.composeFile.isEmpty()) {
-			return;
-		}
-		MarkdownTable serviceTable = Markdown.table("Service name", "Image", "Tag", "Website");
-		this.composeFile.getServices()
-			.stream()
-			.sorted(Comparator.comparing(DockerComposeService::getName))
-			.forEach((service) -> serviceTable.addRow(service.getName(), Markdown.code(service.getImage()),
-					Markdown.code(service.getImageTag()), Markdown.link("Website", service.getImageWebsite())));
+		Collection<DockerComposeService> services = this.composeFile.getServices();
 		Map<String, Object> model = new HashMap<>();
-		model.put("serviceTable", serviceTable.toMarkdown());
+		if (services.isEmpty()) {
+			model.put("serviceTable", null);
+			document.getWarnings()
+				.addItem(
+						"No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file.");
+		}
+		else {
+			MarkdownTable serviceTable = Markdown.table("Service name", "Image", "Tag", "Website");
+			for (DockerComposeService service : services) {
+				serviceTable.addRow(service.getName(), Markdown.code(service.getImage()),
+						Markdown.code(service.getImageTag()), Markdown.link("Website", service.getImageWebsite()));
+			}
+			model.put("serviceTable", serviceTable.toMarkdown());
+		}
 		document.addSection("documentation/docker-compose", model);
 	}
 

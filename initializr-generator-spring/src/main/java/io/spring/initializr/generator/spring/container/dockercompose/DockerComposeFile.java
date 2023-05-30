@@ -60,14 +60,6 @@ public class DockerComposeFile {
 		return Collections.unmodifiableCollection(this.services.values());
 	}
 
-	/**
-	 * Returns whether this file is empty.
-	 * @return whether this file is empty
-	 */
-	public boolean isEmpty() {
-		return this.services.isEmpty();
-	}
-
 	void write(PrintWriter writer) {
 		writer.println("services:");
 		for (DockerComposeService service : this.services.values()) {

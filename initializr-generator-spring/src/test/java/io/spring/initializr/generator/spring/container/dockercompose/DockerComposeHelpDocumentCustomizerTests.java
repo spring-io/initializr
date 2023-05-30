@@ -47,13 +47,6 @@ class DockerComposeHelpDocumentCustomizerTests {
 	}
 
 	@Test
-	void shouldNotAlterHelpIfDockerComposeFileIsEmpty() {
-		HelpDocument helpDocument = helpDocument();
-		this.customizer.customize(helpDocument);
-		assertThat(helpDocument.getSections()).isEmpty();
-	}
-
-	@Test
 	void addsDockerComposeSection() throws IOException {
 		this.dockerComposeFile.addService(DockerComposeServiceFixtures.service());
 		HelpDocument helpDocument = helpDocument();
@@ -66,7 +59,7 @@ class DockerComposeHelpDocumentCustomizerTests {
 		assertThat(stringWriter.toString()).isEqualToIgnoringNewLines("""
 				### Docker Compose support
 
-				This project contains a Docker Compose file.
+				This project contains a Docker Compose file named `compose.yaml`.
 
 				In this file, the following services have been defined:
 
@@ -76,6 +69,30 @@ class DockerComposeHelpDocumentCustomizerTests {
 
 
 				Please review the tags of the used images and set them to the same as you're running in production.""");
+	}
+
+	@Test
+	void addsWarningIfNoServicesAreDefined() throws IOException {
+		HelpDocument helpDocument = helpDocument();
+		this.customizer.customize(helpDocument);
+		assertThat(helpDocument.getWarnings().getItems()).containsExactly(
+				"No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file");
+		StringWriter stringWriter = new StringWriter();
+		helpDocument.write(new PrintWriter(stringWriter));
+		assertThat(stringWriter.toString()).isEqualToIgnoringNewLines(
+				"""
+						# Read Me First
+						The following was discovered as part of building this project:
+
+						* No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file.
+
+						### Docker Compose support
+
+						This project contains a Docker Compose file named `compose.yaml`.
+
+						However, no services were found. As of now, the application won't start!
+
+						Please make sure to add at least one service in the `compose.yaml` file.""");
 	}
 
 	private static HelpDocument helpDocument() {
