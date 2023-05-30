@@ -20,11 +20,11 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * A Docker Compose service.
@@ -194,7 +194,7 @@ public final class DockerComposeService {
 
 		private final Map<String, String> environment = new TreeMap<>();
 
-		private final Set<Integer> ports = new HashSet<>();
+		private final Set<Integer> ports = new TreeSet<>();
 
 		private Builder(String name, String image, String imageTag) {
 			this.name = name;
