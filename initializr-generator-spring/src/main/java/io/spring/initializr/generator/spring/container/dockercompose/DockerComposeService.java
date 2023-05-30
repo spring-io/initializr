@@ -179,6 +179,9 @@ public final class DockerComposeService {
 			.ports(service.ports);
 	}
 
+	/**
+	 * Builder for {@link DockerComposeService}.
+	 */
 	public static final class Builder {
 
 		private String name;
@@ -238,6 +241,10 @@ public final class DockerComposeService {
 			return ports(Arrays.stream(ports).boxed().toList());
 		}
 
+		/**
+		 * Builds the {@link DockerComposeService} instance.
+		 * @return the built instance
+		 */
 		public DockerComposeService build() {
 			return new DockerComposeService(this);
 		}
