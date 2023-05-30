@@ -17,13 +17,13 @@
 package io.spring.initializr.generator.spring.container.dockercompose;
 
 /**
- * Fixtures for {@link DockerComposeService}.
+ * Helper class for {@link DockerComposeService}.
  *
  * @author Moritz Halbritter
  */
-final class DockerComposeServiceFixtures {
+final class DockerComposeServiceHelper {
 
-	private DockerComposeServiceFixtures() {
+	private DockerComposeServiceHelper() {
 	}
 
 	/**

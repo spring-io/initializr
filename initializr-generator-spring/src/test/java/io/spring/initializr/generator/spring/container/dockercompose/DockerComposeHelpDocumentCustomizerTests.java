@@ -48,7 +48,7 @@ class DockerComposeHelpDocumentCustomizerTests {
 
 	@Test
 	void addsDockerComposeSection() throws IOException {
-		this.dockerComposeFile.addService(DockerComposeServiceFixtures.service());
+		this.dockerComposeFile.addService(DockerComposeServiceHelper.service());
 		HelpDocument helpDocument = helpDocument();
 		this.customizer.customize(helpDocument);
 		assertThat(helpDocument.getSections()).hasSize(1);

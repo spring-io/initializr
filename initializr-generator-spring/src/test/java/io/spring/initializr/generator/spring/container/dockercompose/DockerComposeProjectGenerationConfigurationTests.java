@@ -45,7 +45,7 @@ class DockerComposeProjectGenerationConfigurationTests {
 
 	@Test
 	void callsCustomizers() {
-		DockerComposeService service = DockerComposeServiceFixtures.service(3);
+		DockerComposeService service = DockerComposeServiceHelper.service(3);
 		DockerComposeFileCustomizer customizer = (composeFile) -> composeFile.addService(service);
 		this.runner.withBean(DockerComposeFileCustomizer.class, () -> customizer).run((context) -> {
 			DockerComposeFile composeFile = context.getBean(DockerComposeFile.class);
@@ -58,12 +58,12 @@ class DockerComposeProjectGenerationConfigurationTests {
 
 		@Bean
 		DockerComposeService service1() {
-			return DockerComposeServiceFixtures.service(1);
+			return DockerComposeServiceHelper.service(1);
 		}
 
 		@Bean
 		DockerComposeService service2() {
-			return DockerComposeServiceFixtures.service(2);
+			return DockerComposeServiceHelper.service(2);
 		}
 
 	}

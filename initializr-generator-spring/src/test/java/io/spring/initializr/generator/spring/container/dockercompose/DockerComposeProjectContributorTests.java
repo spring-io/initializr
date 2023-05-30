@@ -45,7 +45,7 @@ class DockerComposeProjectContributorTests {
 
 	@Test
 	void writesComposeYamlFile(@TempDir Path tempDir) throws IOException {
-		this.dockerComposeFile.addService(DockerComposeServiceFixtures.service());
+		this.dockerComposeFile.addService(DockerComposeServiceHelper.service());
 		this.contributor.contribute(tempDir);
 		assertThat(tempDir.resolve("compose.yaml")).content(StandardCharsets.UTF_8).startsWith("services:");
 	}

@@ -33,8 +33,8 @@ class DockerComposeFileTests {
 	@Test
 	void write() {
 		DockerComposeFile file = new DockerComposeFile();
-		file.addService(DockerComposeServiceFixtures.service(1));
-		file.addService(DockerComposeServiceFixtures.service(2));
+		file.addService(DockerComposeServiceHelper.service(1));
+		file.addService(DockerComposeServiceHelper.service(2));
 		StringWriter writer = new StringWriter();
 		file.write(new PrintWriter(writer));
 		assertThat(writer.toString()).isEqualToIgnoringNewLines("""
@@ -49,10 +49,10 @@ class DockerComposeFileTests {
 	@Test
 	void servicesAreOrderedByName() {
 		DockerComposeFile file = new DockerComposeFile();
-		file.addService(DockerComposeServiceFixtures.service(2));
-		file.addService(DockerComposeServiceFixtures.service(1));
-		assertThat(file.getServices()).containsExactly(DockerComposeServiceFixtures.service(1),
-				DockerComposeServiceFixtures.service(2));
+		file.addService(DockerComposeServiceHelper.service(2));
+		file.addService(DockerComposeServiceHelper.service(1));
+		assertThat(file.getServices()).containsExactly(DockerComposeServiceHelper.service(1),
+				DockerComposeServiceHelper.service(2));
 	}
 
 }
