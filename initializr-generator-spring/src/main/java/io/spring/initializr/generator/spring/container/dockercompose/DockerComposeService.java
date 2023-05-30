@@ -17,10 +17,13 @@
 package io.spring.initializr.generator.spring.container.dockercompose;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -28,7 +31,7 @@ import java.util.TreeMap;
  *
  * @author Moritz Halbritter
  */
-public class DockerComposeService {
+public final class DockerComposeService {
 
 	private static final String INDENT = "  ";
 
@@ -42,26 +45,15 @@ public class DockerComposeService {
 
 	private final Map<String, String> environment;
 
-	private final List<Integer> ports;
+	private final Set<Integer> ports;
 
-	/**
-	 * Creates a new docker compose service.
-	 * @param name the name of the service
-	 * @param image the image of the service
-	 * @param imageTag the image tag of the service
-	 * @param imageWebsite the image website of the service
-	 * @param environment the environment of the service
-	 * @param ports the ports of the service
-	 */
-	public DockerComposeService(String name, String image, String imageTag, String imageWebsite,
-			Map<String, String> environment, List<Integer> ports) {
-		this.name = name;
-		this.image = image;
-		this.imageTag = imageTag;
-		this.imageWebsite = imageWebsite;
-		// Sort the environment alphabetically
-		this.environment = Collections.unmodifiableMap(new TreeMap<>(environment));
-		this.ports = ports;
+	private DockerComposeService(Builder builder) {
+		this.name = builder.name;
+		this.image = builder.image;
+		this.imageTag = builder.imageTag;
+		this.imageWebsite = builder.imageWebsite;
+		this.environment = builder.environment;
+		this.ports = builder.ports;
 	}
 
 	public String getName() {
@@ -78,6 +70,14 @@ public class DockerComposeService {
 
 	public String getImageWebsite() {
 		return this.imageWebsite;
+	}
+
+	public Map<String, String> getEnvironment() {
+		return Collections.unmodifiableMap(this.environment);
+	}
+
+	public Set<Integer> getPorts() {
+		return Collections.unmodifiableSet(this.ports);
 	}
 
 	@Override
@@ -137,6 +137,111 @@ public class DockerComposeService {
 	private void println(PrintWriter writer, String value, int indentation) {
 		writer.write(INDENT.repeat(indentation));
 		writer.println(value);
+	}
+
+	/**
+	 * Initialize a new {@link Builder} with the given image. The name is automatically
+	 * deduced.
+	 * @param image the image
+	 * @param tag the image tag
+	 * @return a new builder
+	 */
+	public static Builder withImage(String image, String tag) {
+		// See https://github.com/docker/compose/pull/1624
+		String name = image.replaceAll("[^a-zA-Z0-9._\\-]", "_");
+		return new Builder(name, image, tag);
+	}
+
+	/**
+	 * Initialize a new {@link Builder} with the given image. The name is automatically
+	 * deduced.
+	 * @param imageAndTag the image and tag in the format {@code image:tag}
+	 * @return a new builder
+	 */
+	public static Builder withImage(String imageAndTag) {
+		String[] split = imageAndTag.split(":", 2);
+		if (split.length == 1) {
+			return withImage(split[0], "latest");
+		}
+		else {
+			return withImage(split[0], split[1]);
+		}
+	}
+
+	/**
+	 * Initialize a {@link Builder} with the given service.
+	 * @param service the service to initialize from
+	 * @return a new builder
+	 */
+	public static Builder from(DockerComposeService service) {
+		return new Builder(service.name, service.image, service.imageTag).imageWebsite(service.imageWebsite)
+			.environment(service.environment)
+			.ports(service.ports);
+	}
+
+	public static final class Builder {
+
+		private String name;
+
+		private String image;
+
+		private String imageTag;
+
+		private String imageWebsite;
+
+		private final Map<String, String> environment = new TreeMap<>();
+
+		private final Set<Integer> ports = new HashSet<>();
+
+		private Builder(String name, String image, String imageTag) {
+			this.name = name;
+			this.image = image;
+			this.imageTag = imageTag;
+		}
+
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder image(String image) {
+			this.image = image;
+			return this;
+		}
+
+		public Builder imageTag(String imageTag) {
+			this.imageTag = imageTag;
+			return this;
+		}
+
+		public Builder imageWebsite(String imageWebsite) {
+			this.imageWebsite = imageWebsite;
+			return this;
+		}
+
+		public Builder environment(String key, String value) {
+			this.environment.put(key, value);
+			return this;
+		}
+
+		public Builder environment(Map<String, String> environment) {
+			this.environment.putAll(environment);
+			return this;
+		}
+
+		public Builder ports(Collection<Integer> ports) {
+			this.ports.addAll(ports);
+			return this;
+		}
+
+		public Builder ports(int... ports) {
+			return ports(Arrays.stream(ports).boxed().toList());
+		}
+
+		public DockerComposeService build() {
+			return new DockerComposeService(this);
+		}
+
 	}
 
 }

@@ -76,7 +76,7 @@ class DockerComposeHelpDocumentCustomizerTests {
 		HelpDocument helpDocument = helpDocument();
 		this.customizer.customize(helpDocument);
 		assertThat(helpDocument.getWarnings().getItems()).containsExactly(
-				"No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file");
+				"No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file.");
 		StringWriter stringWriter = new StringWriter();
 		helpDocument.write(new PrintWriter(stringWriter));
 		assertThat(stringWriter.toString()).isEqualToIgnoringNewLines(

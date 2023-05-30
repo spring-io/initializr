@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator.spring.container.dockercompose;
 
-import java.util.Collections;
-
 /**
  * Fixtures for {@link DockerComposeService}.
  *
@@ -42,8 +40,10 @@ final class DockerComposeServiceFixtures {
 	 * @return a new {@link DockerComposeService}
 	 */
 	static DockerComposeService service(int suffix) {
-		return new DockerComposeService("service-" + suffix, "image-" + suffix, "image-tag-" + suffix,
-				"https://service-" + suffix + ".org/", Collections.emptyMap(), Collections.emptyList());
+		return DockerComposeService.withImage("image-" + suffix, "image-tag-" + suffix)
+			.name("service-" + suffix)
+			.imageWebsite("https://service-" + suffix + ".org/")
+			.build();
 	}
 
 }
