@@ -87,7 +87,8 @@ public class InitializrAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public IndentingWriterFactory indentingWriterFactory() {
-		return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"));
+		return IndentingWriterFactory.create(new SimpleIndentStrategy("\t"),
+				(builder) -> builder.indentingStrategy("yaml", new SimpleIndentStrategy("  ")));
 	}
 
 	@Bean
