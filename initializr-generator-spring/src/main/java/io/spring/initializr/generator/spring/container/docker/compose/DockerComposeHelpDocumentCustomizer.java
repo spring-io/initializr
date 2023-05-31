@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
+package io.spring.initializr.generator.spring.container.docker.compose;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.spring.initializr.generator.spring.container.dockercompose.Markdown.MarkdownTable;
+import io.spring.initializr.generator.container.docker.compose.ComposeFile;
+import io.spring.initializr.generator.container.docker.compose.ComposeService;
+import io.spring.initializr.generator.spring.container.docker.compose.Markdown.MarkdownTable;
 import io.spring.initializr.generator.spring.documentation.HelpDocument;
 import io.spring.initializr.generator.spring.documentation.HelpDocumentCustomizer;
 
 /**
- * Provide additional information in the {@link HelpDocument} if the
- * {@link DockerComposeFile} isn't empty.
+ * A {@link HelpDocumentCustomizer} that provide additional information about the
+ * {@link ComposeService compose services} that are defined for the project.
  *
  * @author Moritz Halbritter
  */
-class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
+public class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
-	private final DockerComposeFile composeFile;
+	private final ComposeFile composeFile;
 
-	DockerComposeHelpDocumentCustomizer(DockerComposeFile composeFile) {
+	public DockerComposeHelpDocumentCustomizer(ComposeFile composeFile) {
 		this.composeFile = composeFile;
 	}
 
 	@Override
 	public void customize(HelpDocument document) {
-		Collection<DockerComposeService> services = this.composeFile.getServices();
 		Map<String, Object> model = new HashMap<>();
-		if (services.isEmpty()) {
+		if (this.composeFile.services().isEmpty()) {
 			model.put("serviceTable", null);
 			document.getWarnings()
 				.addItem(
@@ -50,10 +50,10 @@ class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
 		}
 		else {
 			MarkdownTable serviceTable = Markdown.table("Service name", "Image", "Tag", "Website");
-			for (DockerComposeService service : services) {
-				serviceTable.addRow(service.getName(), Markdown.code(service.getImage()),
-						Markdown.code(service.getImageTag()), Markdown.link("Website", service.getImageWebsite()));
-			}
+			this.composeFile.services()
+				.values()
+				.forEach((service) -> serviceTable.addRow(service.getName(), Markdown.code(service.getImage()),
+						Markdown.code(service.getImageTag()), Markdown.link("Website", service.getImageWebsite())));
 			model.put("serviceTable", serviceTable.toMarkdown());
 		}
 		document.addSection("documentation/docker-compose", model);

@@ -14,29 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
-
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
- * Tests for {@link Markdown}.
- *
- * @author Moritz Halbritter
+ * Docker Compose support.
  */
-class MarkdownTests {
-
-	@Test
-	void shouldFormatCode() {
-		String code = Markdown.code("c = a + b");
-		assertThat(code).isEqualTo("`c = a + b`");
-	}
-
-	@Test
-	void shouldFormatLink() {
-		String link = Markdown.link("Spring Website", "https://spring.io/");
-		assertThat(link).isEqualTo("[Spring Website](https://spring.io/)");
-	}
-
-}
+package io.spring.initializr.generator.container.docker.compose;

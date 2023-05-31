@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
+package io.spring.initializr.generator.spring.container.docker.compose;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import io.spring.initializr.generator.container.docker.compose.ComposeFile;
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
 import io.spring.initializr.generator.io.text.MustacheSection;
 import io.spring.initializr.generator.io.text.Section;
@@ -38,17 +39,18 @@ class DockerComposeHelpDocumentCustomizerTests {
 
 	private DockerComposeHelpDocumentCustomizer customizer;
 
-	private DockerComposeFile dockerComposeFile;
+	private ComposeFile dockerComposeFile;
 
 	@BeforeEach
 	void setUp() {
-		this.dockerComposeFile = new DockerComposeFile();
+		this.dockerComposeFile = new ComposeFile();
 		this.customizer = new DockerComposeHelpDocumentCustomizer(this.dockerComposeFile);
 	}
 
 	@Test
 	void addsDockerComposeSection() throws IOException {
-		this.dockerComposeFile.addService(DockerComposeServiceHelper.service());
+		this.dockerComposeFile.services()
+			.add("test", (service) -> service.imageAndTag("image-1:1.2.3").imageWebsite("https:/example.com/image-1"));
 		HelpDocument helpDocument = helpDocument();
 		this.customizer.customize(helpDocument);
 		assertThat(helpDocument.getSections()).hasSize(1);
@@ -63,9 +65,9 @@ class DockerComposeHelpDocumentCustomizerTests {
 
 				In this file, the following services have been defined:
 
-				| Service name | Image     | Tag           | Website                           |
-				| ------------ | --------- | ------------- | --------------------------------- |
-				| service-1    | `image-1` | `image-tag-1` | [Website](https://service-1.org/) |
+				| Service name | Image     | Tag     | Website                               |
+				| ------------ | --------- | ------- | ------------------------------------- |
+				| test         | `image-1` | `1.2.3` | [Website](https:/example.com/image-1) |
 
 
 				Please review the tags of the used images and set them to the same as you're running in production.""");

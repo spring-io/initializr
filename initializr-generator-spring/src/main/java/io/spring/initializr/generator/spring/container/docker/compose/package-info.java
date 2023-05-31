@@ -17,4 +17,4 @@
 /**
  * Support for Docker Compose.
  */
-package io.spring.initializr.generator.spring.container.dockercompose;
+package io.spring.initializr.generator.spring.container.docker.compose;

@@ -14,20 +14,32 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
+package io.spring.initializr.generator.spring.container.docker.compose;
 
-import io.spring.initializr.generator.spring.container.dockercompose.Markdown.MarkdownTable;
+import io.spring.initializr.generator.spring.container.docker.compose.Markdown.MarkdownTable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * Tests for {@link MarkdownTable}.
+ * Tests for {@link Markdown}.
  *
  * @author Moritz Halbritter
  */
-class MarkdownTableTests {
+class MarkdownTests {
+
+	@Test
+	void shouldFormatCode() {
+		String code = Markdown.code("c = a + b");
+		assertThat(code).isEqualTo("`c = a + b`");
+	}
+
+	@Test
+	void shouldFormatLink() {
+		String link = Markdown.link("Spring Website", "https://spring.io/");
+		assertThat(link).isEqualTo("[Spring Website](https://spring.io/)");
+	}
 
 	@Test
 	void shouldFormatCorrectly() {

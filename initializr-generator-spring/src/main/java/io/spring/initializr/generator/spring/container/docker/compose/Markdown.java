@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
+package io.spring.initializr.generator.spring.container.docker.compose;
 
 import java.util.ArrayList;
 import java.util.List;

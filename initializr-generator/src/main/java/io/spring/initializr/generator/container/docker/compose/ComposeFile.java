@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.container.dockercompose;
-
-import org.springframework.core.Ordered;
+package io.spring.initializr.generator.container.docker.compose;
 
 /**
- * Callback for customizing a project's {@link DockerComposeFile}. Invoked with an
- * {@link Ordered order} of {@code 0} by default, considering overriding
- * {@link #getOrder()} to customize this behaviour.
+ * Model for a Docker Compose file.
  *
  * @author Moritz Halbritter
+ * @author Stephane Nicoll
  */
-@FunctionalInterface
-public interface DockerComposeFileCustomizer extends Ordered {
+public class ComposeFile {
+
+	private final ComposeServiceContainer services = new ComposeServiceContainer();
 
 	/**
-	 * Customizes the given {@link DockerComposeFile}.
-	 * @param composeFile the compose file to customize
+	 * Return the {@linkplain ComposeServiceContainer service container} to use to
+	 * configure services.
+	 * @return the {@link ComposeServiceContainer}
 	 */
-	void customize(DockerComposeFile composeFile);
-
-	@Override
-	default int getOrder() {
-		return 0;
+	public ComposeServiceContainer services() {
+		return this.services;
 	}
 
 }
