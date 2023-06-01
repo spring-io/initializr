@@ -16,12 +16,12 @@
 
 package io.spring.initializr.generator.spring.container.docker.compose;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.spring.initializr.generator.container.docker.compose.ComposeFile;
 import io.spring.initializr.generator.container.docker.compose.ComposeService;
-import io.spring.initializr.generator.spring.container.docker.compose.Markdown.MarkdownTable;
 import io.spring.initializr.generator.spring.documentation.HelpDocument;
 import io.spring.initializr.generator.spring.documentation.HelpDocumentCustomizer;
 
@@ -31,11 +31,11 @@ import io.spring.initializr.generator.spring.documentation.HelpDocumentCustomize
  *
  * @author Moritz Halbritter
  */
-public class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
+public class ComposeHelpDocumentCustomizer implements HelpDocumentCustomizer {
 
 	private final ComposeFile composeFile;
 
-	public DockerComposeHelpDocumentCustomizer(ComposeFile composeFile) {
+	public ComposeHelpDocumentCustomizer(ComposeFile composeFile) {
 		this.composeFile = composeFile;
 	}
 
@@ -43,18 +43,16 @@ public class DockerComposeHelpDocumentCustomizer implements HelpDocumentCustomiz
 	public void customize(HelpDocument document) {
 		Map<String, Object> model = new HashMap<>();
 		if (this.composeFile.services().isEmpty()) {
-			model.put("serviceTable", null);
 			document.getWarnings()
 				.addItem(
 						"No Docker Compose services found. As of now, the application won't start! Please add at least one service to the `compose.yaml` file.");
 		}
 		else {
-			MarkdownTable serviceTable = Markdown.table("Service name", "Image", "Tag", "Website");
-			this.composeFile.services()
-				.values()
-				.forEach((service) -> serviceTable.addRow(service.getName(), Markdown.code(service.getImage()),
-						Markdown.code(service.getImageTag()), Markdown.link("Website", service.getImageWebsite())));
-			model.put("serviceTable", serviceTable.toMarkdown());
+			model.put("services",
+					this.composeFile.services()
+						.values()
+						.sorted(Comparator.comparing(ComposeService::getName))
+						.toList());
 		}
 		document.addSection("documentation/docker-compose", model);
 	}
