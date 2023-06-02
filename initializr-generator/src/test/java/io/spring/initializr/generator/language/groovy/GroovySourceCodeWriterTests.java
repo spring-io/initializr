@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
@@ -114,6 +115,22 @@ class GroovySourceCodeWriterTests {
 		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
 			.returning("java.lang.String")
 			.parameters(new Parameter("java.lang.String", "value"))
+			.body(CodeBlock.ofStatement("value.trim()")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    String trim(String value) {", "        value.trim()", "    }", "", "}");
+	}
+
+	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
+	void methodWithStatements() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
+			.returning("java.lang.String")
+			.parameters(new Parameter("java.lang.String", "value"))
 			.body(new GroovyReturnStatement(new GroovyMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -130,8 +147,7 @@ class GroovySourceCodeWriterTests {
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
 			.parameters(new Parameter("java.lang.String[]", "args"))
-			.body(new GroovyExpressionStatement(
-					new GroovyMethodInvocation("org.springframework.boot.SpringApplication", "run", "Test", "args"))));
+			.body(CodeBlock.ofStatement("$T.run($L, args)", "org.springframework.boot.SpringApplication", "Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.boot.SpringApplication",
@@ -278,7 +294,7 @@ class GroovySourceCodeWriterTests {
 		GroovyMethodDeclaration method = GroovyMethodDeclaration.method("something")
 			.returning("void")
 			.parameters()
-			.body();
+			.body(CodeBlock.of(""));
 		method.annotate(Annotation.name("com.example.test.TestAnnotation"));
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");

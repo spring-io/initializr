@@ -23,11 +23,9 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.groovy.GroovyExpressionStatement;
 import io.spring.initializr.generator.language.groovy.GroovyMethodDeclaration;
-import io.spring.initializr.generator.language.groovy.GroovyMethodInvocation;
-import io.spring.initializr.generator.language.groovy.GroovyReturnStatement;
 import io.spring.initializr.generator.language.groovy.GroovyTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -58,14 +56,16 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
 			.parameters(new Parameter("java.lang.String[]", "args"))
-			.body(new GroovyExpressionStatement(new GroovyMethodInvocation("org.springframework.boot.SpringApplication",
-					"run", typeDeclaration.getName(), "args"))));
+			.body(CodeBlock.ofStatement("$T.run($L, args)", "org.springframework.boot.SpringApplication",
+					typeDeclaration.getName())));
 	}
 
 	@Bean
 	TestApplicationTypeCustomizer<GroovyTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
-			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads").returning("void").body();
+			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads")
+				.returning("void")
+				.body(CodeBlock.of(""));
 			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
@@ -92,8 +92,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
-					.body(new GroovyReturnStatement(
-							new GroovyMethodInvocation("application", "sources", description.getApplicationName())));
+					.body(CodeBlock.ofStatement("application.sources($L)", description.getApplicationName()));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

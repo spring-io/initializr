@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 
 /**
@@ -43,15 +44,26 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 	private final List<Parameter> parameters;
 
+	private final CodeBlock code;
+
 	private final List<GroovyStatement> statements;
 
-	private GroovyMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
-			List<GroovyStatement> statements) {
-		this.name = name;
-		this.returnType = returnType;
-		this.modifiers = modifiers;
-		this.parameters = parameters;
-		this.statements = statements;
+	private GroovyMethodDeclaration(Builder builder, CodeBlock code) {
+		this.name = builder.name;
+		this.returnType = builder.returnType;
+		this.modifiers = builder.modifiers;
+		this.parameters = List.copyOf(builder.parameters);
+		this.code = code;
+		this.statements = Collections.emptyList();
+	}
+
+	private GroovyMethodDeclaration(Builder builder, List<GroovyStatement> statements) {
+		this.name = builder.name;
+		this.returnType = builder.returnType;
+		this.modifiers = builder.modifiers;
+		this.parameters = List.copyOf(builder.parameters);
+		this.code = CodeBlock.of("");
+		this.statements = List.copyOf(statements);
 	}
 
 	public static Builder method(String name) {
@@ -74,6 +86,11 @@ public final class GroovyMethodDeclaration implements Annotatable {
 		return this.modifiers;
 	}
 
+	CodeBlock getCode() {
+		return this.code;
+	}
+
+	@Deprecated(since = "0.20.0", forRemoval = true)
 	public List<GroovyStatement> getStatements() {
 		return this.statements;
 	}
@@ -120,9 +137,13 @@ public final class GroovyMethodDeclaration implements Annotatable {
 			return this;
 		}
 
+		public GroovyMethodDeclaration body(CodeBlock code) {
+			return new GroovyMethodDeclaration(this, code);
+		}
+
+		@Deprecated(since = "0.20.0", forRemoval = true)
 		public GroovyMethodDeclaration body(GroovyStatement... statements) {
-			return new GroovyMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
-					Arrays.asList(statements));
+			return new GroovyMethodDeclaration(this, Arrays.asList(statements));
 		}
 
 	}

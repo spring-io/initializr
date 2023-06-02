@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 
 /**
@@ -42,7 +43,18 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	private final List<Parameter> parameters;
 
+	private final CodeBlock code;
+
 	private final List<JavaStatement> statements;
+
+	private JavaMethodDeclaration(Builder builder, CodeBlock code) {
+		this.name = builder.name;
+		this.returnType = builder.returnType;
+		this.modifiers = builder.modifiers;
+		this.parameters = List.copyOf(builder.parameters);
+		this.code = code;
+		this.statements = Collections.emptyList();
+	}
 
 	private JavaMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
 			List<JavaStatement> statements) {
@@ -50,6 +62,7 @@ public final class JavaMethodDeclaration implements Annotatable {
 		this.returnType = returnType;
 		this.modifiers = modifiers;
 		this.parameters = parameters;
+		this.code = CodeBlock.of((""));
 		this.statements = statements;
 	}
 
@@ -73,6 +86,11 @@ public final class JavaMethodDeclaration implements Annotatable {
 		return this.modifiers;
 	}
 
+	CodeBlock getCode() {
+		return this.code;
+	}
+
+	@Deprecated(since = "0.20.0", forRemoval = true)
 	public List<JavaStatement> getStatements() {
 		return this.statements;
 	}
@@ -119,6 +137,11 @@ public final class JavaMethodDeclaration implements Annotatable {
 			return this;
 		}
 
+		public JavaMethodDeclaration body(CodeBlock code) {
+			return new JavaMethodDeclaration(this, code);
+		}
+
+		@Deprecated(since = "0.20.0", forRemoval = true)
 		public JavaMethodDeclaration body(JavaStatement... statements) {
 			return new JavaMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
 					Arrays.asList(statements));

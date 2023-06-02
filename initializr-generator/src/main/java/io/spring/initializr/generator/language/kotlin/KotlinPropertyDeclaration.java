@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 
 /**
  * Declaration of a property written in Kotlin.
@@ -197,6 +198,8 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final List<Annotation> annotations = new ArrayList<>();
 
+		private CodeBlock code;
+
 		private KotlinExpressionStatement body;
 
 		private final T parent;
@@ -213,8 +216,14 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			return this;
 		}
 
+		@Deprecated(since = "0.20.0", forRemoval = true)
 		public AccessorBuilder<?> withBody(KotlinExpressionStatement expressionStatement) {
 			this.body = expressionStatement;
+			return this;
+		}
+
+		public AccessorBuilder<?> withBody(CodeBlock code) {
+			this.code = code;
 			return this;
 		}
 
@@ -229,17 +238,25 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final List<Annotation> annotations = new ArrayList<>();
 
+		private final CodeBlock code;
+
 		private final KotlinExpressionStatement body;
 
 		Accessor(AccessorBuilder<?> builder) {
 			this.annotations.addAll(builder.annotations);
+			this.code = builder.code;
 			this.body = builder.body;
 		}
 
 		boolean isEmptyBody() {
-			return this.body == null;
+			return (this.body == null && this.code == null);
 		}
 
+		CodeBlock getCode() {
+			return this.code;
+		}
+
+		@Deprecated(since = "0.20.0", forRemoval = true)
 		KotlinExpressionStatement getBody() {
 			return this.body;
 		}

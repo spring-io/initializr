@@ -38,6 +38,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -210,20 +211,26 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 		writer.println(") {");
 		writer.indented(() -> {
-			List<JavaStatement> statements = methodDeclaration.getStatements();
-			for (JavaStatement statement : statements) {
-				if (statement instanceof JavaExpressionStatement) {
-					writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
-				}
-				else if (statement instanceof JavaReturnStatement) {
-					writer.print("return ");
-					writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
-				}
-				writer.println(";");
-			}
+			methodDeclaration.getCode().write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS);
+			writeJavaStatements(writer, methodDeclaration);
 		});
 		writer.println("}");
 		writer.println();
+	}
+
+	@SuppressWarnings("removal")
+	private void writeJavaStatements(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
+		List<JavaStatement> statements = methodDeclaration.getStatements();
+		for (JavaStatement statement : statements) {
+			if (statement instanceof JavaExpressionStatement) {
+				writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
+			}
+			else if (statement instanceof JavaReturnStatement) {
+				writer.print("return ");
+				writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
+			}
+			writer.println(";");
+		}
 	}
 
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
@@ -270,19 +277,25 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
-				imports.addAll(getRequiredImports(
-						methodDeclaration.getStatements()
-							.stream()
-							.filter(JavaExpressionStatement.class::isInstance)
-							.map(JavaExpressionStatement.class::cast)
-							.map(JavaExpressionStatement::getExpression)
-							.filter(JavaMethodInvocation.class::isInstance)
-							.map(JavaMethodInvocation.class::cast),
-						(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
+				determineImportsFromStatements(imports, methodDeclaration);
+				imports.addAll(methodDeclaration.getCode().getImports());
 			}
 		}
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
+	}
+
+	@SuppressWarnings("removal")
+	private void determineImportsFromStatements(List<String> imports, JavaMethodDeclaration methodDeclaration) {
+		imports.addAll(getRequiredImports(
+				methodDeclaration.getStatements()
+					.stream()
+					.filter(JavaExpressionStatement.class::isInstance)
+					.map(JavaExpressionStatement.class::cast)
+					.map(JavaExpressionStatement::getExpression)
+					.filter(JavaMethodInvocation.class::isInstance)
+					.map(JavaMethodInvocation.class::cast),
+				(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
 	}
 
 	private Collection<String> determineImports(Annotation annotation) {

@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
@@ -107,6 +108,23 @@ class JavaSourceCodeWriterTests {
 
 	@Test
 	void method() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
+			.returning("java.lang.String")
+			.modifiers(Modifier.PUBLIC)
+			.parameters(new Parameter("java.lang.String", "value"))
+			.body(CodeBlock.ofStatement("return value.trim()")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
+				"    public String trim(String value) {", "        return value.trim();", "    }", "", "}");
+	}
+
+	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
+	void methodWithStatements() throws IOException {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
@@ -205,8 +223,8 @@ class JavaSourceCodeWriterTests {
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
 			.parameters(new Parameter("java.lang.String[]", "args"))
-			.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
-					"run", "Test.class", "args"))));
+			.body(CodeBlock.ofStatement("$T.run($L.class, args)", "org.springframework.boot.SpringApplication",
+					"Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
 				"import org.springframework.boot.SpringApplication;",
@@ -283,7 +301,10 @@ class JavaSourceCodeWriterTests {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		JavaMethodDeclaration method = JavaMethodDeclaration.method("something").returning("void").parameters().body();
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("something")
+			.returning("void")
+			.parameters()
+			.body(CodeBlock.of(""));
 		method.annotate(Annotation.name("com.example.test.TestAnnotation"));
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");

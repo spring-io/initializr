@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
@@ -113,6 +114,22 @@ class KotlinSourceCodeWriterTests {
 		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
 			.returning("java.lang.String")
 			.parameters(new Parameter("java.lang.String", "echo"))
+			.body(CodeBlock.ofStatement("return echo.reversed()")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    fun reverse(echo: String): String {", "        return echo.reversed()", "    }", "", "}");
+	}
+
+	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
+	void functionWithStatements() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
+			.returning("java.lang.String")
+			.parameters(new Parameter("java.lang.String", "echo"))
 			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -127,7 +144,7 @@ class KotlinSourceCodeWriterTests {
 		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("toString")
 			.modifiers(KotlinModifier.OVERRIDE, KotlinModifier.PUBLIC, KotlinModifier.OPEN)
 			.returning("java.lang.String")
-			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("super", "toString"))));
+			.body(CodeBlock.ofStatement("return super.toString()")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    open override fun toString(): String {", "        return super.toString()", "    }", "", "}");
@@ -159,6 +176,27 @@ class KotlinSourceCodeWriterTests {
 
 	@Test
 	void valGetterProperty() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addPropertyDeclaration(
+				KotlinPropertyDeclaration.val("testProp").returning("java.lang.String").value("\"This is a TEST\""));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("withGetter")
+			.returning("java.lang.String")
+			.getter()
+			.withBody(CodeBlock.of("testProp.toLowerCase()"))
+			.buildAccessor()
+			.emptyValue());
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    val testProp: String = \"This is a TEST\"", "", "    val withGetter: String",
+				"        get() = testProp.toLowerCase()", "", "}");
+	}
+
+	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
+	void valGetterPropertyWithStatement() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
@@ -265,8 +303,7 @@ class KotlinSourceCodeWriterTests {
 		test.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
 		compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
 			.parameters(new Parameter("Array<String>", "args"))
-			.body(new KotlinExpressionStatement(
-					new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication", "Test", "*args"))));
+			.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication", "Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
 				"import org.springframework.boot.autoconfigure.SpringBootApplication",
@@ -339,7 +376,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("something").body();
+		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("something").body(CodeBlock.of(""));
 		function.annotate(Annotation.name("com.example.test.TestAnnotation"));
 		test.addFunctionDeclaration(function);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");

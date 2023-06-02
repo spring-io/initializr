@@ -34,6 +34,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -46,6 +47,8 @@ import io.spring.initializr.generator.language.SourceStructure;
  * @author Matt Berteaux
  */
 public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode> {
+
+	private static final FormattingOptions FORMATTING_OPTIONS = new KotlinFormattingOptions();
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
@@ -157,7 +160,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		writer.print(accessorName);
 		if (!accessor.isEmptyBody()) {
 			writer.print("() = ");
-			writeExpression(writer, accessor.getBody().getExpression());
+			if (accessor.getCode() != null) {
+				accessor.getCode().write(writer, FORMATTING_OPTIONS);
+			}
+			else if (accessor.getBody() != null) {
+				writeExpression(writer, accessor.getBody().getExpression());
+			}
 		}
 	}
 
@@ -178,20 +186,26 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writer.print(": " + getUnqualifiedName(functionDeclaration.getReturnType()));
 		}
 		writer.println(" {");
-		List<KotlinStatement> statements = functionDeclaration.getStatements();
 		writer.indented(() -> {
-			for (KotlinStatement statement : statements) {
-				if (statement instanceof KotlinExpressionStatement) {
-					writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
-				}
-				else if (statement instanceof KotlinReturnStatement) {
-					writer.print("return ");
-					writeExpression(writer, ((KotlinReturnStatement) statement).getExpression());
-				}
-				writer.println("");
-			}
+			functionDeclaration.getCode().write(writer, FORMATTING_OPTIONS);
+			writeStatements(writer, functionDeclaration);
 		});
 		writer.println("}");
+	}
+
+	@SuppressWarnings("removal")
+	private void writeStatements(IndentingWriter writer, KotlinFunctionDeclaration functionDeclaration) {
+		List<KotlinStatement> statements = functionDeclaration.getStatements();
+		for (KotlinStatement statement : statements) {
+			if (statement instanceof KotlinExpressionStatement) {
+				writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
+			}
+			else if (statement instanceof KotlinReturnStatement) {
+				writer.print("return ");
+				writeExpression(writer, ((KotlinReturnStatement) statement).getExpression());
+			}
+			writer.println("");
+		}
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
@@ -316,6 +330,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		imports.addAll(getRequiredImports(functionDeclaration.getAnnotations(), this::determineImports));
 		imports.addAll(getRequiredImports(functionDeclaration.getParameters(),
 				(parameter) -> Collections.singleton(parameter.getType())));
+		imports.addAll(functionDeclaration.getCode().getImports());
 		imports.addAll(getRequiredImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
 					.map(KotlinFunctionInvocation.class::cast),
@@ -344,6 +359,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return imports;
 	}
 
+	@SuppressWarnings("removal")
 	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
 		return functionDeclaration.getStatements()
 			.stream()
@@ -376,6 +392,15 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
 		return !"java.lang".equals(packageName);
+	}
+
+	static class KotlinFormattingOptions implements FormattingOptions {
+
+		@Override
+		public String statementSeparator() {
+			return "";
+		}
+
 	}
 
 }

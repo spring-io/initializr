@@ -23,14 +23,11 @@ import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
-import io.spring.initializr.generator.language.kotlin.KotlinExpressionStatement;
 import io.spring.initializr.generator.language.kotlin.KotlinFunctionDeclaration;
-import io.spring.initializr.generator.language.kotlin.KotlinFunctionInvocation;
 import io.spring.initializr.generator.language.kotlin.KotlinModifier;
-import io.spring.initializr.generator.language.kotlin.KotlinReifiedFunctionInvocation;
-import io.spring.initializr.generator.language.kotlin.KotlinReturnStatement;
 import io.spring.initializr.generator.language.kotlin.KotlinTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -56,7 +53,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@Bean
 	TestApplicationTypeCustomizer<KotlinTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
-			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads").body();
+			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads")
+				.body(CodeBlock.of(""));
 			function.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
@@ -96,12 +94,10 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ProjectDescription description) {
-			return (compilationUnit) -> compilationUnit.addTopLevelFunction(
-					KotlinFunctionDeclaration.function("main")
-						.parameters(new Parameter("Array<String>", "args"))
-						.body(new KotlinExpressionStatement(
-								new KotlinReifiedFunctionInvocation("org.springframework.boot.runApplication",
-										description.getApplicationName(), "*args"))));
+			return (compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
+				.parameters(new Parameter("Array<String>", "args"))
+				.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication",
+						description.getApplicationName())));
 		}
 
 	}
@@ -122,8 +118,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
-					.body(new KotlinReturnStatement(new KotlinFunctionInvocation("application", "sources",
-							description.getApplicationName() + "::class.java")));
+					.body(CodeBlock.ofStatement("return application.sources($L::class.java)",
+							description.getApplicationName()));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};
 		}

@@ -38,6 +38,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -50,6 +51,8 @@ import io.spring.initializr.generator.language.SourceStructure;
  * @author Matt Berteaux
  */
 public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode> {
+
+	private static final FormattingOptions FORMATTING_OPTIONS = new GroovyFormattingOptions();
 
 	private static final Map<Predicate<Integer>, String> TYPE_MODIFIERS;
 
@@ -208,19 +211,25 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 		writer.println(") {");
 		writer.indented(() -> {
-			List<GroovyStatement> statements = methodDeclaration.getStatements();
-			for (GroovyStatement statement : statements) {
-				if (statement instanceof GroovyExpressionStatement) {
-					writeExpression(writer, ((GroovyExpressionStatement) statement).getExpression());
-				}
-				else if (statement instanceof GroovyReturnStatement) {
-					writeExpression(writer, ((GroovyReturnStatement) statement).getExpression());
-				}
-				writer.println();
-			}
+			methodDeclaration.getCode().write(writer, FORMATTING_OPTIONS);
+			writeStatements(writer, methodDeclaration);
 		});
 		writer.println("}");
 		writer.println();
+	}
+
+	@SuppressWarnings("removal")
+	private void writeStatements(IndentingWriter writer, GroovyMethodDeclaration methodDeclaration) {
+		List<GroovyStatement> statements = methodDeclaration.getStatements();
+		for (GroovyStatement statement : statements) {
+			if (statement instanceof GroovyExpressionStatement) {
+				writeExpression(writer, ((GroovyExpressionStatement) statement).getExpression());
+			}
+			else if (statement instanceof GroovyReturnStatement) {
+				writeExpression(writer, ((GroovyReturnStatement) statement).getExpression());
+			}
+			writer.println();
+		}
 	}
 
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
@@ -267,19 +276,25 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
 				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
-				imports.addAll(getRequiredImports(
-						methodDeclaration.getStatements()
-							.stream()
-							.filter(GroovyExpressionStatement.class::isInstance)
-							.map(GroovyExpressionStatement.class::cast)
-							.map(GroovyExpressionStatement::getExpression)
-							.filter(GroovyMethodInvocation.class::isInstance)
-							.map(GroovyMethodInvocation.class::cast),
-						(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
+				imports.addAll(methodDeclaration.getCode().getImports());
+				determineImportsFromStatements(imports, methodDeclaration);
 			}
 		}
 		Collections.sort(imports);
 		return new LinkedHashSet<>(imports);
+	}
+
+	@SuppressWarnings("removal")
+	private void determineImportsFromStatements(List<String> imports, GroovyMethodDeclaration methodDeclaration) {
+		imports.addAll(getRequiredImports(
+				methodDeclaration.getStatements()
+					.stream()
+					.filter(GroovyExpressionStatement.class::isInstance)
+					.map(GroovyExpressionStatement.class::cast)
+					.map(GroovyExpressionStatement::getExpression)
+					.filter(GroovyMethodInvocation.class::isInstance)
+					.map(GroovyMethodInvocation.class::cast),
+				(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
 	}
 
 	private Collection<String> determineImports(Annotation annotation) {
@@ -323,6 +338,15 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
 		return !"java.lang".equals(packageName);
+	}
+
+	static class GroovyFormattingOptions implements FormattingOptions {
+
+		@Override
+		public String statementSeparator() {
+			return "";
+		}
+
 	}
 
 }

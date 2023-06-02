@@ -20,11 +20,9 @@ import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.java.JavaExpressionStatement;
 import io.spring.initializr.generator.language.java.JavaMethodDeclaration;
-import io.spring.initializr.generator.language.java.JavaMethodInvocation;
-import io.spring.initializr.generator.language.java.JavaReturnStatement;
 import io.spring.initializr.generator.language.java.JavaTypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -52,15 +50,17 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 				.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 				.returning("void")
 				.parameters(new Parameter("java.lang.String[]", "args"))
-				.body(new JavaExpressionStatement(new JavaMethodInvocation("org.springframework.boot.SpringApplication",
-						"run", typeDeclaration.getName() + ".class", "args"))));
+				.body(CodeBlock.ofStatement("$T.run($L.class, args)", "org.springframework.boot.SpringApplication",
+						typeDeclaration.getName())));
 		};
 	}
 
 	@Bean
 	TestApplicationTypeCustomizer<JavaTypeDeclaration> junitJupiterTestMethodContributor() {
 		return (typeDeclaration) -> {
-			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads").returning("void").body();
+			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads")
+				.returning("void")
+				.body(CodeBlock.of(""));
 			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
@@ -83,8 +83,8 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
-					.body(new JavaReturnStatement(new JavaMethodInvocation("application", "sources",
-							description.getApplicationName() + ".class")));
+					.body(CodeBlock.ofStatement("return application.sources($L.class)",
+							description.getApplicationName()));
 				configure.annotate(Annotation.name("java.lang.Override"));
 				typeDeclaration.addMethodDeclaration(configure);
 			};
