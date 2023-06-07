@@ -168,10 +168,10 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addPropertyDeclaration(
-				KotlinPropertyDeclaration.val("testProp").returning("com.example.One").emptyValue());
+				KotlinPropertyDeclaration.val("testProp").returning("com.example.another.One").emptyValue());
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "", "class Test {", "",
-				"    val testProp: One", "", "}");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.One", "",
+				"class Test {", "", "    val testProp: One", "", "}");
 	}
 
 	@Test
@@ -296,6 +296,21 @@ class KotlinSourceCodeWriterTests {
 	}
 
 	@Test
+	void importsFromSamePackageAreDiscarded() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("another").returning("com.example.Another").empty());
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("sibling").returning("com.example.Sibling").empty());
+		test.addPropertyDeclaration(
+				KotlinPropertyDeclaration.var("external").returning("com.example.another.External").empty());
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).doesNotContain("import com.example.Another")
+			.doesNotContain("import com.example.Sibling")
+			.contains("import com.example.another.External");
+	}
+
+	@Test
 	void springBootApplication() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
@@ -346,10 +361,11 @@ class KotlinSourceCodeWriterTests {
 
 	@Test
 	void annotationWithClassArrayAttribute() throws IOException {
-		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
-				(builder) -> builder.attribute("target", Class.class, "com.example.One", "com.example.Two")));
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "import com.example.Two",
-				"import org.springframework.test.TestApplication", "",
+		List<String> lines = writeClassAnnotation(
+				Annotation.name("org.springframework.test.TestApplication", (builder) -> builder.attribute("target",
+						Class.class, "com.example.another.One", "com.example.another.Two")));
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.One",
+				"import com.example.another.Two", "import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = [One::class, Two::class])", "class Test");
 	}
 
@@ -358,8 +374,8 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
 				(builder) -> builder.attribute("target", Class.class, "com.example.One")
 					.attribute("unit", ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One",
-				"import java.time.temporal.ChronoUnit", "import org.springframework.test.TestApplication", "",
+		assertThat(lines).containsExactly("package com.example", "", "import java.time.temporal.ChronoUnit",
+				"import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One::class, unit = ChronoUnit.NANOS)", "class Test");
 	}
 

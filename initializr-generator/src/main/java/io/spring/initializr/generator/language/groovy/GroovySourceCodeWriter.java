@@ -39,6 +39,7 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
+import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -259,34 +260,30 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	private Set<String> determineImports(GroovyCompilationUnit compilationUnit) {
 		List<String> imports = new ArrayList<>();
 		for (GroovyTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
-			if (requiresImport(typeDeclaration.getExtends())) {
-				imports.add(typeDeclaration.getExtends());
-			}
-			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			imports.add(typeDeclaration.getExtends());
+			imports.addAll(appendImports(typeDeclaration.getAnnotations(), this::determineImports));
 			for (GroovyFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
-				if (requiresImport(fieldDeclaration.getReturnType())) {
-					imports.add(fieldDeclaration.getReturnType());
-				}
-				imports.addAll(getRequiredImports(fieldDeclaration.getAnnotations(), this::determineImports));
+				imports.add(fieldDeclaration.getReturnType());
+				imports.addAll(appendImports(fieldDeclaration.getAnnotations(), this::determineImports));
 			}
 			for (GroovyMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
-				if (requiresImport(methodDeclaration.getReturnType())) {
-					imports.add(methodDeclaration.getReturnType());
-				}
-				imports.addAll(getRequiredImports(methodDeclaration.getAnnotations(), this::determineImports));
-				imports.addAll(getRequiredImports(methodDeclaration.getParameters(),
+				imports.add(methodDeclaration.getReturnType());
+				imports.addAll(appendImports(methodDeclaration.getAnnotations(), this::determineImports));
+				imports.addAll(appendImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
 				imports.addAll(methodDeclaration.getCode().getImports());
 				determineImportsFromStatements(imports, methodDeclaration);
 			}
 		}
-		Collections.sort(imports);
-		return new LinkedHashSet<>(imports);
+		return imports.stream()
+			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
+			.sorted()
+			.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	@SuppressWarnings("removal")
 	private void determineImportsFromStatements(List<String> imports, GroovyMethodDeclaration methodDeclaration) {
-		imports.addAll(getRequiredImports(
+		imports.addAll(appendImports(
 				methodDeclaration.getStatements()
 					.stream()
 					.filter(GroovyExpressionStatement.class::isInstance)
@@ -314,15 +311,12 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		return imports;
 	}
 
-	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
-		return getRequiredImports(candidates.stream(), mapping);
+	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {
+		return appendImports(candidates.stream(), mapping);
 	}
 
-	private <T> List<String> getRequiredImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping)
-			.flatMap(Collection::stream)
-			.filter(this::requiresImport)
-			.collect(Collectors.toList());
+	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
+		return candidates.map(mapping).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	private String getUnqualifiedName(String name) {
@@ -332,12 +326,12 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
-	private boolean requiresImport(String name) {
+	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !"java.lang".equals(packageName);
+		return !"java.lang".equals(packageName) && !compilationUnit.getPackageName().equals(packageName);
 	}
 
 	static class GroovyFormattingOptions implements FormattingOptions {

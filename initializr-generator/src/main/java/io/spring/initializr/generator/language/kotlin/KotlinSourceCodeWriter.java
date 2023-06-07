@@ -35,6 +35,7 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
+import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -299,10 +300,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	private Set<String> determineImports(KotlinCompilationUnit compilationUnit) {
 		List<String> imports = new ArrayList<>();
 		for (KotlinTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
-			if (requiresImport(typeDeclaration.getExtends())) {
-				imports.add(typeDeclaration.getExtends());
-			}
-			imports.addAll(getRequiredImports(typeDeclaration.getAnnotations(), this::determineImports));
+			imports.add(typeDeclaration.getExtends());
+			imports.addAll(appendImports(typeDeclaration.getAnnotations(), this::determineImports));
 			typeDeclaration.getPropertyDeclarations()
 				.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
 			typeDeclaration.getFunctionDeclarations()
@@ -310,32 +309,29 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		}
 		compilationUnit.getTopLevelFunctions()
 			.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
-		Collections.sort(imports);
-		return new LinkedHashSet<>(imports);
+		return imports.stream()
+			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
+			.sorted()
+			.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	private Set<String> determinePropertyImports(KotlinPropertyDeclaration propertyDeclaration) {
-		Set<String> imports = new LinkedHashSet<>();
-		if (requiresImport(propertyDeclaration.getReturnType())) {
-			imports.add(propertyDeclaration.getReturnType());
-		}
-		return imports;
+		return (propertyDeclaration.getReturnType() != null) ? Set.of(propertyDeclaration.getReturnType())
+				: Collections.emptySet();
 	}
 
 	private Set<String> determineFunctionImports(KotlinFunctionDeclaration functionDeclaration) {
 		Set<String> imports = new LinkedHashSet<>();
-		if (requiresImport(functionDeclaration.getReturnType())) {
-			imports.add(functionDeclaration.getReturnType());
-		}
-		imports.addAll(getRequiredImports(functionDeclaration.getAnnotations(), this::determineImports));
-		imports.addAll(getRequiredImports(functionDeclaration.getParameters(),
+		imports.add(functionDeclaration.getReturnType());
+		imports.addAll(appendImports(functionDeclaration.getAnnotations(), this::determineImports));
+		imports.addAll(appendImports(functionDeclaration.getParameters(),
 				(parameter) -> Collections.singleton(parameter.getType())));
 		imports.addAll(functionDeclaration.getCode().getImports());
-		imports.addAll(getRequiredImports(
+		imports.addAll(appendImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
 					.map(KotlinFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getTarget())));
-		imports.addAll(getRequiredImports(
+		imports.addAll(appendImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
 					.map(KotlinReifiedFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getName())));
@@ -368,15 +364,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			.map(KotlinExpressionStatement::getExpression);
 	}
 
-	private <T> List<String> getRequiredImports(List<T> candidates, Function<T, Collection<String>> mapping) {
-		return getRequiredImports(candidates.stream(), mapping);
+	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {
+		return appendImports(candidates.stream(), mapping);
 	}
 
-	private <T> List<String> getRequiredImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping)
-			.flatMap(Collection::stream)
-			.filter(this::requiresImport)
-			.collect(Collectors.toList());
+	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
+		return candidates.map(mapping).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	private String getUnqualifiedName(String name) {
@@ -386,12 +379,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
-	private boolean requiresImport(String name) {
+	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}
 		String packageName = name.substring(0, name.lastIndexOf('.'));
-		return !"java.lang".equals(packageName);
+		return !"java.lang".equals(packageName) && !compilationUnit.getPackageName().equals(packageName);
 	}
 
 	static class KotlinFormattingOptions implements FormattingOptions {

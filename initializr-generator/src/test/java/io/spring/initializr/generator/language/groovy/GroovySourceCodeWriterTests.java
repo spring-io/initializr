@@ -138,6 +138,20 @@ class GroovySourceCodeWriterTests {
 	}
 
 	@Test
+	void importsFromSamePackageAreDiscarded() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("another").returning("com.example.Another"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("sibling").returning("com.example.Sibling"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("external").returning("com.example.another.External"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).doesNotContain("import com.example.Another")
+			.doesNotContain("import com.example.Sibling")
+			.contains("import com.example.another.External");
+	}
+
+	@Test
 	void springBootApplication() throws IOException {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
@@ -205,11 +219,12 @@ class GroovySourceCodeWriterTests {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFieldDeclaration(
-				GroovyFieldDeclaration.field("testString").modifiers(Modifier.PUBLIC).returning("com.example.One"));
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString")
+			.modifiers(Modifier.PUBLIC)
+			.returning("com.example.another.One"));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "", "class Test {", "",
-				"    public One testString", "", "}");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.One", "",
+				"class Test {", "", "    public One testString", "", "}");
 	}
 
 	@Test
@@ -261,11 +276,12 @@ class GroovySourceCodeWriterTests {
 
 	@Test
 	void annotationWithClassArrayAttribute() throws IOException {
-		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
-				(builder) -> builder.attribute("target", Class.class, "com.example.One", "com.example.Two")));
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One", "import com.example.Two",
-				"import org.springframework.test.TestApplication", "", "@TestApplication(target = [ One, Two ])",
-				"class Test {", "", "}");
+		List<String> lines = writeClassAnnotation(
+				Annotation.name("org.springframework.test.TestApplication", (builder) -> builder.attribute("target",
+						Class.class, "com.example.another.One", "com.example.another.Two")));
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.One",
+				"import com.example.another.Two", "import org.springframework.test.TestApplication", "",
+				"@TestApplication(target = [ One, Two ])", "class Test {", "", "}");
 	}
 
 	@Test
@@ -273,8 +289,8 @@ class GroovySourceCodeWriterTests {
 		List<String> lines = writeClassAnnotation(Annotation.name("org.springframework.test.TestApplication",
 				(builder) -> builder.attribute("target", Class.class, "com.example.One")
 					.attribute("unit", ChronoUnit.class, "java.time.temporal.ChronoUnit.NANOS")));
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.One",
-				"import java.time.temporal.ChronoUnit", "import org.springframework.test.TestApplication", "",
+		assertThat(lines).containsExactly("package com.example", "", "import java.time.temporal.ChronoUnit",
+				"import org.springframework.test.TestApplication", "",
 				"@TestApplication(target = One, unit = ChronoUnit.NANOS)", "class Test {", "", "}");
 	}
 
