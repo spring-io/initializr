@@ -39,6 +39,7 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.version.JavaVersionConstantProvider;
 import io.spring.initializr.generator.version.VersionProperty;
 
 /**
@@ -65,7 +66,7 @@ public abstract class GradleBuildWriter {
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
 		writeProperty(writer, "version", settings.getVersion());
-		writeJavaSourceCompatibility(writer, settings);
+		writeJavaConfiguration(writer, settings);
 		writer.println();
 		writeConfigurations(writer, build.configurations());
 		writeRepositories(writer, build);
@@ -96,7 +97,15 @@ public abstract class GradleBuildWriter {
 			.collect(Collectors.toList());
 	}
 
-	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings);
+	protected void writeJavaConfiguration(IndentingWriter writer, GradleBuildSettings settings) {
+		if (settings.getJavaConfiguration() != null) {
+			String sourceCompatibility = settings.getJavaConfiguration().getSourceCompatibility();
+			writer.println("java {");
+			writer.indented(() -> writer.println(String.format("sourceCompatibility = %s",
+					JavaVersionConstantProvider.forVersion(sourceCompatibility))));
+			writer.println("}");
+		}
+	}
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
 
