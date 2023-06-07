@@ -29,13 +29,13 @@ import io.spring.initializr.generator.buildsystem.Dependency;
  */
 public class GradleBuildSettings extends BuildSettings {
 
-	private final String sourceCompatibility;
+	private final JavaConfiguration java;
 
 	private final List<PluginMapping> pluginMappings;
 
 	protected GradleBuildSettings(Builder builder) {
 		super(builder);
-		this.sourceCompatibility = builder.sourceCompatibility;
+		this.java = builder.java;
 		this.pluginMappings = new ArrayList<>(builder.pluginMappings);
 	}
 
@@ -43,8 +43,8 @@ public class GradleBuildSettings extends BuildSettings {
 	 * Return the java version compatibility to use when compiling Java source.
 	 * @return the java version to use for source.
 	 */
-	public String getSourceCompatibility() {
-		return this.sourceCompatibility;
+	public JavaConfiguration getJavaConfiguration() {
+		return this.java;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class GradleBuildSettings extends BuildSettings {
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
 
-		private String sourceCompatibility;
+		private JavaConfiguration java = new JavaConfiguration();
 
 		private final List<PluginMapping> pluginMappings = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class GradleBuildSettings extends BuildSettings {
 		 * @return this for method chaining
 		 */
 		public Builder sourceCompatibility(String sourceCompatibility) {
-			this.sourceCompatibility = sourceCompatibility;
+			this.java.setSourceCompatibility(sourceCompatibility);
 			return self();
 		}
 
@@ -127,6 +127,36 @@ public class GradleBuildSettings extends BuildSettings {
 		 */
 		public Dependency getDependency() {
 			return this.dependency;
+		}
+
+	}
+
+	/**
+	 * Class to map common configuration for Java based projects.
+	 *
+	 */
+	public static class JavaConfiguration {
+
+		private String sourceCompatibility;
+
+		JavaConfiguration(String sourceCompatibility) {
+			this.sourceCompatibility = sourceCompatibility;
+		}
+
+		JavaConfiguration() {
+			this.sourceCompatibility = null;
+		}
+
+		/**
+		 * Return the source compatibility for 'java' configuration.
+		 * @return the source compatibility
+		 */
+		public String getSourceCompatibility() {
+			return this.sourceCompatibility;
+		}
+
+		public void setSourceCompatibility(String sourceCompatibility) {
+			this.sourceCompatibility = sourceCompatibility;
 		}
 
 	}
