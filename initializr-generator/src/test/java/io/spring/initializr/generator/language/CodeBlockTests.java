@@ -87,6 +87,19 @@ class CodeBlockTests {
 	}
 
 	@Test
+	void codeBlockWithLiteralPlaceHolderUsingCodeBlock() {
+		CodeBlock code = CodeBlock.of("return myUtil.add($L, $L)", CodeBlock.of("1"), CodeBlock.of("2"));
+		assertThat(writeJava(code)).isEqualTo("return myUtil.add(1, 2)");
+	}
+
+	@Test
+	void codeBlockWithLiteralPlaceHolderUsingNestedCodeBlock() {
+		CodeBlock code = CodeBlock.of("return myUtil.add($L)",
+				CodeBlock.of("$L, $L", CodeBlock.of("1"), CodeBlock.of("2")));
+		assertThat(writeJava(code)).isEqualTo("return myUtil.add(1, 2)");
+	}
+
+	@Test
 	void codeBlockWithDollarSignPlaceholder() {
 		CodeBlock code = CodeBlock.of("// $$ allowed, that's $$$L.", 25);
 		assertThat(writeJava(code)).isEqualTo("// $ allowed, that's $25.");

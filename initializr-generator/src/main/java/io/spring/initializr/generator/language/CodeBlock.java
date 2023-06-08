@@ -31,7 +31,8 @@ import org.springframework.util.ClassUtils;
  * are supported:
  * <ul>
  * <li>{@code $L} emits a literal value. Arguments for literals may be plain String,
- * primitives, or any type where the {@code toString()} representation can be used.
+ * primitives, another {@code CodeBlock}, or any type where the {@code toString()}
+ * representation can be used.
  * <li>{@code $S} escapes the value as a string, wraps it with double quotes, and emits
  * that. Emit {@code "null"} if the value is {@code null}. Does not handle multi-line
  * strings.
@@ -86,7 +87,15 @@ public final class CodeBlock {
 		int argIndex = 0;
 		for (String part : this.parts) {
 			switch (part) {
-				case "$L" -> writer.print(String.valueOf(this.args.get(argIndex++)));
+				case "$L" -> {
+					Object value = this.args.get(argIndex++);
+					if (value instanceof CodeBlock code) {
+						code.write(writer, options);
+					}
+					else {
+						writer.print(String.valueOf(value));
+					}
+				}
 				case "$S" -> {
 					String value = (String) this.args.get(argIndex++);
 					String valueToEmit = (value != null) ? quote(value) : "null";
