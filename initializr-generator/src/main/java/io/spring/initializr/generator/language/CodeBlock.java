@@ -17,7 +17,10 @@
 package io.spring.initializr.generator.language;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.StreamSupport;
 
 import io.spring.initializr.generator.io.IndentingWriter;
 
@@ -153,6 +156,31 @@ public final class CodeBlock {
 	 */
 	public static CodeBlock ofStatement(String format, Object... args) {
 		return new Builder().addStatement(format, args).build();
+	}
+
+	/**
+	 * Joins {@code codeBlocks} into a single {@link CodeBlock}, each separated by
+	 * {@code separator}. For example, joining {@code String s}, {@code Object o} and
+	 * {@code int i} using {@code ", "} would produce {@code String s, Object o, int i}.
+	 * @param codeBlocks the code blocks to join
+	 * @param separator the separator to use
+	 * @return a code block joining the specified code blocks
+	 */
+	public static CodeBlock join(Iterable<CodeBlock> codeBlocks, String separator) {
+		return StreamSupport.stream(codeBlocks.spliterator(), false).collect(joining(separator));
+	}
+
+	/**
+	 * A {@link Collector} implementation that joins {@link CodeBlock} instances together
+	 * into one separated by {@code separator}. For example, joining {@code String s},
+	 * {@code Object o} and {@code int i} using {@code ", "} would produce
+	 * {@code String s, Object o, int i}.
+	 * @param separator the separator to use
+	 * @return a collector using the specified separator
+	 */
+	public static Collector<CodeBlock, ?, CodeBlock> joining(String separator) {
+		return Collector.of(() -> new CodeBlockJoiner(separator, builder()), CodeBlockJoiner::add,
+				CodeBlockJoiner::merge, CodeBlockJoiner::join);
 	}
 
 	/**
@@ -309,6 +337,22 @@ public final class CodeBlock {
 		 */
 		String statementSeparator();
 
+		/**
+		 * Return the code that represents an array for the specified values.
+		 * @param values the values of the array
+		 * @return an array defining the specified values
+		 */
+		CodeBlock arrayOf(CodeBlock... values);
+
+		/**
+		 * Return the code that represents a reference to the specified {@link ClassName}.
+		 * For instance with java, a reference to {@code com.example.Test} would be
+		 * {@code Test.class}.
+		 * @param className the class name to handle
+		 * @return a class reference to the specified class name
+		 */
+		CodeBlock classReference(ClassName className);
+
 	}
 
 	private static class JavaFormattingOptions implements FormattingOptions {
@@ -316,6 +360,53 @@ public final class CodeBlock {
 		@Override
 		public String statementSeparator() {
 			return ";";
+		}
+
+		@Override
+		public CodeBlock arrayOf(CodeBlock... values) {
+			return CodeBlock.of("{ $L }", CodeBlock.join(Arrays.asList(values), ", "));
+		}
+
+		@Override
+		public CodeBlock classReference(ClassName className) {
+			return CodeBlock.of("$T.class", className);
+		}
+
+	}
+
+	private static final class CodeBlockJoiner {
+
+		private final String delimiter;
+
+		private final CodeBlock.Builder builder;
+
+		private boolean first = true;
+
+		CodeBlockJoiner(String delimiter, CodeBlock.Builder builder) {
+			this.delimiter = delimiter;
+			this.builder = builder;
+		}
+
+		CodeBlockJoiner add(CodeBlock codeBlock) {
+			if (!this.first) {
+				this.builder.add(this.delimiter);
+			}
+			this.first = false;
+
+			this.builder.add(codeBlock);
+			return this;
+		}
+
+		CodeBlock.CodeBlockJoiner merge(CodeBlockJoiner other) {
+			CodeBlock otherBlock = other.builder.build();
+			if (!otherBlock.parts.isEmpty()) {
+				add(otherBlock);
+			}
+			return this;
+		}
+
+		CodeBlock join() {
+			return this.builder.build();
 		}
 
 	}

@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.code;
 
+import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.TypeDeclaration;
@@ -50,18 +51,17 @@ class SourceCodeProjectGenerationConfigurationTests {
 			bean.customize(type);
 			return type;
 		});
-		assertThat(declaration.getAnnotations()).hasSize(1);
-		assertThat(declaration.getAnnotations()).singleElement()
-			.satisfies((annotation) -> assertThat(annotation.getName())
-				.isEqualTo("org.springframework.boot.autoconfigure.SpringBootApplication"));
+		assertThat(declaration.annotations().values()).singleElement()
+			.satisfies((annotation) -> assertThat(annotation.getClassName())
+				.isEqualTo(ClassName.of("org.springframework.boot.autoconfigure.SpringBootApplication")));
 	}
 
 	@Test
 	void addsACustomizerThatAppliesTestAnnotationsOnTestClassWithJunit5() {
 		TypeDeclaration declaration = generateTestTypeDeclaration("2.2.0.RELEASE");
-		assertThat(declaration.getAnnotations()).hasSize(1);
-		assertThat(declaration.getAnnotations().get(0).getName())
-			.isEqualTo("org.springframework.boot.test.context.SpringBootTest");
+		assertThat(declaration.annotations().values()).singleElement()
+			.satisfies((annotation) -> assertThat(annotation.getClassName())
+				.isEqualTo(ClassName.of("org.springframework.boot.test.context.SpringBootTest")));
 	}
 
 	@SuppressWarnings("unchecked")

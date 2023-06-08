@@ -18,7 +18,7 @@ package io.spring.initializr.generator.spring.code;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
-import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.TypeDeclaration;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -38,14 +38,14 @@ public class SourceCodeProjectGenerationConfiguration {
 
 	@Bean
 	public MainApplicationTypeCustomizer<TypeDeclaration> springBootApplicationAnnotator() {
-		return (typeDeclaration) -> typeDeclaration
-			.annotate(Annotation.name("org.springframework.boot.autoconfigure.SpringBootApplication"));
+		return (typeDeclaration) -> typeDeclaration.annotations()
+			.add(ClassName.of("org.springframework.boot.autoconfigure.SpringBootApplication"));
 	}
 
 	@Bean
 	public TestApplicationTypeCustomizer<TypeDeclaration> junitJupiterSpringBootTestTypeCustomizer() {
-		return (typeDeclaration) -> typeDeclaration
-			.annotate(Annotation.name("org.springframework.boot.test.context.SpringBootTest"));
+		return (typeDeclaration) -> typeDeclaration.annotations()
+			.add(ClassName.of("org.springframework.boot.test.context.SpringBootTest"));
 	}
 
 	/**

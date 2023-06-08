@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,25 @@ import java.util.List;
  * A representation of something that can be annotated.
  *
  * @author Andy Wilkinson
+ * @author Stephane Nicoll
  */
 public interface Annotatable {
 
-	void annotate(Annotation annotation);
+	/**
+	 * Return the {@link AnnotationContainer} to use to configure the annotations of this
+	 * element.
+	 * @return the annotation container
+	 */
+	AnnotationContainer annotations();
 
-	List<Annotation> getAnnotations();
+	@Deprecated(since = "0.20.0", forRemoval = true)
+	default void annotate(Annotation annotation) {
+		annotations().add(annotation.getClassName(), (builder) -> builder.from(annotation));
+	}
+
+	@Deprecated(since = "0.20.0", forRemoval = true)
+	default List<Annotation> getAnnotations() {
+		return annotations().values().toList();
+	}
 
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -34,6 +35,8 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
+import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.Parameter;
@@ -153,10 +156,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeAccessor(IndentingWriter writer, String accessorName,
 			KotlinPropertyDeclaration.Accessor accessor) {
-		if (!accessor.getAnnotations().isEmpty()) {
-			for (Annotation annotation : accessor.getAnnotations()) {
-				writeAnnotation(writer, annotation, false);
-			}
+		if (!accessor.annotations().isEmpty()) {
+			accessor.annotations().values().forEach((annotation) -> writeAnnotation(writer, annotation, false));
 		}
 		writer.print(accessorName);
 		if (!accessor.isEmptyBody()) {
@@ -210,55 +211,17 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		for (Annotation annotation : annotatable.getAnnotations()) {
-			writeAnnotation(writer, annotation, true);
-		}
+		annotatable.annotations().values().forEach((annotation) -> writeAnnotation(writer, annotation, true));
 	}
 
 	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-					.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-					.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
+		annotation.write(writer, FORMATTING_OPTIONS);
 		if (newLine) {
 			writer.println();
 		}
 		else {
 			writer.print(" ");
 		}
-	}
-
-	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format("%s::class", getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? "[" + result + "]" : result;
 	}
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
@@ -301,7 +264,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		List<String> imports = new ArrayList<>();
 		for (KotlinTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
 			imports.add(typeDeclaration.getExtends());
-			imports.addAll(appendImports(typeDeclaration.getAnnotations(), this::determineImports));
+			imports.addAll(appendImports(typeDeclaration.annotations().values(), Annotation::getImports));
 			typeDeclaration.getPropertyDeclarations()
 				.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));
 			typeDeclaration.getFunctionDeclarations()
@@ -323,7 +286,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	private Set<String> determineFunctionImports(KotlinFunctionDeclaration functionDeclaration) {
 		Set<String> imports = new LinkedHashSet<>();
 		imports.add(functionDeclaration.getReturnType());
-		imports.addAll(appendImports(functionDeclaration.getAnnotations(), this::determineImports));
+		imports.addAll(appendImports(functionDeclaration.annotations().values(), Annotation::getImports));
 		imports.addAll(appendImports(functionDeclaration.getParameters(),
 				(parameter) -> Collections.singleton(parameter.getType())));
 		imports.addAll(functionDeclaration.getCode().getImports());
@@ -335,23 +298,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
 					.map(KotlinReifiedFunctionInvocation.class::cast),
 				(invocation) -> Collections.singleton(invocation.getName())));
-		return imports;
-	}
-
-	private Collection<String> determineImports(Annotation annotation) {
-		List<String> imports = new ArrayList<>();
-		imports.add(annotation.getName());
-		annotation.getAttributes().forEach((attribute) -> {
-			if (attribute.getType() == Class.class) {
-				imports.addAll(attribute.getValues());
-			}
-			if (Enum.class.isAssignableFrom(attribute.getType())) {
-				imports.addAll(attribute.getValues()
-					.stream()
-					.map((value) -> value.substring(0, value.lastIndexOf(".")))
-					.toList());
-			}
-		});
 		return imports;
 	}
 
@@ -392,6 +338,16 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		@Override
 		public String statementSeparator() {
 			return "";
+		}
+
+		@Override
+		public CodeBlock arrayOf(CodeBlock... values) {
+			return CodeBlock.of("[$L]", CodeBlock.join(Arrays.asList(values), ", "));
+		}
+
+		@Override
+		public CodeBlock classReference(ClassName className) {
+			return CodeBlock.of("$T::class", className);
 		}
 
 	}

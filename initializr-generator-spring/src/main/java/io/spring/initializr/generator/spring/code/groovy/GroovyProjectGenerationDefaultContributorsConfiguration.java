@@ -22,7 +22,7 @@ import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.groovy.GroovyMethodDeclaration;
@@ -66,7 +66,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads")
 				.returning("void")
 				.body(CodeBlock.of(""));
-			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
+			method.annotations().add(ClassName.of("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
 	}
@@ -93,7 +93,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 					.parameters(
 							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
 					.body(CodeBlock.ofStatement("application.sources($L)", description.getApplicationName()));
-				configure.annotate(Annotation.name("java.lang.Override"));
+				configure.annotations().add(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);
 			};
 		}

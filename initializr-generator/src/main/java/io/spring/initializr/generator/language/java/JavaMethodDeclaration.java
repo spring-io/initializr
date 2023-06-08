@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
-import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.AnnotationContainer;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 
@@ -33,7 +33,7 @@ import io.spring.initializr.generator.language.Parameter;
  */
 public final class JavaMethodDeclaration implements Annotatable {
 
-	private final List<Annotation> annotations = new ArrayList<>();
+	private final AnnotationContainer annotations = new AnnotationContainer();
 
 	private final String name;
 
@@ -96,13 +96,8 @@ public final class JavaMethodDeclaration implements Annotatable {
 	}
 
 	@Override
-	public void annotate(Annotation annotation) {
-		this.annotations.add(annotation);
-	}
-
-	@Override
-	public List<Annotation> getAnnotations() {
-		return Collections.unmodifiableList(this.annotations);
+	public AnnotationContainer annotations() {
+		return this.annotations;
 	}
 
 	/**

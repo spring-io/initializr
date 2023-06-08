@@ -22,7 +22,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
-import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
@@ -55,7 +55,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads")
 				.body(CodeBlock.of(""));
-			function.annotate(Annotation.name("org.junit.jupiter.api.Test"));
+			function.annotations().add(ClassName.of("org.junit.jupiter.api.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
 	}

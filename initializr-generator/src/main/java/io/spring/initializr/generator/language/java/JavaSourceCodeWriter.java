@@ -142,48 +142,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 	}
 
 	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		annotatable.getAnnotations().forEach((annotation) -> writeAnnotation(writer, annotation));
-	}
-
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation) {
-		writer.print("@" + getUnqualifiedName(annotation.getName()));
-		List<Annotation.Attribute> attributes = annotation.getAttributes();
-		if (!attributes.isEmpty()) {
-			writer.print("(");
-			if (attributes.size() == 1 && attributes.get(0).getName().equals("value")) {
-				writer.print(formatAnnotationAttribute(attributes.get(0)));
-			}
-			else {
-				writer.print(attributes.stream()
-					.map((attribute) -> attribute.getName() + " = " + formatAnnotationAttribute(attribute))
-					.collect(Collectors.joining(", ")));
-			}
-			writer.print(")");
-		}
-		writer.println();
-	}
-
-	private String formatAnnotationAttribute(Annotation.Attribute attribute) {
-		List<String> values = attribute.getValues();
-		if (attribute.getType().equals(Class.class)) {
-			return formatValues(values, (value) -> String.format("%s.class", getUnqualifiedName(value)));
-		}
-		if (Enum.class.isAssignableFrom(attribute.getType())) {
-			return formatValues(values, (value) -> {
-				String enumValue = value.substring(value.lastIndexOf(".") + 1);
-				String enumClass = value.substring(0, value.lastIndexOf("."));
-				return String.format("%s.%s", getUnqualifiedName(enumClass), enumValue);
-			});
-		}
-		if (attribute.getType().equals(String.class)) {
-			return formatValues(values, (value) -> String.format("\"%s\"", value));
-		}
-		return formatValues(values, (value) -> String.format("%s", value));
-	}
-
-	private String formatValues(List<String> values, Function<String, String> formatter) {
-		String result = values.stream().map(formatter).collect(Collectors.joining(", "));
-		return (values.size() > 1) ? "{ " + result + " }" : result;
+		annotatable.annotations().values().forEach((annotation) -> {
+			annotation.write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS);
+			writer.println();
+		});
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
@@ -263,14 +225,14 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		for (JavaTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
 			imports.add(typeDeclaration.getExtends());
 
-			imports.addAll(appendImports(typeDeclaration.getAnnotations(), this::determineImports));
+			imports.addAll(appendImports(typeDeclaration.annotations().values(), Annotation::getImports));
 			for (JavaFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
 				imports.add(fieldDeclaration.getReturnType());
-				imports.addAll(appendImports(fieldDeclaration.getAnnotations(), this::determineImports));
+				imports.addAll(appendImports(fieldDeclaration.annotations().values(), Annotation::getImports));
 			}
 			for (JavaMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				imports.add(methodDeclaration.getReturnType());
-				imports.addAll(appendImports(methodDeclaration.getAnnotations(), this::determineImports));
+				imports.addAll(appendImports(methodDeclaration.annotations().values(), Annotation::getImports));
 				imports.addAll(appendImports(methodDeclaration.getParameters(),
 						(parameter) -> Collections.singletonList(parameter.getType())));
 				determineImportsFromStatements(imports, methodDeclaration);
@@ -294,23 +256,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 					.filter(JavaMethodInvocation.class::isInstance)
 					.map(JavaMethodInvocation.class::cast),
 				(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
-	}
-
-	private Collection<String> determineImports(Annotation annotation) {
-		List<String> imports = new ArrayList<>();
-		imports.add(annotation.getName());
-		annotation.getAttributes().forEach((attribute) -> {
-			if (attribute.getType() == Class.class) {
-				imports.addAll(attribute.getValues());
-			}
-			if (Enum.class.isAssignableFrom(attribute.getType())) {
-				imports.addAll(attribute.getValues()
-					.stream()
-					.map((value) -> value.substring(0, value.lastIndexOf(".")))
-					.toList());
-			}
-		});
-		return imports;
 	}
 
 	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {

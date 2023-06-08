@@ -19,7 +19,7 @@ package io.spring.initializr.generator.spring.code.java;
 import java.lang.reflect.Modifier;
 
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.java.JavaMethodDeclaration;
@@ -61,7 +61,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 			JavaMethodDeclaration method = JavaMethodDeclaration.method("contextLoads")
 				.returning("void")
 				.body(CodeBlock.of(""));
-			method.annotate(Annotation.name("org.junit.jupiter.api.Test"));
+			method.annotations().add(ClassName.of("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
 	}
@@ -85,7 +85,7 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
 					.body(CodeBlock.ofStatement("return application.sources($L.class)",
 							description.getApplicationName()));
-				configure.annotate(Annotation.name("java.lang.Override"));
+				configure.annotations().add(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);
 			};
 		}
