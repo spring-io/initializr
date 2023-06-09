@@ -37,8 +37,8 @@ import org.springframework.util.ClassUtils;
  * that. Emit {@code "null"} if the value is {@code null}. Does not handle multi-line
  * strings.
  * <li>{@code $T} emits a type reference. Arguments for types may be plain
- * {@linkplain Class classes}, fully qualified class names, and fully qualified
- * functions.</li>
+ * {@linkplain Class classes}, {@linkplain ClassName class names}, fully qualified class
+ * names, and fully qualified functions.</li>
  * <li>{@code $$} emits a dollar sign.
  * <li>{@code $]} ends a statement and emits the configured
  * {@linkplain FormattingOptions#statementSeparator() statement separator}.
@@ -253,9 +253,13 @@ public final class CodeBlock {
 				this.imports.add(type.getName());
 				return type.getSimpleName();
 			}
-			if (arg instanceof String className) {
-				this.imports.add(className);
-				return ClassUtils.getShortName(className);
+			if (arg instanceof ClassName className) {
+				this.imports.add(className.getName());
+				return className.getSimpleName();
+			}
+			if (arg instanceof String fqName) {
+				this.imports.add(fqName);
+				return ClassUtils.getShortName(fqName);
 			}
 			throw new IllegalArgumentException("Failed to extract type from '%s'".formatted(arg));
 		}

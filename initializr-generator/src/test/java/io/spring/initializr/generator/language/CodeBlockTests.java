@@ -125,6 +125,13 @@ class CodeBlockTests {
 
 	@Test
 	void codeBlockWithTypePlaceholderAndClassNameAddsImport() {
+		CodeBlock code = CodeBlock.of("return $T.truncate(myString)", ClassName.of(StringUtils.class));
+		assertThat(writeJava(code)).isEqualTo("return StringUtils.truncate(myString)");
+		assertThat(code.getImports()).containsExactly(StringUtils.class.getName());
+	}
+
+	@Test
+	void codeBlockWithTypePlaceholderAndFullyQualifiedClassNameAddsImport() {
 		CodeBlock code = CodeBlock.of("return $T.truncate(myString)", "com.example.StringUtils");
 		assertThat(writeJava(code)).isEqualTo("return StringUtils.truncate(myString)");
 		assertThat(code.getImports()).containsExactly("com.example.StringUtils");
