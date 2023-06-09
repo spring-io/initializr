@@ -18,7 +18,6 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.io.StringWriter;
 import java.util.Comparator;
-import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -30,9 +29,6 @@ import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,22 +48,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		assertThat(write(build).lines()).contains("group = 'com.example'", "version = '1.0.1-SNAPSHOT'");
 	}
 
-	@ParameterizedTest
-	@MethodSource("sourceCompatibilityParameters")
-	void gradleBuildWithSourceCompatibility(String sourceCompatibility, String javaVersionConstant) {
+	@Test
+	void gradleBuildWithSourceCompatibility() {
 		GradleBuild build = new GradleBuild();
-		build.settings().sourceCompatibility(sourceCompatibility);
-		String javaConfiguration = writeJavaConfiguration(javaVersionConstant);
-		assertThat(write(build)).contains(javaConfiguration);
-	}
-
-	static Stream<Arguments> sourceCompatibilityParameters() {
-		return Stream.of(Arguments.arguments("1.8", "JavaVersion.VERSION_1_8"),
-				Arguments.arguments("8", "JavaVersion.VERSION_1_8"),
-				Arguments.arguments(null, "JavaVersion.VERSION_11"),
-				Arguments.arguments("11", "JavaVersion.VERSION_11"),
-				Arguments.arguments("17", "JavaVersion.VERSION_17"),
-				Arguments.arguments("18", "JavaVersion.VERSION_HIGHER"));
+		build.settings().sourceCompatibility("11");
+		assertThat(write(build).lines()).contains("sourceCompatibility = '11'");
 	}
 
 	@Test
