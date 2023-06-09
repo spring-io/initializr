@@ -20,7 +20,6 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.test.io.AbstractTextAssert;
 import io.spring.initializr.generator.test.io.TextTestUtils;
-import io.spring.initializr.generator.version.JavaVersionConstantProvider;
 
 /**
  * Simple assertions for a gradle build using the Groovy DSL.
@@ -72,8 +71,7 @@ public class GroovyDslGradleBuildAssert extends AbstractTextAssert<GroovyDslGrad
 	 * @return {@code this} assertion object
 	 */
 	public GroovyDslGradleBuildAssert hasSourceCompatibility(String javaVersion) {
-		String javaVersionConstant = JavaVersionConstantProvider.forVersion(javaVersion);
-		return contains(String.format("sourceCompatibility = %s", javaVersionConstant));
+		return hasProperty("sourceCompatibility", javaVersion);
 	}
 
 	/**
