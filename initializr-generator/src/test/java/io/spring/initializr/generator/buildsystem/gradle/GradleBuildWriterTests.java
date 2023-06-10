@@ -95,14 +95,15 @@ public abstract class GradleBuildWriterTests {
 
 	/**
 	 * Helper method to build a java configuration string.
-	 * @param javaVersionConstant for source compatibility in java configuration
+	 * @param sourceCompatibilityFormat formatting string for source compatibility
+	 * @param sourceCompatibility for source compatibility in java configuration
 	 * @return String representation for java configuration
 	 */
-	protected String writeJavaConfiguration(String javaVersionConstant) {
+	protected String writeJavaConfiguration(String sourceCompatibilityFormat, String sourceCompatibility) {
 		StringWriter stringWriter = new StringWriter();
 		IndentingWriter writer = new IndentingWriter(stringWriter, new SimpleIndentStrategy("\t"));
 		writer.println("java {");
-		writer.indented(() -> writer.println(String.format("sourceCompatibility = %s", javaVersionConstant)));
+		writer.indented(() -> writer.println(String.format(sourceCompatibilityFormat, sourceCompatibility)));
 		writer.println("}");
 		return stringWriter.toString().replace("\r\n", "\n");
 	}
