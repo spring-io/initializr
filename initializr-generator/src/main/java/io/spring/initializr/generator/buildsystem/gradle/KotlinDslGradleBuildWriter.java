@@ -82,7 +82,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
-		writer.println("java.sourceCompatibility = " + getJavaVersionConstant(settings.getSourceCompatibility()));
+		writer.println("sourceCompatibility = " + getJavaVersionConstant(settings.getSourceCompatibility()));
 	}
 
 	private String getJavaVersionConstant(String jvmVersion) {
