@@ -37,6 +37,11 @@ import io.spring.initializr.generator.version.VersionReference;
 public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
+	public void writeTo(IndentingWriter writer, GradleBuild build) {
+		doWrite(writer, build, false);
+	}
+
+	@Override
 	protected void writeBuildscript(IndentingWriter writer, GradleBuild build) {
 		List<String> dependencies = build.getBuildscript().getDependencies();
 		Map<String, String> ext = build.getBuildscript().getExt();
@@ -84,11 +89,6 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 			string += " version '" + plugin.getVersion() + "'";
 		}
 		return string;
-	}
-
-	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
-		writeProperty(writer, "sourceCompatibility", settings.getSourceCompatibility());
 	}
 
 	@Override
