@@ -58,15 +58,19 @@ public abstract class GradleBuildWriter {
 	 * @param writer the writer to use
 	 * @param build the gradle build to write
 	 */
-	public final void writeTo(IndentingWriter writer, GradleBuild build) {
+	public abstract void writeTo(IndentingWriter writer, GradleBuild build);
+
+	protected void doWrite(IndentingWriter writer, GradleBuild build, boolean kotlinBuild) {
 		GradleBuildSettings settings = build.getSettings();
 		writeImports(writer, build.tasks(), build.snippets());
 		writeBuildscript(writer, build);
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
 		writeProperty(writer, "version", settings.getVersion());
-		writer.println();
-		writeJavaConfiguration(writer, settings);
+		if (!kotlinBuild) {
+			writer.println();
+			writeJavaConfiguration(writer, settings);
+		}
 		writer.println();
 		writeConfigurations(writer, build.configurations());
 		writeRepositories(writer, build);
@@ -77,7 +81,7 @@ public abstract class GradleBuildWriter {
 		writeSnippets(writer, build.snippets());
 	}
 
-	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks, GradleSnippetContainer snippets) {
+	protected void writeImports(IndentingWriter writer, GradleTaskContainer tasks, GradleSnippetContainer snippets) {
 		List<String> imports = Stream.concat(tasks.importedTypes(), snippets.importedTypes()).sorted().toList();
 		imports.forEach((importedType) -> writer.println("import " + importedType));
 		if (!imports.isEmpty()) {
@@ -97,13 +101,15 @@ public abstract class GradleBuildWriter {
 			.collect(Collectors.toList());
 	}
 
-	protected void writeJavaConfiguration(IndentingWriter writer, GradleBuildSettings settings) {
+	private void writeJavaConfiguration(IndentingWriter writer, GradleBuildSettings settings) {
 		writer.println("java {");
 		writer.indented(() -> writeJavaSourceCompatibility(writer, settings));
 		writer.println("}");
 	}
 
-	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings);
+	private void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
+		writeProperty(writer, "sourceCompatibility", settings.getSourceCompatibility());
+	}
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
 
@@ -114,7 +120,7 @@ public abstract class GradleBuildWriter {
 
 	protected abstract String repositoryAsString(MavenRepository repository);
 
-	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
+	protected void writeProperties(IndentingWriter writer, PropertyContainer properties) {
 		if (properties.isEmpty()) {
 			return;
 		}
