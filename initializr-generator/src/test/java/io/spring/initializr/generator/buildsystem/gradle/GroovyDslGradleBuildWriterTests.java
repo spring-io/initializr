@@ -52,7 +52,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithSourceCompatibility() {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility("11");
-		String javaConfiguration = writeJavaConfiguration("sourceCompatibility = '%s'", "11");
+		StringWriter stringWriter = new StringWriter();
+		IndentingWriter writer = new IndentingWriter(stringWriter, new SimpleIndentStrategy("\t"));
+		writer.println("java {");
+		writer.indented(() -> writer.println("sourceCompatibility = '11'"));
+		writer.println("}");
+		String javaConfiguration = stringWriter.toString().replace("\r\n", "\n");
 		assertThat(write(build)).contains(javaConfiguration);
 	}
 
