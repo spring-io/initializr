@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.test.buildsystem.gradle.GroovyDslGradleBuildAssert;
+import io.spring.initializr.generator.test.buildsystem.gradle.KotlinDslGradleBuildAssert;
 import io.spring.initializr.generator.test.buildsystem.maven.MavenBuildAssert;
 
 /**
@@ -106,6 +107,26 @@ public abstract class AbstractModuleAssert<SELF extends AbstractModuleAssert<SEL
 	public GroovyDslGradleBuildAssert groovyDslGradleBuild() {
 		hasGroovyDslGradleBuild();
 		return new GroovyDslGradleBuildAssert(this.actual.resolve("build.gradle"));
+	}
+
+	/**
+	 * Assert the module defines a {@code build.gradle.kts}.
+	 * @return {@code this} assertion object
+	 */
+	public SELF hasKotlinDslGradleBuild() {
+		filePaths().contains("build.gradle.kts");
+		return this.myself;
+	}
+
+	/**
+	 * Assert this module has a {@code build.gradle.kts} and return an
+	 * {@link KotlinDslGradleBuildAssert assert} for the {@code build.gradle.kts} file of
+	 * this module, to allow chaining of gradle-specific assertions from this call.
+	 * @return a {@link KotlinDslGradleBuildAssert}
+	 */
+	public KotlinDslGradleBuildAssert kotlinDslGradleBuild() {
+		hasKotlinDslGradleBuild();
+		return new KotlinDslGradleBuildAssert(this.actual.resolve("build.gradle.kts"));
 	}
 
 }

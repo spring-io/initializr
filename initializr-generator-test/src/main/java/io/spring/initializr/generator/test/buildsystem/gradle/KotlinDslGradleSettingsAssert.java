@@ -17,14 +17,14 @@
 package io.spring.initializr.generator.test.buildsystem.gradle;
 
 /**
- * Simple assertions for a gradle settings using the Groovy DSL.
+ * Simple assertions for a gradle settings using the Kotlin DSL.
  *
- * @author Stephane Nicoll
+ * @author Prithvi singh
  */
-public class GroovyDslGradleSettingsAssert extends GradleSettingsAssert<GroovyDslGradleSettingsAssert> {
+public class KotlinDslGradleSettingsAssert extends GradleSettingsAssert<KotlinDslGradleSettingsAssert> {
 
-	public GroovyDslGradleSettingsAssert(String content) {
-		super(content, GroovyDslGradleSettingsAssert.class);
+	protected KotlinDslGradleSettingsAssert(String content) {
+		super(content, KotlinDslGradleSettingsAssert.class);
 	}
 
 }

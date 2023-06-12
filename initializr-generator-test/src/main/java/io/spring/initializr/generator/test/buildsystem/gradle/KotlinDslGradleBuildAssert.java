@@ -21,37 +21,37 @@ import java.nio.file.Path;
 import io.spring.initializr.generator.test.io.TextTestUtils;
 
 /**
- * Simple assertions for a gradle build using the Groovy DSL.
+ * Simple assertions for a kotlin build using the kotlin DSL.
  *
- * @author Stephane Nicoll
+ * @author Prithvi singh
  */
-public class GroovyDslGradleBuildAssert extends GradleBuildAssert<GroovyDslGradleBuildAssert> {
+public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradleBuildAssert> {
 
-	public GroovyDslGradleBuildAssert(String content) {
-		super(content, GroovyDslGradleBuildAssert.class);
+	public KotlinDslGradleBuildAssert(String content) {
+		super(content, KotlinDslGradleBuildAssert.class);
 	}
 
-	public GroovyDslGradleBuildAssert(Path buildGradleFile) {
+	public KotlinDslGradleBuildAssert(Path buildGradleFile) {
 		this(TextTestUtils.readContent(buildGradleFile));
 	}
 
 	/**
-	 * Assert {@code build.gradle} defines a plugin with the specified id and version.
+	 * Assert {@code build.gradle.kts} defines a plugin with the specified id and version.
 	 * @param id the id of the plugin
 	 * @param version the version of the plugin
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasPlugin(String id, String version) {
-		return contains(String.format("id '%s' version '%s'", id, version));
+	public KotlinDslGradleBuildAssert hasPlugin(String id, String version) {
+		return contains(String.format("id('%s') version '%s'", id, version));
 	}
 
 	/**
-	 * Assert {@code build.gradle} defines a plugin with the specified id.
+	 * Assert {@code build.gradle.kts} defines a plugin with the specified id.
 	 * @param id the id of the plugin
 	 * @return {@code this} assertion object
 	 */
-	public GroovyDslGradleBuildAssert hasPlugin(String id) {
-		return contains(String.format("id '%s'", id));
+	public KotlinDslGradleBuildAssert hasPlugin(String id) {
+		return contains(String.format("id('%s')", id));
 	}
 
 }
