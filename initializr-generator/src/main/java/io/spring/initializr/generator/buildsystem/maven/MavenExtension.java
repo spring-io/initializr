@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 /**
- * An extension entry in a @{@link MavenBuild}.
+ * A build extension in a @{@link MavenBuild}.
  *
  * @author Niklas Herder
+ * @author Stephane Nicoll
  */
 public class MavenExtension {
 
@@ -27,7 +28,7 @@ public class MavenExtension {
 
 	private final String artifactId;
 
-	private String version;
+	private final String version;
 
 	protected MavenExtension(Builder builder) {
 		this.groupId = builder.groupId;
@@ -35,14 +36,26 @@ public class MavenExtension {
 		this.version = builder.version;
 	}
 
+	/**
+	 * Return the group ID of the extension.
+	 * @return the group id
+	 */
 	public String getGroupId() {
 		return this.groupId;
 	}
 
+	/**
+	 * Return the artifact ID of the extension.
+	 * @return the artifact id
+	 */
 	public String getArtifactId() {
 		return this.artifactId;
 	}
 
+	/**
+	 * Return the version of the extension.
+	 * @return the artifact id
+	 */
 	public String getVersion() {
 		return this.version;
 	}
@@ -60,11 +73,20 @@ public class MavenExtension {
 			this.artifactId = artifactId;
 		}
 
+		/**
+		 * Set the version of the extension.
+		 * @param version the version of the extension
+		 * @return this for method chaining
+		 */
 		public Builder version(String version) {
 			this.version = version;
 			return this;
 		}
 
+		/**
+		 * Build a {@link MavenExtension} with the current state of this builder.
+		 * @return a {@link MavenExtension}
+		 */
 		public MavenExtension build() {
 			return new MavenExtension(this);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class MavenExtensionsContainer {
+/**
+ * A container for {@link MavenExtension maven extensions}.
+ *
+ * @author Niklas Herder
+ * @author Stephane Nicoll
+ */
+public class MavenExtensionContainer {
 
 	private final Map<String, MavenExtension.Builder> extensions = new LinkedHashMap<>();
 
@@ -54,14 +60,16 @@ public class MavenExtensionsContainer {
 	}
 
 	/**
-	 * Add a {@link MavenExtension} with the specified {@code groupId} and
-	 * {@code artifactId}. Does nothing if the extension has already been added.
+	 * Add a {@link MavenExtension} with the specified {@code groupId},
+	 * {@code artifactId}, and {@code version}. If the extension has already been added,
+	 * only update the version if necessary.
 	 * @param groupId the groupId of the extension
 	 * @param artifactId the artifactId of the extension
+	 * @param version the version of the extension
 	 * @see #add(String, String, Consumer)
 	 */
-	public void add(String groupId, String artifactId) {
-		addExtension(groupId, artifactId);
+	public void add(String groupId, String artifactId, String version) {
+		add(groupId, artifactId, (extension) -> extension.version(version));
 	}
 
 	/**

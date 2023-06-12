@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class MavenBuild extends Build {
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
 
-	private final MavenExtensionsContainer extensions = new MavenExtensionsContainer();
+	private final MavenExtensionContainer extensions = new MavenExtensionContainer();
 
 	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
@@ -109,11 +109,11 @@ public class MavenBuild extends Build {
 	}
 
 	/**
-	 * Return the {@linkplain MavenExtensionsContainer extensions container} to use to
+	 * Return the {@linkplain MavenExtensionContainer extension container} to use to
 	 * configure extensions.
-	 * @return the {@link MavenExtensionsContainer}
+	 * @return the {@link MavenExtensionContainer}
 	 */
-	public MavenExtensionsContainer extensions() {
+	public MavenExtensionContainer extensions() {
 		return this.extensions;
 	}
 
