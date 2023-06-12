@@ -59,6 +59,7 @@ import org.springframework.util.StringUtils;
  * @author Olga Maciaszek-Sharma
  * @author Jafer Khan Shamshad
  * @author Joachim Pasquali
+ * @author Niklas Herder
  */
 public class MavenBuildWriter {
 
@@ -315,7 +316,8 @@ public class MavenBuildWriter {
 		MavenBuildSettings settings = build.getSettings();
 		if (settings.getDefaultGoal() == null && settings.getFinalName() == null
 				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
-				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()) {
+				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()
+				&& build.extensions().isEmpty()) {
 			return;
 		}
 		writer.println();
@@ -326,6 +328,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "testSourceDirectory", settings.getTestSourceDirectory());
 			writeResources(writer, build.resources(), build.testResources());
 			writeCollectionElement(writer, "plugins", build.plugins().values(), this::writePlugin);
+			writeCollectionElement(writer, "extensions", build.extensions().values(), this::writeExtension);
 		});
 	}
 
@@ -493,6 +496,14 @@ public class MavenBuildWriter {
 				}
 			});
 		}
+	}
+
+	private void writeExtension(IndentingWriter writer, MavenExtension extension) {
+		writeElement(writer, "extension", () -> {
+			writeSingleElement(writer, "groupId", extension.getGroupId());
+			writeSingleElement(writer, "artifactId", extension.getArtifactId());
+			writeSingleElement(writer, "version", extension.getVersion());
+		});
 	}
 
 	private void writeProfiles(IndentingWriter writer, MavenBuild build) {

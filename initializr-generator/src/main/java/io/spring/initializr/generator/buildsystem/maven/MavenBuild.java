@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Niklas Herder
  */
 public class MavenBuild extends Build {
 
@@ -36,6 +37,8 @@ public class MavenBuild extends Build {
 	private final MavenResourceContainer testResources = new MavenResourceContainer();
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
+
+	private final MavenExtensionContainer extensions = new MavenExtensionContainer();
 
 	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
@@ -103,6 +106,15 @@ public class MavenBuild extends Build {
 	 */
 	public MavenPluginContainer plugins() {
 		return this.plugins;
+	}
+
+	/**
+	 * Return the {@linkplain MavenExtensionContainer extension container} to use to
+	 * configure extensions.
+	 * @return the {@link MavenExtensionContainer}
+	 */
+	public MavenExtensionContainer extensions() {
+		return this.extensions;
 	}
 
 	/**
