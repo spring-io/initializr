@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,15 @@
 
 package io.spring.initializr.generator.test.buildsystem.gradle;
 
-import io.spring.initializr.generator.test.io.AbstractTextAssert;
-
 /**
  * Simple assertions for a gradle settings using the Kotlin DSL.
  *
  * @author Prithvi singh
  */
-public class KotlinDslGradleSettingsAssert extends AbstractTextAssert<KotlinDslGradleSettingsAssert> {
+public class KotlinDslGradleSettingsAssert extends GradleSettingsAssert<KotlinDslGradleSettingsAssert> {
 
 	protected KotlinDslGradleSettingsAssert(String content) {
 		super(content, KotlinDslGradleSettingsAssert.class);
-	}
-
-	/**
-	 * Assert {@code settings.gradle.kts} defines the specified project name.
-	 * @param name the name of the project
-	 * @return {@code this} assertion object
-	 */
-	public KotlinDslGradleSettingsAssert hasProjectName(String name) {
-		return hasProperty("rootProject.name", name);
-	}
-
-	/**
-	 * Assert {@code settings.gradle.kts} defines a property with the specified name and
-	 * value.
-	 * @param name the name of the property
-	 * @param value the value
-	 * @return {@code this} assertion object
-	 */
-	public KotlinDslGradleSettingsAssert hasProperty(String name, String value) {
-		return contains(String.format("%s = '%s", name, value));
 	}
 
 }
