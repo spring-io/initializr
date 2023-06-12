@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -144,11 +145,15 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 	}
 
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, Runnable separator) {
 		annotatable.annotations().values().forEach((annotation) -> {
 			annotation.write(writer, FORMATTING_OPTIONS);
-			writer.println();
+			separator.run();
 		});
+	}
+
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		writeAnnotations(writer, annotatable, writer::println);
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, GroovyFieldDeclaration fieldDeclaration) {
@@ -169,12 +174,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		writeAnnotations(writer, methodDeclaration);
 		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
-		List<Parameter> parameters = methodDeclaration.getParameters();
-		if (!parameters.isEmpty()) {
-			writer.print(parameters.stream()
-				.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
-				.collect(Collectors.joining(", ")));
-		}
+		writeParameters(writer, methodDeclaration.getParameters());
 		writer.println(") {");
 		writer.indented(() -> {
 			methodDeclaration.getCode().write(writer, FORMATTING_OPTIONS);
@@ -182,6 +182,21 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		});
 		writer.println("}");
 		writer.println();
+	}
+
+	private void writeParameters(IndentingWriter writer, List<Parameter> parameters) {
+		if (parameters.isEmpty()) {
+			return;
+		}
+		Iterator<Parameter> it = parameters.iterator();
+		while (it.hasNext()) {
+			Parameter parameter = it.next();
+			writeAnnotations(writer, parameter, () -> writer.print(" "));
+			writer.print(getUnqualifiedName(parameter.getType()) + " " + parameter.getName());
+			if (it.hasNext()) {
+				writer.print(", ");
+			}
+		}
 	}
 
 	@SuppressWarnings("removal")
@@ -234,8 +249,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			for (GroovyMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				imports.add(methodDeclaration.getReturnType());
 				imports.addAll(appendImports(methodDeclaration.annotations().values(), Annotation::getImports));
-				imports.addAll(appendImports(methodDeclaration.getParameters(),
-						(parameter) -> Collections.singletonList(parameter.getType())));
+				for (Parameter parameter : methodDeclaration.getParameters()) {
+					imports.add(parameter.getType());
+					imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
+				}
 				imports.addAll(methodDeclaration.getCode().getImports());
 				determineImportsFromStatements(imports, methodDeclaration);
 			}

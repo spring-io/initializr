@@ -95,7 +95,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ProjectDescription description) {
 			return (compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-				.parameters(new Parameter("Array<String>", "args"))
+				.parameters(Parameter.of("args", "Array<String>"))
 				.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication",
 						description.getApplicationName())));
 		}
@@ -117,7 +117,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 					.modifiers(KotlinModifier.OVERRIDE)
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
-							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
+							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
 					.body(CodeBlock.ofStatement("return application.sources($L::class.java)",
 							description.getApplicationName()));
 				typeDeclaration.addFunctionDeclaration(configure);

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -156,9 +157,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeAccessor(IndentingWriter writer, String accessorName,
 			KotlinPropertyDeclaration.Accessor accessor) {
-		if (!accessor.annotations().isEmpty()) {
-			accessor.annotations().values().forEach((annotation) -> writeAnnotation(writer, annotation, false));
-		}
+		writeAnnotations(writer, accessor, () -> writer.print(" "));
 		writer.print(accessorName);
 		if (!accessor.isEmptyBody()) {
 			writer.print("() = ");
@@ -177,12 +176,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		writeModifiers(writer, functionDeclaration.getModifiers());
 		writer.print("fun ");
 		writer.print(functionDeclaration.getName() + "(");
-		List<Parameter> parameters = functionDeclaration.getParameters();
-		if (!parameters.isEmpty()) {
-			writer.print(parameters.stream()
-				.map((parameter) -> parameter.getName() + ": " + getUnqualifiedName(parameter.getType()))
-				.collect(Collectors.joining(", ")));
-		}
+		writeParameters(writer, functionDeclaration.getParameters());
 		writer.print(")");
 		if (functionDeclaration.getReturnType() != null) {
 			writer.print(": " + getUnqualifiedName(functionDeclaration.getReturnType()));
@@ -193,6 +187,21 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writeStatements(writer, functionDeclaration);
 		});
 		writer.println("}");
+	}
+
+	private void writeParameters(IndentingWriter writer, List<Parameter> parameters) {
+		if (parameters.isEmpty()) {
+			return;
+		}
+		Iterator<Parameter> it = parameters.iterator();
+		while (it.hasNext()) {
+			Parameter parameter = it.next();
+			writeAnnotations(writer, parameter, () -> writer.print(" "));
+			writer.print(parameter.getName() + ": " + getUnqualifiedName(parameter.getType()));
+			if (it.hasNext()) {
+				writer.print(", ");
+			}
+		}
 	}
 
 	@SuppressWarnings("removal")
@@ -210,18 +219,15 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		}
 	}
 
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
-		annotatable.annotations().values().forEach((annotation) -> writeAnnotation(writer, annotation, true));
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, Runnable separator) {
+		annotatable.annotations().values().forEach((annotation) -> {
+			annotation.write(writer, FORMATTING_OPTIONS);
+			separator.run();
+		});
 	}
 
-	private void writeAnnotation(IndentingWriter writer, Annotation annotation, boolean newLine) {
-		annotation.write(writer, FORMATTING_OPTIONS);
-		if (newLine) {
-			writer.println();
-		}
-		else {
-			writer.print(" ");
-		}
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		writeAnnotations(writer, annotatable, writer::println);
 	}
 
 	private void writeModifiers(IndentingWriter writer, List<KotlinModifier> declaredModifiers) {
@@ -287,8 +293,10 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		Set<String> imports = new LinkedHashSet<>();
 		imports.add(functionDeclaration.getReturnType());
 		imports.addAll(appendImports(functionDeclaration.annotations().values(), Annotation::getImports));
-		imports.addAll(appendImports(functionDeclaration.getParameters(),
-				(parameter) -> Collections.singleton(parameter.getType())));
+		for (Parameter parameter : functionDeclaration.getParameters()) {
+			imports.add(parameter.getType());
+			imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
+		}
 		imports.addAll(functionDeclaration.getCode().getImports());
 		imports.addAll(appendImports(
 				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)

@@ -55,7 +55,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 		return (typeDeclaration) -> typeDeclaration.addMethodDeclaration(GroovyMethodDeclaration.method("main")
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
-			.parameters(new Parameter("java.lang.String[]", "args"))
+			.parameters(Parameter.of("args", String[].class))
 			.body(CodeBlock.ofStatement("$T.run($L, args)", "org.springframework.boot.SpringApplication",
 					typeDeclaration.getName())));
 	}
@@ -91,7 +91,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 					.modifiers(Modifier.PROTECTED)
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
-							new Parameter("org.springframework.boot.builder.SpringApplicationBuilder", "application"))
+							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
 					.body(CodeBlock.ofStatement("application.sources($L)", description.getApplicationName()));
 				configure.annotations().add(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);

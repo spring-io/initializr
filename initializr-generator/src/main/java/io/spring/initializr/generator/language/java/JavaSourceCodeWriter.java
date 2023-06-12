@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -112,7 +113,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 				writer.println();
 			}
 			for (JavaTypeDeclaration type : compilationUnit.getTypeDeclarations()) {
-				writeAnnotations(writer, type);
+				writeAnnotations(writer, type, writer::println);
 				writeModifiers(writer, TYPE_MODIFIERS, type.getModifiers());
 				writer.print("class " + type.getName());
 				if (type.getExtends() != null) {
@@ -141,11 +142,15 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 	}
 
-	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable, Runnable separator) {
 		annotatable.annotations().values().forEach((annotation) -> {
 			annotation.write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS);
-			writer.println();
+			separator.run();
 		});
+	}
+
+	private void writeAnnotations(IndentingWriter writer, Annotatable annotatable) {
+		writeAnnotations(writer, annotatable, writer::println);
 	}
 
 	private void writeFieldDeclaration(IndentingWriter writer, JavaFieldDeclaration fieldDeclaration) {
@@ -166,12 +171,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		writeAnnotations(writer, methodDeclaration);
 		writeModifiers(writer, METHOD_MODIFIERS, methodDeclaration.getModifiers());
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
-		List<Parameter> parameters = methodDeclaration.getParameters();
-		if (!parameters.isEmpty()) {
-			writer.print(parameters.stream()
-				.map((parameter) -> getUnqualifiedName(parameter.getType()) + " " + parameter.getName())
-				.collect(Collectors.joining(", ")));
-		}
+		writeParameters(writer, methodDeclaration.getParameters());
 		writer.println(") {");
 		writer.indented(() -> {
 			methodDeclaration.getCode().write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS);
@@ -179,6 +179,21 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		});
 		writer.println("}");
 		writer.println();
+	}
+
+	private void writeParameters(IndentingWriter writer, List<Parameter> parameters) {
+		if (parameters.isEmpty()) {
+			return;
+		}
+		Iterator<Parameter> it = parameters.iterator();
+		while (it.hasNext()) {
+			Parameter parameter = it.next();
+			writeAnnotations(writer, parameter, () -> writer.print(" "));
+			writer.print(getUnqualifiedName(parameter.getType()) + " " + parameter.getName());
+			if (it.hasNext()) {
+				writer.print(", ");
+			}
+		}
 	}
 
 	@SuppressWarnings("removal")
@@ -233,8 +248,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			for (JavaMethodDeclaration methodDeclaration : typeDeclaration.getMethodDeclarations()) {
 				imports.add(methodDeclaration.getReturnType());
 				imports.addAll(appendImports(methodDeclaration.annotations().values(), Annotation::getImports));
-				imports.addAll(appendImports(methodDeclaration.getParameters(),
-						(parameter) -> Collections.singletonList(parameter.getType())));
+				for (Parameter parameter : methodDeclaration.getParameters()) {
+					imports.add(parameter.getType());
+					imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
+				}
 				determineImportsFromStatements(imports, methodDeclaration);
 				imports.addAll(methodDeclaration.getCode().getImports());
 			}

@@ -117,7 +117,7 @@ class GroovySourceCodeWriterTests {
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
 			.returning("java.lang.String")
-			.parameters(new Parameter("java.lang.String", "value"))
+			.parameters(Parameter.of("value", String.class))
 			.body(CodeBlock.ofStatement("value.trim()")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -133,7 +133,7 @@ class GroovySourceCodeWriterTests {
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
 			.returning("java.lang.String")
-			.parameters(new Parameter("java.lang.String", "value"))
+			.parameters(Parameter.of("value", String.class))
 			.body(new GroovyReturnStatement(new GroovyMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -163,7 +163,7 @@ class GroovySourceCodeWriterTests {
 		test.addMethodDeclaration(GroovyMethodDeclaration.method("main")
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
-			.parameters(new Parameter("java.lang.String[]", "args"))
+			.parameters(Parameter.of("args", String[].class))
 			.body(CodeBlock.ofStatement("$T.run($L, args)", "org.springframework.boot.SpringApplication", "Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "",
@@ -309,6 +309,24 @@ class GroovySourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.test.TestAnnotation", "",
 				"class Test {", "", "    @TestAnnotation", "    void something() {", "    }", "", "}");
+	}
+
+	@Test
+	void methodWithParameterAnnotation() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("something")
+			.returning("void")
+			.parameters(Parameter.builder("service")
+				.type(ClassName.of("com.example.another.MyService"))
+				.annotate(ClassName.of("com.example.stereotype.Service"))
+				.build())
+			.body(CodeBlock.of("")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.MyService",
+				"import com.example.stereotype.Service", "", "class Test {", "",
+				"    void something(@Service MyService service) {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(GroovySourceCode sourceCode, String location) throws IOException {

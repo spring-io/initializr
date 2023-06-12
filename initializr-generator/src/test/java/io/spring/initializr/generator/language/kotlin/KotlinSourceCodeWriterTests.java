@@ -116,7 +116,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
 			.returning("java.lang.String")
-			.parameters(new Parameter("java.lang.String", "echo"))
+			.parameters(Parameter.of("echo", String.class))
 			.body(CodeBlock.ofStatement("return echo.reversed()")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -132,7 +132,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
 			.returning("java.lang.String")
-			.parameters(new Parameter("java.lang.String", "echo"))
+			.parameters(Parameter.of("echo", String.class))
 			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
@@ -320,7 +320,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotations().add(ClassName.of("org.springframework.boot.autoconfigure.SpringBootApplication"));
 		compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-			.parameters(new Parameter("Array<String>", "args"))
+			.parameters(Parameter.of("args", "Array<String>"))
 			.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication", "Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "",
@@ -390,6 +390,23 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.test.TestAnnotation", "",
 				"class Test {", "", "    @TestAnnotation", "    fun something() {", "    }", "", "}");
+	}
+
+	@Test
+	void functionWithParameterAnnotation() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("something")
+			.parameters(Parameter.builder("service")
+				.type(ClassName.of("com.example.another.MyService"))
+				.annotate(ClassName.of("com.example.stereotype.Service"))
+				.build())
+			.body(CodeBlock.of("")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.MyService",
+				"import com.example.stereotype.Service", "", "class Test {", "",
+				"    fun something(@Service service: MyService) {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {

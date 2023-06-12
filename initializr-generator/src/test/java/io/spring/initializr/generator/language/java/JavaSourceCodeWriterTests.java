@@ -117,7 +117,7 @@ class JavaSourceCodeWriterTests {
 		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
 			.returning("java.lang.String")
 			.modifiers(Modifier.PUBLIC)
-			.parameters(new Parameter("java.lang.String", "value"))
+			.parameters(Parameter.of("value", String.class))
 			.body(CodeBlock.ofStatement("return value.trim()")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
@@ -134,7 +134,7 @@ class JavaSourceCodeWriterTests {
 		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
 			.returning("java.lang.String")
 			.modifiers(Modifier.PUBLIC)
-			.parameters(new Parameter("java.lang.String", "value"))
+			.parameters(Parameter.of("value", String.class))
 			.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
@@ -258,7 +258,7 @@ class JavaSourceCodeWriterTests {
 		test.addMethodDeclaration(JavaMethodDeclaration.method("main")
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
-			.parameters(new Parameter("java.lang.String[]", "args"))
+			.parameters(Parameter.of("args", String[].class))
 			.body(CodeBlock.ofStatement("$T.run($L.class, args)", "org.springframework.boot.SpringApplication",
 					"Test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
@@ -337,6 +337,24 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.test.TestAnnotation;", "",
 				"class Test {", "", "    @TestAnnotation", "    void something() {", "    }", "", "}");
+	}
+
+	@Test
+	void methodWithParameterAnnotation() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(JavaMethodDeclaration.method("something")
+			.returning("void")
+			.parameters(Parameter.builder("service")
+				.type(ClassName.of("com.example.another.MyService"))
+				.annotate(ClassName.of("com.example.stereotype.Service"))
+				.build())
+			.body(CodeBlock.of("")));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import com.example.another.MyService;",
+				"import com.example.stereotype.Service;", "", "class Test {", "",
+				"    void something(@Service MyService service) {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location) throws IOException {
