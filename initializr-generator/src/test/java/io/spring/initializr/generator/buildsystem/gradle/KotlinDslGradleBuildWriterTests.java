@@ -60,7 +60,8 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithSourceCompatibility15(String sourceCompatibility, String javaVersionConstant) {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility(sourceCompatibility);
-		assertThat(write(build)).contains("java.sourceCompatibility = " + javaVersionConstant);
+		String javaConfiguration = javaConfigurationWriter("sourceCompatibility = %s", javaVersionConstant);
+		assertThat(write(build)).contains(javaConfiguration);
 	}
 
 	static Stream<Arguments> sourceCompatibilityParameters() {
