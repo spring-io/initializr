@@ -86,6 +86,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		writer.indented(() -> writer.println(
 				String.format("sourceCompatibility = %s", getJavaVersionConstant(settings.getSourceCompatibility()))));
 		writer.println("}");
+		writer.println();
 	}
 
 	private String getJavaVersionConstant(String jvmVersion) {

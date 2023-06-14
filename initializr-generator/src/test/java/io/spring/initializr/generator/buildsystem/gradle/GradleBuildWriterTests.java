@@ -16,11 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import java.io.StringWriter;
 import java.util.Set;
 
-import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,20 +89,5 @@ public abstract class GradleBuildWriterTests {
 	}
 
 	protected abstract String write(GradleBuild build);
-
-	/**
-	 * A helper method that tests if java configuration is written properly
-	 * @param format in which source compatibility must be written
-	 * @param jvmVersion for the java
-	 * @return the string representation for java configuration
-	 */
-	protected String javaConfigurationWriter(String format, String jvmVersion) {
-		StringWriter stringWriter = new StringWriter();
-		IndentingWriter writer = new IndentingWriter(stringWriter, new SimpleIndentStrategy("\t"));
-		writer.println("java {");
-		writer.indented(() -> writer.println(String.format(format, jvmVersion)));
-		writer.println("}");
-		return stringWriter.toString().replace("\r\n", "\n");
-	}
 
 }

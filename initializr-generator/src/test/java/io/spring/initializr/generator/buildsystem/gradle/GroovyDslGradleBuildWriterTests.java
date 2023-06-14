@@ -52,8 +52,11 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithSourceCompatibility() {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility("11");
-		String javaConfiguration = javaConfigurationWriter("sourceCompatibility = '%s'", "11");
-		assertThat(write(build)).contains(javaConfiguration);
+		assertThat(write(build)).contains("""
+				java {
+					sourceCompatibility = '11'
+				}
+				""");
 	}
 
 	@Test
