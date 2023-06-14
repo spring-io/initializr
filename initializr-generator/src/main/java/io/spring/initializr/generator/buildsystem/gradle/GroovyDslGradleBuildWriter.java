@@ -88,7 +88,11 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 
 	@Override
 	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
-		writeProperty(writer, "sourceCompatibility", settings.getSourceCompatibility());
+		writer.println("java {");
+		writer.indented(
+				() -> writer.println(String.format("sourceCompatibility = '%s'", settings.getSourceCompatibility())));
+		writer.println("}");
+		writer.println("");
 	}
 
 	@Override
