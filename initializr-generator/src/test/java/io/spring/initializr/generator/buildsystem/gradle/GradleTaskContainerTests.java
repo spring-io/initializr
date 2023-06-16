@@ -16,10 +16,10 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Attribute;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 /**
  * Tests for {@link GradleTaskContainer}.
@@ -73,11 +73,15 @@ class GradleTaskContainerTests {
 	@Test
 	void customizeTask() {
 		GradleTaskContainer container = new GradleTaskContainer();
-		container.customize("test", (task) -> task.attribute("fork", "true"));
+		container.customize("test", (task) -> {
+			task.attribute("fork", "true");
+			task.append("names", "test");
+		});
 		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("test");
 			assertThat(task.getType()).isNull();
-			assertThat(task.getAttributes()).containsOnly(entry("fork", "true"));
+			assertThat(task.getAttributes()).containsOnly(Attribute.set("fork", "true"),
+					Attribute.append("names", "test"));
 			assertThat(task.getInvocations()).isEmpty();
 			assertThat(task.getNested()).isEmpty();
 		});
@@ -93,7 +97,7 @@ class GradleTaskContainerTests {
 		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("MyTask");
 			assertThat(task.getType()).isEqualTo("com.example.MyTask");
-			assertThat(task.getAttributes()).containsOnly(entry("fork", "true"));
+			assertThat(task.getAttributes()).containsOnly(Attribute.set("fork", "true"));
 			assertThat(task.getInvocations()).singleElement().satisfies((invocation) -> {
 				assertThat(invocation.getTarget()).isEqualTo("property");
 				assertThat(invocation.getArguments()).containsOnly("taskDir");
@@ -116,7 +120,8 @@ class GradleTaskContainerTests {
 		assertThat(container.values()).singleElement().satisfies((task) -> {
 			assertThat(task.getName()).isEqualTo("test");
 			assertThat(task.getType()).isNull();
-			assertThat(task.getAttributes()).containsOnly(entry("ignore", "false"), entry("fork", "false"));
+			assertThat(task.getAttributes()).containsOnly(Attribute.set("ignore", "false"),
+					Attribute.set("fork", "false"));
 			assertThat(task.getInvocations()).singleElement().satisfies((invocation) -> {
 				assertThat(invocation.getTarget()).isEqualTo("method");
 				assertThat(invocation.getArguments()).containsOnly("arg1", "arg2");

@@ -38,6 +38,7 @@ import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
+import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Attribute.Type;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 
@@ -200,12 +201,17 @@ public abstract class GradleBuildWriter {
 
 	protected final void writeTaskCustomization(IndentingWriter writer, GradleTask task) {
 		writeCollection(writer, task.getInvocations(), this::invocationAsString);
-		writeMap(writer, task.getAttributes(), (key, value) -> key + " = " + value);
+		writeCollection(writer, task.getAttributes(), this::attributeAsString);
 		task.getNested().forEach((property, nestedCustomization) -> {
 			writer.println(property + " {");
 			writer.indented(() -> writeTaskCustomization(writer, nestedCustomization));
 			writer.println("}");
 		});
+	}
+
+	private String attributeAsString(GradleTask.Attribute attribute) {
+		String separator = (attribute.getType() == Type.SET) ? "=" : "+=";
+		return String.format("%s %s %s", attribute.getName(), separator, attribute.getValue());
 	}
 
 	protected abstract String invocationAsString(GradleTask.Invocation invocation);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -35,7 +36,7 @@ public class GradleTask {
 
 	private final String type;
 
-	private final Map<String, String> attributes;
+	private final List<Attribute> attributes;
 
 	private final List<Invocation> invocations;
 
@@ -44,7 +45,7 @@ public class GradleTask {
 	protected GradleTask(Builder builder) {
 		this.name = builder.name;
 		this.type = builder.type;
-		this.attributes = Collections.unmodifiableMap(new LinkedHashMap<>(builder.attributes));
+		this.attributes = List.copyOf(builder.attributes.values());
 		this.invocations = Collections.unmodifiableList(new ArrayList<>(builder.invocations));
 		this.nested = Collections.unmodifiableMap(resolve(builder.nested));
 	}
@@ -73,10 +74,10 @@ public class GradleTask {
 	}
 
 	/**
-	 * Return the attributes that should be set for this task.
+	 * Return the attributes that should be configured for this task.
 	 * @return task attributes
 	 */
-	public Map<String, String> getAttributes() {
+	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
 
@@ -105,7 +106,7 @@ public class GradleTask {
 
 		private final String type;
 
-		private final Map<String, String> attributes = new LinkedHashMap<>();
+		private final Map<String, Attribute> attributes = new LinkedHashMap<>();
 
 		private final List<Invocation> invocations = new ArrayList<>();
 
@@ -121,12 +122,21 @@ public class GradleTask {
 		}
 
 		/**
-		 * Add a task attribute.
+		 * Set a task attribute.
 		 * @param target the name of the attribute
 		 * @param value the value
 		 */
 		public void attribute(String target, String value) {
-			this.attributes.put(target, value);
+			this.attributes.put(target, Attribute.set(target, value));
+		}
+
+		/**
+		 * Configure a task attribute by appending the specified value.
+		 * @param target the name of the attribute
+		 * @param value the value to append
+		 */
+		public void append(String target, String value) {
+			this.attributes.put(target, Attribute.append(target, value));
 		}
 
 		/**
@@ -187,6 +197,106 @@ public class GradleTask {
 		 */
 		public List<String> getArguments() {
 			return this.arguments;
+		}
+
+	}
+
+	/**
+	 * An attribute of a task.
+	 */
+	public static final class Attribute {
+
+		private final String name;
+
+		private final String value;
+
+		private final Type type;
+
+		private Attribute(String name, String value, Type type) {
+			this.name = name;
+			this.value = value;
+			this.type = type;
+		}
+
+		/**
+		 * Create an attribute that {@linkplain Type#SET sets} the specified value.
+		 * @param name the name of the attribute
+		 * @param value the value to set
+		 * @return an attribute
+		 */
+		public static Attribute set(String name, String value) {
+			return new Attribute(name, value, Type.SET);
+		}
+
+		/**
+		 * Create an attribute that {@linkplain Type#APPEND appends} the specified value.
+		 * @param name the name of the attribute
+		 * @param value the value to append
+		 * @return an attribute
+		 */
+		public static Attribute append(String name, String value) {
+			return new Attribute(name, value, Type.APPEND);
+		}
+
+		/**
+		 * Return the name of the attribute.
+		 * @return the name
+		 */
+		public String getName() {
+			return this.name;
+		}
+
+		/**
+		 * Return the value of the attribute to set or to append.
+		 * @return the value
+		 */
+		public String getValue() {
+			return this.value;
+		}
+
+		/**
+		 * Return the {@link Type} of the attribute.
+		 * @return the type
+		 */
+		public Type getType() {
+			return this.type;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			Attribute attribute = (Attribute) o;
+			return Objects.equals(this.name, attribute.name) && Objects.equals(this.value, attribute.value)
+					&& this.type == attribute.type;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.name, this.value, this.type);
+		}
+
+		@Override
+		public String toString() {
+			return this.name + ((this.type == Type.SET) ? " = " : " += ") + this.value;
+		}
+
+		public enum Type {
+
+			/**
+			 * Set the value of the attribute.
+			 */
+			SET,
+
+			/**
+			 * Append the value to the attribute.
+			 */
+			APPEND;
+
 		}
 
 	}

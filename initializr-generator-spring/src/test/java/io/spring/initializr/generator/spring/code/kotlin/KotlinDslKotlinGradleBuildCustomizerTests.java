@@ -16,8 +16,11 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import java.util.List;
+
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradleTask;
+import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Attribute;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +53,23 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 		});
 	}
 
+	@Test
+	void kotlinCompilationTasksWithListOfCompilerArgsAreCustomized() {
+		GradleBuild build = new GradleBuild();
+		KotlinProjectSettings kotlinProjectSettings = new SimpleKotlinProjectSettings("1.2.70", "11") {
+			@Override
+			public List<String> getCompilerArgs() {
+				return List.of("-Xjsr305=strict", "-Xmx=128M");
+			}
+		};
+		new KotlinDslKotlinGradleBuildCustomizer(kotlinProjectSettings).customize(build);
+		assertThat(build.tasks().values()).singleElement().satisfies((task) -> {
+			GradleTask kotlinOptions = task.getNested().get("kotlinOptions");
+			assertThat(kotlinOptions.getAttributes())
+				.contains(Attribute.append("freeCompilerArgs", "listOf(\"-Xjsr305=strict\", \"-Xmx=128M\")"));
+		});
+	}
+
 	private void assertKotlinOptions(GradleTask compileTask, String jvmTarget) {
 		assertThat(compileTask.getAttributes()).isEmpty();
 		assertThat(compileTask.getInvocations()).isEmpty();
@@ -58,8 +78,8 @@ class KotlinDslKotlinGradleBuildCustomizerTests {
 		assertThat(kotlinOptions.getInvocations()).hasSize(0);
 		assertThat(kotlinOptions.getNested()).hasSize(0);
 		assertThat(kotlinOptions.getAttributes()).hasSize(2);
-		assertThat(kotlinOptions.getAttributes()).containsEntry("freeCompilerArgs", "listOf(\"-Xjsr305=strict\")")
-			.containsEntry("jvmTarget", String.format("\"%s\"", jvmTarget));
+		assertThat(kotlinOptions.getAttributes()).contains(Attribute.append("freeCompilerArgs", "\"-Xjsr305=strict\""),
+				Attribute.set("jvmTarget", String.format("\"%s\"", jvmTarget)));
 	}
 
 }

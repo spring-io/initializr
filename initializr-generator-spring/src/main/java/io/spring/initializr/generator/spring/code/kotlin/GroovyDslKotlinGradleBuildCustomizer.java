@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleTask;
@@ -35,13 +36,17 @@ class GroovyDslKotlinGradleBuildCustomizer extends KotlinGradleBuildCustomizer {
 	@Override
 	protected void customizeKotlinOptions(KotlinProjectSettings settings, GradleTask.Builder compile) {
 		compile.nested("kotlinOptions", (kotlinOptions) -> {
-			String compilerArgs = settings.getCompilerArgs()
-				.stream()
-				.map((arg) -> "'" + arg + "'")
-				.collect(Collectors.joining(", "));
-			kotlinOptions.attribute("freeCompilerArgs", "[" + compilerArgs + "]");
+			kotlinOptions.append("freeCompilerArgs", compilerArgsAsString(settings.getCompilerArgs()));
 			kotlinOptions.attribute("jvmTarget", "'" + settings.getJvmTarget() + "'");
 		});
+	}
+
+	private String compilerArgsAsString(List<String> compilerArgs) {
+		if (compilerArgs.size() == 1) {
+			return "'" + compilerArgs.get(0) + "'";
+		}
+		String values = compilerArgs.stream().map((arg) -> "'" + arg + "'").collect(Collectors.joining(", "));
+		return "[%s]".formatted(values);
 	}
 
 }
