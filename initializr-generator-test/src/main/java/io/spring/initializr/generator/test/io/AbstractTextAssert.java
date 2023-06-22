@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 import org.assertj.core.api.AbstractStringAssert;
 import org.assertj.core.api.ListAssert;
@@ -52,15 +53,30 @@ public abstract class AbstractTextAssert<SELF extends AbstractStringAssert<SELF>
 	 * @see #isEqualToIgnoringNewLines(CharSequence)
 	 */
 	public SELF hasSameContentAs(Resource expected) {
-		if (!expected.isReadable()) {
-			failWithMessage("Expected resource does not exist: " + expected);
+		return doWithResource(expected, this::isEqualToIgnoringNewLines);
+	}
+
+	/**
+	 * Assert this text contains the content defined by the specified {@link Resource}.
+	 * Differences in newlines are ignored
+	 * @param content a resource with the partial expected content
+	 * @return {@code this} assertion object
+	 * @see #containsIgnoringNewLines(CharSequence...)
+	 */
+	public SELF contains(Resource content) {
+		return doWithResource(content, this::containsIgnoringNewLines);
+	}
+
+	private SELF doWithResource(Resource resource, Consumer<String> resourceAssertions) {
+		if (!resource.isReadable()) {
+			failWithMessage("Resource does not exist: " + resource);
 		}
-		try (InputStream in = expected.getInputStream()) {
+		try (InputStream in = resource.getInputStream()) {
 			String expectedContent = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
-			isEqualToIgnoringNewLines(expectedContent);
+			resourceAssertions.accept(expectedContent);
 		}
 		catch (IOException ex) {
-			failWithMessage("Cannot read expected content " + expected);
+			failWithMessage("Cannot read content " + resource);
 		}
 		return this.myself;
 	}

@@ -58,7 +58,7 @@ class TextAssertTests {
 		given(resource.getInputStream()).willThrow(new IOException("Test exception"));
 		assertThatExceptionOfType(AssertionError.class)
 			.isThrownBy(() -> assertThat(forContent("Hello")).hasSameContentAs(resource))
-			.withMessageContaining("Cannot read expected content");
+			.withMessageContaining("Cannot read content");
 	}
 
 	@Test
@@ -104,6 +104,49 @@ class TextAssertTests {
 			.withMessageContaining("Test")
 			.withMessageContaining("Hello")
 			.withMessageContaining(file.toString());
+	}
+
+	@Test
+	void containsWithNonReadableResource() {
+		Resource resource = mock(Resource.class);
+		given(resource.isReadable()).willReturn(false);
+		given(resource.toString()).willReturn("project/does-not-exist");
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forContent("Hello")).contains(resource))
+			.withMessageContaining("project/does-not-exist");
+	}
+
+	@Test
+	void containsWithNonReliableResource() throws IOException {
+		Resource resource = mock(Resource.class);
+		given(resource.isReadable()).willReturn(true);
+		given(resource.getInputStream()).willThrow(new IOException("Test exception"));
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forContent("Hello")).contains(resource))
+			.withMessageContaining("Cannot read content");
+	}
+
+	@Test
+	void containsWithMatchingResource() throws IOException {
+		assertThat(forContent("Hello World")).contains(createResource("Hello"));
+	}
+
+	@Test
+	void containsMatchingResourceAndDifferentNewLinesInTarget() throws IOException {
+		assertThat(forContent("Hello\nWorld!")).contains(createResource("Hello\r\nWorld"));
+	}
+
+	@Test
+	void containsWithMatchingResourceAndDifferentNewLinesInSource() throws IOException {
+		assertThat(forContent("Hello\r\nWorld!")).contains(createResource("Hello\nWorld"));
+	}
+
+	@Test
+	void containsWithNonMatchingResource() {
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> assertThat(forContent("Test")).contains(createResource("Hello")))
+			.withMessageContaining("Test")
+			.withMessageContaining("Hello");
 	}
 
 	private AssertProvider<TextAssert> forContent(String content) {
