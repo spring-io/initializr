@@ -39,7 +39,9 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
 		.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
 
-	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.5.0-RC1");
+	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.5.0-RC1,2.7.10)");
+
+	private static final VersionRange GRADLE_8_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.7.10");
 
 	@Override
 	protected boolean matches(ProjectDescription description, ConditionContext context,
@@ -62,6 +64,9 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 		}
 		else if (GRADLE_7_VERSION_RANGE.match(platformVersion)) {
 			return "7";
+		}
+		else if (GRADLE_8_VERSION_RANGE.match(platformVersion)) {
+			return "8";
 		}
 		else {
 			return null;

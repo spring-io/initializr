@@ -41,7 +41,7 @@ class GradleWrapperContributorTests {
 	Path directory;
 
 	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments("6"), Arguments.arguments("7"));
+		return Stream.of(Arguments.arguments("6"), Arguments.arguments("7"), Arguments.arguments("8"));
 	}
 
 	@ParameterizedTest(name = "Gradle {0}")

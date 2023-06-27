@@ -67,6 +67,56 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
+	void outcomeWithSpringBoot26() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.6.1"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle7"));
+	}
+
+	@Test
+	void outcomeWithSpringBootEarly27() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.7.9"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle7"));
+	}
+
+	@Test
+	void outcomeWithSpringBootLate27() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("2.7.10"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle8"));
+	}
+
+	@Test
+	void outcomeWithSpringBoot30() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("3.0.0"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle8"));
+	}
+
+	@Test
+	void outcomeWithSpringBoot31() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("3.1.0"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle8"));
+	}
+
+	@Test
 	void outcomeWithNoMatch() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
@@ -101,6 +151,12 @@ public class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("7")
 		String gradle7() {
 			return "testGradle7";
+		}
+
+		@Bean
+		@ConditionalOnGradleVersion("8")
+		String gradle8() {
+			return "testGradle8";
 		}
 
 	}

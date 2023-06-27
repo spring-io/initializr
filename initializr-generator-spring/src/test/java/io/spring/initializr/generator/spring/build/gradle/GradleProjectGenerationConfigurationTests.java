@@ -65,7 +65,8 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
-		return Stream.of(Arguments.arguments("2.2.3.RELEASE"), Arguments.arguments("2.5.0"));
+		return Stream.of(Arguments.arguments("2.2.3.RELEASE"), Arguments.arguments("2.5.0"),
+				Arguments.arguments("2.7.10"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -84,7 +85,8 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("2.2.3.RELEASE", "6.9.3"), Arguments.arguments("2.5.0", "7.6.1"));
+		return Stream.of(Arguments.arguments("2.2.3.RELEASE", "6.9.3"), Arguments.arguments("2.5.0", "7.6.1"),
+				Arguments.arguments("2.7.10", "8.1.1"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")

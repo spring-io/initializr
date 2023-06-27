@@ -113,7 +113,7 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnGradleVersion({ "6", "7" })
+	@ConditionalOnGradleVersion({ "6", "7", "8" })
 	BuildCustomizer<GradleBuild> springBootPluginContributor(ProjectDescription description,
 			ObjectProvider<DependencyManagementPluginVersionResolver> versionResolver, InitializrMetadata metadata) {
 		return new SpringBootPluginBuildCustomizer(description, versionResolver
@@ -163,12 +163,26 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	/**
+	 * Configuration specific to projects using Gradle 8.
+	 */
+	@Configuration
+	@ConditionalOnGradleVersion("8")
+	static class Gradle8ProjectGenerationConfiguration {
+
+		@Bean
+		GradleWrapperContributor gradle7WrapperContributor() {
+			return new GradleWrapperContributor("8");
+		}
+
+	}
+
+	/**
 	 * Configuration specific to projects using Gradle (Groovy DSL).
 	 */
 	@Configuration
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
-	@ConditionalOnGradleVersion({ "6", "7" })
-	static class Gradle4Or5ProjectGenerationConfiguration {
+	@ConditionalOnGradleVersion({ "6", "7", "8" })
+	static class GradleGroovyProjectGenerationConfiguration {
 
 		@Bean
 		GroovyDslGradleBuildWriter gradleBuildWriter() {
@@ -201,7 +215,7 @@ public class GradleProjectGenerationConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
-	@ConditionalOnGradleVersion({ "6", "7" })
+	@ConditionalOnGradleVersion({ "6", "7", "8" })
 	static class GradleKtsProjectGenerationConfiguration {
 
 		@Bean
