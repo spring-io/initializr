@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,12 @@ import java.lang.annotation.Target;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
- * Specialization of {@link Configuration} for configuration of project generation.
+ * Specialization of {@link Configuration} for configuration of project generation, with
+ * {@link Configuration#proxyBeanMethods()} set to {@code false} by default.
  * <p>
  * Project generation configuration classes are regular Spring {@link Configuration}
  * beans. They are located using the {@link SpringFactoriesLoader} mechanism (keyed
@@ -48,5 +50,15 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 @Documented
 @Configuration
 public @interface ProjectGenerationConfiguration {
+
+	/**
+	 * Specify whether {@code @Bean} methods should get proxied in order to enforce bean
+	 * lifecycle behavior, e.g. to return shared singleton bean instances even in case of
+	 * direct {@code @Bean} method calls in user code.
+	 * @see Configuration#proxyBeanMethods()
+	 * @return whether a CGLIB proxy should be created to enforce bean lifecycle behavior
+	 */
+	@AliasFor(annotation = Configuration.class)
+	boolean proxyBeanMethods() default false;
 
 }
