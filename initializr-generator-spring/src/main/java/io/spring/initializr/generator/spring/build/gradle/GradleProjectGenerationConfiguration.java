@@ -139,6 +139,7 @@ public class GradleProjectGenerationConfiguration {
 	 */
 	@Configuration
 	@ConditionalOnGradleVersion("6")
+	@Deprecated
 	static class Gradle6ProjectGenerationConfiguration {
 
 		@Bean

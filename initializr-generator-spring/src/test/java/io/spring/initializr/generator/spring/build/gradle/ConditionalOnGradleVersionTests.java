@@ -37,6 +37,7 @@ public class ConditionalOnGradleVersionTests {
 		.withConfiguration(GradleVersionTestConfiguration.class);
 
 	@Test
+	@Deprecated
 	void outcomeWithSpringBoot23() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.3.10.RELEASE"));
@@ -47,6 +48,7 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
+	@Deprecated
 	void outcomeWithSpringBoot24() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.4.0"));
@@ -132,10 +134,10 @@ public class ConditionalOnGradleVersionTests {
 	@Test
 	void outcomeWithSpringBoot24AndMultipleGenerations() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0"));
-		this.projectTester.withConfiguration(Gradle6Or7TestConfiguration.class)
+		description.setPlatformVersion(Version.parse("2.7.0"));
+		this.projectTester.withConfiguration(Gradle7Or8TestConfiguration.class)
 			.configure(description,
-					(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle6", "gradle6Or7"));
+					(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle7", "gradle7Or8"));
 	}
 
 	@Configuration
@@ -143,6 +145,7 @@ public class ConditionalOnGradleVersionTests {
 
 		@Bean
 		@ConditionalOnGradleVersion("6")
+		@Deprecated
 		String gradle6() {
 			return "testGradle6";
 		}
@@ -162,12 +165,12 @@ public class ConditionalOnGradleVersionTests {
 	}
 
 	@Configuration
-	static class Gradle6Or7TestConfiguration {
+	static class Gradle7Or8TestConfiguration {
 
 		@Bean
-		@ConditionalOnGradleVersion({ "6", "7" })
-		String gradle6Or7() {
-			return "testGradle6Or7";
+		@ConditionalOnGradleVersion({ "7", "8" })
+		String gradle7Or8() {
+			return "testGradle7Or8";
 		}
 
 	}
