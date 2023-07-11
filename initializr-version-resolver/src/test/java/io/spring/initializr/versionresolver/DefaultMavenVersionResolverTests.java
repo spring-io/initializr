@@ -91,6 +91,13 @@ class DefaultMavenVersionResolverTests {
 	}
 
 	@Test
+	void resolvePluginsUsingMilestoneThatHasResolutionProblem() {
+		Map<String, String> versions = this.resolver.resolvePlugins("org.springframework.boot",
+				"spring-boot-dependencies", "3.0.0-M1");
+		assertThat(versions).containsEntry("org.springframework.boot:spring-boot-maven-plugin", "3.0.0-M1");
+	}
+
+	@Test
 	void resolvePluginsUsingSnapshots() {
 		Map<String, String> versions = this.resolver.resolvePlugins("org.springframework.boot",
 				"spring-boot-dependencies", "2.4.0-SNAPSHOT");

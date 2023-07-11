@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilder;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
@@ -67,6 +69,8 @@ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
  */
 @SuppressWarnings("removal")
 class DefaultMavenVersionResolver implements MavenVersionResolver, DependencyManagementVersionResolver {
+
+	private static final Log logger = LogFactory.getLog(DefaultMavenVersionResolver.class);
 
 	private static final RemoteRepository mavenCentral = new RemoteRepository.Builder("central", "default",
 			"https://repo1.maven.org/maven2")
@@ -163,6 +167,12 @@ class DefaultMavenVersionResolver implements MavenVersionResolver, DependencyMan
 			return modelBuilder.build(modelBuildingRequest).getEffectiveModel();
 		}
 		catch (ModelBuildingException ex) {
+			Model model = ex.getModel();
+			if (model != null) {
+				logger.warn("Model for '" + groupId + ":" + artifactId + ":" + version + "' is incomplete: "
+						+ ex.getProblems());
+				return model;
+			}
 			throw new IllegalStateException(
 					"Model for '" + groupId + ":" + artifactId + ":" + version + "' could not be built", ex);
 		}
