@@ -239,10 +239,10 @@ jobs:
       download_artifacts: true
       save_build_info: true
   - task: promote
-    image: ci-image
     file: git-repo/ci/tasks/promote.yml
     params:
       RELEASE_TYPE: RELEASE
+      <<: *registry-image-resource-source
       <<: *artifactory-task-params
       <<: *sonatype-task-params
 - name: create-github-release
