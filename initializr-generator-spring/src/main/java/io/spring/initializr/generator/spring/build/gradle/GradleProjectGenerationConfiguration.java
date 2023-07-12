@@ -171,7 +171,7 @@ public class GradleProjectGenerationConfiguration {
 	static class Gradle8ProjectGenerationConfiguration {
 
 		@Bean
-		GradleWrapperContributor gradle7WrapperContributor() {
+		GradleWrapperContributor gradle8WrapperContributor() {
 			return new GradleWrapperContributor("8");
 		}
 
