@@ -100,7 +100,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 			if (generation >= 1 && generation <= 10) {
 				sb.append("VERSION_1_").append(generation);
 			}
-			else if (generation <= 17) {
+			else if (generation <= 24) {
 				sb.append("VERSION_").append(generation);
 			}
 			else {
