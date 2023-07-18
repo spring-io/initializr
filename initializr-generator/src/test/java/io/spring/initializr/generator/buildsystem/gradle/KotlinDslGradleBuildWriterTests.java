@@ -57,7 +57,7 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 
 	@ParameterizedTest
 	@MethodSource("sourceCompatibilityParameters")
-	void gradleBuildWithSourceCompatibility15(String sourceCompatibility, String javaVersionConstant) {
+	void gradleBuildWithSourceCompatibilities(String sourceCompatibility, String javaVersionConstant) {
 		GradleBuild build = new GradleBuild();
 		build.settings().sourceCompatibility(sourceCompatibility);
 		assertThat(write(build)).contains("""
@@ -82,7 +82,14 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 				Arguments.arguments("15", "JavaVersion.VERSION_15"),
 				Arguments.arguments("16", "JavaVersion.VERSION_16"),
 				Arguments.arguments("17", "JavaVersion.VERSION_17"),
-				Arguments.arguments("18", "JavaVersion.VERSION_HIGHER"));
+				Arguments.arguments("18", "JavaVersion.VERSION_18"),
+				Arguments.arguments("19", "JavaVersion.VERSION_19"),
+				Arguments.arguments("20", "JavaVersion.VERSION_20"),
+				Arguments.arguments("21", "JavaVersion.VERSION_21"),
+				Arguments.arguments("22", "JavaVersion.VERSION_22"),
+				Arguments.arguments("23", "JavaVersion.VERSION_23"),
+				Arguments.arguments("24", "JavaVersion.VERSION_24"),
+				Arguments.arguments("25", "JavaVersion.VERSION_HIGHER"));
 	}
 
 	@Test
