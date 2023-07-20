@@ -39,7 +39,6 @@
 
 	<properties>
 		<revision>0.20.1-SNAPSHOT</revision>
-		<disable.checks>false</disable.checks>
 		<git.url>https://github.com/spring-io/initializr</git.url>
 		<git.connection>scm:git:https://github.com/spring-io/initializr</git.connection>
 		<git.developerConnection>scm:git:ssh://git@github.com/spring-io/initializr.git</git.developerConnection>
@@ -96,9 +95,6 @@
 						<executions>
 							<execution>
 								<phase>validate</phase>
-								<configuration>
-									<skip>${disable.checks}</skip>
-								</configuration>
 								<goals>
 									<goal>validate</goal>
 								</goals>
@@ -131,7 +127,6 @@
 								<id>checkstyle-validation</id>
 								<phase>validate</phase>
 								<configuration>
-									<skip>${disable.checks}</skip>
 									<configLocation>src/checkstyle/checkstyle.xml</configLocation>
 									<suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
 									<includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -145,7 +140,6 @@
 								<id>nohttp-checkstyle-validation</id>
 								<phase>validate</phase>
 								<configuration>
-									<skip>${disable.checks}</skip>
 									<configLocation>src/checkstyle/nohttp-checkstyle.xml</configLocation>
 									<suppressionsLocation>src/checkstyle/nohttp-checkstyle-suppressions.xml</suppressionsLocation>
 									<propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
@@ -217,38 +211,6 @@
 				</pluginManagement>
 			</build>
 		</profile>
-		<profile>
-			<id>fast</id>
-			<activation>
-				<property>
-					<name>fast</name>
-				</property>
-			</activation>
-			<properties>
-				<disable.checks>true</disable.checks>
-			</properties>
-		</profile>
 	</profiles>
-
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
