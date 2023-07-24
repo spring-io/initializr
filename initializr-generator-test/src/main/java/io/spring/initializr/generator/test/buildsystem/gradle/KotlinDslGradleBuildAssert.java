@@ -24,6 +24,7 @@ import io.spring.initializr.generator.test.io.TextTestUtils;
  * Simple assertions for a kotlin build using the kotlin DSL.
  *
  * @author Prithvi singh
+ * @author Stephane Nicoll
  */
 public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradleBuildAssert> {
 
@@ -35,6 +36,11 @@ public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradl
 		this(TextTestUtils.readContent(buildGradleFile));
 	}
 
+	@Override
+	protected String quote(String value) {
+		return "\"" + value + "\"";
+	}
+
 	/**
 	 * Assert {@code build.gradle.kts} defines a plugin with the specified id and version.
 	 * @param id the id of the plugin
@@ -42,7 +48,7 @@ public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public KotlinDslGradleBuildAssert hasPlugin(String id, String version) {
-		return contains(String.format("id('%s') version '%s'", id, version));
+		return contains(String.format("id(%s) version %s", quote(id), quote(version)));
 	}
 
 	/**
@@ -51,7 +57,7 @@ public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public KotlinDslGradleBuildAssert hasPlugin(String id) {
-		return contains(String.format("id('%s')", id));
+		return contains(String.format("id(%s)", quote(id)));
 	}
 
 }

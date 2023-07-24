@@ -35,6 +35,11 @@ public class GroovyDslGradleBuildAssert extends GradleBuildAssert<GroovyDslGradl
 		this(TextTestUtils.readContent(buildGradleFile));
 	}
 
+	@Override
+	protected String quote(String value) {
+		return "'" + value + "'";
+	}
+
 	/**
 	 * Assert {@code build.gradle} defines a plugin with the specified id and version.
 	 * @param id the id of the plugin
@@ -42,7 +47,7 @@ public class GroovyDslGradleBuildAssert extends GradleBuildAssert<GroovyDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public GroovyDslGradleBuildAssert hasPlugin(String id, String version) {
-		return contains(String.format("id '%s' version '%s'", id, version));
+		return contains(String.format("id %s version %s", quote(id), quote(version)));
 	}
 
 	/**
@@ -51,7 +56,7 @@ public class GroovyDslGradleBuildAssert extends GradleBuildAssert<GroovyDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public GroovyDslGradleBuildAssert hasPlugin(String id) {
-		return contains(String.format("id '%s'", id));
+		return contains(String.format("id %s", quote(id)));
 	}
 
 }

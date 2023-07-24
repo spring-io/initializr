@@ -57,7 +57,7 @@ public abstract class GradleBuildAssert<SELF extends GradleBuildAssert<SELF>> ex
 	 * @return {@code this} assertion object
 	 */
 	public SELF hasProperty(String name, String value) {
-		return contains(String.format("%s = '%s'", name, value));
+		return contains(String.format("%s = %s", name, quote(value)));
 	}
 
 	/**
@@ -71,10 +71,12 @@ public abstract class GradleBuildAssert<SELF extends GradleBuildAssert<SELF>> ex
 			throw new IllegalArgumentException("Size must be even, it is a set of property=value pairs");
 		}
 		for (int i = 0; i < values.length; i += 2) {
-			builder.append(String.format("\tset('%s', \"%s\")%n", values[i], values[i + 1]));
+			builder.append(String.format("\tset(%s, \"%s\")%n", quote(values[i]), values[i + 1]));
 		}
 		builder.append("}");
 		return contains(builder.toString());
 	}
+
+	protected abstract String quote(String value);
 
 }
