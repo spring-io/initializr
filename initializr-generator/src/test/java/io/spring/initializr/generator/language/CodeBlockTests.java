@@ -179,6 +179,12 @@ class CodeBlockTests {
 		assertThat(code.getImports()).isEmpty();
 	}
 
+	@Test
+	void codeBlockWithParameterCodeBlockAddsImports() {
+		CodeBlock code = CodeBlock.of("$L", CodeBlock.of("$T.truncate(myString)", ClassName.of(StringUtils.class)));
+		assertThat(code.getImports()).containsExactly(StringUtils.class.getName());
+	}
+
 	private String writeJava(CodeBlock code) {
 		return write(code, CodeBlock.JAVA_FORMATTING_OPTIONS);
 	}

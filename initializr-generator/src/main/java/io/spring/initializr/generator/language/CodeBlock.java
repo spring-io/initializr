@@ -264,7 +264,7 @@ public final class CodeBlock {
 
 		private void addArgument(String format, char c, Object arg) {
 			switch (c) {
-				case 'L' -> this.args.add(arg);
+				case 'L' -> this.args.add(arg(arg));
 				case 'S' -> this.args.add(argToString(arg));
 				case 'T' -> this.args.add(argToType(arg));
 				default -> throw new IllegalArgumentException(
@@ -272,8 +272,15 @@ public final class CodeBlock {
 			}
 		}
 
-		private String argToString(Object o) {
-			return (o != null) ? String.valueOf(o) : null;
+		private Object arg(Object arg) {
+			if (arg instanceof CodeBlock code) {
+				this.imports.addAll(code.getImports());
+			}
+			return arg;
+		}
+
+		private String argToString(Object arg) {
+			return (arg != null) ? String.valueOf(arg) : null;
 		}
 
 		private String argToType(Object arg) {
