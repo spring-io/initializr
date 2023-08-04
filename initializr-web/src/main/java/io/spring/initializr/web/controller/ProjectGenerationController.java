@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -107,21 +108,21 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
-	@RequestMapping(path = { "/pom", "/pom.xml" })
+	@RequestMapping(path = { "/pom", "/pom.xml" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> pom(R request) {
 		request.setType("maven-build");
 		byte[] mavenPom = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
-	@RequestMapping(path = { "/build", "/build.gradle" })
+	@RequestMapping(path = { "/build", "/build.gradle" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> gradle(R request) {
 		request.setType("gradle-build");
 		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(gradleBuild, "application/octet-stream", "build.gradle");
 	}
 
-	@RequestMapping("/starter.zip")
+	@RequestMapping(path = "/starter.zip", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> springZip(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
@@ -129,7 +130,8 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return upload(archive, result.getRootDirectory(), generateFileName(request, "zip"), "application/zip");
 	}
 
-	@RequestMapping(path = "/starter.tgz", produces = "application/x-compress")
+	@RequestMapping(path = "/starter.tgz", method = { RequestMethod.GET, RequestMethod.POST },
+			produces = "application/x-compress")
 	public ResponseEntity<byte[]> springTgz(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,

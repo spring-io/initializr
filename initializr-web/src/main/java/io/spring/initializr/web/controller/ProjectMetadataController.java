@@ -40,7 +40,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,38 +65,38 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 	}
 
-	@RequestMapping(path = "/metadata/config", produces = "application/json")
+	@GetMapping(path = "/metadata/config", produces = "application/json")
 	public InitializrMetadata config() {
 		return this.metadataProvider.get();
 	}
 
-	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
+	@GetMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
 	}
 
-	@RequestMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
+	@GetMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
 	public ResponseEntity<String> serviceCapabilitiesV22() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_2);
 	}
 
-	@RequestMapping(path = { "/", "/metadata/client" },
+	@GetMapping(path = { "/", "/metadata/client" },
 			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
 
-	@RequestMapping(path = { "/", "/metadata/client" }, produces = "application/vnd.initializr.v2+json")
+	@GetMapping(path = { "/", "/metadata/client" }, produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
 
-	@RequestMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.2+json")
+	@GetMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.2+json")
 	public ResponseEntity<String> dependenciesV22(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_2, bootVersion);
 	}
 
-	@RequestMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
+	@GetMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
 	}
