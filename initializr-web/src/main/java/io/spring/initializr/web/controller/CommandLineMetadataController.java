@@ -29,8 +29,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -50,7 +50,7 @@ public class CommandLineMetadataController extends AbstractMetadataController {
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
 	}
 
-	@RequestMapping(path = "/", produces = "text/plain")
+	@GetMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) throws IOException {
 		String appUrl = generateAppUrl();
