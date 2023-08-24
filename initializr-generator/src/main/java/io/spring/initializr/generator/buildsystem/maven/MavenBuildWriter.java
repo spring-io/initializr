@@ -235,7 +235,7 @@ public class MavenBuildWriter {
 		Collection<Dependency> candidates = dependencies.items()
 			.filter((dep) -> filter.test(dep.getScope()))
 			.sorted(getDependencyComparator())
-			.collect(Collectors.toList());
+			.toList();
 		writeCollection(writer, candidates, this::writeDependency);
 		return candidates;
 	}
@@ -267,18 +267,15 @@ public class MavenBuildWriter {
 			return null;
 		}
 		return switch (type) {
-			case ANNOTATION_PROCESSOR -> null;
-			case COMPILE -> null;
-			case COMPILE_ONLY -> null;
+			case ANNOTATION_PROCESSOR, COMPILE, COMPILE_ONLY -> null;
 			case PROVIDED_RUNTIME -> "provided";
 			case RUNTIME -> "runtime";
-			case TEST_COMPILE -> "test";
-			case TEST_RUNTIME -> "test";
+			case TEST_COMPILE, TEST_RUNTIME -> "test";
 		};
 	}
 
 	private boolean isOptional(Dependency dependency) {
-		if (dependency instanceof MavenDependency && ((MavenDependency) dependency).isOptional()) {
+		if (dependency instanceof MavenDependency mavenDependency && mavenDependency.isOptional()) {
 			return true;
 		}
 		return (dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR
@@ -429,8 +426,7 @@ public class MavenBuildWriter {
 	}
 
 	private List<MavenRepository> filterRepositories(Stream<MavenRepository> repositories) {
-		return repositories.filter((repository) -> !MavenRepository.MAVEN_CENTRAL.equals(repository))
-			.collect(Collectors.toList());
+		return repositories.filter((repository) -> !MavenRepository.MAVEN_CENTRAL.equals(repository)).toList();
 	}
 
 	private void writeRepository(IndentingWriter writer, MavenRepository repository) {
@@ -588,7 +584,7 @@ public class MavenBuildWriter {
 
 	private <T> void writeCollectionElement(IndentingWriter writer, String name, Stream<T> items,
 			BiConsumer<IndentingWriter, T> itemWriter) {
-		writeCollectionElement(writer, name, items.collect(Collectors.toList()), itemWriter);
+		writeCollectionElement(writer, name, items.toList(), itemWriter);
 	}
 
 	private <T> void writeCollectionElement(IndentingWriter writer, String name, Collection<T> items,
@@ -616,23 +612,12 @@ public class MavenBuildWriter {
 		for (int i = 0; i < text.length(); i++) {
 			char character = text.charAt(i);
 			switch (character) {
-				case '\'':
-					sb.append("&apos;");
-					break;
-				case '\"':
-					sb.append("&quot;");
-					break;
-				case '<':
-					sb.append("&lt;");
-					break;
-				case '>':
-					sb.append("&gt;");
-					break;
-				case '&':
-					sb.append("&amp;");
-					break;
-				default:
-					sb.append(character);
+				case '\'' -> sb.append("&apos;");
+				case '\"' -> sb.append("&quot;");
+				case '<' -> sb.append("&lt;");
+				case '>' -> sb.append("&gt;");
+				case '&' -> sb.append("&amp;");
+				default -> sb.append(character);
 			}
 		}
 		return sb.toString();
