@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * A plugin in a {@link MavenBuild}.
@@ -51,9 +50,8 @@ public class MavenPlugin {
 		this.artifactId = builder.artifactId;
 		this.version = builder.version;
 		this.extensions = builder.extensions;
-		this.executions = Collections.unmodifiableList(
-				builder.executions.values().stream().map(ExecutionBuilder::build).collect(Collectors.toList()));
-		this.dependencies = Collections.unmodifiableList(new ArrayList<>(builder.dependencies));
+		this.executions = builder.executions.values().stream().map(ExecutionBuilder::build).toList();
+		this.dependencies = List.copyOf(builder.dependencies);
 		this.configuration = (builder.configurationBuilder == null) ? null : builder.configurationBuilder.build();
 	}
 
@@ -331,16 +329,15 @@ public class MavenPlugin {
 		 * @return a {@link Configuration}
 		 */
 		Configuration build() {
-			return new Configuration(this.settings.stream()
-				.map((entry) -> resolve(entry.getName(), entry.getValue()))
-				.collect(Collectors.toList()));
+			return new Configuration(
+					this.settings.stream().map((entry) -> resolve(entry.getName(), entry.getValue())).toList());
 		}
 
 		private Setting resolve(String key, Object value) {
-			if (value instanceof ConfigurationBuilder) {
-				List<Setting> values = ((ConfigurationBuilder) value).settings.stream()
+			if (value instanceof ConfigurationBuilder configurationBuilder) {
+				List<Setting> values = configurationBuilder.settings.stream()
 					.map((entry) -> resolve(entry.getName(), entry.getValue()))
-					.collect(Collectors.toList());
+					.toList();
 				return new Setting(key, values);
 			}
 			else {
@@ -358,7 +355,7 @@ public class MavenPlugin {
 		private final List<Setting> settings;
 
 		private Configuration(List<Setting> settings) {
-			this.settings = Collections.unmodifiableList(settings);
+			this.settings = List.copyOf(settings);
 		}
 
 		/**

@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.buildsystem;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -112,7 +111,7 @@ public class PropertyContainer {
 	public Stream<Entry<String, String>> versions(Function<VersionProperty, String> nameFactory) {
 		return this.versions.entrySet()
 			.stream()
-			.map((entry) -> new SimpleEntry<>(nameFactory.apply(entry.getKey()), entry.getValue()));
+			.map((entry) -> Map.entry(nameFactory.apply(entry.getKey()), entry.getValue()));
 	}
 
 }
