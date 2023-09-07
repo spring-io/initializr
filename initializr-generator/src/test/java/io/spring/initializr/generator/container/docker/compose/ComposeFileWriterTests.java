@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Moritz Halbritter
  * @author Stephane Nicoll
+ * @author Chris Bono
  */
 class ComposeFileWriterTests {
 
@@ -57,7 +58,8 @@ class ComposeFileWriterTests {
 						.imageWebsite("https://www.docker.elastic.co/r/elasticsearch")
 						.environment("ELASTIC_PASSWORD", "secret")
 						.environment("discovery.type", "single-node")
-						.ports(9200, 9300));
+						.ports(9200, 9300)
+						.command("bin/run thing"));
 		assertThat(write(file)).isEqualToIgnoringNewLines("""
 				services:
 					elasticsearch:
@@ -68,6 +70,7 @@ class ComposeFileWriterTests {
 						ports:
 							- '9200'
 							- '9300'
+						command: 'bin/run thing'
 				""");
 	}
 
