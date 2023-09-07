@@ -125,6 +125,7 @@ class ComposeServiceContainerTests {
 			service.imageWebsite("https://example.com/my-image");
 			service.environment("param", "value");
 			service.ports(8080);
+			service.command("run");
 		});
 		assertThat(container.values()).singleElement().satisfies((service) -> {
 			assertThat(service.getName()).isEqualTo("test");
@@ -133,6 +134,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getImageWebsite()).isEqualTo("https://example.com/my-image");
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value"));
 			assertThat(service.getPorts()).containsOnly(8080);
+			assertThat(service.getCommand()).isEqualTo("run");
 		});
 	}
 
@@ -145,6 +147,7 @@ class ComposeServiceContainerTests {
 			service.imageWebsite("https://example.com/my-image");
 			service.environment("param", "value");
 			service.ports(7070);
+			service.command("run");
 		});
 		container.add("test", (service) -> {
 			service.image("my-image");
@@ -152,6 +155,7 @@ class ComposeServiceContainerTests {
 			service.imageWebsite("https://example.com/my-image");
 			service.environment("param", "value2");
 			service.ports(8080);
+			service.command("run2");
 		});
 		assertThat(container.values()).singleElement().satisfies((service) -> {
 			assertThat(service.getName()).isEqualTo("test");
@@ -160,6 +164,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getImageWebsite()).isEqualTo("https://example.com/my-image");
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value2"));
 			assertThat(service.getPorts()).containsOnly(7070, 8080);
+			assertThat(service.getCommand()).isEqualTo("run2");
 		});
 	}
 
