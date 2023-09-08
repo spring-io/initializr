@@ -86,15 +86,15 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 
 	private Template getTemplate(String name) {
 		try {
-			if (this.templateCache == null) {
-				return loadTemplate(name);
+			if (this.templateCache != null) {
+				try {
+					return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
+				}
+				catch (ValueRetrievalException ex) {
+					throw ex.getCause();
+				}
 			}
-			try {
-				return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
-			}
-			catch (ValueRetrievalException ex) {
-				throw ex.getCause();
-			}
+			return loadTemplate(name);
 		}
 		catch (Throwable ex) {
 			throw new IllegalStateException("Cannot load template " + name, ex);
