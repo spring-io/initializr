@@ -44,6 +44,8 @@ public final class ComposeService {
 
 	private final Set<Integer> ports;
 
+	private final String command;
+
 	private ComposeService(Builder builder) {
 		this.name = builder.name;
 		this.image = builder.image;
@@ -51,6 +53,7 @@ public final class ComposeService {
 		this.imageWebsite = builder.imageWebsite;
 		this.environment = Collections.unmodifiableMap(new TreeMap<>(builder.environment));
 		this.ports = Collections.unmodifiableSet(new TreeSet<>(builder.ports));
+		this.command = builder.command;
 	}
 
 	public String getName() {
@@ -77,6 +80,10 @@ public final class ComposeService {
 		return this.ports;
 	}
 
+	public String getCommand() {
+		return this.command;
+	}
+
 	/**
 	 * Builder for {@link ComposeService}.
 	 */
@@ -93,6 +100,8 @@ public final class ComposeService {
 		private final Map<String, String> environment = new TreeMap<>();
 
 		private final Set<Integer> ports = new TreeSet<>();
+
+		private String command;
 
 		protected Builder(String name) {
 			this.name = name;
@@ -136,6 +145,11 @@ public final class ComposeService {
 
 		public Builder ports(int... ports) {
 			return ports(Arrays.stream(ports).boxed().toList());
+		}
+
+		public Builder command(String command) {
+			this.command = command;
+			return this;
 		}
 
 		/**

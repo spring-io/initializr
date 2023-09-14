@@ -22,6 +22,8 @@ import java.util.Set;
 
 import io.spring.initializr.generator.io.IndentingWriter;
 
+import org.springframework.util.StringUtils;
+
 /**
  * A {@link ComposeFile} writer for {@code compose.yaml}.
  *
@@ -51,6 +53,7 @@ public class ComposeFileWriter {
 				writer.println("image: '%s:%s'".formatted(service.getImage(), service.getImageTag()));
 				writerServiceEnvironment(writer, service.getEnvironment());
 				writerServicePorts(writer, service.getPorts());
+				writeServiceCommand(writer, service.getCommand());
 			});
 		});
 	}
@@ -77,6 +80,13 @@ public class ComposeFileWriter {
 				writer.println("- '%d'".formatted(port));
 			}
 		});
+	}
+
+	private void writeServiceCommand(IndentingWriter writer, String command) {
+		if (!StringUtils.hasText(command)) {
+			return;
+		}
+		writer.println("command: '%s'".formatted(command));
 	}
 
 }
