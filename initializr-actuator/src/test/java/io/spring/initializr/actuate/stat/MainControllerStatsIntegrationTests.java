@@ -18,6 +18,7 @@ package io.spring.initializr.actuate.stat;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,7 +33,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -86,8 +86,8 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		String authorization = content.authorization;
 		assertThat(authorization).as("Authorization header must be set").isNotNull();
 		assertThat(authorization).startsWith("Basic ");
-		String token = authorization.substring("Basic ".length(), authorization.length());
-		String[] data = new String(Base64Utils.decodeFromString(token)).split(":");
+		String token = authorization.substring("Basic ".length());
+		String[] data = new String(Base64.getDecoder().decode(token)).split(":");
 		assertThat(data[0]).as("Wrong user from " + token).isEqualTo("test-user");
 		assertThat(data[1]).as("Wrong password " + token).isEqualTo("test-password");
 	}
