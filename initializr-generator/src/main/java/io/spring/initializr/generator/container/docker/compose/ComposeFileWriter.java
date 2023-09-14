@@ -29,7 +29,6 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
- * @author Chris Bono
  */
 public class ComposeFileWriter {
 
@@ -54,7 +53,7 @@ public class ComposeFileWriter {
 				writer.println("image: '%s:%s'".formatted(service.getImage(), service.getImageTag()));
 				writerServiceEnvironment(writer, service.getEnvironment());
 				writerServicePorts(writer, service.getPorts());
-				writeServiceComamnd(writer, service.getCommand());
+				writeServiceCommand(writer, service.getCommand());
 			});
 		});
 	}
@@ -83,7 +82,7 @@ public class ComposeFileWriter {
 		});
 	}
 
-	private void writeServiceComamnd(IndentingWriter writer, String command) {
+	private void writeServiceCommand(IndentingWriter writer, String command) {
 		if (!StringUtils.hasText(command)) {
 			return;
 		}

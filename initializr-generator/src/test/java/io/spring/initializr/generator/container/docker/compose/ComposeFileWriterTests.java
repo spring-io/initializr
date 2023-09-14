@@ -30,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Moritz Halbritter
  * @author Stephane Nicoll
- * @author Chris Bono
  */
 class ComposeFileWriterTests {
 

@@ -29,7 +29,6 @@ import java.util.TreeSet;
  *
  * @author Moritz Halbritter
  * @author Stephane Nicoll
- * @author Chris Bono
  */
 public final class ComposeService {
 
