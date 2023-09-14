@@ -18,7 +18,6 @@ package io.spring.initializr.generator.language.java;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
@@ -45,25 +44,12 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	private final List<JavaStatement> statements;
-
 	private JavaMethodDeclaration(Builder builder, CodeBlock code) {
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = builder.modifiers;
 		this.parameters = List.copyOf(builder.parameters);
 		this.code = code;
-		this.statements = Collections.emptyList();
-	}
-
-	private JavaMethodDeclaration(String name, String returnType, int modifiers, List<Parameter> parameters,
-			List<JavaStatement> statements) {
-		this.name = name;
-		this.returnType = returnType;
-		this.modifiers = modifiers;
-		this.parameters = parameters;
-		this.code = CodeBlock.of((""));
-		this.statements = statements;
 	}
 
 	public static Builder method(String name) {
@@ -88,11 +74,6 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	CodeBlock getCode() {
 		return this.code;
-	}
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public List<JavaStatement> getStatements() {
-		return this.statements;
 	}
 
 	@Override
@@ -134,12 +115,6 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 		public JavaMethodDeclaration body(CodeBlock code) {
 			return new JavaMethodDeclaration(this, code);
-		}
-
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		public JavaMethodDeclaration body(JavaStatement... statements) {
-			return new JavaMethodDeclaration(this.name, this.returnType, this.modifiers, this.parameters,
-					Arrays.asList(statements));
 		}
 
 	}

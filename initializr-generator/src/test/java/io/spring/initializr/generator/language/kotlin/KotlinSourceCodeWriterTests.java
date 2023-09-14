@@ -28,7 +28,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Annotation.Builder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
@@ -124,22 +123,6 @@ class KotlinSourceCodeWriterTests {
 	}
 
 	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void functionWithStatements() throws IOException {
-		KotlinSourceCode sourceCode = new KotlinSourceCode();
-		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("reverse")
-			.returning("java.lang.String")
-			.parameters(Parameter.of("echo", String.class))
-			.body(new KotlinReturnStatement(new KotlinFunctionInvocation("echo", "reversed"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
-				"    fun reverse(echo: String): String {", "        return echo.reversed()", "    }", "", "}");
-	}
-
-	@Test
 	void functionModifiers() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
@@ -182,8 +165,9 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(
-				KotlinPropertyDeclaration.val("testProp").returning("java.lang.String").value("\"This is a TEST\""));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("testProp")
+			.returning("java.lang.String")
+			.value(CodeBlock.of("$S", "This is a TEST")));
 		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("withGetter")
 			.returning("java.lang.String")
 			.getter()
@@ -197,33 +181,13 @@ class KotlinSourceCodeWriterTests {
 	}
 
 	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void valGetterPropertyWithStatement() throws IOException {
-		KotlinSourceCode sourceCode = new KotlinSourceCode();
-		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(
-				KotlinPropertyDeclaration.val("testProp").returning("java.lang.String").value("\"This is a TEST\""));
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.val("withGetter")
-			.returning("java.lang.String")
-			.getter()
-			.withBody(new KotlinExpressionStatement(new KotlinFunctionInvocation("testProp", "toLowerCase")))
-			.buildAccessor()
-			.emptyValue());
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
-				"    val testProp: String = \"This is a TEST\"", "", "    val withGetter: String",
-				"        get() = testProp.toLowerCase()", "", "}");
-	}
-
-	@Test
 	void varProperty() throws IOException {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(
-				KotlinPropertyDeclaration.var("testProp").returning("java.lang.String").value("\"This is a test\""));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp")
+			.returning("java.lang.String")
+			.value(CodeBlock.of("$S", "This is a test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "", "}");
@@ -238,7 +202,7 @@ class KotlinSourceCodeWriterTests {
 			.returning("java.lang.String")
 			.setter()
 			.buildAccessor()
-			.value("\"This is a test\""));
+			.value(CodeBlock.of("$S", "This is a test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        set", "", "}");
@@ -254,7 +218,7 @@ class KotlinSourceCodeWriterTests {
 			.setter()
 			.withAnnotation(ClassName.of("org.springframework.beans.factory.annotation.Autowired"))
 			.buildAccessor()
-			.value("\"This is a test\""));
+			.value(CodeBlock.of("$S", "This is a test")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
 				"    var testProp: String = \"This is a test\"", "        @Autowired set", "", "}");
@@ -265,10 +229,13 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testProp").returning("Int").value(42));
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testDouble").returning("Double").value("1986.0"));
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testFloat").value("99.999f"));
-		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testLong").returning("Long").value("1986L"));
+		test.addPropertyDeclaration(
+				KotlinPropertyDeclaration.var("testProp").returning("Int").value(CodeBlock.of("42")));
+		test.addPropertyDeclaration(
+				KotlinPropertyDeclaration.var("testDouble").returning("Double").value(CodeBlock.of("1986.0")));
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testFloat").value(CodeBlock.of("99.999f")));
+		test.addPropertyDeclaration(
+				KotlinPropertyDeclaration.var("testLong").returning("Long").value(CodeBlock.of("1986L")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    var testProp: Int = 42",
 				"", "    var testDouble: Double = 1986.0", "", "    var testFloat = 99.999f", "",
@@ -362,21 +329,6 @@ class KotlinSourceCodeWriterTests {
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotations().add(ClassName.of(annotationClassName), annotation);
 		return writeSingleType(sourceCode, "com/example/Test.kt");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void functionWithSimpleAnnotationAndAnnotate() throws IOException {
-		KotlinSourceCode sourceCode = new KotlinSourceCode();
-		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("something").body(CodeBlock.of(""));
-		function.annotate(Annotation.of(ClassName.of("com.example.test.TestAnnotation")).build());
-		test.addFunctionDeclaration(function);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "import com.example.test.TestAnnotation", "",
-				"class Test {", "", "    @TestAnnotation", "    fun something() {", "    }", "", "}");
 	}
 
 	@Test

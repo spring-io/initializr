@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,11 +50,6 @@ public final class Annotation {
 		this.className = builder.className;
 		this.attributes = List.copyOf(builder.attributes.values());
 		this.imports = List.copyOf(builder.imports);
-	}
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public String getName() {
-		return this.className.getName();
 	}
 
 	/**
@@ -93,34 +87,6 @@ public final class Annotation {
 	}
 
 	/**
-	 * Create an annotation with the specified class name.
-	 * @param name the name of the annotation
-	 * @return an annotation with no attribute defined
-	 * @deprecated as of 0.20.0 in favor of {@link #of(ClassName)}
-	 */
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public static Annotation name(String name) {
-		return name(name, null);
-	}
-
-	/**
-	 * Create an annotation with the specified class name, customized by the specified
-	 * consumer.
-	 * @param name the name of the annotation
-	 * @param annotation a consumer of the builder
-	 * @return an annotation with no attribute defined
-	 * @deprecated as of 0.20.0 in favor of {@link #of(ClassName)}
-	 */
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public static Annotation name(String name, Consumer<Builder> annotation) {
-		Builder builder = of(ClassName.of(name));
-		if (annotation != null) {
-			annotation.accept(builder);
-		}
-		return new Annotation(builder);
-	}
-
-	/**
 	 * Write this annotation using the specified writer.
 	 * @param writer the writer to use
 	 * @param options the formatting options to use
@@ -151,52 +117,6 @@ public final class Annotation {
 			this.className = copy.className;
 			this.imports.addAll(copy.imports);
 			this.attributes.putAll(copy.attributes);
-		}
-
-		/**
-		 * Set the attribute with the specified name and String representation of the
-		 * specified values.
-		 * @param name the name of the attribute
-		 * @param type the type of the property
-		 * @param values the values to associate with the attribute
-		 * @return this for method chaining
-		 * @deprecated as of 0.22.0 in favor of {@link #set(String, Object...)}
-		 */
-		@Deprecated(since = "0.22.0", forRemoval = true)
-		public Builder attribute(String name, Class<?> type, String... values) {
-			this.attributes.put(name, determineAttributeFromUserType(name, type, values));
-			return this;
-		}
-
-		@Deprecated
-		private Attribute determineAttributeFromUserType(String name, Class<?> type, String... values) {
-			if (ClassUtils.isPrimitiveOrWrapper(type)) {
-				return createAttribute(name, AttributeType.PRIMITIVE,
-						Arrays.stream(values).map(Object.class::cast).toArray());
-			}
-			else if (CharSequence.class.isAssignableFrom(type)) {
-				return createAttribute(name, AttributeType.STRING, values);
-			}
-			else if (Class.class.isAssignableFrom(type)) {
-				Object[] mappedValues = Arrays.stream(values).map(ClassName::of).toArray(Object[]::new);
-				return createAttribute(name, AttributeType.CLASS, mappedValues);
-			}
-			else if (Enum.class.isAssignableFrom(type)) {
-				Object[] mappedValues = Arrays.stream(values).map((code) -> {
-					int i = code.lastIndexOf('.');
-					return CodeBlock.of("$T.$L", code.substring(0, i), code.substring(i + 1));
-				}).toArray(Object[]::new);
-				return createAttribute(name, AttributeType.ENUM, mappedValues);
-			}
-			else {
-				Object[] mappedValues = Arrays.stream(values).map(CodeBlock::of).toArray(Object[]::new);
-				return createAttribute(name, AttributeType.CODE, mappedValues);
-			}
-		}
-
-		private Attribute createAttribute(String name, AttributeType attributeType, Object[] values) {
-			Arrays.stream(values).map(attributeType::getImports).forEach(this.imports::addAll);
-			return new Attribute(name, attributeType, values);
 		}
 
 		/**

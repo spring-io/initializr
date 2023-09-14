@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -176,10 +175,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
 		writeParameters(writer, methodDeclaration.getParameters());
 		writer.println(") {");
-		writer.indented(() -> {
-			methodDeclaration.getCode().write(writer, FORMATTING_OPTIONS);
-			writeStatements(writer, methodDeclaration);
-		});
+		writer.indented(() -> methodDeclaration.getCode().write(writer, FORMATTING_OPTIONS));
 		writer.println("}");
 		writer.println();
 	}
@@ -199,20 +195,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		}
 	}
 
-	@SuppressWarnings("removal")
-	private void writeStatements(IndentingWriter writer, GroovyMethodDeclaration methodDeclaration) {
-		List<GroovyStatement> statements = methodDeclaration.getStatements();
-		for (GroovyStatement statement : statements) {
-			if (statement instanceof GroovyExpressionStatement) {
-				writeExpression(writer, ((GroovyExpressionStatement) statement).getExpression());
-			}
-			else if (statement instanceof GroovyReturnStatement) {
-				writeExpression(writer, ((GroovyReturnStatement) statement).getExpression());
-			}
-			writer.println();
-		}
-	}
-
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
 			int declaredModifiers) {
 		String modifiers = availableModifiers.entrySet()
@@ -224,17 +206,6 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 			writer.print(modifiers);
 			writer.print(" ");
 		}
-	}
-
-	private void writeExpression(IndentingWriter writer, GroovyExpression expression) {
-		if (expression instanceof GroovyMethodInvocation) {
-			writeMethodInvocation(writer, (GroovyMethodInvocation) expression);
-		}
-	}
-
-	private void writeMethodInvocation(IndentingWriter writer, GroovyMethodInvocation methodInvocation) {
-		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
-				+ String.join(", ", methodInvocation.getArguments()) + ")");
 	}
 
 	private Set<String> determineImports(GroovyCompilationUnit compilationUnit) {
@@ -254,30 +225,12 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 					imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
 				}
 				imports.addAll(methodDeclaration.getCode().getImports());
-				determineImportsFromStatements(imports, methodDeclaration);
 			}
 		}
 		return imports.stream()
 			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
 			.sorted()
 			.collect(Collectors.toCollection(LinkedHashSet::new));
-	}
-
-	@SuppressWarnings("removal")
-	private void determineImportsFromStatements(List<String> imports, GroovyMethodDeclaration methodDeclaration) {
-		imports.addAll(appendImports(
-				methodDeclaration.getStatements()
-					.stream()
-					.filter(GroovyExpressionStatement.class::isInstance)
-					.map(GroovyExpressionStatement.class::cast)
-					.map(GroovyExpressionStatement::getExpression)
-					.filter(GroovyMethodInvocation.class::isInstance)
-					.map(GroovyMethodInvocation.class::cast),
-				(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
-	}
-
-	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {
-		return appendImports(candidates.stream(), mapping);
 	}
 
 	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {

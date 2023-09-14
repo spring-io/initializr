@@ -19,7 +19,6 @@ package io.spring.initializr.generator.language.groovy;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
@@ -46,24 +45,12 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	private final List<GroovyStatement> statements;
-
 	private GroovyMethodDeclaration(Builder builder, CodeBlock code) {
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = builder.modifiers;
 		this.parameters = List.copyOf(builder.parameters);
 		this.code = code;
-		this.statements = Collections.emptyList();
-	}
-
-	private GroovyMethodDeclaration(Builder builder, List<GroovyStatement> statements) {
-		this.name = builder.name;
-		this.returnType = builder.returnType;
-		this.modifiers = builder.modifiers;
-		this.parameters = List.copyOf(builder.parameters);
-		this.code = CodeBlock.of("");
-		this.statements = List.copyOf(statements);
 	}
 
 	public static Builder method(String name) {
@@ -88,11 +75,6 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 	CodeBlock getCode() {
 		return this.code;
-	}
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public List<GroovyStatement> getStatements() {
-		return this.statements;
 	}
 
 	@Override
@@ -134,11 +116,6 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 		public GroovyMethodDeclaration body(CodeBlock code) {
 			return new GroovyMethodDeclaration(this, code);
-		}
-
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		public GroovyMethodDeclaration body(GroovyStatement... statements) {
-			return new GroovyMethodDeclaration(this, Arrays.asList(statements));
 		}
 
 	}

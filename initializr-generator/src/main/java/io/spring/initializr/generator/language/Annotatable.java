@@ -16,8 +16,6 @@
 
 package io.spring.initializr.generator.language;
 
-import java.util.List;
-
 /**
  * A representation of something that can be annotated.
  *
@@ -32,15 +30,5 @@ public interface Annotatable {
 	 * @return the annotation container
 	 */
 	AnnotationContainer annotations();
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	default void annotate(Annotation annotation) {
-		annotations().add(annotation.getClassName(), (builder) -> builder.from(annotation));
-	}
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	default List<Annotation> getAnnotations() {
-		return annotations().values().toList();
-	}
 
 }

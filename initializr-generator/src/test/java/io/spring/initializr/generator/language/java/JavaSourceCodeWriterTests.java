@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Annotation.Builder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
@@ -125,23 +124,6 @@ class JavaSourceCodeWriterTests {
 	}
 
 	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void methodWithStatements() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addMethodDeclaration(JavaMethodDeclaration.method("trim")
-			.returning("java.lang.String")
-			.modifiers(Modifier.PUBLIC)
-			.parameters(Parameter.of("value", String.class))
-			.body(new JavaReturnStatement(new JavaMethodInvocation("value", "trim"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
-				"    public String trim(String value) {", "        return value.trim();", "    }", "", "}");
-	}
-
-	@Test
 	void field() throws IOException {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
@@ -164,25 +146,6 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.another.One;", "", "class Test {", "",
 				"    public One testString;", "", "}");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void fieldAnnotationWithAnnotate() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.modifiers(Modifier.PUBLIC);
-		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString")
-			.modifiers(Modifier.PRIVATE)
-			.returning("java.lang.String");
-		field.annotate(Annotation.of(ClassName.of("org.springframework.beans.factory.annotation.Autowired")).build());
-		test.addFieldDeclaration(field);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "",
-				"import org.springframework.beans.factory.annotation.Autowired;", "", "public class Test {", "",
-				"    @Autowired", "    private String testString;", "", "}");
 	}
 
 	@Test
@@ -303,24 +266,6 @@ class JavaSourceCodeWriterTests {
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		test.annotations().add(ClassName.of(annotationClassName), annotation);
 		return writeSingleType(sourceCode, "com/example/Test.java");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void methodWithSimpleAnnotationWithAnnotated() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		JavaMethodDeclaration method = JavaMethodDeclaration.method("something")
-			.returning("void")
-			.parameters()
-			.body(CodeBlock.of(""));
-		method.annotate(Annotation.name("com.example.test.TestAnnotation"));
-		test.addMethodDeclaration(method);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "import com.example.test.TestAnnotation;", "",
-				"class Test {", "", "    @TestAnnotation", "    void something() {", "    }", "", "}");
 	}
 
 	@Test

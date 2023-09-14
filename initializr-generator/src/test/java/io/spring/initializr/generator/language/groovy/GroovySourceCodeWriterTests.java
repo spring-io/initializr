@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.Annotation.Builder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
@@ -125,22 +124,6 @@ class GroovySourceCodeWriterTests {
 	}
 
 	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void methodWithStatements() throws IOException {
-		GroovySourceCode sourceCode = new GroovySourceCode();
-		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
-			.returning("java.lang.String")
-			.parameters(Parameter.of("value", String.class))
-			.body(new GroovyReturnStatement(new GroovyMethodInvocation("value", "trim"))));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
-				"    String trim(String value) {", "        value.trim()", "    }", "", "}");
-	}
-
-	@Test
 	void importsFromSamePackageAreDiscarded() throws IOException {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
@@ -228,22 +211,6 @@ class GroovySourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.One", "",
 				"class Test {", "", "    public One testString", "", "}");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void fieldAnnotationWithAnnotated() throws IOException {
-		GroovySourceCode sourceCode = new GroovySourceCode();
-		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		GroovyFieldDeclaration field = GroovyFieldDeclaration.field("testString").returning("java.lang.String");
-		field.annotate(Annotation.of(ClassName.of("org.springframework.beans.factory.annotation.Autowired")).build());
-		test.addFieldDeclaration(field);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
-		assertThat(lines).containsExactly("package com.example", "",
-				"import org.springframework.beans.factory.annotation.Autowired", "", "class Test {", "",
-				"    @Autowired", "    String testString", "", "}");
 	}
 
 	@Test

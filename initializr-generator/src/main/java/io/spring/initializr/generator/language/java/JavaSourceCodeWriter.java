@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -173,10 +172,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		writer.print(getUnqualifiedName(methodDeclaration.getReturnType()) + " " + methodDeclaration.getName() + "(");
 		writeParameters(writer, methodDeclaration.getParameters());
 		writer.println(") {");
-		writer.indented(() -> {
-			methodDeclaration.getCode().write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS);
-			writeJavaStatements(writer, methodDeclaration);
-		});
+		writer.indented(() -> methodDeclaration.getCode().write(writer, CodeBlock.JAVA_FORMATTING_OPTIONS));
 		writer.println("}");
 		writer.println();
 	}
@@ -196,21 +192,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 	}
 
-	@SuppressWarnings("removal")
-	private void writeJavaStatements(IndentingWriter writer, JavaMethodDeclaration methodDeclaration) {
-		List<JavaStatement> statements = methodDeclaration.getStatements();
-		for (JavaStatement statement : statements) {
-			if (statement instanceof JavaExpressionStatement) {
-				writeExpression(writer, ((JavaExpressionStatement) statement).getExpression());
-			}
-			else if (statement instanceof JavaReturnStatement) {
-				writer.print("return ");
-				writeExpression(writer, ((JavaReturnStatement) statement).getExpression());
-			}
-			writer.println(";");
-		}
-	}
-
 	private void writeModifiers(IndentingWriter writer, Map<Predicate<Integer>, String> availableModifiers,
 			int declaredModifiers) {
 		String modifiers = availableModifiers.entrySet()
@@ -222,17 +203,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			writer.print(modifiers);
 			writer.print(" ");
 		}
-	}
-
-	private void writeExpression(IndentingWriter writer, JavaExpression expression) {
-		if (expression instanceof JavaMethodInvocation) {
-			writeMethodInvocation(writer, (JavaMethodInvocation) expression);
-		}
-	}
-
-	private void writeMethodInvocation(IndentingWriter writer, JavaMethodInvocation methodInvocation) {
-		writer.print(getUnqualifiedName(methodInvocation.getTarget()) + "." + methodInvocation.getName() + "("
-				+ String.join(", ", methodInvocation.getArguments()) + ")");
 	}
 
 	private Set<String> determineImports(JavaCompilationUnit compilationUnit) {
@@ -252,7 +222,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 					imports.add(parameter.getType());
 					imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
 				}
-				determineImportsFromStatements(imports, methodDeclaration);
 				imports.addAll(methodDeclaration.getCode().getImports());
 			}
 		}
@@ -260,23 +229,6 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
 			.sorted()
 			.collect(Collectors.toCollection(LinkedHashSet::new));
-	}
-
-	@SuppressWarnings("removal")
-	private void determineImportsFromStatements(List<String> imports, JavaMethodDeclaration methodDeclaration) {
-		imports.addAll(appendImports(
-				methodDeclaration.getStatements()
-					.stream()
-					.filter(JavaExpressionStatement.class::isInstance)
-					.map(JavaExpressionStatement.class::cast)
-					.map(JavaExpressionStatement::getExpression)
-					.filter(JavaMethodInvocation.class::isInstance)
-					.map(JavaMethodInvocation.class::cast),
-				(methodInvocation) -> Collections.singleton(methodInvocation.getTarget())));
-	}
-
-	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {
-		return appendImports(candidates.stream(), mapping);
 	}
 
 	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {

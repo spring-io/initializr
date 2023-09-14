@@ -44,7 +44,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	private final List<KotlinModifier> modifiers;
 
-	private final KotlinExpressionStatement valueExpression;
+	private final CodeBlock valueCode;
 
 	private final Accessor getter;
 
@@ -55,7 +55,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		this.returnType = builder.returnType;
 		this.modifiers = new ArrayList<>(builder.modifiers);
 		this.isVal = builder.isVal;
-		this.valueExpression = builder.initializerStatement;
+		this.valueCode = builder.valueCode;
 		this.getter = builder.getter;
 		this.setter = builder.setter;
 	}
@@ -84,8 +84,8 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		return this.modifiers;
 	}
 
-	KotlinExpressionStatement getValueExpression() {
-		return this.valueExpression;
+	CodeBlock getValueCode() {
+		return this.valueCode;
 	}
 
 	Accessor getGetter() {
@@ -116,7 +116,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private List<KotlinModifier> modifiers = new ArrayList<>();
 
-		private KotlinExpressionStatement initializerStatement;
+		private CodeBlock valueCode;
 
 		private Accessor getter;
 
@@ -153,8 +153,8 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			return new KotlinPropertyDeclaration(this);
 		}
 
-		public KotlinPropertyDeclaration value(Object value) {
-			this.initializerStatement = new KotlinExpressionStatement(new SimpleValueExpression(value));
+		public KotlinPropertyDeclaration value(CodeBlock valueCode) {
+			this.valueCode = valueCode;
 			return new KotlinPropertyDeclaration(this);
 		}
 
@@ -196,8 +196,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private CodeBlock code;
 
-		private KotlinExpressionStatement body;
-
 		private final T parent;
 
 		private final Consumer<Accessor> accessorFunction;
@@ -207,24 +205,12 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			this.accessorFunction = accessorFunction;
 		}
 
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		public AccessorBuilder<?> withAnnotation(Annotation annotation) {
-			this.annotations.add(annotation.getClassName(), (builder) -> builder.from(annotation));
-			return this;
-		}
-
 		public AccessorBuilder<?> withAnnotation(ClassName className) {
 			return withAnnotation(className, null);
 		}
 
 		public AccessorBuilder<?> withAnnotation(ClassName className, Consumer<Annotation.Builder> annotation) {
 			this.annotations.add(className, annotation);
-			return this;
-		}
-
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		public AccessorBuilder<?> withBody(KotlinExpressionStatement expressionStatement) {
-			this.body = expressionStatement;
 			return this;
 		}
 
@@ -246,45 +232,18 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final CodeBlock code;
 
-		private final KotlinExpressionStatement body;
-
 		Accessor(AccessorBuilder<?> builder) {
 			this.annotations = builder.annotations.deepCopy();
 			this.code = builder.code;
-			this.body = builder.body;
-		}
-
-		boolean isEmptyBody() {
-			return (this.body == null && this.code == null);
 		}
 
 		CodeBlock getCode() {
 			return this.code;
 		}
 
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		KotlinExpressionStatement getBody() {
-			return this.body;
-		}
-
 		@Override
 		public AnnotationContainer annotations() {
 			return this.annotations;
-		}
-
-	}
-
-	private static class SimpleValueExpression extends KotlinExpression {
-
-		private final Object value;
-
-		SimpleValueExpression(Object value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(this.value);
 		}
 
 	}

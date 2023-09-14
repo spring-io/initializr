@@ -18,7 +18,6 @@ package io.spring.initializr.generator.language.kotlin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
@@ -45,24 +44,12 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	private final List<KotlinStatement> statements;
-
 	private KotlinFunctionDeclaration(Builder builder, CodeBlock code) {
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = builder.modifiers;
 		this.parameters = List.copyOf(builder.parameters);
 		this.code = code;
-		this.statements = Collections.emptyList();
-	}
-
-	private KotlinFunctionDeclaration(Builder builder, List<KotlinStatement> statements) {
-		this.name = builder.name;
-		this.returnType = builder.returnType;
-		this.modifiers = builder.modifiers;
-		this.parameters = List.copyOf(builder.parameters);
-		this.code = CodeBlock.of("");
-		this.statements = List.copyOf(statements);
 	}
 
 	public static Builder function(String name) {
@@ -87,11 +74,6 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 	CodeBlock getCode() {
 		return this.code;
-	}
-
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public List<KotlinStatement> getStatements() {
-		return this.statements;
 	}
 
 	@Override
@@ -133,11 +115,6 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 		public KotlinFunctionDeclaration body(CodeBlock code) {
 			return new KotlinFunctionDeclaration(this, code);
-		}
-
-		@Deprecated(since = "0.20.0", forRemoval = true)
-		public KotlinFunctionDeclaration body(KotlinStatement... statements) {
-			return new KotlinFunctionDeclaration(this, Arrays.asList(statements));
 		}
 
 	}

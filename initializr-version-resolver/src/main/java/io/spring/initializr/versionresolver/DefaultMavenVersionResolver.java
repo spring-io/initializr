@@ -68,7 +68,7 @@ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
  * @author Stephane Nicoll
  */
 @SuppressWarnings("removal")
-class DefaultMavenVersionResolver implements MavenVersionResolver, DependencyManagementVersionResolver {
+class DefaultMavenVersionResolver implements MavenVersionResolver {
 
 	private static final Log logger = LogFactory.getLog(DefaultMavenVersionResolver.class);
 
@@ -106,11 +106,6 @@ class DefaultMavenVersionResolver implements MavenVersionResolver, DependencyMan
 		session.setReadOnly();
 		this.repositorySystemSession = session;
 		this.remoteRepositoryManager = serviceLocator.getService(RemoteRepositoryManager.class);
-	}
-
-	@Override
-	public Map<String, String> resolve(String groupId, String artifactId, String version) {
-		return resolveDependencies(groupId, artifactId, version);
 	}
 
 	@Override

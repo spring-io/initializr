@@ -24,24 +24,13 @@ import java.util.function.Consumer;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  */
-public class Parameter implements Annotatable {
+public final class Parameter implements Annotatable {
 
 	private final String name;
 
 	private final String type;
 
 	private final AnnotationContainer annotations;
-
-	/**
-	 * Create a parameter with the specified type and name.
-	 * @param type the type of the annotation
-	 * @param name the name of the annotation
-	 * @deprecated in favor of {@link #of(String, String)}
-	 */
-	@Deprecated(since = "0.20.0", forRemoval = true)
-	public Parameter(String type, String name) {
-		this(new Builder(name).type(type));
-	}
 
 	private Parameter(Builder builder) {
 		this.name = builder.name;

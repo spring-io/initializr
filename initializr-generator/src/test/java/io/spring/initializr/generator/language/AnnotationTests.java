@@ -85,37 +85,9 @@ class AnnotationTests {
 				Arguments.arguments(true, "true"), Arguments.arguments('t', "'t'"));
 	}
 
-	@ParameterizedTest
-	@MethodSource("parametersDeprecated")
-	@SuppressWarnings("removal")
-	void annotationWithPrimitivesDeprecated(Class<?> type, String parameter, String expectedCode) {
-		Annotation test = Annotation.of(ClassName.of("com.example.Test")).attribute("test", type, parameter).build();
-		assertThat(write(test)).isEqualTo("@Test(test = " + expectedCode + ")");
-		assertThat(test.getImports()).containsOnly("com.example.Test");
-	}
-
-	static Stream<Arguments> parametersDeprecated() {
-		// Character wasn't supported previously
-		return Stream.of(Arguments.arguments(Integer.class, "1", "1"), Arguments.arguments(Byte.class, "0x4f", "0x4f"),
-				Arguments.arguments(Short.class, "4", "4"), Arguments.arguments(Long.class, "500", "500"),
-				Arguments.arguments(Float.class, "3.14", "3.14"), Arguments.arguments(Double.class, "3.156", "3.156"),
-				Arguments.arguments(Boolean.class, "true", "true"));
-	}
-
 	@Test
 	void annotationWithString() {
 		Annotation test = Annotation.of(ClassName.of("com.example.Test")).set("test", "value").build();
-		assertThat(write(test)).isEqualTo("@Test(test = \"value\")");
-		assertThat(test.getImports()).containsOnly("com.example.Test");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void annotationWithStringDeprecated() {
-		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
-			.attribute("test", String.class, "value")
-			.build();
 		assertThat(write(test)).isEqualTo("@Test(test = \"value\")");
 		assertThat(test.getImports()).containsOnly("com.example.Test");
 	}
@@ -130,17 +102,6 @@ class AnnotationTests {
 	@Test
 	void annotationWithClassName() {
 		Annotation test = Annotation.of(ClassName.of("com.example.Test")).set("test", ClassName.of(Test.class)).build();
-		assertThat(write(test)).isEqualTo("@Test(test = Test.class)");
-		assertThat(test.getImports()).containsOnly("com.example.Test", Test.class.getName());
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void annotationWithClassNameStringDeprecated() {
-		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
-			.attribute("test", Class.class, Test.class.getName())
-			.build();
 		assertThat(write(test)).isEqualTo("@Test(test = Test.class)");
 		assertThat(test.getImports()).containsOnly("com.example.Test", Test.class.getName());
 	}
@@ -173,17 +134,6 @@ class AnnotationTests {
 	}
 
 	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void annotationWithEnumDeprecated() {
-		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
-			.attribute("test", Enum.class, "java.time.temporal.ChronoUnit.CENTURIES")
-			.build();
-		assertThat(write(test)).isEqualTo("@Test(test = ChronoUnit.CENTURIES)");
-		assertThat(test.getImports()).containsOnly("com.example.Test", ChronoUnit.class.getName());
-	}
-
-	@Test
 	void annotationWithNestedAnnotation() {
 		Annotation nested = Annotation.of(ClassName.of("com.example.Nested")).set("counter", 42).build();
 		Annotation test = Annotation.of(ClassName.of("com.example.Test")).set("test", nested).build();
@@ -210,16 +160,6 @@ class AnnotationTests {
 	@Test
 	void annotationWithParameterArray() {
 		Annotation test = Annotation.of(ClassName.of("com.example.Test")).set("counters", 2, 4, 8, 10).build();
-		assertThat(write(test)).isEqualTo("@Test(counters = { 2, 4, 8, 10 })");
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void annotationWithParameterArrayDeprecated() {
-		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
-			.attribute("counters", Integer.class, "2", "4", "8", "10")
-			.build();
 		assertThat(write(test)).isEqualTo("@Test(counters = { 2, 4, 8, 10 })");
 	}
 

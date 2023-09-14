@@ -140,9 +140,10 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		if (propertyDeclaration.getReturnType() != null) {
 			writer.print(": " + getUnqualifiedName(propertyDeclaration.getReturnType()));
 		}
-		if (propertyDeclaration.getValueExpression() != null) {
+		CodeBlock valueCode = propertyDeclaration.getValueCode();
+		if (valueCode != null) {
 			writer.print(" = ");
-			writeExpression(writer, propertyDeclaration.getValueExpression().getExpression());
+			valueCode.write(writer, FORMATTING_OPTIONS);
 		}
 		if (propertyDeclaration.getGetter() != null) {
 			writer.println();
@@ -159,14 +160,10 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			KotlinPropertyDeclaration.Accessor accessor) {
 		writeAnnotations(writer, accessor, () -> writer.print(" "));
 		writer.print(accessorName);
-		if (!accessor.isEmptyBody()) {
+		CodeBlock initCode = accessor.getCode();
+		if (initCode != null) {
 			writer.print("() = ");
-			if (accessor.getCode() != null) {
-				accessor.getCode().write(writer, FORMATTING_OPTIONS);
-			}
-			else if (accessor.getBody() != null) {
-				writeExpression(writer, accessor.getBody().getExpression());
-			}
+			initCode.write(writer, FORMATTING_OPTIONS);
 		}
 	}
 
@@ -182,10 +179,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writer.print(": " + getUnqualifiedName(functionDeclaration.getReturnType()));
 		}
 		writer.println(" {");
-		writer.indented(() -> {
-			functionDeclaration.getCode().write(writer, FORMATTING_OPTIONS);
-			writeStatements(writer, functionDeclaration);
-		});
+		writer.indented(() -> functionDeclaration.getCode().write(writer, FORMATTING_OPTIONS));
 		writer.println("}");
 	}
 
@@ -201,21 +195,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			if (it.hasNext()) {
 				writer.print(", ");
 			}
-		}
-	}
-
-	@SuppressWarnings("removal")
-	private void writeStatements(IndentingWriter writer, KotlinFunctionDeclaration functionDeclaration) {
-		List<KotlinStatement> statements = functionDeclaration.getStatements();
-		for (KotlinStatement statement : statements) {
-			if (statement instanceof KotlinExpressionStatement) {
-				writeExpression(writer, ((KotlinExpressionStatement) statement).getExpression());
-			}
-			else if (statement instanceof KotlinReturnStatement) {
-				writer.print("return ");
-				writeExpression(writer, ((KotlinReturnStatement) statement).getExpression());
-			}
-			writer.println("");
 		}
 	}
 
@@ -240,30 +219,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writer.print(modifiers);
 			writer.print(" ");
 		}
-	}
-
-	private void writeExpression(IndentingWriter writer, KotlinExpression expression) {
-		if (expression instanceof KotlinFunctionInvocation) {
-			writeFunctionInvocation(writer, (KotlinFunctionInvocation) expression);
-		}
-		else if (expression instanceof KotlinReifiedFunctionInvocation) {
-			writeReifiedFunctionInvocation(writer, (KotlinReifiedFunctionInvocation) expression);
-		}
-		else if (expression != null) {
-			writer.print(expression.toString());
-		}
-	}
-
-	private void writeFunctionInvocation(IndentingWriter writer, KotlinFunctionInvocation functionInvocation) {
-		writer.print(getUnqualifiedName(functionInvocation.getTarget()) + "." + functionInvocation.getName() + "("
-				+ String.join(", ", functionInvocation.getArguments()) + ")");
-	}
-
-	private void writeReifiedFunctionInvocation(IndentingWriter writer,
-			KotlinReifiedFunctionInvocation functionInvocation) {
-		writer.print(getUnqualifiedName(functionInvocation.getName()) + "<"
-				+ getUnqualifiedName(functionInvocation.getTargetClass()) + ">("
-				+ String.join(", ", functionInvocation.getArguments()) + ")");
 	}
 
 	private Set<String> determineImports(KotlinCompilationUnit compilationUnit) {
@@ -298,28 +253,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			imports.addAll(appendImports(parameter.annotations().values(), Annotation::getImports));
 		}
 		imports.addAll(functionDeclaration.getCode().getImports());
-		imports.addAll(appendImports(
-				getKotlinExpressions(functionDeclaration).filter(KotlinFunctionInvocation.class::isInstance)
-					.map(KotlinFunctionInvocation.class::cast),
-				(invocation) -> Collections.singleton(invocation.getTarget())));
-		imports.addAll(appendImports(
-				getKotlinExpressions(functionDeclaration).filter(KotlinReifiedFunctionInvocation.class::isInstance)
-					.map(KotlinReifiedFunctionInvocation.class::cast),
-				(invocation) -> Collections.singleton(invocation.getName())));
 		return imports;
-	}
-
-	@SuppressWarnings("removal")
-	private Stream<KotlinExpression> getKotlinExpressions(KotlinFunctionDeclaration functionDeclaration) {
-		return functionDeclaration.getStatements()
-			.stream()
-			.filter(KotlinExpressionStatement.class::isInstance)
-			.map(KotlinExpressionStatement.class::cast)
-			.map(KotlinExpressionStatement::getExpression);
-	}
-
-	private <T> List<String> appendImports(List<T> candidates, Function<T, Collection<String>> mapping) {
-		return appendImports(candidates.stream(), mapping);
 	}
 
 	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
