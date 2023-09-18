@@ -37,7 +37,7 @@ import io.spring.initializr.generator.version.VersionReference;
  */
 public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 
-	private final Map<String, String> sourceCompatibilitiesToJavaVersion = new HashMap<>();
+	private final Map<String, String> sourceCompatibilitiesToJvmVersion = new HashMap<>();
 
 	@Override
 	protected void writeBuildscript(IndentingWriter writer, GradleBuild build) {
@@ -84,13 +84,13 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
 		writer.println("java {");
 		writer.indented(() -> writer.println(
-				String.format("sourceCompatibility = %s", getJavaVersionConstant(settings.getSourceCompatibility()))));
+				String.format("sourceCompatibility = %s", getJvmVersionConstant(settings.getSourceCompatibility()))));
 		writer.println("}");
 		writer.println();
 	}
 
-	private String getJavaVersionConstant(String jvmVersion) {
-		return this.sourceCompatibilitiesToJavaVersion.computeIfAbsent(jvmVersion, (key) -> {
+	private String getJvmVersionConstant(String jvmVersion) {
+		return this.sourceCompatibilitiesToJvmVersion.computeIfAbsent(jvmVersion, (key) -> {
 			StringBuilder sb = new StringBuilder("JavaVersion.");
 			if (jvmVersion == null) {
 				return sb.append("VERSION_11").toString();

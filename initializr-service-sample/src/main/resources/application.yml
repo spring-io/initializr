@@ -17,7 +17,7 @@ initializr:
     - name: Groovy
       id: groovy
       default: false
-  javaVersions:
+  jvmVersions:
     - id: 11
       default: true
     - id: 1.8

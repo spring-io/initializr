@@ -226,7 +226,7 @@ class ProjectGenerationStatPublisherTests {
 	}
 
 	@Test
-	void publishDocumentWithInvalidJavaVersion() {
+	void publishDocumentWithInvalidJvmVersion() {
 		ProjectRequest request = createProjectRequest();
 		request.setGroupId("com.example.acme");
 		request.setArtifactId("test");
@@ -234,7 +234,7 @@ class ProjectGenerationStatPublisherTests {
 		request.setBootVersion("2.1.0.RELEASE");
 		request.setDependencies(Arrays.asList("web", "data-jpa"));
 		request.setLanguage("java");
-		request.setJavaVersion("1.2");
+		request.setJvmVersion("1.2");
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
 			.andExpect(method(HttpMethod.POST))

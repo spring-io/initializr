@@ -90,7 +90,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		description.setBuildSystem(getBuildSystem(request, metadata));
 		description.setDescription(request.getDescription());
 		description.setGroupId(cleanInputValue(request.getGroupId()));
-		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
+		description.setLanguage(Language.forId(request.getLanguage(), request.getJvmVersion()));
 		description.setName(cleanInputValue(request.getName()));
 		description.setPackageName(cleanInputValue(request.getPackageName()));
 		description.setPackaging(Packaging.forId(request.getPackaging()));

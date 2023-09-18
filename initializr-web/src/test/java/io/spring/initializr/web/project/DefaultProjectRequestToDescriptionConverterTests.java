@@ -271,7 +271,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	@Test
 	void convertShouldSetLanguageForProjectDescriptionFromRequest() {
 		ProjectRequest request = createProjectRequest();
-		request.setJavaVersion("1.8");
+		request.setJvmVersion("1.8");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getLanguage().id()).isEqualTo("java");
 		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");

@@ -60,7 +60,7 @@ class DefaultMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void customizeSetJavaVersion() {
+	void customizeSetJvmVersion() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MutableProjectDescription description = initializeDescription();
 		description.setLanguage(new JavaLanguage("11"));

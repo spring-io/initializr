@@ -44,7 +44,7 @@ public class ProjectRequestDocument {
 
 	private String artifactId;
 
-	private String javaVersion;
+	private String jvmVersion;
 
 	private String language;
 
@@ -100,12 +100,12 @@ public class ProjectRequestDocument {
 		this.artifactId = artifactId;
 	}
 
-	public String getJavaVersion() {
-		return this.javaVersion;
+	public String getJvmVersion() {
+		return this.jvmVersion;
 	}
 
-	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
+	public void setJvmVersion(String jvmVersion) {
+		this.jvmVersion = jvmVersion;
 	}
 
 	public String getLanguage() {
@@ -175,7 +175,7 @@ public class ProjectRequestDocument {
 			.add("buildSystem='" + this.buildSystem + "'")
 			.add("groupId='" + this.groupId + "'")
 			.add("artifactId='" + this.artifactId + "'")
-			.add("javaVersion='" + this.javaVersion + "'")
+			.add("javaVersion='" + this.jvmVersion + "'")
 			.add("language='" + this.language + "'")
 			.add("packaging='" + this.packaging + "'")
 			.add("packageName='" + this.packageName + "'")
@@ -327,7 +327,7 @@ public class ProjectRequestDocument {
 
 		private boolean invalid = true;
 
-		private Boolean javaVersion;
+		private Boolean jvmVersion;
 
 		private Boolean language;
 
@@ -343,12 +343,12 @@ public class ProjectRequestDocument {
 			return this.invalid;
 		}
 
-		public Boolean getJavaVersion() {
-			return this.javaVersion;
+		public Boolean getJvmVersion() {
+			return this.jvmVersion;
 		}
 
-		public void setJavaVersion(Boolean javaVersion) {
-			this.javaVersion = javaVersion;
+		public void setJvmVersion(Boolean jvmVersion) {
+			this.jvmVersion = jvmVersion;
 		}
 
 		public Boolean getLanguage() {
@@ -394,7 +394,7 @@ public class ProjectRequestDocument {
 		@Override
 		public String toString() {
 			return new StringJoiner(", ", "{", "}").add("invalid=" + this.invalid)
-				.add("javaVersion=" + this.javaVersion)
+				.add("javaVersion=" + this.jvmVersion)
 				.add("language=" + this.language)
 				.add("packaging=" + this.packaging)
 				.add("type=" + this.type)

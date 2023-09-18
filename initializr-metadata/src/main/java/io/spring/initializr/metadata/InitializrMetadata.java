@@ -45,7 +45,7 @@ public class InitializrMetadata {
 	private final SingleSelectCapability packagings = new SingleSelectCapability("packaging", "Packaging",
 			"project packaging");
 
-	private final SingleSelectCapability javaVersions = new SingleSelectCapability("javaVersion", "Java Version",
+	private final SingleSelectCapability jvmVersions = new SingleSelectCapability("javaVersion", "Java Version",
 			"language level");
 
 	private final SingleSelectCapability languages = new SingleSelectCapability("language", "Language",
@@ -91,8 +91,8 @@ public class InitializrMetadata {
 		return this.packagings;
 	}
 
-	public SingleSelectCapability getJavaVersions() {
-		return this.javaVersions;
+	public SingleSelectCapability getJvmVersions() {
+		return this.jvmVersions;
 	}
 
 	public SingleSelectCapability getLanguages() {
@@ -133,7 +133,7 @@ public class InitializrMetadata {
 		this.types.merge(other.types);
 		this.bootVersions.merge(other.bootVersions);
 		this.packagings.merge(other.packagings);
-		this.javaVersions.merge(other.javaVersions);
+		this.jvmVersions.merge(other.jvmVersions);
 		this.languages.merge(other.languages);
 		this.name.merge(other.name);
 		this.description.merge(other.description);
@@ -245,7 +245,7 @@ public class InitializrMetadata {
 		defaults.put("type", defaultId(this.types));
 		defaults.put("bootVersion", defaultId(this.bootVersions));
 		defaults.put("packaging", defaultId(this.packagings));
-		defaults.put("javaVersion", defaultId(this.javaVersions));
+		defaults.put("javaVersion", defaultId(this.jvmVersions));
 		defaults.put("language", defaultId(this.languages));
 		defaults.put("groupId", this.groupId.getContent());
 		defaults.put("artifactId", this.artifactId.getContent());

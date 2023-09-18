@@ -59,7 +59,7 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 		assertThat(metadata.getTypes().getContent()).hasSameSizeAs(localMetadata.getTypes().getContent());
 		assertThat(metadata.getBootVersions().getContent()).hasSameSizeAs(localMetadata.getBootVersions().getContent());
 		assertThat(metadata.getPackagings().getContent()).hasSameSizeAs(localMetadata.getPackagings().getContent());
-		assertThat(metadata.getJavaVersions().getContent()).hasSameSizeAs(localMetadata.getJavaVersions().getContent());
+		assertThat(metadata.getJvmVersions().getContent()).hasSameSizeAs(localMetadata.getJvmVersions().getContent());
 		assertThat(metadata.getLanguages().getContent()).hasSameSizeAs(localMetadata.getLanguages().getContent());
 	}
 

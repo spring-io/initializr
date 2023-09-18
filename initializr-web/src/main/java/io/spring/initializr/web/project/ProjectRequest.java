@@ -52,7 +52,7 @@ public class ProjectRequest {
 
 	private String packageName;
 
-	private String javaVersion;
+	private String jvmVersion;
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
@@ -159,12 +159,12 @@ public class ProjectRequest {
 		this.packageName = packageName;
 	}
 
-	public String getJavaVersion() {
-		return this.javaVersion;
+	public String getJvmVersion() {
+		return this.jvmVersion;
 	}
 
-	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
+	public void setJvmVersion(String jvmVersion) {
+		this.jvmVersion = jvmVersion;
 	}
 
 	public String getBaseDir() {

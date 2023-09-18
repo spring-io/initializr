@@ -133,7 +133,7 @@ initializr:
     - name: War
       id: war
       default: false
-  javaVersions:
+  jvmVersions:
     - id: 1.6
       default: false
     - id: 1.7

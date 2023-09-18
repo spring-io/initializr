@@ -58,7 +58,7 @@ class ProjectRequestDocumentFactoryTests {
 		assertThat(document.getErrorState()).isNull();
 		assertThat(document.getGenerationTimestamp()).isEqualTo(event.getTimestamp());
 		assertThat(document.getGroupId()).isEqualTo("com.example");
-		assertThat(document.getJavaVersion()).isEqualTo("1.8");
+		assertThat(document.getJvmVersion()).isEqualTo("1.8");
 		assertThat(document.getLanguage()).isEqualTo("java");
 		assertThat(document.getPackageName()).isEqualTo("com.example.demo");
 		assertThat(document.getPackaging()).isEqualTo("jar");
@@ -160,14 +160,14 @@ class ProjectRequestDocumentFactoryTests {
 	}
 
 	@Test
-	void createDocumentInvalidJavaVersion() {
+	void createDocumentInvalidJvmVersion() {
 		ProjectRequest request = createProjectRequest();
-		request.setJavaVersion("1.2");
+		request.setJvmVersion("1.2");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getJavaVersion()).isEqualTo("1.2");
+		assertThat(document.getJvmVersion()).isEqualTo("1.2");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isTrue();
+		assertThat(document.getErrorState().getJvmVersion()).isTrue();
 		assertThat(document.getErrorState().getLanguage()).isNull();
 		assertThat(document.getErrorState().getPackaging()).isNull();
 		assertThat(document.getErrorState().getType()).isNull();
@@ -182,7 +182,7 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getLanguage()).isEqualTo("c++");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
+		assertThat(document.getErrorState().getJvmVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isTrue();
 		assertThat(document.getErrorState().getPackaging()).isNull();
 		assertThat(document.getErrorState().getType()).isNull();
@@ -197,7 +197,7 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getPackaging()).isEqualTo("ear");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
+		assertThat(document.getErrorState().getJvmVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isNull();
 		assertThat(document.getErrorState().getPackaging()).isTrue();
 		assertThat(document.getErrorState().getType()).isNull();
@@ -212,7 +212,7 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getType()).isEqualTo("ant-project");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
+		assertThat(document.getErrorState().getJvmVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isNull();
 		assertThat(document.getErrorState().getPackaging()).isNull();
 		assertThat(document.getErrorState().getType()).isTrue();
@@ -237,7 +237,7 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getDependencies().getValues()).containsExactly("web", "data-jpa");
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
+		assertThat(document.getErrorState().getJvmVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isNull();
 		assertThat(document.getErrorState().getPackaging()).isNull();
 		assertThat(document.getErrorState().getType()).isNull();
@@ -253,7 +253,7 @@ class ProjectRequestDocumentFactoryTests {
 				new IllegalStateException("my test message"));
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
+		assertThat(document.getErrorState().getJvmVersion()).isNull();
 		assertThat(document.getErrorState().getLanguage()).isNull();
 		assertThat(document.getErrorState().getPackaging()).isNull();
 		assertThat(document.getErrorState().getType()).isNull();

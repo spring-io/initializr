@@ -57,10 +57,10 @@ public class ProjectRequestDocumentFactory {
 		document.setVersion(determineVersionInformation(request));
 		document.setClient(determineClientInformation(request));
 
-		document.setJavaVersion(request.getJavaVersion());
-		if (StringUtils.hasText(request.getJavaVersion())
-				&& metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
-			document.triggerError().setJavaVersion(true);
+		document.setJvmVersion(request.getJvmVersion());
+		if (StringUtils.hasText(request.getJvmVersion())
+				&& metadata.getJvmVersions().get(request.getJvmVersion()) == null) {
+			document.triggerError().setJvmVersion(true);
 		}
 
 		document.setLanguage(request.getLanguage());

@@ -85,7 +85,7 @@ public class InitializrMetadataTestBuilder {
 
 	public InitializrMetadataTestBuilder addBasicDefaults() {
 		return addDefaultTypes().addDefaultPackagings()
-			.addDefaultJavaVersions()
+			.addDefaultJvmVersions()
 			.addDefaultLanguages()
 			.addDefaultBootVersions();
 	}
@@ -136,17 +136,17 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder addDefaultJavaVersions() {
-		return addJavaVersion("1.6", false).addJavaVersion("1.7", false).addJavaVersion("1.8", true);
+	public InitializrMetadataTestBuilder addDefaultJvmVersions() {
+		return addJvmVersion("1.6", false).addJvmVersion("1.7", false).addJvmVersion("1.8", true);
 	}
 
-	public InitializrMetadataTestBuilder addJavaVersion(String version, boolean defaultValue) {
+	public InitializrMetadataTestBuilder addJvmVersion(String version, boolean defaultValue) {
 		this.builder.withCustomizer((it) -> {
 			DefaultMetadataElement element = new DefaultMetadataElement();
 			element.setId(version);
 			element.setName(version);
 			element.setDefault(defaultValue);
-			it.getJavaVersions().addContent(element);
+			it.getJvmVersions().addContent(element);
 		});
 		return this;
 	}

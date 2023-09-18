@@ -54,7 +54,7 @@ public class InitializrProperties extends InitializrConfiguration {
 	 * Available java versions.
 	 */
 	@JsonIgnore
-	private final List<DefaultMetadataElement> javaVersions = new ArrayList<>();
+	private final List<DefaultMetadataElement> jvmVersions = new ArrayList<>();
 
 	/**
 	 * Available programming languages.
@@ -116,8 +116,8 @@ public class InitializrProperties extends InitializrConfiguration {
 		return this.packagings;
 	}
 
-	public List<DefaultMetadataElement> getJavaVersions() {
-		return this.javaVersions;
+	public List<DefaultMetadataElement> getJvmVersions() {
+		return this.jvmVersions;
 	}
 
 	public List<DefaultMetadataElement> getLanguages() {

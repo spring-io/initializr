@@ -123,7 +123,7 @@ public class ProjectGenerationInvokerTests {
 			.doesNotHaveNode("/project/packaging")
 			.hasName(request.getName())
 			.hasDescription(request.getDescription())
-			.hasProperty("java.version", request.getJavaVersion())
+			.hasProperty("java.version", request.getJvmVersion())
 			.hasParent("org.springframework.boot", "spring-boot-starter-parent", request.getBootVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -137,7 +137,7 @@ public class ProjectGenerationInvokerTests {
 		String content = new String(bytes);
 		new GroovyDslGradleBuildAssert(content).hasVersion(request.getVersion())
 			.hasPlugin("org.springframework.boot", request.getBootVersion())
-			.hasSourceCompatibility(request.getJavaVersion());
+			.hasSourceCompatibility(request.getJvmVersion());
 		verifyProjectSuccessfulEventFor(request);
 	}
 

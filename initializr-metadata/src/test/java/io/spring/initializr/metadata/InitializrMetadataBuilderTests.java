@@ -83,7 +83,7 @@ class InitializrMetadataBuilderTests {
 		assertThat(metadata.getTypes().getContent()).hasSize(1);
 		assertThat(metadata.getBootVersions().getContent()).hasSize(2);
 		assertThat(metadata.getPackagings().getContent()).hasSize(2);
-		assertThat(metadata.getJavaVersions().getContent()).hasSize(1);
+		assertThat(metadata.getJvmVersions().getContent()).hasSize(1);
 		assertThat(metadata.getLanguages().getContent()).hasSize(3);
 		assertThat(metadata.getName().getContent()).isEqualTo("metadata-merge");
 		assertThat(metadata.getDescription().getContent()).isEqualTo("Demo project for metadata merge");
