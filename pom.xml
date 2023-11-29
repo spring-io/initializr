@@ -89,7 +89,7 @@
 			</activation>
 			<properties>
 				<spring-javaformat.version>0.0.40</spring-javaformat.version>
-				<nohttp-checkstyle.version>0.0.10</nohttp-checkstyle.version>
+				<nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
 			</properties>
 			<build>
 				<plugins>
