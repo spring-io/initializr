@@ -65,8 +65,10 @@ public class MultipleResourcesProjectContributor implements ProjectContributor {
 			if (resource.isReadable()) {
 				String filename = extractFileName(root.getURI(), resource.getURI());
 				Path output = projectRoot.resolve(filename);
-				Files.createDirectories(output.getParent());
-				Files.createFile(output);
+				if (!Files.exists(output)) {
+					Files.createDirectories(output.getParent());
+					Files.createFile(output);
+				}
 				FileCopyUtils.copy(resource.getInputStream(), Files.newOutputStream(output));
 				// TODO Set executable using NIO
 				output.toFile().setExecutable(this.executable.test(filename));
