@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -242,7 +242,7 @@ public class CommandLineHelpGenerator {
 	/**
 	 * Utility to generate a text table.
 	 */
-	private static class TableGenerator {
+	private static final class TableGenerator {
 
 		/**
 		 * Generate a table description for the specified {@code content}.
@@ -353,7 +353,7 @@ public class CommandLineHelpGenerator {
 
 	}
 
-	private static class HelpFormatter {
+	private static final class HelpFormatter {
 
 		/**
 		 * Formats a given content to a max width.

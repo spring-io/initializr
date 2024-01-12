@@ -245,7 +245,7 @@ class InitializrAutoConfigurationTests {
 	}
 
 	@Order(-1)
-	private static class CustomJCacheManagerCustomizer implements JCacheManagerCustomizer {
+	private static final class CustomJCacheManagerCustomizer implements JCacheManagerCustomizer {
 
 		@Override
 		public void customize(CacheManager cacheManager) {

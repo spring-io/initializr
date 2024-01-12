@@ -96,7 +96,7 @@ class BuildTests {
 			return this.settings.build();
 		}
 
-		private static class TestBuildSettingsBuilder extends BuildSettings.Builder<TestBuildSettingsBuilder> {
+		private static final class TestBuildSettingsBuilder extends BuildSettings.Builder<TestBuildSettingsBuilder> {
 
 			@Override
 			public BuildSettings build() {
