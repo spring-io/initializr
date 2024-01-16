@@ -62,7 +62,7 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 		public List<MediaType> resolveMediaTypes(NativeWebRequest request) {
 			String path = this.urlPathHelper
 				.getPathWithinApplication(request.getNativeRequest(HttpServletRequest.class));
-			if (!StringUtils.hasText(path) || !path.equals("/")) { // Only care about "/"
+			if (!StringUtils.hasText(path) || !"/".equals(path)) { // Only care about "/"
 				return MEDIA_TYPE_ALL_LIST;
 			}
 			String userAgent = request.getHeader(HttpHeaders.USER_AGENT);

@@ -335,7 +335,7 @@ public final class Annotation {
 		private CodeBlock generateAnnotationCode(Annotation annotation) {
 			CodeBlock.Builder code = CodeBlock.builder();
 			code.add("@$T", annotation.className);
-			if (annotation.attributes.size() == 1 && annotation.attributes.get(0).getName().equals("value")) {
+			if (annotation.attributes.size() == 1 && "value".equals(annotation.attributes.get(0).getName())) {
 				code.add("($L)", generateAttributeValuesCode(annotation.attributes.get(0)));
 			}
 			else if (!annotation.attributes.isEmpty()) {

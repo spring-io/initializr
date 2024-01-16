@@ -95,7 +95,7 @@ class SpringBootMetadataReader {
 
 	private String determineSuffix(Qualifier qualifier) {
 		String id = qualifier.getId();
-		if (id.equals("RELEASE")) {
+		if ("RELEASE".equals(id)) {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder(" (");

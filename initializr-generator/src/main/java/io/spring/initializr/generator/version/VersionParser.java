@@ -133,10 +133,10 @@ public class VersionParser {
 			Version version = parse(text);
 			return new VersionRange(version, true, null, true);
 		}
-		boolean lowerInclusive = matcher.group(1).equals("[");
+		boolean lowerInclusive = "[".equals(matcher.group(1));
 		Version lowerVersion = parse(matcher.group(2));
 		Version higherVersion = parse(matcher.group(3));
-		boolean higherInclusive = matcher.group(4).equals("]");
+		boolean higherInclusive = "]".equals(matcher.group(4));
 		return new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive);
 	}
 

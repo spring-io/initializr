@@ -139,7 +139,7 @@ public final class ClassName {
 	}
 
 	private String addPackageIfNecessary(String part) {
-		if (this.packageName.isEmpty() || this.packageName.equals("java.lang") && isPrimitive()) {
+		if (this.packageName.isEmpty() || "java.lang".equals(this.packageName) && isPrimitive()) {
 			return part;
 		}
 		return this.packageName + '.' + part;

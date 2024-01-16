@@ -68,7 +68,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String shortPluginNotation(String pluginId) {
-		if (pluginId.equals("java") || pluginId.equals("war") || pluginId.equals("groovy")) {
+		if ("java".equals(pluginId) || "war".equals(pluginId) || "groovy".equals(pluginId)) {
 			return pluginId;
 		}
 
