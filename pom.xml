@@ -26,14 +26,10 @@
 	</scm>
 	<developers>
 		<developer>
-			<id>snicoll</id>
-			<name>Stephane Nicoll</name>
-			<email>snicoll at pivotal.io</email>
-			<organization>Pivotal Software, Inc.</organization>
+			<name>Spring</name>
+			<email>ask@spring.io</email>
+			<organization>VMware, Inc.</organization>
 			<organizationUrl>https://www.spring.io</organizationUrl>
-			<roles>
-				<role>Project lead</role>
-			</roles>
 		</developer>
 	</developers>
 
