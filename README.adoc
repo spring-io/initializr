@@ -59,7 +59,8 @@ Spring Initializr can be used as follows:
 
 * On the command-line with {boot-doc}/#cli-init[the Spring Boot CLI] or simply with
 `cURL` or `HTTPie`.
-* In your IDE if you are using STS, IntelliJ IDEA Ultimate, NetBeans (with
+* In your IDE if you are using STS, IntelliJ IDEA Ultimate, Intelij IDEA Community (with
+https://plugins.jetbrains.com/plugin/23564-spring-initializr[this plugin]), NetBeans (with
 https://github.com/AlexFalappa/nb-springboot[this plugin]) or VSCode (with
 https://github.com/microsoft/vscode-spring-initializr[the `vscode-spring-initializr`
 plugin]).
