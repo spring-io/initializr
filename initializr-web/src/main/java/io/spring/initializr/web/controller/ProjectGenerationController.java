@@ -127,7 +127,8 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
 				ZipArchiveEntry::setUnixMode);
-		return upload(archive, result.getRootDirectory(), generateFileName(request, "zip"), "application/zip");
+		return upload(archive, result.getRootDirectory(),
+				generateFileName(result.getProjectDescription().getArtifactId(), "zip"), "application/zip");
 	}
 
 	@RequestMapping(path = "/starter.tgz", method = { RequestMethod.GET, RequestMethod.POST },
@@ -136,8 +137,8 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
 				TarArchiveEntry::setMode);
-		return upload(archive, result.getRootDirectory(), generateFileName(request, "tar.gz"),
-				"application/x-compress");
+		return upload(archive, result.getRootDirectory(),
+				generateFileName(result.getProjectDescription().getArtifactId(), "tar.gz"), "application/x-compress");
 	}
 
 	private TarArchiveOutputStream createTarArchiveOutputStream(OutputStream output) {
@@ -194,12 +195,11 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return UnixStat.FILE_FLAG | (entryName.equals(wrapperScript) ? 0755 : UnixStat.DEFAULT_FILE_PERM);
 	}
 
-	private String generateFileName(R request, String extension) {
-		String candidate = (StringUtils.hasText(request.getArtifactId()) ? request.getArtifactId()
+	private String generateFileName(String artifactId, String extension) {
+		String candidate = (StringUtils.hasText(artifactId) ? artifactId
 				: this.metadataProvider.get().getArtifactId().getContent());
-		String tmp = candidate.replaceAll(" ", "_");
 		try {
-			return URLEncoder.encode(tmp, "UTF-8") + "." + extension;
+			return URLEncoder.encode(candidate, "UTF-8") + "." + extension;
 		}
 		catch (UnsupportedEncodingException ex) {
 			throw new IllegalStateException("Cannot encode URL", ex);
