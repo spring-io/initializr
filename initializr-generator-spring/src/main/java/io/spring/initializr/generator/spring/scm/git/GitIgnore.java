@@ -18,11 +18,14 @@ package io.spring.initializr.generator.spring.scm.git;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import io.spring.initializr.generator.io.text.Section;
+
+import org.springframework.util.Assert;
 
 /**
  * Project's {@code .gitignore}. Contain a general section and pre-defined section for
@@ -42,7 +45,7 @@ public class GitIgnore {
 
 	private final GitIgnoreSection vscode = new GitIgnoreSection("VS Code");
 
-	private final List<GitIgnoreSection> sections = new LinkedList<>(
+	private final List<GitIgnoreSection> sections = new ArrayList<>(
 			Arrays.asList(this.general, this.sts, this.intellijIdea, this.netBeans, this.vscode));
 
 	public void write(PrintWriter writer) throws IOException {
@@ -51,7 +54,9 @@ public class GitIgnore {
 		}
 	}
 
-	public void registerCustomizeSection(GitIgnoreSection section) {
+	public void addSection(GitIgnoreSection section) {
+		GitIgnoreSection existingSection = getSection(section.name);
+		Assert.state(existingSection == null, () -> "Section with name '%s' already exists".formatted(section.name));
 		this.sections.add(section);
 	}
 
@@ -61,8 +66,9 @@ public class GitIgnore {
 		}
 		else {
 			return this.sections.stream()
-					.filter((section) -> section.name != null && section.name.equalsIgnoreCase(sectionName)).findAny()
-					.orElse(null);
+				.filter((section) -> section.name != null && section.name.equalsIgnoreCase(sectionName))
+				.findAny()
+				.orElse(null);
 		}
 	}
 
