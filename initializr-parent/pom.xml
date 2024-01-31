@@ -15,7 +15,7 @@
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
 		<java.version>17</java.version>
-		<commons-compress.version>1.24.0</commons-compress.version>
+		<commons-compress.version>1.25.0</commons-compress.version>
 		<commons-text.version>1.10.0</commons-text.version>
 		<maven.version>3.9.4</maven.version>
 		<maven-resolver.version>1.9.15</maven-resolver.version>
