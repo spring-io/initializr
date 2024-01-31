@@ -6,7 +6,7 @@
 		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr-parent</artifactId>
 		<version>${revision}</version>
-		<relativePath>../initializr-parent</relativePath>
+		<relativePath>../initializr-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>initializr-service-sample</artifactId>
 	<name>Spring Initializr :: Service (Sample)</name>

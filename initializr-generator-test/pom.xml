@@ -6,7 +6,7 @@
 		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr-parent</artifactId>
 		<version>${revision}</version>
-		<relativePath>../initializr-parent</relativePath>
+		<relativePath>../initializr-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>initializr-generator-test</artifactId>
 	<name>Spring Initializr :: Generator (Test Infrastructure)</name>

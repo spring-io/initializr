@@ -6,7 +6,7 @@
 		<groupId>io.spring.initializr</groupId>
 		<artifactId>initializr-bom</artifactId>
 		<version>${revision}</version>
-		<relativePath>../initializr-bom</relativePath>
+		<relativePath>../initializr-bom/pom.xml</relativePath>
 	</parent>
 	<artifactId>initializr-parent</artifactId>
 	<name>Spring Initializr :: Parent</name>
