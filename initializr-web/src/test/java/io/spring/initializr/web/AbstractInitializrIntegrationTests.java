@@ -257,8 +257,8 @@ public abstract class AbstractInitializrIntegrationTests {
 	private void untar(Path archiveFile, Path project) throws IOException {
 		try (TarArchiveInputStream input = new TarArchiveInputStream(
 				new GzipCompressorInputStream(Files.newInputStream(archiveFile)))) {
-			TarArchiveEntry entry = null;
-			while ((entry = input.getNextTarEntry()) != null) {
+			TarArchiveEntry entry;
+			while ((entry = input.getNextEntry()) != null) {
 				Path path = project.resolve(entry.getName());
 				if (entry.isDirectory()) {
 					Files.createDirectories(path);
