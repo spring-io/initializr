@@ -67,6 +67,16 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.1</version>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -80,7 +90,7 @@
 			</activation>
 			<properties>
 				<spring-javaformat.version>0.0.41</spring-javaformat.version>
-				<nohttp-checkstyle.version>0.0.10</nohttp-checkstyle.version>
+				<nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
 			</properties>
 			<build>
 				<plugins>
@@ -100,7 +110,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-checkstyle-plugin</artifactId>
-						<version>3.3.0</version>
+						<version>3.3.1</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
