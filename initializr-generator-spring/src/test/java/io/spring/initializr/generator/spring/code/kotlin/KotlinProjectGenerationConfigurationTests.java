@@ -19,7 +19,9 @@ package io.spring.initializr.generator.spring.code.kotlin;
 import java.nio.file.Path;
 import java.util.Collections;
 
+import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
@@ -27,6 +29,7 @@ import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.scm.git.GitProjectGenerationConfiguration;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.test.project.ProjectAssetTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -42,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link KotlinProjectGenerationConfiguration}.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 class KotlinProjectGenerationConfigurationTests {
 
@@ -52,7 +56,7 @@ class KotlinProjectGenerationConfigurationTests {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
 			.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
 					KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
-					MavenProjectGenerationConfiguration.class)
+					MavenProjectGenerationConfiguration.class, GitProjectGenerationConfiguration.class)
 			.withDirectory(directory)
 			.withBean(InitializrMetadata.class, () -> {
 				io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
@@ -65,7 +69,9 @@ class KotlinProjectGenerationConfigurationTests {
 				if (description.getPlatformVersion() == null) {
 					description.setPlatformVersion(Version.parse("2.1.0.RELEASE"));
 				}
-				description.setBuildSystem(new MavenBuildSystem());
+				if (description.getBuildSystem() == null) {
+					description.setBuildSystem(new MavenBuildSystem());
+				}
 			});
 	}
 
@@ -123,6 +129,14 @@ class KotlinProjectGenerationConfigurationTests {
 		assertThat(project).textFile("pom.xml")
 			.contains("        <dependency>", "            <groupId>com.fasterxml.jackson.module</groupId>",
 					"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
+	}
+
+	@Test
+	void addsKotlinGradlePluginGitIgnoreEntry() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(BuildSystem.forId(GradleBuildSystem.ID));
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile(".gitignore").contains("### Kotlin ###", ".kotlin");
 	}
 
 }

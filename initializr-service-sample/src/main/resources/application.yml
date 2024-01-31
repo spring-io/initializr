@@ -1,4 +1,7 @@
 initializr:
+  env:
+    kotlin:
+      default-version: "1.9.22"
   group-id:
     value: org.acme
   dependencies:
@@ -18,8 +21,10 @@ initializr:
       id: groovy
       default: false
   javaVersions:
-    - id: 11
+    - id: 17
       default: true
+    - id: 11
+      default: false
     - id: 1.8
       name: 8
       default: false

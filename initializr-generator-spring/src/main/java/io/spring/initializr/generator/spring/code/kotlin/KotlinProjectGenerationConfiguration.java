@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
@@ -32,6 +34,8 @@ import io.spring.initializr.generator.spring.code.MainSourceCodeProjectContribut
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeCustomizer;
 import io.spring.initializr.generator.spring.code.TestSourceCodeProjectContributor;
+import io.spring.initializr.generator.spring.scm.git.GitIgnore;
+import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -44,6 +48,7 @@ import org.springframework.context.annotation.Import;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
 @ConditionalOnLanguage(KotlinLanguage.ID)
@@ -77,6 +82,15 @@ public class KotlinProjectGenerationConfiguration {
 		return new TestSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
 				new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
 				testSourceCodeCustomizers);
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	public GitIgnoreCustomizer kotlinGradlePluginGitIgnoreCustomizer() {
+		return (gitIgnore) -> {
+			GitIgnore.GitIgnoreSection section = gitIgnore.addSectionIfAbsent("Kotlin");
+			section.add(".kotlin");
+		};
 	}
 
 	@Bean

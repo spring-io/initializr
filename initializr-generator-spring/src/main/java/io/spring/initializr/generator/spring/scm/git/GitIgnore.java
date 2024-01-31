@@ -60,6 +60,21 @@ public class GitIgnore {
 		this.sections.add(section);
 	}
 
+	/**
+	 * Adds a section if it doesn't already exist.
+	 * @param sectionName the name of the section
+	 * @return the newly added section or the existing one
+	 */
+	public GitIgnoreSection addSectionIfAbsent(String sectionName) {
+		GitIgnoreSection section = getSection(sectionName);
+		if (section != null) {
+			return section;
+		}
+		section = new GitIgnoreSection(sectionName);
+		addSection(section);
+		return section;
+	}
+
 	public GitIgnoreSection getSection(String sectionName) {
 		if ("general".equalsIgnoreCase(sectionName)) {
 			return this.general;

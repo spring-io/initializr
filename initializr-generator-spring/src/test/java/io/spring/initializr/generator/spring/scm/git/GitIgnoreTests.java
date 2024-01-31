@@ -58,6 +58,15 @@ class GitIgnoreTests {
 			.withMessageContaining("Section with name 'test' already exists");
 	}
 
+	@Test
+	void addSectionIfAbsentShouldNotFail() {
+		GitIgnore.GitIgnoreSection section = this.gitIgnore.addSectionIfAbsent("test");
+		assertThat(section).isNotNull();
+		GitIgnore.GitIgnoreSection section2 = this.gitIgnore.addSectionIfAbsent("test");
+		assertThat(section2).isNotNull();
+		assertThat(section2).isSameAs(section);
+	}
+
 	private String write(GitIgnore gitIgnore) throws IOException {
 		StringWriter stringWriter = new StringWriter();
 		try (PrintWriter writer = new PrintWriter(stringWriter)) {
