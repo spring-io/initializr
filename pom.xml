@@ -10,7 +10,7 @@
 	<description>JVM-based project generator</description>
 	<url>https://github.com/spring-io/initializr</url>
 	<organization>
-		<name>Pivotal Software, Inc.</name>
+		<name>Broadcom Inc.</name>
 		<url>https://www.spring.io</url>
 	</organization>
 	<licenses>
@@ -28,7 +28,7 @@
 		<developer>
 			<name>Spring</name>
 			<email>ask@spring.io</email>
-			<organization>VMware, Inc.</organization>
+			<organization>Broadcom Inc.</organization>
 			<organizationUrl>https://www.spring.io</organizationUrl>
 		</developer>
 	</developers>
