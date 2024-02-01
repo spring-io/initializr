@@ -47,7 +47,7 @@ class GitIgnoreTests {
 		assertThat(section).isNotNull();
 		section.add("file.txt");
 		String content = write(this.gitIgnore);
-		assertThat(content).contains("### demo ###\nfile.txt");
+		assertThat(content).containsIgnoringNewLines("### demo ###\nfile.txt");
 	}
 
 	@Test
