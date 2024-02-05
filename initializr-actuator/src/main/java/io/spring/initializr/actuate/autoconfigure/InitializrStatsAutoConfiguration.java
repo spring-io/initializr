@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,16 +24,21 @@ import io.spring.initializr.actuate.stat.StatsProperties;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -44,7 +49,7 @@ import org.springframework.retry.support.RetryTemplate;
 @AutoConfiguration(after = RestTemplateAutoConfiguration.class,
 		afterName = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 @EnableConfigurationProperties(StatsProperties.class)
-@ConditionalOnProperty("initializr.stats.elastic.uri")
+@Conditional(InitializrStatsAutoConfiguration.ElasticUriCondition.class)
 class InitializrStatsAutoConfiguration {
 
 	private final StatsProperties statsProperties;
@@ -72,6 +77,19 @@ class InitializrStatsAutoConfiguration {
 		retryTemplate.setBackOffPolicy(backOffPolicy);
 		retryTemplate.setRetryPolicy(retryPolicy);
 		return retryTemplate;
+	}
+
+	static class ElasticUriCondition extends SpringBootCondition {
+
+		@Override
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			String elasticUri = context.getEnvironment().getProperty("initializr.stats.elastic.uri");
+			if (StringUtils.hasText(elasticUri)) {
+				return ConditionOutcome.match("initializr.stats.elastic.uri is set");
+			}
+			return ConditionOutcome.noMatch("initializr.stats.elastic.uri is not set");
+		}
+
 	}
 
 }

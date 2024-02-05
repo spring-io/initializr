@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,6 +88,17 @@ class InitializrStatsAutoConfigurationTests {
 					.getPropertyValue("restTemplate");
 				assertThat(restTemplate.getErrorHandler()).isSameAs(CustomRestTemplateConfiguration.errorHandler);
 			});
+	}
+
+	@Test
+	void shouldBackOffIfElasticUriIsNotSet() {
+		this.contextRunner.run((context) -> assertThat(context).doesNotHaveBean(ProjectGenerationStatPublisher.class));
+	}
+
+	@Test
+	void shouldBackOffIfElasticUriIsEmpty() {
+		this.contextRunner.withPropertyValues("initializr.stats.elastic.uri=")
+			.run((context) -> assertThat(context).doesNotHaveBean(ProjectGenerationStatPublisher.class));
 	}
 
 	@Configuration
