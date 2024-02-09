@@ -7,41 +7,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  build-linux:
-    name: Build (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'liberica'
-          cache: 'maven'
-
-      - name: Build with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
-  build-windows:
-    name: Build (Windows)
-    runs-on: windows-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'liberica'
-          cache: 'maven'
-
-      - name: Build with Maven
-        run: mvnw --batch-mode --update-snapshots verify
-  build-macos:
-    name: Build (MacOS)
-    runs-on: macos-latest
+  build:
+    strategy:
+      matrix:
+        runner: [ ubuntu-latest, windows-latest, macos-latest ]
+    name: Build (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out
         uses: actions/checkout@v4
