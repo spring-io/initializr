@@ -7,8 +7,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  build:
-    name: Build
+  build-linux:
+    name: Build (Linux)
     runs-on: ubuntu-latest
     steps:
       - name: Check out
