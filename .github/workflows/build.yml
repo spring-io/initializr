@@ -38,7 +38,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvnw.cmd --batch-mode --update-snapshots verify
+        run: mvnw --batch-mode --update-snapshots verify
   build-macos:
     name: Build (MacOS)
     runs-on: macos-latest
