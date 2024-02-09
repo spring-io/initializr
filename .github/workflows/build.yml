@@ -25,4 +25,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: ./mvnw –-no-transfer-progress --batch-mode --update-snapshots verify
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots verify
