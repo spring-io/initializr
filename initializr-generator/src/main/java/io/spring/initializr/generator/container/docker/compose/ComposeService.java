@@ -47,7 +47,7 @@ public final class ComposeService {
 
 	private final String command;
 
-	private final Map<String, String> label;
+	private final Map<String, String> labels;
 
 	private ComposeService(Builder builder) {
 		this.name = builder.name;
@@ -57,7 +57,7 @@ public final class ComposeService {
 		this.environment = Collections.unmodifiableMap(new TreeMap<>(builder.environment));
 		this.ports = Collections.unmodifiableSet(new TreeSet<>(builder.ports));
 		this.command = builder.command;
-		this.label = Collections.unmodifiableMap(new TreeMap<>(builder.label));
+		this.labels = Collections.unmodifiableMap(new TreeMap<>(builder.labels));
 	}
 
 	public String getName() {
@@ -88,8 +88,8 @@ public final class ComposeService {
 		return this.command;
 	}
 
-	public Map<String, String> getLabel() {
-		return this.label;
+	public Map<String, String> getLabels() {
+		return this.labels;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public final class ComposeService {
 
 		private String command;
 
-		private final Map<String, String> label = new TreeMap<>();
+		private final Map<String, String> labels = new TreeMap<>();
 
 		protected Builder(String name) {
 			this.name = name;
@@ -163,12 +163,12 @@ public final class ComposeService {
 		}
 
 		public Builder label(String key, String value) {
-			this.label.put(key, value);
+			this.labels.put(key, value);
 			return this;
 		}
 
 		public Builder label(Map<String, String> label) {
-			this.label.putAll(label);
+			this.labels.putAll(label);
 			return this;
 		}
 

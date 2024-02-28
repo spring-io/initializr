@@ -137,7 +137,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value"));
 			assertThat(service.getPorts()).containsOnly(8080);
 			assertThat(service.getCommand()).isEqualTo("run");
-			assertThat(service.getLabel()).containsOnly(entry("foo", "bar"));
+			assertThat(service.getLabels()).containsOnly(entry("foo", "bar"));
 		});
 	}
 
@@ -193,7 +193,8 @@ class ComposeServiceContainerTests {
 		container.add("test", (service) -> service.imageAndTag("my-image").label("z", "zz"));
 		container.add("test", (service) -> service.label("a", "aa"));
 		assertThat(container.values()).singleElement()
-			.satisfies((service) -> assertThat(service.getLabel()).containsExactly(entry("a", "aa"), entry("z", "zz")));
+			.satisfies(
+					(service) -> assertThat(service.getLabels()).containsExactly(entry("a", "aa"), entry("z", "zz")));
 	}
 
 	@Test
@@ -202,7 +203,7 @@ class ComposeServiceContainerTests {
 		container.add("test", (service) -> service.imageAndTag("my-image").label(Map.of("a", "aa", "z", "zz")));
 		container.add("test", (service) -> service.label(Map.of("a", "aaa", "b", "bb")));
 		assertThat(container.values()).singleElement()
-			.satisfies((service) -> assertThat(service.getLabel()).containsExactly(entry("a", "aaa"), entry("b", "bb"),
+			.satisfies((service) -> assertThat(service.getLabels()).containsExactly(entry("a", "aaa"), entry("b", "bb"),
 					entry("z", "zz")));
 	}
 
