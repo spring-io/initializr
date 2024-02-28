@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
+ * @author Eddú Meléndez
  */
 public class ComposeFileWriter {
 
@@ -52,6 +53,7 @@ public class ComposeFileWriter {
 			writer.indented(() -> {
 				writer.println("image: '%s:%s'".formatted(service.getImage(), service.getImageTag()));
 				writerServiceEnvironment(writer, service.getEnvironment());
+				writerServiceLabels(writer, service.getLabels());
 				writerServicePorts(writer, service.getPorts());
 				writeServiceCommand(writer, service.getCommand());
 			});
@@ -87,6 +89,18 @@ public class ComposeFileWriter {
 			return;
 		}
 		writer.println("command: '%s'".formatted(command));
+	}
+
+	private void writerServiceLabels(IndentingWriter writer, Map<String, String> labels) {
+		if (labels.isEmpty()) {
+			return;
+		}
+		writer.println("labels:");
+		writer.indented(() -> {
+			for (Map.Entry<String, String> label : labels.entrySet()) {
+				writer.println("- \"%s=%s\"".formatted(label.getKey(), label.getValue()));
+			}
+		});
 	}
 
 }

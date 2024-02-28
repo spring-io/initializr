@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Moritz Halbritter
  * @author Stephane Nicoll
+ * @author Eddú Meléndez
  */
 class ComposeFileWriterTests {
 
@@ -58,7 +59,8 @@ class ComposeFileWriterTests {
 						.environment("ELASTIC_PASSWORD", "secret")
 						.environment("discovery.type", "single-node")
 						.ports(9200, 9300)
-						.command("bin/run thing"));
+						.command("bin/run thing")
+						.label("foo", "bar"));
 		assertThat(write(file)).isEqualToIgnoringNewLines("""
 				services:
 					elasticsearch:
@@ -66,6 +68,8 @@ class ComposeFileWriterTests {
 						environment:
 							- 'ELASTIC_PASSWORD=secret'
 							- 'discovery.type=single-node'
+						labels:
+							- "foo=bar"
 						ports:
 							- '9200'
 							- '9300'
