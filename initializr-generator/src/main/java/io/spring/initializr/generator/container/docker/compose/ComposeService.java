@@ -167,7 +167,7 @@ public final class ComposeService {
 			return this;
 		}
 
-		public Builder label(Map<String, String> label) {
+		public Builder labels(Map<String, String> label) {
 			this.labels.putAll(label);
 			return this;
 		}

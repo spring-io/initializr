@@ -200,8 +200,8 @@ class ComposeServiceContainerTests {
 	@Test
 	void labelIsMerged() {
 		ComposeServiceContainer container = new ComposeServiceContainer();
-		container.add("test", (service) -> service.imageAndTag("my-image").label(Map.of("a", "aa", "z", "zz")));
-		container.add("test", (service) -> service.label(Map.of("a", "aaa", "b", "bb")));
+		container.add("test", (service) -> service.imageAndTag("my-image").labels(Map.of("a", "aa", "z", "zz")));
+		container.add("test", (service) -> service.labels(Map.of("a", "aaa", "b", "bb")));
 		assertThat(container.values()).singleElement()
 			.satisfies((service) -> assertThat(service.getLabels()).containsExactly(entry("a", "aaa"), entry("b", "bb"),
 					entry("z", "zz")));
