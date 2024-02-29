@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.entry;
  * Tests for {@link ComposeServiceContainer}.
  *
  * @author Stephane Nicoll
+ * @author Eddú Meléndez
  */
 class ComposeServiceContainerTests {
 
@@ -126,6 +127,7 @@ class ComposeServiceContainerTests {
 			service.environment("param", "value");
 			service.ports(8080);
 			service.command("run");
+			service.label("foo", "bar");
 		});
 		assertThat(container.values()).singleElement().satisfies((service) -> {
 			assertThat(service.getName()).isEqualTo("test");
@@ -135,6 +137,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value"));
 			assertThat(service.getPorts()).containsOnly(8080);
 			assertThat(service.getCommand()).isEqualTo("run");
+			assertThat(service.getLabels()).containsOnly(entry("foo", "bar"));
 		});
 	}
 
@@ -182,6 +185,26 @@ class ComposeServiceContainerTests {
 		container.add("test", (service) -> service.image("my-image"));
 		assertThat(container.remove("another")).isFalse();
 		assertThat(container.isEmpty()).isFalse();
+	}
+
+	@Test
+	void labelKeysAreSorted() {
+		ComposeServiceContainer container = new ComposeServiceContainer();
+		container.add("test", (service) -> service.imageAndTag("my-image").label("z", "zz"));
+		container.add("test", (service) -> service.label("a", "aa"));
+		assertThat(container.values()).singleElement()
+			.satisfies(
+					(service) -> assertThat(service.getLabels()).containsExactly(entry("a", "aa"), entry("z", "zz")));
+	}
+
+	@Test
+	void labelIsMerged() {
+		ComposeServiceContainer container = new ComposeServiceContainer();
+		container.add("test", (service) -> service.imageAndTag("my-image").labels(Map.of("a", "aa", "z", "zz")));
+		container.add("test", (service) -> service.labels(Map.of("a", "aaa", "b", "bb")));
+		assertThat(container.values()).singleElement()
+			.satisfies((service) -> assertThat(service.getLabels()).containsExactly(entry("a", "aaa"), entry("b", "bb"),
+					entry("z", "zz")));
 	}
 
 }
