@@ -97,8 +97,8 @@ public class ComposeFileWriter {
 		}
 		writer.println("labels:");
 		writer.indented(() -> {
-			for (Map.Entry<String, String> env : labels.entrySet()) {
-				writer.println("- \"%s=%s\"".formatted(env.getKey(), env.getValue()));
+			for (Map.Entry<String, String> label : labels.entrySet()) {
+				writer.println("- \"%s=%s\"".formatted(label.getKey(), label.getValue()));
 			}
 		});
 	}
