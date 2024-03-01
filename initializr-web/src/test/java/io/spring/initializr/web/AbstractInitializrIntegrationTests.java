@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -273,7 +273,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	private void unzip(Path archiveFile, Path project) throws IOException {
-		try (ZipFile zip = new ZipFile(archiveFile.toFile())) {
+		try (ZipFile zip = ZipFile.builder().setPath(archiveFile).get()) {
 			Enumeration<? extends ZipArchiveEntry> entries = zip.getEntries();
 			while (entries.hasMoreElements()) {
 				ZipArchiveEntry entry = entries.nextElement();

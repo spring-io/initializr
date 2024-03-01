@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,6 +121,7 @@ public class ProjectGenerator {
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
+	@SuppressWarnings("deprecation")
 	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
 		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
 				getClass().getClassLoader());
