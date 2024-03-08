@@ -14,26 +14,31 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.configuration;
+package io.spring.initializr.generator.spring.properties;
 
-import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.metadata.InitializrMetadata;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Configuration for application-related contributions to a generated project.
+ * Configuration for application properties related contributions to a generated project.
  *
- * @author Stephane Nicoll
  * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
-public class ApplicationConfigurationProjectGenerationConfiguration {
+class ApplicationPropertiesProjectGenerationConfiguration {
 
 	@Bean
-	WebFoldersContributor webFoldersContributor(Build build, InitializrMetadata metadata) {
-		return new WebFoldersContributor(build, metadata);
+	ApplicationProperties applicationProperties(ObjectProvider<ApplicationPropertiesCustomizer> customizers) {
+		ApplicationProperties properties = new ApplicationProperties();
+		customizers.orderedStream().forEach((customizer) -> customizer.customize(properties));
+		return properties;
+	}
+
+	@Bean
+	ApplicationPropertiesContributor applicationPropertiesContributor(ApplicationProperties applicationProperties) {
+		return new ApplicationPropertiesContributor(applicationProperties);
 	}
 
 }

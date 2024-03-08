@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.generator.spring.configuration;
+package io.spring.initializr.generator.spring.properties;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import io.spring.initializr.generator.test.project.ProjectStructure;
@@ -30,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link ApplicationPropertiesContributor}.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 class ApplicationPropertiesContributorTests {
 
@@ -38,11 +38,20 @@ class ApplicationPropertiesContributorTests {
 
 	@Test
 	void applicationConfigurationWithDefaultSettings() throws IOException {
-		Path projectDir = Files.createTempDirectory(this.directory, "project-");
-		new ApplicationPropertiesContributor().contribute(projectDir);
-		assertThat(new ProjectStructure(projectDir)).textFile("src/main/resources/application.properties")
-			.lines()
+		new ApplicationPropertiesContributor(new ApplicationProperties()).contribute(this.directory);
+		assertThat(new ProjectStructure(this.directory)).textFile("src/main/resources/application.properties")
 			.isEmpty();
+	}
+
+	@Test
+	void shouldAddStringProperty() throws IOException {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("spring.application.name", "test");
+		ApplicationPropertiesContributor contributor = new ApplicationPropertiesContributor(properties);
+		contributor.contribute(this.directory);
+		assertThat(new ProjectStructure(this.directory)).textFile("src/main/resources/application.properties")
+			.lines()
+			.contains("spring.application.name=test");
 	}
 
 }
