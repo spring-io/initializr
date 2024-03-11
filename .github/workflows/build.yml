@@ -13,6 +13,7 @@ jobs:
       matrix:
         runner: [ ubuntu-latest, windows-latest, macos-latest ]
     name: Build (${{ matrix.runner }})
+    if: ${{ github.repository == 'spring-io/initializr' }}
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out

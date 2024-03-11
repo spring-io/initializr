@@ -1,0 +1,46 @@
+name: Deploy snapshots
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  build:
+    name: Deploy snapshots
+    if: ${{ github.repository == 'spring-io/initializr' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'liberica'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -Dmaven.repo.local=/tmp/maven-repo install
+
+      - name: Deploy
+        uses: spring-io/artifactory-deploy-action@90d28f97f3e3735888ffa8648828d5f2f1b1ad21
+        with:
+          uri: 'https://repo.spring.io'
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          build-name: ${{ format('initializr-{0}', github.ref_name)}}
+          repository: 'libs-snapshot-local'
+          folder: '/tmp/maven-repo/io/spring/initializr/'
+          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Google Chat Notification
+        uses: Co-qn/google-chat-notification@3691ccf4763537d6e544bc6cdcccc1965799d056
+        with:
+          name: Deploy snapshots
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          status: ${{ job.status }}
+        if: always()
