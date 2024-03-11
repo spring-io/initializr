@@ -23,7 +23,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -Dmaven.repo.local=/tmp/maven-repo install
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -DaltDeploymentRepository=local::file:/tmp/maven-repo/ install
 
       - name: Deploy
         uses: spring-io/artifactory-deploy-action@90d28f97f3e3735888ffa8648828d5f2f1b1ad21
