@@ -61,4 +61,4 @@ jobs:
         with:
           webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
           status: ${{ job.status }}
-          run-name: ${{ format('{0} | {1}', github.ref_name, matrix.runner.name) }}
+          run-name: ${{ format('Initializr | {0} | {1}', github.ref_name, matrix.runner.name) }}
