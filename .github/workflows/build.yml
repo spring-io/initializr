@@ -40,7 +40,20 @@ jobs:
 
       - name: Maven deploy
         if: ${{ matrix.runner.deploy-snapshots }}
-        run: echo "Would deploy"
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -DaltDeploymentRepository=local::file:./maven-repo/ deploy
+
+      - name: Deploy to repo.spring.io
+        if: ${{ matrix.runner.deploy-snapshots }}
+        uses: spring-io/artifactory-deploy-action@90d28f97f3e3735888ffa8648828d5f2f1b1ad21
+        with:
+          uri: 'https://repo.spring.io'
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          build-name: ${{ format('initializr-{0}', github.ref_name)}}
+          repository: 'libs-snapshot-local'
+          folder: './maven-repo/'
+          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Send notification
         uses: ./.github/actions/send-notification
