@@ -1,0 +1,30 @@
+name: Send notification
+description: Sends a Google Chat message as a notification of the job's outcome
+inputs:
+  webhook-url:
+    description: 'Google Chat Webhook URL'
+    required: true
+  status:
+    description: 'Status of the job'
+    required: true
+  run-name:
+    description: 'Name of the run to include in the notification'
+    default: ${{ format('{0} {1}', github.ref_name, github.job) }}
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        echo "RUN_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> "$GITHUB_ENV"
+    - shell: bash
+      if: ${{ inputs.status == 'success' }}
+      run: |
+        curl -X POST '${{ inputs.webhook-url }}' -H 'Content-Type: application/json' -d '{ text: "<${{ env.RUN_URL }}|${{ inputs.run-name }}> was successful"}' || true
+    - shell: bash
+      if: ${{ inputs.status == 'failure' }}
+      run: |
+        curl -X POST '${{ inputs.webhook-url }}' -H 'Content-Type: application/json' -d '{ text: "<users/all> *<${{ env.RUN_URL }}|${{ inputs.run-name }}> failed* "}' || true
+    - shell: bash
+      if: ${{ inputs.status == 'cancelled' }}
+      run: |
+        curl -X POST '${{ inputs.webhook-url }}' -H 'Content-Type: application/json' -d '{ text: "<${{ env.RUN_URL }}|${{ inputs.run-name }}> was cancelled"}' || true
