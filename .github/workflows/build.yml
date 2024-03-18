@@ -44,7 +44,7 @@ jobs:
 
       - name: Deploy to repo.spring.io
         if: ${{ matrix.runner.deploy-snapshots }}
-        uses: spring-io/artifactory-deploy-action@90d28f97f3e3735888ffa8648828d5f2f1b1ad21
+        uses: spring-io/artifactory-deploy-action@b106e2854e05882e9b7d8810033e1e38fdc054b0
         with:
           uri: 'https://repo.spring.io'
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
