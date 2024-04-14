@@ -52,9 +52,10 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 		if (this.springBootVersion.getQualifier() != null) {
 			String qualifier = this.springBootVersion.getQualifier().getId();
 			if (!qualifier.equals("RELEASE")) {
-				addMilestoneRepository(build);
 				if (qualifier.contains("SNAPSHOT")) {
 					addSnapshotRepository(build);
+				}else{
+					addMilestoneRepository(build);
 				}
 			}
 		}
