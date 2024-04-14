@@ -79,17 +79,24 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 	void addMavenCentralAndNonReleaseWhenUsingSnapshot() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0.BUILD-SNAPSHOT")).customize(build);
-		assertNonReleaseRepositories(build);
+		assertNonReleaseRepositoriesWhenPatchIsZero(build);
 	}
 
 	@Test
 	void addMavenCentralAndNonReleaseWhenUsingSemVerSnapshot() {
 		MavenBuild build = new MavenBuild();
 		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.0-SNAPSHOT")).customize(build);
-		assertNonReleaseRepositories(build);
+		assertNonReleaseRepositoriesWhenPatchIsZero(build);
 	}
 
-	private void assertNonReleaseRepositories(MavenBuild build) {
+	@Test
+	void addMavenCentralAndNonReleaseWhenUsingSemVerSnapshotAndPatchDifferentToZero() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("2.1.1-SNAPSHOT")).customize(build);
+		assertNonReleaseRepositoriesWhenPatchIsDifferentToZero(build);
+	}
+
+	private void assertNonReleaseRepositoriesWhenPatchIsZero(MavenBuild build) {
 		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
 		assertThat(repositories).hasSize(3);
 		assertThat(repositories.get(0)).isEqualTo(MavenRepository.MAVEN_CENTRAL);
@@ -98,6 +105,16 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 			.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/milestone")
 			.hasFieldOrPropertyWithValue("snapshotsEnabled", false);
 		assertThat(repositories.get(2)).hasFieldOrPropertyWithValue("id", "spring-snapshots")
+			.hasFieldOrPropertyWithValue("name", "Spring Snapshots")
+			.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
+			.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
+	}
+
+	private void assertNonReleaseRepositoriesWhenPatchIsDifferentToZero(MavenBuild build) {
+		List<MavenRepository> repositories = build.repositories().items().collect(Collectors.toList());
+		assertThat(repositories).hasSize(2);
+		assertThat(repositories.get(0)).isEqualTo(MavenRepository.MAVEN_CENTRAL);
+		assertThat(repositories.get(1)).hasFieldOrPropertyWithValue("id", "spring-snapshots")
 			.hasFieldOrPropertyWithValue("name", "Spring Snapshots")
 			.hasFieldOrPropertyWithValue("url", "https://repo.spring.io/snapshot")
 			.hasFieldOrPropertyWithValue("snapshotsEnabled", true);
