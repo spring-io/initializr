@@ -54,7 +54,8 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 			if (!qualifier.equals("RELEASE")) {
 				if (qualifier.contains("SNAPSHOT")) {
 					addSnapshotRepository(build);
-				}else{
+				}
+				else {
 					addMilestoneRepository(build);
 				}
 			}
