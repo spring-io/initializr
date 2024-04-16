@@ -25,16 +25,17 @@ import io.spring.initializr.generator.version.Version;
  * of Spring Boot being used.
  *
  * @author Andy Wilkinson
+ * @author Moritz Halbritter
  */
 class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Build> {
 
-	private static final MavenRepository SPRING_MILESTONES = MavenRepository
+	static final MavenRepository SPRING_MILESTONES = MavenRepository
 		.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone")
 		.name("Spring Milestones")
 		.onlyReleases()
 		.build();
 
-	private static final MavenRepository SPRING_SNAPSHOTS = MavenRepository
+	static final MavenRepository SPRING_SNAPSHOTS = MavenRepository
 		.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot")
 		.name("Spring Snapshots")
 		.onlySnapshots()
@@ -49,15 +50,38 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 	@Override
 	public void customize(Build build) {
 		build.repositories().add("maven-central");
-		if (this.springBootVersion.getQualifier() != null) {
-			String qualifier = this.springBootVersion.getQualifier().getId();
-			if (!qualifier.equals("RELEASE")) {
-				addMilestoneRepository(build);
-				if (qualifier.contains("SNAPSHOT")) {
+		switch (getReleaseType()) {
+			case MILESTONE -> addMilestoneRepository(build);
+			case SNAPSHOT -> {
+				if (isMaintenanceRelease()) {
+					addSnapshotRepository(build);
+				}
+				else {
+					addMilestoneRepository(build);
 					addSnapshotRepository(build);
 				}
 			}
 		}
+	}
+
+	private ReleaseType getReleaseType() {
+		Version.Qualifier qualifier = this.springBootVersion.getQualifier();
+		if (qualifier == null) {
+			return ReleaseType.GA;
+		}
+		String id = qualifier.getId();
+		if ("RELEASE".equals(id)) {
+			return ReleaseType.GA;
+		}
+		if (id.contains("SNAPSHOT")) {
+			return ReleaseType.SNAPSHOT;
+		}
+		return ReleaseType.MILESTONE;
+	}
+
+	private boolean isMaintenanceRelease() {
+		Integer patch = this.springBootVersion.getPatch();
+		return patch != null && patch > 0;
 	}
 
 	private void addSnapshotRepository(Build build) {
@@ -68,6 +92,12 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 	private void addMilestoneRepository(Build build) {
 		build.repositories().add(SPRING_MILESTONES);
 		build.pluginRepositories().add(SPRING_MILESTONES);
+	}
+
+	private enum ReleaseType {
+
+		GA, MILESTONE, SNAPSHOT
+
 	}
 
 }
