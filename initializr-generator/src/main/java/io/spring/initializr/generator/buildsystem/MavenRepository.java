@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import java.util.Objects;
+
 /**
  * A Maven repository.
  *
@@ -100,6 +102,25 @@ public class MavenRepository {
 	 */
 	public boolean isSnapshotsEnabled() {
 		return this.snapshotsEnabled;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		MavenRepository that = (MavenRepository) o;
+		return this.releasesEnabled == that.releasesEnabled && this.snapshotsEnabled == that.snapshotsEnabled
+				&& Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
+				&& Objects.equals(this.url, that.url);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.id, this.name, this.url, this.releasesEnabled, this.snapshotsEnabled);
 	}
 
 	public static class Builder {
