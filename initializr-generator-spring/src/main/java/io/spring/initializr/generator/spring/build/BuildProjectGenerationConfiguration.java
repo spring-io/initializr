@@ -20,6 +20,8 @@ import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
@@ -35,6 +37,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
 public class BuildProjectGenerationConfiguration {
@@ -55,6 +58,14 @@ public class BuildProjectGenerationConfiguration {
 		return (build) -> build.dependencies()
 			.add("test", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
 				.scope(DependencyScope.TEST_COMPILE));
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	BuildCustomizer<Build> junitLauncherContributor() {
+		return (build) -> build.dependencies()
+			.add("junit-launcher", Dependency.withCoordinates("org.junit.platform", "junit-platform-launcher")
+				.scope(DependencyScope.TEST_RUNTIME));
 	}
 
 	@Bean
