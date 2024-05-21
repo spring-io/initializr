@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,7 @@ public abstract class AbstractModuleAssert<SELF extends AbstractModuleAssert<SEL
 	 * @return {@code this} assertion object
 	 */
 	public SELF hasMavenWrapper() {
-		filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
-				".mvn/wrapper/maven-wrapper.jar");
+		filePaths().contains("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties");
 		return this.myself;
 	}
 

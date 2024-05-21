@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ class MavenWrapperContributorTests {
 		Path projectDir = contribute(mavenVersion);
 		assertThat(projectDir.resolve("mvnw")).isRegularFile().isExecutable();
 		assertThat(projectDir.resolve("mvnw.cmd")).isRegularFile().isExecutable();
-		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.jar")).isRegularFile().satisfies(isNotExecutable());
 		assertThat(projectDir.resolve(".mvn/wrapper/maven-wrapper.properties")).isRegularFile()
 			.satisfies(isNotExecutable());
 	}

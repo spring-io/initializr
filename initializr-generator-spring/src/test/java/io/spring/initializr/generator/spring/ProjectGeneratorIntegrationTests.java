@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,6 @@ class ProjectGeneratorIntegrationTests {
 		assertThat(project).filePaths()
 			.containsOnly("test/demo-app/.gitignore", "test/demo-app/pom.xml", "test/demo-app/mvnw",
 					"test/demo-app/mvnw.cmd", "test/demo-app/.mvn/wrapper/maven-wrapper.properties",
-					"test/demo-app/.mvn/wrapper/maven-wrapper.jar",
 					"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
 					"test/demo-app/src/main/resources/application.properties",
 					"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java");
