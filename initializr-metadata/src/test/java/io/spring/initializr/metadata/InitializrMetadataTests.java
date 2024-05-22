@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,12 +204,11 @@ class InitializrMetadataTests {
 		InitializrMetadata metadata = initializeMetadata();
 		metadata.getGroupId().setContent("org.acme");
 		metadata.getArtifactId().setContent("2foo.bar");
-		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foo.bar");
-
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme._foo.bar");
 		metadata = initializeMetadata();
 		metadata.getGroupId().setContent("org.ac-me");
 		metadata.getArtifactId().setContent("foo-bar");
-		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.acme.foobar");
+		assertThat(metadata.getPackageName().getContent()).isEqualTo("org.ac_me.foo_bar");
 	}
 
 	private InitializrMetadata initializeMetadata() {

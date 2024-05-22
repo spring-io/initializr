@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephane Nicoll
  * @author Chris Bono
+ * @author Moritz Halbritter
  */
 public class InitializrConfiguration {
 
@@ -126,11 +127,11 @@ public class InitializrConfiguration {
 	}
 
 	static String cleanPackageName(String packageName) {
-		String[] elements = packageName.trim().replaceAll("-", "").split("\\W+");
+		String[] elements = packageName.trim().replaceAll("-", "_").split("\\W+");
 		StringBuilder sb = new StringBuilder();
 		for (String element : elements) {
-			element = element.replaceFirst("^[0-9]+(?!$)", "");
-			if (!element.matches("[0-9]+") && sb.length() > 0) {
+			element = element.replaceFirst("^[0-9]+(?!$)", "_");
+			if (!element.matches("[0-9]+") && !sb.isEmpty()) {
 				sb.append(".");
 			}
 			sb.append(element);
@@ -140,7 +141,7 @@ public class InitializrConfiguration {
 
 	private static String unsplitWords(String text) {
 		return String.join("",
-				Arrays.stream(text.split("(_|-| |:)+")).map(StringUtils::capitalize).toArray(String[]::new));
+				Arrays.stream(text.split("([_\\- :])+")).map(StringUtils::capitalize).toArray(String[]::new));
 	}
 
 	private static String splitCamelCase(String text) {

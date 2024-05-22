@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
 		ProjectStructure project = tgzProjectAssert(entity.getBody());
 		assertThat(project).containsFiles(
-				"spring-boot-service/src/test/java/com/spring/boot/service/springbootservice/SpringBootServiceApplicationTests.java");
+				"spring-boot-service/src/test/java/com/spring/boot/service/spring_boot_service/SpringBootServiceApplicationTests.java");
 	}
 
 	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {

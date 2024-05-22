@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,8 +133,8 @@ class InitializrConfigurationTests {
 	}
 
 	@Test
-	void generatePackageNameMultipleDashers() {
-		assertThat(this.properties.cleanPackageName("com.foo--bar", "com.example")).isEqualTo("com.foobar");
+	void generatePackageNameMultipleDashes() {
+		assertThat(this.properties.cleanPackageName("com.foo--bar", "com.example")).isEqualTo("com.foo__bar");
 	}
 
 	@Test
@@ -159,12 +159,12 @@ class InitializrConfigurationTests {
 
 	@Test
 	void generatePackageNameInvalidStartCharacter() {
-		assertThat(this.properties.cleanPackageName("0com.foo", "com.example")).isEqualTo("com.foo");
+		assertThat(this.properties.cleanPackageName("0com.foo", "com.example")).isEqualTo("_com.foo");
 	}
 
 	@Test
 	void generatePackageNameVersion() {
-		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", "com.example")).isEqualTo("com.foo.test145");
+		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", "com.example")).isEqualTo("com.foo.test_145");
 	}
 
 	@Test
