@@ -19,7 +19,7 @@ package io.spring.initializr.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
@@ -332,13 +332,12 @@ public abstract class AbstractInitializrIntegrationTests {
 		try {
 			ClassPathResource resource = new ClassPathResource(path);
 			try (InputStream in = resource.getInputStream()) {
-				String json = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+				String json = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
 				String placeholder = "";
 				if (this instanceof AbstractInitializrControllerIntegrationTests) {
 					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
 				}
-				if (this instanceof AbstractFullStackInitializrIntegrationTests) {
-					AbstractFullStackInitializrIntegrationTests test = (AbstractFullStackInitializrIntegrationTests) this;
+				if (this instanceof AbstractFullStackInitializrIntegrationTests test) {
 					placeholder = test.host + ":" + test.port;
 				}
 				// Let's parse the port as it is random
@@ -389,9 +388,9 @@ public abstract class AbstractInitializrIntegrationTests {
 
 		OTHERS_EXECUTE(0001);
 
-		private int mask;
+		private final int mask;
 
-		private PosixFilePermission filePermission;
+		private final PosixFilePermission filePermission;
 
 		BitMaskFilePermission(int mask) {
 			this.mask = mask;
