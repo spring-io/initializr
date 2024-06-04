@@ -11,7 +11,9 @@ group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
 }
 
 repositories {

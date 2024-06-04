@@ -133,11 +133,12 @@ public class ProjectGenerationInvokerTests {
 		WebProjectRequest request = new WebProjectRequest();
 		request.initialize(metadata);
 		request.setType("gradle-project");
+		request.setJavaVersion("17");
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
 		new GroovyDslGradleBuildAssert(content).hasVersion(request.getVersion())
 			.hasPlugin("org.springframework.boot", request.getBootVersion())
-			.hasSourceCompatibility(request.getJavaVersion());
+			.hasToolchainForJava("17");
 		verifyProjectSuccessfulEventFor(request);
 	}
 

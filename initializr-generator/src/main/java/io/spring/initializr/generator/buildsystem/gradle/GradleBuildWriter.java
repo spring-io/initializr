@@ -39,6 +39,7 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
 import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.version.VersionProperty;
 
 /**
@@ -68,6 +69,7 @@ public abstract class GradleBuildWriter {
 		writeProperty(writer, "version", settings.getVersion());
 		writer.println();
 		writeJavaSourceCompatibility(writer, settings);
+		writeToolchain(writer, settings);
 		writeConfigurations(writer, build.configurations());
 		writeRepositories(writer, build);
 		writeProperties(writer, build.properties());
@@ -101,9 +103,38 @@ public abstract class GradleBuildWriter {
 			.collect(Collectors.toList());
 	}
 
-	protected abstract void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings);
+	/**
+	 * Writes the source compatibility for Java.
+	 * @param writer the writer
+	 * @param settings the settings
+	 * @deprecated for removal in favor of Gradle toolchains
+	 */
+	@Deprecated(forRemoval = true)
+	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
+	}
 
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
+
+	private void writeToolchain(IndentingWriter writer, GradleBuildSettings settings) {
+		writer.println("java {");
+		writer.indented(() -> {
+			writer.println("toolchain {");
+			writer.indented(() -> writer.println(
+					"languageVersion = JavaLanguageVersion.of(%s)".formatted(sourceCompatibilityAsNumber(settings))));
+			writer.println("}");
+		});
+		writer.println("}");
+		writer.println("");
+	}
+
+	private static String sourceCompatibilityAsNumber(GradleBuildSettings settings) {
+		String version = (settings.getSourceCompatibility() != null) ? settings.getSourceCompatibility()
+				: Language.DEFAULT_JVM_VERSION;
+		if (version.startsWith("1.")) {
+			return version.substring("1.".length());
+		}
+		return version;
+	}
 
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "repositories", build.repositories().items().collect(Collectors.toList()),

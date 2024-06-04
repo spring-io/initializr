@@ -88,15 +88,6 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
-		writer.println("java {");
-		writer.indented(
-				() -> writer.println(String.format("sourceCompatibility = '%s'", settings.getSourceCompatibility())));
-		writer.println("}");
-		writer.println("");
-	}
-
-	@Override
 	protected String repositoryAsString(MavenRepository repository) {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
 			return "mavenCentral()";

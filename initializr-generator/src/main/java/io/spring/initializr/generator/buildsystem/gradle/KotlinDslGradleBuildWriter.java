@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.buildsystem.gradle;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,8 +36,6 @@ import io.spring.initializr.generator.version.VersionReference;
  * @author Moritz Halbritter
  */
 public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
-
-	private final Map<String, String> sourceCompatibilitiesToJavaVersion = new HashMap<>();
 
 	@Override
 	protected void writeBuildscript(IndentingWriter writer, GradleBuild build) {
@@ -79,36 +76,6 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		}
 
 		return null;
-	}
-
-	@Override
-	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
-		writer.println("java {");
-		writer.indented(() -> writer.println(
-				String.format("sourceCompatibility = %s", getJavaVersionConstant(settings.getSourceCompatibility()))));
-		writer.println("}");
-		writer.println();
-	}
-
-	private String getJavaVersionConstant(String jvmVersion) {
-		return this.sourceCompatibilitiesToJavaVersion.computeIfAbsent(jvmVersion, (key) -> {
-			StringBuilder sb = new StringBuilder("JavaVersion.");
-			if (jvmVersion == null) {
-				return sb.append("VERSION_11").toString();
-			}
-			int generation = (jvmVersion.startsWith("1.") ? Integer.parseInt(jvmVersion.substring(2))
-					: Integer.parseInt(jvmVersion));
-			if (generation >= 1 && generation <= 10) {
-				sb.append("VERSION_1_").append(generation);
-			}
-			else if (generation <= 24) {
-				sb.append("VERSION_").append(generation);
-			}
-			else {
-				sb.append("VERSION_HIGHER");
-			}
-			return sb.toString();
-		});
 	}
 
 	private String configurationReference(String configurationName, Collection<String> customConfigurations) {

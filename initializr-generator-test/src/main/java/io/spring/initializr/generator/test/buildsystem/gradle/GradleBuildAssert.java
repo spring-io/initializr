@@ -50,6 +50,16 @@ public abstract class GradleBuildAssert<SELF extends GradleBuildAssert<SELF>> ex
 	}
 
 	/**
+	 * Assert the Gradle {@code build} uses a toolchain for the specified java version.
+	 * @param javaVersion the java version
+	 * @return {@code this} assertion object
+	 */
+	public SELF hasToolchainForJava(String javaVersion) {
+		return containsSubsequence("java {", "toolchain {",
+				"languageVersion = JavaLanguageVersion.of(%s)".formatted(javaVersion));
+	}
+
+	/**
 	 * Assert the Gradle {@code build} defines a top-level property with the specified
 	 * name and value.
 	 * @param name the name of the property

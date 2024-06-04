@@ -62,34 +62,17 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		build.settings().sourceCompatibility(sourceCompatibility);
 		assertThat(write(build)).contains("""
 				java {
-					sourceCompatibility = %s
+					toolchain {
+						languageVersion = JavaLanguageVersion.of(%s)
+					}
 				}
 				""".formatted(javaVersionConstant));
 	}
 
 	static Stream<Arguments> sourceCompatibilityParameters() {
-		return Stream.of(Arguments.arguments("1.8", "JavaVersion.VERSION_1_8"),
-				Arguments.arguments("8", "JavaVersion.VERSION_1_8"),
-				Arguments.arguments("1.9", "JavaVersion.VERSION_1_9"),
-				Arguments.arguments("9", "JavaVersion.VERSION_1_9"),
-				Arguments.arguments("1.10", "JavaVersion.VERSION_1_10"),
-				Arguments.arguments("10", "JavaVersion.VERSION_1_10"),
-				Arguments.arguments(null, "JavaVersion.VERSION_11"),
-				Arguments.arguments("11", "JavaVersion.VERSION_11"),
-				Arguments.arguments("12", "JavaVersion.VERSION_12"),
-				Arguments.arguments("13", "JavaVersion.VERSION_13"),
-				Arguments.arguments("14", "JavaVersion.VERSION_14"),
-				Arguments.arguments("15", "JavaVersion.VERSION_15"),
-				Arguments.arguments("16", "JavaVersion.VERSION_16"),
-				Arguments.arguments("17", "JavaVersion.VERSION_17"),
-				Arguments.arguments("18", "JavaVersion.VERSION_18"),
-				Arguments.arguments("19", "JavaVersion.VERSION_19"),
-				Arguments.arguments("20", "JavaVersion.VERSION_20"),
-				Arguments.arguments("21", "JavaVersion.VERSION_21"),
-				Arguments.arguments("22", "JavaVersion.VERSION_22"),
-				Arguments.arguments("23", "JavaVersion.VERSION_23"),
-				Arguments.arguments("24", "JavaVersion.VERSION_24"),
-				Arguments.arguments("25", "JavaVersion.VERSION_HIGHER"));
+		return Stream.of(Arguments.arguments("1.8", "8"), Arguments.arguments("8", "8"), Arguments.arguments(null, "8"),
+				Arguments.arguments("11", "11"), Arguments.arguments("17", "17"), Arguments.arguments("21", "21"),
+				Arguments.arguments("22", "22"));
 	}
 
 	@Test

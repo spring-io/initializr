@@ -51,10 +51,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	@Test
 	void gradleBuildWithSourceCompatibility() {
 		GradleBuild build = new GradleBuild();
-		build.settings().sourceCompatibility("11");
+		build.settings().sourceCompatibility("17");
 		assertThat(write(build)).contains("""
 				java {
-					sourceCompatibility = '11'
+					toolchain {
+						languageVersion = JavaLanguageVersion.of(17)
+					}
 				}
 				""");
 	}
