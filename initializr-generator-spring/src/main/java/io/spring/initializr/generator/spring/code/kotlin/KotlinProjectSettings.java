@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +43,7 @@ public interface KotlinProjectSettings {
 	 * @return the compiler arguments
 	 */
 	default List<String> getCompilerArgs() {
-		return Collections.singletonList("-Xjsr305=strict");
+		return List.of("-Xjsr305=strict");
 	}
 
 }
