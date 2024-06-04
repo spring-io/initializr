@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Bui
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @author Moritz Halbritter
  */
 public class GradleBuild extends Build {
 
@@ -41,6 +42,8 @@ public class GradleBuild extends Build {
 	private final GradleSnippetContainer snippets = new GradleSnippetContainer();
 
 	private final GradleBuildscript.Builder buildscript = new GradleBuildscript.Builder();
+
+	private final GradleExtensionContainer extensions = new GradleExtensionContainer();
 
 	/**
 	 * Create a new Gradle build using the specified {@link BuildItemResolver}.
@@ -92,6 +95,15 @@ public class GradleBuild extends Build {
 	 */
 	public GradleTaskContainer tasks() {
 		return this.tasks;
+	}
+
+	/**
+	 * Return the {@linkplain GradleExtensionContainer extension container} to use to
+	 * configure extensions.
+	 * @return the {@link GradleExtensionContainer}
+	 */
+	public GradleExtensionContainer extensions() {
+		return this.extensions;
 	}
 
 	/**

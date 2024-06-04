@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Jean-Baptiste Nizet
  */
+@SuppressWarnings("removal")
 class KotlinDslKotlinGradleBuildCustomizerTests {
 
 	@Test

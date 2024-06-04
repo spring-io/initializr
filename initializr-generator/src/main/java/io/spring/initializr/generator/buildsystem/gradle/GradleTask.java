@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -46,7 +45,7 @@ public class GradleTask {
 		this.name = builder.name;
 		this.type = builder.type;
 		this.attributes = List.copyOf(builder.attributes.values());
-		this.invocations = Collections.unmodifiableList(new ArrayList<>(builder.invocations));
+		this.invocations = List.copyOf(builder.invocations);
 		this.nested = Collections.unmodifiableMap(resolve(builder.nested));
 	}
 
@@ -171,118 +170,62 @@ public class GradleTask {
 
 	/**
 	 * An invocation of a method that customizes a task.
+	 *
+	 * @deprecated in favor of
+	 * {@link io.spring.initializr.generator.buildsystem.gradle.Invocation}
 	 */
-	public static class Invocation {
-
-		private final String target;
-
-		private final List<String> arguments;
+	@Deprecated(forRemoval = true)
+	public static class Invocation extends io.spring.initializr.generator.buildsystem.gradle.Invocation {
 
 		Invocation(String target, List<String> arguments) {
-			this.target = target;
-			this.arguments = arguments;
-		}
-
-		/**
-		 * Return the name of the method.
-		 * @return the method name
-		 */
-		public String getTarget() {
-			return this.target;
-		}
-
-		/**
-		 * Return the arguments (can be empty).
-		 * @return the method arguments
-		 */
-		public List<String> getArguments() {
-			return this.arguments;
+			super(target, arguments);
 		}
 
 	}
 
 	/**
 	 * An attribute of a task.
+	 *
+	 * @deprecated in favor of
+	 * {@link io.spring.initializr.generator.buildsystem.gradle.Attribute}
 	 */
-	public static final class Attribute {
+	@Deprecated(forRemoval = true)
+	public static final class Attribute extends io.spring.initializr.generator.buildsystem.gradle.Attribute {
 
-		private final String name;
+		private Attribute(String name, String value,
+				io.spring.initializr.generator.buildsystem.gradle.Attribute.Type type) {
+			super(name, value, type);
+		}
 
-		private final String value;
-
-		private final Type type;
-
-		private Attribute(String name, String value, Type type) {
-			this.name = name;
-			this.value = value;
-			this.type = type;
+		private static io.spring.initializr.generator.buildsystem.gradle.Attribute.Type toType(Type type) {
+			return switch (type) {
+				case SET -> io.spring.initializr.generator.buildsystem.gradle.Attribute.Type.SET;
+				case APPEND -> io.spring.initializr.generator.buildsystem.gradle.Attribute.Type.APPEND;
+			};
 		}
 
 		/**
-		 * Create an attribute that {@linkplain Type#SET sets} the specified value.
+		 * Create an attribute that
+		 * {@linkplain io.spring.initializr.generator.buildsystem.gradle.Attribute.Type#SET
+		 * sets} the specified value.
 		 * @param name the name of the attribute
 		 * @param value the value to set
 		 * @return an attribute
 		 */
 		public static Attribute set(String name, String value) {
-			return new Attribute(name, value, Type.SET);
+			return new Attribute(name, value, io.spring.initializr.generator.buildsystem.gradle.Attribute.Type.SET);
 		}
 
 		/**
-		 * Create an attribute that {@linkplain Type#APPEND appends} the specified value.
+		 * Create an attribute that
+		 * {@linkplain io.spring.initializr.generator.buildsystem.gradle.Attribute.Type#APPEND
+		 * appends} the specified value.
 		 * @param name the name of the attribute
 		 * @param value the value to append
 		 * @return an attribute
 		 */
 		public static Attribute append(String name, String value) {
-			return new Attribute(name, value, Type.APPEND);
-		}
-
-		/**
-		 * Return the name of the attribute.
-		 * @return the name
-		 */
-		public String getName() {
-			return this.name;
-		}
-
-		/**
-		 * Return the value of the attribute to set or to append.
-		 * @return the value
-		 */
-		public String getValue() {
-			return this.value;
-		}
-
-		/**
-		 * Return the {@link Type} of the attribute.
-		 * @return the type
-		 */
-		public Type getType() {
-			return this.type;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			Attribute attribute = (Attribute) o;
-			return Objects.equals(this.name, attribute.name) && Objects.equals(this.value, attribute.value)
-					&& this.type == attribute.type;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(this.name, this.value, this.type);
-		}
-
-		@Override
-		public String toString() {
-			return this.name + ((this.type == Type.SET) ? " = " : " += ") + this.value;
+			return new Attribute(name, value, io.spring.initializr.generator.buildsystem.gradle.Attribute.Type.APPEND);
 		}
 
 		public enum Type {

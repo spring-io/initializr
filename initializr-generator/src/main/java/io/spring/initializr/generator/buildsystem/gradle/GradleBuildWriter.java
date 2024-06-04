@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
-import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Attribute.Type;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 
@@ -48,6 +47,7 @@ import io.spring.initializr.generator.version.VersionProperty;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
+ * @author Moritz Halbritter
  * @see GroovyDslGradleBuildWriter
  * @see KotlinDslGradleBuildWriter
  */
@@ -61,7 +61,7 @@ public abstract class GradleBuildWriter {
 	 */
 	public final void writeTo(IndentingWriter writer, GradleBuild build) {
 		GradleBuildSettings settings = build.getSettings();
-		writeImports(writer, build.tasks(), build.snippets());
+		writeImports(writer, build.tasks(), build.snippets(), build.extensions());
 		writeBuildscript(writer, build);
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
@@ -73,12 +73,16 @@ public abstract class GradleBuildWriter {
 		writeProperties(writer, build.properties());
 		writeDependencies(writer, build);
 		writeBoms(writer, build);
+		writeExtensions(writer, build.extensions());
 		writeTasks(writer, build.tasks());
 		writeSnippets(writer, build.snippets());
 	}
 
-	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks, GradleSnippetContainer snippets) {
-		List<String> imports = Stream.concat(tasks.importedTypes(), snippets.importedTypes()).sorted().toList();
+	private void writeImports(IndentingWriter writer, GradleTaskContainer tasks, GradleSnippetContainer snippets,
+			GradleExtensionContainer extensions) {
+		List<String> imports = concat(tasks.importedTypes(), snippets.importedTypes(), extensions.importedTypes())
+			.sorted()
+			.toList();
 		imports.forEach((importedType) -> writer.println("import " + importedType));
 		if (!imports.isEmpty()) {
 			writer.println();
@@ -199,6 +203,26 @@ public abstract class GradleBuildWriter {
 
 	protected abstract void writeTasks(IndentingWriter writer, GradleTaskContainer tasks);
 
+	private void writeExtensions(IndentingWriter writer, GradleExtensionContainer extensions) {
+		extensions.values().forEach((extension) -> {
+			writer.println();
+			writer.println(extension.getName() + " {");
+			writer.indented(() -> writeExtensionCustomization(writer, extension));
+			writer.println("}");
+		});
+
+	}
+
+	private void writeExtensionCustomization(IndentingWriter writer, GradleExtension extension) {
+		writeCollection(writer, extension.getInvocations(), this::invocationAsString);
+		writeCollection(writer, extension.getAttributes(), this::attributeAsString);
+		extension.getNested().forEach((ignored, nested) -> {
+			writer.println(nested.getName() + " {");
+			writer.indented(() -> writeExtensionCustomization(writer, nested));
+			writer.println("}");
+		});
+	}
+
 	protected final void writeTaskCustomization(IndentingWriter writer, GradleTask task) {
 		writeCollection(writer, task.getInvocations(), this::invocationAsString);
 		writeCollection(writer, task.getAttributes(), this::attributeAsString);
@@ -209,12 +233,12 @@ public abstract class GradleBuildWriter {
 		});
 	}
 
-	private String attributeAsString(GradleTask.Attribute attribute) {
-		String separator = (attribute.getType() == Type.SET) ? "=" : "+=";
+	private String attributeAsString(Attribute attribute) {
+		String separator = (attribute.getType() == Attribute.Type.SET) ? "=" : "+=";
 		return String.format("%s %s %s", attribute.getName(), separator, attribute.getValue());
 	}
 
-	protected abstract String invocationAsString(GradleTask.Invocation invocation);
+	protected abstract String invocationAsString(Invocation invocation);
 
 	private void writeSnippets(IndentingWriter writer, GradleSnippetContainer snippets) {
 		if (!snippets.isEmpty()) {
@@ -271,6 +295,15 @@ public abstract class GradleBuildWriter {
 			.filter((dep) -> filter.test(dep.getScope()))
 			.sorted(getDependencyComparator())
 			.collect(Collectors.toList());
+	}
+
+	@SafeVarargs
+	private static Stream<String> concat(Stream<String>... streams) {
+		Stream<String> result = Stream.empty();
+		for (Stream<String> stream : streams) {
+			result = Stream.concat(result, stream);
+		}
+		return result;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -588,6 +588,25 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.settings().version("1.2.4.RELEASE");
 		assertThat(write(build)).contains("version = '1.2.4.RELEASE'");
+	}
+
+	@Test
+	void shouldCustomizeExtensions() {
+		GradleBuild build = new GradleBuild();
+		build.extensions().customize("kotlin", (kotlin) -> kotlin.nested("compilerOptions", (compilerOptions) -> {
+			compilerOptions.attributeWithType("jvmTarget", "JvmTarget.JVM_21",
+					"org.jetbrains.kotlin.gradle.dsl.JvmTarget");
+			compilerOptions.invoke("freeCompilerArgs.addAll", "'-Xjsr305=strict'", "'-Xexport-kdoc'");
+		}));
+		String written = write(build);
+		assertThat(written).contains("import org.jetbrains.kotlin.gradle.dsl.JvmTarget");
+		assertThat(written).contains("""
+				kotlin {
+					compilerOptions {
+						freeCompilerArgs.addAll '-Xjsr305=strict', '-Xexport-kdoc'
+						jvmTarget = JvmTarget.JVM_21
+					}
+				}""");
 	}
 
 	protected String write(GradleBuild build) {

@@ -32,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
  */
+@SuppressWarnings("removal")
 class GroovyDslKotlinGradleBuildCustomizerTests {
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,39 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
-import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Attribute;
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 
 /**
- * Tests for {@link GradleTask}.
+ * An invocation of a method.
  *
+ * @author Moritz Halbritter
  * @author Stephane Nicoll
  */
-@SuppressWarnings("removal")
-public class GradleTaskTests {
+public class Invocation {
 
-	@Test
-	void attributeSetHasSensibleToString() {
-		assertThat(Attribute.set("name", "value")).hasToString("name = value");
+	private final String target;
+
+	private final List<String> arguments;
+
+	public Invocation(String target, List<String> arguments) {
+		this.target = target;
+		this.arguments = List.copyOf(arguments);
 	}
 
-	@Test
-	void attributeAppendHasSensibleToString() {
-		assertThat(Attribute.append("name", "value")).hasToString("name += value");
+	/**
+	 * Return the name of the method.
+	 * @return the method name
+	 */
+	public String getTarget() {
+		return this.target;
+	}
+
+	/**
+	 * Return the arguments (can be empty).
+	 * @return the method arguments
+	 */
+	public List<String> getArguments() {
+		return this.arguments;
 	}
 
 }
