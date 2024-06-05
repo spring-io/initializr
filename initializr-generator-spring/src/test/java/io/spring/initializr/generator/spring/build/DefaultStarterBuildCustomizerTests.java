@@ -18,11 +18,14 @@ package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.project.MutableProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +37,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DefaultStarterBuildCustomizerTests {
 
+	private ProjectDescription projectDescription;
+
+	@BeforeEach
+	void setUp() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("1.0.0"));
+		this.projectDescription = description;
+	}
+
 	@Test
 	void defaultStarterIsAddedIfNoneExists() {
 		Dependency dependency = Dependency.withId("acme", "com.example", "acme");
@@ -43,7 +55,7 @@ class DefaultStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("acme");
-		new DefaultStarterBuildCustomizer(metadata).customize(build);
+		new DefaultStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("acme", DefaultStarterBuildCustomizer.DEFAULT_STARTER);
 	}
 
@@ -56,7 +68,7 @@ class DefaultStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("runtime");
-		new DefaultStarterBuildCustomizer(metadata).customize(build);
+		new DefaultStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("runtime", DefaultStarterBuildCustomizer.DEFAULT_STARTER);
 	}
 
@@ -67,7 +79,7 @@ class DefaultStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("web");
-		new DefaultStarterBuildCustomizer(metadata).customize(build);
+		new DefaultStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("web");
 	}
 

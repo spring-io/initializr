@@ -69,14 +69,15 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@Bean
 	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
 	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
-			KotlinProjectSettings settings) {
-		return new KotlinJpaGradleBuildCustomizer(metadata, settings);
+			KotlinProjectSettings settings, ProjectDescription projectDescription) {
+		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription);
 	}
 
 	@Bean
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
-	KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
-		return new KotlinJpaMavenBuildCustomizer(metadata);
+	KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata,
+			ProjectDescription projectDescription) {
+		return new KotlinJpaMavenBuildCustomizer(metadata, projectDescription);
 	}
 
 	@Bean

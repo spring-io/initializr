@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -32,8 +33,8 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
-	public KotlinJpaMavenBuildCustomizer(InitializrMetadata metadata) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+	public KotlinJpaMavenBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 	}
 
 	@Override

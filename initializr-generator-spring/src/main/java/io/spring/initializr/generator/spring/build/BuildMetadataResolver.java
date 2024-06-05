@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 
@@ -27,13 +28,17 @@ import io.spring.initializr.metadata.InitializrMetadata;
  * Resolve metadata information from the build.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public class BuildMetadataResolver {
 
 	private final InitializrMetadata metadata;
 
-	public BuildMetadataResolver(InitializrMetadata metadata) {
+	private final Version platformVersion;
+
+	public BuildMetadataResolver(InitializrMetadata metadata, Version platformVersion) {
 		this.metadata = metadata;
+		this.platformVersion = platformVersion;
 	}
 
 	/**
@@ -43,7 +48,11 @@ public class BuildMetadataResolver {
 	 * @return a stream of dependency metadata
 	 */
 	public Stream<Dependency> dependencies(Build build) {
-		return build.dependencies().ids().map((id) -> this.metadata.getDependencies().get(id)).filter(Objects::nonNull);
+		return build.dependencies()
+			.ids()
+			.map((id) -> this.metadata.getDependencies().get(id))
+			.filter(Objects::nonNull)
+			.map((dependency) -> dependency.resolve(this.platformVersion));
 	}
 
 	/**

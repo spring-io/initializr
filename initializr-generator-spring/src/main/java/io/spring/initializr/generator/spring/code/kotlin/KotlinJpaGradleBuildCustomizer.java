@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -34,8 +35,9 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	private final KotlinProjectSettings settings;
 
-	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings,
+			ProjectDescription projectDescription) {
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 		this.settings = settings;
 	}
 

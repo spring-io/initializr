@@ -40,7 +40,7 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 	private final ProjectDescription description;
 
 	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, description.getPlatformVersion());
 		this.description = description;
 	}
 

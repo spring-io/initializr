@@ -20,11 +20,14 @@ import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.project.MutableProjectDescription;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +39,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class WarPackagingWebStarterBuildCustomizerTests {
 
+	private ProjectDescription projectDescription;
+
+	@BeforeEach
+	void setUp() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("1.0.0"));
+		this.projectDescription = description;
+	}
+
 	@Test
 	void addWebStarterWhenNoWebFacetIsPresent() {
 		Dependency dependency = Dependency.withId("test", "com.example", "acme", null, Dependency.SCOPE_COMPILE);
@@ -44,7 +56,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
 	}
 
@@ -57,7 +69,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("test", "web", "tomcat");
 	}
 
@@ -70,7 +82,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 			.build();
 		Build build = createBuild(metadata);
 		build.dependencies().add("test");
-		new WarPackagingWebStarterBuildCustomizer(metadata).customize(build);
+		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("test", "tomcat");
 	}
 

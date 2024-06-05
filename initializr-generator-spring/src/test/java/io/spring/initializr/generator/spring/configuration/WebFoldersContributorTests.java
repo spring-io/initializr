@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
@@ -83,7 +84,9 @@ class WebFoldersContributorTests {
 	}
 
 	private Path contribute(Build build, InitializrMetadata metadata) throws IOException {
-		new WebFoldersContributor(build, metadata).contribute(this.projectDir);
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
+		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
+		new WebFoldersContributor(build, metadata, projectDescription).contribute(this.projectDir);
 		return this.projectDir;
 	}
 

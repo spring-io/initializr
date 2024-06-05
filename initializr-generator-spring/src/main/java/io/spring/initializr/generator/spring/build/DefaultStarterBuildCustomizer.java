@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
@@ -37,8 +38,8 @@ class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 
 	private final BuildMetadataResolver buildResolver;
 
-	DefaultStarterBuildCustomizer(InitializrMetadata metadata) {
-		this.buildResolver = new BuildMetadataResolver(metadata);
+	DefaultStarterBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
+		this.buildResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 	}
 
 	@Override

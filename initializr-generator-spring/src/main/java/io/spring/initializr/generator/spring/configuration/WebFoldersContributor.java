@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -39,9 +40,9 @@ public class WebFoldersContributor implements ProjectContributor {
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
-	public WebFoldersContributor(Build build, InitializrMetadata metadata) {
+	public WebFoldersContributor(Build build, InitializrMetadata metadata, ProjectDescription projectDescription) {
 		this.build = build;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 	}
 
 	@Override

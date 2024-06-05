@@ -69,8 +69,9 @@ public class BuildProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata) {
-		return new DefaultStarterBuildCustomizer(metadata);
+	public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata,
+			ProjectDescription projectDescription) {
+		return new DefaultStarterBuildCustomizer(metadata, projectDescription);
 	}
 
 	@Bean
@@ -81,8 +82,9 @@ public class BuildProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnPackaging(WarPackaging.ID)
-	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
-		return new WarPackagingWebStarterBuildCustomizer(metadata);
+	public WarPackagingWebStarterBuildCustomizer warPackagingWebStarterBuildCustomizer(InitializrMetadata metadata,
+			ProjectDescription projectDescription) {
+		return new WarPackagingWebStarterBuildCustomizer(metadata, projectDescription);
 	}
 
 	@Bean

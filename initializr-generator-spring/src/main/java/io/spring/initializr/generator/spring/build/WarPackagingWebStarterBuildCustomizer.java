@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
@@ -36,9 +37,9 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
-	public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata) {
+	public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
 		this.metadata = metadata;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata);
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 	}
 
 	@Override
