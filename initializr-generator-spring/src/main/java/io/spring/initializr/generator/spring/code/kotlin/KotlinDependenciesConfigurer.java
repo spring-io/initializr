@@ -26,6 +26,7 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
  * Kotlin.
  *
  * @author Andy Wilkinson
+ * @author Moritz Halbritter
  */
 class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 
@@ -34,6 +35,9 @@ class KotlinDependenciesConfigurer implements BuildCustomizer<Build> {
 		build.dependencies()
 			.add("kotlin-reflect", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-reflect")
 				.scope(DependencyScope.COMPILE));
+		build.dependencies()
+			.add("kotlin-test-junit5", Dependency.withCoordinates("org.jetbrains.kotlin", "kotlin-test-junit5")
+				.scope(DependencyScope.TEST_COMPILE));
 	}
 
 }

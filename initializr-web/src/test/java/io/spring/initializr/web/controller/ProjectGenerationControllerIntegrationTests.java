@@ -147,7 +147,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		assertThat(project).containsFiles("src/main/kotlin/com/example/demo/DemoApplication.kt",
 				"src/test/kotlin/com/example/demo/DemoApplicationTests.kt",
 				"src/main/resources/application.properties");
-		assertThat(project).mavenBuild().hasDependenciesSize(4).hasProperty("kotlin.version", "1.4.31");
+		assertThat(project).mavenBuild().hasDependenciesSize(5).hasProperty("kotlin.version", "1.4.31");
 	}
 
 	@Test
