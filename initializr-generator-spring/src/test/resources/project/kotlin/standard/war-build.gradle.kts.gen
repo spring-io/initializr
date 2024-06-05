@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
 	war
 	id("org.springframework.boot") version "2.4.1"
@@ -32,7 +30,6 @@ dependencies {
 kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
-		jvmTarget = JvmTarget.JVM_1_8
 	}
 }
 

@@ -16,12 +16,9 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import io.spring.initializr.generator.buildsystem.gradle.Attribute;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,34 +44,16 @@ class KotlinGradleBuildCustomizerTests {
 	void shouldCustomizeCompilerOptions() {
 		GradleBuild build = new GradleBuild();
 		new KotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70"), '\'').customize(build);
-		assertThat(build.extensions().importedTypes()).contains("org.jetbrains.kotlin.gradle.dsl.JvmTarget");
 		assertThat(build.extensions().values()).singleElement().satisfies((kotlin) -> {
 			assertThat(kotlin.getName()).isEqualTo("kotlin");
 			assertThat(kotlin.getNested().values()).singleElement().satisfies((compilerOptions) -> {
 				assertThat(compilerOptions.getName()).isEqualTo("compilerOptions");
-				assertThat(compilerOptions.getAttributes()).singleElement()
-					.isEqualTo(Attribute.set("jvmTarget", "JvmTarget.JVM_1_8"));
 				assertThat(compilerOptions.getInvocations()).singleElement().satisfies((freeCompilerArgs) -> {
 					assertThat(freeCompilerArgs.getTarget()).isEqualTo("freeCompilerArgs.addAll");
 					assertThat(freeCompilerArgs.getArguments()).containsExactly("'-Xjsr305=strict'");
 				});
 			});
 		});
-	}
-
-	@ParameterizedTest
-	@CsvSource(textBlock = """
-			1.8, JvmTarget.JVM_1_8
-			17, JvmTarget.JVM_17
-			21, JvmTarget.JVM_21
-			""")
-	void shouldSetJvmTarget(String jvmTarget, String constant) {
-		GradleBuild build = new GradleBuild();
-		new KotlinGradleBuildCustomizer(new SimpleKotlinProjectSettings("1.2.70", jvmTarget), '\'').customize(build);
-		assertThat(build.extensions().values()).singleElement()
-			.satisfies((kotlin) -> assertThat(kotlin.getNested().values()).singleElement()
-				.satisfies((compilerOptions) -> assertThat(compilerOptions.getAttributes()).singleElement()
-					.isEqualTo(Attribute.set("jvmTarget", constant))));
 	}
 
 }

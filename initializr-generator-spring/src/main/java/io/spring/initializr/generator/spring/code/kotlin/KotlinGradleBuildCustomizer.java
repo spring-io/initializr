@@ -51,7 +51,6 @@ class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private void customizeCompilerOptions(GradleBuild build) {
 		build.extensions().customize("kotlin", (kotlin) -> kotlin.nested("compilerOptions", (compilerOptions) -> {
-			compilerOptions.attributeWithType("jvmTarget", getJvmTarget(), "org.jetbrains.kotlin.gradle.dsl.JvmTarget");
 			if (!CollectionUtils.isEmpty(this.settings.getCompilerArgs())) {
 				compilerOptions.invoke("freeCompilerArgs.addAll", quote(this.settings.getCompilerArgs()));
 			}
@@ -60,13 +59,6 @@ class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private List<String> quote(List<String> compilerArgs) {
 		return compilerArgs.stream().map((element) -> this.quote + element + this.quote).toList();
-	}
-
-	private String getJvmTarget() {
-		if ("1.8".equals(this.settings.getJvmTarget())) {
-			return "JvmTarget.JVM_1_8";
-		}
-		return "JvmTarget.JVM_" + this.settings.getJvmTarget();
 	}
 
 }
