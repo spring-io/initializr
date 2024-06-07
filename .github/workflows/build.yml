@@ -36,11 +36,11 @@ jobs:
 
       - name: Maven verify
         if: ${{ !matrix.runner.deploy-snapshots }}
-        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -Pfull verify
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots verify
 
       - name: Maven deploy
         if: ${{ matrix.runner.deploy-snapshots }}
-        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -DaltDeploymentRepository=local::file:./maven-repo/ deploy
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -DaltDeploymentRepository=local::file:./maven-repo/ -Pfull deploy
 
       - name: Deploy to repo.spring.io
         if: ${{ matrix.runner.deploy-snapshots }}
