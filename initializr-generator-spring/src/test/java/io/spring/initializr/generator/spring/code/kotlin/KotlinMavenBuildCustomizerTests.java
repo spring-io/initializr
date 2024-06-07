@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Configuratio
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.version.VersionProperty;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,15 +67,15 @@ class KotlinMavenBuildCustomizerTests {
 			assertThat(configuration.getSettings()).hasSize(2);
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");
-			assertThat(args.getValue()).asList().hasSize(1);
-			assertThat(args.getValue()).asList()
+			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1);
+			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(0)
 				.hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Xjsr305=strict");
 			Setting compilerPlugins = configuration.getSettings().get(1);
 			assertThat(compilerPlugins.getName()).isEqualTo("compilerPlugins");
-			assertThat(compilerPlugins.getValue()).asList().hasSize(1);
-			assertThat(compilerPlugins.getValue()).asList()
+			assertThat(compilerPlugins.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1);
+			assertThat(compilerPlugins.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(0)
 				.hasFieldOrPropertyWithValue("name", "plugin")
 				.hasFieldOrPropertyWithValue("value", "spring");
@@ -95,12 +96,12 @@ class KotlinMavenBuildCustomizerTests {
 			Configuration configuration = kotlinPlugin.getConfiguration();
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");
-			assertThat(args.getValue()).asList().hasSize(2);
-			assertThat(args.getValue()).asList()
+			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(2);
+			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(0)
 				.hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Done=1");
-			assertThat(args.getValue()).asList()
+			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(1)
 				.hasFieldOrPropertyWithValue("name", "arg")
 				.hasFieldOrPropertyWithValue("value", "-Dtwo=2");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +48,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
 			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
-			assertThat(settings.getValue()).asList()
+			assertThat(settings.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(0)
 				.hasFieldOrPropertyWithValue("name", "plugin")
 				.hasFieldOrPropertyWithValue("value", "jpa");
