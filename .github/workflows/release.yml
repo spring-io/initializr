@@ -6,75 +6,8 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  build-and-stage-release:
-    if: ${{ github.repository == 'spring-io/initializr' }}
-    name: Build and Stage Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'liberica'
-          cache: 'maven'
-      - name: Maven deploy
-        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -DaltDeploymentRepository=local::file:./maven-repo/ clean deploy -Pfull
-      - name: Read version
-        id: read-version
-        shell: bash
-        run: | 
-          version=$(sed -n 's/^.*<revision>\(.*\)<\/revision>.*$/\1/p' pom.xml)
-          echo "Version is $version"
-          echo "version=$version" >> $GITHUB_OUTPUT
-      - name: Stage Release
-        uses: spring-io/artifactory-deploy-action@26bbe925a75f4f863e1e529e85be2d0093cac116 # v0.0.1
-        with:
-          build-name: ${{ format('initializr-{0}', steps.read-version.outputs.version)}}
-          folder: 'maven-repo'
-          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          repository: 'libs-staging-local'
-          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          uri: 'https://repo.spring.io'
-          username: ${{ secrets.ARTIFACTORY_USERNAME }}
-    outputs:
-      version: ${{ steps.read-version.outputs.version }}
-  sync-to-maven-central:
-    name: Sync to Maven Central
-    needs:
-      - build-and-stage-release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-      - name: Sync to Maven Central
-        uses: ./.github/actions/sync-to-maven-central
-        with:
-          jfrog-cli-config-token: ${{ secrets.JF_ARTIFACTORY_SPRING }}
-          ossrh-s01-staging-profile: ${{ secrets.OSSRH_S01_STAGING_PROFILE }}
-          ossrh-s01-token-password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
-          ossrh-s01-token-username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
-          initializr-version: ${{ needs.build-and-stage-release.outputs.version }}
-  promote-release:
-    name: Promote Release
-    needs:
-      - build-and-stage-release
-      - sync-to-maven-central
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up JFrog CLI
-        uses: jfrog/setup-jfrog-cli@7c95feb32008765e1b4e626b078dfd897c4340ad # v4.1.2
-        env:
-          JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
-      - name: Promote build
-        run: jfrog rt build-promote ${{ format('initializr-{0}', needs.build-and-stage-release.outputs.version)}} ${{ github.run_number }} libs-release-local
   create-github-release:
     name: Create GitHub Release
-    needs:
-      - build-and-stage-release
-      - promote-release
     runs-on: ubuntu-latest
     steps:
       - name: Check out
@@ -82,5 +15,5 @@ jobs:
       - name: Create GitHub Release
         uses: ./.github/actions/create-github-release
         with:
-          milestone: ${{ needs.build-and-stage-release.outputs.version }}
+          milestone: "0.21.0"
           token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}

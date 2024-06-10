@@ -14,10 +14,10 @@ runs:
       uses: spring-io/github-changelog-generator@052892c62af51f8af87a9da6de55e70864b7df12
       with:
         milestone: ${{ inputs.milestone }}
-        token: ${{ inputs.token }}
+        token: ${{ github.token }}
         config-file: .github/actions/create-github-release/changelog-generator.yml
     - name: Create GitHub Release
       env:
-        GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ github.token }}
       shell: bash
       run: gh release create ${{ format('v{0}', inputs.milestone) }} --notes-file changelog.md
