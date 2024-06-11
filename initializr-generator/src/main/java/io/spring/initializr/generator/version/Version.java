@@ -347,7 +347,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		 * SemVer-compliant format, i.e. {@code Major.Minor.Patch-Qualifier} using
 		 * {@code SNAPSHOT} as the qualifier for snapshots and no qualifier for GAs.
 		 */
-		V2;
+		V2
 
 	}
 

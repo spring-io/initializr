@@ -238,7 +238,7 @@ public class GradleTask {
 			/**
 			 * Append the value to the attribute.
 			 */
-			APPEND;
+			APPEND
 
 		}
 

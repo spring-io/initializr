@@ -115,7 +115,7 @@ public class Attribute {
 		/**
 		 * Append the value to the attribute.
 		 */
-		APPEND;
+		APPEND
 
 	}
 
