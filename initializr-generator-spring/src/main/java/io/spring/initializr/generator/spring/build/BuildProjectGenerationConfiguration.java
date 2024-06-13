@@ -27,7 +27,6 @@ import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
-import io.spring.initializr.generator.spring.build.maven.DefaultMavenBuildCustomizer;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.context.annotation.Bean;
@@ -72,12 +71,6 @@ public class BuildProjectGenerationConfiguration {
 	public DefaultStarterBuildCustomizer defaultStarterContributor(InitializrMetadata metadata,
 			ProjectDescription projectDescription) {
 		return new DefaultStarterBuildCustomizer(metadata, projectDescription);
-	}
-
-	@Bean
-	public DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description,
-			InitializrMetadata metadata) {
-		return new DefaultMavenBuildCustomizer(description, metadata);
 	}
 
 	@Bean

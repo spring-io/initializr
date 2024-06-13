@@ -55,6 +55,10 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final String testSourceDirectory;
 
+	private final String url;
+
+	private final boolean addOverrideIfEmpty;
+
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
 		this.parent = builder.parent;
@@ -68,6 +72,8 @@ public class MavenBuildSettings extends BuildSettings {
 		this.finalName = builder.finalName;
 		this.sourceDirectory = builder.sourceDirectory;
 		this.testSourceDirectory = builder.testSourceDirectory;
+		this.url = builder.url;
+		this.addOverrideIfEmpty = builder.addOverrideIfEmpty;
 	}
 
 	/**
@@ -163,6 +169,23 @@ public class MavenBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * The URL to the project.
+	 * @return the url to the project
+	 */
+	public String getUrl() {
+		return this.url;
+	}
+
+	/**
+	 * Whether to add overrides for empty elements so that they are not inherited from the
+	 * parent.
+	 * @return whether to add overrides for empty elements
+	 */
+	public boolean isAddOverrideIfEmpty() {
+		return this.addOverrideIfEmpty;
+	}
+
+	/**
 	 * Builder for {@link BuildSettings}.
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
@@ -188,6 +211,10 @@ public class MavenBuildSettings extends BuildSettings {
 		private String sourceDirectory;
 
 		private String testSourceDirectory;
+
+		private String url;
+
+		private boolean addOverrideIfEmpty;
 
 		public Builder() {
 		}
@@ -312,7 +339,7 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
-		 * Set the the location of main source code. Can use Maven properties such as
+		 * Set the location of main source code. Can use Maven properties such as
 		 * {@code ${basedir}}.
 		 * @param sourceDirectory the location of main source code or {@code null} to use
 		 * the default
@@ -324,7 +351,7 @@ public class MavenBuildSettings extends BuildSettings {
 		}
 
 		/**
-		 * Set the the location of test source code. Can use Maven properties such as
+		 * Set the location of test source code. Can use Maven properties such as
 		 * {@code ${basedir}}.
 		 * @param testSourceDirectory the location of test source code or {@code null} to
 		 * use the default
@@ -332,6 +359,27 @@ public class MavenBuildSettings extends BuildSettings {
 		 */
 		public Builder testSourceDirectory(String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
+			return self();
+		}
+
+		/**
+		 * Set the url of the project.
+		 * @param url the url of the project
+		 * @return this for method chaining
+		 */
+		public Builder url(String url) {
+			this.url = url;
+			return self();
+		}
+
+		/**
+		 * Whether to add overrides for empty elements so that they are not inherited from
+		 * the parent.
+		 * @param addOverrideIfEmpty whether to add overrides for empty elements
+		 * @return this for method chaining
+		 */
+		public Builder addOverrideIfEmpty(boolean addOverrideIfEmpty) {
+			this.addOverrideIfEmpty = addOverrideIfEmpty;
 			return self();
 		}
 

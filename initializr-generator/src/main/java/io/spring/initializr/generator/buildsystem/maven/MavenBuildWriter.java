@@ -48,6 +48,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -76,9 +77,10 @@ public class MavenBuildWriter {
 			writeProjectCoordinates(writer, settings);
 			writePackaging(writer, settings);
 			writeProjectName(writer, settings);
-			writeCollectionElement(writer, "licenses", settings.getLicenses(), this::writeLicense);
-			writeCollectionElement(writer, "developers", settings.getDevelopers(), this::writeDeveloper);
-			writeScm(writer, settings.getScm());
+			writeUrl(writer, settings);
+			writeLicenses(writer, settings);
+			writeDevelopers(writer, settings);
+			writeScm(writer, settings);
 			writeProperties(writer, build.properties());
 			writeDependencies(writer, build.dependencies());
 			writeDependencyManagement(writer, build.boms());
@@ -152,6 +154,14 @@ public class MavenBuildWriter {
 		writeSingleElement(writer, "description", settings.getDescription());
 	}
 
+	private void writeUrl(IndentingWriter writer, MavenBuildSettings settings) {
+		String url = settings.getUrl();
+		if (url == null && settings.isAddOverrideIfEmpty()) {
+			url = "";
+		}
+		writeSingleElement(writer, "url", url);
+	}
+
 	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
 		if (properties.isEmpty()) {
 			return;
@@ -196,13 +206,48 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeScm(IndentingWriter writer, MavenScm mavenScm) {
-		if (!mavenScm.isEmpty()) {
+	private void writeDevelopers(IndentingWriter writer, MavenBuildSettings settings) {
+		List<MavenDeveloper> developers = settings.getDevelopers();
+		if (CollectionUtils.isEmpty(developers)) {
+			if (settings.isAddOverrideIfEmpty()) {
+				writeElement(writer, "developers", () -> writeSingleElement(writer, "developer", ""));
+			}
+		}
+		else {
+			writeCollectionElement(writer, "developers", settings.getDevelopers(), this::writeDeveloper);
+		}
+	}
+
+	private void writeLicenses(IndentingWriter writer, MavenBuildSettings settings) {
+		List<MavenLicense> licenses = settings.getLicenses();
+		if (CollectionUtils.isEmpty(licenses)) {
+			if (settings.isAddOverrideIfEmpty()) {
+				writeElement(writer, "licenses", () -> writeSingleElement(writer, "license", ""));
+			}
+		}
+		else {
+			writeCollectionElement(writer, "licenses", licenses, this::writeLicense);
+		}
+	}
+
+	private void writeScm(IndentingWriter writer, MavenBuildSettings settings) {
+		MavenScm scm = settings.getScm();
+		if (scm.isEmpty()) {
+			if (settings.isAddOverrideIfEmpty()) {
+				writeElement(writer, "scm", () -> {
+					writeSingleElement(writer, "connection", "");
+					writeSingleElement(writer, "developerConnection", "");
+					writeSingleElement(writer, "tag", "");
+					writeSingleElement(writer, "url", "");
+				});
+			}
+		}
+		else {
 			writeElement(writer, "scm", () -> {
-				writeSingleElement(writer, "connection", mavenScm.getConnection());
-				writeSingleElement(writer, "developerConnection", mavenScm.getDeveloperConnection());
-				writeSingleElement(writer, "tag", mavenScm.getTag());
-				writeSingleElement(writer, "url", mavenScm.getUrl());
+				writeSingleElement(writer, "connection", scm.getConnection());
+				writeSingleElement(writer, "developerConnection", scm.getDeveloperConnection());
+				writeSingleElement(writer, "tag", scm.getTag());
+				writeSingleElement(writer, "url", scm.getUrl());
 			});
 		}
 	}

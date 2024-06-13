@@ -83,9 +83,10 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	}
 
 	private void testCurrentGenerationJar(Language language, BuildSystem build, String fileName) {
+		String path = "project/" + language + "/standard/" + getAssertFileName(fileName);
 		assertThat(generateProject(language, build, "2.4.1")).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + language + "/standard/" + getAssertFileName(fileName)));
+			.as("Resource " + path)
+			.hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -95,8 +96,10 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	}
 
 	private void testNextGenerationJar(Language language, BuildSystem build, String fileName) {
+		String path = "project/" + language + "/next/" + getAssertFileName(fileName);
 		assertThat(generateProject(language, build, "3.0.0")).textFile(fileName)
-			.hasSameContentAs(new ClassPathResource("project/" + language + "/next/" + getAssertFileName(fileName)));
+			.as("Resource " + path)
+			.hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -122,9 +125,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
 			description.setPackaging(Packaging.forId("war"));
 		});
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + language + "/standard/war-" + getAssertFileName(fileName)));
+		String path = "project/" + language + "/standard/war-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -132,9 +134,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 	void kotlinJava11(BuildSystem build, String fileName) {
 		ProjectStructure project = generateProject(kotlin, build, "2.4.1",
 				(description) -> description.setLanguage(Language.forId(kotlin.id(), "11")));
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + build + "/kotlin-java11-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/kotlin-java11-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -146,9 +147,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 						() -> (projectBuild) -> projectBuild.properties()
 							.version(VersionProperty.of("spring-foo.version", false), "0.1.0.RELEASE")
 							.version(VersionProperty.of("spring-bar.version"), "0.2.0.RELEASE")));
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + build + "/version-override-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/version-override-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -164,9 +164,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			.build();
 		ProjectStructure project = generateProject(java, build, "2.4.1",
 				(description) -> description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)), metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + build + "/bom-property-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/bom-property-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -184,9 +183,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
 			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
 		}, metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + build + "/compile-only-dependency-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/compile-only-dependency-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -206,9 +204,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
 			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
 		}, metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + build + "/annotation-processor-dependency-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/annotation-processor-dependency-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -233,9 +230,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			.build();
 		ProjectStructure project = generateProject(java, build, "2.4.1",
 				(description) -> description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo)), metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + build + "/bom-ordering-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/bom-ordering-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -254,9 +250,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
 			description.addDependency("bar", MetadataBuildItemMapper.toDependency(bar));
 		}, metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(
-					new ClassPathResource("project/" + build + "/repositories-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/repositories-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	@ParameterizedTest
@@ -270,9 +265,8 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.setPlatformVersion(Version.parse("2.4.0-M1"));
 			description.addDependency("foo", MetadataBuildItemMapper.toDependency(foo));
 		}, metadata);
-		assertThat(project).textFile(fileName)
-			.hasSameContentAs(new ClassPathResource(
-					"project/" + build + "/repositories-milestone-" + getAssertFileName(fileName)));
+		String path = "project/" + build + "/repositories-milestone-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 
 	private String getAssertFileName(String fileName) {

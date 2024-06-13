@@ -26,9 +26,11 @@ import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +44,12 @@ import org.springframework.context.annotation.Bean;
 @ProjectGenerationConfiguration
 @ConditionalOnBuildSystem(MavenBuildSystem.ID)
 public class MavenProjectGenerationConfiguration {
+
+	@Bean
+	DefaultMavenBuildCustomizer initializrMetadataMavenBuildCustomizer(ProjectDescription description,
+			InitializrMetadata metadata) {
+		return new DefaultMavenBuildCustomizer(description, metadata);
+	}
 
 	@Bean
 	MavenWrapperContributor mavenWrapperContributor() {
@@ -67,6 +75,11 @@ public class MavenProjectGenerationConfiguration {
 	public MavenBuildProjectContributor mavenBuildProjectContributor(MavenBuild build,
 			IndentingWriterFactory indentingWriterFactory) {
 		return new MavenBuildProjectContributor(build, indentingWriterFactory);
+	}
+
+	@Bean
+	ParentOverridesHelpDocumentCustomizer parentOverridesHelpDocumentCustomizer(MavenBuild build) {
+		return new ParentOverridesHelpDocumentCustomizer(build.getSettings());
 	}
 
 	@Bean
