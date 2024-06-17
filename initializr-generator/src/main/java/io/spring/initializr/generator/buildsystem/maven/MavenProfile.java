@@ -27,6 +27,7 @@ import io.spring.initializr.generator.buildsystem.PropertyContainer;
  *
  * @author Daniel Andres Pelaez Lopez
  * @author Stephane Nicoll
+ * @author Maurice Zeijen
  */
 public class MavenProfile {
 
@@ -43,6 +44,8 @@ public class MavenProfile {
 	private final MavenResourceContainer resources = new MavenResourceContainer();
 
 	private final MavenResourceContainer testResources = new MavenResourceContainer();
+
+	private final MavenPluginContainer pluginManagementPlugins = new MavenPluginContainer();
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
 
@@ -182,6 +185,15 @@ public class MavenProfile {
 	 */
 	public MavenResourceContainer testResources() {
 		return this.testResources;
+	}
+
+	/**
+	 * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
+	 * plugin management plugins.
+	 * @return the {@link MavenPluginContainer}
+	 */
+	public MavenPluginContainer pluginManagementPlugins() {
+		return this.pluginManagementPlugins;
 	}
 
 	/**

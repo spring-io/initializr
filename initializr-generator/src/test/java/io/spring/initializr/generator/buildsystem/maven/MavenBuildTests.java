@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Maurice Zeijen
  */
 class MavenBuildTests {
 
@@ -54,6 +55,17 @@ class MavenBuildTests {
 		assertThat(build.testResources().values()).singleElement().satisfies((resource) -> {
 			assertThat(resource.getDirectory()).isEqualTo("src/test/custom");
 			assertThat(resource.getExcludes()).containsExactly("**/*.gen");
+		});
+	}
+
+	@Test
+	void mavenPluginManagementCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.pluginManagementPlugins().add("com.example", "test-plugin", (plugin) -> plugin.version("1.2.3"));
+		assertThat(build.pluginManagementPlugins().values()).singleElement().satisfies((testPlugin) -> {
+			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
+			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
+			assertThat(testPlugin.getVersion()).isEqualTo("1.2.3");
 		});
 	}
 
@@ -182,6 +194,22 @@ class MavenBuildTests {
 		build.profiles().remove("test");
 		assertThat(build.profiles().ids()).isEmpty();
 		assertThat(build.profiles().values()).isEmpty();
+	}
+
+	@Test
+	void mavenPluginManagementInProfileCanBeConfigured() {
+		MavenBuild build = new MavenBuild();
+		build.profiles()
+			.id("test")
+			.pluginManagementPlugins()
+			.add("com.example", "test-plugin", (plugin) -> plugin.version("1.2.3"));
+		assertThat(build.profiles().values()).singleElement()
+			.satisfies((profile) -> assertThat(profile.pluginManagementPlugins().values()).singleElement()
+				.satisfies((testPlugin) -> {
+					assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
+					assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
+					assertThat(testPlugin.getVersion()).isEqualTo("1.2.3");
+				}));
 	}
 
 }
