@@ -27,6 +27,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @author Niklas Herder
+ * @author Maurice Zeijen
  */
 public class MavenBuild extends Build {
 
@@ -35,6 +36,8 @@ public class MavenBuild extends Build {
 	private final MavenResourceContainer resources = new MavenResourceContainer();
 
 	private final MavenResourceContainer testResources = new MavenResourceContainer();
+
+	private final MavenPluginContainer pluginManagementPlugins = new MavenPluginContainer();
 
 	private final MavenPluginContainer plugins = new MavenPluginContainer();
 
@@ -97,6 +100,15 @@ public class MavenBuild extends Build {
 	 */
 	public MavenResourceContainer testResources() {
 		return this.testResources;
+	}
+
+	/**
+	 * Return the {@linkplain MavenPluginContainer plugin container} to use to configure
+	 * plugin management plugins.
+	 * @return the {@link MavenPluginContainer}
+	 */
+	public MavenPluginContainer pluginManagementPlugins() {
+		return this.pluginManagementPlugins;
 	}
 
 	/**
