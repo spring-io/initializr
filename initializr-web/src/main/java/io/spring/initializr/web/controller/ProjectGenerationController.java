@@ -29,9 +29,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import io.spring.initializr.generator.buildsystem.BuildSystem;
-import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
-import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
@@ -158,7 +155,6 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 			BiFunction<File, String, T> archiveEntry, BiConsumer<T, Integer> setMode) throws IOException {
 		Path archive = this.projectGenerationInvoker.createDistributionFile(result.getRootDirectory(),
 				"." + fileExtension);
-		String wrapperScript = getWrapperScript(result.getProjectDescription());
 		try (ArchiveOutputStream<T> output = archiveOutputStream.apply(Files.newOutputStream(archive))) {
 			Stream<Path> files = Files.walk(result.getRootDirectory());
 			try (files) {
@@ -166,7 +162,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 					try {
 						String entryName = getEntryName(result.getRootDirectory(), path);
 						T entry = archiveEntry.apply(path.toFile(), entryName);
-						setMode.accept(entry, getUnixMode(wrapperScript, entryName, path));
+						setMode.accept(entry, getUnixMode(path));
 						output.putArchiveEntry(entry);
 						if (!Files.isDirectory(path)) {
 							Files.copy(path, output);
@@ -190,23 +186,17 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return entryName;
 	}
 
-	private int getUnixMode(String wrapperScript, String entryName, Path path) {
+	private int getUnixMode(Path path) {
 		if (Files.isDirectory(path)) {
 			return UnixStat.DIR_FLAG | UnixStat.DEFAULT_DIR_PERM;
 		}
-		return UnixStat.FILE_FLAG | (entryName.equals(wrapperScript) ? 0755 : UnixStat.DEFAULT_FILE_PERM);
+		return UnixStat.FILE_FLAG | (Files.isExecutable(path) ? 0755 : UnixStat.DEFAULT_FILE_PERM);
 	}
 
 	private String generateFileName(String artifactId, String extension) {
 		String candidate = (StringUtils.hasText(artifactId) ? artifactId
 				: this.metadataProvider.get().getArtifactId().getContent());
 		return URLEncoder.encode(candidate, StandardCharsets.UTF_8) + "." + extension;
-	}
-
-	private static String getWrapperScript(ProjectDescription description) {
-		BuildSystem buildSystem = description.getBuildSystem();
-		String script = buildSystem.id().equals(MavenBuildSystem.ID) ? "mvnw" : "gradlew";
-		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;
 	}
 
 	private ResponseEntity<byte[]> upload(Path archive, Path dir, String fileName, String contentType)
