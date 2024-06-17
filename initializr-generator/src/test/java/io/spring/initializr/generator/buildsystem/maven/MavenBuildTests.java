@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Olga Maciaszek-Sharma
+ * @author Maurice Zeijen
  */
 class MavenBuildTests {
 
@@ -124,6 +125,22 @@ class MavenBuildTests {
 			assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
 			assertThat(testPlugin.getExecutions().get(0).getGoals()).containsExactly("run-this", "run-that");
 		});
+	}
+
+	@Test
+	void mavenPluginInheritedByDefault() {
+		MavenBuild build = new MavenBuild();
+		build.plugins().add("com.example", "test-plugin");
+		assertThat(build.plugins().values()).singleElement()
+			.satisfies((testPlugin) -> assertThat(testPlugin.isInherited()).isTrue());
+	}
+
+	@Test
+	void mavenPluginCanBeSetToNotBeInherited() {
+		MavenBuild build = new MavenBuild();
+		build.plugins().add("com.example", "test-plugin", (plugin) -> plugin.inherited(false));
+		assertThat(build.plugins().values()).singleElement()
+			.satisfies((testPlugin) -> assertThat(testPlugin.isInherited()).isFalse());
 	}
 
 	@Test

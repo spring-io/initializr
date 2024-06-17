@@ -61,6 +61,7 @@ import org.springframework.util.StringUtils;
  * @author Jafer Khan Shamshad
  * @author Joachim Pasquali
  * @author Niklas Herder
+ * @author Maurice Zeijen
  */
 public class MavenBuildWriter {
 
@@ -413,6 +414,9 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "groupId", plugin.getGroupId());
 			writeSingleElement(writer, "artifactId", plugin.getArtifactId());
 			writeSingleElement(writer, "version", plugin.getVersion());
+			if (!plugin.isInherited()) {
+				writeSingleElement(writer, "inherited", "false");
+			}
 			if (plugin.isExtensions()) {
 				writeSingleElement(writer, "extensions", "true");
 			}
