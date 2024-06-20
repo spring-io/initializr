@@ -35,7 +35,7 @@
 		<commons-text.version>1.12.0</commons-text.version>
 		<maven.version>3.9.6</maven.version>
 		<maven-resolver.version>1.9.20</maven-resolver.version>
-		<spring-boot.version>3.3.0</spring-boot.version>
+		<spring-boot.version>3.3.1</spring-boot.version>
 		<spring-cloud-contract.version>4.1.2</spring-cloud-contract.version>
 	</properties>
 	<scm>
