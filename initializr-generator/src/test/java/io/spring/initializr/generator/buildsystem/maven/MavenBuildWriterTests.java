@@ -606,6 +606,20 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithPluginManagement() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.pluginManagementPlugins()
+			.add("org.springframework.boot", "spring-boot-maven-plugin", (plugin) -> plugin.version("1.2.3"));
+		generatePom(build, (pom) -> {
+			NodeAssert plugin = pom.nodeAtPath("/project/build/pluginManagement/plugins/plugin");
+			assertThat(plugin).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(plugin).textAtPath("artifactId").isEqualTo("spring-boot-maven-plugin");
+			assertThat(plugin).textAtPath("version").isEqualTo("1.2.3");
+		});
+	}
+
+	@Test
 	void pomWithPlugin() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
@@ -1182,6 +1196,23 @@ class MavenBuildWriterTests {
 			assertThat(profile).textAtPath("build/testResources/testResource/filtering").isEqualTo("true");
 			assertThat(profile).textAtPath("build/testResources/testResource/includes").isNullOrEmpty();
 			assertThat(profile).textAtPath("build/testResources/testResource/excludes/exclude").isEqualTo("**/*.gen");
+		});
+	}
+
+	@Test
+	void pomWithProfilePluginManagement() {
+		MavenBuild build = new MavenBuild();
+		build.profiles()
+			.id("profile1")
+			.pluginManagementPlugins()
+			.add("org.springframework.boot", "spring-boot-maven-plugin", (plugin) -> plugin.version("1.2.3"));
+		generatePom(build, (pom) -> {
+			NodeAssert profile = pom.nodeAtPath("/project/profiles/profile");
+			assertThat(profile).textAtPath("id").isEqualTo("profile1");
+			NodeAssert plugin = profile.nodeAtPath("build/pluginManagement/plugins/plugin");
+			assertThat(plugin).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(plugin).textAtPath("artifactId").isEqualTo("spring-boot-maven-plugin");
+			assertThat(plugin).textAtPath("version").isEqualTo("1.2.3");
 		});
 	}
 

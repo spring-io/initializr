@@ -359,7 +359,8 @@ public class MavenBuildWriter {
 		MavenBuildSettings settings = build.getSettings();
 		if (settings.getDefaultGoal() == null && settings.getFinalName() == null
 				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
-				&& build.resources().isEmpty() && build.testResources().isEmpty() && build.plugins().isEmpty()
+				&& build.resources().isEmpty() && build.testResources().isEmpty()
+				&& build.pluginManagementPlugins().isEmpty() && build.plugins().isEmpty()
 				&& build.extensions().isEmpty()) {
 			return;
 		}
@@ -370,6 +371,7 @@ public class MavenBuildWriter {
 			writeSingleElement(writer, "sourceDirectory", settings.getSourceDirectory());
 			writeSingleElement(writer, "testSourceDirectory", settings.getTestSourceDirectory());
 			writeResources(writer, build.resources(), build.testResources());
+			writePluginManagement(writer, build.pluginManagementPlugins());
 			writeCollectionElement(writer, "plugins", build.plugins().values(), this::writePlugin);
 			writeCollectionElement(writer, "extensions", build.extensions().values(), this::writeExtension);
 		});
@@ -407,6 +409,13 @@ public class MavenBuildWriter {
 
 	private void writeResourceExclude(IndentingWriter writer, String exclude) {
 		writeSingleElement(writer, "exclude", exclude);
+	}
+
+	private void writePluginManagement(IndentingWriter writer, MavenPluginContainer pluginManagementContainer) {
+		if (!pluginManagementContainer.isEmpty()) {
+			writeElement(writer, "pluginManagement", () -> writeCollectionElement(writer, "plugins",
+					pluginManagementContainer.values(), this::writePlugin));
+		}
 	}
 
 	private void writePlugin(IndentingWriter writer, MavenPlugin plugin) {
@@ -600,13 +609,15 @@ public class MavenBuildWriter {
 	private void writeProfileBuild(IndentingWriter writer, MavenProfile profile) {
 		MavenProfile.Settings settings = profile.getSettings();
 		if (settings.getDefaultGoal() == null && settings.getFinalName() == null && profile.resources().isEmpty()
-				&& profile.testResources().isEmpty() && profile.plugins().isEmpty()) {
+				&& profile.testResources().isEmpty() && profile.pluginManagementPlugins().isEmpty()
+				&& profile.plugins().isEmpty()) {
 			return;
 		}
 		writeElement(writer, "build", () -> {
 			writeSingleElement(writer, "defaultGoal", settings.getDefaultGoal());
 			writeSingleElement(writer, "finalName", settings.getFinalName());
 			writeResources(writer, profile.resources(), profile.testResources());
+			writePluginManagement(writer, profile.pluginManagementPlugins());
 			writeCollectionElement(writer, "plugins", profile.plugins().values(), this::writePlugin);
 		});
 	}
