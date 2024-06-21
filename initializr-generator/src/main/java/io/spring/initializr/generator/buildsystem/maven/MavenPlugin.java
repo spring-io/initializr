@@ -93,8 +93,8 @@ public class MavenPlugin {
 	}
 
 	/**
-	 * Return whether to propagate plugin configuration to child POMs.
-	 * @return {@code true} whether to propagate plugin configuration
+	 * Return whether to inherit plugin configuration to child POMs.
+	 * @return whether to inherit plugin configuration
 	 */
 	public boolean isInherited() {
 		return this.inherited;
@@ -172,8 +172,8 @@ public class MavenPlugin {
 		}
 
 		/**
-		 * Set whether to propagate plugin configuration to child POMs.
-		 * @param inherited whether to propagate plugin configuration
+		 * Set whether to inherit plugin configuration to child POMs.
+		 * @param inherited whether to inherit plugin configuration
 		 * @return this for method chaining
 		 */
 		public Builder inherited(boolean inherited) {
