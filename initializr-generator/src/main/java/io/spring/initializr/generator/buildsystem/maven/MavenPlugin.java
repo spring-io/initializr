@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  *
  * @author Andy Wilkinson
  * @author Olga Maciaszek-Sharma
+ * @author Maurice Zeijen
  */
 public class MavenPlugin {
 
@@ -38,6 +39,8 @@ public class MavenPlugin {
 	private final String version;
 
 	private final boolean extensions;
+
+	private final boolean inherited;
 
 	private final List<Execution> executions;
 
@@ -50,6 +53,7 @@ public class MavenPlugin {
 		this.artifactId = builder.artifactId;
 		this.version = builder.version;
 		this.extensions = builder.extensions;
+		this.inherited = builder.inherited;
 		this.executions = builder.executions.values().stream().map(ExecutionBuilder::build).toList();
 		this.dependencies = List.copyOf(builder.dependencies);
 		this.configuration = (builder.configurationBuilder == null) ? null : builder.configurationBuilder.build();
@@ -89,6 +93,14 @@ public class MavenPlugin {
 	}
 
 	/**
+	 * Return whether to inherit plugin configuration to child POMs.
+	 * @return whether to inherit plugin configuration
+	 */
+	public boolean isInherited() {
+		return this.inherited;
+	}
+
+	/**
 	 * Return the {@linkplain Execution executions} of the plugin.
 	 * @return the executions
 	 */
@@ -125,6 +137,8 @@ public class MavenPlugin {
 
 		private boolean extensions;
 
+		private boolean inherited = true;
+
 		private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
 
 		private final List<Dependency> dependencies = new ArrayList<>();
@@ -154,6 +168,16 @@ public class MavenPlugin {
 		 */
 		public Builder extensions(boolean extensions) {
 			this.extensions = extensions;
+			return this;
+		}
+
+		/**
+		 * Set whether to inherit plugin configuration to child POMs.
+		 * @param inherited whether to inherit plugin configuration
+		 * @return this for method chaining
+		 */
+		public Builder inherited(boolean inherited) {
+			this.inherited = inherited;
 			return this;
 		}
 

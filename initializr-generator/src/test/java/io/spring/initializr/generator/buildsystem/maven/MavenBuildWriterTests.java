@@ -40,6 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Olga Maciaszek-Sharma
  * @author Jafer Khan Shamshad
  * @author Joachim Pasquali
+ * @author Maurice Zeijen
  */
 class MavenBuildWriterTests {
 
@@ -614,6 +615,7 @@ class MavenBuildWriterTests {
 			assertThat(plugin).textAtPath("groupId").isEqualTo("org.springframework.boot");
 			assertThat(plugin).textAtPath("artifactId").isEqualTo("spring-boot-maven-plugin");
 			assertThat(plugin).textAtPath("version").isNullOrEmpty();
+			assertThat(plugin).textAtPath("inherited").isNullOrEmpty();
 			assertThat(plugin).textAtPath("extensions").isNullOrEmpty();
 		});
 	}
@@ -684,6 +686,19 @@ class MavenBuildWriterTests {
 			assertThat(dependency).textAtPath("groupId").isEqualTo("org.jetbrains.kotlin");
 			assertThat(dependency).textAtPath("artifactId").isEqualTo("kotlin-maven-allopen");
 			assertThat(dependency).textAtPath("version").isEqualTo("${kotlin.version}");
+		});
+	}
+
+	@Test
+	void pomWithNonInheritedPlugin() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.plugins().add("com.example.demo", "demo-plugin", (plugin) -> plugin.inherited(false));
+		generatePom(build, (pom) -> {
+			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
+			assertThat(plugin).textAtPath("groupId").isEqualTo("com.example.demo");
+			assertThat(plugin).textAtPath("artifactId").isEqualTo("demo-plugin");
+			assertThat(plugin).textAtPath("inherited").isEqualTo("false");
 		});
 	}
 
@@ -1181,6 +1196,7 @@ class MavenBuildWriterTests {
 			assertThat(plugin).textAtPath("groupId").isEqualTo("org.springframework.boot");
 			assertThat(plugin).textAtPath("artifactId").isEqualTo("spring-boot-maven-plugin");
 			assertThat(plugin).textAtPath("version").isNullOrEmpty();
+			assertThat(plugin).textAtPath("inherited").isNullOrEmpty();
 			assertThat(plugin).textAtPath("extensions").isNullOrEmpty();
 		});
 	}
