@@ -68,12 +68,18 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		}
 	}
 
+	private String escapeKotlinPackageName(String packageName) {
+		return Arrays.stream(packageName.split("\\."))
+				.map(segment -> segment.equals("fun") ? "`fun`" : segment)
+				.collect(Collectors.joining("."));
+	}
+
 	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
 		Path output = structure.createSourceFile(compilationUnit.getPackageName(), compilationUnit.getName());
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",
 				Files.newBufferedWriter(output))) {
-			writer.println("package " + compilationUnit.getPackageName());
+			writer.println("package " + escapeKotlinPackageName(compilationUnit.getPackageName()));
 			writer.println();
 			Set<String> imports = determineImports(compilationUnit);
 			if (!imports.isEmpty()) {
