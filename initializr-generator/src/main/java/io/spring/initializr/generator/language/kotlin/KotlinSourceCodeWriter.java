@@ -55,6 +55,14 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private static final FormattingOptions FORMATTING_OPTIONS = new KotlinFormattingOptions();
 
+	// Taken from https://kotlinlang.org/docs/keyword-reference.html#hard-keywords
+	// except keywords contains `!` or `?` because they should be handled as invalid package names already
+	private static final Set<String> KOTLIN_HARD_KEYWORDS = Set.of(
+			"package", "as", "typealias", "class", "this", "super", "val", "var", "fun", "for", "null", "true", "false",
+			"is", "in", "throw", "return", "break", "continue", "object", "if", "try", "else", "while", "do", "when",
+			"interface", "typeof"
+	);
+
 	private final IndentingWriterFactory indentingWriterFactory;
 
 	public KotlinSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
@@ -68,12 +76,18 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		}
 	}
 
+	private static String escapeKotlinKeywords(String packageName) {
+		return Arrays.stream(packageName.split("\\."))
+				.map(segment -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
+				.collect(Collectors.joining("."));
+	}
+
 	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
 		Path output = structure.createSourceFile(compilationUnit.getPackageName(), compilationUnit.getName());
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",
 				Files.newBufferedWriter(output))) {
-			writer.println("package " + compilationUnit.getPackageName());
+			writer.println("package " + escapeKotlinKeywords(compilationUnit.getPackageName()));
 			writer.println();
 			Set<String> imports = determineImports(compilationUnit);
 			if (!imports.isEmpty()) {
