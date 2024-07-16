@@ -119,77 +119,166 @@ class InitializrConfigurationTests {
 
 	@Test
 	void generatePackageNameSimple() {
-		assertThat(this.properties.cleanPackageName("com.foo", "com.example")).isEqualTo("com.foo");
+		assertThat(this.properties.cleanPackageName("com.foo", false, "com.example")).isEqualTo("com.foo");
 	}
 
 	@Test
 	void generatePackageNameSimpleUnderscore() {
-		assertThat(this.properties.cleanPackageName("com.my_foo", "com.example")).isEqualTo("com.my_foo");
+		assertThat(this.properties.cleanPackageName("com.my_foo", false, "com.example")).isEqualTo("com.my_foo");
 	}
 
 	@Test
 	void generatePackageNameSimpleColon() {
-		assertThat(this.properties.cleanPackageName("com:foo", "com.example")).isEqualTo("com.foo");
+		assertThat(this.properties.cleanPackageName("com:foo", false, "com.example")).isEqualTo("com.foo");
 	}
 
 	@Test
 	void generatePackageNameMultipleDashes() {
-		assertThat(this.properties.cleanPackageName("com.foo--bar", "com.example")).isEqualTo("com.foo__bar");
+		assertThat(this.properties.cleanPackageName("com.foo--bar", false, "com.example")).isEqualTo("com.foo__bar");
 	}
 
 	@Test
 	void generatePackageNameMultipleSpaces() {
-		assertThat(this.properties.cleanPackageName("  com   foo  ", "com.example")).isEqualTo("com.foo");
+		assertThat(this.properties.cleanPackageName("  com   foo  ", false, "com.example")).isEqualTo("com.foo");
 	}
 
 	@Test
 	void generatePackageNameNull() {
-		assertThat(this.properties.cleanPackageName(null, "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName(null, false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameDot() {
-		assertThat(this.properties.cleanPackageName(".", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName(".", false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameWhitespaces() {
-		assertThat(this.properties.cleanPackageName("    ", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("    ", false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameInvalidStartCharacter() {
-		assertThat(this.properties.cleanPackageName("0com.foo", "com.example")).isEqualTo("_com.foo");
+		assertThat(this.properties.cleanPackageName("0com.foo", false, "com.example")).isEqualTo("_com.foo");
 	}
 
 	@Test
 	void generatePackageNameVersion() {
-		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", "com.example")).isEqualTo("com.foo.test_145");
+		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", false, "com.example"))
+			.isEqualTo("com.foo.test_145");
 	}
 
 	@Test
 	void generatePackageNameInvalidPackageName() {
-		assertThat(this.properties.cleanPackageName("org.springframework", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("org.springframework", false, "com.example"))
+			.isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameReservedKeywordsMiddleOfPackageName() {
-		assertThat(this.properties.cleanPackageName("com.return.foo", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("com.return.foo", false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameReservedKeywordsStartOfPackageName() {
-		assertThat(this.properties.cleanPackageName("false.com.foo", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("false.com.foo", false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameReservedKeywordsEndOfPackageName() {
-		assertThat(this.properties.cleanPackageName("com.foo.null", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("com.foo.null", false, "com.example")).isEqualTo("com.example");
 	}
 
 	@Test
 	void generatePackageNameReservedKeywordsEntirePackageName() {
-		assertThat(this.properties.cleanPackageName("public", "com.example")).isEqualTo("com.example");
+		assertThat(this.properties.cleanPackageName("public", false, "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generateKotlinPackageNameSimple() {
+		assertThat(this.properties.cleanPackageName("com.foo", true, "com.example")).isEqualTo("com.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameSimpleUnderscore() {
+		assertThat(this.properties.cleanPackageName("com.my_foo", true, "com.example")).isEqualTo("com.my_foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameSimpleColon() {
+		assertThat(this.properties.cleanPackageName("com:foo", true, "com.example")).isEqualTo("com.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameMultipleDashes() {
+		assertThat(this.properties.cleanPackageName("com.foo--bar", true, "com.example")).isEqualTo("com.foo__bar");
+	}
+
+	@Test
+	void generateKotlinPackageNameMultipleSpaces() {
+		assertThat(this.properties.cleanPackageName("  com   foo  ", true, "com.example")).isEqualTo("com.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameNull() {
+		assertThat(this.properties.cleanPackageName(null, true, "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generateKotlinPackageNameDot() {
+		assertThat(this.properties.cleanPackageName(".", true, "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generateKotlinPackageNameWhitespaces() {
+		assertThat(this.properties.cleanPackageName("    ", true, "com.example")).isEqualTo("com.example");
+	}
+
+	@Test
+	void generateKotlinPackageNameInvalidStartCharacter() {
+		assertThat(this.properties.cleanPackageName("0com.foo", true, "com.example")).isEqualTo("_com.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameVersion() {
+		assertThat(this.properties.cleanPackageName("com.foo.test-1.4.5", true, "com.example"))
+			.isEqualTo("com.foo.test_145");
+	}
+
+	@Test
+	void generateKotlinPackageNameInvalidPackageName() {
+		assertThat(this.properties.cleanPackageName("org.springframework", true, "com.example"))
+			.isEqualTo("com.example");
+	}
+
+	@Test
+	void generateKotlinPackageNameReservedKeywordsMiddleOfPackageName() {
+		assertThat(this.properties.cleanPackageName("com.return.foo", true, "com.example")).isEqualTo("com.return.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameReservedKeywordsStartOfPackageName() {
+		assertThat(this.properties.cleanPackageName("false.com.foo", true, "com.example")).isEqualTo("false.com.foo");
+	}
+
+	@Test
+	void generateKotlinPackageNameReservedKeywordsEndOfPackageName() {
+		assertThat(this.properties.cleanPackageName("com.foo.null", true, "com.example")).isEqualTo("com.foo.null");
+	}
+
+	@Test
+	void generateKotlinPackageNameReservedChar() {
+		assertThat(this.properties.cleanPackageName("com._foo.null", true, "com.example")).isEqualTo("com._foo.null");
+	}
+
+	@Test
+	void generateKotlinPackageNameJavaReservedKeywords() {
+		assertThat(this.properties.cleanPackageName("public", true, "com.example")).isEqualTo("public");
+	}
+
+	@Test
+	void generateKotlinPackageNameJavaReservedKeywordsEntirePackageName() {
+		assertThat(this.properties.cleanPackageName("public.package", true, "com.example")).isEqualTo("public.package");
 	}
 
 	@Test
