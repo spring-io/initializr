@@ -19,6 +19,8 @@ package io.spring.initializr.web.project;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.spring.initializr.generator.buildsystem.ProjectMetadata;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -32,30 +34,18 @@ public class ProjectRequest {
 
 	private String name;
 
-	private String type;
-
 	private String description;
-
-	private String groupId;
-
-	private String artifactId;
 
 	private String version;
 
 	private String bootVersion;
 
-	private String packaging;
-
 	private String applicationName;
-
-	private String language;
-
-	private String packageName;
-
-	private String javaVersion;
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;
+
+	private ProjectMetadata projectMetadata = new ProjectMetadata(null, null, null, null, null, null, null);
 
 	public List<String> getDependencies() {
 		return this.dependencies;
@@ -74,11 +64,11 @@ public class ProjectRequest {
 	}
 
 	public String getType() {
-		return this.type;
+		return this.projectMetadata.getType();
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this.projectMetadata.setType(type);
 	}
 
 	public String getDescription() {
@@ -90,19 +80,19 @@ public class ProjectRequest {
 	}
 
 	public String getGroupId() {
-		return this.groupId;
+		return this.projectMetadata.getGroupId();
 	}
 
 	public void setGroupId(String groupId) {
-		this.groupId = groupId;
+		this.projectMetadata.setGroupId(groupId);
 	}
 
 	public String getArtifactId() {
-		return this.artifactId;
+		return this.projectMetadata.getArtifactId();
 	}
 
 	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
+		this.projectMetadata.setArtifactId(artifactId);
 	}
 
 	public String getVersion() {
@@ -122,11 +112,11 @@ public class ProjectRequest {
 	}
 
 	public String getPackaging() {
-		return this.packaging;
+		return this.projectMetadata.getPackaging();
 	}
 
 	public void setPackaging(String packaging) {
-		this.packaging = packaging;
+		this.projectMetadata.setPackaging(packaging);
 	}
 
 	public String getApplicationName() {
@@ -138,33 +128,34 @@ public class ProjectRequest {
 	}
 
 	public String getLanguage() {
-		return this.language;
+		return this.projectMetadata.getLanguage();
 	}
 
 	public void setLanguage(String language) {
-		this.language = language;
+		this.projectMetadata.setLanguage(language);
 	}
 
 	public String getPackageName() {
-		if (StringUtils.hasText(this.packageName)) {
-			return this.packageName;
+		if (StringUtils.hasText(this.projectMetadata.getPackageName())) {
+			return this.projectMetadata.getPackageName();
 		}
-		if (StringUtils.hasText(this.groupId) && StringUtils.hasText(this.artifactId)) {
+		if (StringUtils.hasText(this.projectMetadata.getGroupId())
+				&& StringUtils.hasText(this.projectMetadata.getArtifactId())) {
 			return getGroupId() + "." + getArtifactId();
 		}
 		return null;
 	}
 
 	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+		this.projectMetadata.setPackageName(packageName);
 	}
 
 	public String getJavaVersion() {
-		return this.javaVersion;
+		return this.projectMetadata.getJavaVersion();
 	}
 
 	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
+		this.projectMetadata.setJavaVersion(javaVersion);
 	}
 
 	public String getBaseDir() {

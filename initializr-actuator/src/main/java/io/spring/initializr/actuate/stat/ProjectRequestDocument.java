@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 
+import io.spring.initializr.generator.buildsystem.ProjectMetadata;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.web.support.Agent;
 
@@ -36,21 +37,7 @@ public class ProjectRequestDocument {
 
 	private long generationTimestamp;
 
-	private String type;
-
 	private String buildSystem;
-
-	private String groupId;
-
-	private String artifactId;
-
-	private String javaVersion;
-
-	private String language;
-
-	private String packaging;
-
-	private String packageName;
 
 	private VersionInformation version;
 
@@ -59,6 +46,8 @@ public class ProjectRequestDocument {
 	private DependencyInformation dependencies;
 
 	private ErrorStateInformation errorState;
+
+	private ProjectMetadata projectMetadata = new ProjectMetadata(null, null, null, null, null, null, null);
 
 	public long getGenerationTimestamp() {
 		return this.generationTimestamp;
@@ -69,11 +58,11 @@ public class ProjectRequestDocument {
 	}
 
 	public String getType() {
-		return this.type;
+		return this.projectMetadata.getType();
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this.projectMetadata.setType(type);
 	}
 
 	public String getBuildSystem() {
@@ -85,51 +74,51 @@ public class ProjectRequestDocument {
 	}
 
 	public String getGroupId() {
-		return this.groupId;
+		return this.projectMetadata.getGroupId();
 	}
 
 	public void setGroupId(String groupId) {
-		this.groupId = groupId;
+		this.projectMetadata.setGroupId(groupId);
 	}
 
 	public String getArtifactId() {
-		return this.artifactId;
+		return this.projectMetadata.getArtifactId();
 	}
 
 	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
+		this.projectMetadata.setArtifactId(artifactId);
 	}
 
 	public String getJavaVersion() {
-		return this.javaVersion;
+		return this.projectMetadata.getJavaVersion();
 	}
 
 	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
+		this.projectMetadata.setJavaVersion(javaVersion);
 	}
 
 	public String getLanguage() {
-		return this.language;
+		return this.projectMetadata.getLanguage();
 	}
 
 	public void setLanguage(String language) {
-		this.language = language;
+		this.projectMetadata.setLanguage(language);
 	}
 
 	public String getPackaging() {
-		return this.packaging;
+		return this.projectMetadata.getPackaging();
 	}
 
 	public void setPackaging(String packaging) {
-		this.packaging = packaging;
+		this.projectMetadata.setPackaging(packaging);
 	}
 
 	public String getPackageName() {
-		return this.packageName;
+		return this.projectMetadata.getPackageName();
 	}
 
 	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+		this.projectMetadata.setPackageName(packageName);
 	}
 
 	public VersionInformation getVersion() {
@@ -171,14 +160,14 @@ public class ProjectRequestDocument {
 	public String toString() {
 		return new StringJoiner(", ", ProjectRequestDocument.class.getSimpleName() + "[", "]")
 			.add("generationTimestamp=" + this.generationTimestamp)
-			.add("type='" + this.type + "'")
+			.add("type='" + this.projectMetadata.getType() + "'")
 			.add("buildSystem='" + this.buildSystem + "'")
-			.add("groupId='" + this.groupId + "'")
-			.add("artifactId='" + this.artifactId + "'")
-			.add("javaVersion='" + this.javaVersion + "'")
-			.add("language='" + this.language + "'")
-			.add("packaging='" + this.packaging + "'")
-			.add("packageName='" + this.packageName + "'")
+			.add("groupId='" + this.projectMetadata.getGroupId() + "'")
+			.add("artifactId='" + this.projectMetadata.getArtifactId() + "'")
+			.add("javaVersion='" + this.projectMetadata.getJavaVersion() + "'")
+			.add("language='" + this.projectMetadata.getLanguage() + "'")
+			.add("packaging='" + this.projectMetadata.getPackaging() + "'")
+			.add("packageName='" + this.projectMetadata.getPackageName() + "'")
 			.add("version=" + this.version)
 			.add("client=" + this.client)
 			.add("dependencies=" + this.dependencies)
