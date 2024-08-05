@@ -16,34 +16,18 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
+import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.*;
+import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotatable;
-import io.spring.initializr.generator.language.Annotation;
-import io.spring.initializr.generator.language.ClassName;
-import io.spring.initializr.generator.language.CodeBlock;
-import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
-import io.spring.initializr.generator.language.CompilationUnit;
-import io.spring.initializr.generator.language.Parameter;
-import io.spring.initializr.generator.language.SourceCode;
-import io.spring.initializr.generator.language.SourceCodeWriter;
-import io.spring.initializr.generator.language.SourceStructure;
 
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
@@ -56,12 +40,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 	private static final FormattingOptions FORMATTING_OPTIONS = new KotlinFormattingOptions();
 
 	// Taken from https://kotlinlang.org/docs/keyword-reference.html#hard-keywords
-	// except keywords contains `!` or `?` because they should be handled as invalid package names already
-	private static final Set<String> KOTLIN_HARD_KEYWORDS = Set.of(
-			"package", "as", "typealias", "class", "this", "super", "val", "var", "fun", "for", "null", "true", "false",
-			"is", "in", "throw", "return", "break", "continue", "object", "if", "try", "else", "while", "do", "when",
-			"interface", "typeof"
-	);
+	// except keywords contains `!` or `?` because they should be handled as invalid
+	// package names already
+	private static final Set<String> KOTLIN_HARD_KEYWORDS = Set.of("package", "as", "typealias", "class", "this",
+			"super", "val", "var", "fun", "for", "null", "true", "false", "is", "in", "throw", "return", "break",
+			"continue", "object", "if", "try", "else", "while", "do", "when", "interface", "typeof");
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
@@ -78,8 +61,8 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private static String escapeKotlinKeywords(String packageName) {
 		return Arrays.stream(packageName.split("\\."))
-				.map(segment -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
-				.collect(Collectors.joining("."));
+			.map(segment -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
+			.collect(Collectors.joining("."));
 	}
 
 	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
