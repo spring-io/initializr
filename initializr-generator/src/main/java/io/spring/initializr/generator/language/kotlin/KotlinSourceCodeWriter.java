@@ -77,7 +77,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private static String escapeKotlinKeywords(String packageName) {
 		return Arrays.stream(packageName.split("\\."))
-			.map(segment -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
+			.map((segment) -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
 			.collect(Collectors.joining("."));
 	}
 
