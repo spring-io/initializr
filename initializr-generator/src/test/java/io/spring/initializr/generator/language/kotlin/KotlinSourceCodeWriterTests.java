@@ -16,13 +16,6 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.Annotation.Builder;
-import io.spring.initializr.generator.language.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.springframework.util.StreamUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +26,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.Annotation.Builder;
+import io.spring.initializr.generator.language.ClassName;
+import io.spring.initializr.generator.language.CodeBlock;
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.language.SourceStructure;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;

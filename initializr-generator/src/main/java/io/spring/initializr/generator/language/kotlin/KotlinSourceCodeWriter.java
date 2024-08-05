@@ -16,18 +16,34 @@
 
 package io.spring.initializr.generator.language.kotlin;
 
-import io.spring.initializr.generator.io.IndentingWriter;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.language.*;
-import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import io.spring.initializr.generator.io.IndentingWriter;
+import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.Annotatable;
+import io.spring.initializr.generator.language.Annotation;
+import io.spring.initializr.generator.language.ClassName;
+import io.spring.initializr.generator.language.CodeBlock;
+import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
+import io.spring.initializr.generator.language.CompilationUnit;
+import io.spring.initializr.generator.language.Parameter;
+import io.spring.initializr.generator.language.SourceCode;
+import io.spring.initializr.generator.language.SourceCodeWriter;
+import io.spring.initializr.generator.language.SourceStructure;
 
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
