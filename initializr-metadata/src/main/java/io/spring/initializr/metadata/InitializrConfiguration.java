@@ -103,11 +103,12 @@ public class InitializrConfiguration {
 	 * The package name cannot be cleaned if the specified {@code packageName} is
 	 * {@code null} or if it contains an invalid character for a class identifier.
 	 * @param packageName the package name
+	 * @param isKotlin if the package name clean is for kotlin project
 	 * @param defaultPackageName the default package name
 	 * @return the cleaned package name
 	 * @see Env#getInvalidPackageNames()
 	 */
-	public String cleanPackageName(String packageName, String defaultPackageName) {
+	public String cleanPackageName(String packageName, boolean isKotlin, String defaultPackageName) {
 		if (!StringUtils.hasText(packageName)) {
 			return defaultPackageName;
 		}
@@ -118,7 +119,9 @@ public class InitializrConfiguration {
 		if (hasInvalidChar(candidate.replace(".", "")) || this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
 		}
-		if (hasReservedKeyword(candidate)) {
+
+		// No check for Kotlin as its reserved keywords will be escaped later
+		if (!isKotlin && hasReservedKeyword(candidate)) {
 			return defaultPackageName;
 		}
 		else {

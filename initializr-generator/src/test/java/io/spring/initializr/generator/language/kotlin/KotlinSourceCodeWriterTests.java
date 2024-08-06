@@ -385,6 +385,30 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example.`in`");
 	}
 
+	@Test
+	void reservedJavaKeywordsStartPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("package.fun.example.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "package/fun/example/demo/Test.kt");
+		assertThat(lines).containsExactly("package `package`.`fun`.example.demo");
+	}
+
+	@Test
+	void reservedJavaKeywordsMiddlePackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.package.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/package/demo/Test.kt");
+		assertThat(lines).containsExactly("package com.`package`.demo");
+	}
+
+	@Test
+	void reservedJavaKeywordsEndPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.example.package", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/example/package/Test.kt");
+		assertThat(lines).containsExactly("package com.example.`package`");
+	}
+
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {

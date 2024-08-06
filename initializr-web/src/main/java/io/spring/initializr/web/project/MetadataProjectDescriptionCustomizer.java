@@ -16,8 +16,11 @@
 
 package io.spring.initializr.web.project;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.version.Version;
@@ -64,8 +67,14 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		else if (targetArtifactId.equals(description.getName())) {
 			description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
 		}
+
+		boolean isKotlin = Optional.ofNullable(description.getLanguage())
+			.map(Language::id)
+			.filter((id) -> id.equals(KotlinLanguage.ID))
+			.isPresent();
+
 		description.setPackageName(this.metadata.getConfiguration()
-			.cleanPackageName(description.getPackageName(), this.metadata.getPackageName().getContent()));
+			.cleanPackageName(description.getPackageName(), isKotlin, this.metadata.getPackageName().getContent()));
 		if (description.getPlatformVersion() == null) {
 			description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
 		}
