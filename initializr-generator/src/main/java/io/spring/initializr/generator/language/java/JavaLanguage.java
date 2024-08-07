@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.language.java;
 
+import javax.lang.model.SourceVersion;
+
 import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.Language;
 
@@ -38,6 +40,16 @@ public final class JavaLanguage extends AbstractLanguage {
 
 	public JavaLanguage(String jvmVersion) {
 		super(ID, jvmVersion, "java");
+	}
+
+	@Override
+	public boolean supportsEscapingKeywordsInPackage() {
+		return false;
+	}
+
+	@Override
+	public boolean isKeyword(String input) {
+		return SourceVersion.isKeyword(input);
 	}
 
 }

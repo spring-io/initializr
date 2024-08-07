@@ -40,6 +40,7 @@ import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
 import io.spring.initializr.generator.language.CompilationUnit;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -55,16 +56,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private static final FormattingOptions FORMATTING_OPTIONS = new KotlinFormattingOptions();
 
-	// Taken from https://kotlinlang.org/docs/keyword-reference.html#hard-keywords
-	// except keywords contains `!` or `?` because they should be handled as invalid
-	// package names already
-	private static final Set<String> KOTLIN_HARD_KEYWORDS = Set.of("package", "as", "typealias", "class", "this",
-			"super", "val", "var", "fun", "for", "null", "true", "false", "is", "in", "throw", "return", "break",
-			"continue", "object", "if", "try", "else", "while", "do", "when", "interface", "typeof");
+	private final Language language;
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+	public KotlinSourceCodeWriter(Language language, IndentingWriterFactory indentingWriterFactory) {
+		this.language = language;
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -73,12 +70,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		for (KotlinCompilationUnit compilationUnit : sourceCode.getCompilationUnits()) {
 			writeTo(structure, compilationUnit);
 		}
-	}
-
-	private static String escapeKotlinKeywords(String packageName) {
-		return Arrays.stream(packageName.split("\\."))
-			.map((segment) -> KOTLIN_HARD_KEYWORDS.contains(segment) ? "`" + segment + "`" : segment)
-			.collect(Collectors.joining("."));
 	}
 
 	private void writeTo(SourceStructure structure, KotlinCompilationUnit compilationUnit) throws IOException {
@@ -138,6 +129,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 
 		}
+	}
+
+	private String escapeKotlinKeywords(String packageName) {
+		return Arrays.stream(packageName.split("\\."))
+			.map((segment) -> this.language.isKeyword(segment) ? "`" + segment + "`" : segment)
+			.collect(Collectors.joining("."));
 	}
 
 	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {

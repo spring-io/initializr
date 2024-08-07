@@ -55,7 +55,7 @@ class KotlinSourceCodeWriterTests {
 	@TempDir
 	Path directory;
 
-	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(
+	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(new KotlinLanguage(),
 			IndentingWriterFactory.withDefaultSettings());
 
 	@Test
