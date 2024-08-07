@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.language.groovy;
 
+import java.util.Set;
+
 import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.Language;
 
@@ -23,8 +25,16 @@ import io.spring.initializr.generator.language.Language;
  * Groovy {@link Language}.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public final class GroovyLanguage extends AbstractLanguage {
+
+	// See https://docs.groovy-lang.org/latest/html/documentation/#_keywords
+	private static final Set<String> KEYWORDS = Set.of("abstract", "assert", "break", "case", "catch", "class", "const",
+			"continue", "def", "default", "do", "else", "enum", "extends", "final", "finally", "for", "goto", "if",
+			"implements", "import", "instanceof", "interface", "native", "new", "null", "non-sealed", "package",
+			"public", "protected", "private", "return", "static", "strictfp", "super", "switch", "synchronized", "this",
+			"threadsafe", "throw", "throws", "transient", "try", "while");
 
 	/**
 	 * Groovy {@link Language} identifier.
@@ -37,6 +47,16 @@ public final class GroovyLanguage extends AbstractLanguage {
 
 	public GroovyLanguage(String jvmVersion) {
 		super(ID, jvmVersion, "groovy");
+	}
+
+	@Override
+	public boolean supportsEscapingKeywordsInPackage() {
+		return false;
+	}
+
+	@Override
+	public boolean isKeyword(String input) {
+		return KEYWORDS.contains(input);
 	}
 
 }

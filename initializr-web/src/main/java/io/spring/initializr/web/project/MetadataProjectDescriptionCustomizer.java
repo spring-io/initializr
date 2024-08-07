@@ -65,7 +65,8 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 			description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
 		}
 		description.setPackageName(this.metadata.getConfiguration()
-			.cleanPackageName(description.getPackageName(), this.metadata.getPackageName().getContent()));
+			.cleanPackageName(description.getPackageName(), description.getLanguage(),
+					this.metadata.getPackageName().getContent()));
 		if (description.getPlatformVersion() == null) {
 			description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
 		}

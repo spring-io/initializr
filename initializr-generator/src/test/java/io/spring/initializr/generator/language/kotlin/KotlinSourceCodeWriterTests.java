@@ -55,7 +55,7 @@ class KotlinSourceCodeWriterTests {
 	@TempDir
 	Path directory;
 
-	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(
+	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(new KotlinLanguage(),
 			IndentingWriterFactory.withDefaultSettings());
 
 	@Test
@@ -359,6 +359,54 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.MyService",
 				"import com.example.stereotype.Service", "", "class Test {", "",
 				"    fun something(@Service service: MyService) {", "    }", "", "}");
+	}
+
+	@Test
+	void reservedKeywordsStartPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("fun.example.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "fun/example/demo/Test.kt");
+		assertThat(lines).containsExactly("package `fun`.example.demo");
+	}
+
+	@Test
+	void reservedKeywordsMiddlePackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.false.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/false/demo/Test.kt");
+		assertThat(lines).containsExactly("package com.`false`.demo");
+	}
+
+	@Test
+	void reservedKeywordsEndPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.example.in", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/example/in/Test.kt");
+		assertThat(lines).containsExactly("package com.example.`in`");
+	}
+
+	@Test
+	void reservedJavaKeywordsStartPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("package.fun.example.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "package/fun/example/demo/Test.kt");
+		assertThat(lines).containsExactly("package `package`.`fun`.example.demo");
+	}
+
+	@Test
+	void reservedJavaKeywordsMiddlePackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.package.demo", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/package/demo/Test.kt");
+		assertThat(lines).containsExactly("package com.`package`.demo");
+	}
+
+	@Test
+	void reservedJavaKeywordsEndPackageName() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		sourceCode.createCompilationUnit("com.example.package", "Test");
+		List<String> lines = writeSingleType(sourceCode, "com/example/package/Test.kt");
+		assertThat(lines).containsExactly("package com.example.`package`");
 	}
 
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {

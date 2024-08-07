@@ -71,8 +71,8 @@ public class KotlinProjectGenerationConfiguration {
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
 		return new MainSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
-				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
+				new KotlinSourceCodeWriter(this.description.getLanguage(), this.indentingWriterFactory),
+				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
@@ -80,8 +80,8 @@ public class KotlinProjectGenerationConfiguration {
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
 		return new TestSourceCodeProjectContributor<>(this.description, KotlinSourceCode::new,
-				new KotlinSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
-				testSourceCodeCustomizers);
+				new KotlinSourceCodeWriter(this.description.getLanguage(), this.indentingWriterFactory),
+				testApplicationTypeCustomizers, testSourceCodeCustomizers);
 	}
 
 	@Bean

@@ -24,6 +24,7 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * A language in which a generated project can be written.
  *
  * @author Andy Wilkinson
+ * @author Moritz Halbritter
  */
 public interface Language {
 
@@ -49,6 +50,19 @@ public interface Language {
 	 * @return the source file extension
 	 */
 	String sourceFileExtension();
+
+	/**
+	 * Whether the language supports escaping keywords in package declarations.
+	 * @return whether the language supports escaping keywords in package declarations.
+	 */
+	boolean supportsEscapingKeywordsInPackage();
+
+	/**
+	 * Whether the given {@code input} is a keyword.
+	 * @param input the input
+	 * @return whether the input is a keyword
+	 */
+	boolean isKeyword(String input);
 
 	static Language forId(String id, String jvmVersion) {
 		return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader())

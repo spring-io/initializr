@@ -25,9 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.SourceVersion;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.version.InvalidVersionException;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Format;
@@ -103,11 +102,12 @@ public class InitializrConfiguration {
 	 * The package name cannot be cleaned if the specified {@code packageName} is
 	 * {@code null} or if it contains an invalid character for a class identifier.
 	 * @param packageName the package name
+	 * @param language the project language
 	 * @param defaultPackageName the default package name
 	 * @return the cleaned package name
 	 * @see Env#getInvalidPackageNames()
 	 */
-	public String cleanPackageName(String packageName, String defaultPackageName) {
+	public String cleanPackageName(String packageName, Language language, String defaultPackageName) {
 		if (!StringUtils.hasText(packageName)) {
 			return defaultPackageName;
 		}
@@ -118,12 +118,16 @@ public class InitializrConfiguration {
 		if (hasInvalidChar(candidate.replace(".", "")) || this.env.invalidPackageNames.contains(candidate)) {
 			return defaultPackageName;
 		}
-		if (hasReservedKeyword(candidate)) {
-			return defaultPackageName;
+		if (!supportsEscapingKeywordsInPackage(language)) {
+			if (hasReservedKeyword(language, candidate)) {
+				return defaultPackageName;
+			}
 		}
-		else {
-			return candidate;
-		}
+		return candidate;
+	}
+
+	private boolean supportsEscapingKeywordsInPackage(Language language) {
+		return (language != null) ? language.supportsEscapingKeywordsInPackage() : false;
 	}
 
 	static String cleanPackageName(String packageName) {
@@ -165,8 +169,11 @@ public class InitializrConfiguration {
 		return false;
 	}
 
-	private static boolean hasReservedKeyword(final String packageName) {
-		return Arrays.stream(packageName.split("\\.")).anyMatch(SourceVersion::isKeyword);
+	private static boolean hasReservedKeyword(Language language, String packageName) {
+		if (language == null) {
+			return false;
+		}
+		return Arrays.stream(packageName.split("\\.")).anyMatch(language::isKeyword);
 	}
 
 	/**

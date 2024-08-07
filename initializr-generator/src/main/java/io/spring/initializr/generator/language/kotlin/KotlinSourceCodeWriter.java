@@ -40,6 +40,7 @@ import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.CodeBlock.FormattingOptions;
 import io.spring.initializr.generator.language.CompilationUnit;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
@@ -55,9 +56,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private static final FormattingOptions FORMATTING_OPTIONS = new KotlinFormattingOptions();
 
+	private final Language language;
+
 	private final IndentingWriterFactory indentingWriterFactory;
 
-	public KotlinSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+	public KotlinSourceCodeWriter(Language language, IndentingWriterFactory indentingWriterFactory) {
+		this.language = language;
 		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
@@ -73,7 +77,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		Files.createDirectories(output.getParent());
 		try (IndentingWriter writer = this.indentingWriterFactory.createIndentingWriter("kotlin",
 				Files.newBufferedWriter(output))) {
-			writer.println("package " + compilationUnit.getPackageName());
+			writer.println("package " + escapeKotlinKeywords(compilationUnit.getPackageName()));
 			writer.println();
 			Set<String> imports = determineImports(compilationUnit);
 			if (!imports.isEmpty()) {
@@ -125,6 +129,12 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			}
 
 		}
+	}
+
+	private String escapeKotlinKeywords(String packageName) {
+		return Arrays.stream(packageName.split("\\."))
+			.map((segment) -> this.language.isKeyword(segment) ? "`" + segment + "`" : segment)
+			.collect(Collectors.joining("."));
 	}
 
 	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {
