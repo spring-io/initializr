@@ -21,6 +21,7 @@ import java.util.List;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 
+import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -59,6 +60,13 @@ class KotlinGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private List<String> quote(List<String> compilerArgs) {
 		return compilerArgs.stream().map((element) -> this.quote + element + this.quote).toList();
+	}
+
+	@Override
+	public int getOrder() {
+		// See
+		// io.spring.initializr.generator.spring.build.gradle.GradleProjectGenerationConfiguration.LANGUAGE_PLUGINS_ORDER
+		return Ordered.HIGHEST_PRECEDENCE + 5;
 	}
 
 }
