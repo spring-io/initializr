@@ -28,7 +28,7 @@ import org.springframework.test.context.ActiveProfiles;
  * @author HaiTao Zhang
  */
 @ActiveProfiles("test-default")
-public class ProjectGenerationControllerArchiveIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
+class ProjectGenerationControllerArchiveIntegrationTests extends AbstractFullStackInitializrIntegrationTests {
 
 	@Test
 	void baseDirectorySeparatedBySpace() {

@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class SpringCliDistributionControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class SpringCliDistributionControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void downloadCli() throws Exception {

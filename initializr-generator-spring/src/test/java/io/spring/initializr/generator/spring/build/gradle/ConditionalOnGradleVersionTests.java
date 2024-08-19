@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-public class ConditionalOnGradleVersionTests {
+class ConditionalOnGradleVersionTests {
 
 	private final ProjectAssetTester projectTester = new ProjectAssetTester()
 		.withConfiguration(GradleVersionTestConfiguration.class);

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @SuppressWarnings("removal")
-public class GradleTaskTests {
+class GradleTaskTests {
 
 	@Test
 	void attributeSetHasSensibleToString() {

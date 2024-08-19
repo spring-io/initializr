@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Joachim Pasquali
  */
-public class MavenScmTests {
+class MavenScmTests {
 
 	@Test
 	void isEmptyWithNoData() {

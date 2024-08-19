@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for {@link MavenProfileActivation}.
  */
-public class MavenProfileActivationTests {
+class MavenProfileActivationTests {
 
 	@Test
 	void profileWithNoActivation() {

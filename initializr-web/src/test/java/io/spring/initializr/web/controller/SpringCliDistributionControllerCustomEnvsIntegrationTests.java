@@ -33,8 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-custom-env" })
-public class SpringCliDistributionControllerCustomEnvsIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+class SpringCliDistributionControllerCustomEnvsIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void downloadCliWithCustomRepository() throws Exception {

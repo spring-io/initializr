@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class ProjectMetadataControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class ProjectMetadataControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void metadataWithNoAcceptHeader() {

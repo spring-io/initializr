@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
-public class CommandLineMetadataControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class CommandLineMetadataControllerIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void curlReceivesTextByDefault() {

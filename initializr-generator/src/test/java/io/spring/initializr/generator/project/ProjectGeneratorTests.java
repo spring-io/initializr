@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
  *
  * @author Stephane Nicoll
  */
-public class ProjectGeneratorTests {
+class ProjectGeneratorTests {
 
 	@Test
 	void generateRegisterProjectDescription() {

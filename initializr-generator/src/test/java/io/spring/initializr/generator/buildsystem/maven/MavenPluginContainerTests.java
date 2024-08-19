@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author HaiTao Zhang
  * @author Stephane Nicoll
  */
-public class MavenPluginContainerTests {
+class MavenPluginContainerTests {
 
 	@Test
 	void addPlugin() {

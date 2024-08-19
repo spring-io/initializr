@@ -59,7 +59,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Madhura Bhave
  */
-public class ProjectGenerationInvokerTests {
+class ProjectGenerationInvokerTests {
 
 	private static final InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 

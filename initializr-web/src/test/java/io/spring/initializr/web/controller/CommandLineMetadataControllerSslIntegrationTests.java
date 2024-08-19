@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  */
 @ActiveProfiles({ "test-default", "test-ssl" })
-public class CommandLineMetadataControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
+class CommandLineMetadataControllerSslIntegrationTests extends AbstractInitializrControllerIntegrationTests {
 
 	@Test
 	void forceSsl() {

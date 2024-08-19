@@ -136,6 +136,8 @@ public class GradleProjectGenerationConfiguration {
 
 	/**
 	 * Configuration specific to projects using Gradle 6.
+	 *
+	 * @deprecated Gradle 6 support is deprecated
 	 */
 	@Configuration
 	@ConditionalOnGradleVersion("6")
