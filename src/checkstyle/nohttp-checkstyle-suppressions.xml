@@ -5,7 +5,7 @@
 <suppressions>
 	<suppress files="[\\/]build.log" checks="NoHttp"/>
 	<suppress files=".+\.(jar|git|ico|p12|gif|jks|jpg|svg)" checks="NoHttp"/>
-	<suppress files="\.mvn/wrapper/maven-wrapper\.properties" checks="NoHttp"/>
-	<suppress files="mvnw\.cmd" checks="NoHttp"/>
-	<suppress files="mvnw" checks="NoHttp"/>
+	<suppress files="[\\/]\.mvn[\\/]wrapper[\\/]maven-wrapper\.properties" checks="NoHttp"/>
+	<suppress files="[\\/]mvnw\.cmd" checks="NoHttp"/>
+	<suppress files="[\\/]mvnw" checks="NoHttp"/>
 </suppressions>
