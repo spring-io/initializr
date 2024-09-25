@@ -57,21 +57,17 @@ public class KotlinProjectGenerationConfiguration {
 
 	private final ProjectDescription description;
 
-	private final IndentingWriterFactory indentingWriterFactory;
-
-	public KotlinProjectGenerationConfiguration(ProjectDescription description,
-			IndentingWriterFactory indentingWriterFactory) {
+	public KotlinProjectGenerationConfiguration(ProjectDescription description) {
 		this.description = description;
-		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
 	@Bean
-	public KotlinSourceCodeWriter kotlinSourceCodeWriter() {
-		return new KotlinSourceCodeWriter(this.description.getLanguage(), this.indentingWriterFactory);
+	KotlinSourceCodeWriter kotlinSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+		return new KotlinSourceCodeWriter(this.description.getLanguage(), indentingWriterFactory);
 	}
 
 	@Bean
-	public MainSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> mainKotlinSourceCodeProjectContributor(
+	MainSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> mainKotlinSourceCodeProjectContributor(
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers,
@@ -81,7 +77,7 @@ public class KotlinProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(
+	TestSourceCodeProjectContributor<KotlinTypeDeclaration, KotlinCompilationUnit, KotlinSourceCode> testKotlinSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers,
 			KotlinSourceCodeWriter kotlinSourceCodeWriter) {

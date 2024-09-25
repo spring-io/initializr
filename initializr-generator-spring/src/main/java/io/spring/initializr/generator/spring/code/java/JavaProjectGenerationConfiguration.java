@@ -50,21 +50,17 @@ public class JavaProjectGenerationConfiguration {
 
 	private final ProjectDescription description;
 
-	private final IndentingWriterFactory indentingWriterFactory;
-
-	public JavaProjectGenerationConfiguration(ProjectDescription description,
-			IndentingWriterFactory indentingWriterFactory) {
+	public JavaProjectGenerationConfiguration(ProjectDescription description) {
 		this.description = description;
-		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
 	@Bean
-	public JavaSourceCodeWriter javaSourceCodeWriter() {
-		return new JavaSourceCodeWriter(this.indentingWriterFactory);
+	JavaSourceCodeWriter javaSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+		return new JavaSourceCodeWriter(indentingWriterFactory);
 	}
 
 	@Bean
-	public MainSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> mainJavaSourceCodeProjectContributor(
+	MainSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> mainJavaSourceCodeProjectContributor(
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers,
@@ -74,7 +70,7 @@ public class JavaProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public TestSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> testJavaSourceCodeProjectContributor(
+	TestSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> testJavaSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers,
 			JavaSourceCodeWriter javaSourceCodeWriter) {

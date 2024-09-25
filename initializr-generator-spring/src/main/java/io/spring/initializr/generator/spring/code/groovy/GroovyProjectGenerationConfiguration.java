@@ -50,21 +50,17 @@ public class GroovyProjectGenerationConfiguration {
 
 	private final ProjectDescription description;
 
-	private final IndentingWriterFactory indentingWriterFactory;
-
-	public GroovyProjectGenerationConfiguration(ProjectDescription description,
-			IndentingWriterFactory indentingWriterFactory) {
+	public GroovyProjectGenerationConfiguration(ProjectDescription description) {
 		this.description = description;
-		this.indentingWriterFactory = indentingWriterFactory;
 	}
 
 	@Bean
-	public GroovySourceCodeWriter groovySourceCodeWriter() {
-		return new GroovySourceCodeWriter(this.indentingWriterFactory);
+	GroovySourceCodeWriter groovySourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
+		return new GroovySourceCodeWriter(indentingWriterFactory);
 	}
 
 	@Bean
-	public MainSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> mainGroovySourceCodeProjectContributor(
+	MainSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> mainGroovySourceCodeProjectContributor(
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
 			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers,
@@ -74,7 +70,7 @@ public class GroovyProjectGenerationConfiguration {
 	}
 
 	@Bean
-	public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
+	TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
 			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers,
 			GroovySourceCodeWriter groovySourceCodeWriter) {
