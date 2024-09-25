@@ -59,22 +59,27 @@ public class GroovyProjectGenerationConfiguration {
 	}
 
 	@Bean
+	public GroovySourceCodeWriter groovySourceCodeWriter() {
+		return new GroovySourceCodeWriter(this.indentingWriterFactory);
+	}
+
+	@Bean
 	public MainSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> mainGroovySourceCodeProjectContributor(
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
-			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
-				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
+			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers,
+			GroovySourceCodeWriter groovySourceCodeWriter) {
+		return new MainSourceCodeProjectContributor<>(this.description, GroovySourceCode::new, groovySourceCodeWriter,
+				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
 	public TestSourceCodeProjectContributor<GroovyTypeDeclaration, GroovyCompilationUnit, GroovySourceCode> testGroovySourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
-			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.description, GroovySourceCode::new,
-				new GroovySourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
-				testSourceCodeCustomizers);
+			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers,
+			GroovySourceCodeWriter groovySourceCodeWriter) {
+		return new TestSourceCodeProjectContributor<>(this.description, GroovySourceCode::new, groovySourceCodeWriter,
+				testApplicationTypeCustomizers, testSourceCodeCustomizers);
 	}
 
 }

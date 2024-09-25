@@ -59,22 +59,27 @@ public class JavaProjectGenerationConfiguration {
 	}
 
 	@Bean
+	public JavaSourceCodeWriter javaSourceCodeWriter() {
+		return new JavaSourceCodeWriter(this.indentingWriterFactory);
+	}
+
+	@Bean
 	public MainSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> mainJavaSourceCodeProjectContributor(
 			ObjectProvider<MainApplicationTypeCustomizer<?>> mainApplicationTypeCustomizers,
 			ObjectProvider<MainCompilationUnitCustomizer<?, ?>> mainCompilationUnitCustomizers,
-			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers) {
-		return new MainSourceCodeProjectContributor<>(this.description, JavaSourceCode::new,
-				new JavaSourceCodeWriter(this.indentingWriterFactory), mainApplicationTypeCustomizers,
-				mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
+			ObjectProvider<MainSourceCodeCustomizer<?, ?, ?>> mainSourceCodeCustomizers,
+			JavaSourceCodeWriter javaSourceCodeWriter) {
+		return new MainSourceCodeProjectContributor<>(this.description, JavaSourceCode::new, javaSourceCodeWriter,
+				mainApplicationTypeCustomizers, mainCompilationUnitCustomizers, mainSourceCodeCustomizers);
 	}
 
 	@Bean
 	public TestSourceCodeProjectContributor<JavaTypeDeclaration, JavaCompilationUnit, JavaSourceCode> testJavaSourceCodeProjectContributor(
 			ObjectProvider<TestApplicationTypeCustomizer<?>> testApplicationTypeCustomizers,
-			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers) {
-		return new TestSourceCodeProjectContributor<>(this.description, JavaSourceCode::new,
-				new JavaSourceCodeWriter(this.indentingWriterFactory), testApplicationTypeCustomizers,
-				testSourceCodeCustomizers);
+			ObjectProvider<TestSourceCodeCustomizer<?, ?, ?>> testSourceCodeCustomizers,
+			JavaSourceCodeWriter javaSourceCodeWriter) {
+		return new TestSourceCodeProjectContributor<>(this.description, JavaSourceCode::new, javaSourceCodeWriter,
+				testApplicationTypeCustomizers, testSourceCodeCustomizers);
 	}
 
 }
