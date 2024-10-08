@@ -48,8 +48,29 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-			//TODO jakarta or javax 일 때, 알맞은 구성 추가
+			if(this.buildMetadataResolver.dependencies(build).anyMatch(a -> a.getGroupId().equals("javax.persistence"))) {
+				customizeAllOpenJPA_TEMP_jakarta(build);
+			} else if(this.buildMetadataResolver.dependencies(build).anyMatch(a -> a.getGroupId().equals("jakarta.persistence"))) {
+				customizeAllOpenJPA_TEMP_javax(build);
+			}
 		}
 	}
+
+	private void customizeAllOpenJPA_TEMP_jakarta(GradleBuild build) {
+		build.extensions().customize("allOpen", (allOpen) -> {
+			allOpen.invoke("annotation", "jakarta.persistence.Entity");
+			allOpen.invoke("annotation", "jakarta.persistence.MappedSuperclass");
+			allOpen.invoke("annotation", "jakarta.persistence.Embeddable");
+		});
+	}
+
+	private void customizeAllOpenJPA_TEMP_javax(GradleBuild build) {
+		build.extensions().customize("allOpen", (allOpen) -> {
+			allOpen.invoke("annotation", "javax.persistence.Entity");
+			allOpen.invoke("annotation", "javax.persistence.MappedSuperclass");
+			allOpen.invoke("annotation", "javax.persistence.Embeddable");
+		});
+	}
+
 
 }
