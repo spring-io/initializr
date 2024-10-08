@@ -48,9 +48,10 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-			if(this.buildMetadataResolver.dependencies(build).anyMatch(a -> a.getGroupId().equals("javax.persistence"))) {
+			if (this.buildMetadataResolver.hasGroupId(build, "jakarta.persistence")) {
 				customizeAllOpenJPA_TEMP_jakarta(build);
-			} else if(this.buildMetadataResolver.dependencies(build).anyMatch(a -> a.getGroupId().equals("jakarta.persistence"))) {
+			}
+			else if (this.buildMetadataResolver.hasGroupId(build, "javax.persistence")) {
 				customizeAllOpenJPA_TEMP_javax(build);
 			}
 		}
@@ -71,6 +72,5 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 			allOpen.invoke("annotation", "javax.persistence.Embeddable");
 		});
 	}
-
 
 }
