@@ -29,6 +29,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  *
  * @author Madhura Bhave
  */
+// BuildCustomizer 구현체를 보니 Kotlin + JPA 관련 객체가 이미 있음.
 public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private final BuildMetadataResolver buildMetadataResolver;
@@ -43,9 +44,11 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	@Override
 	public void customize(GradleBuild build) {
+		// jpa가 있을때, 특정 조건 추가
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+			//TODO jakarta or javax 일 때, 알맞은 구성 추가
 		}
 	}
 
