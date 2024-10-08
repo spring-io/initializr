@@ -17,9 +17,12 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
+import io.spring.initializr.generator.buildsystem.gradle.Invocation;
 import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -71,6 +74,41 @@ class KotlinJpaGradleBuildCustomizerTests {
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;
+	}
+
+	@Test
+	void customizeWhenJakartaPersistencePresentShouldCustomizeAllOpenWithJakarta() {
+		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency);
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
+		});
+		assertThat(build.extensions().values()).singleElement().satisfies((extension) -> {
+			assertThat(extension.getName()).isEqualTo("allOpen");
+			assertThat(extension.getInvocations())
+				.filteredOn(invocation -> Objects.equals(invocation.getTarget(), "annotation"))
+				.extracting("arguments")
+				.containsExactlyInAnyOrder(List.of("jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass", "jakarta.persistence.Embeddable"));
+		});
+	}
+
+	@Test
+	void customizeWhenJavaxPersistencePresentShouldCustomizeAllOpenWithJavax() {
+		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency);
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa");
+		});
+		assertThat(build.extensions().values()).singleElement().satisfies((extension) -> {
+			assertThat(extension.getName()).isEqualTo("allOpen");
+			assertThat(extension.getInvocations())
+				.filteredOn(invocation -> Objects.equals(invocation.getTarget(), "annotation"))
+				.extracting("arguments")
+				.containsExactlyInAnyOrder(List.of("javax.persistence.Entity", "javax.persistence.MappedSuperclass", "javax.persistence.Embeddable"));
+		});
+
 	}
 
 }
