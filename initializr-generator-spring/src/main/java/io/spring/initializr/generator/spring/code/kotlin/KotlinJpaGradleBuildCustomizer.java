@@ -44,32 +44,29 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	@Override
 	public void customize(GradleBuild build) {
-		// jpa가 있을때, 특정 조건 추가
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
 			if (this.buildMetadataResolver.hasGroupId(build, "jakarta.persistence")) {
-				customizeAllOpenJPA_TEMP_jakarta(build);
+				customizeAllOpenWithJakarta(build);
 			}
 			else if (this.buildMetadataResolver.hasGroupId(build, "javax.persistence")) {
-				customizeAllOpenJPA_TEMP_javax(build);
+				customizeAllOpenWithJavax(build);
 			}
 		}
 	}
 
-	private void customizeAllOpenJPA_TEMP_jakarta(GradleBuild build) {
+	private void customizeAllOpenWithJakarta(GradleBuild build) {
 		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "jakarta.persistence.Entity");
-			allOpen.invoke("annotation", "jakarta.persistence.MappedSuperclass");
-			allOpen.invoke("annotation", "jakarta.persistence.Embeddable");
+			allOpen.invoke("annotation", "jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass",
+					"jakarta.persistence.Embeddable");
 		});
 	}
 
-	private void customizeAllOpenJPA_TEMP_javax(GradleBuild build) {
+	private void customizeAllOpenWithJavax(GradleBuild build) {
 		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "javax.persistence.Entity");
-			allOpen.invoke("annotation", "javax.persistence.MappedSuperclass");
-			allOpen.invoke("annotation", "javax.persistence.Embeddable");
+			allOpen.invoke("annotation", "javax.persistence.Entity", "javax.persistence.MappedSuperclass",
+					"javax.persistence.Embeddable");
 		});
 	}
 
