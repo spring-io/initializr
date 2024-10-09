@@ -44,7 +44,7 @@ public class GradleBuildProjectContributor implements BuildWriter, ProjectContri
 
 	private final String buildFileName;
 
-	public GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build,
+	GradleBuildProjectContributor(GradleBuildWriter buildWriter, GradleBuild build,
 			IndentingWriterFactory indentingWriterFactory, String buildFileName) {
 		this.buildWriter = buildWriter;
 		this.build = build;
