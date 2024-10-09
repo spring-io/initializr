@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
 public class GitProjectGenerationConfiguration {
@@ -43,6 +44,18 @@ public class GitProjectGenerationConfiguration {
 		GitIgnore gitIgnore = createGitIgnore();
 		gitIgnoreCustomizers.orderedStream().forEach((customizer) -> customizer.customize(gitIgnore));
 		return gitIgnore;
+	}
+
+	@Bean
+	GitAttributesContributor gitAttributesContributor(GitAttributes gitAttributes) {
+		return new GitAttributesContributor(gitAttributes);
+	}
+
+	@Bean
+	GitAttributes gitAttributes(ObjectProvider<GitAttributesCustomizer> gitAttributesCustomizers) {
+		GitAttributes gitAttributes = new GitAttributes();
+		gitAttributesCustomizers.orderedStream().forEach((customizer) -> customizer.customize(gitAttributes));
+		return gitAttributes;
 	}
 
 	@Bean
@@ -65,6 +78,25 @@ public class GitProjectGenerationConfiguration {
 						"!**/src/test/**/build/");
 			gitIgnore.getIntellijIdea().add("out/", "!**/src/main/**/out/", "!**/src/test/**/out/");
 			gitIgnore.getSts().add("bin/", "!**/src/main/**/bin/", "!**/src/test/**/bin/");
+		};
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
+	public GitAttributesCustomizer mavenGitAttributesCustomizer() {
+		return (gitAttributes) -> {
+			gitAttributes.add("/mvnw", "text", "eol=lf");
+			gitAttributes.add("*.cmd", "text", "eol=crlf");
+		};
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
+	public GitAttributesCustomizer gradleGitAttributesCustomizer() {
+		return (gitAttributes) -> {
+			gitAttributes.add("/gradlew", "text", "eol=lf");
+			gitAttributes.add("*.bat", "text", "eol=crlf");
+			gitAttributes.add("*.jar", "binary");
 		};
 	}
 

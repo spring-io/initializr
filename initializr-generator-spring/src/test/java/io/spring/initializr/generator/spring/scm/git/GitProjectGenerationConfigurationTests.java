@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link GitProjectGenerationConfiguration}.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 class GitProjectGenerationConfigurationTests {
 
@@ -85,11 +86,55 @@ class GitProjectGenerationConfigurationTests {
 			.doesNotContain(".gradle", "!gradle/wrapper/gradle-wrapper.jar", "/out/");
 	}
 
+	@Test
+	void gitAttributesIsContributedToProject(@TempDir Path directory) {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new GradleBuildSystem());
+		Path projectDirectory = this.projectTester.withDirectory(directory).generate(description, (context) -> {
+			GitAttributesContributor contributor = context.getBean(GitAttributesContributor.class);
+			contributor.contribute(directory);
+			return directory;
+		});
+		assertThat(projectDirectory.resolve(".gitattributes")).isRegularFile();
+	}
+
+	@Test
+	void gitAttributesGradle() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new GradleBuildSystem());
+		description.setPlatformVersion(Version.parse("3.4.0"));
+		assertThat(generateGitAttributes(description))
+			.contains("/gradlew text eol=lf", "*.bat text eol=crlf", "*.jar binary")
+			.doesNotContain("/mvnw text eol=lf", "*.cmd text eol=crlf");
+	}
+
+	@Test
+	void gitAttributesMaven() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(new MavenBuildSystem());
+		description.setPlatformVersion(Version.parse("3.3.0"));
+		assertThat(generateGitAttributes(description)).contains("/mvnw text eol=lf", "*.cmd text eol=crlf")
+			.doesNotContain("/gradlew text eol=lf", "*.bat text eol=crlf", "*.jar binary");
+	}
+
 	private List<String> generateGitIgnore(MutableProjectDescription description) {
 		return this.projectTester.generate(description, (context) -> {
 			GitIgnore gitIgnore = context.getBean(GitIgnore.class);
 			StringWriter out = new StringWriter();
-			gitIgnore.write(new PrintWriter(out));
+			try (PrintWriter printWriter = new PrintWriter(out)) {
+				gitIgnore.write(printWriter);
+			}
+			return TextTestUtils.readAllLines(out.toString());
+		});
+	}
+
+	private List<String> generateGitAttributes(MutableProjectDescription description) {
+		return this.projectTester.generate(description, (context) -> {
+			GitAttributes gitAttributes = context.getBean(GitAttributes.class);
+			StringWriter out = new StringWriter();
+			try (PrintWriter printWriter = new PrintWriter(out)) {
+				gitAttributes.write(printWriter);
+			}
 			return TextTestUtils.readAllLines(out.toString());
 		});
 	}

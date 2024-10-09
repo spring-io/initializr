@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,27 @@ import java.nio.file.Path;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * A {@link ProjectContributor} that contributes a {@code .gitignore} file to a project.
+ * A {@link ProjectContributor} that contributes a {@code .gitattributes} file to a
+ * project.
  *
- * @author Andy Wilkinson
- * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
-public class GitIgnoreContributor implements ProjectContributor {
+public class GitAttributesContributor implements ProjectContributor {
 
-	private final GitIgnore gitIgnore;
+	private final GitAttributes gitAttributes;
 
-	public GitIgnoreContributor(GitIgnore gitIgnore) {
-		this.gitIgnore = gitIgnore;
+	public GitAttributesContributor(GitAttributes gitAttributes) {
+		this.gitAttributes = gitAttributes;
 	}
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		if (this.gitIgnore.isEmpty()) {
+		if (this.gitAttributes.isEmpty()) {
 			return;
 		}
-		Path file = Files.createFile(projectRoot.resolve(".gitignore"));
+		Path file = Files.createFile(projectRoot.resolve(".gitattributes"));
 		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
-			this.gitIgnore.write(writer);
+			this.gitAttributes.write(writer);
 		}
 	}
 
