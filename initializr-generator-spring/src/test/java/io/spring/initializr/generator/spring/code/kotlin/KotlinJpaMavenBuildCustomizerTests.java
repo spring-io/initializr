@@ -16,19 +16,12 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collections;
 
-import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
-import io.spring.initializr.generator.spring.build.maven.MavenBuildProjectContributor;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
-import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -127,37 +120,6 @@ class KotlinJpaMavenBuildCustomizerTests {
 		build.dependencies().add("foo");
 		customizer.customize(build);
 		return build;
-	}
-
-	@Test
-	void tempTestForBuildFile1() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
-				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
-		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
-		MavenBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor = generatePom(build, indentingWriterFactory);
-		StringWriter writer = new StringWriter();
-		gradleBuildProjectContributor.writeBuild(writer);
-		System.out.println(TextTestUtils.readAllLines(writer.toString()));
-	}
-
-	@Test
-	void tempTestForBuildFile2() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
-				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
-		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
-		MavenBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor = generatePom(build, indentingWriterFactory);
-		StringWriter writer = new StringWriter();
-		gradleBuildProjectContributor.writeBuild(writer);
-		System.out.println(TextTestUtils.readAllLines(writer.toString()));
-	}
-
-	private MavenBuildProjectContributor generatePom(MavenBuild mavenBuild,
-			IndentingWriterFactory indentingWriterFactory) {
-		return new MavenBuildProjectContributor(mavenBuild, indentingWriterFactory);
 	}
 
 }

@@ -16,19 +16,13 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import io.spring.initializr.generator.buildsystem.gradle.*;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.MutableProjectDescription;
-import io.spring.initializr.generator.spring.build.gradle.GradleBuildProjectContributor;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
-import io.spring.initializr.generator.test.io.TextTestUtils;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -115,38 +109,6 @@ class KotlinJpaGradleBuildCustomizerTests {
 						"javax.persistence.Embeddable");
 		});
 
-	}
-
-	private GradleBuildProjectContributor kotlinDslGradleBuildProjectContributor(GradleBuild build,
-			IndentingWriterFactory indentingWriterFactory) {
-		return new GradleBuildProjectContributor(new KotlinDslGradleBuildWriter(), build, indentingWriterFactory,
-				"build.gradle.kts");
-	}
-
-	@Test
-	void tempTestForBuildFile1() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
-				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
-		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
-		GradleBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor = kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
-		StringWriter writer = new StringWriter();
-		gradleBuildProjectContributor.writeBuild(writer);
-		System.out.println(TextTestUtils.readAllLines(writer.toString()));
-	}
-
-	@Test
-	void tempTestForBuildFile2() throws IOException {
-		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
-				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
-		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
-		GradleBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor = kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
-		StringWriter writer = new StringWriter();
-		gradleBuildProjectContributor.writeBuild(writer);
-		System.out.println(TextTestUtils.readAllLines(writer.toString()));
 	}
 
 }
