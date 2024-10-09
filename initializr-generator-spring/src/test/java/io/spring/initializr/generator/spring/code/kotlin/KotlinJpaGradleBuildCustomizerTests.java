@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import io.spring.initializr.generator.buildsystem.gradle.*;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
+import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
