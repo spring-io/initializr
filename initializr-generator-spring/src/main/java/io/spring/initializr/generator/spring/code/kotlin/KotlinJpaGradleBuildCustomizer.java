@@ -58,15 +58,17 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	private void customizeAllOpenWithJakarta(GradleBuild build) {
 		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass",
-					"jakarta.persistence.Embeddable");
+			allOpen.invoke("annotation", "jakarta.persistence.Entity");
+			allOpen.invoke("annotation", "jakarta.persistence.MappedSuperclass");
+			allOpen.invoke("annotation", "jakarta.persistence.Embeddable");
 		});
 	}
 
 	private void customizeAllOpenWithJavax(GradleBuild build) {
 		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "javax.persistence.Entity", "javax.persistence.MappedSuperclass",
-					"javax.persistence.Embeddable");
+			allOpen.invoke("annotation", "javax.persistence.Entity");
+			allOpen.invoke("annotation", "javax.persistence.MappedSuperclass");
+			allOpen.invoke("annotation", "javax.persistence.Embeddable");
 		});
 	}
 
