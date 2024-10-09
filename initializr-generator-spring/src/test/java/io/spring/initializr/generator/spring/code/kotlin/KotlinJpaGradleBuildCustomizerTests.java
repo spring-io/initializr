@@ -110,7 +110,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 			assertThat(extension.getInvocations())
 				.filteredOn(invocation -> Objects.equals(invocation.getTarget(), "annotation"))
 				.extracting("arguments")
-				.containsExactlyInAnyOrder(List.of("javax.persistence.Entity"), List.of("javax.persistence.MappedSuperclass"), List.of("javax.persistence.Embeddable"));
+				.containsExactlyInAnyOrder("javax.persistence.Entity", "javax.persistence.MappedSuperclass", "javax.persistence.Embeddable");
 		});
 
 	}
