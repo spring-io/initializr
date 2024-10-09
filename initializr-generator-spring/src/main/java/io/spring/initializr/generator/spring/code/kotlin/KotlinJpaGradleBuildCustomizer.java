@@ -28,8 +28,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
  * related dependency is present.
  *
  * @author Madhura Bhave
+ * @author Sijun Yang
  */
-// BuildCustomizer 구현체를 보니 Kotlin + JPA 관련 객체가 이미 있음.
 public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
 	private final BuildMetadataResolver buildMetadataResolver;

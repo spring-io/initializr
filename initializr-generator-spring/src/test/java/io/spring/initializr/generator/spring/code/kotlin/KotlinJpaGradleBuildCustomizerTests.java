@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link KotlinJpaGradleBuildCustomizer}.
  *
  * @author Madhura Bhave
+ * @author Sijun Yang
  */
 class KotlinJpaGradleBuildCustomizerTests {
 
