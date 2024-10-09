@@ -67,6 +67,46 @@ class KotlinJpaMavenBuildCustomizerTests {
 		assertThat(build.plugins().isEmpty()).isTrue();
 	}
 
+	@Test
+	void customizeWhenJakartaPersistencePresentShouldCustomizeAllOpenWithJakarta() {
+		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		MavenBuild build = getCustomizedBuild(dependency);
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+		});
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+			assertThat(configuration.getSettings().stream()
+					.filter(setting -> "option".equals(setting.getName()))
+					.map(MavenPlugin.Setting::getValue))
+					.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
+							"all-open:annotation=jakarta.persistence.MappedSuperclass",
+							"all-open:annotation=jakarta.persistence.Embeddable");
+		});
+	}
+
+	@Test
+	void customizeWhenJavaxPersistencePresentShouldCustomizeAllOpenWithJavax() {
+		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		MavenBuild build = getCustomizedBuild(dependency);
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
+			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
+		});
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+			assertThat(configuration.getSettings().stream()
+					.filter(setting -> "option".equals(setting.getName()))
+					.map(MavenPlugin.Setting::getValue))
+					.containsExactlyInAnyOrder("all-open:annotation=javax.persistence.Entity",
+							"all-open:annotation=javax.persistence.MappedSuperclass",
+							"all-open:annotation=javax.persistence.Embeddable");
+		});
+	}
+
 	private MavenBuild getCustomizedBuild(Dependency dependency) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", dependency)
