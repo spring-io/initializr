@@ -122,10 +122,23 @@ class KotlinJpaGradleBuildCustomizerTests {
 	}
 
 	@Test
-	void tempTestForBuildFile() throws IOException {
+	void tempTestForBuildFile1() throws IOException {
 		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
 				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
 		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency);
+		var gradleBuildProjectContributor= kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
+		StringWriter writer = new StringWriter();
+		gradleBuildProjectContributor.writeBuild(writer);
+		System.out.println(TextTestUtils.readAllLines(writer.toString()));
+	}
+
+	@Test
+	void tempTestForBuildFile2() throws IOException {
+		IndentingWriterFactory indentingWriterFactory = IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
+				(factory) -> factory.indentingStrategy("gradle", new SimpleIndentStrategy("  ")));
+		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
 		var gradleBuildProjectContributor= kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
