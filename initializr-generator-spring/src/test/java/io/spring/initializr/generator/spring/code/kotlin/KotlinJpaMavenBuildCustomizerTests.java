@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2024 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Tests for {@link KotlinJpaMavenBuildCustomizer}.
- *
- * @author Madhura Bhave
- * @author Sebastien Deleuze
- */
 class KotlinJpaMavenBuildCustomizerTests {
 
 	@Test
@@ -80,7 +74,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
 			assertThat(configuration.getSettings()
 				.stream()
-				.filter(setting -> "option".equals(setting.getName()))
+				.filter((setting) -> "option".equals(setting.getName()))
 				.map(MavenPlugin.Setting::getValue))
 				.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
 						"all-open:annotation=jakarta.persistence.MappedSuperclass",
@@ -101,7 +95,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
 			assertThat(configuration.getSettings()
 				.stream()
-				.filter(setting -> "option".equals(setting.getName()))
+				.filter((setting) -> "option".equals(setting.getName()))
 				.map(MavenPlugin.Setting::getValue))
 				.containsExactlyInAnyOrder("all-open:annotation=javax.persistence.Entity",
 						"all-open:annotation=javax.persistence.MappedSuperclass",
