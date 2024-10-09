@@ -35,7 +35,6 @@ import org.springframework.util.StringUtils;
  * number of {@code aliases}.
  *
  * @author Stephane Nicoll
- * @author Sijun Yang
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Dependency extends MetadataElement implements Describable {

@@ -29,6 +29,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
+ * @author Sijun Yang
  */
 public class BuildMetadataResolver {
 
