@@ -29,6 +29,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  *
  * @author Madhura Bhave
  * @author Sebastien Deleuze
+ * @author Sijun Yang
  */
 public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
