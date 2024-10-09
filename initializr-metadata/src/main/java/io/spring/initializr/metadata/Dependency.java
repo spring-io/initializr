@@ -124,7 +124,6 @@ public class Dependency extends MetadataElement implements Describable {
 	public Dependency() {
 	}
 
-	//groupId로 jakarta 또는 javax 사용 여부를 확인할 수 있을 것 같음.
 	public Dependency(Dependency dependency) {
 		super(dependency);
 		this.aliases.addAll(dependency.aliases);

@@ -93,7 +93,8 @@ class KotlinJpaGradleBuildCustomizerTests {
 			assertThat(extension.getInvocations())
 				.filteredOn(invocation -> Objects.equals(invocation.getTarget(), "annotation"))
 				.extracting("arguments")
-				.containsExactlyInAnyOrder(List.of("jakarta.persistence.Entity"), List.of("jakarta.persistence.MappedSuperclass"), List.of("jakarta.persistence.Embeddable"));
+				.containsExactlyInAnyOrder(List.of("jakarta.persistence.Entity"),
+						List.of("jakarta.persistence.MappedSuperclass"), List.of("jakarta.persistence.Embeddable"));
 		});
 	}
 
@@ -110,13 +111,14 @@ class KotlinJpaGradleBuildCustomizerTests {
 			assertThat(extension.getInvocations())
 				.filteredOn(invocation -> Objects.equals(invocation.getTarget(), "annotation"))
 				.extracting("arguments")
-				.containsExactlyInAnyOrder("javax.persistence.Entity", "javax.persistence.MappedSuperclass", "javax.persistence.Embeddable");
+				.containsExactlyInAnyOrder("javax.persistence.Entity", "javax.persistence.MappedSuperclass",
+						"javax.persistence.Embeddable");
 		});
 
 	}
 
 	private GradleBuildProjectContributor kotlinDslGradleBuildProjectContributor(GradleBuild build,
-																				 IndentingWriterFactory indentingWriterFactory) {
+			IndentingWriterFactory indentingWriterFactory) {
 		return new GradleBuildProjectContributor(new KotlinDslGradleBuildWriter(), build, indentingWriterFactory,
 				"build.gradle.kts");
 	}
@@ -128,7 +130,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor= kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
+		var gradleBuildProjectContributor = kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
 		StringWriter writer = new StringWriter();
 		gradleBuildProjectContributor.writeBuild(writer);
 		System.out.println(TextTestUtils.readAllLines(writer.toString()));
@@ -141,7 +143,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor= kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
+		var gradleBuildProjectContributor = kotlinDslGradleBuildProjectContributor(build, indentingWriterFactory);
 		StringWriter writer = new StringWriter();
 		gradleBuildProjectContributor.writeBuild(writer);
 		System.out.println(TextTestUtils.readAllLines(writer.toString()));

@@ -85,12 +85,13 @@ class KotlinJpaMavenBuildCustomizerTests {
 		});
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
-			assertThat(configuration.getSettings().stream()
-					.filter(setting -> "option".equals(setting.getName()))
-					.map(MavenPlugin.Setting::getValue))
-					.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
-							"all-open:annotation=jakarta.persistence.MappedSuperclass",
-							"all-open:annotation=jakarta.persistence.Embeddable");
+			assertThat(configuration.getSettings()
+				.stream()
+				.filter(setting -> "option".equals(setting.getName()))
+				.map(MavenPlugin.Setting::getValue))
+				.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
+						"all-open:annotation=jakarta.persistence.MappedSuperclass",
+						"all-open:annotation=jakarta.persistence.Embeddable");
 		});
 	}
 
@@ -105,12 +106,13 @@ class KotlinJpaMavenBuildCustomizerTests {
 		});
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
-			assertThat(configuration.getSettings().stream()
-					.filter(setting -> "option".equals(setting.getName()))
-					.map(MavenPlugin.Setting::getValue))
-					.containsExactlyInAnyOrder("all-open:annotation=javax.persistence.Entity",
-							"all-open:annotation=javax.persistence.MappedSuperclass",
-							"all-open:annotation=javax.persistence.Embeddable");
+			assertThat(configuration.getSettings()
+				.stream()
+				.filter(setting -> "option".equals(setting.getName()))
+				.map(MavenPlugin.Setting::getValue))
+				.containsExactlyInAnyOrder("all-open:annotation=javax.persistence.Entity",
+						"all-open:annotation=javax.persistence.MappedSuperclass",
+						"all-open:annotation=javax.persistence.Embeddable");
 		});
 	}
 
@@ -134,7 +136,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		MavenBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor= generatePom(build, indentingWriterFactory);
+		var gradleBuildProjectContributor = generatePom(build, indentingWriterFactory);
 		StringWriter writer = new StringWriter();
 		gradleBuildProjectContributor.writeBuild(writer);
 		System.out.println(TextTestUtils.readAllLines(writer.toString()));
@@ -147,13 +149,14 @@ class KotlinJpaMavenBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		MavenBuild build = getCustomizedBuild(dependency);
-		var gradleBuildProjectContributor= generatePom(build, indentingWriterFactory);
+		var gradleBuildProjectContributor = generatePom(build, indentingWriterFactory);
 		StringWriter writer = new StringWriter();
 		gradleBuildProjectContributor.writeBuild(writer);
 		System.out.println(TextTestUtils.readAllLines(writer.toString()));
 	}
 
-	private MavenBuildProjectContributor generatePom(MavenBuild mavenBuild, IndentingWriterFactory indentingWriterFactory) {
+	private MavenBuildProjectContributor generatePom(MavenBuild mavenBuild,
+			IndentingWriterFactory indentingWriterFactory) {
 		return new MavenBuildProjectContributor(mavenBuild, indentingWriterFactory);
 	}
 
