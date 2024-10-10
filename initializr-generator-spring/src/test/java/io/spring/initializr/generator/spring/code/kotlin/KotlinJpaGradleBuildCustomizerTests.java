@@ -62,38 +62,27 @@ class KotlinJpaGradleBuildCustomizerTests {
 	}
 
 	@Test
-	void customizeWhenJakartaPersistencePresentShouldCustomizeAllOpenWithJakarta() {
-		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
+	void customizeWhenJpaFacetPresentShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).singleElement()
-			.satisfies((plugin) -> assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa"));
 		assertThat(build.extensions().values()).singleElement().satisfies((extension) -> {
 			assertThat(extension.getName()).isEqualTo("allOpen");
 			assertThat(extension.getInvocations())
 				.filteredOn((invocation) -> Objects.equals(invocation.getTarget(), "annotation"))
 				.extracting("arguments")
-				.containsExactlyInAnyOrder(List.of("jakarta.persistence.Entity"),
-						List.of("jakarta.persistence.MappedSuperclass"), List.of("jakarta.persistence.Embeddable"));
+				.containsExactlyInAnyOrder(List.of("\"jakarta.persistence.Entity\""),
+						List.of("\"jakarta.persistence.MappedSuperclass\""),
+						List.of("\"jakarta.persistence.Embeddable\""));
 		});
 	}
 
 	@Test
-	void customizeWhenJavaxPersistencePresentShouldCustomizeAllOpenWithJavax() {
-		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
+	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).singleElement()
-			.satisfies((plugin) -> assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa"));
-		assertThat(build.extensions().values()).singleElement().satisfies((extension) -> {
-			assertThat(extension.getName()).isEqualTo("allOpen");
-			assertThat(extension.getInvocations())
-				.filteredOn((invocation) -> Objects.equals(invocation.getTarget(), "annotation"))
-				.extracting("arguments")
-				.containsExactlyInAnyOrder(List.of("javax.persistence.Entity"),
-						List.of("javax.persistence.MappedSuperclass"), List.of("javax.persistence.Embeddable"));
-		});
-
+		assertThat(build.extensions().values()).filteredOn(a -> Objects.equals(a.getName(), "allOpen")).isEmpty();
+		assertThat(build.extensions().values()).isEmpty();
 	}
 
 	private GradleBuild getCustomizedBuild(Dependency dependency) {
@@ -104,7 +93,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings,
-				projectDescription);
+				projectDescription, '\"');
 		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);

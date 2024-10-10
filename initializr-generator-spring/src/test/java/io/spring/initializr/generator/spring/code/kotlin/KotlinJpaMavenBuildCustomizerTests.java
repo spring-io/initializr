@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
+import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
@@ -31,6 +32,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests for {@link KotlinJpaMavenBuildCustomizer}.
+ *
+ * @author Madhura Bhave
+ * @author Sebastien Deleuze
+ * @author Sijun Yang
+ */
 class KotlinJpaMavenBuildCustomizerTests {
 
 	@Test
@@ -62,20 +70,24 @@ class KotlinJpaMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void customizeWhenJakartaPersistencePresentShouldCustomizeAllOpenWithJakarta() {
-		Dependency dependency = Dependency.withId("foo", "jakarta.persistence", "jakarta.persistence-api");
+	void customizeWhenJpaFacetPresentShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("jpa"));
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
-			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-		});
+
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
-			assertThat(configuration.getSettings()
+
+			assertThat(configuration.getSettings()).filteredOn(setting -> setting.getName().equals("pluginOptions"))
+				.isNotEmpty();
+			var a = configuration.getSettings()
 				.stream()
-				.filter((setting) -> "option".equals(setting.getName()))
-				.map(MavenPlugin.Setting::getValue))
+				.filter(setting -> setting.getName().equals("pluginOptions"))
+				.findFirst()
+				.get();
+			assertThat(((List<MavenPlugin.Setting>) a.getValue()))
+				.filteredOn(setting -> setting.getName().equals("option"))
+				.map(MavenPlugin.Setting::getValue)
 				.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
 						"all-open:annotation=jakarta.persistence.MappedSuperclass",
 						"all-open:annotation=jakarta.persistence.Embeddable");
@@ -83,24 +95,10 @@ class KotlinJpaMavenBuildCustomizerTests {
 	}
 
 	@Test
-	void customizeWhenJavaxPersistencePresentShouldCustomizeAllOpenWithJavax() {
-		Dependency dependency = Dependency.withId("foo", "javax.persistence", "javax.persistence-api");
-		dependency.setFacets(Collections.singletonList("jpa"));
+	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
 		MavenBuild build = getCustomizedBuild(dependency);
-		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
-			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
-			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-		});
-		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
-			MavenPlugin.Configuration configuration = plugin.getConfiguration();
-			assertThat(configuration.getSettings()
-				.stream()
-				.filter((setting) -> "option".equals(setting.getName()))
-				.map(MavenPlugin.Setting::getValue))
-				.containsExactlyInAnyOrder("all-open:annotation=javax.persistence.Entity",
-						"all-open:annotation=javax.persistence.MappedSuperclass",
-						"all-open:annotation=javax.persistence.Embeddable");
-		});
+		assertThat(build.plugins().values()).isEmpty();
 	}
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {
