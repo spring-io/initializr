@@ -47,6 +47,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
  * @author Moritz Halbritter
+ * @author Sijun Yang
  */
 @Configuration
 class KotlinProjectGenerationDefaultContributorsConfiguration {
@@ -67,10 +68,17 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(GradleBuildSystem.ID)
-	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizer(InitializrMetadata metadata,
+	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizerKotlinDsl(InitializrMetadata metadata,
 			KotlinProjectSettings settings, ProjectDescription projectDescription) {
-		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription);
+		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription, '\"');
+	}
+
+	@Bean
+	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
+	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizerGroovyDsl(InitializrMetadata metadata,
+			KotlinProjectSettings settings, ProjectDescription projectDescription) {
+		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription, '\'');
 	}
 
 	@Bean

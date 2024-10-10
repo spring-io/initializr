@@ -17,6 +17,8 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
@@ -36,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Madhura Bhave
  * @author Sebastien Deleuze
+ * @author Sijun Yang
  */
 class KotlinJpaMavenBuildCustomizerTests {
 
@@ -65,6 +68,34 @@ class KotlinJpaMavenBuildCustomizerTests {
 		Dependency dependency = Dependency.withId("foo");
 		MavenBuild build = getCustomizedBuild(dependency);
 		assertThat(build.plugins().isEmpty()).isTrue();
+	}
+
+	@Test
+	void customizeWhenJpaFacetPresentShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		MavenBuild build = getCustomizedBuild(dependency);
+
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+
+			assertThat(configuration.getSettings()).filteredOn((setting) -> setting.getName().equals("pluginOptions"))
+				.isNotEmpty()
+				.first()
+				.satisfies((pluginOptions) -> assertThat(((List<MavenPlugin.Setting>) pluginOptions.getValue()))
+					.filteredOn((option) -> Objects.equals(option.getName(), "option"))
+					.map(MavenPlugin.Setting::getValue)
+					.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
+							"all-open:annotation=jakarta.persistence.MappedSuperclass",
+							"all-open:annotation=jakarta.persistence.Embeddable"));
+		});
+	}
+
+	@Test
+	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		MavenBuild build = getCustomizedBuild(dependency);
+		assertThat(build.plugins().values()).isEmpty();
 	}
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {

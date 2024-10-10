@@ -29,6 +29,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  *
  * @author Stephane Nicoll
  * @author Moritz Halbritter
+ * @author Sijun Yang
  */
 public class BuildMetadataResolver {
 
@@ -63,6 +64,18 @@ public class BuildMetadataResolver {
 	 */
 	public boolean hasFacet(Build build, String facet) {
 		return dependencies(build).anyMatch((dependency) -> dependency.getFacets().contains(facet));
+	}
+
+	/**
+	 * Checks if the given {@link Build} contains dependencies with the given
+	 * {@code groupId}.
+	 * @param build the build to query
+	 * @param groupId the groupId to query
+	 * @return {@code true} if this build defines at least a dependency with that groupId,
+	 * {@code false} otherwise
+	 */
+	public boolean hasGroupId(Build build, String groupId) {
+		return dependencies(build).anyMatch((dependency) -> dependency.getGroupId().equals(groupId));
 	}
 
 }

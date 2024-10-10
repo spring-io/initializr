@@ -28,6 +28,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  * related dependency is present.
  *
  * @author Madhura Bhave
+ * @author Sijun Yang
  */
 public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
 
@@ -35,10 +36,13 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	private final KotlinProjectSettings settings;
 
+	private final char quote;
+
 	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings,
-			ProjectDescription projectDescription) {
+			ProjectDescription projectDescription, char quote) {
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 		this.settings = settings;
+		this.quote = quote;
 	}
 
 	@Override
@@ -46,7 +50,16 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+			build.extensions().customize("allOpen", (allOpen) -> {
+				allOpen.invoke("annotation", quote("jakarta.persistence.Entity"));
+				allOpen.invoke("annotation", quote("jakarta.persistence.MappedSuperclass"));
+				allOpen.invoke("annotation", quote("jakarta.persistence.Embeddable"));
+			});
 		}
+	}
+
+	private String quote(String element) {
+		return this.quote + element + this.quote;
 	}
 
 }
