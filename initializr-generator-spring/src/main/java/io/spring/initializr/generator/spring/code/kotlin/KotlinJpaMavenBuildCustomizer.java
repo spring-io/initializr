@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
-import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
@@ -46,28 +45,15 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 				kotlinPlugin.configuration((configuration) -> {
 					configuration.configure("compilerPlugins",
 							(compilerPlugins) -> compilerPlugins.add("plugin", "jpa"));
-					if (this.buildMetadataResolver.hasGroupId(build, "jakarta.persistence")) {
-						customizeAllOpenWithJakarta(configuration);
-					}
-					else if (this.buildMetadataResolver.hasGroupId(build, "javax.persistence")) {
-						customizeAllOpenWithJavax(configuration);
-					}
+					configuration.configure("pluginOptions", (option) -> {
+						option.add("option", "all-open:annotation=jakarta.persistence.Entity");
+						option.add("option", "all-open:annotation=jakarta.persistence.MappedSuperclass");
+						option.add("option", "all-open:annotation=jakarta.persistence.Embeddable");
+					});
 				});
 				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
 			});
 		}
-	}
-
-	private void customizeAllOpenWithJakarta(MavenPlugin.ConfigurationBuilder option) {
-		option.add("option", "all-open:annotation=jakarta.persistence.Entity");
-		option.add("option", "all-open:annotation=jakarta.persistence.MappedSuperclass");
-		option.add("option", "all-open:annotation=jakarta.persistence.Embeddable");
-	}
-
-	private void customizeAllOpenWithJavax(MavenPlugin.ConfigurationBuilder option) {
-		option.add("option", "all-open:annotation=javax.persistence.Entity");
-		option.add("option", "all-open:annotation=javax.persistence.MappedSuperclass");
-		option.add("option", "all-open:annotation=javax.persistence.Embeddable");
 	}
 
 }

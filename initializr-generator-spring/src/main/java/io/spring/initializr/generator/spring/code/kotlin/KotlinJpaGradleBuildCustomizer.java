@@ -36,10 +36,13 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	private final KotlinProjectSettings settings;
 
+	private final char quote;
+
 	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings,
-			ProjectDescription projectDescription) {
+			ProjectDescription projectDescription, char quote) {
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
 		this.settings = settings;
+		this.quote = quote;
 	}
 
 	@Override
@@ -47,29 +50,16 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins()
 				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
-			if (this.buildMetadataResolver.hasGroupId(build, "jakarta.persistence")) {
-				customizeAllOpenWithJakarta(build);
-			}
-			else if (this.buildMetadataResolver.hasGroupId(build, "javax.persistence")) {
-				customizeAllOpenWithJavax(build);
-			}
+			build.extensions().customize("allOpen", (allOpen) -> {
+				allOpen.invoke("annotation", quote("jakarta.persistence.Entity"));
+				allOpen.invoke("annotation", quote("jakarta.persistence.MappedSuperclass"));
+				allOpen.invoke("annotation", quote("jakarta.persistence.Embeddable"));
+			});
 		}
 	}
 
-	private void customizeAllOpenWithJakarta(GradleBuild build) {
-		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "jakarta.persistence.Entity");
-			allOpen.invoke("annotation", "jakarta.persistence.MappedSuperclass");
-			allOpen.invoke("annotation", "jakarta.persistence.Embeddable");
-		});
-	}
-
-	private void customizeAllOpenWithJavax(GradleBuild build) {
-		build.extensions().customize("allOpen", (allOpen) -> {
-			allOpen.invoke("annotation", "javax.persistence.Entity");
-			allOpen.invoke("annotation", "javax.persistence.MappedSuperclass");
-			allOpen.invoke("annotation", "javax.persistence.Embeddable");
-		});
+	private String quote(String element) {
+		return this.quote + element + this.quote;
 	}
 
 }
