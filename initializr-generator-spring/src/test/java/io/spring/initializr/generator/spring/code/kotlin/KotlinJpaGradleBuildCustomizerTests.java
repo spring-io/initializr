@@ -81,7 +81,9 @@ class KotlinJpaGradleBuildCustomizerTests {
 	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
 		Dependency dependency = Dependency.withId("foo");
 		GradleBuild build = getCustomizedBuild(dependency);
-		assertThat(build.extensions().values()).filteredOn(a -> Objects.equals(a.getName(), "allOpen")).isEmpty();
+		assertThat(build.extensions().values())
+			.filteredOn((extension) -> Objects.equals(extension.getName(), "allOpen"))
+			.isEmpty();
 		assertThat(build.extensions().values()).isEmpty();
 	}
 
