@@ -28,6 +28,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
  *
  * @author Madhura Bhave
  * @author Sebastien Deleuze
+ * @author Sijun Yang
  */
 public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
@@ -41,8 +42,15 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 	public void customize(MavenBuild build) {
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinPlugin) -> {
-				kotlinPlugin.configuration((configuration) -> configuration.configure("compilerPlugins",
-						(compilerPlugins) -> compilerPlugins.add("plugin", "jpa")));
+				kotlinPlugin.configuration((configuration) -> {
+					configuration.configure("compilerPlugins",
+							(compilerPlugins) -> compilerPlugins.add("plugin", "jpa"));
+					configuration.configure("pluginOptions", (option) -> {
+						option.add("option", "all-open:annotation=jakarta.persistence.Entity");
+						option.add("option", "all-open:annotation=jakarta.persistence.MappedSuperclass");
+						option.add("option", "all-open:annotation=jakarta.persistence.Embeddable");
+					});
+				});
 				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
 			});
 		}

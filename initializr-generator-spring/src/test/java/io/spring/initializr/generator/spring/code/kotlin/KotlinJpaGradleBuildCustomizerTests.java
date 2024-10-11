@@ -17,6 +17,8 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
@@ -35,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link KotlinJpaGradleBuildCustomizer}.
  *
  * @author Madhura Bhave
+ * @author Sijun Yang
  */
 class KotlinJpaGradleBuildCustomizerTests {
 
@@ -58,6 +61,32 @@ class KotlinJpaGradleBuildCustomizerTests {
 		assertThat(build.plugins().values()).isEmpty();
 	}
 
+	@Test
+	void customizeWhenJpaFacetPresentShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency);
+		assertThat(build.extensions().values()).singleElement().satisfies((extension) -> {
+			assertThat(extension.getName()).isEqualTo("allOpen");
+			assertThat(extension.getInvocations())
+				.filteredOn((invocation) -> Objects.equals(invocation.getTarget(), "annotation"))
+				.extracting("arguments")
+				.containsExactlyInAnyOrder(List.of("\"jakarta.persistence.Entity\""),
+						List.of("\"jakarta.persistence.MappedSuperclass\""),
+						List.of("\"jakarta.persistence.Embeddable\""));
+		});
+	}
+
+	@Test
+	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		GradleBuild build = getCustomizedBuild(dependency);
+		assertThat(build.extensions().values())
+			.filteredOn((extension) -> Objects.equals(extension.getName(), "allOpen"))
+			.isEmpty();
+		assertThat(build.extensions().values()).isEmpty();
+	}
+
 	private GradleBuild getCustomizedBuild(Dependency dependency) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", dependency)
@@ -66,7 +95,7 @@ class KotlinJpaGradleBuildCustomizerTests {
 		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings,
-				projectDescription);
+				projectDescription, '\"');
 		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
