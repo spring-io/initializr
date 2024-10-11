@@ -68,14 +68,14 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizerKotlinDsl(InitializrMetadata metadata,
 			KotlinProjectSettings settings, ProjectDescription projectDescription) {
 		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription, '\"');
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	KotlinJpaGradleBuildCustomizer kotlinJpaGradleBuildCustomizerGroovyDsl(InitializrMetadata metadata,
 			KotlinProjectSettings settings, ProjectDescription projectDescription) {
 		return new KotlinJpaGradleBuildCustomizer(metadata, settings, projectDescription, '\'');
@@ -89,13 +89,13 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_KOTLIN)
 	KotlinGradleBuildCustomizer kotlinBuildCustomizerKotlinDsl(KotlinProjectSettings kotlinProjectSettings) {
 		return new KotlinGradleBuildCustomizer(kotlinProjectSettings, '\"');
 	}
 
 	@Bean
-	@ConditionalOnBuildSystem(value = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
+	@ConditionalOnBuildSystem(id = GradleBuildSystem.ID, dialect = GradleBuildSystem.DIALECT_GROOVY)
 	KotlinGradleBuildCustomizer kotlinBuildCustomizerGroovyDsl(KotlinProjectSettings kotlinProjectSettings) {
 		return new KotlinGradleBuildCustomizer(kotlinProjectSettings, '\'');
 	}
