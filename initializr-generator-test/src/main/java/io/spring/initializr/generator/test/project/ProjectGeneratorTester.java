@@ -30,10 +30,10 @@ import io.spring.initializr.generator.project.ProjectGenerator;
 
 /**
  * A tester class for {@link ProjectGenerator}. Contrary to {@link ProjectAssetTester},
- * standard {@link ProjectGenerationConfiguration} classes are processed
- * automatically.Extra beans can be added using {@linkplain #withBean(Class, Supplier)
- * bean registration}, a {@linkplain #withConfiguration(Class[]) configuration class} or
- * via the {@linkplain #withContextInitializer(Consumer) customization of the project
+ * standard {@link ProjectGenerationConfiguration} classes are processed automatically.
+ * Extra beans can be added using {@linkplain #withBean(Class, Supplier) bean
+ * registration}, a {@linkplain #withConfiguration(Class[]) configuration class} or via
+ * the {@linkplain #withContextInitializer(Consumer) customization of the project
  * generation context}.
  *
  * @author Stephane Nicoll
