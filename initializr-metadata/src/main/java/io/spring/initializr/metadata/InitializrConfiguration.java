@@ -59,6 +59,18 @@ public class InitializrConfiguration {
 		this.env.validate();
 	}
 
+	// Add customFields
+	private Map<String, Object> customFields = Collections.emptyMap();
+
+	// Getter and Setter
+	public Map<String, Object> getCustomFields() {
+		return this.customFields;
+	}
+
+	public void setCustomFields(Map<String, Object> customFields) {
+		this.customFields = customFields;
+	}
+
 	public void merge(InitializrConfiguration other) {
 		this.env.merge(other.env);
 	}
