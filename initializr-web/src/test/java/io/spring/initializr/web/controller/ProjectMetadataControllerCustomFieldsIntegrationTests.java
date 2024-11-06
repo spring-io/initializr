@@ -43,4 +43,5 @@ class ProjectMetadataControllerCustomFieldsIntegrationTests extends AbstractFull
 		JSONObject expected = readJsonFrom("metadata/config/test-custom-fields.json");
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
 	}
+
 }

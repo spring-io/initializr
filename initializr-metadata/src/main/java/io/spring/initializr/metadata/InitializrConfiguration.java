@@ -60,11 +60,13 @@ public class InitializrConfiguration {
 	}
 
 	/**
-	 * The customFields feature in Spring Initializr enables additional, adaptable metadata beyond the standard fields.
-	 * This allows organizations to set environment-specific values like default configurations, dependencies,
-	 * version control, or deployment options—aligning generated projects directly with their standards.
-	 * By using customFields, organizations can add new metadata flexibly without altering core configurations,
-	 * making Initializr more adaptable and valuable for various use cases.
+	 * The customFields feature in Spring Initializr enables additional, adaptable
+	 * metadata beyond the standard fields. This allows organizations to set
+	 * environment-specific values like default configurations, dependencies, version
+	 * control, or deployment options—aligning generated projects directly with their
+	 * standards. By using customFields, organizations can add new metadata flexibly
+	 * without altering core configurations, making Initializr more adaptable and valuable
+	 * for various use cases.
 	 */
 	private Map<String, Object> customFields = Collections.emptyMap();
 
