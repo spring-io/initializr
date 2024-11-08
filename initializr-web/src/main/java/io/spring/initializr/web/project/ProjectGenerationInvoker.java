@@ -59,7 +59,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 
 	private final ProjectAssetGenerator<Path> projectAssetGenerator = new DefaultProjectAssetGenerator();
 
-	private final transient Map<Path, List<Path>> temporaryFiles = new ConcurrentHashMap<>();
+	private final Map<Path, List<Path>> temporaryFiles = new ConcurrentHashMap<>();
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
 			ProjectRequestToDescriptionConverter<R> requestConverter) {
@@ -83,8 +83,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
-			ProjectGenerator projectGenerator = new ProjectGenerator((
-					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
+			ProjectGenerator projectGenerator = createProjectGenerator(metadata);
 			ProjectGenerationResult result = projectGenerator.generate(description,
 					generateProject(description, request));
 			addTempFile(result.getRootDirectory(), result.getRootDirectory());
@@ -125,14 +124,23 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
-			ProjectGenerator projectGenerator = new ProjectGenerator((
-					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
+			ProjectGenerator projectGenerator = createProjectGenerator(metadata);
 			return projectGenerator.generate(description, generateBuild(request));
 		}
 		catch (ProjectGenerationException ex) {
 			publishProjectFailedEvent(request, metadata, ex);
 			throw ex;
 		}
+	}
+
+	/**
+	 * Creates the project generator using provided metadata.
+	 * @param metadata metadata to build the {@link ProjectGenerator} used by this invoker
+	 * @return project generator used to generate the project
+	 */
+	protected ProjectGenerator createProjectGenerator(InitializrMetadata metadata) {
+		return new ProjectGenerator(
+				(projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 	}
 
 	private ProjectAssetGenerator<byte[]> generateBuild(R request) {
