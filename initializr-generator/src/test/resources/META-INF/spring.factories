@@ -1,0 +1,4 @@
+io.spring.initializr.generator.project.ProjectGenerationConfigurationTypeFilter=\
+  io.spring.initializr.generator.project.contributor.TestProjectGenerationConfigurationExcludingTypeFilter,\
+  io.spring.initializr.generator.project.contributor.TestProjectGenerationConfiguration2ExcludingTypeFilter
+

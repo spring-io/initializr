@@ -124,10 +124,9 @@ public class ProjectGenerator {
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
-		List<String> candidates = SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-				getClass().getClassLoader());
+		List<String> candidates = getProjectGenerationConfigurationFactoryNames();
 		ProjectGenerationConfigurationTypeFilter filter = getProjectGenerationConfigurationExclusionFilter();
 		return candidates.stream().filter((candidate) -> {
 			Class<?> type = this.resolveClass(candidate);
@@ -142,6 +141,12 @@ public class ProjectGenerator {
 		catch (ClassNotFoundException ex) {
 			return null;
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	List<String> getProjectGenerationConfigurationFactoryNames() {
+		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
+				getClass().getClassLoader());
 	}
 
 	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
