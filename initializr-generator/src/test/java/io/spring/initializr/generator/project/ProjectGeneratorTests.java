@@ -25,6 +25,8 @@ import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.project.contributor.TestProjectGenerationConfiguration;
+import io.spring.initializr.generator.project.contributor.TestProjectGenerationConfiguration2;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InOrder;
@@ -181,8 +183,9 @@ class ProjectGeneratorTests {
 		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());
 		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr()) {
 			@Override
-			protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
-				assertThat(description).isSameAs(description);
+			protected List<String> getCandidateProjectGenerationConfigurations(
+					ProjectDescription generatorDescription) {
+				assertThat(description).isSameAs(generatorDescription);
 				return Collections.singletonList(TestProjectGenerationConfiguration.class.getName());
 			}
 		};
@@ -193,6 +196,37 @@ class ProjectGeneratorTests {
 		assertThat(expectedFile).hasContent("test-custom-contributor");
 		verify(description).getArtifactId();
 		verify(description).getBuildSystem();
+	}
+
+	@Test
+	void loadAndConstructProjectGenerationTypeExclusionFilter() {
+		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr());
+		ProjectGenerationConfigurationTypeFilter filter = generator.getProjectGenerationConfigurationExclusionFilter();
+		assertThat(filter).isNotNull();
+		assertThat(filter.match(TestProjectGenerationConfiguration.class)).isTrue();
+		assertThat(filter.match(TestProjectGenerationConfiguration2.class)).isTrue();
+		assertThat(filter.match(Integer.class)).isFalse();
+	}
+
+	@Test
+	void filterProjectContributorsCorrectly(@TempDir Path projectDir) {
+		ProjectDescription description = mock(ProjectDescription.class);
+		given(description.getArtifactId()).willReturn("test-custom-contributor");
+		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());
+		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr()) {
+			@Override
+			List<String> getProjectGenerationConfigurationFactoryNames() {
+				return Lists.list(TestProjectGenerationConfiguration.class.getName(),
+						TestProjectGenerationConfiguration2.class.getName());
+			}
+
+			@Override
+			ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
+				return TestProjectGenerationConfiguration2.class::equals;
+			}
+		};
+		List<String> candidates = generator.getCandidateProjectGenerationConfigurations(description);
+		assertThat(candidates).containsOnly(TestProjectGenerationConfiguration.class.getCanonicalName());
 	}
 
 	@SuppressWarnings("unchecked")
