@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.support.SpringFactoriesLoader;
+import org.springframework.util.ClassUtils;
 
 /**
  * Main entry point for project generation that processes a {@link ProjectDescription} by
@@ -116,15 +117,44 @@ public class ProjectGenerator {
 
 	/**
 	 * Return the {@link ProjectGenerationConfiguration} class names that should be
-	 * considered. By default this method will load candidates using
-	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration}.
+	 * considered. By default, this method will load candidates using
+	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration} and
+	 * exclude those which are matched by the
+	 * {@link ProjectGenerationConfigurationTypeFilter}
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
 	@SuppressWarnings("deprecation")
 	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
-		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
+		List<String> candidates = SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
 				getClass().getClassLoader());
+		ProjectGenerationConfigurationTypeFilter filter = getProjectGenerationConfigurationExclusionFilter();
+		return candidates.stream().filter((candidate) -> {
+			Class<?> type = this.resolveClass(candidate);
+			return type != null && !filter.match(type);
+		}).toList();
+	}
+
+	private Class<?> resolveClass(String candidate) {
+		try {
+			return ClassUtils.forName(candidate, getClass().getClassLoader());
+		}
+		catch (ClassNotFoundException ex) {
+			return null;
+		}
+	}
+
+	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
+		List<ProjectGenerationConfigurationTypeFilter> filters = SpringFactoriesLoader
+			.loadFactories(ProjectGenerationConfigurationTypeFilter.class, getClass().getClassLoader());
+		// Build a composite filter, combining results with a logical OR
+		return (configurationClass) -> {
+			boolean excluded = false;
+			for (ProjectGenerationConfigurationTypeFilter filter : filters) {
+				excluded = excluded || filter.match(configurationClass);
+			}
+			return excluded;
+		};
 	}
 
 	private void registerProjectDescription(ProjectGenerationContext context, ProjectDescription description) {
