@@ -181,8 +181,9 @@ class ProjectGeneratorTests {
 		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());
 		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr()) {
 			@Override
-			protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
-				assertThat(description).isSameAs(description);
+			protected List<String> getCandidateProjectGenerationConfigurations(
+					ProjectDescription generatorDescription) {
+				assertThat(description).isSameAs(generatorDescription);
 				return Collections.singletonList(TestProjectGenerationConfiguration.class.getName());
 			}
 		};
