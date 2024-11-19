@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.support.SpringFactoriesLoader;
+import org.springframework.util.ClassUtils;
 
 /**
  * Main entry point for project generation that processes a {@link ProjectDescription} by
@@ -34,6 +35,8 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Simon Zambrovski
+ * @author Moritz Halbritter
  */
 public class ProjectGenerator {
 
@@ -116,15 +119,43 @@ public class ProjectGenerator {
 
 	/**
 	 * Return the {@link ProjectGenerationConfiguration} class names that should be
-	 * considered. By default this method will load candidates using
-	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration}.
+	 * considered. By default, this method will load candidates using
+	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration} and
+	 * exclude those which are not matched by the
+	 * {@link ProjectGenerationConfigurationTypeFilter}, also loaded by
+	 * {@link SpringFactoriesLoader}.
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
+		List<String> candidates = getProjectGenerationConfigurationFactoryNames();
+		ProjectGenerationConfigurationTypeFilter filter = getProjectGenerationConfigurationExclusionFilter();
+		return candidates.stream().filter((candidate) -> {
+			Class<?> type = resolveClass(candidate);
+			return type != null && filter.test(type);
+		}).toList();
+	}
+
+	private Class<?> resolveClass(String candidate) {
+		try {
+			return ClassUtils.forName(candidate, getClass().getClassLoader());
+		}
+		catch (ClassNotFoundException ex) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	List<String> getProjectGenerationConfigurationFactoryNames() {
 		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
 				getClass().getClassLoader());
+	}
+
+	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
+		List<ProjectGenerationConfigurationTypeFilter> filters = SpringFactoriesLoader
+			.loadFactories(ProjectGenerationConfigurationTypeFilter.class, getClass().getClassLoader());
+		return ProjectGenerationConfigurationTypeFilter.allMatch(filters);
 	}
 
 	private void registerProjectDescription(ProjectGenerationContext context, ProjectDescription description) {
