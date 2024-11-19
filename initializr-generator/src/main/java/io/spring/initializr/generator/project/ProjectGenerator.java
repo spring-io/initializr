@@ -35,6 +35,8 @@ import org.springframework.util.ClassUtils;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Simon Zambrovski
+ * @author Moritz Halbritter
  */
 public class ProjectGenerator {
 
@@ -119,8 +121,9 @@ public class ProjectGenerator {
 	 * Return the {@link ProjectGenerationConfiguration} class names that should be
 	 * considered. By default, this method will load candidates using
 	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration} and
-	 * exclude those which are matched by the
-	 * {@link ProjectGenerationConfigurationTypeFilter}
+	 * exclude those which are not matched by the
+	 * {@link ProjectGenerationConfigurationTypeFilter}, also loaded by
+	 * {@link SpringFactoriesLoader}.
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
@@ -129,8 +132,8 @@ public class ProjectGenerator {
 		List<String> candidates = getProjectGenerationConfigurationFactoryNames();
 		ProjectGenerationConfigurationTypeFilter filter = getProjectGenerationConfigurationExclusionFilter();
 		return candidates.stream().filter((candidate) -> {
-			Class<?> type = this.resolveClass(candidate);
-			return type != null && !filter.match(type);
+			Class<?> type = resolveClass(candidate);
+			return type != null && filter.test(type);
 		}).toList();
 	}
 
@@ -152,14 +155,7 @@ public class ProjectGenerator {
 	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
 		List<ProjectGenerationConfigurationTypeFilter> filters = SpringFactoriesLoader
 			.loadFactories(ProjectGenerationConfigurationTypeFilter.class, getClass().getClassLoader());
-		// Build a composite filter, combining results with a logical OR
-		return (configurationClass) -> {
-			boolean excluded = false;
-			for (ProjectGenerationConfigurationTypeFilter filter : filters) {
-				excluded = excluded || filter.match(configurationClass);
-			}
-			return excluded;
-		};
+		return ProjectGenerationConfigurationTypeFilter.allMatch(filters);
 	}
 
 	private void registerProjectDescription(ProjectGenerationContext context, ProjectDescription description) {

@@ -20,9 +20,12 @@ import io.spring.initializr.generator.project.ProjectGenerationConfigurationType
 
 public class TestProjectGenerationConfigurationExcludingTypeFilter implements ProjectGenerationConfigurationTypeFilter {
 
+	private final ProjectGenerationConfigurationTypeFilter delegate = ProjectGenerationConfigurationTypeFilter
+		.exclude(TestProjectGenerationConfiguration.class);
+
 	@Override
-	public boolean match(Class<?> type) {
-		return TestProjectGenerationConfiguration.class.equals(type);
+	public boolean test(Class<?> type) {
+		return this.delegate.test(type);
 	}
 
 }

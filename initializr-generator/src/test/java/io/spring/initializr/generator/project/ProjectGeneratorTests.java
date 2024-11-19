@@ -203,13 +203,13 @@ class ProjectGeneratorTests {
 		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr());
 		ProjectGenerationConfigurationTypeFilter filter = generator.getProjectGenerationConfigurationExclusionFilter();
 		assertThat(filter).isNotNull();
-		assertThat(filter.match(TestProjectGenerationConfiguration.class)).isTrue();
-		assertThat(filter.match(TestProjectGenerationConfiguration2.class)).isTrue();
-		assertThat(filter.match(Integer.class)).isFalse();
+		assertThat(filter.test(TestProjectGenerationConfiguration.class)).isFalse();
+		assertThat(filter.test(TestProjectGenerationConfiguration2.class)).isFalse();
+		assertThat(filter.test(Integer.class)).isTrue();
 	}
 
 	@Test
-	void filterProjectContributorsCorrectly(@TempDir Path projectDir) {
+	void filterProjectContributorsCorrectly() {
 		ProjectDescription description = mock(ProjectDescription.class);
 		given(description.getArtifactId()).willReturn("test-custom-contributor");
 		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());
@@ -222,7 +222,7 @@ class ProjectGeneratorTests {
 
 			@Override
 			ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
-				return TestProjectGenerationConfiguration2.class::equals;
+				return (clazz) -> !TestProjectGenerationConfiguration2.class.equals(clazz);
 			}
 		};
 		List<String> candidates = generator.getCandidateProjectGenerationConfigurations(description);
