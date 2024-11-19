@@ -37,58 +37,6 @@ class ConditionalOnGradleVersionTests {
 		.withConfiguration(GradleVersionTestConfiguration.class);
 
 	@Test
-	@Deprecated
-	void outcomeWithSpringBoot23() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.3.10.RELEASE"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(String.class)
-					.getBean(String.class)
-					.isEqualTo("testGradle6"));
-	}
-
-	@Test
-	@Deprecated
-	void outcomeWithSpringBoot24() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(String.class)
-					.getBean(String.class)
-					.isEqualTo("testGradle6"));
-	}
-
-	@Test
-	void outcomeWithSpringBoot25() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.5.1"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(String.class)
-					.getBean(String.class)
-					.isEqualTo("testGradle7"));
-	}
-
-	@Test
-	void outcomeWithSpringBoot26() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.6.1"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(String.class)
-					.getBean(String.class)
-					.isEqualTo("testGradle7"));
-	}
-
-	@Test
-	void outcomeWithSpringBootEarly27() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.7.9"));
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(String.class)
-					.getBean(String.class)
-					.isEqualTo("testGradle7"));
-	}
-
-	@Test
 	void outcomeWithSpringBootLate27() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.7.10"));
@@ -119,25 +67,9 @@ class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
-	void outcomeWithNoMatch() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("1.0.0.RELEASE"));
-		this.projectTester.configure(description, (context) -> assertThat(context).doesNotHaveBean(String.class));
-	}
-
-	@Test
 	void outcomeWithNoAvailableSpringBootVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		this.projectTester.configure(description, (context) -> assertThat(context).doesNotHaveBean(String.class));
-	}
-
-	@Test
-	void outcomeWithSpringBoot24AndMultipleGenerations() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.7.0"));
-		this.projectTester.withConfiguration(Gradle7Or8TestConfiguration.class)
-			.configure(description,
-					(context) -> assertThat(context).getBeanNames(String.class).containsOnly("gradle7", "gradle7Or8"));
 	}
 
 	@Configuration
@@ -160,17 +92,6 @@ class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("8")
 		String gradle8() {
 			return "testGradle8";
-		}
-
-	}
-
-	@Configuration
-	static class Gradle7Or8TestConfiguration {
-
-		@Bean
-		@ConditionalOnGradleVersion({ "7", "8" })
-		String gradle7Or8() {
-			return "testGradle7Or8";
 		}
 
 	}

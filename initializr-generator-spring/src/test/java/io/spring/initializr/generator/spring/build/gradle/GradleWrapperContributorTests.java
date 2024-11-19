@@ -20,13 +20,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import org.assertj.core.internal.Failures;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,14 +36,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GradleWrapperContributorTests {
 
 	@TempDir
-	Path directory;
-
-	static Stream<Arguments> parameters() {
-		return Stream.of(Arguments.arguments("6"), Arguments.arguments("7"), Arguments.arguments("8"));
-	}
+	private Path directory;
 
 	@ParameterizedTest(name = "Gradle {0}")
-	@MethodSource("parameters")
+	@ValueSource(strings = "8")
 	void gradleWrapperSetExecutableFlagOnScripts(String gradleVersion) throws IOException {
 		Path projectDir = contribute(gradleVersion);
 		assertThat(projectDir.resolve("gradlew")).isRegularFile().isExecutable();

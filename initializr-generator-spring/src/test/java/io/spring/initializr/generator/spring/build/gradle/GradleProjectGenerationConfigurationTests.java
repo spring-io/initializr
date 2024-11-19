@@ -50,8 +50,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  * @author Jean-Baptiste Nizet
+ * @author Moritz Halbritter
  */
 class GradleProjectGenerationConfigurationTests {
+
+	private static final String GRADLE_VERSION = "8.10.2";
 
 	private ProjectAssetTester projectTester;
 
@@ -65,8 +68,7 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
-		return Stream.of(Arguments.arguments("2.2.3.RELEASE"), Arguments.arguments("2.5.0"),
-				Arguments.arguments("2.7.10"));
+		return Stream.of(Arguments.arguments("3.3.0"), Arguments.arguments("3.4.0"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -85,8 +87,8 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("2.2.3.RELEASE", "6.9.3"), Arguments.arguments("2.5.0", "7.6.3"),
-				Arguments.arguments("2.7.10", "8.10.2"));
+		return Stream.of(Arguments.arguments("3.3.0", GRADLE_VERSION),
+				Arguments.arguments("3.4.0-RC1", GRADLE_VERSION));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")

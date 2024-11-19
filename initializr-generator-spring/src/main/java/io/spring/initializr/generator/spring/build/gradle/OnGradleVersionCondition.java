@@ -21,8 +21,6 @@ import java.util.Arrays;
 import io.spring.initializr.generator.condition.ProjectGenerationCondition;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
-import io.spring.initializr.generator.version.VersionParser;
-import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -35,13 +33,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * @author Stephane Nicoll
  */
 public class OnGradleVersionCondition extends ProjectGenerationCondition {
-
-	private static final VersionRange GRADLE_6_VERSION_RANGE = VersionParser.DEFAULT
-		.parseRange("[2.2.2.RELEASE,2.5.0-RC1)");
-
-	private static final VersionRange GRADLE_7_VERSION_RANGE = VersionParser.DEFAULT.parseRange("[2.5.0-RC1,2.7.10)");
-
-	private static final VersionRange GRADLE_8_VERSION_RANGE = VersionParser.DEFAULT.parseRange("2.7.10");
 
 	@Override
 	protected boolean matches(ProjectDescription description, ConditionContext context,
@@ -59,18 +50,7 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 		if (platformVersion == null) {
 			return null;
 		}
-		else if (GRADLE_6_VERSION_RANGE.match(platformVersion)) {
-			return "6";
-		}
-		else if (GRADLE_7_VERSION_RANGE.match(platformVersion)) {
-			return "7";
-		}
-		else if (GRADLE_8_VERSION_RANGE.match(platformVersion)) {
-			return "8";
-		}
-		else {
-			return null;
-		}
+		return "8";
 	}
 
 }
