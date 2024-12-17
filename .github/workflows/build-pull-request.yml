@@ -21,4 +21,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: ./mvnw --batch-mode --update-snapshots -Pfull verify
+        run: ./mvnw --batch-mode --update-snapshots -Pfull install

@@ -36,7 +36,7 @@ jobs:
 
       - name: Maven verify
         if: ${{ !matrix.runner.deploy-snapshots }}
-        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -Pfull verify
+        run: ./mvnw --no-transfer-progress --batch-mode --update-snapshots -Pfull install
 
       - name: Maven deploy
         if: ${{ matrix.runner.deploy-snapshots }}
