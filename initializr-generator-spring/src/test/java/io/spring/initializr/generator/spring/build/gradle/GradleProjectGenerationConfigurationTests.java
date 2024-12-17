@@ -87,8 +87,7 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("3.3.0", GRADLE_VERSION),
-				Arguments.arguments("3.4.0-RC1", GRADLE_VERSION));
+		return Stream.of(Arguments.arguments("3.3.0", GRADLE_VERSION), Arguments.arguments("3.4.0", GRADLE_VERSION));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
