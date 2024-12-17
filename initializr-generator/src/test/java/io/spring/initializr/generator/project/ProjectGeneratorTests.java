@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 public class ProjectGeneratorTests {
 
 	@Test
-	void generateRegisterProjectDescription() {
+	void generateRegisterProjectDescription() throws Exception {
 		Consumer<ProjectGenerationContext> contextInitializer = mockContextInitializr();
 		ProjectGenerator generator = new ProjectGenerator(contextInitializer);
 		MutableProjectDescription description = new MutableProjectDescription();
@@ -61,7 +61,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateProvideDefaultProjectDescriptionDiff() {
+	void generateProvideDefaultProjectDescriptionDiff() throws Exception {
 		ProjectGenerator generator = new ProjectGenerator(mockContextInitializr());
 		MutableProjectDescription description = new MutableProjectDescription();
 		ProjectDescriptionDiff diff = generator.generate(description, (context) -> {
@@ -72,7 +72,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateUseAvailableProjectDescriptionDiffFactory() {
+	void generateUseAvailableProjectDescriptionDiffFactory() throws Exception {
 		ProjectDescriptionDiff diff = mock(ProjectDescriptionDiff.class);
 		ProjectDescriptionDiffFactory diffFactory = mock(ProjectDescriptionDiffFactory.class);
 		MutableProjectDescription description = new MutableProjectDescription();
@@ -88,7 +88,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateInvokeContextInitializerBeforeContextIsRefreshed() {
+	void generateInvokeContextInitializerBeforeContextIsRefreshed() throws Exception {
 		ProjectGenerator generator = new ProjectGenerator((context) -> {
 			assertThat(context.isActive()).isFalse();
 			context.registerBean(String.class, () -> "Test");
@@ -101,7 +101,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateInvokeProjectDescriptionCustomizer() {
+	void generateInvokeProjectDescriptionCustomizer() throws Exception {
 		ProjectGenerator generator = new ProjectGenerator((context) -> context.registerBean(
 				ProjectDescriptionCustomizer.class, () -> (description) -> description.setGroupId("com.acme")));
 		MutableProjectDescription description = new MutableProjectDescription();
@@ -112,7 +112,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateInvokeProjectDescriptionCustomizersInOrder() {
+	void generateInvokeProjectDescriptionCustomizersInOrder() throws Exception {
 		ProjectDescriptionCustomizer firstCustomizer = mock(ProjectDescriptionCustomizer.class);
 		given(firstCustomizer.getOrder()).willReturn(5);
 		ProjectDescriptionCustomizer secondCustomizer = mock(ProjectDescriptionCustomizer.class);
@@ -129,7 +129,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateIgnoreProjectDescriptionCustomizerOnNonMutableDescription() {
+	void generateIgnoreProjectDescriptionCustomizerOnNonMutableDescription() throws Exception {
 		ProjectDescriptionCustomizer customizer = mock(ProjectDescriptionCustomizer.class);
 		ProjectGenerator generator = new ProjectGenerator(
 				(context) -> context.registerBean(ProjectDescriptionCustomizer.class, () -> customizer));
@@ -164,7 +164,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateCanBeConfiguredToAllowBeanDefinitionOverriding() {
+	void generateCanBeConfiguredToAllowBeanDefinitionOverriding() throws Exception {
 		ProjectGenerator generator = new ProjectGenerator((context) -> {
 			context.registerBean("testBean", String.class, () -> "test");
 			context.registerBean("testBean", String.class, () -> "duplicate");
@@ -175,7 +175,7 @@ public class ProjectGeneratorTests {
 	}
 
 	@Test
-	void generateCanBeExtendedToFilterProjectContributors(@TempDir Path projectDir) {
+	void generateCanBeExtendedToFilterProjectContributors(@TempDir Path projectDir) throws Exception {
 		ProjectDescription description = mock(ProjectDescription.class);
 		given(description.getArtifactId()).willReturn("test-custom-contributor");
 		given(description.getBuildSystem()).willReturn(new MavenBuildSystem());

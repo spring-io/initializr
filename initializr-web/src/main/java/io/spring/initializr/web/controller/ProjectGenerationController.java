@@ -110,21 +110,21 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	@RequestMapping(path = { "/pom", "/pom.xml" }, method = { RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<byte[]> pom(R request) {
+	public ResponseEntity<byte[]> pom(R request) throws Exception {
 		request.setType("maven-build");
 		byte[] mavenPom = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
 	@RequestMapping(path = { "/build", "/build.gradle" }, method = { RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<byte[]> gradle(R request) {
+	public ResponseEntity<byte[]> gradle(R request) throws Exception {
 		request.setType("gradle-build");
 		byte[] gradleBuild = this.projectGenerationInvoker.invokeBuildGeneration(request);
 		return createResponseEntity(gradleBuild, "application/octet-stream", "build.gradle");
 	}
 
 	@RequestMapping(path = "/starter.zip", method = { RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<byte[]> springZip(R request) throws IOException {
+	public ResponseEntity<byte[]> springZip(R request) throws Exception {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
 				ZipArchiveEntry::setUnixMode);
@@ -134,7 +134,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	@RequestMapping(path = "/starter.tgz", method = { RequestMethod.GET, RequestMethod.POST },
 			produces = "application/x-compress")
-	public ResponseEntity<byte[]> springTgz(R request) throws IOException {
+	public ResponseEntity<byte[]> springTgz(R request) throws Exception {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
 				TarArchiveEntry::setMode);

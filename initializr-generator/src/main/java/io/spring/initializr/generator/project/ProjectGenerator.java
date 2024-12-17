@@ -17,7 +17,11 @@
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -99,7 +103,7 @@ public class ProjectGenerator {
 	 * @throws ProjectGenerationException if an error occurs while generating the project
 	 */
 	public <T> T generate(ProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator)
-			throws ProjectGenerationException {
+			throws Exception {
 		try (ProjectGenerationContext context = this.contextFactory.get()) {
 			registerProjectDescription(context, description);
 			registerProjectContributors(context, description);
@@ -121,17 +125,17 @@ public class ProjectGenerator {
 	 * @param description the description of the project to generate
 	 * @return a list of candidate configurations
 	 */
-	@SuppressWarnings("deprecation")
-	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description) {
-		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-				getClass().getClassLoader());
+	protected List<String> getCandidateProjectGenerationConfigurations(ProjectDescription description)
+			throws Exception {
+		return getFactoryNames(ProjectGenerationConfiguration.class);
 	}
 
 	private void registerProjectDescription(ProjectGenerationContext context, ProjectDescription description) {
 		context.registerBean(ProjectDescription.class, resolve(description, context));
 	}
 
-	private void registerProjectContributors(ProjectGenerationContext context, ProjectDescription description) {
+	private void registerProjectContributors(ProjectGenerationContext context, ProjectDescription description)
+			throws Exception {
 		getCandidateProjectGenerationConfigurations(description).forEach((configurationClassName) -> {
 			GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 			beanDefinition.setBeanClassName(configurationClassName);
@@ -154,6 +158,40 @@ public class ProjectGenerator {
 			}
 			return description;
 		};
+	}
+
+	/**
+	 * The method getFactoryNames retrieves the factory class names that are registered
+	 * for a given factory type. It uses reflection to interact with the private members
+	 * of {@link SpringFactoriesLoader}, specifically calling a private variable factories
+	 * to get an object that holds the factories and then accessing the factories map.
+	 * @param factoryType the class type for which the factory names are to be retrieved.
+	 * @return a list of factory names (fully qualified class names) that implement the
+	 * specified factory type.If no factories are found for the given type, an empty list
+	 * is returned.
+	 * @throws Exception if there is an issue accessing private methods/fields or invoking
+	 * reflection.
+	 * @author Rituraj Basu
+	 */
+
+	public static List<String> getFactoryNames(Class<?> factoryType) throws Exception {
+		Class<?> springFactoriesLoaderClass = SpringFactoriesLoader.class;
+		// Use reflection to access the private static method "forDefaultResourceLocation"
+		// This method is expected to return an object containing the factories map
+		Method defaultResourceLocation = springFactoriesLoaderClass.getDeclaredMethod("forDefaultResourceLocation");
+		Object storeDefaultResourceLocation = defaultResourceLocation.invoke(null);
+
+		Field factoriesField = springFactoriesLoaderClass.getDeclaredField("factories");
+		factoriesField.setAccessible(true); // Make the private field accessible
+
+		Object factoryObject = factoriesField.get(storeDefaultResourceLocation);
+		if (factoryObject instanceof Map) {
+			Map<String, List<String>> factories = (Map<String, List<String>>) factoryObject;
+			return factories.getOrDefault(factoryType.getName(), Collections.emptyList());
+		}
+		else {
+			throw new IllegalStateException("Factories field is not of the expected type.");
+		}
 	}
 
 }

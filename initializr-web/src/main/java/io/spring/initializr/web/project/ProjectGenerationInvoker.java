@@ -79,7 +79,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	 * @param request the project request
 	 * @return the {@link ProjectGenerationResult}
 	 */
-	public ProjectGenerationResult invokeProjectStructureGeneration(R request) {
+	public ProjectGenerationResult invokeProjectStructureGeneration(R request) throws Exception {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
@@ -121,7 +121,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	 * @param request the project request
 	 * @return the generated build content
 	 */
-	public byte[] invokeBuildGeneration(R request) {
+	public byte[] invokeBuildGeneration(R request) throws Exception {
 		InitializrMetadata metadata = this.parentApplicationContext.getBean(InitializrMetadataProvider.class).get();
 		try {
 			ProjectDescription description = this.requestConverter.convert(request, metadata);
