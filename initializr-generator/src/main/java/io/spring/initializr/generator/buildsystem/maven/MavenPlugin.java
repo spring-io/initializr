@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import io.spring.initializr.generator.version.VersionReference;
+
 /**
  * A plugin in a {@link MavenBuild}.
  *
@@ -36,7 +38,7 @@ public class MavenPlugin {
 
 	private final String artifactId;
 
-	private final String version;
+	private final VersionReference version;
 
 	private final boolean extensions;
 
@@ -77,10 +79,21 @@ public class MavenPlugin {
 
 	/**
 	 * Return the version of the plugin or {@code null} if the version of the plugin is
+	 * managed. Also returns {@code null} if the version references a property.
+	 * @return the version or {@code null}
+	 * @deprecated for removal in favor of {@link #getVersionReference()}
+	 */
+	@Deprecated(forRemoval = true)
+	public String getVersion() {
+		return (this.version != null) ? this.version.getValue() : null;
+	}
+
+	/**
+	 * Return the version of the plugin or {@code null} if the version of the plugin is
 	 * managed.
 	 * @return the version or {@code null}
 	 */
-	public String getVersion() {
+	public VersionReference getVersionReference() {
 		return this.version;
 	}
 
@@ -133,7 +146,7 @@ public class MavenPlugin {
 
 		private final String artifactId;
 
-		private String version;
+		private VersionReference version;
 
 		private boolean extensions;
 
@@ -157,6 +170,19 @@ public class MavenPlugin {
 		 * @return this for method chaining
 		 */
 		public Builder version(String version) {
+			if (version == null) {
+				return versionReference(null);
+			}
+			return versionReference(VersionReference.ofValue(version));
+		}
+
+		/**
+		 * Set the version of the plugin or {@code null} if the version is managed by the
+		 * project.
+		 * @param version the version of the plugin or {@code null}
+		 * @return this for method chaining
+		 */
+		public Builder versionReference(VersionReference version) {
 			this.version = version;
 			return this;
 		}
@@ -215,6 +241,17 @@ public class MavenPlugin {
 		 * @return this for method chaining
 		 */
 		public Builder dependency(String groupId, String artifactId, String version) {
+			return dependency(groupId, artifactId, (version != null) ? VersionReference.ofValue(version) : null);
+		}
+
+		/**
+		 * Add a plugin dependency.
+		 * @param groupId the group ID of the dependency
+		 * @param artifactId the artifact ID of the dependency
+		 * @param version the version of the dependency
+		 * @return this for method chaining
+		 */
+		public Builder dependency(String groupId, String artifactId, VersionReference version) {
 			this.dependencies.add(new Dependency(groupId, artifactId, version));
 			return this;
 		}
@@ -487,9 +524,9 @@ public class MavenPlugin {
 
 		private final String artifactId;
 
-		private final String version;
+		private final VersionReference version;
 
-		private Dependency(String groupId, String artifactId, String version) {
+		private Dependency(String groupId, String artifactId, VersionReference version) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;
 			this.version = version;
@@ -514,8 +551,18 @@ public class MavenPlugin {
 		/**
 		 * Return the version of the plugin dependency.
 		 * @return the version
+		 * @deprecated for removal in favor of {@link #getVersionReference()}.
 		 */
+		@Deprecated(forRemoval = true)
 		public String getVersion() {
+			return (this.version != null) ? this.version.getValue() : null;
+		}
+
+		/**
+		 * Return the version of the plugin dependency.
+		 * @return the version
+		 */
+		public VersionReference getVersionReference() {
 			return this.version;
 		}
 

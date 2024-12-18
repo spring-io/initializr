@@ -55,7 +55,7 @@ class DefaultMavenBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((mavenPlugin) -> {
 			assertThat(mavenPlugin.getGroupId()).isEqualTo("org.springframework.boot");
 			assertThat(mavenPlugin.getArtifactId()).isEqualTo("spring-boot-maven-plugin");
-			assertThat(mavenPlugin.getVersion()).isNull();
+			assertThat(mavenPlugin.getVersionReference()).isNull();
 		});
 	}
 

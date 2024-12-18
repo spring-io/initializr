@@ -422,7 +422,7 @@ public class MavenBuildWriter {
 		writeElement(writer, "plugin", () -> {
 			writeSingleElement(writer, "groupId", plugin.getGroupId());
 			writeSingleElement(writer, "artifactId", plugin.getArtifactId());
-			writeSingleElement(writer, "version", plugin.getVersion());
+			writeSingleElement(writer, "version", determineVersion(plugin.getVersionReference()));
 			if (!plugin.isInherited()) {
 				writeSingleElement(writer, "inherited", "false");
 			}
@@ -468,7 +468,7 @@ public class MavenBuildWriter {
 		writeElement(writer, "dependency", () -> {
 			writeSingleElement(writer, "groupId", dependency.getGroupId());
 			writeSingleElement(writer, "artifactId", dependency.getArtifactId());
-			writeSingleElement(writer, "version", dependency.getVersion());
+			writeSingleElement(writer, "version", determineVersion(dependency.getVersionReference()));
 		});
 	}
 
@@ -556,7 +556,7 @@ public class MavenBuildWriter {
 		writeElement(writer, "extension", () -> {
 			writeSingleElement(writer, "groupId", extension.getGroupId());
 			writeSingleElement(writer, "artifactId", extension.getArtifactId());
-			writeSingleElement(writer, "version", extension.getVersion());
+			writeSingleElement(writer, "version", determineVersion(extension.getVersionReference()));
 		});
 	}
 

@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
+import io.spring.initializr.generator.version.VersionReference;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 /**
@@ -51,7 +52,8 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 						option.add("option", "all-open:annotation=jakarta.persistence.Embeddable");
 					});
 				});
-				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg", "${kotlin.version}");
+				kotlinPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-noarg",
+						VersionReference.ofProperty(KotlinMavenBuildCustomizer.KOTLIN_VERSION_PROPERTY));
 			});
 		}
 	}

@@ -25,6 +25,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionReference;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -59,7 +60,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 			MavenPlugin.Dependency pluginDependency = plugin.getDependencies().get(0);
 			assertThat(pluginDependency.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(pluginDependency.getArtifactId()).isEqualTo("kotlin-maven-noarg");
-			assertThat(pluginDependency.getVersion()).isEqualTo("${kotlin.version}");
+			assertThat(pluginDependency.getVersionReference()).isEqualTo(VersionReference.ofProperty("kotlin.version"));
 		});
 	}
 

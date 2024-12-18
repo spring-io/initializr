@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +36,7 @@ class MavenPluginContainerTests {
 		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(plugin.getVersion()).isNull();
+			assertThat(plugin.getVersionReference()).isNull();
 		});
 	}
 
@@ -47,7 +48,7 @@ class MavenPluginContainerTests {
 		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(plugin.getVersion()).isEqualTo("1.0");
+			assertThat(plugin.getVersionReference()).isEqualTo(VersionReference.ofValue("1.0"));
 			assertThat(plugin.getExecutions()).hasSize(1);
 			assertThat(plugin.getExecutions().get(0).getId()).isEqualTo("first");
 			assertThat(plugin.getExecutions().get(0).getGoals()).containsExactly("run-this");
@@ -62,7 +63,7 @@ class MavenPluginContainerTests {
 		assertThat(pluginContainer.values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("com.example");
 			assertThat(plugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(plugin.getVersion()).isEqualTo("2.0");
+			assertThat(plugin.getVersionReference()).isEqualTo(VersionReference.ofValue("2.0"));
 		});
 	}
 

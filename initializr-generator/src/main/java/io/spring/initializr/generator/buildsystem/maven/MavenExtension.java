@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.version.VersionReference;
+
 /**
  * A build extension in a @{@link MavenBuild}.
  *
@@ -28,7 +30,7 @@ public class MavenExtension {
 
 	private final String artifactId;
 
-	private final String version;
+	private final VersionReference version;
 
 	protected MavenExtension(Builder builder) {
 		this.groupId = builder.groupId;
@@ -54,9 +56,19 @@ public class MavenExtension {
 
 	/**
 	 * Return the version of the extension.
-	 * @return the artifact id
+	 * @return the version
+	 * @deprecated for removal in favor of {@link #getVersionReference()}
 	 */
+	@Deprecated(forRemoval = true)
 	public String getVersion() {
+		return (this.version != null) ? this.version.getValue() : null;
+	}
+
+	/**
+	 * Return the version of the extension.
+	 * @return the version
+	 */
+	public VersionReference getVersionReference() {
 		return this.version;
 	}
 
@@ -66,7 +78,7 @@ public class MavenExtension {
 
 		private final String artifactId;
 
-		private String version;
+		private VersionReference version;
 
 		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
@@ -79,6 +91,18 @@ public class MavenExtension {
 		 * @return this for method chaining
 		 */
 		public Builder version(String version) {
+			if (version == null) {
+				return versionReference(null);
+			}
+			return versionReference(VersionReference.ofValue(version));
+		}
+
+		/**
+		 * Set the version of the extension.
+		 * @param version the version of the extension
+		 * @return this for method chaining
+		 */
+		public Builder versionReference(VersionReference version) {
 			this.version = version;
 			return this;
 		}

@@ -22,6 +22,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Execution;
 import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.version.VersionProperty;
+import io.spring.initializr.generator.version.VersionReference;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,7 @@ class KotlinMavenFullBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
 			assertThat(kotlinPlugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(kotlinPlugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-			assertThat(kotlinPlugin.getVersion()).isEqualTo("${kotlin.version}");
+			assertThat(kotlinPlugin.getVersionReference()).isEqualTo(VersionReference.ofProperty("kotlin.version"));
 			Configuration configuration = kotlinPlugin.getConfiguration();
 			assertThat(configuration).isNotNull();
 			assertThat(configuration.getSettings()).hasSize(3);
@@ -94,7 +95,7 @@ class KotlinMavenFullBuildCustomizerTests {
 			Dependency allOpen = kotlinPlugin.getDependencies().get(0);
 			assertThat(allOpen.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(allOpen.getArtifactId()).isEqualTo("kotlin-maven-allopen");
-			assertThat(allOpen.getVersion()).isEqualTo("${kotlin.version}");
+			assertThat(allOpen.getVersionReference()).isEqualTo(VersionReference.ofProperty("kotlin.version"));
 		});
 	}
 

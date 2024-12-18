@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.VersionReference;
 
 /**
  * {@link BuildCustomizer} for Kotlin projects build with Maven when Kotlin is not
@@ -35,12 +36,13 @@ class KotlinMavenFullBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
 	@Override
 	public void customize(MavenBuild build) {
-		build.properties().version("kotlin.version", this.settings.getVersion());
+		build.properties().version(KotlinMavenBuildCustomizer.KOTLIN_VERSION_PROPERTY, this.settings.getVersion());
 		build.settings()
 			.sourceDirectory("${project.basedir}/src/main/kotlin")
 			.testSourceDirectory("${project.basedir}/src/test/kotlin");
 		build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinMavenPlugin) -> {
-			kotlinMavenPlugin.version("${kotlin.version}");
+			kotlinMavenPlugin
+				.versionReference(VersionReference.ofProperty(KotlinMavenBuildCustomizer.KOTLIN_VERSION_PROPERTY));
 			kotlinMavenPlugin.configuration((configuration) -> {
 				configuration.configure("args",
 						(args) -> this.settings.getCompilerArgs().forEach((arg) -> args.add("arg", arg)));
@@ -51,7 +53,8 @@ class KotlinMavenFullBuildCustomizer implements BuildCustomizer<MavenBuild> {
 			kotlinMavenPlugin.execution("compile", (compile) -> compile.phase("compile").goal("compile"));
 			kotlinMavenPlugin.execution("test-compile",
 					(compile) -> compile.phase("test-compile").goal("test-compile"));
-			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen", "${kotlin.version}");
+			kotlinMavenPlugin.dependency("org.jetbrains.kotlin", "kotlin-maven-allopen",
+					VersionReference.ofProperty(KotlinMavenBuildCustomizer.KOTLIN_VERSION_PROPERTY));
 		});
 
 	}

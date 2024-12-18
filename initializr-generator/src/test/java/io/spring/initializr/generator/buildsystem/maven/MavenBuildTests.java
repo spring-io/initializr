@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,7 +66,7 @@ class MavenBuildTests {
 		assertThat(build.pluginManagementPlugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isEqualTo("1.2.3");
+			assertThat(testPlugin.getVersionReference()).isEqualTo(VersionReference.ofValue("1.2.3"));
 		});
 	}
 
@@ -78,7 +79,7 @@ class MavenBuildTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isNull();
+			assertThat(testPlugin.getVersionReference()).isNull();
 			assertThat(testPlugin.getExecutions()).hasSize(1);
 			assertThat(testPlugin.getExecutions().get(0).getId()).isEqualTo("first");
 			assertThat(testPlugin.getExecutions().get(0).getGoals()).containsExactly("run-this");
@@ -93,7 +94,7 @@ class MavenBuildTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
+			assertThat(testPlugin.getVersionReference()).isEqualTo(VersionReference.ofValue("1.0.0"));
 		});
 
 	}
@@ -106,7 +107,7 @@ class MavenBuildTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isNull();
+			assertThat(testPlugin.getVersionReference()).isNull();
 		});
 	}
 
@@ -118,7 +119,7 @@ class MavenBuildTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((testPlugin) -> {
 			assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 			assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-			assertThat(testPlugin.getVersion()).isEqualTo("1.0.0");
+			assertThat(testPlugin.getVersionReference()).isEqualTo(VersionReference.ofValue("1.0.0"));
 		});
 	}
 
@@ -224,7 +225,7 @@ class MavenBuildTests {
 				.satisfies((testPlugin) -> {
 					assertThat(testPlugin.getGroupId()).isEqualTo("com.example");
 					assertThat(testPlugin.getArtifactId()).isEqualTo("test-plugin");
-					assertThat(testPlugin.getVersion()).isEqualTo("1.2.3");
+					assertThat(testPlugin.getVersionReference()).isEqualTo(VersionReference.ofValue("1.2.3"));
 				}));
 	}
 
