@@ -64,7 +64,7 @@ public final class VersionReference {
 	}
 
 	/**
-	 * Return the version of {@code null} if this reference is backed by a property.
+	 * Return the version or {@code null} if this reference is backed by a property.
 	 * @return the version or {@code null}
 	 */
 	public String getValue() {
