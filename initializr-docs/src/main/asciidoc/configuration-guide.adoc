@@ -396,7 +396,7 @@ available versions.
 
 If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
 scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
-details, {spring-boot-reference}/#boot-features-restclient-customization[check the
+details, {spring-boot-reference}/io/rest-client.html#io.rest-client.restclient.customization[check the
 documentation].
 
 NOTE: If you opt-in for `SpringIoInitializrMetadataUpdateStrategy`, you have to

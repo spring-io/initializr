@@ -26,7 +26,7 @@ Stéphane Nicoll; Dave Syer; Madhura Bhave
 :spring-initializr-docs-version: current
 :spring-initializr-docs: https://docs.spring.io/initializr/docs/{spring-initializr-docs-version}/reference
 :spring-initializr-docs-current: https://docs.spring.io/initializr/docs/current/reference/html
-:spring-boot-reference: https://docs.spring.io/spring-boot/docs/{spring-boot-docs-version}/reference/htmlsingle
+:spring-boot-reference: https://docs.spring.io/spring-boot/reference
 
 // ======================================================================================
 
