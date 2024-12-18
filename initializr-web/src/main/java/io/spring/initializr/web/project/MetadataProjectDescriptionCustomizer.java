@@ -91,7 +91,7 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 	}
 
 	private boolean shouldAppendDelimiter(String element, StringBuilder builder) {
-		if (builder.length() == 0) {
+		if (builder.isEmpty()) {
 			return false;
 		}
 		for (char c : VALID_MAVEN_SPECIAL_CHARACTERS) {

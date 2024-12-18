@@ -131,12 +131,12 @@ bean is available for extensions that wish to know if an attribute of the origin
 Once the description has been customized based on the available
 ``ProjectDescriptionCustomizer``s, the generator uses a `ProjectAssetGenerator` to
 generate the project assets. The `initializr-generator` module provides a default
-implementation of this interface (``DefaultProjectAssetGenerator`) that generates a
+implementation of this interface (`DefaultProjectAssetGenerator`) that generates a
 directory structure using available `ProjectContributor` beans.
 
-While the default `ProjectAssetGenerator` use the file system and invoke a particular set
+While the default `ProjectAssetGenerator` uses the file system and invoke a particular set
 of components, it is possible to use the same `ProjectGenerator` instance with a custom
-implementation that focus on something else entirely.
+implementation that focusses on something else entirely.
 
 
 
@@ -578,7 +578,7 @@ available development build of the upcoming 2.1.0 release). For the `V2` format,
 simply `SNAPSHOT`, i.e. `2.1.0-SNAPSHOT`.
 * `RELEASE` for general availability (e.g. `2.0.0.RELEASE` is 2.0.0 proper)
 
-TIP: snapshots are in a bit special in that scheme as they always represent the "latest
+TIP: Snapshots are in a bit special in that scheme as they always represent the "latest
 state" of a release. `M1` represents the oldest version for a given major, minor and
 patch revisions, and it can therefore be safely used when referring to the "first" release
 in that line.
