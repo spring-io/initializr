@@ -64,6 +64,13 @@ public interface Language {
 	 */
 	boolean isKeyword(String input);
 
+	/**
+	 * Creates the language for the given id.
+	 * @param id the id
+	 * @param jvmVersion the JVM version
+	 * @return the language
+	 * @throws IllegalStateException if no language for this id can be found
+	 */
 	static Language forId(String id, String jvmVersion) {
 		return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader())
 			.stream()

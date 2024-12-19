@@ -61,6 +61,9 @@ public class MutableProjectDescription implements ProjectDescription {
 
 	private String baseDirectory;
 
+	/**
+	 * Creates a new instance.
+	 */
 	public MutableProjectDescription() {
 	}
 
@@ -94,6 +97,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.platformVersion;
 	}
 
+	/**
+	 * Sets the platform version.
+	 * @param platformVersion the platform version
+	 */
 	public void setPlatformVersion(Version platformVersion) {
 		this.platformVersion = platformVersion;
 	}
@@ -103,6 +110,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.buildSystem;
 	}
 
+	/**
+	 * Sets the build system.
+	 * @param buildSystem the build system
+	 */
 	public void setBuildSystem(BuildSystem buildSystem) {
 		this.buildSystem = buildSystem;
 	}
@@ -112,6 +123,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.packaging;
 	}
 
+	/**
+	 * Sets the packaging.
+	 * @param packaging the packaging
+	 */
 	public void setPackaging(Packaging packaging) {
 		this.packaging = packaging;
 	}
@@ -121,18 +136,39 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.language;
 	}
 
+	/**
+	 * Sets the language.
+	 * @param language the language
+	 */
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
 
+	/**
+	 * Adds the given dependency.
+	 * @param id the id
+	 * @param dependency the dependency
+	 * @return the added dependency
+	 */
 	public Dependency addDependency(String id, Dependency dependency) {
 		return this.requestedDependencies.put(id, dependency);
 	}
 
+	/**
+	 * Adds the given dependency.
+	 * @param id the id
+	 * @param builder the dependency builder
+	 * @return the added dependency
+	 */
 	public Dependency addDependency(String id, Dependency.Builder<?> builder) {
 		return addDependency(id, builder.build());
 	}
 
+	/**
+	 * Removes the dependency with the given id.
+	 * @param id the id
+	 * @return the removed dependency
+	 */
 	public Dependency removeDependency(String id) {
 		return this.requestedDependencies.remove(id);
 	}
@@ -147,6 +183,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.groupId;
 	}
 
+	/**
+	 * Sets the group id.
+	 * @param groupId the group id
+	 */
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
@@ -156,6 +196,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.artifactId;
 	}
 
+	/**
+	 * Sets the artifact id.
+	 * @param artifactId the artifact id
+	 */
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;
 	}
@@ -165,6 +209,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.version;
 	}
 
+	/**
+	 * Sets the version.
+	 * @param version the version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
@@ -174,6 +222,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.name;
 	}
 
+	/**
+	 * Sets the name.
+	 * @param name the name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -183,6 +235,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.description;
 	}
 
+	/**
+	 * Sets the description.
+	 * @param description the description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -192,6 +248,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.applicationName;
 	}
 
+	/**
+	 * Sets the application name.
+	 * @param applicationName the application name
+	 */
 	public void setApplicationName(String applicationName) {
 		this.applicationName = applicationName;
 	}
@@ -207,6 +267,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return null;
 	}
 
+	/**
+	 * Sets the package name.
+	 * @param packageName the package name
+	 */
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
@@ -216,6 +280,10 @@ public class MutableProjectDescription implements ProjectDescription {
 		return this.baseDirectory;
 	}
 
+	/**
+	 * Sets the base directory.
+	 * @param baseDirectory the base directory
+	 */
 	public void setBaseDirectory(String baseDirectory) {
 		this.baseDirectory = baseDirectory;
 	}

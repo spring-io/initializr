@@ -57,6 +57,11 @@ public class MavenProfile {
 
 	private final MavenDistributionManagement.Builder distributionManagement = new MavenDistributionManagement.Builder();
 
+	/**
+	 * Creates a new instance.
+	 * @param id the id
+	 * @param buildItemResolver the build item resolver
+	 */
 	protected MavenProfile(String id, BuildItemResolver buildItemResolver) {
 		this.id = id;
 		this.dependencies = new DependencyContainer(buildItemResolver::resolveDependency);
@@ -214,6 +219,9 @@ public class MavenProfile {
 
 		private String finalName;
 
+		/**
+		 * Creates a new instance.
+		 */
 		protected SettingsBuilder() {
 		}
 
@@ -241,6 +249,10 @@ public class MavenProfile {
 			return this;
 		}
 
+		/**
+		 * Builds the settings.
+		 * @return the settings
+		 */
 		public Settings build() {
 			return new Settings(this);
 		}
@@ -256,7 +268,11 @@ public class MavenProfile {
 
 		private final String finalName;
 
-		protected Settings(SettingsBuilder builder) {
+		/**
+		 * Creates a new instance.
+		 * @param builder the builder to use
+		 */
+		private Settings(SettingsBuilder builder) {
 			this.defaultGoal = builder.defaultGoal;
 			this.finalName = builder.finalName;
 		}

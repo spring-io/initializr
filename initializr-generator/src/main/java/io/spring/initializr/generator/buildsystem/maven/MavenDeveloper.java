@@ -245,6 +245,10 @@ public class MavenDeveloper {
 			return this;
 		}
 
+		/**
+		 * Builds the developer.
+		 * @return the developer
+		 */
 		public MavenDeveloper build() {
 			return new MavenDeveloper(this);
 		}

@@ -86,6 +86,10 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
+	/**
+	 * Creates a new instance.
+	 * @param indentingWriterFactory the {@link IndentingWriterFactory} to use
+	 */
 	public JavaSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
 		this.indentingWriterFactory = indentingWriterFactory;
 	}

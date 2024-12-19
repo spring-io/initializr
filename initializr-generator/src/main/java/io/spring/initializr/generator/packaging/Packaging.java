@@ -27,8 +27,18 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  */
 public interface Packaging {
 
+	/**
+	 * Return the id of the packaging.
+	 * @return the id
+	 */
 	String id();
 
+	/**
+	 * Creates the packaging for the given id.
+	 * @param id the id
+	 * @return the packaging
+	 * @throws IllegalStateException if the packaging with the given id can't be found
+	 */
 	static Packaging forId(String id) {
 		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader())
 			.stream()

@@ -24,10 +24,19 @@ package io.spring.initializr.generator.version;
 @SuppressWarnings("serial")
 public class InvalidVersionException extends RuntimeException {
 
+	/**
+	 * Creates a new instance.
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public InvalidVersionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Creates a new instance.
+	 * @param message the message
+	 */
 	public InvalidVersionException(String message) {
 		super(message);
 	}

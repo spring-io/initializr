@@ -34,10 +34,17 @@ public final class JavaLanguage extends AbstractLanguage {
 	 */
 	public static final String ID = "java";
 
+	/**
+	 * Creates a new instance with the JVM version {@value #DEFAULT_JVM_VERSION}.
+	 */
 	public JavaLanguage() {
 		this(DEFAULT_JVM_VERSION);
 	}
 
+	/**
+	 * Creates a new instance.
+	 * @param jvmVersion the JVM version
+	 */
 	public JavaLanguage(String jvmVersion) {
 		super(ID, jvmVersion, "java");
 	}

@@ -112,7 +112,7 @@ public class GradleExtension {
 	}
 
 	/**
-	 * A builder for {@link GradleExtension}.
+	 * Builder for {@link GradleExtension}.
 	 */
 	public static class Builder {
 

@@ -97,7 +97,7 @@ public class GradleTask {
 	}
 
 	/**
-	 * A builder for {@link GradleTask}.
+	 * Builder for {@link GradleTask}.
 	 */
 	public static class Builder {
 
@@ -111,6 +111,11 @@ public class GradleTask {
 
 		private final Map<String, Builder> nested = new LinkedHashMap<>();
 
+		/**
+		 * Creates a new instance.
+		 * @param name the name of the task
+		 * @param type the type of the task
+		 */
 		protected Builder(String name, String type) {
 			this.name = name;
 			this.type = type;

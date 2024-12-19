@@ -39,6 +39,10 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 		super(name);
 	}
 
+	/**
+	 * Sets the modifiers.
+	 * @param modifiers the modifiers
+	 */
 	public void modifiers(KotlinModifier... modifiers) {
 		this.modifiers = Arrays.asList(modifiers);
 	}
@@ -47,18 +51,34 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 		return this.modifiers;
 	}
 
+	/**
+	 * Adds a property declaration.
+	 * @param propertyDeclaration the property declaration
+	 */
 	public void addPropertyDeclaration(KotlinPropertyDeclaration propertyDeclaration) {
 		this.propertyDeclarations.add(propertyDeclaration);
 	}
 
+	/**
+	 * Returns the property declarations.
+	 * @return the property declaration
+	 */
 	public List<KotlinPropertyDeclaration> getPropertyDeclarations() {
 		return this.propertyDeclarations;
 	}
 
+	/**
+	 * Adds the function declaration.
+	 * @param methodDeclaration the function declaration
+	 */
 	public void addFunctionDeclaration(KotlinFunctionDeclaration methodDeclaration) {
 		this.functionDeclarations.add(methodDeclaration);
 	}
 
+	/**
+	 * Returns the function declarations.
+	 * @return the function declarations
+	 */
 	public List<KotlinFunctionDeclaration> getFunctionDeclarations() {
 		return this.functionDeclarations;
 	}

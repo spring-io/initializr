@@ -39,10 +39,18 @@ public class KotlinCompilationUnit extends CompilationUnit<KotlinTypeDeclaration
 		return new KotlinTypeDeclaration(name);
 	}
 
+	/**
+	 * Adds the given function as a top level function.
+	 * @param function the function to add
+	 */
 	public void addTopLevelFunction(KotlinFunctionDeclaration function) {
 		this.topLevelFunctions.add(function);
 	}
 
+	/**
+	 * Returns the top level functions.
+	 * @return the top level functions
+	 */
 	public List<KotlinFunctionDeclaration> getTopLevelFunctions() {
 		return this.topLevelFunctions;
 	}

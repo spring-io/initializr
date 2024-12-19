@@ -41,10 +41,17 @@ public final class GroovyLanguage extends AbstractLanguage {
 	 */
 	public static final String ID = "groovy";
 
+	/**
+	 * Creates a new instance with the JVM version {@value #DEFAULT_JVM_VERSION}.
+	 */
 	public GroovyLanguage() {
 		this(DEFAULT_JVM_VERSION);
 	}
 
+	/**
+	 * Creates a new instance.
+	 * @param jvmVersion the JVM version
+	 */
 	public GroovyLanguage(String jvmVersion) {
 		super(ID, jvmVersion, "groovy");
 	}

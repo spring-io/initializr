@@ -197,26 +197,50 @@ public final class Annotation {
 			this.values = Arrays.asList(values);
 		}
 
+		/**
+		 * Return the attribute name.
+		 * @return the attribute name
+		 */
 		public String getName() {
 			return this.name;
 		}
 
+		/**
+		 * Return the attribute type.
+		 * @return the attribute type
+		 */
 		public AttributeType getType() {
 			return this.type;
 		}
 
+		/**
+		 * Return the values.
+		 * @return the values
+		 */
 		public List<Object> getValues() {
 			return this.values;
 		}
 
 	}
 
-	private enum AttributeType {
+	/**
+	 * Type of an attribute.
+	 */
+	public enum AttributeType {
 
+		/**
+		 * Primitive type.
+		 */
 		PRIMITIVE,
 
+		/**
+		 * String type.
+		 */
 		STRING,
 
+		/**
+		 * Class type.
+		 */
 		CLASS() {
 			@Override
 			protected Collection<String> getImports(Object value) {
@@ -230,6 +254,9 @@ public final class Annotation {
 			}
 		},
 
+		/**
+		 * Enum type.
+		 */
 		ENUM() {
 			@Override
 			protected Collection<String> getImports(Object value) {
@@ -240,6 +267,9 @@ public final class Annotation {
 			}
 		},
 
+		/**
+		 * Annotation type.
+		 */
 		ANNOTATION() {
 			@Override
 			protected Collection<String> getImports(Object value) {
@@ -250,6 +280,9 @@ public final class Annotation {
 			}
 		},
 
+		/**
+		 * Code type.
+		 */
 		CODE {
 			@Override
 			protected boolean isCompatible(AttributeType attributeType) {

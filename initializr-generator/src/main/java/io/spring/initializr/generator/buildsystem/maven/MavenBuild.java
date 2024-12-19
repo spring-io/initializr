@@ -47,11 +47,18 @@ public class MavenBuild extends Build {
 
 	private final MavenProfileContainer profiles;
 
+	/**
+	 * Creates a new instance.
+	 * @param buildItemResolver the build item resolver
+	 */
 	public MavenBuild(BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 		this.profiles = new MavenProfileContainer(determineBuildItemResolver(buildItemResolver));
 	}
 
+	/**
+	 * Creates a new instance.
+	 */
 	public MavenBuild() {
 		this(null);
 	}

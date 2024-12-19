@@ -59,6 +59,10 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final boolean addOverrideIfEmpty;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenBuildSettings(Builder builder) {
 		super(builder);
 		this.parent = builder.parent;
@@ -216,6 +220,9 @@ public class MavenBuildSettings extends BuildSettings {
 
 		private boolean addOverrideIfEmpty;
 
+		/**
+		 * Creates a new instance.
+		 */
 		public Builder() {
 		}
 

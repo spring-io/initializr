@@ -25,6 +25,9 @@ import io.spring.initializr.generator.language.SourceCode;
  */
 public class KotlinSourceCode extends SourceCode<KotlinTypeDeclaration, KotlinCompilationUnit> {
 
+	/**
+	 * Creates a new instance.
+	 */
 	public KotlinSourceCode() {
 		super(KotlinCompilationUnit::new);
 	}

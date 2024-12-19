@@ -119,6 +119,11 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println("");
 	}
 
+	/**
+	 * Writes the given configuration.
+	 * @param writer the writer to write to
+	 * @param configuration the configuration to write
+	 */
 	protected void writeConfiguration(IndentingWriter writer, GradleConfiguration configuration) {
 		writer.println(configuration.getName() + " {");
 		writer.indented(() -> writer

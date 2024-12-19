@@ -60,10 +60,20 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		this.setter = builder.setter;
 	}
 
+	/**
+	 * Returns a builder for a {@code val} property with the given name.
+	 * @param name the name
+	 * @return the builder
+	 */
 	public static ValBuilder val(String name) {
 		return new ValBuilder(name);
 	}
 
+	/**
+	 * Returns a builder for a {@code var} property with the given name.
+	 * @param name the name
+	 * @return the builder
+	 */
 	public static VarBuilder var(String name) {
 		return new VarBuilder(name);
 	}
@@ -80,6 +90,10 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		return this.returnType;
 	}
 
+	/**
+	 * Returns the modifiers.
+	 * @return the modifiers
+	 */
 	public List<KotlinModifier> getModifiers() {
 		return this.modifiers;
 	}
@@ -127,32 +141,63 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			this.isVal = isVal;
 		}
 
+		/**
+		 * Returns {@code this} instance.
+		 * @return this instance
+		 */
 		protected abstract T self();
 
+		/**
+		 * Returns the getter.
+		 * @return the getter
+		 */
 		@SuppressWarnings("unchecked")
 		public AccessorBuilder<T> getter() {
 			return new AccessorBuilder<>((T) this, (created) -> this.getter = created);
 		}
 
+		/**
+		 * Returns the setter.
+		 * @return setter
+		 */
 		@SuppressWarnings("unchecked")
 		public AccessorBuilder<T> setter() {
 			return new AccessorBuilder<>((T) this, (created) -> this.setter = created);
 		}
 
+		/**
+		 * Sets the return type.
+		 * @param returnType the return type
+		 * @return this for method chaining
+		 */
 		public T returning(String returnType) {
 			this.returnType = returnType;
 			return self();
 		}
 
+		/**
+		 * Sets the modifiers.
+		 * @param modifiers the modifiers
+		 * @return this for method chaining
+		 */
 		public T modifiers(KotlinModifier... modifiers) {
 			this.modifiers = Arrays.asList(modifiers);
 			return self();
 		}
 
+		/**
+		 * Sets no value.
+		 * @return the property declaration
+		 */
 		public KotlinPropertyDeclaration emptyValue() {
 			return new KotlinPropertyDeclaration(this);
 		}
 
+		/**
+		 * Sets the given value.
+		 * @param valueCode the code for the value
+		 * @return the property declaration
+		 */
 		public KotlinPropertyDeclaration value(CodeBlock valueCode) {
 			this.valueCode = valueCode;
 			return new KotlinPropertyDeclaration(this);
@@ -160,6 +205,9 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	}
 
+	/**
+	 * Builder for {@code val} properties.
+	 */
 	public static final class ValBuilder extends Builder<ValBuilder> {
 
 		private ValBuilder(String name) {
@@ -173,12 +221,19 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	}
 
+	/**
+	 * Builder for {@code val} properties.
+	 */
 	public static final class VarBuilder extends Builder<VarBuilder> {
 
 		private VarBuilder(String name) {
 			super(name, false);
 		}
 
+		/**
+		 * Sets no value.
+		 * @return the property declaration
+		 */
 		public KotlinPropertyDeclaration empty() {
 			return new KotlinPropertyDeclaration(this);
 		}
@@ -190,6 +245,11 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	}
 
+	/**
+	 * Builder for a property accessor.
+	 *
+	 * @param <T> the type of builder
+	 */
 	public static final class AccessorBuilder<T extends Builder<T>> {
 
 		private final AnnotationContainer annotations = new AnnotationContainer();
@@ -205,20 +265,40 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 			this.accessorFunction = accessorFunction;
 		}
 
+		/**
+		 * Adds an annotation.
+		 * @param className the class name of the annotation
+		 * @return this for method chaining
+		 */
 		public AccessorBuilder<?> withAnnotation(ClassName className) {
 			return withAnnotation(className, null);
 		}
 
+		/**
+		 * Adds an annotation.
+		 * @param className the class name of the annotation
+		 * @param annotation configurer for the annotation
+		 * @return this for method chaining
+		 */
 		public AccessorBuilder<?> withAnnotation(ClassName className, Consumer<Annotation.Builder> annotation) {
 			this.annotations.add(className, annotation);
 			return this;
 		}
 
+		/**
+		 * Sets the body.
+		 * @param code the code for the body
+		 * @return this for method chaining
+		 */
 		public AccessorBuilder<?> withBody(CodeBlock code) {
 			this.code = code;
 			return this;
 		}
 
+		/**
+		 * Builds the accessor.
+		 * @return the parent getter / setter
+		 */
 		public T buildAccessor() {
 			this.accessorFunction.accept(new Accessor(this));
 			return this.parent;

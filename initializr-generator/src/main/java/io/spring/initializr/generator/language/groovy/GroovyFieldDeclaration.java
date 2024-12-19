@@ -46,6 +46,11 @@ public final class GroovyFieldDeclaration implements Annotatable {
 		this.initialized = builder.initialized;
 	}
 
+	/**
+	 * Creates a new builder for the field with the given name.
+	 * @param name the name
+	 * @return the builder
+	 */
 	public static Builder field(String name) {
 		return new Builder(name);
 	}
@@ -55,26 +60,49 @@ public final class GroovyFieldDeclaration implements Annotatable {
 		return this.annotations;
 	}
 
+	/**
+	 * Return the modifiers.
+	 * @return the modifiers
+	 */
 	public int getModifiers() {
 		return this.modifiers;
 	}
 
+	/**
+	 * Return the name.
+	 * @return the name
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Return the return type.
+	 * @return the return type
+	 */
 	public String getReturnType() {
 		return this.returnType;
 	}
 
+	/**
+	 * Return the value.
+	 * @return the value
+	 */
 	public Object getValue() {
 		return this.value;
 	}
 
+	/**
+	 * Whether the field declaration is initialized.
+	 * @return whether the field declaration is initialized
+	 */
 	public boolean isInitialized() {
 		return this.initialized;
 	}
 
+	/**
+	 * Builder for {@link GroovyFieldDeclaration}.
+	 */
 	public static final class Builder {
 
 		private final String name;
@@ -91,17 +119,32 @@ public final class GroovyFieldDeclaration implements Annotatable {
 			this.name = name;
 		}
 
+		/**
+		 * Sets the modifiers.
+		 * @param modifiers the modifiers
+		 * @return this for method chaining
+		 */
 		public Builder modifiers(int modifiers) {
 			this.modifiers = modifiers;
 			return this;
 		}
 
+		/**
+		 * Sets the value.
+		 * @param value the value
+		 * @return this for method chaining
+		 */
 		public Builder value(Object value) {
 			this.value = value;
 			this.initialized = true;
 			return this;
 		}
 
+		/**
+		 * Sets the return type.
+		 * @param returnType the return type
+		 * @return the field
+		 */
 		public GroovyFieldDeclaration returning(String returnType) {
 			this.returnType = returnType;
 			return new GroovyFieldDeclaration(this);

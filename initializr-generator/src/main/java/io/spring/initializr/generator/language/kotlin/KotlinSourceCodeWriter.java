@@ -60,6 +60,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
+	/**
+	 * Creates a new instance.
+	 * @param language the language
+	 * @param indentingWriterFactory the {@link IndentingWriterFactory}
+	 */
 	public KotlinSourceCodeWriter(Language language, IndentingWriterFactory indentingWriterFactory) {
 		this.language = language;
 		this.indentingWriterFactory = indentingWriterFactory;

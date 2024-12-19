@@ -39,26 +39,50 @@ public class JavaTypeDeclaration extends TypeDeclaration {
 		super(name);
 	}
 
+	/**
+	 * Sets the modifiers.
+	 * @param modifiers the modifiers
+	 */
 	public void modifiers(int modifiers) {
 		this.modifiers = modifiers;
 	}
 
+	/**
+	 * Return the modifiers.
+	 * @return the modifiers
+	 */
 	public int getModifiers() {
 		return this.modifiers;
 	}
 
+	/**
+	 * Adds the given field declaration.
+	 * @param fieldDeclaration the field declaration
+	 */
 	public void addFieldDeclaration(JavaFieldDeclaration fieldDeclaration) {
 		this.fieldDeclarations.add(fieldDeclaration);
 	}
 
+	/**
+	 * Returns the field declarations.
+	 * @return the field declarations
+	 */
 	public List<JavaFieldDeclaration> getFieldDeclarations() {
 		return this.fieldDeclarations;
 	}
 
+	/**
+	 * Adds the given method declaration.
+	 * @param methodDeclaration the method declaration
+	 */
 	public void addMethodDeclaration(JavaMethodDeclaration methodDeclaration) {
 		this.methodDeclarations.add(methodDeclaration);
 	}
 
+	/**
+	 * Returns the method declarations.
+	 * @return the method declarations
+	 */
 	public List<JavaMethodDeclaration> getMethodDeclarations() {
 		return this.methodDeclarations;
 	}

@@ -25,6 +25,9 @@ import io.spring.initializr.generator.language.SourceCode;
  */
 public class JavaSourceCode extends SourceCode<JavaTypeDeclaration, JavaCompilationUnit> {
 
+	/**
+	 * Creates a new instance.
+	 */
 	public JavaSourceCode() {
 		super(JavaCompilationUnit::new);
 	}

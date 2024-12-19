@@ -44,6 +44,10 @@ public class MavenDistributionManagement {
 		this.relocation = builder.relocation.build();
 	}
 
+	/**
+	 * Returns whether this instance is empty.
+	 * @return whether this instance is empty
+	 */
 	public boolean isEmpty() {
 		return this.downloadUrl == null && this.repository.isEmpty() && this.snapshotRepository.isEmpty()
 				&& this.site.isEmpty() && this.relocation.isEmpty();
@@ -92,17 +96,20 @@ public class MavenDistributionManagement {
 		return this.relocation;
 	}
 
+	/**
+	 * Builder for {@link MavenDistributionManagement}.
+	 */
 	public static class Builder {
 
 		private String downloadUrl;
 
-		private DeploymentRepository.Builder repository = new DeploymentRepository.Builder();
+		private final DeploymentRepository.Builder repository = new DeploymentRepository.Builder();
 
-		private DeploymentRepository.Builder snapshotRepository = new DeploymentRepository.Builder();
+		private final DeploymentRepository.Builder snapshotRepository = new DeploymentRepository.Builder();
 
-		private Site.Builder site = new Site.Builder();
+		private final Site.Builder site = new Site.Builder();
 
-		private Relocation.Builder relocation = new Relocation.Builder();
+		private final Relocation.Builder relocation = new Relocation.Builder();
 
 		/**
 		 * Specify the URL where this project can be downloaded from.
@@ -188,6 +195,10 @@ public class MavenDistributionManagement {
 			this.uniqueVersion = builder.uniqueVersion;
 		}
 
+		/**
+		 * Returns whether this instance is empty.
+		 * @return whether this instance is empty
+		 */
 		public boolean isEmpty() {
 			return this.id == null && this.name == null && this.url == null && this.layout == null
 					&& this.uniqueVersion == null;
@@ -234,6 +245,9 @@ public class MavenDistributionManagement {
 			return this.uniqueVersion;
 		}
 
+		/**
+		 * Builder for {@link DeploymentRepository}.
+		 */
 		public static class Builder {
 
 			private String id;
@@ -329,6 +343,10 @@ public class MavenDistributionManagement {
 			this.url = builder.url;
 		}
 
+		/**
+		 * Returns whether this instance is empty.
+		 * @return whether this instance is empty
+		 */
 		public boolean isEmpty() {
 			return this.id == null && this.name == null && this.url == null;
 		}
@@ -357,6 +375,9 @@ public class MavenDistributionManagement {
 			return this.url;
 		}
 
+		/**
+		 * Builder for {@link Site}.
+		 */
 		public static class Builder {
 
 			private String id;
@@ -429,6 +450,10 @@ public class MavenDistributionManagement {
 			this.message = builder.message;
 		}
 
+		/**
+		 * Returns whether this instance is empty.
+		 * @return whether this instance is empty
+		 */
 		public boolean isEmpty() {
 			return this.groupId == null && this.artifactId == null && this.version == null && this.message == null;
 		}
@@ -465,6 +490,9 @@ public class MavenDistributionManagement {
 			return this.message;
 		}
 
+		/**
+		 * Builder for {@link Relocation}.
+		 */
 		public static class Builder {
 
 			private String groupId;

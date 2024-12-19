@@ -37,6 +37,10 @@ public class MavenResource {
 
 	private final List<String> excludes;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	public MavenResource(Builder builder) {
 		this.directory = builder.directory;
 		this.targetPath = builder.targetPath;
@@ -105,6 +109,10 @@ public class MavenResource {
 
 		private List<String> excludes = new ArrayList<>();
 
+		/**
+		 * Creates a new instance.
+		 * @param directory the directory
+		 */
 		public Builder(String directory) {
 			this.directory = directory;
 		}

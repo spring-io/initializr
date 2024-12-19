@@ -38,26 +38,50 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 		super(name);
 	}
 
+	/**
+	 * Sets the modifiers.
+	 * @param modifiers the modifiers
+	 */
 	public void modifiers(int modifiers) {
 		this.modifiers = modifiers;
 	}
 
+	/**
+	 * Returns the modifiers.
+	 * @return the modifiers
+	 */
 	public int getModifiers() {
 		return this.modifiers;
 	}
 
+	/**
+	 * Adds the given field declaration.
+	 * @param fieldDeclaration the field declaration
+	 */
 	public void addFieldDeclaration(GroovyFieldDeclaration fieldDeclaration) {
 		this.fieldDeclarations.add(fieldDeclaration);
 	}
 
+	/**
+	 * Return the field declarations.
+	 * @return the field declarations
+	 */
 	public List<GroovyFieldDeclaration> getFieldDeclarations() {
 		return this.fieldDeclarations;
 	}
 
+	/**
+	 * Adds the given method declaration.
+	 * @param methodDeclaration the method declaration
+	 */
 	public void addMethodDeclaration(GroovyMethodDeclaration methodDeclaration) {
 		this.methodDeclarations.add(methodDeclaration);
 	}
 
+	/**
+	 * Returns the method declarations.
+	 * @return the method declarations
+	 */
 	public List<GroovyMethodDeclaration> getMethodDeclarations() {
 		return this.methodDeclarations;
 	}

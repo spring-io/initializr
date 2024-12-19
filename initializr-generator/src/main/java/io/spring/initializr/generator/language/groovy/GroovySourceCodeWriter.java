@@ -90,6 +90,10 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 
 	private final IndentingWriterFactory indentingWriterFactory;
 
+	/**
+	 * Creates a new instance.
+	 * @param indentingWriterFactory the {@link IndentingWriterFactory}
+	 */
 	public GroovySourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
 		this.indentingWriterFactory = indentingWriterFactory;
 	}

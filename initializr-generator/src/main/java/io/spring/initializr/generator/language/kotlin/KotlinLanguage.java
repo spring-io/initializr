@@ -41,10 +41,17 @@ public final class KotlinLanguage extends AbstractLanguage {
 	 */
 	public static final String ID = "kotlin";
 
+	/**
+	 * Creates a new instance with the JVM version {@value #DEFAULT_JVM_VERSION}.
+	 */
 	public KotlinLanguage() {
 		this(DEFAULT_JVM_VERSION);
 	}
 
+	/**
+	 * Creates a new instance.
+	 * @param jvmVersion the JVM version
+	 */
 	public KotlinLanguage(String jvmVersion) {
 		super(ID, jvmVersion, "kt");
 	}

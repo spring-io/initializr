@@ -33,6 +33,10 @@ public class MavenProfileActivation {
 
 	private final File file;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenProfileActivation(Builder builder) {
 		this.activeByDefault = builder.activeByDefault;
 		this.jdk = builder.jdk;
@@ -233,6 +237,9 @@ public class MavenProfileActivation {
 
 		private String fileMissing;
 
+		/**
+		 * Creates a new instance.
+		 */
 		protected Builder() {
 		}
 

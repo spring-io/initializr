@@ -124,6 +124,10 @@ public class MavenLicense {
 			return this;
 		}
 
+		/**
+		 * Builds the license.
+		 * @return the license
+		 */
 		public MavenLicense build() {
 			return new MavenLicense(this);
 		}

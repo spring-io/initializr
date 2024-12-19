@@ -30,6 +30,11 @@ public class Invocation {
 
 	private final List<String> arguments;
 
+	/**
+	 * Creates a new instance.
+	 * @param target the target
+	 * @param arguments the arguments
+	 */
 	public Invocation(String target, List<String> arguments) {
 		this.target = target;
 		this.arguments = List.copyOf(arguments);

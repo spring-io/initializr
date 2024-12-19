@@ -45,6 +45,10 @@ public class MavenRepository {
 
 	private final boolean snapshotsEnabled;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenRepository(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
@@ -123,6 +127,9 @@ public class MavenRepository {
 		return Objects.hash(this.id, this.name, this.url, this.releasesEnabled, this.snapshotsEnabled);
 	}
 
+	/**
+	 * Builder for {@link MavenRepository}.
+	 */
 	public static class Builder {
 
 		private String id;
@@ -135,6 +142,11 @@ public class MavenRepository {
 
 		private boolean snapshotsEnabled;
 
+		/**
+		 * Creates a new instance.
+		 * @param id the id
+		 * @param url the url
+		 */
 		public Builder(String id, String url) {
 			this.id = id;
 			this.name = id;

@@ -32,6 +32,10 @@ public class MavenExtension {
 
 	private final VersionReference version;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenExtension(Builder builder) {
 		this.groupId = builder.groupId;
 		this.artifactId = builder.artifactId;
@@ -72,6 +76,9 @@ public class MavenExtension {
 		return this.version;
 	}
 
+	/**
+	 * Builder for {@link MavenExtension}.
+	 */
 	public static class Builder {
 
 		private final String groupId;
@@ -80,6 +87,11 @@ public class MavenExtension {
 
 		private VersionReference version;
 
+		/**
+		 * Creates a new instance.
+		 * @param groupId the group id
+		 * @param artifactId the artifact id
+		 */
 		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;

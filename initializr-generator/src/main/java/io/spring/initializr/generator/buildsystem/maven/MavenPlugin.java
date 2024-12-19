@@ -50,6 +50,10 @@ public class MavenPlugin {
 
 	private final Configuration configuration;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenPlugin(Builder builder) {
 		this.groupId = builder.groupId;
 		this.artifactId = builder.artifactId;
@@ -158,6 +162,11 @@ public class MavenPlugin {
 
 		private ConfigurationBuilder configurationBuilder;
 
+		/**
+		 * Creates a new instance.
+		 * @param groupId the group id
+		 * @param artifactId the artifact id
+		 */
 		protected Builder(String groupId, String artifactId) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;
@@ -279,6 +288,10 @@ public class MavenPlugin {
 
 		private ConfigurationBuilder configurationCustomization = null;
 
+		/**
+		 * Creates a new instance.
+		 * @param id the id
+		 */
 		public ExecutionBuilder(String id) {
 			this.id = id;
 		}

@@ -52,6 +52,11 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 		this.code = code;
 	}
 
+	/**
+	 * Creates a new builder for the function with the given name.
+	 * @param name the name
+	 * @return the builder
+	 */
 	public static Builder function(String name) {
 		return new Builder(name);
 	}
@@ -98,21 +103,41 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 			this.name = name;
 		}
 
+		/**
+		 * Sets the modifiers.
+		 * @param modifiers the modifiers
+		 * @return this for method chaining
+		 */
 		public Builder modifiers(KotlinModifier... modifiers) {
 			this.modifiers = Arrays.asList(modifiers);
 			return this;
 		}
 
+		/**
+		 * Sets the return type.
+		 * @param returnType the return type
+		 * @return this for method chaining
+		 */
 		public Builder returning(String returnType) {
 			this.returnType = returnType;
 			return this;
 		}
 
+		/**
+		 * Sets the parameters.
+		 * @param parameters the parameters
+		 * @return this for method chaining
+		 */
 		public Builder parameters(Parameter... parameters) {
 			this.parameters = Arrays.asList(parameters);
 			return this;
 		}
 
+		/**
+		 * Sets the body.
+		 * @param code the code for the body
+		 * @return the function declaration containing the body
+		 */
 		public KotlinFunctionDeclaration body(CodeBlock code) {
 			return new KotlinFunctionDeclaration(this, code);
 		}

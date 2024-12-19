@@ -25,8 +25,15 @@ import io.spring.initializr.generator.buildsystem.Dependency;
  */
 public class MavenDependency extends Dependency {
 
+	/**
+	 * Whether this dependency is optional.
+	 */
 	protected final boolean optional;
 
+	/**
+	 * Creates a new instance.
+	 * @param builder the builder to use
+	 */
 	protected MavenDependency(Builder builder) {
 		super(builder);
 		this.optional = builder.optional;
@@ -69,6 +76,11 @@ public class MavenDependency extends Dependency {
 
 		private boolean optional;
 
+		/**
+		 * Creates a new instance.
+		 * @param groupId the group id
+		 * @param artifactId the artifact id
+		 */
 		protected Builder(String groupId, String artifactId) {
 			super(groupId, artifactId);
 		}

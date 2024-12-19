@@ -29,6 +29,12 @@ public abstract class AbstractLanguage implements Language {
 
 	private final String sourceFileExtension;
 
+	/**
+	 * Creates a new instance.
+	 * @param id the id
+	 * @param jvmVersion the JVM version
+	 * @param sourceFileExtension the source file extension
+	 */
 	protected AbstractLanguage(String id, String jvmVersion, String sourceFileExtension) {
 		this.id = id;
 		this.jvmVersion = (jvmVersion != null) ? jvmVersion : DEFAULT_JVM_VERSION;
