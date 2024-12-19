@@ -17,7 +17,11 @@
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -37,6 +41,7 @@ import org.springframework.util.ClassUtils;
  * @author Stephane Nicoll
  * @author Simon Zambrovski
  * @author Moritz Halbritter
+ * @author Rituraj Basu
  */
 public class ProjectGenerator {
 
@@ -146,10 +151,8 @@ public class ProjectGenerator {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	List<String> getProjectGenerationConfigurationFactoryNames() {
-		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-				getClass().getClassLoader());
+		return getFactoryNames(ProjectGenerationConfiguration.class);
 	}
 
 	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
@@ -185,6 +188,45 @@ public class ProjectGenerator {
 			}
 			return description;
 		};
+	}
+
+	/**
+	 * Retrieves the list of factory names associated with the given factory type from the
+	 * SpringFactoriesLoader. This method uses reflection to access private fields and
+	 * methods within the SpringFactoriesLoader class. If the factory names for the
+	 * provided type are found, they are returned as a list of strings. If the factory
+	 * type is not found, an empty list is returned.
+	 * @param factoryType the class type of the factory whose names are to be fetched
+	 * @return a list of factory names associated with the provided factory type. If no
+	 * factory names are found, an empty list is returned.
+	 * @throws RuntimeException if any error occurs while retrieving the factory names or
+	 * if the "factories" field is not of the expected type.
+	 * @author Rituraj Basu
+	 */
+	public static List<String> getFactoryNames(Class<?> factoryType) {
+		try {
+			Class<?> springFactoriesLoaderClass = SpringFactoriesLoader.class;
+
+			// Use reflection to access the private static method
+			// "forDefaultResourceLocation"
+			Method defaultResourceLocation = springFactoriesLoaderClass.getDeclaredMethod("forDefaultResourceLocation");
+			Object storeDefaultResourceLocation = defaultResourceLocation.invoke(null);
+
+			Field factoriesField = springFactoriesLoaderClass.getDeclaredField("factories");
+			factoriesField.setAccessible(true);
+
+			Object factoryObject = factoriesField.get(storeDefaultResourceLocation);
+			if (factoryObject instanceof Map) {
+				Map<String, List<String>> factories = (Map<String, List<String>>) factoryObject;
+				return factories.getOrDefault(factoryType.getName(), Collections.emptyList());
+			}
+			else {
+				throw new IllegalStateException("Factories field is not of the expected type.");
+			}
+		}
+		catch (Exception ex) {
+			throw new RuntimeException("Failed to get factory names: " + ex.getMessage(), ex);
+		}
 	}
 
 }
