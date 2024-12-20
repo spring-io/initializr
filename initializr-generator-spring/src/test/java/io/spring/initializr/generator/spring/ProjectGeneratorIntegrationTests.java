@@ -47,11 +47,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ProjectGeneratorIntegrationTests {
 
-	private static final String SPRING_BOOT_VERSION = "3.4.0";
+	private static final String SPRING_BOOT_VERSION = "3.4.1";
 
 	private static final String JAVA_VERSION = "17";
 
-	private static final String DEPENDENCY_MANAGEMENT_PLUGIN_VERSION = "1.1.6";
+	private static final String DEPENDENCY_MANAGEMENT_PLUGIN_VERSION = "1.1.7";
 
 	private ProjectGeneratorTester projectTester;
 
