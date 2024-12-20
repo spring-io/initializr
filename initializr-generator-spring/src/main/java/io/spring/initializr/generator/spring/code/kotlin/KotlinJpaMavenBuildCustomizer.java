@@ -44,8 +44,10 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
 			build.plugins().add("org.jetbrains.kotlin", "kotlin-maven-plugin", (kotlinPlugin) -> {
 				kotlinPlugin.configuration((configuration) -> {
-					configuration.configure("compilerPlugins",
-							(compilerPlugins) -> compilerPlugins.add("plugin", "jpa"));
+					configuration.configure("compilerPlugins", (compilerPlugins) -> {
+						compilerPlugins.add("plugin", "jpa");
+						compilerPlugins.add("plugin", "all-open");
+					});
 					configuration.configure("pluginOptions", (option) -> {
 						option.add("option", "all-open:annotation=jakarta.persistence.Entity");
 						option.add("option", "all-open:annotation=jakarta.persistence.MappedSuperclass");
