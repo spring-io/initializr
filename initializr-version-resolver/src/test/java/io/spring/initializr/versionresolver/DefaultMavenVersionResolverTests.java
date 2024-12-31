@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,15 @@ class DefaultMavenVersionResolverTests {
 		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.boot",
 				"spring-boot-dependencies", "2.1.5.RELEASE");
 		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
+	}
+
+	@Test
+	void resolveDependenciesForSpringBoot3() {
+		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.boot",
+				"spring-boot-dependencies", "3.4.1");
+		assertThat(versions).containsEntry("io.micrometer:micrometer-core", "1.14.2")
+			.containsEntry("org.springframework.boot:spring-boot-autoconfigure", "3.4.1")
+			.containsEntry("org.junit.jupiter:junit-jupiter-api", "5.11.4");
 	}
 
 	@Test
