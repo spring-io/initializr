@@ -145,6 +145,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	private TarArchiveOutputStream createTarArchiveOutputStream(OutputStream output) {
 		try {
 			TarArchiveOutputStream out = new TarArchiveOutputStream(new GzipCompressorOutputStream(output));
+			out.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
 			out.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 			return out;
 		}
