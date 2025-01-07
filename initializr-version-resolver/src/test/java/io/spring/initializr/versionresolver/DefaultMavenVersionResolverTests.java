@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2023 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,28 +44,30 @@ class DefaultMavenVersionResolverTests {
 	@Test
 	void resolveDependenciesForSpringBoot() {
 		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.boot",
-				"spring-boot-dependencies", "2.1.5.RELEASE");
-		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
+				"spring-boot-dependencies", "3.4.1");
+		assertThat(versions).containsEntry("io.micrometer:micrometer-core", "1.14.2")
+			.containsEntry("org.springframework.boot:spring-boot-autoconfigure", "3.4.1")
+			.containsEntry("org.junit.jupiter:junit-jupiter-api", "5.11.4");
 	}
 
 	@Test
 	void resolveDependenciesForSpringCloud() {
 		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.cloud",
-				"spring-cloud-dependencies", "Greenwich.SR1");
-		assertThat(versions).containsEntry("com.netflix.ribbon:ribbon", "2.3.0");
+				"spring-cloud-dependencies", "2024.0.0");
+		assertThat(versions).containsEntry("com.netflix.eureka:eureka-client", "2.0.4");
 	}
 
 	@Test
 	void resolveDependenciesUsingMilestones() {
 		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.boot",
-				"spring-boot-dependencies", "2.2.0.M3");
-		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "5.2.4");
+				"spring-boot-dependencies", "3.4.0-M1");
+		assertThat(versions).containsEntry("org.flywaydb:flyway-core", "10.15.2");
 	}
 
 	@Test
 	void resolveDependenciesUsingSnapshots() {
 		Map<String, String> versions = this.resolver.resolveDependencies("org.springframework.boot",
-				"spring-boot-dependencies", "2.4.0-SNAPSHOT");
+				"spring-boot-dependencies", "3.4.0-SNAPSHOT");
 		assertThat(versions).isNotEmpty();
 	}
 
@@ -79,15 +81,15 @@ class DefaultMavenVersionResolverTests {
 	@Test
 	void resolvePluginsForSpringBoot() {
 		Map<String, String> versions = this.resolver.resolvePlugins("org.springframework.boot",
-				"spring-boot-starter-parent", "3.1.1");
-		assertThat(versions).containsEntry("org.springframework.boot:spring-boot-maven-plugin", "3.1.1");
+				"spring-boot-starter-parent", "3.4.1");
+		assertThat(versions).containsEntry("org.springframework.boot:spring-boot-maven-plugin", "3.4.1");
 	}
 
 	@Test
 	void resolvePluginsUsingMilestones() {
 		Map<String, String> versions = this.resolver.resolvePlugins("org.springframework.boot",
-				"spring-boot-dependencies", "2.2.0.M3");
-		assertThat(versions).containsEntry("org.springframework.boot:spring-boot-maven-plugin", "2.2.0.M3");
+				"spring-boot-dependencies", "3.4.0-M1");
+		assertThat(versions).containsEntry("org.springframework.boot:spring-boot-maven-plugin", "3.4.0-M1");
 	}
 
 	@Test
@@ -100,7 +102,7 @@ class DefaultMavenVersionResolverTests {
 	@Test
 	void resolvePluginsUsingSnapshots() {
 		Map<String, String> versions = this.resolver.resolvePlugins("org.springframework.boot",
-				"spring-boot-dependencies", "2.4.0-SNAPSHOT");
+				"spring-boot-dependencies", "3.4.0-SNAPSHOT");
 		assertThat(versions).isNotEmpty();
 	}
 
