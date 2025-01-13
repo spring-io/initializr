@@ -13,14 +13,9 @@ We use GitHub issues to track bugs and enhancements. If you have a general usage
 please ask on https://stackoverflow.com[Stack Overflow] or join us on the
 https://gitter.im/spring-io/initializr[Gitter channel].
 
-== Sign the Contributor License Agreement
-Before we accept a non-trivial patch or pull request we will need you to
-https://cla.pivotal.io/sign/spring[sign the Contributor License Agreement].
-Signing the contributor's agreement does not grant anyone commit rights to the main
-repository, but it does mean that we can accept your contributions, and you will get an
-author credit if we do.  Active contributors might be asked to join the core team, and
-given the ability to merge pull requests.
-
+== Include a Signed Off By Trailer
+All commits must include a __Signed-off-by__ trailer at the end of each commit message to indicate that the contributor agrees to the Developer Certificate of Origin.
+For additional details, please refer to the blog post https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello DCO, Goodbye CLA: Simplifying Contributions to Spring].
 
 == Code Conventions and Housekeeping
 None of these is essential for a pull request, but they will all help.  They can also be
