@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
 /**
  * Tests for {@link ProjectGenerator} that uses all available
@@ -106,6 +107,16 @@ class ProjectGeneratorIntegrationTests {
 		processBuilder.redirectOutput(output.toFile());
 		assertThat(processBuilder.start().waitFor()).describedAs(String.join("\n", Files.readAllLines(output)))
 			.isEqualTo(0);
+
+		if (description.getBuildSystem().id().equals(GradleBuildSystem.ID)) {
+			assertThat(output.toFile()).content().contains("BUILD SUCCESSFUL");
+		}
+		else if (description.getBuildSystem().id().equals(MavenBuildSystem.ID)) {
+			assertThat(output.toFile()).content().contains("BUILD SUCCESS");
+		}
+		else {
+			fail("unexpected Build System: " + description.getBuildSystem().id());
+		}
 	}
 
 	private ProcessBuilder createProcessBuilder(Path directory, BuildSystem buildSystem, Path home) {
