@@ -16,6 +16,8 @@
 
 package io.spring.initializr.actuate.autoconfigure;
 
+import java.net.URI;
+
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
@@ -30,6 +32,7 @@ import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -136,7 +139,7 @@ class InitializrStatsAutoConfigurationTests {
 			}
 
 			@Override
-			public void handleError(ClientHttpResponse response) {
+			public void handleError(URI url, HttpMethod method, ClientHttpResponse response) {
 			}
 		};
 

@@ -36,6 +36,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import org.springframework.boot.SpringBootVersion;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -46,8 +48,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Moritz Halbritter
  */
 class ProjectGeneratorIntegrationTests {
-
-	private static final String SPRING_BOOT_VERSION = "3.4.1";
 
 	private static final String JAVA_VERSION = "17";
 
@@ -144,7 +144,7 @@ class ProjectGeneratorIntegrationTests {
 	private MutableProjectDescription initProjectDescription() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setApplicationName("DemoApplication");
-		description.setPlatformVersion(Version.parse(SPRING_BOOT_VERSION));
+		description.setPlatformVersion(Version.parse(SpringBootVersion.getVersion()));
 		description.setLanguage(new JavaLanguage(JAVA_VERSION));
 		description.setGroupId("com.example");
 		return description;
