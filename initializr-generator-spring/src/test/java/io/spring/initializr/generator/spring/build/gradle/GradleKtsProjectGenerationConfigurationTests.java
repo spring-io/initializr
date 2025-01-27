@@ -53,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class GradleKtsProjectGenerationConfigurationTests {
 
-	private static final String GRADLE_VERSION = "8.11.1";
+	private static final String GRADLE_VERSION = "8.12.1";
 
 	private ProjectAssetTester projectTester;
 
