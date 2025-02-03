@@ -46,6 +46,8 @@ import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.SourceStructure;
 
+import org.springframework.util.CollectionUtils;
+
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Kotlin.
  *
@@ -95,8 +97,13 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				writeAnnotations(writer, type);
 				writeModifiers(writer, type.getModifiers());
 				writer.print("class " + type.getName());
-				if (type.getExtends() != null) {
+				boolean hasExtends = type.getExtends() != null;
+				if (hasExtends) {
 					writer.print(" : " + getUnqualifiedName(type.getExtends()) + "()");
+				}
+				if (!CollectionUtils.isEmpty(type.getImplements())) {
+					writer.print(hasExtends ? ", " : " : ");
+					writeImplements(type, writer);
 				}
 				List<KotlinPropertyDeclaration> propertyDeclarations = type.getPropertyDeclarations();
 				List<KotlinFunctionDeclaration> functionDeclarations = type.getFunctionDeclarations();
@@ -133,6 +140,17 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				}
 			}
 
+		}
+	}
+
+	private void writeImplements(KotlinTypeDeclaration type, IndentingWriter writer) {
+		Iterator<String> iterator = type.getImplements().iterator();
+		while (iterator.hasNext()) {
+			String name = iterator.next();
+			writer.print(getUnqualifiedName(name));
+			if (iterator.hasNext()) {
+				writer.print(", ");
+			}
 		}
 	}
 
@@ -240,6 +258,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		List<String> imports = new ArrayList<>();
 		for (KotlinTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
 			imports.add(typeDeclaration.getExtends());
+			imports.addAll(typeDeclaration.getImplements());
 			imports.addAll(appendImports(typeDeclaration.annotations().values(), Annotation::getImports));
 			typeDeclaration.getPropertyDeclarations()
 				.forEach(((propertyDeclaration) -> imports.addAll(determinePropertyImports(propertyDeclaration))));

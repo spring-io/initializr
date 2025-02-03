@@ -48,6 +48,8 @@ import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.SourceStructure;
 
+import org.springframework.util.CollectionUtils;
+
 /**
  * A {@link SourceCodeWriter} that writes {@link SourceCode} in Groovy.
  *
@@ -125,6 +127,9 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 				if (type.getExtends() != null) {
 					writer.print(" extends " + getUnqualifiedName(type.getExtends()));
 				}
+				if (!CollectionUtils.isEmpty(type.getImplements())) {
+					writeImplements(type, writer);
+				}
 				writer.println(" {");
 				writer.println();
 				List<GroovyFieldDeclaration> fieldDeclarations = type.getFieldDeclarations();
@@ -144,6 +149,18 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 					});
 				}
 				writer.println("}");
+			}
+		}
+	}
+
+	private void writeImplements(GroovyTypeDeclaration type, IndentingWriter writer) {
+		writer.print(" implements ");
+		Iterator<String> iterator = type.getImplements().iterator();
+		while (iterator.hasNext()) {
+			String name = iterator.next();
+			writer.print(getUnqualifiedName(name));
+			if (iterator.hasNext()) {
+				writer.print(", ");
 			}
 		}
 	}
@@ -216,6 +233,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		List<String> imports = new ArrayList<>();
 		for (GroovyTypeDeclaration typeDeclaration : compilationUnit.getTypeDeclarations()) {
 			imports.add(typeDeclaration.getExtends());
+			imports.addAll(typeDeclaration.getImplements());
 			imports.addAll(appendImports(typeDeclaration.annotations().values(), Annotation::getImports));
 			for (GroovyFieldDeclaration fieldDeclaration : typeDeclaration.getFieldDeclarations()) {
 				imports.add(fieldDeclaration.getReturnType());

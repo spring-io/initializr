@@ -48,6 +48,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Andy Wilkinson
  * @author Matt Berteaux
+ * @author Moritz Halbritter
  */
 class JavaSourceCodeWriterTests {
 
@@ -106,6 +107,30 @@ class JavaSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.build.TestParent;", "",
 				"class Test extends TestParent {", "", "}");
+	}
+
+	@Test
+	void shouldAddImplements() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.implement(List.of("com.example.build.Interface1", "com.example.build.Interface2"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import com.example.build.Interface1;",
+				"import com.example.build.Interface2;", "", "class Test implements Interface1, Interface2 {", "", "}");
+	}
+
+	@Test
+	void shouldAddExtendsAndImplements() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.extend("com.example.build.TestParent");
+		test.implement(List.of("com.example.build.Interface1", "com.example.build.Interface2"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "import com.example.build.Interface1;",
+				"import com.example.build.Interface2;", "import com.example.build.TestParent;", "",
+				"class Test extends TestParent implements Interface1, Interface2 {", "", "}");
 	}
 
 	@Test

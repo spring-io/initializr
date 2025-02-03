@@ -47,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author Stephane Nicoll
  * @author Matt Berteaux
+ * @author Moritz Halbritter
  */
 class KotlinSourceCodeWriterTests {
 
@@ -106,6 +107,30 @@ class KotlinSourceCodeWriterTests {
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.build.TestParent", "",
 				"class Test : TestParent()");
+	}
+
+	@Test
+	void shouldImplementInterfaces() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.implement(List.of("com.example.build.Interface1", "com.example.build.Interface2"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.build.Interface1",
+				"import com.example.build.Interface2", "", "class Test : Interface1, Interface2");
+	}
+
+	@Test
+	void shouldExtendAndImplement() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.extend("com.example.build.TestParent");
+		test.implement(List.of("com.example.build.Interface1", "com.example.build.Interface2"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "import com.example.build.Interface1",
+				"import com.example.build.Interface2", "import com.example.build.TestParent", "",
+				"class Test : TestParent(), Interface1, Interface2");
 	}
 
 	@Test
