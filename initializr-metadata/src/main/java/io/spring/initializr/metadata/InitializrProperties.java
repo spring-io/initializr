@@ -172,7 +172,11 @@ public class InitializrProperties extends InitializrConfiguration {
 		 */
 		private String value;
 
-		private SimpleElement(String value) {
+		/**
+		 * Create a new instance with the given value.
+		 * @param value the value
+		 */
+		public SimpleElement(String value) {
 			this.value = value;
 		}
 
