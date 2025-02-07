@@ -33,7 +33,13 @@ public class TextCapability extends ServiceCapability<String> {
 		this(id, null, null);
 	}
 
-	TextCapability(String id, String title, String description) {
+	/**
+	 * Creates a new instance.
+	 * @param id the id of this capability
+	 * @param title the title of this capability
+	 * @param description the description of this capability
+	 */
+	public TextCapability(String id, String title, String description) {
 		super(id, ServiceCapabilityType.TEXT, title, description);
 	}
 
