@@ -37,13 +37,17 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  * @see InitializrMetadataCustomizer
  */
-public final class InitializrMetadataBuilder {
+public class InitializrMetadataBuilder {
 
 	private final List<InitializrMetadataCustomizer> customizers = new ArrayList<>();
 
 	private final InitializrConfiguration configuration;
 
-	private InitializrMetadataBuilder(InitializrConfiguration configuration) {
+	/**
+	 * Create a new instance with the given configuration.
+	 * @param configuration the configuration to use
+	 */
+	protected InitializrMetadataBuilder(InitializrConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
