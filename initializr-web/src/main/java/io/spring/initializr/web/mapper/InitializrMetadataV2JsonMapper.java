@@ -16,6 +16,9 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,6 +52,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephane Nicoll
  * @author Guillaume Gerbaud
+ * @author Moritz Halbritter
  */
 public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMapper {
 
@@ -56,19 +60,32 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 
 	private final TemplateVariables templateVariables;
 
+	/**
+	 * Create a new instance.
+	 */
 	public InitializrMetadataV2JsonMapper() {
-		this.templateVariables = new TemplateVariables(
-				new TemplateVariable("dependencies", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("packaging", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("javaVersion", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("language", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("groupId", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("artifactId", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("version", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("description", TemplateVariable.VariableType.REQUEST_PARAM),
-				new TemplateVariable("packageName", TemplateVariable.VariableType.REQUEST_PARAM));
+		this(Collections.emptyList());
+	}
+
+	/**
+	 * Create a new instance using the additional template variables.
+	 * @param additionalTemplateVariables the additional template variables
+	 */
+	public InitializrMetadataV2JsonMapper(Collection<? extends TemplateVariable> additionalTemplateVariables) {
+		List<TemplateVariable> templateVariables = new ArrayList<>();
+		templateVariables.add(new TemplateVariable("dependencies", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("packaging", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("javaVersion", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("language", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("groupId", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("artifactId", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("version", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("description", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.add(new TemplateVariable("packageName", TemplateVariable.VariableType.REQUEST_PARAM));
+		templateVariables.addAll(additionalTemplateVariables);
+		this.templateVariables = new TemplateVariables(templateVariables);
 	}
 
 	protected JsonNodeFactory nodeFactory() {
@@ -77,21 +94,30 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 
 	@Override
 	public String write(InitializrMetadata metadata, String appUrl) {
-		ObjectNode delegate = nodeFactory.objectNode();
-		links(delegate, metadata.getTypes().getContent(), appUrl);
-		dependencies(delegate, metadata.getDependencies());
-		type(delegate, metadata.getTypes());
-		singleSelect(delegate, metadata.getPackagings());
-		singleSelect(delegate, metadata.getJavaVersions());
-		singleSelect(delegate, metadata.getLanguages());
-		singleSelect(delegate, metadata.getBootVersions(), this::mapVersionMetadata, this::formatVersion);
-		text(delegate, metadata.getGroupId());
-		text(delegate, metadata.getArtifactId());
-		text(delegate, metadata.getVersion());
-		text(delegate, metadata.getName());
-		text(delegate, metadata.getDescription());
-		text(delegate, metadata.getPackageName());
-		return delegate.toString();
+		ObjectNode parent = nodeFactory.objectNode();
+		links(parent, metadata.getTypes().getContent(), appUrl);
+		dependencies(parent, metadata.getDependencies());
+		type(parent, metadata.getTypes());
+		singleSelect(parent, metadata.getPackagings());
+		singleSelect(parent, metadata.getJavaVersions());
+		singleSelect(parent, metadata.getLanguages());
+		singleSelect(parent, metadata.getBootVersions(), this::mapVersionMetadata, this::formatVersion);
+		text(parent, metadata.getGroupId());
+		text(parent, metadata.getArtifactId());
+		text(parent, metadata.getVersion());
+		text(parent, metadata.getName());
+		text(parent, metadata.getDescription());
+		text(parent, metadata.getPackageName());
+		customizeParent(parent, metadata);
+		return parent.toString();
+	}
+
+	/**
+	 * Customizes the parent.
+	 * @param parent the parent
+	 * @param metadata the metadata
+	 */
+	protected void customizeParent(ObjectNode parent, InitializrMetadata metadata) {
 	}
 
 	protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -41,7 +43,19 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 
 	private final TemplateVariables dependenciesVariables;
 
+	/**
+	 * Create a new instance.
+	 */
 	public InitializrMetadataV21JsonMapper() {
+		this(Collections.emptyList());
+	}
+
+	/**
+	 * Create a new instance using the additional template variables.
+	 * @param additionalTemplateVariables the additional template variables
+	 */
+	public InitializrMetadataV21JsonMapper(Collection<? extends TemplateVariable> additionalTemplateVariables) {
+		super(additionalTemplateVariables);
 		this.dependenciesVariables = new TemplateVariables(
 				new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM));
 	}

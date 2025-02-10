@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,8 @@ import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.hateoas.TemplateVariable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -73,18 +77,27 @@ class InitializrMetadataV22JsonMapperTests {
 		assertVersionMetadata(versions.get(2), "2.4.2", "2.4.2");
 	}
 
+	@Test
+	void shouldAllowCustomization() throws JsonProcessingException {
+		InitializrMetadataJsonMapper mapper = new InitializrMetadataV22JsonMapper(
+				List.of(TemplateVariable.requestParameter("testParameter"))) {
+			@Override
+			protected void customizeParent(ObjectNode parent, InitializrMetadata metadata) {
+				parent.put("testField", "testValue");
+			}
+		};
+		String json = mapper.write(
+				new InitializrMetadataTestBuilder().addType("id", true, "action", "build", "dialect", "format").build(),
+				"http://localhost");
+		JsonNode result = objectMapper.readTree(json);
+		assertThat(result.get("testField").asText()).isEqualTo("testValue");
+		assertThat(result.get("_links").get("id").get("href").asText()).isEqualTo(
+				"http://localhost/action?type=id{&dependencies,packaging,javaVersion,language,bootVersion,groupId,artifactId,version,name,description,packageName,testParameter}");
+	}
+
 	private void assertVersionMetadata(JsonNode node, String id, String name) {
 		assertThat(node.get("id").textValue()).isEqualTo(id);
 		assertThat(node.get("name").textValue()).isEqualTo(name);
-	}
-
-	private Object get(JsonNode result, String path) {
-		String[] nodes = path.split("\\.");
-		for (int i = 0; i < nodes.length - 1; i++) {
-			String node = nodes[i];
-			result = result.path(node);
-		}
-		return result.get(nodes[nodes.length - 1]).textValue();
 	}
 
 }

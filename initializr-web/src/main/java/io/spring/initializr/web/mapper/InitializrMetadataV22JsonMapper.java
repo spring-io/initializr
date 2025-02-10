@@ -16,8 +16,13 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionRange;
+
+import org.springframework.hateoas.TemplateVariable;
 
 /**
  * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.2
@@ -28,6 +33,21 @@ import io.spring.initializr.generator.version.VersionRange;
  * @author Stephane Nicoll
  */
 public class InitializrMetadataV22JsonMapper extends InitializrMetadataV21JsonMapper {
+
+	/**
+	 * Create a new instance.
+	 */
+	public InitializrMetadataV22JsonMapper() {
+		this(Collections.emptyList());
+	}
+
+	/**
+	 * Create a new instance using the additional template variables.
+	 * @param additionalTemplateVariables the additional template variables
+	 */
+	public InitializrMetadataV22JsonMapper(Collection<? extends TemplateVariable> additionalTemplateVariables) {
+		super(additionalTemplateVariables);
+	}
 
 	@Override
 	protected String formatVersion(String versionId) {
