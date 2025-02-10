@@ -26,6 +26,7 @@ import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.InvalidInitializrMetadataException;
+import io.spring.initializr.web.mapper.DependencyMetadataJsonMapper;
 import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  * {@link RestController} that exposes metadata and service configuration.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 @RestController
 public class ProjectMetadataController extends AbstractMetadataController {
@@ -124,32 +126,47 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return CacheControl.maxAge(2, TimeUnit.HOURS);
 	}
 
-	private ResponseEntity<String> dependenciesFor(InitializrMetadataVersion version, String bootVersion) {
+	/**
+	 * Create the dependencies {@link ResponseEntity} for the given version and Spring
+	 * Boot version.
+	 * @param metadataVersion the metadata version
+	 * @param bootVersion the Spring Boot version.
+	 * @return the {@link ResponseEntity}
+	 */
+	protected ResponseEntity<String> dependenciesFor(InitializrMetadataVersion metadataVersion, String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
-		Version v = (bootVersion != null) ? Version.parse(bootVersion)
+		Version effectiveBootVersion = (bootVersion != null) ? Version.parse(bootVersion)
 				: Version.parse(metadata.getBootVersions().getDefault().getId());
 		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
-		if (!platform.isCompatibleVersion(v)) {
+		if (!platform.isCompatibleVersion(effectiveBootVersion)) {
 			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
 					+ "', Spring Boot compatibility range is " + platform.determineCompatibilityRangeRequirement());
 		}
-		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, v);
-		String content = new DependencyMetadataV21JsonMapper().write(dependencyMetadata);
+		DependencyMetadata dependencyMetadata = this.dependencyMetadataProvider.get(metadata, effectiveBootVersion);
+		String content = createDependencyJsonMapper(metadataVersion).write(dependencyMetadata);
 		return ResponseEntity.ok()
-			.contentType(version.getMediaType())
+			.contentType(metadataVersion.getMediaType())
 			.eTag(createUniqueId(content))
 			.cacheControl(determineCacheControlFor(metadata))
 			.body(content);
 	}
 
-	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version) {
-		return serviceCapabilitiesFor(version, version.getMediaType());
+	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion metadataVersion) {
+		return serviceCapabilitiesFor(metadataVersion, metadataVersion.getMediaType());
 	}
 
-	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion version, MediaType contentType) {
+	/**
+	 * Create the service capabilities {@link ResponseEntity} for the given metadata
+	 * version and content type.
+	 * @param metadataVersion the metadata version
+	 * @param contentType the content type
+	 * @return the {@link ResponseEntity}
+	 */
+	protected ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion metadataVersion,
+			MediaType contentType) {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
-		String content = getJsonMapper(version).write(metadata, appUrl);
+		String content = createMetadataJsonMapper(metadataVersion).write(metadata, appUrl);
 		return ResponseEntity.ok()
 			.contentType(contentType)
 			.eTag(createUniqueId(content))
@@ -158,12 +175,28 @@ public class ProjectMetadataController extends AbstractMetadataController {
 			.body(content);
 	}
 
-	private static InitializrMetadataJsonMapper getJsonMapper(InitializrMetadataVersion version) {
-        return switch (version) {
-            case V2 -> new InitializrMetadataV2JsonMapper();
-            case V2_1 -> new InitializrMetadataV21JsonMapper();
-            default -> new InitializrMetadataV22JsonMapper();
-        };
+	/**
+	 * Create the {@link InitializrMetadataJsonMapper JSON mapper} for the given metadata
+	 * version.
+	 * @param metadataVersion the metadata version
+	 * @return the JSON mapper
+	 */
+	protected InitializrMetadataJsonMapper createMetadataJsonMapper(InitializrMetadataVersion metadataVersion) {
+		return switch (metadataVersion) {
+			case V2 -> new InitializrMetadataV2JsonMapper();
+			case V2_1 -> new InitializrMetadataV21JsonMapper();
+			default -> new InitializrMetadataV22JsonMapper();
+		};
+	}
+
+	/**
+	 * Create the {@link DependencyMetadataJsonMapper JSON mapper} for the given metadata
+	 * version.
+	 * @param metadataVersion the metadata version
+	 * @return the JSON mapper
+	 */
+	protected DependencyMetadataJsonMapper createDependencyJsonMapper(InitializrMetadataVersion metadataVersion) {
+		return new DependencyMetadataV21JsonMapper();
 	}
 
 }

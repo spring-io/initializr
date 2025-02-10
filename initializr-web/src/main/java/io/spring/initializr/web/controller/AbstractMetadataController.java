@@ -62,7 +62,6 @@ public abstract class AbstractMetadataController {
 			this.forceSsl = this.metadataProvider.get().getConfiguration().getEnv().isForceSsl();
 		}
 		return this.forceSsl;
-
 	}
 
 }
