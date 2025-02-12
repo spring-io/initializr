@@ -16,9 +16,6 @@
 
 package io.spring.initializr.web.mapper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,28 +61,18 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	 * Create a new instance.
 	 */
 	public InitializrMetadataV2JsonMapper() {
-		this(Collections.emptyList());
-	}
-
-	/**
-	 * Create a new instance using the additional template variables.
-	 * @param additionalTemplateVariables the additional template variables
-	 */
-	public InitializrMetadataV2JsonMapper(Collection<? extends TemplateVariable> additionalTemplateVariables) {
-		List<TemplateVariable> templateVariables = new ArrayList<>();
-		templateVariables.add(new TemplateVariable("dependencies", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("packaging", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("javaVersion", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("language", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("groupId", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("artifactId", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("version", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("description", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.add(new TemplateVariable("packageName", TemplateVariable.VariableType.REQUEST_PARAM));
-		templateVariables.addAll(additionalTemplateVariables);
-		this.templateVariables = new TemplateVariables(templateVariables);
+		this.templateVariables = new TemplateVariables(
+				new TemplateVariable("dependencies", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("packaging", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("javaVersion", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("language", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("bootVersion", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("groupId", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("artifactId", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("version", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("description", TemplateVariable.VariableType.REQUEST_PARAM),
+				new TemplateVariable("packageName", TemplateVariable.VariableType.REQUEST_PARAM));
 	}
 
 	protected JsonNodeFactory nodeFactory() {
@@ -134,11 +121,15 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return result;
 	}
 
-	private String generateTemplatedUri(String appUrl, Type type) {
+	protected String generateTemplatedUri(String appUrl, Type type) {
 		String uri = (appUrl != null) ? appUrl + type.getAction() : type.getAction();
 		uri = uri + "?type=" + type.getId();
-		UriTemplate uriTemplate = UriTemplate.of(uri, this.templateVariables);
+		UriTemplate uriTemplate = UriTemplate.of(uri, getTemplateVariables(type));
 		return uriTemplate.toString();
+	}
+
+	protected TemplateVariables getTemplateVariables(Type type) {
+		return this.templateVariables;
 	}
 
 	protected void dependencies(ObjectNode parent, DependenciesCapability capability) {

@@ -16,8 +16,6 @@
 
 package io.spring.initializr.web.mapper;
 
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,9 +23,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.Type;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.hateoas.TemplateVariable;
+import org.springframework.hateoas.TemplateVariables;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -79,8 +79,13 @@ class InitializrMetadataV22JsonMapperTests {
 
 	@Test
 	void shouldAllowCustomization() throws JsonProcessingException {
-		InitializrMetadataJsonMapper mapper = new InitializrMetadataV22JsonMapper(
-				List.of(TemplateVariable.requestParameter("testParameter"))) {
+		InitializrMetadataJsonMapper mapper = new InitializrMetadataV22JsonMapper() {
+			@Override
+			protected TemplateVariables getTemplateVariables(Type type) {
+				TemplateVariables templateVariables = super.getTemplateVariables(type);
+				return templateVariables.concat(TemplateVariable.requestParameter("testParameter"));
+			}
+
 			@Override
 			protected void customizeParent(ObjectNode parent, InitializrMetadata metadata) {
 				parent.put("testField", "testValue");
