@@ -16,9 +16,9 @@
 
 package io.spring.initializr.web.mapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -41,21 +41,9 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	public String write(DependencyMetadata metadata) {
 		ObjectNode parent = nodeFactory.objectNode();
 		parent.put("bootVersion", metadata.getBootVersion().toString());
-		parent.set("dependencies",
-				mapNode(metadata.getDependencies()
-					.entrySet()
-					.stream()
-					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapDependency(entry.getValue())))));
-		parent.set("repositories",
-				mapNode(metadata.getRepositories()
-					.entrySet()
-					.stream()
-					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapRepository(entry.getValue())))));
-		parent.set("boms",
-				mapNode(metadata.getBoms()
-					.entrySet()
-					.stream()
-					.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapBom(entry.getValue())))));
+		parent.set("dependencies", mapDependencies(metadata.getDependencies()));
+		parent.set("repositories", mapRepositories(metadata.getRepositories()));
+		parent.set("boms", mapBoms(metadata.getBoms()));
 		customizeParent(parent, metadata);
 		return parent.toString();
 	}
@@ -68,50 +56,66 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	protected void customizeParent(ObjectNode parent, DependencyMetadata metadata) {
 	}
 
-	private static JsonNode mapDependency(Dependency dep) {
+	private static ObjectNode mapDependency(Dependency dep) {
 		ObjectNode node = nodeFactory.objectNode();
 		node.put("groupId", dep.getGroupId());
 		node.put("artifactId", dep.getArtifactId());
-		if (dep.getVersion() != null) {
-			node.put("version", dep.getVersion());
-		}
 		node.put("scope", dep.getScope());
-		if (dep.getBom() != null) {
-			node.put("bom", dep.getBom());
-		}
-		if (dep.getRepository() != null) {
-			node.put("repository", dep.getRepository());
-		}
+		addIfNotNull(node, "version", dep.getVersion());
+		addIfNotNull(node, "bom", dep.getBom());
+		addIfNotNull(node, "repository", dep.getRepository());
 		return node;
+	}
+
+	private static void addIfNotNull(ObjectNode node, String key, String value) {
+		if (value != null) {
+			node.put(key, value);
+		}
 	}
 
 	private static JsonNode mapRepository(Repository repo) {
 		ObjectNode node = nodeFactory.objectNode();
 		node.put("name", repo.getName())
-			.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
-			.put("snapshotEnabled", repo.isSnapshotsEnabled());
+				.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
+				.put("snapshotEnabled", repo.isSnapshotsEnabled());
 		return node;
 	}
 
-	private static JsonNode mapBom(BillOfMaterials bom) {
+	private static ObjectNode mapBom(BillOfMaterials bom) {
 		ObjectNode node = nodeFactory.objectNode();
 		node.put("groupId", bom.getGroupId());
 		node.put("artifactId", bom.getArtifactId());
-		if (bom.getVersion() != null) {
-			node.put("version", bom.getVersion());
-		}
-		if (bom.getRepositories() != null) {
-			ArrayNode array = nodeFactory.arrayNode();
-			bom.getRepositories().forEach(array::add);
-			node.set("repositories", array);
-		}
+		addIfNotNull(node, "version", bom.getVersion());
+		addArrayIfNotNull(node, bom.getRepositories());
 		return node;
 	}
 
-	private static JsonNode mapNode(Map<String, JsonNode> content) {
+	private static void addArrayIfNotNull(ObjectNode node, List<String> values) {
+		if (values != null && !values.isEmpty()) {
+			ArrayNode arrayNode = nodeFactory.arrayNode();
+			values.forEach(arrayNode::add);
+			node.set("repositories", arrayNode);
+		}
+	}
+
+	private static ObjectNode mapNode(Map<String, JsonNode> content) {
 		ObjectNode node = nodeFactory.objectNode();
 		content.forEach(node::set);
 		return node;
 	}
 
+	private ObjectNode mapDependencies(Map<String, Dependency> dependencies) {
+		return mapNode(dependencies.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapDependency(entry.getValue()))));
+	}
+
+	private ObjectNode mapRepositories(Map<String, Repository> repositories) {
+		return mapNode(repositories.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapRepository(entry.getValue()))));
+	}
+
+	private ObjectNode mapBoms(Map<String, BillOfMaterials> boms) {
+		return mapNode(boms.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue()))));
+	}
 }
