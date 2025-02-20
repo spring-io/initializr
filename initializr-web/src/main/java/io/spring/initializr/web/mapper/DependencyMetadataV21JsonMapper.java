@@ -118,5 +118,4 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 		return mapNode(boms.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue()))));
 	}
-
 }
