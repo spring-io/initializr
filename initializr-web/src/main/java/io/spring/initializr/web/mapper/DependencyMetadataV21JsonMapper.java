@@ -19,6 +19,7 @@ package io.spring.initializr.web.mapper;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -27,6 +28,8 @@ import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.Repository;
+
+import org.springframework.util.CollectionUtils;
 
 /**
  * A {@link DependencyMetadataJsonMapper} handling the metadata format for v2.1.
@@ -76,8 +79,8 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	private static JsonNode mapRepository(Repository repo) {
 		ObjectNode node = nodeFactory.objectNode();
 		node.put("name", repo.getName())
-				.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
-				.put("snapshotEnabled", repo.isSnapshotsEnabled());
+			.put("url", (repo.getUrl() != null) ? repo.getUrl().toString() : null)
+			.put("snapshotEnabled", repo.isSnapshotsEnabled());
 		return node;
 	}
 
@@ -91,7 +94,7 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	}
 
 	private static void addArrayIfNotNull(ObjectNode node, List<String> values) {
-		if (values != null && !values.isEmpty()) {
+		if (!CollectionUtils.isEmpty(values)) {
 			ArrayNode arrayNode = nodeFactory.arrayNode();
 			values.forEach(arrayNode::add);
 			node.set("repositories", arrayNode);
@@ -105,17 +108,21 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
 	}
 
 	private ObjectNode mapDependencies(Map<String, Dependency> dependencies) {
-		return mapNode(dependencies.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapDependency(entry.getValue()))));
+		return mapNode(dependencies.entrySet()
+			.stream()
+			.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapDependency(entry.getValue()))));
 	}
 
 	private ObjectNode mapRepositories(Map<String, Repository> repositories) {
-		return mapNode(repositories.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapRepository(entry.getValue()))));
+		return mapNode(repositories.entrySet()
+			.stream()
+			.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapRepository(entry.getValue()))));
 	}
 
 	private ObjectNode mapBoms(Map<String, BillOfMaterials> boms) {
-		return mapNode(boms.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, entry -> mapBom(entry.getValue()))));
+		return mapNode(boms.entrySet()
+			.stream()
+			.collect(Collectors.toMap(Map.Entry::getKey, (entry) -> mapBom(entry.getValue()))));
 	}
+
 }
