@@ -71,6 +71,7 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		typeModifiers.put(Modifier::isStatic, "static");
 		typeModifiers.put(Modifier::isFinal, "final");
 		typeModifiers.put(Modifier::isStrict, "strictfp");
+		typeModifiers.put(Modifier::isInterface, "interface");
 		TYPE_MODIFIERS = typeModifiers;
 		Map<Predicate<Integer>, String> fieldModifiers = new LinkedHashMap<>();
 		fieldModifiers.put(Modifier::isPublic, "public");
@@ -121,7 +122,13 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 			for (JavaTypeDeclaration type : compilationUnit.getTypeDeclarations()) {
 				writeAnnotations(writer, type, writer::println);
 				writeModifiers(writer, TYPE_MODIFIERS, type.getModifiers());
-				writer.print("class " + type.getName());
+
+				if (!Modifier.isInterface(type.getModifiers())) {
+					writer.print("class ");
+				}
+
+				writer.print(type.getName());
+
 				if (type.getExtends() != null) {
 					writer.print(" extends " + getUnqualifiedName(type.getExtends()));
 				}

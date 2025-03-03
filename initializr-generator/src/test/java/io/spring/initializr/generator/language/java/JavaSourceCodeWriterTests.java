@@ -134,6 +134,16 @@ class JavaSourceCodeWriterTests {
 	}
 
 	@Test
+	void shouldAddInterface() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.modifiers(Modifier.INTERFACE);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "interface Test {", "", "}");
+	}
+
+	@Test
 	void method() throws IOException {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
