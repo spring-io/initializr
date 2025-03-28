@@ -31,6 +31,7 @@ import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
 import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
@@ -86,7 +87,8 @@ public class GradleProjectGenerationConfiguration {
 
 	@Bean
 	public BuildCustomizer<GradleBuild> defaultGradleBuildCustomizer(ProjectDescription description) {
-		return (build) -> build.settings().sourceCompatibility(description.getLanguage().jvmVersion());
+		return (build) -> build.settings()
+			.sourceCompatibility(((AbstractLanguage) description.getLanguage()).jvmVersion());
 	}
 
 	@Bean

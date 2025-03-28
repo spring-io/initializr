@@ -37,7 +37,7 @@ class LanguageTests {
 		assertThat(java).isInstanceOf(JavaLanguage.class);
 		assertThat(java.id()).isEqualTo("java");
 		assertThat(java.toString()).isEqualTo("java");
-		assertThat(java.jvmVersion()).isEqualTo("11");
+		assertThat(((JavaLanguage) java).jvmVersion()).isEqualTo("11");
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class LanguageTests {
 		assertThat(kotlin).isInstanceOf(KotlinLanguage.class);
 		assertThat(kotlin.id()).isEqualTo("kotlin");
 		assertThat(kotlin.toString()).isEqualTo("kotlin");
-		assertThat(kotlin.jvmVersion()).isEqualTo("1.8");
+		assertThat(((KotlinLanguage) kotlin).jvmVersion()).isEqualTo("1.8");
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class LanguageTests {
 		assertThat(groovy).isInstanceOf(GroovyLanguage.class);
 		assertThat(groovy.id()).isEqualTo("groovy");
 		assertThat(groovy.toString()).isEqualTo("groovy");
-		assertThat(groovy.jvmVersion()).isEqualTo("1.8");
+		assertThat(((GroovyLanguage) groovy).jvmVersion()).isEqualTo("1.8");
 	}
 
 	@Test
