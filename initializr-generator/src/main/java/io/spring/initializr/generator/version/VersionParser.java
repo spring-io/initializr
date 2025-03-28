@@ -38,6 +38,7 @@ import org.springframework.util.StringUtils;
  * line.
  *
  * @author Stephane Nicoll
+ * @author Akshat Gulati
  */
 public class VersionParser {
 
@@ -141,17 +142,11 @@ public class VersionParser {
 	}
 
 	private Version findLatestVersion(Integer major, Integer minor, Version.Qualifier qualifier) {
-		List<Version> matches = this.latestVersions.stream().filter((it) -> {
-			if (major != null && !major.equals(it.getMajor())) {
-				return false;
-			}
-			if (minor != null && !minor.equals(it.getMinor())) {
-				return false;
-			}
-			if (qualifier != null && !qualifier.equals(it.getQualifier())) {
-				return false;
-			}
-			return true;
+		List<Version> matches = this.latestVersions.stream().filter((version) -> {
+			boolean majorMismatch = (major != null && !major.equals(version.getMajor()));
+			boolean minorMismatch = (minor != null && !minor.equals(version.getMinor()));
+			boolean qualifierMismatch = (qualifier != null && !qualifier.equals(version.getQualifier()));
+			return !majorMismatch && !minorMismatch && !qualifierMismatch;
 		}).toList();
 		return (matches.size() != 1) ? null : matches.get(0);
 	}
