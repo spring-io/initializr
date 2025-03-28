@@ -27,11 +27,8 @@ import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
-import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.util.Assert;
@@ -79,7 +76,8 @@ public class DefaultProjectRequestToDescriptionConverter
 	 * @param metadata the metadata instance to use to apply defaults if necessary
 	 */
 	public void convert(ProjectRequest request, MutableProjectDescription description, InitializrMetadata metadata) {
-		validate(request, metadata);
+		ProjectRequestValidator validator = new ProjectRequestValidator(metadata);
+		validator.validate(request);
 		Version platformVersion = getPlatformVersion(request, metadata);
 		List<Dependency> resolvedDependencies = getResolvedDependencies(request, platformVersion, metadata);
 		validateDependencyRange(platformVersion, resolvedDependencies);
@@ -108,65 +106,6 @@ public class DefaultProjectRequestToDescriptionConverter
 	protected String cleanInputValue(String value) {
 		return StringUtils.hasText(value) ? Normalizer.normalize(value, Normalizer.Form.NFKD).replaceAll("\\p{M}", "")
 				: value;
-	}
-
-	private void validate(ProjectRequest request, InitializrMetadata metadata) {
-		validatePlatformVersion(request, metadata);
-		validateType(request.getType(), metadata);
-		validateLanguage(request.getLanguage(), metadata);
-		validatePackaging(request.getPackaging(), metadata);
-		validateDependencies(request, metadata);
-	}
-
-	private void validatePlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
-		Version platformVersion = Version.safeParse(request.getBootVersion());
-		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
-		if (platformVersion != null && !platform.isCompatibleVersion(platformVersion)) {
-			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + platformVersion
-					+ "', Spring Boot compatibility range is " + platform.determineCompatibilityRangeRequirement());
-		}
-	}
-
-	private void validateType(String type, InitializrMetadata metadata) {
-		if (type != null) {
-			Type typeFromMetadata = metadata.getTypes().get(type);
-			if (typeFromMetadata == null) {
-				throw new InvalidProjectRequestException("Unknown type '" + type + "' check project metadata");
-			}
-			if (!typeFromMetadata.getTags().containsKey("build")) {
-				throw new InvalidProjectRequestException(
-						"Invalid type '" + type + "' (missing build tag) check project metadata");
-			}
-		}
-	}
-
-	private void validateLanguage(String language, InitializrMetadata metadata) {
-		if (language != null) {
-			DefaultMetadataElement languageFromMetadata = metadata.getLanguages().get(language);
-			if (languageFromMetadata == null) {
-				throw new InvalidProjectRequestException("Unknown language '" + language + "' check project metadata");
-			}
-		}
-	}
-
-	private void validatePackaging(String packaging, InitializrMetadata metadata) {
-		if (packaging != null) {
-			DefaultMetadataElement packagingFromMetadata = metadata.getPackagings().get(packaging);
-			if (packagingFromMetadata == null) {
-				throw new InvalidProjectRequestException(
-						"Unknown packaging '" + packaging + "' check project metadata");
-			}
-		}
-	}
-
-	private void validateDependencies(ProjectRequest request, InitializrMetadata metadata) {
-		List<String> dependencies = request.getDependencies();
-		dependencies.forEach((dep) -> {
-			Dependency dependency = metadata.getDependencies().get(dep);
-			if (dependency == null) {
-				throw new InvalidProjectRequestException("Unknown dependency '" + dep + "' check project metadata");
-			}
-		});
 	}
 
 	private void validateDependencyRange(Version platformVersion, List<Dependency> resolvedDependencies) {
