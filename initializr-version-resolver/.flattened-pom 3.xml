@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.spring.initializr</groupId>
+    <artifactId>initializr-parent</artifactId>
+    <version>0.22.0-SNAPSHOT</version>
+    <relativePath>../initializr-parent/pom.xml</relativePath>
+  </parent>
+  <groupId>io.spring.initializr</groupId>
+  <artifactId>initializr-version-resolver</artifactId>
+  <version>0.22.0-SNAPSHOT</version>
+  <name>Spring Initializr :: Version Resolver</name>
+  <description>JVM-based project generator</description>
+  <url>https://github.com/spring-io/initializr/initializr-bom/initializr-parent/initializr-version-resolver</url>
+  <organization>
+    <name>Broadcom Inc.</name>
+    <url>https://www.spring.io</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Spring</name>
+      <email>ask@spring.io</email>
+      <organization>Broadcom Inc.</organization>
+      <organizationUrl>https://www.spring.io</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/spring-io/initializr</connection>
+    <developerConnection>scm:git:ssh://git@github.com/spring-io/initializr.git</developerConnection>
+    <url>https://github.com/spring-io/initializr</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jcl</artifactId>
+      <version>6.2.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>3.9.6</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-resolver-provider</artifactId>
+      <version>3.9.6</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-connector-basic</artifactId>
+      <version>1.9.20</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-http</artifactId>
+      <version>1.9.20</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

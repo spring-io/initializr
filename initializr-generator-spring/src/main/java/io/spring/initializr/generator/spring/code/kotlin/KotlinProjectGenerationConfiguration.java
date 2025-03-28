@@ -100,7 +100,8 @@ public class KotlinProjectGenerationConfiguration {
 		String kotlinVersion = kotlinVersionResolver
 			.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
 			.resolveKotlinVersion(this.description);
-		return new SimpleKotlinProjectSettings(kotlinVersion, this.description.getLanguage().jvmVersion());
+		return new SimpleKotlinProjectSettings(kotlinVersion,
+				((KotlinLanguage) this.description.getLanguage()).jvmVersion());
 	}
 
 	@Bean

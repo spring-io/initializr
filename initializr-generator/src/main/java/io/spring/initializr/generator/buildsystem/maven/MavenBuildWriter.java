@@ -355,13 +355,20 @@ public class MavenBuildWriter {
 				: versionReference.getValue();
 	}
 
+	private boolean isBuildEmpty(MavenBuild build) {
+		return build.resources().isEmpty() && build.testResources().isEmpty()
+				&& build.pluginManagementPlugins().isEmpty() && build.plugins().isEmpty()
+				&& build.extensions().isEmpty();
+	}
+
+	private boolean isBuildSettingsEmpty(MavenBuildSettings settings) {
+		return settings.getDefaultGoal() == null && settings.getFinalName() == null
+				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null;
+	}
+
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
 		MavenBuildSettings settings = build.getSettings();
-		if (settings.getDefaultGoal() == null && settings.getFinalName() == null
-				&& settings.getSourceDirectory() == null && settings.getTestSourceDirectory() == null
-				&& build.resources().isEmpty() && build.testResources().isEmpty()
-				&& build.pluginManagementPlugins().isEmpty() && build.plugins().isEmpty()
-				&& build.extensions().isEmpty()) {
+		if (isBuildEmpty(build) && isBuildSettingsEmpty(settings)) {
 			return;
 		}
 		writer.println();

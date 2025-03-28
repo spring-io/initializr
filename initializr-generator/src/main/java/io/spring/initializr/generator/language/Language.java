@@ -39,11 +39,11 @@ public interface Language {
 	 */
 	String id();
 
-	/**
-	 * Return the JVM version level to use.
-	 * @return the JVM version or {@value DEFAULT_JVM_VERSION} if not set
-	 */
-	String jvmVersion();
+	// /**
+	// * Return the JVM version level to use.
+	// * @return the JVM version or {@value DEFAULT_JVM_VERSION} if not set
+	// */
+	// String jvmVersion();
 
 	/**
 	 * Return the file extension to use for source file of this language.

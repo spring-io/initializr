@@ -19,6 +19,7 @@ package io.spring.initializr.web.project;
 import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
+import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
@@ -274,7 +275,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		request.setJavaVersion("1.8");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getLanguage().id()).isEqualTo("java");
-		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");
+		assertThat(((AbstractLanguage) description.getLanguage()).jvmVersion()).isEqualTo("1.8");
 	}
 
 	private ProjectRequest createProjectRequest() {

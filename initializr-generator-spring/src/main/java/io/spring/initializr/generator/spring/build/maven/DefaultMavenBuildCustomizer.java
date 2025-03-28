@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.version.VersionProperty;
@@ -46,7 +47,7 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 	public void customize(MavenBuild build) {
 		build.settings().addOverrideIfEmpty(true);
 		build.settings().name(this.description.getName()).description(this.description.getDescription());
-		build.properties().property("java.version", this.description.getLanguage().jvmVersion());
+		build.properties().property("java.version", ((AbstractLanguage) this.description.getLanguage()).jvmVersion());
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();

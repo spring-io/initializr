@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.spring.initializr</groupId>
+  <artifactId>initializr-bom</artifactId>
+  <version>0.22.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Spring Initializr :: Bill of Materials</name>
+  <description>JVM-based project generator</description>
+  <url>https://github.com/spring-io/initializr/initializr-bom</url>
+  <organization>
+    <name>Broadcom Inc.</name>
+    <url>https://www.spring.io</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Spring</name>
+      <email>ask@spring.io</email>
+      <organization>Broadcom Inc.</organization>
+      <organizationUrl>https://www.spring.io</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/spring-io/initializr</connection>
+    <developerConnection>scm:git:ssh://git@github.com/spring-io/initializr.git</developerConnection>
+    <url>https://github.com/spring-io/initializr</url>
+  </scm>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-actuator</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-generator</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-generator-spring</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-generator-test</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-metadata</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-version-resolver</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-web</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.spring.initializr</groupId>
+        <artifactId>initializr-web</artifactId>
+        <version>0.22.0-SNAPSHOT</version>
+        <type>test-jar</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
