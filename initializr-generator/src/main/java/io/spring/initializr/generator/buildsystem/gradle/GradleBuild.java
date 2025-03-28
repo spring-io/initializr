@@ -19,6 +19,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.BuildExtensionsAndPlugins;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
 
@@ -29,7 +30,8 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Bui
  * @author Jean-Baptiste Nizet
  * @author Moritz Halbritter
  */
-public class GradleBuild extends Build {
+public class GradleBuild extends Build
+		implements BuildExtensionsAndPlugins<GradleExtensionContainer, GradlePluginContainer> {
 
 	private final GradleBuildSettings.Builder settings = new Builder();
 
@@ -75,6 +77,7 @@ public class GradleBuild extends Build {
 	 * plugins.
 	 * @return the {@link GradlePluginContainer}
 	 */
+	@Override
 	public GradlePluginContainer plugins() {
 		return this.plugins;
 	}
@@ -102,6 +105,7 @@ public class GradleBuild extends Build {
 	 * configure extensions.
 	 * @return the {@link GradleExtensionContainer}
 	 */
+	@Override
 	public GradleExtensionContainer extensions() {
 		return this.extensions;
 	}

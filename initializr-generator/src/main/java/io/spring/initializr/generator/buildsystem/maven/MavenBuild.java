@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.BuildExtensionsAndPlugins;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Builder;
@@ -29,7 +30,8 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Build
  * @author Niklas Herder
  * @author Maurice Zeijen
  */
-public class MavenBuild extends Build {
+public class MavenBuild extends Build
+		implements BuildExtensionsAndPlugins<MavenExtensionContainer, MavenPluginContainer> {
 
 	private final MavenBuildSettings.Builder settings = new Builder();
 
@@ -123,6 +125,7 @@ public class MavenBuild extends Build {
 	 * plugins.
 	 * @return the {@link MavenPluginContainer}
 	 */
+	@Override
 	public MavenPluginContainer plugins() {
 		return this.plugins;
 	}
@@ -132,6 +135,7 @@ public class MavenBuild extends Build {
 	 * configure extensions.
 	 * @return the {@link MavenExtensionContainer}
 	 */
+	@Override
 	public MavenExtensionContainer extensions() {
 		return this.extensions;
 	}
