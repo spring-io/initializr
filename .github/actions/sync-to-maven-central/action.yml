@@ -20,7 +20,7 @@ runs:
   using: composite
   steps:
     - name: Set Up JFrog CLI
-      uses: jfrog/setup-jfrog-cli@6359487fb3e3de9d8ce7c1c8bbe8ed298a55d061 # v4.5.9
+      uses: jfrog/setup-jfrog-cli@45d604504ed4cf717138383936c447afab73a0be # v4.5.10
       env:
         JF_ENV_SPRING: ${{ inputs.jfrog-cli-config-token }}
     - name: Download Release Artifacts
