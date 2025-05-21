@@ -1,4 +1,4 @@
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
 .gradle
 *.sw?

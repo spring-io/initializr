@@ -63,8 +63,7 @@ public class GitProjectGenerationConfiguration {
 	public GitIgnoreCustomizer mavenGitIgnoreCustomizer() {
 		return (gitIgnore) -> {
 			gitIgnore.getGeneral()
-				.add("target/", "!.mvn/wrapper/maven-wrapper.jar", "!**/src/main/**/target/",
-						"!**/src/test/**/target/");
+				.add("target/", ".mvn/wrapper/maven-wrapper.jar", "!**/src/main/**/target/", "!**/src/test/**/target/");
 			gitIgnore.getNetBeans().add("build/", "!**/src/main/**/build/", "!**/src/test/**/build/");
 		};
 	}
