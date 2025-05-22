@@ -286,6 +286,8 @@ public class MavenPlugin {
 
 		private final List<String> goals = new ArrayList<>();
 
+		private final List<String> processingInstructions = new ArrayList<>();
+
 		private ConfigurationBuilder configurationCustomization = null;
 
 		/**
@@ -298,7 +300,8 @@ public class MavenPlugin {
 
 		Execution build() {
 			return new Execution(this.id, this.phase, this.goals,
-					(this.configurationCustomization == null) ? null : this.configurationCustomization.build());
+					(this.configurationCustomization == null) ? null : this.configurationCustomization.build(),
+					this.processingInstructions);
 		}
 
 		/**
@@ -319,6 +322,25 @@ public class MavenPlugin {
 		public ExecutionBuilder goal(String goal) {
 			this.goals.add(goal);
 			return this;
+		}
+
+		/**
+		 * Add a processing instruction to invoke for this execution.
+		 * @param content the processing instruction to add
+		 * @return this for method chaining
+		 */
+		public ExecutionBuilder processingInstruction(String content) {
+			this.processingInstructions.add(content);
+			return this;
+		}
+
+		/**
+		 * Add a m2e hint, e.g. "execute onConfiguration,onIncremental" or "ignore".
+		 * @param hint the hint to add
+		 * @return this for method chaining
+		 */
+		public ExecutionBuilder m2e(String hint) {
+			return processingInstruction("m2e " + hint);
 		}
 
 		/**
@@ -487,11 +509,15 @@ public class MavenPlugin {
 
 		private final Configuration configuration;
 
-		private Execution(String id, String phase, List<String> goals, Configuration configuration) {
+		private final List<String> processingInstructions;
+
+		private Execution(String id, String phase, List<String> goals, Configuration configuration,
+				List<String> processingInstructions) {
 			this.id = id;
 			this.phase = phase;
 			this.goals = Collections.unmodifiableList(goals);
 			this.configuration = configuration;
+			this.processingInstructions = processingInstructions;
 		}
 
 		/**
@@ -524,6 +550,10 @@ public class MavenPlugin {
 		 */
 		public Configuration getConfiguration() {
 			return this.configuration;
+		}
+
+		public List<String> getProcessingInstructions() {
+			return this.processingInstructions;
 		}
 
 	}
