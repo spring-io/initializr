@@ -30,6 +30,7 @@ import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -682,6 +683,37 @@ class MavenBuildWriterTests {
 			NodeAssert configuration = execution.nodeAtPath("configuration");
 			assertThat(configuration).textAtPath("doctype").isEqualTo("book");
 			assertThat(configuration).textAtPath("backend").isEqualTo("html");
+		});
+	}
+
+	@Test
+	void pomWithPluginWithExecutionAndIDEHint() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
+			plugin.version("1.5.3");
+			plugin.execution("generateProject-docs", (execution) -> {
+				execution.m2e("ignore");
+				execution.goal("process-asciidoc");
+			});
+		});
+		generatePom(build, (pom) -> {
+			NodeAssert plugin = pom.nodeAtPath("/project/build/plugins/plugin");
+			assertThat(plugin).textAtPath("groupId").isEqualTo("org.asciidoctor");
+			assertThat(plugin).textAtPath("artifactId").isEqualTo("asciidoctor-maven-plugin");
+			assertThat(plugin).textAtPath("version").isEqualTo("1.5.3");
+			NodeAssert execution = plugin.nodeAtPath("executions/execution");
+			assertThat(execution).textAtPath("id").isEqualTo("generateProject-docs");
+			assertThat(execution).matches((node) -> {
+				Node child = node.getFirstChild();
+				while (child != null) {
+					if (child.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+						return child.getNodeName().equals("m2e") && child.getTextContent().equals("ignore");
+					}
+					child = child.getNextSibling();
+				}
+				return false;
+			}, "m2e:ignore");
 		});
 	}
 
