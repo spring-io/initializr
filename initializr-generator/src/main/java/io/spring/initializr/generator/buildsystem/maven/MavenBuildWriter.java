@@ -454,6 +454,10 @@ public class MavenBuildWriter {
 
 	private void writePluginExecution(IndentingWriter writer, Execution execution) {
 		writeElement(writer, "execution", () -> {
+			List<String> processingInstructions = execution.getProcessingInstructions();
+			for (String instruction : processingInstructions) {
+				writeProcessingInstruction(writer, instruction);
+			}
 			writeSingleElement(writer, "id", execution.getId());
 			writeSingleElement(writer, "phase", execution.getPhase());
 			List<String> goals = execution.getGoals();
@@ -634,6 +638,10 @@ public class MavenBuildWriter {
 				writer.println(String.format("</%s>", name));
 			}
 		}
+	}
+
+	private void writeProcessingInstruction(IndentingWriter writer, String content) {
+		writer.println(String.format("<?%s?>", content));
 	}
 
 	private void writeElement(IndentingWriter writer, String name, Runnable withContent) {
