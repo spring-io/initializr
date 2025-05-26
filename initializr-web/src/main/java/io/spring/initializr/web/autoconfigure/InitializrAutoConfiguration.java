@@ -138,7 +138,7 @@ public class InitializrAutoConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnMissingBean
+		@ConditionalOnMissingBean(ProjectGenerationController.class)
 		ProjectGenerationController<ProjectRequest> projectGenerationController(
 				InitializrMetadataProvider metadataProvider,
 				ObjectProvider<ProjectRequestPlatformVersionTransformer> platformVersionTransformer,
