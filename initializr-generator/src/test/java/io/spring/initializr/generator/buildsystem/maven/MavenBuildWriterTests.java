@@ -687,7 +687,7 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
-	void pomWithPluginWithExecutionAndIDEHint() {
+	void pomWithPluginWithExecutionAndIdeHint() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");
 		build.plugins().add("org.asciidoctor", "asciidoctor-maven-plugin", (plugin) -> {
