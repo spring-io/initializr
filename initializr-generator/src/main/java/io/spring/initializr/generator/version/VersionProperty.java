@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.version;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,9 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  */
 public final class VersionProperty implements Serializable, Comparable<VersionProperty> {
+
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	private static final List<Character> SUPPORTED_CHARS = Arrays.asList('.', '-');
 

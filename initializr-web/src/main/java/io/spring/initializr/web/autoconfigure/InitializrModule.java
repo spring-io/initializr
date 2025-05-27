@@ -17,6 +17,7 @@
 package io.spring.initializr.web.autoconfigure;
 
 import java.io.IOException;
+import java.io.Serial;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -31,12 +32,18 @@ import io.spring.initializr.generator.version.VersionProperty;
  */
 class InitializrModule extends SimpleModule {
 
+	@Serial
+	private static final long serialVersionUID = 1L;
+
 	InitializrModule() {
 		super("initializr");
 		addSerializer(new VersionPropertySerializer());
 	}
 
 	private static class VersionPropertySerializer extends StdSerializer<VersionProperty> {
+
+		@Serial
+		private static final long serialVersionUID = 1L;
 
 		VersionPropertySerializer() {
 			super(VersionProperty.class);

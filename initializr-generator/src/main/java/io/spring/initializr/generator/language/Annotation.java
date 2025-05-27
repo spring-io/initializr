@@ -244,7 +244,7 @@ public final class Annotation {
 		CLASS() {
 			@Override
 			protected Collection<String> getImports(Object value) {
-				if (value instanceof Class type) {
+				if (value instanceof Class<?> type) {
 					return List.of(type.getName());
 				}
 				else if (value instanceof ClassName name) {
@@ -260,7 +260,7 @@ public final class Annotation {
 		ENUM() {
 			@Override
 			protected Collection<String> getImports(Object value) {
-				if (value instanceof Enum enumeration) {
+				if (value instanceof Enum<?> enumeration) {
 					return List.of(enumeration.getClass().getName());
 				}
 				return super.getImports(value);
@@ -408,7 +408,7 @@ public final class Annotation {
 				}
 				case STRING -> CodeBlock.of("$S", value);
 				case CLASS -> {
-					ClassName className = (value instanceof Class clazz) ? ClassName.of(clazz) : (ClassName) value;
+					ClassName className = (value instanceof Class<?> clazz) ? ClassName.of(clazz) : (ClassName) value;
 					yield this.formattingOptions.classReference(className);
 				}
 				case ENUM -> {

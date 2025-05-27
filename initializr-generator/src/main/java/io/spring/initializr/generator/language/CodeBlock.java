@@ -284,7 +284,7 @@ public final class CodeBlock {
 		}
 
 		private String argToType(Object arg) {
-			if (arg instanceof Class type) {
+			if (arg instanceof Class<?> type) {
 				this.imports.add(type.getName());
 				return type.getSimpleName();
 			}

@@ -183,6 +183,10 @@
 						<parameters>true</parameters>
 						<failOnWarning>true</failOnWarning>
 						<showDeprecation>true</showDeprecation>
+						<compilerArgs>
+							<arg>-Xlint:all</arg>
+							<arg>-Xlint:-processing</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 				<plugin>
