@@ -1,4 +1,6 @@
 name: Release
+permissions:
+  contents: read
 on:
   push:
     tags:
@@ -72,6 +74,8 @@ jobs:
         run: jfrog rt build-promote ${{ format('initializr-{0}', needs.build-and-stage-release.outputs.version)}} ${{ github.run_number }} libs-release-local
   create-github-release:
     name: Create GitHub Release
+    permissions:
+      contents: write
     needs:
       - build-and-stage-release
       - promote-release
