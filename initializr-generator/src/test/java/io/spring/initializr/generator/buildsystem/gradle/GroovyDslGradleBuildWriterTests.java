@@ -133,7 +133,7 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		build.repositories().add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"));
 		assertThat(write(build)).contains("""
 				repositories {
-					maven { url 'https://repo.spring.io/milestone' }
+					maven { url = 'https://repo.spring.io/milestone' }
 				}""");
 	}
 
@@ -144,7 +144,7 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 			.add(MavenRepository.withIdAndUrl("spring-snapshots", "https://repo.spring.io/snapshot").onlySnapshots());
 		assertThat(write(build)).contains("""
 				repositories {
-					maven { url 'https://repo.spring.io/snapshot' }
+					maven { url = 'https://repo.spring.io/snapshot' }
 				}""");
 	}
 
