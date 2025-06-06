@@ -30,7 +30,7 @@ public class GroovyDslGradleSettingsWriter extends GradleSettingsWriter {
 
 	@Override
 	protected String urlAssignment(String url) {
-		return "url " + wrapWithQuotes(url);
+		return "url = " + wrapWithQuotes(url);
 	}
 
 }

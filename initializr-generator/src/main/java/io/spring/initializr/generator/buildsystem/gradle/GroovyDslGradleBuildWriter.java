@@ -92,7 +92,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 		if (MavenRepository.MAVEN_CENTRAL.equals(repository)) {
 			return "mavenCentral()";
 		}
-		return "maven { url '" + repository.getUrl() + "' }";
+		return "maven { url = '" + repository.getUrl() + "' }";
 	}
 
 	@Override

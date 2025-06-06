@@ -15,8 +15,8 @@ java {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://example.com/foo' }
-	maven { url 'https://example.com/bar' }
+	maven { url = 'https://example.com/foo' }
+	maven { url = 'https://example.com/bar' }
 }
 
 dependencies {
