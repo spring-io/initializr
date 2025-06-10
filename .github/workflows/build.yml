@@ -56,6 +56,8 @@ jobs:
           folder: './maven-repo/'
           signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
           signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          artifact-properties: |
+            /**/initializr-docs-*.zip::zip.type=docs,zip.deployed=false
 
       - name: Send notification
         uses: ./.github/actions/send-notification
