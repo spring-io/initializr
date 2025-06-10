@@ -1178,6 +1178,7 @@ could use `ehcache` by adding the following:
 	<dependency>
 		<groupId>org.ehcache</groupId>
 		<artifactId>ehcache</artifactId>
+        <classifier>jakarta</classifier>
 	</dependency>
 ----
 
@@ -1186,7 +1187,7 @@ Or if you are using Gradle:
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
 implementation("javax.cache:cache-api")
-implementation("org.ehcache:ehcache")
+implementation("org.ehcache:ehcache::jakarta")
 ----
 
 You'll notice that the log entry is much more rare. If you do not want to use JSR-107, you
