@@ -57,9 +57,8 @@ jobs:
         uses: ./.github/actions/sync-to-maven-central
         with:
           jfrog-cli-config-token: ${{ secrets.JF_ARTIFACTORY_SPRING }}
-          ossrh-s01-staging-profile: ${{ secrets.OSSRH_S01_STAGING_PROFILE }}
-          ossrh-s01-token-password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
-          ossrh-s01-token-username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
+          sonatype-token: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          sonatype-token-name: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           initializr-version: ${{ needs.build-and-stage-release.outputs.version }}
   promote-release:
     name: Promote Release

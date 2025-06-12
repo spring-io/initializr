@@ -7,14 +7,11 @@ inputs:
   initializr-version:
     description: 'The version of Initializr that is being synced to Central'
     required: true
-  ossrh-s01-token-username:
-    description: 'Username for authentication with s01.oss.sonatype.org'
+  sonatype-token-name:
+    description: 'Token username for the Sonatype Central Portal'
     required: true
-  ossrh-s01-token-password:
-    description: 'Password for authentication with s01.oss.sonatype.org'
-    required: true
-  ossrh-s01-staging-profile:
-    description: 'Staging profile to use when syncing to Central'
+  sonatype-token:
+    description: 'Token for the Sonatype Central Portal'
     required: true
 runs:
   using: composite
@@ -27,16 +24,10 @@ runs:
       shell: bash
       run: jf rt download --spec ${{ format('{0}/artifacts.spec', github.action_path) }} --spec-vars 'buildName=${{ format('initializr-{0}', inputs.initializr-version) }};buildNumber=${{ github.run_number }}'
     - name: Sync
-      uses: spring-io/nexus-sync-action@42477a2230a2f694f9eaa4643fa9e76b99b7ab84 # v0.0.1
+      uses: spring-io/central-publish-action@0cdd90d12e6876341e82860d951e1bcddc1e51b6 # v0.2.0
       with:
-        username: ${{ inputs.ossrh-s01-token-username }}
-        password: ${{ inputs.ossrh-s01-token-password }}
-        staging-profile-name: ${{ inputs.ossrh-s01-staging-profile }}
-        create: true
-        upload: true
-        close: true
-        release: true
-        generate-checksums: true
+        token-name: ${{ inputs.sonatype-token-name }}
+        token: ${{ inputs.sonatype-token }}
     - name: Await
       shell: bash
       run: |
