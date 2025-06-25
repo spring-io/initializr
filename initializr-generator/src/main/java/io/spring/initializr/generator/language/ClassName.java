@@ -21,7 +21,6 @@ import java.util.Objects;
 
 import javax.lang.model.SourceVersion;
 
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -177,7 +176,7 @@ public final class ClassName {
 	}
 
 	@Override
-	public boolean equals(@Nullable Object other) {
+	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
 		}
