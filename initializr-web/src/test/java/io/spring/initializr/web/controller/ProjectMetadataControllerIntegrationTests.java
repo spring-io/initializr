@@ -80,7 +80,7 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 		}
 		catch (HttpClientErrorException ex) {
 			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertThat(ex.getResponseBodyAsString().contains("2.2.17.RELEASE"));
+			assertThat(ex.getResponseBodyAsString()).contains("2.2.17.RELEASE");
 		}
 	}
 
