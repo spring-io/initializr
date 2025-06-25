@@ -16,14 +16,21 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.version.Version;
 
 /**
  * Commons settings for Kotlin projects.
  *
  * @author Andy Wilkinson
+ * @author Moritz Halbritter
  */
 public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
+
+	private static final Version KOTLIN_2_2_OR_LATER = Version.parse("2.2.0");
 
 	private final String version;
 
@@ -56,6 +63,16 @@ public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 	@Override
 	public String getJvmTarget() {
 		return this.jvmTarget;
+	}
+
+	@Override
+	public List<String> getCompilerArgs() {
+		List<String> result = new ArrayList<>(KotlinProjectSettings.super.getCompilerArgs());
+		Version kotlinVersion = Version.parse(this.version);
+		if (kotlinVersion.compareTo(KOTLIN_2_2_OR_LATER) >= 0) {
+			result.add("-Xannotation-default-target=param-property");
+		}
+		return result;
 	}
 
 }
