@@ -16,11 +16,14 @@
 
 package io.spring.initializr.generator.language;
 
-import io.spring.initializr.generator.language.Annotation.Builder;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import io.spring.initializr.generator.language.Annotation.Builder;
 
 /**
  * An {@link AnnotationHolder} implementation that can hold multiple annotations per type.
@@ -123,7 +126,7 @@ public class MultipleAnnotationContainer implements AnnotationHolder {
 	 */
 	public int countOf(ClassName className) {
 		List<Builder> builders = this.annotations.get(className);
-		return builders != null ? builders.size() : 0;
+		return (builders != null) ? builders.size() : 0;
 	}
 
 	/**
@@ -133,7 +136,7 @@ public class MultipleAnnotationContainer implements AnnotationHolder {
 	 */
 	public int removeAll(ClassName className) {
 		List<Builder> builders = this.annotations.remove(className);
-		return builders != null ? builders.size() : 0;
+		return (builders != null) ? builders.size() : 0;
 	}
 
 	@Override
@@ -158,7 +161,7 @@ public class MultipleAnnotationContainer implements AnnotationHolder {
 		Map<ClassName, List<Builder>> copy = new LinkedHashMap<>();
 		this.annotations.forEach((className, builders) -> {
 			List<Builder> buildersCopy = new ArrayList<>();
-			builders.forEach(builder -> buildersCopy.add(new Builder(builder)));
+			builders.forEach((builder) -> buildersCopy.add(new Builder(builder)));
 			copy.put(className, buildersCopy);
 		});
 		return new MultipleAnnotationContainer(copy);

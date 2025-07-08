@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 - present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.spring.initializr.generator.language;
 
 import org.junit.jupiter.api.Test;
@@ -28,39 +44,39 @@ class MultipleAnnotationContainerTests {
 	@Test
 	void isEmptyWithAnnotation() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "test"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "test"));
 		assertThat(container.isEmpty()).isFalse();
 	}
 
 	@Test
 	void hasWithMatchingAnnotation() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "test"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "test"));
 		assertThat(container.has(TEST_CLASS_NAME)).isTrue();
 	}
 
 	@Test
 	void hasWithNonMatchingAnnotation() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "test"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "test"));
 		assertThat(container.has(OTHER_CLASS_NAME)).isFalse();
 	}
 
 	@Test
 	void valuesShouldReturnAllAnnotations() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "one"));
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "two"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "one"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "two"));
 		List<Annotation> annotations = container.values().collect(Collectors.toList());
 		assertThat(annotations).hasSize(2);
-		assertThat(annotations).allMatch(annotation -> annotation.getClassName().equals(TEST_CLASS_NAME));
+		assertThat(annotations).allMatch((annotation) -> annotation.getClassName().equals(TEST_CLASS_NAME));
 	}
 
 	@Test
 	void valuesOfShouldReturnMatchingAnnotationsOnly() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "one"));
-		container.addToList(OTHER_CLASS_NAME, builder -> builder.add("name", "other"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "one"));
+		container.addToList(OTHER_CLASS_NAME, (builder) -> builder.add("name", "other"));
 		List<Annotation> annotations = container.valuesOf(TEST_CLASS_NAME).collect(Collectors.toList());
 		assertThat(annotations).hasSize(1);
 		assertThat(annotations.get(0).getAttributes()).singleElement().satisfies((attribute) -> {
@@ -123,14 +139,14 @@ class MultipleAnnotationContainerTests {
 	void addUnsupportedMethodsThrowException() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
 		assertThatThrownBy(() -> container.add(TEST_CLASS_NAME)).isInstanceOf(UnsupportedOperationException.class);
-		assertThatThrownBy(() -> container.add(TEST_CLASS_NAME, builder -> {
+		assertThatThrownBy(() -> container.add(TEST_CLASS_NAME, (builder) -> {
 		})).isInstanceOf(UnsupportedOperationException.class);
 	}
 
 	@Test
 	void deepCopyShouldCreateDistinctObjectReferences() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "test"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "test"));
 
 		MultipleAnnotationContainer copy = container.deepCopy();
 
@@ -148,12 +164,12 @@ class MultipleAnnotationContainerTests {
 	@Test
 	void deepCopyMutationShouldNotAffectOriginal() {
 		MultipleAnnotationContainer container = new MultipleAnnotationContainer();
-		container.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "original"));
+		container.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "original"));
 
 		MultipleAnnotationContainer copy = container.deepCopy();
 
-		copy.addToList(TEST_CLASS_NAME, builder -> builder.add("value", "new"));
-		copy.addToList(OTHER_CLASS_NAME, builder -> builder.add("other", "test"));
+		copy.addToList(TEST_CLASS_NAME, (builder) -> builder.add("value", "new"));
+		copy.addToList(OTHER_CLASS_NAME, (builder) -> builder.add("other", "test"));
 
 		assertThat(container.countOf(TEST_CLASS_NAME)).isEqualTo(1);
 		assertThat(container.has(OTHER_CLASS_NAME)).isFalse();
