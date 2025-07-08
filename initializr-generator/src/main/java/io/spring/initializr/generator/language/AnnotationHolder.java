@@ -16,10 +16,10 @@
 
 package io.spring.initializr.generator.language;
 
-import io.spring.initializr.generator.language.Annotation.Builder;
-
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import io.spring.initializr.generator.language.Annotation.Builder;
 
 /**
  * A holder for {@linkplain Annotation annotations} defined on an annotated element.
