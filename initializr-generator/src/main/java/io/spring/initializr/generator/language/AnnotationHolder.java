@@ -24,7 +24,6 @@ import io.spring.initializr.generator.language.Annotation.Builder;
 /**
  * A holder for {@linkplain Annotation annotations} defined on an annotated element.
  *
- * @author Stephane Nicoll
  * @author Sijun Yang
  */
 public interface AnnotationHolder {

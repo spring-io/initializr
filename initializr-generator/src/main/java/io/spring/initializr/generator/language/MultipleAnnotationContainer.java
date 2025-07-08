@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import io.spring.initializr.generator.language.Annotation.Builder;
 
 /**
- * An {@link AnnotationHolder} implementation that can hold multiple annotations per type.
+ * An {@link AnnotationHolder} implementation that holds multiple annotations per type.
  *
  * @author Sijun Yang
  */

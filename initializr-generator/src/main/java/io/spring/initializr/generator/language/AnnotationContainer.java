@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import io.spring.initializr.generator.language.Annotation.Builder;
 
 /**
- * An {@link AnnotationHolder} implementation that holds at most one annotation per type.
+ * An {@link AnnotationHolder} implementation that holds a single annotation per type.
  *
  * @author Stephane Nicoll
  * @author Sijun Yang
