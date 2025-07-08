@@ -30,7 +30,7 @@ public final class Parameter implements Annotatable {
 
 	private final String type;
 
-	private final AnnotationContainer annotations;
+	private final AnnotationHolder annotations;
 
 	private Parameter(Builder builder) {
 		this.name = builder.name;
@@ -94,7 +94,7 @@ public final class Parameter implements Annotatable {
 	}
 
 	@Override
-	public AnnotationContainer annotations() {
+	public AnnotationHolder annotations() {
 		return this.annotations;
 	}
 

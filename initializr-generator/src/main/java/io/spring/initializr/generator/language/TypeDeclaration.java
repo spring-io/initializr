@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class TypeDeclaration implements Annotatable {
 
-	private final AnnotationContainer annotations = new AnnotationContainer();
+	private final AnnotationHolder annotations;
 
 	private final String name;
 
@@ -36,12 +36,17 @@ public class TypeDeclaration implements Annotatable {
 
 	private List<String> implementsClassNames = Collections.emptyList();
 
+	public TypeDeclaration(String name, AnnotationHolder annotations) {
+		this.name = name;
+		this.annotations = annotations;
+	}
+
 	/**
 	 * Creates a new instance.
 	 * @param name the type name
 	 */
 	public TypeDeclaration(String name) {
-		this.name = name;
+		this(name, new AnnotationContainer());
 	}
 
 	/**
@@ -69,7 +74,7 @@ public class TypeDeclaration implements Annotatable {
 	}
 
 	@Override
-	public AnnotationContainer annotations() {
+	public AnnotationHolder annotations() {
 		return this.annotations;
 	}
 
