@@ -29,52 +29,52 @@ import java.util.stream.Stream;
  */
 public interface AnnotationHolder {
 
-    /**
-     * Specify if this holder is empty.
-     * @return {@code true} if no annotation is registered
-     */
-    boolean isEmpty();
+	/**
+	 * Specify if this holder is empty.
+	 * @return {@code true} if no annotation is registered
+	 */
+	boolean isEmpty();
 
-    /**
-     * Specify if this holder has an annotation with the specified {@link ClassName}.
-     * @param className the class name of an annotation
-     * @return {@code true} if the annotation with the specified class name exists
-     */
-    boolean has(ClassName className);
+	/**
+	 * Specify if this holder has an annotation with the specified {@link ClassName}.
+	 * @param className the class name of an annotation
+	 * @return {@code true} if the annotation with the specified class name exists
+	 */
+	boolean has(ClassName className);
 
-    /**
-     * Return the {@link Annotation annotations}.
-     * @return the annotations
-     */
-    Stream<Annotation> values();
+	/**
+	 * Return the {@link Annotation annotations}.
+	 * @return the annotations
+	 */
+	Stream<Annotation> values();
 
-    /**
-     * Add a single {@link Annotation} with the specified class name and {@link Consumer}
-     * to customize it. If the annotation has already been added, the consumer can be used
-     * to further tune attributes
-     * @param className the class name of an annotation
-     * @param annotation a {@link Consumer} to customize the {@link Annotation}
-     */
-    void add(ClassName className, Consumer<Builder> annotation);
+	/**
+	 * Add a single {@link Annotation} with the specified class name and {@link Consumer}
+	 * to customize it. If the annotation has already been added, the consumer can be used
+	 * to further tune attributes
+	 * @param className the class name of an annotation
+	 * @param annotation a {@link Consumer} to customize the {@link Annotation}
+	 */
+	void add(ClassName className, Consumer<Builder> annotation);
 
-    /**
-     * Add a single {@link Annotation} with the specified class name. Does nothing If the
-     * annotation has already been added.
-     * @param className the class name of an annotation
-     */
-    void add(ClassName className);
+	/**
+	 * Add a single {@link Annotation} with the specified class name. Does nothing If the
+	 * annotation has already been added.
+	 * @param className the class name of an annotation
+	 */
+	void add(ClassName className);
 
-    /**
-     * Remove the annotation with the specified {@link ClassName}.
-     * @param className the class name of the annotation
-     * @return {@code true} if such an annotation exists, {@code false} otherwise
-     */
-    boolean remove(ClassName className);
+	/**
+	 * Remove the annotation with the specified {@link ClassName}.
+	 * @param className the class name of the annotation
+	 * @return {@code true} if such an annotation exists, {@code false} otherwise
+	 */
+	boolean remove(ClassName className);
 
-    /**
-     * Create a deep copy of this annotation holder.
-     * @return a new annotation holder with the same annotations
-     */
-    AnnotationHolder deepCopy();
+	/**
+	 * Create a deep copy of this annotation holder.
+	 * @return a new annotation holder with the same annotations
+	 */
+	AnnotationHolder deepCopy();
 
 }
