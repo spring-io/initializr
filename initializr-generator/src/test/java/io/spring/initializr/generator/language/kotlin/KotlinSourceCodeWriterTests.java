@@ -32,6 +32,7 @@ import io.spring.initializr.generator.language.Annotation.Builder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.MultipleAnnotationContainer;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
 import org.junit.jupiter.api.Test;
@@ -384,6 +385,54 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example", "", "import com.example.another.MyService",
 				"import com.example.stereotype.Service", "", "class Test {", "",
 				"    fun something(@Service service: MyService) {", "    }", "", "}");
+	}
+
+	@Test
+	void multipleAnnotationsOnClass() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		MultipleAnnotationContainer classAnnotations = new MultipleAnnotationContainer();
+		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
+		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test", classAnnotations);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "@TestClassAnnotation",
+				"@TestClassAnnotation", "class Test");
+	}
+
+	@Test
+	void multipleAnnotationsOnProperty() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		MultipleAnnotationContainer propertyAnnotations = new MultipleAnnotationContainer();
+		propertyAnnotations.addToList(ClassName.of("com.example.TestPropertyAnnotation"));
+		propertyAnnotations.addToList(ClassName.of("com.example.TestPropertyAnnotation"));
+		KotlinPropertyDeclaration property = KotlinPropertyDeclaration.val("testProperty")
+				.annotations(propertyAnnotations)
+				.returning("String").emptyValue();
+		test.addPropertyDeclaration(property);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    @TestPropertyAnnotation", "    @TestPropertyAnnotation", "    val testProperty: String", "", "}");
+	}
+
+	@Test
+	void multipleAnnotationsOnFunction() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		MultipleAnnotationContainer functionAnnotations = new MultipleAnnotationContainer();
+		functionAnnotations.addToList(ClassName.of("com.example.TestFunctionAnnotation"));
+		functionAnnotations.addToList(ClassName.of("com.example.TestFunctionAnnotation"));
+		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("testFunction")
+				.annotations(functionAnnotations)
+				.body(CodeBlock.of(""));
+		test.addFunctionDeclaration(function);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
+				"    @TestFunctionAnnotation", "    @TestFunctionAnnotation", "    fun testFunction() {",
+				"    }", "", "}");
 	}
 
 	@Test
