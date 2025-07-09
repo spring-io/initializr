@@ -50,7 +50,7 @@ public final class GroovyMethodDeclaration implements Annotatable {
 		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
-		this.parameters = new ArrayList<>(builder.parameters);
+		this.parameters = List.copyOf(builder.parameters);
 		this.modifiers = builder.modifiers;
 		this.code = code;
 	}

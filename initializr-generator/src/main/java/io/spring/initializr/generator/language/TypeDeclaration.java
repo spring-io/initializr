@@ -36,6 +36,11 @@ public class TypeDeclaration implements Annotatable {
 
 	private List<String> implementsClassNames = Collections.emptyList();
 
+	/**
+	 * Creates a new instance.
+	 * @param name the type name
+	 * @param annotations the annotation holder
+	 */
 	public TypeDeclaration(String name, AnnotationHolder annotations) {
 		this.name = name;
 		this.annotations = annotations;
