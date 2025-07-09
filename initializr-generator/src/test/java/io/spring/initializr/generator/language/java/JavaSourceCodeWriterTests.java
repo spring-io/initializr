@@ -335,10 +335,10 @@ class JavaSourceCodeWriterTests {
 		MultipleAnnotationContainer classAnnotations = new MultipleAnnotationContainer();
 		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
 		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
-        compilationUnit.createTypeDeclaration("Test", classAnnotations);
-        List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "@TestClassAnnotation",
-				"@TestClassAnnotation", "class Test {", "", "}");
+		compilationUnit.createTypeDeclaration("Test", classAnnotations);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "@TestClassAnnotation", "@TestClassAnnotation",
+				"class Test {", "", "}");
 	}
 
 	@Test
@@ -350,9 +350,9 @@ class JavaSourceCodeWriterTests {
 		fieldAnnotations.addToList(ClassName.of("com.example.TestFiledAnnotation"));
 		fieldAnnotations.addToList(ClassName.of("com.example.TestFiledAnnotation"));
 		JavaFieldDeclaration field = JavaFieldDeclaration.field("testField")
-				.annotations(fieldAnnotations)
-				.modifiers(Modifier.PRIVATE)
-				.returning("java.lang.String");
+			.annotations(fieldAnnotations)
+			.modifiers(Modifier.PRIVATE)
+			.returning("java.lang.String");
 		test.addFieldDeclaration(field);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestFiledAnnotation",
@@ -368,14 +368,14 @@ class JavaSourceCodeWriterTests {
 		methodAnnotations.addToList(ClassName.of("com.example.TestMethodAnnotation"));
 		methodAnnotations.addToList(ClassName.of("com.example.TestMethodAnnotation"));
 		JavaMethodDeclaration method = JavaMethodDeclaration.method("testMethod")
-				.annotations(methodAnnotations)
-				.returning("void")
-				.parameters()
-				.body(CodeBlock.of(""));
+			.annotations(methodAnnotations)
+			.returning("void")
+			.parameters()
+			.body(CodeBlock.of(""));
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "",
-				"    @TestMethodAnnotation", "    @TestMethodAnnotation", "    void testMethod() {", "    }", "", "}");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestMethodAnnotation",
+				"    @TestMethodAnnotation", "    void testMethod() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location) throws IOException {
