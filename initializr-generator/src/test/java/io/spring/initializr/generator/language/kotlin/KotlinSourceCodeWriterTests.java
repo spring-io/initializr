@@ -396,8 +396,8 @@ class KotlinSourceCodeWriterTests {
 		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test", classAnnotations);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "@TestClassAnnotation",
-				"@TestClassAnnotation", "class Test");
+		assertThat(lines).containsExactly("package com.example", "", "@TestClassAnnotation", "@TestClassAnnotation",
+				"class Test");
 	}
 
 	@Test
@@ -409,12 +409,13 @@ class KotlinSourceCodeWriterTests {
 		propertyAnnotations.addToList(ClassName.of("com.example.TestPropertyAnnotation"));
 		propertyAnnotations.addToList(ClassName.of("com.example.TestPropertyAnnotation"));
 		KotlinPropertyDeclaration property = KotlinPropertyDeclaration.val("testProperty")
-				.annotations(propertyAnnotations)
-				.returning("String").emptyValue();
+			.annotations(propertyAnnotations)
+			.returning("String")
+			.emptyValue();
 		test.addPropertyDeclaration(property);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
-				"    @TestPropertyAnnotation", "    @TestPropertyAnnotation", "    val testProperty: String", "", "}");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestPropertyAnnotation",
+				"    @TestPropertyAnnotation", "    val testProperty: String", "", "}");
 	}
 
 	@Test
@@ -426,13 +427,12 @@ class KotlinSourceCodeWriterTests {
 		functionAnnotations.addToList(ClassName.of("com.example.TestFunctionAnnotation"));
 		functionAnnotations.addToList(ClassName.of("com.example.TestFunctionAnnotation"));
 		KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("testFunction")
-				.annotations(functionAnnotations)
-				.body(CodeBlock.of(""));
+			.annotations(functionAnnotations)
+			.body(CodeBlock.of(""));
 		test.addFunctionDeclaration(function);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
-		assertThat(lines).containsExactly("package com.example", "", "class Test {", "",
-				"    @TestFunctionAnnotation", "    @TestFunctionAnnotation", "    fun testFunction() {",
-				"    }", "", "}");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestFunctionAnnotation",
+				"    @TestFunctionAnnotation", "    fun testFunction() {", "    }", "", "}");
 	}
 
 	@Test
