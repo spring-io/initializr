@@ -39,17 +39,13 @@ public final class GroovyFieldDeclaration implements Annotatable {
 
 	private final boolean initialized;
 
-	public GroovyFieldDeclaration(Builder builder, AnnotationHolder annotations) {
-		this.annotations = annotations;
+	private GroovyFieldDeclaration(Builder builder) {
+		this.annotations = builder.annotations;
 		this.modifiers = builder.modifiers;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.value = builder.value;
 		this.initialized = builder.initialized;
-	}
-
-	private GroovyFieldDeclaration(Builder builder) {
-		this(builder, new AnnotationContainer());
 	}
 
 	/**
@@ -111,6 +107,8 @@ public final class GroovyFieldDeclaration implements Annotatable {
 	 */
 	public static final class Builder {
 
+		private AnnotationHolder annotations = new AnnotationContainer();
+
 		private final String name;
 
 		private String returnType;
@@ -132,6 +130,16 @@ public final class GroovyFieldDeclaration implements Annotatable {
 		 */
 		public Builder modifiers(int modifiers) {
 			this.modifiers = modifiers;
+			return this;
+		}
+
+		/**
+		 * Sets the annotation holder.
+		 * @param annotations the annotation holder
+		 * @return this for method chaining
+		 */
+		public Builder annotations(AnnotationHolder annotations) {
+			this.annotations = annotations;
 			return this;
 		}
 

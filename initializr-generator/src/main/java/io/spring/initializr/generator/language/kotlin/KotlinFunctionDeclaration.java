@@ -45,17 +45,13 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	private KotlinFunctionDeclaration(Builder builder, CodeBlock code, AnnotationHolder annotations) {
-		this.annotations = annotations;
+	private KotlinFunctionDeclaration(Builder builder, CodeBlock code) {
+		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = builder.modifiers;
 		this.parameters = List.copyOf(builder.parameters);
 		this.code = code;
-	}
-
-	private KotlinFunctionDeclaration(Builder builder, CodeBlock code) {
-		this(builder, code, new AnnotationContainer());
 	}
 
 	/**
@@ -97,6 +93,8 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 	 */
 	public static final class Builder {
 
+		private AnnotationHolder annotations = new AnnotationContainer();
+
 		private final String name;
 
 		private List<Parameter> parameters = new ArrayList<>();
@@ -136,6 +134,16 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 		 */
 		public Builder parameters(Parameter... parameters) {
 			this.parameters = Arrays.asList(parameters);
+			return this;
+		}
+
+		/**
+		 * Sets the annotation holder.
+		 * @param annotations the annotation holder
+		 * @return this for method chaining
+		 */
+		public Builder annotations(AnnotationHolder annotations) {
+			this.annotations = annotations;
 			return this;
 		}
 
