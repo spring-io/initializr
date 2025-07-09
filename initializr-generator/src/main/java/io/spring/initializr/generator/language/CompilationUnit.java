@@ -74,6 +74,10 @@ public abstract class CompilationUnit<T extends TypeDeclaration> {
 		return Collections.unmodifiableList(this.typeDeclarations);
 	}
 
+	protected void addTypeDeclaration(T typeDeclaration) {
+		this.typeDeclarations.add(typeDeclaration);
+	}
+
 	protected abstract T doCreateTypeDeclaration(String name);
 
 }

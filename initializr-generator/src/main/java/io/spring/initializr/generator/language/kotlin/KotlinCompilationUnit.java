@@ -19,6 +19,7 @@ package io.spring.initializr.generator.language.kotlin;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.CompilationUnit;
 
 /**
@@ -37,6 +38,19 @@ public class KotlinCompilationUnit extends CompilationUnit<KotlinTypeDeclaration
 	@Override
 	protected KotlinTypeDeclaration doCreateTypeDeclaration(String name) {
 		return new KotlinTypeDeclaration(name);
+	}
+
+	/**
+	 * Creates a new {@link KotlinTypeDeclaration} with the specified name and
+	 * {@link AnnotationHolder}.
+	 * @param name the name of the type declaration
+	 * @param annotations the annotation holder to use
+	 * @return a new KotlinTypeDeclaration instance
+	 */
+	public KotlinTypeDeclaration createTypeDeclaration(String name, AnnotationHolder annotations) {
+		KotlinTypeDeclaration typeDeclaration = new KotlinTypeDeclaration(name, annotations);
+		addTypeDeclaration(typeDeclaration);
+		return typeDeclaration;
 	}
 
 	/**
