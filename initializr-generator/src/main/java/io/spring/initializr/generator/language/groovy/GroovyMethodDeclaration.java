@@ -46,12 +46,12 @@ public final class GroovyMethodDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	public GroovyMethodDeclaration(Builder builder, CodeBlock code) {
+	private GroovyMethodDeclaration(Builder builder, CodeBlock code) {
 		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
-		this.parameters = List.copyOf(builder.parameters);
 		this.modifiers = builder.modifiers;
+		this.parameters = List.copyOf(builder.parameters);
 		this.code = code;
 	}
 
