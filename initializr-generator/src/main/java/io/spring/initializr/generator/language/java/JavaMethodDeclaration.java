@@ -45,7 +45,7 @@ public final class JavaMethodDeclaration implements Annotatable {
 
 	private final CodeBlock code;
 
-	public JavaMethodDeclaration(Builder builder, CodeBlock code) {
+	private JavaMethodDeclaration(Builder builder, CodeBlock code) {
 		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
