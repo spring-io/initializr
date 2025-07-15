@@ -434,6 +434,48 @@ class KotlinSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example.`package`");
 	}
 
+	@Test
+	void repeatableAnnotationsOnClass() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.annotations().add("TestAnnotation1", ClassName.of("com.example.TestClassAnnotation"));
+		test.annotations().add("TestAnnotation2", ClassName.of("com.example.TestClassAnnotation"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "@TestClassAnnotation", "@TestClassAnnotation",
+				"class Test");
+	}
+
+	@Test
+	void repeatableAnnotationsOnField() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		KotlinPropertyDeclaration field = KotlinPropertyDeclaration.var("testField")
+				.returning("java.lang.String").empty();
+		field.annotations().add("TestAnnotation1", ClassName.of("com.example.TestFiledAnnotation"));
+		field.annotations().add("TestAnnotation2", ClassName.of("com.example.TestFiledAnnotation"));
+		test.addPropertyDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestFiledAnnotation",
+				"    @TestFiledAnnotation", "    var testField: String", "", "}");
+	}
+
+	@Test
+	void repeatableAnnotationsOnMethod() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		KotlinFunctionDeclaration method = KotlinFunctionDeclaration.function("testMethod")
+				.body(CodeBlock.of(""));
+		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
+		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
+		test.addFunctionDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.kt");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestMethodAnnotation",
+				"    @TestMethodAnnotation", "    fun testMethod() {", "    }", "", "}");
+	}
+
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {
