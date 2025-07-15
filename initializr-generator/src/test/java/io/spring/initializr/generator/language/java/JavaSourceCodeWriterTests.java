@@ -33,7 +33,6 @@ import io.spring.initializr.generator.language.Annotation.Builder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Language;
-import io.spring.initializr.generator.language.MultipleAnnotationContainer;
 import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceStructure;
 import org.junit.jupiter.api.Test;
@@ -326,56 +325,6 @@ class JavaSourceCodeWriterTests {
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.another.MyService;",
 				"import com.example.stereotype.Service;", "", "class Test {", "",
 				"    void something(@Service MyService service) {", "    }", "", "}");
-	}
-
-	@Test
-	void multipleAnnotationsOnClass() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		MultipleAnnotationContainer classAnnotations = new MultipleAnnotationContainer();
-		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
-		classAnnotations.addToList(ClassName.of("com.example.TestClassAnnotation"));
-		compilationUnit.createTypeDeclaration("Test", classAnnotations);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "@TestClassAnnotation", "@TestClassAnnotation",
-				"class Test {", "", "}");
-	}
-
-	@Test
-	void multipleAnnotationsOnField() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		MultipleAnnotationContainer fieldAnnotations = new MultipleAnnotationContainer();
-		fieldAnnotations.addToList(ClassName.of("com.example.TestFiledAnnotation"));
-		fieldAnnotations.addToList(ClassName.of("com.example.TestFiledAnnotation"));
-		JavaFieldDeclaration field = JavaFieldDeclaration.field("testField")
-			.annotations(fieldAnnotations)
-			.modifiers(Modifier.PRIVATE)
-			.returning("java.lang.String");
-		test.addFieldDeclaration(field);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestFiledAnnotation",
-				"    @TestFiledAnnotation", "    private String testField;", "", "}");
-	}
-
-	@Test
-	void multipleAnnotationsOnMethod() throws IOException {
-		JavaSourceCode sourceCode = new JavaSourceCode();
-		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
-		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		MultipleAnnotationContainer methodAnnotations = new MultipleAnnotationContainer();
-		methodAnnotations.addToList(ClassName.of("com.example.TestMethodAnnotation"));
-		methodAnnotations.addToList(ClassName.of("com.example.TestMethodAnnotation"));
-		JavaMethodDeclaration method = JavaMethodDeclaration.method("testMethod")
-			.annotations(methodAnnotations)
-			.returning("void")
-			.parameters()
-			.body(CodeBlock.of(""));
-		test.addMethodDeclaration(method);
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestMethodAnnotation",
-				"    @TestMethodAnnotation", "    void testMethod() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location) throws IOException {

@@ -162,7 +162,6 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 
 	private void writeProperty(IndentingWriter writer, KotlinPropertyDeclaration propertyDeclaration) {
 		writer.println();
-		writeAnnotations(writer, propertyDeclaration);
 		writeModifiers(writer, propertyDeclaration.getModifiers());
 		if (propertyDeclaration.isVal()) {
 			writer.print("val ");

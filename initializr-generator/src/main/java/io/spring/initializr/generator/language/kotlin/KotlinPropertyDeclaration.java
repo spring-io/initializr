@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.AnnotationContainer;
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
 
@@ -35,7 +34,7 @@ import io.spring.initializr.generator.language.CodeBlock;
  */
 public final class KotlinPropertyDeclaration implements Annotatable {
 
-	private final AnnotationHolder annotations;
+	private final AnnotationContainer annotations = new AnnotationContainer();
 
 	private final boolean isVal;
 
@@ -52,7 +51,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 	private final Accessor setter;
 
 	private KotlinPropertyDeclaration(Builder<?> builder) {
-		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = new ArrayList<>(builder.modifiers);
@@ -113,7 +111,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 	}
 
 	@Override
-	public AnnotationHolder annotations() {
+	public AnnotationContainer annotations() {
 		return this.annotations;
 	}
 
@@ -123,8 +121,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 	 * @param <T> a {@link Builder} subclass.
 	 */
 	public abstract static class Builder<T extends Builder<T>> {
-
-		private AnnotationHolder annotations = new AnnotationContainer();
 
 		private final boolean isVal;
 
@@ -186,16 +182,6 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 */
 		public T modifiers(KotlinModifier... modifiers) {
 			this.modifiers = Arrays.asList(modifiers);
-			return self();
-		}
-
-		/**
-		 * Sets the annotation holder.
-		 * @param annotations the annotation holder
-		 * @return this for method chaining
-		 */
-		public T annotations(AnnotationHolder annotations) {
-			this.annotations = annotations;
 			return self();
 		}
 
@@ -322,7 +308,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	static final class Accessor implements Annotatable {
 
-		private final AnnotationHolder annotations;
+		private final AnnotationContainer annotations;
 
 		private final CodeBlock code;
 
@@ -336,7 +322,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		}
 
 		@Override
-		public AnnotationHolder annotations() {
+		public AnnotationContainer annotations() {
 			return this.annotations;
 		}
 

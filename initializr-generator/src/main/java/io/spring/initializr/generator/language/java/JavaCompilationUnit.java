@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.language.java;
 
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.CompilationUnit;
 
 /**
@@ -33,19 +32,6 @@ public class JavaCompilationUnit extends CompilationUnit<JavaTypeDeclaration> {
 	@Override
 	protected JavaTypeDeclaration doCreateTypeDeclaration(String name) {
 		return new JavaTypeDeclaration(name);
-	}
-
-	/**
-	 * Creates a new {@link JavaTypeDeclaration} with the specified name and
-	 * {@link AnnotationHolder}.
-	 * @param name the name of the type declaration
-	 * @param annotations the annotation holder to use
-	 * @return a new JavaTypeDeclaration instance
-	 */
-	public JavaTypeDeclaration createTypeDeclaration(String name, AnnotationHolder annotations) {
-		JavaTypeDeclaration typeDeclaration = new JavaTypeDeclaration(name, annotations);
-		addTypeDeclaration(typeDeclaration);
-		return typeDeclaration;
 	}
 
 }

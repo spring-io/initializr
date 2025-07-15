@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -38,10 +37,6 @@ public class KotlinTypeDeclaration extends TypeDeclaration {
 
 	KotlinTypeDeclaration(String name) {
 		super(name);
-	}
-
-	KotlinTypeDeclaration(String name, AnnotationHolder annotations) {
-		super(name, annotations);
 	}
 
 	/**

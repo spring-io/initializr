@@ -19,7 +19,6 @@ package io.spring.initializr.generator.language.java;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -38,10 +37,6 @@ public class JavaTypeDeclaration extends TypeDeclaration {
 
 	JavaTypeDeclaration(String name) {
 		super(name);
-	}
-
-	JavaTypeDeclaration(String name, AnnotationHolder annotations) {
-		super(name, annotations);
 	}
 
 	/**
