@@ -321,6 +321,49 @@ class GroovySourceCodeWriterTests {
 				"    void something(@Service MyService service) {", "    }", "", "}");
 	}
 
+	@Test
+	void repeatableAnnotationsOnClass() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.annotations().add("TestAnnotation1", ClassName.of("com.example.TestClassAnnotation"));
+		test.annotations().add("TestAnnotation2", ClassName.of("com.example.TestClassAnnotation"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "@TestClassAnnotation", "@TestClassAnnotation",
+				"class Test {", "", "}");
+	}
+
+	@Test
+	void repeatableAnnotationsOnField() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		GroovyFieldDeclaration field = GroovyFieldDeclaration.field("testField").returning("java.lang.String");
+		field.annotations().add("TestAnnotation1", ClassName.of("com.example.TestFiledAnnotation"));
+		field.annotations().add("TestAnnotation2", ClassName.of("com.example.TestFiledAnnotation"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestFiledAnnotation",
+				"    @TestFiledAnnotation", "    String testField", "", "}");
+	}
+
+	@Test
+	void repeatableAnnotationsOnMethod() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		GroovyMethodDeclaration method = GroovyMethodDeclaration.method("testMethod")
+				.returning("void")
+				.parameters()
+				.body(CodeBlock.of(""));
+		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
+		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
+		test.addMethodDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.groovy");
+		assertThat(lines).containsExactly("package com.example", "", "class Test {", "", "    @TestMethodAnnotation",
+				"    @TestMethodAnnotation", "    void testMethod() {", "    }", "", "}");
+	}
+
 	private List<String> writeSingleType(GroovySourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {

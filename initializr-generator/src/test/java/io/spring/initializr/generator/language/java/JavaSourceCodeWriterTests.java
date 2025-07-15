@@ -327,6 +327,51 @@ class JavaSourceCodeWriterTests {
 				"    void something(@Service MyService service) {", "    }", "", "}");
 	}
 
+	@Test
+	void repeatableAnnotationsOnClass() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.annotations().add("TestAnnotation1", ClassName.of("com.example.TestClassAnnotation"));
+		test.annotations().add("TestAnnotation2", ClassName.of("com.example.TestClassAnnotation"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "@TestClassAnnotation", "@TestClassAnnotation",
+				"class Test {", "", "}");
+	}
+
+	@Test
+	void repeatableAnnotationsOnField() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaFieldDeclaration field = JavaFieldDeclaration.field("testField")
+				.modifiers(Modifier.PRIVATE)
+				.returning("java.lang.String");
+		field.annotations().add("TestAnnotation1", ClassName.of("com.example.TestFiledAnnotation"));
+		field.annotations().add("TestAnnotation2", ClassName.of("com.example.TestFiledAnnotation"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestFiledAnnotation",
+				"    @TestFiledAnnotation", "    private String testField;", "", "}");
+	}
+
+	@Test
+	void repeatableAnnotationsOnMethod() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("testMethod")
+				.returning("void")
+				.parameters()
+				.body(CodeBlock.of(""));
+		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
+		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
+		test.addMethodDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @TestMethodAnnotation",
+				"    @TestMethodAnnotation", "    void testMethod() {", "    }", "", "}");
+	}
+
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {
