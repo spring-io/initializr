@@ -353,9 +353,9 @@ class GroovySourceCodeWriterTests {
 		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		GroovyMethodDeclaration method = GroovyMethodDeclaration.method("testMethod")
-				.returning("void")
-				.parameters()
-				.body(CodeBlock.of(""));
+			.returning("void")
+			.parameters()
+			.body(CodeBlock.of(""));
 		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
 		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
 		test.addMethodDeclaration(method);

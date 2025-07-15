@@ -27,6 +27,7 @@ import io.spring.initializr.generator.language.Annotation.Builder;
  * A container for {@linkplain Annotation annotations} defined on an annotated element.
  *
  * @author Stephane Nicoll
+ * @author Sijun Yang
  */
 public class AnnotationContainer {
 
@@ -60,8 +61,8 @@ public class AnnotationContainer {
 	/**
 	 * Specify if this instance contains an annotation with the specified name.
 	 * @param name the name of the annotation
-	 * @return {@code true} if an annotation with the specified name is present,
-	 * otherwise {@code false}
+	 * @return {@code true} if an annotation with the specified name is present, otherwise
+	 * {@code false}
 	 */
 	public boolean has(String name) {
 		return this.annotations.containsKey(name);
@@ -76,16 +77,15 @@ public class AnnotationContainer {
 	}
 
 	/**
-	 * Add an {@link Annotation} with the specific name and {@link Consumer} to
-	 * customize it. If an annotation with that name already exists, the consumer can
-	 * be used to further tune its attributes.
+	 * Add an {@link Annotation} with the specific name and {@link Consumer} to customize
+	 * it. If an annotation with that name already exists, the consumer can be used to
+	 * further tune its attributes.
 	 * @param name the name of the annotation
 	 * @param className the class name of the annotation
 	 * @param annotation a {@link Consumer} to further configure the annotation
 	 */
 	public void add(String name, ClassName className, Consumer<Builder> annotation) {
-		Builder builder = this.annotations.computeIfAbsent(name,
-				(key) -> new Builder(className));
+		Builder builder = this.annotations.computeIfAbsent(name, (key) -> new Builder(className));
 		if (annotation != null) {
 			annotation.accept(builder);
 		}

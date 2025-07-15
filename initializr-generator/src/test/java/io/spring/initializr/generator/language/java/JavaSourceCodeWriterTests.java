@@ -345,8 +345,8 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		JavaFieldDeclaration field = JavaFieldDeclaration.field("testField")
-				.modifiers(Modifier.PRIVATE)
-				.returning("java.lang.String");
+			.modifiers(Modifier.PRIVATE)
+			.returning("java.lang.String");
 		field.annotations().add("TestAnnotation1", ClassName.of("com.example.TestFiledAnnotation"));
 		field.annotations().add("TestAnnotation2", ClassName.of("com.example.TestFiledAnnotation"));
 		test.addFieldDeclaration(field);
@@ -361,9 +361,9 @@ class JavaSourceCodeWriterTests {
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		JavaMethodDeclaration method = JavaMethodDeclaration.method("testMethod")
-				.returning("void")
-				.parameters()
-				.body(CodeBlock.of(""));
+			.returning("void")
+			.parameters()
+			.body(CodeBlock.of(""));
 		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
 		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
 		test.addMethodDeclaration(method);
