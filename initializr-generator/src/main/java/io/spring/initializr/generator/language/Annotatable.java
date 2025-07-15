@@ -21,15 +21,14 @@ package io.spring.initializr.generator.language;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
- * @author Sijun Yang
  */
 public interface Annotatable {
 
 	/**
-	 * Return the {@link AnnotationHolder} to use to configure the annotations of this
+	 * Return the {@link AnnotationContainer} to use to configure the annotations of this
 	 * element.
-	 * @return the annotation holder
+	 * @return the annotation container
 	 */
-	AnnotationHolder annotations();
+	AnnotationContainer annotations();
 
 }

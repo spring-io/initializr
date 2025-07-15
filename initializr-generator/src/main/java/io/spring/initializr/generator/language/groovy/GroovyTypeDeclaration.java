@@ -19,7 +19,6 @@ package io.spring.initializr.generator.language.groovy;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.TypeDeclaration;
 
 /**
@@ -37,10 +36,6 @@ public class GroovyTypeDeclaration extends TypeDeclaration {
 
 	GroovyTypeDeclaration(String name) {
 		super(name);
-	}
-
-	GroovyTypeDeclaration(String name, AnnotationHolder annotations) {
-		super(name, annotations);
 	}
 
 	/**

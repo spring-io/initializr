@@ -16,7 +16,6 @@
 
 package io.spring.initializr.generator.language.groovy;
 
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.CompilationUnit;
 
 /**
@@ -33,19 +32,6 @@ public class GroovyCompilationUnit extends CompilationUnit<GroovyTypeDeclaration
 	@Override
 	protected GroovyTypeDeclaration doCreateTypeDeclaration(String name) {
 		return new GroovyTypeDeclaration(name);
-	}
-
-	/**
-	 * Creates a new {@link GroovyTypeDeclaration} with the specified name and
-	 * {@link AnnotationHolder}.
-	 * @param name the name of the type declaration
-	 * @param annotations the annotation holder to use
-	 * @return a new GroovyTypeDeclaration instance
-	 */
-	public GroovyTypeDeclaration createTypeDeclaration(String name, AnnotationHolder annotations) {
-		GroovyTypeDeclaration typeDeclaration = new GroovyTypeDeclaration(name, annotations);
-		addTypeDeclaration(typeDeclaration);
-		return typeDeclaration;
 	}
 
 }

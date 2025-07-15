@@ -18,7 +18,6 @@ package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.AnnotationContainer;
-import io.spring.initializr.generator.language.AnnotationHolder;
 
 /**
  * Declaration of a field written in Java.
@@ -27,7 +26,7 @@ import io.spring.initializr.generator.language.AnnotationHolder;
  */
 public final class JavaFieldDeclaration implements Annotatable {
 
-	private final AnnotationHolder annotations;
+	private final AnnotationContainer annotations = new AnnotationContainer();
 
 	private final int modifiers;
 
@@ -40,7 +39,6 @@ public final class JavaFieldDeclaration implements Annotatable {
 	private final boolean initialized;
 
 	private JavaFieldDeclaration(Builder builder) {
-		this.annotations = builder.annotations;
 		this.modifiers = builder.modifiers;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
@@ -58,7 +56,7 @@ public final class JavaFieldDeclaration implements Annotatable {
 	}
 
 	@Override
-	public AnnotationHolder annotations() {
+	public AnnotationContainer annotations() {
 		return this.annotations;
 	}
 
@@ -107,8 +105,6 @@ public final class JavaFieldDeclaration implements Annotatable {
 	 */
 	public static final class Builder {
 
-		private AnnotationHolder annotations = new AnnotationContainer();
-
 		private final String name;
 
 		private String returnType;
@@ -130,16 +126,6 @@ public final class JavaFieldDeclaration implements Annotatable {
 		 */
 		public Builder modifiers(int modifiers) {
 			this.modifiers = modifiers;
-			return this;
-		}
-
-		/**
-		 * Sets the annotation holder.
-		 * @param annotations the annotation holder
-		 * @return this for method chaining
-		 */
-		public Builder annotations(AnnotationHolder annotations) {
-			this.annotations = annotations;
 			return this;
 		}
 

@@ -22,7 +22,6 @@ import java.util.List;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.AnnotationContainer;
-import io.spring.initializr.generator.language.AnnotationHolder;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
 
@@ -33,7 +32,7 @@ import io.spring.initializr.generator.language.Parameter;
  */
 public final class KotlinFunctionDeclaration implements Annotatable {
 
-	private final AnnotationHolder annotations;
+	private final AnnotationContainer annotations = new AnnotationContainer();
 
 	private final String name;
 
@@ -46,7 +45,6 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 	private final CodeBlock code;
 
 	private KotlinFunctionDeclaration(Builder builder, CodeBlock code) {
-		this.annotations = builder.annotations;
 		this.name = builder.name;
 		this.returnType = builder.returnType;
 		this.modifiers = builder.modifiers;
@@ -84,7 +82,7 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 	}
 
 	@Override
-	public AnnotationHolder annotations() {
+	public AnnotationContainer annotations() {
 		return this.annotations;
 	}
 
@@ -92,8 +90,6 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 	 * Builder for creating a {@link KotlinFunctionDeclaration}.
 	 */
 	public static final class Builder {
-
-		private AnnotationHolder annotations = new AnnotationContainer();
 
 		private final String name;
 
@@ -134,16 +130,6 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 		 */
 		public Builder parameters(Parameter... parameters) {
 			this.parameters = Arrays.asList(parameters);
-			return this;
-		}
-
-		/**
-		 * Sets the annotation holder.
-		 * @param annotations the annotation holder
-		 * @return this for method chaining
-		 */
-		public Builder annotations(AnnotationHolder annotations) {
-			this.annotations = annotations;
 			return this;
 		}
 
