@@ -111,6 +111,42 @@ class AnnotationContainerTests {
 	}
 
 	@Test
+	void addWithDifferentNamesAddsTwoAnnotations() {
+		AnnotationContainer container = new AnnotationContainer();
+		container.add("test-1", TEST_CLASS_NAME, (annotation) -> annotation.set("id", 1));
+		container.add("test-2", TEST_CLASS_NAME, (annotation) -> annotation.set("id", 2));
+		assertThat(container.values()).satisfiesExactlyInAnyOrder(
+			(a) -> assertThat(a.getAttributes()).singleElement()
+				.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(1)),
+			(a) -> assertThat(a.getAttributes()).singleElement()
+				.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(2)));
+	}
+
+	@Test
+	void hasWithName() {
+		AnnotationContainer container = new AnnotationContainer();
+		container.add("test", TEST_CLASS_NAME);
+		assertThat(container.has("test")).isTrue();
+		assertThat(container.has("test-no")).isFalse();
+	}
+
+	@Test
+	void removeWithNameRemovesMatchingAnnotation() {
+		AnnotationContainer container = new AnnotationContainer();
+		container.add("test", TEST_CLASS_NAME);
+		assertThat(container.remove("test")).isTrue();
+		assertThat(container.isEmpty()).isTrue();
+	}
+
+	@Test
+	void removeWithNameWithNonMatchingAnnotation() {
+		AnnotationContainer container = new AnnotationContainer();
+		container.add("test", TEST_CLASS_NAME);
+		assertThat(container.remove("test-no")).isFalse();
+		assertThat(container.isEmpty()).isFalse();
+	}
+
+	@Test
 	void removeWithMatchingAnnotation() {
 		AnnotationContainer container = new AnnotationContainer();
 		container.add(TEST_CLASS_NAME, (annotation) -> annotation.add("value", "test"));
