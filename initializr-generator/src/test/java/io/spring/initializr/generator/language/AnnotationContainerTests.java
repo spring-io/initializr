@@ -116,10 +116,10 @@ class AnnotationContainerTests {
 		container.add("test-1", TEST_CLASS_NAME, (annotation) -> annotation.set("id", 1));
 		container.add("test-2", TEST_CLASS_NAME, (annotation) -> annotation.set("id", 2));
 		assertThat(container.values()).satisfiesExactlyInAnyOrder(
-			(a) -> assertThat(a.getAttributes()).singleElement()
-				.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(1)),
-			(a) -> assertThat(a.getAttributes()).singleElement()
-				.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(2)));
+				(a) -> assertThat(a.getAttributes()).singleElement()
+					.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(1)),
+				(a) -> assertThat(a.getAttributes()).singleElement()
+					.satisfies((attribute) -> assertThat(attribute.getValues()).containsOnly(2)));
 	}
 
 	@Test

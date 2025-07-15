@@ -452,7 +452,8 @@ class KotlinSourceCodeWriterTests {
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
 		KotlinPropertyDeclaration field = KotlinPropertyDeclaration.var("testField")
-				.returning("java.lang.String").empty();
+			.returning("java.lang.String")
+			.empty();
 		field.annotations().add("TestAnnotation1", ClassName.of("com.example.TestFiledAnnotation"));
 		field.annotations().add("TestAnnotation2", ClassName.of("com.example.TestFiledAnnotation"));
 		test.addPropertyDeclaration(field);
@@ -466,8 +467,7 @@ class KotlinSourceCodeWriterTests {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		KotlinFunctionDeclaration method = KotlinFunctionDeclaration.function("testMethod")
-				.body(CodeBlock.of(""));
+		KotlinFunctionDeclaration method = KotlinFunctionDeclaration.function("testMethod").body(CodeBlock.of(""));
 		method.annotations().add("TestAnnotation1", ClassName.of("com.example.TestMethodAnnotation"));
 		method.annotations().add("TestAnnotation2", ClassName.of("com.example.TestMethodAnnotation"));
 		test.addFunctionDeclaration(method);
