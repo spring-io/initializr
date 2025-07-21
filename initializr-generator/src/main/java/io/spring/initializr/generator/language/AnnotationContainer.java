@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.language;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -23,22 +24,32 @@ import java.util.stream.Stream;
 
 import io.spring.initializr.generator.language.Annotation.Builder;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 /**
- * A container for {@linkplain Annotation annotations} defined on an annotated element.
+ * A container for annotations defined on an annotated element.
+ * <p>
+ * Supports both single and repeatable annotations. Single annotations can be customized
+ * even after they have been added.
  *
  * @author Stephane Nicoll
- * @author Sijun Yang
+ * @author Moritz Halbritter
  */
 public class AnnotationContainer {
 
-	private final Map<String, Builder> annotations;
+	private final Map<ClassName, Builder> singleAnnotations;
+
+	private final MultiValueMap<ClassName, Builder> repeatableAnnotations;
 
 	public AnnotationContainer() {
-		this(new LinkedHashMap<>());
+		this(new LinkedHashMap<>(), new LinkedMultiValueMap<>());
 	}
 
-	private AnnotationContainer(Map<String, Builder> annotations) {
-		this.annotations = annotations;
+	private AnnotationContainer(Map<ClassName, Builder> singleAnnotations,
+			MultiValueMap<ClassName, Builder> repeatableAnnotations) {
+		this.singleAnnotations = singleAnnotations;
+		this.repeatableAnnotations = repeatableAnnotations;
 	}
 
 	/**
@@ -46,59 +57,58 @@ public class AnnotationContainer {
 	 * @return {@code true} if no annotation is registered
 	 */
 	public boolean isEmpty() {
-		return this.annotations.isEmpty();
+		return this.singleAnnotations.isEmpty() && this.repeatableAnnotations.isEmpty();
 	}
 
 	/**
-	 * Specify if this container has an annotation with the specified {@link ClassName}.
+	 * Specify if this container has an annotation with the specified class name.
+	 * Considers both single and repeatable annotations.
 	 * @param className the class name of an annotation
 	 * @return {@code true} if the annotation with the specified class name exists
 	 */
 	public boolean has(ClassName className) {
-		return this.annotations.containsKey(className.getCanonicalName());
+		return this.singleAnnotations.containsKey(className) || this.repeatableAnnotations.containsKey(className);
 	}
 
 	/**
-	 * Specify if this instance contains an annotation with the specified name.
-	 * @param name the name of the annotation
-	 * @return {@code true} if an annotation with the specified name is present, otherwise
-	 * {@code false}
+	 * Whether this container has a single annotation with the specified class name.
+	 * @param className the class name of an annotation
+	 * @return whether this container has the annotation
 	 */
-	public boolean has(String name) {
-		return this.annotations.containsKey(name);
+	public boolean hasSingle(ClassName className) {
+		return this.singleAnnotations.containsKey(className);
 	}
 
 	/**
-	 * Return the {@link Annotation annotations}.
+	 * Whether this container has repeatable annotations with the specified class name.
+	 * @param className the class name of an annotation
+	 * @return whether this container has the annotation
+	 */
+	public boolean hasRepeatable(ClassName className) {
+		return this.repeatableAnnotations.containsKey(className);
+	}
+
+	/**
+	 * Return the annotations. Returns both single and repeatable annotations.
 	 * @return the annotations
 	 */
 	public Stream<Annotation> values() {
-		return this.annotations.values().stream().map(Builder::build);
+		return Stream
+			.concat(this.singleAnnotations.values().stream(),
+					this.repeatableAnnotations.values().stream().flatMap(Collection::stream))
+			.map(Builder::build);
 	}
 
 	/**
-	 * Add an {@link Annotation} with the specific name and {@link Consumer} to customize
-	 * it. If an annotation with that name already exists, the consumer can be used to
-	 * further tune its attributes.
-	 * @param name the name of the annotation
-	 * @param className the class name of the annotation
-	 * @param annotation a {@link Consumer} to further configure the annotation
+	 * Add a single annotation with the specified class name. Does nothing If the
+	 * annotation has already been added.
+	 * @param className the class name of an annotation
+	 * @deprecated in favor of {@link #addSingle(ClassName)} and
+	 * {@link #addRepeatable(ClassName)}
 	 */
-	public void add(String name, ClassName className, Consumer<Builder> annotation) {
-		Builder builder = this.annotations.computeIfAbsent(name, (key) -> new Builder(className));
-		if (annotation != null) {
-			annotation.accept(builder);
-		}
-	}
-
-	/**
-	 * Add an {@link Annotation} with the specific name. Does nothing If an annotation
-	 * with that name already exists.
-	 * @param name the name of the annotation
-	 * @param className the class name of the annotation
-	 */
-	public void add(String name, ClassName className) {
-		add(name, className, null);
+	@Deprecated(forRemoval = true)
+	public void add(ClassName className) {
+		add(className, null);
 	}
 
 	/**
@@ -107,42 +117,132 @@ public class AnnotationContainer {
 	 * to further tune attributes.
 	 * @param className the class name of an annotation
 	 * @param annotation a {@link Consumer} to customize the {@link Annotation}
+	 * @deprecated in favor of {@link #addSingle(ClassName, Consumer)} and
+	 * {@link #addRepeatable(ClassName)}
 	 */
+	@Deprecated(forRemoval = true)
 	public void add(ClassName className, Consumer<Builder> annotation) {
-		add(className.getCanonicalName(), className, annotation);
+		if (hasRepeatable(className)) {
+			throw new IllegalArgumentException(
+					"%s has already been used for repeatable annotations".formatted(className));
+		}
+		Builder builder = this.singleAnnotations.computeIfAbsent(className, (key) -> new Builder(className));
+		if (annotation != null) {
+			annotation.accept(builder);
+		}
 	}
 
 	/**
-	 * Add a single {@link Annotation} with the specified class name. Does nothing If the
-	 * annotation has already been added.
+	 * Add a single annotation.
 	 * @param className the class name of an annotation
+	 * @return whether the annotation has been added
+	 * @throws IllegalStateException if the annotation has already been used for
+	 * repeatable annotations
 	 */
-	public void add(ClassName className) {
-		add(className.getCanonicalName(), className, null);
+	public boolean addSingle(ClassName className) {
+		return addSingle(className, null);
 	}
 
 	/**
-	 * Remove the annotation with the specified {@link ClassName}.
+	 * Add a single annotation with the specified class name. If the annotation already
+	 * exists, this method does nothing.
+	 * @param className the class name of an annotation
+	 * @param annotation a {@link Consumer} to customize the annotation
+	 * @return whether the annotation has been added
+	 * @throws IllegalStateException if the annotation has already been used for
+	 * repeatable annotations
+	 */
+	public boolean addSingle(ClassName className, Consumer<Builder> annotation) {
+		if (hasSingle(className)) {
+			return false;
+		}
+		if (hasRepeatable(className)) {
+			throw new IllegalStateException("%s has already been used for repeatable annotations".formatted(className));
+		}
+		Builder builder = new Builder(className);
+		if (annotation != null) {
+			annotation.accept(builder);
+		}
+		this.singleAnnotations.put(className, builder);
+		return true;
+	}
+
+	/**
+	 * Customize a single annotation if it exists. This method does nothing if the
+	 * annotation doesn't exist.
+	 * @param className the class name of an annotation
+	 * @param customizer the customizer for the annotation
+	 */
+	public void customizeSingle(ClassName className, Consumer<Builder> customizer) {
+		Builder builder = this.singleAnnotations.get(className);
+		if (builder != null) {
+			customizer.accept(builder);
+		}
+	}
+
+	/**
+	 * Add a repeatable annotation.
+	 * @param className the class name of an annotation
+	 * @throws IllegalStateException if the annotation has already been added as a single
+	 * annotation
+	 */
+	public void addRepeatable(ClassName className) {
+		addRepeatable(className, null);
+	}
+
+	/**
+	 * Add a repeatable annotation.
+	 * @param className the class name of an annotation
+	 * @param annotation a {@link Consumer} to customize the annotation
+	 * @throws IllegalStateException if the annotation has already been added as a single
+	 * annotation
+	 */
+	public void addRepeatable(ClassName className, Consumer<Builder> annotation) {
+		if (hasSingle(className)) {
+			throw new IllegalStateException("%s has already been added as a single annotation".formatted(className));
+		}
+		Builder builder = new Builder(className);
+		if (annotation != null) {
+			annotation.accept(builder);
+		}
+		this.repeatableAnnotations.add(className, builder);
+	}
+
+	/**
+	 * Remove the annotation with the specified classname from either the single or the
+	 * repeatable annotations.
 	 * @param className the class name of the annotation
 	 * @return {@code true} if such an annotation exists, {@code false} otherwise
 	 */
 	public boolean remove(ClassName className) {
-		return this.annotations.remove(className.getCanonicalName()) != null;
+		return this.singleAnnotations.remove(className) != null || this.repeatableAnnotations.remove(className) != null;
 	}
 
 	/**
-	 * Remove the annotation with the specified name.
-	 * @param name the name of the annotation to remove
-	 * @return {@code true} if the annotation was removed, {@code false} otherwise
+	 * Remove a single with the specified classname.
+	 * @param className the class name of an annotation
+	 * @return whether the annotation has been removed
 	 */
-	public boolean remove(String name) {
-		return this.annotations.remove(name) != null;
+	public boolean removeSingle(ClassName className) {
+		return this.singleAnnotations.remove(className) != null;
+	}
+
+	/**
+	 * Remove all repeatable annotations with the specified classname.
+	 * @param className the class name of an annotation
+	 * @return whether any annotation has been removed
+	 */
+	public boolean removeAllRepeatable(ClassName className) {
+		return this.repeatableAnnotations.remove(className) != null;
 	}
 
 	public AnnotationContainer deepCopy() {
-		Map<String, Builder> copy = new LinkedHashMap<>();
-		this.annotations.forEach((name, builder) -> copy.put(name, new Builder(builder)));
-		return new AnnotationContainer(copy);
+		Map<ClassName, Builder> singleAnnotations = new LinkedHashMap<>();
+		this.singleAnnotations.forEach((className, builder) -> singleAnnotations.put(className, new Builder(builder)));
+		MultiValueMap<ClassName, Builder> repeatableAnnotations = new LinkedMultiValueMap<>();
+		this.repeatableAnnotations.forEach((className, builders) -> builders
+			.forEach((builder) -> repeatableAnnotations.add(className, new Builder(builder))));
+		return new AnnotationContainer(singleAnnotations, repeatableAnnotations);
 	}
 
 }
