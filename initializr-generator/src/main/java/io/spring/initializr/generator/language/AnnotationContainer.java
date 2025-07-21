@@ -209,8 +209,8 @@ public class AnnotationContainer {
 	}
 
 	/**
-	 * Remove the annotation with the specified classname from either the single or the
-	 * repeatable annotations.
+	 * Remove the annotation with the specified classname from either the single
+	 * annotation or the repeatable annotations.
 	 * @param className the class name of the annotation
 	 * @return {@code true} if such an annotation exists, {@code false} otherwise
 	 */
