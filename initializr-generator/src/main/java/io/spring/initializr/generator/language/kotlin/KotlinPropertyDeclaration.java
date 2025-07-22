@@ -281,7 +281,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 * @return this for method chaining
 		 */
 		public AccessorBuilder<?> withAnnotation(ClassName className, Consumer<Annotation.Builder> annotation) {
-			this.annotations.add(className, annotation);
+			this.annotations.addSingle(className, annotation);
 			return this;
 		}
 

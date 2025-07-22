@@ -145,7 +145,10 @@ public final class Parameter implements Annotatable {
 		 * Annotate the parameter with the specified annotation.
 		 * @param className the class of the annotation
 		 * @return this for method chaining
+		 * @deprecated in favor of {@link #singleAnnotate(ClassName)} and
+		 * {@link #repeatableAnnotate(ClassName)}
 		 */
+		@Deprecated(forRemoval = true)
 		public Builder annotate(ClassName className) {
 			return annotate(className, null);
 		}
@@ -156,9 +159,55 @@ public final class Parameter implements Annotatable {
 		 * @param className the class of the annotation
 		 * @param annotation a consumer of the builder
 		 * @return this for method chaining
+		 * @deprecated in favor of {@link #singleAnnotate(ClassName, Consumer)} and
+		 * {@link #singleAnnotate(ClassName)}
 		 */
+		@Deprecated(forRemoval = true)
+		@SuppressWarnings("removal")
 		public Builder annotate(ClassName className, Consumer<Annotation.Builder> annotation) {
 			this.annotations.add(className, annotation);
+			return this;
+		}
+
+		/**
+		 * Annotate the parameter with the specified single annotation.
+		 * @param className the class of the annotation
+		 * @return this for method chaining
+		 */
+		public Builder singleAnnotate(ClassName className) {
+			return singleAnnotate(className, null);
+		}
+
+		/**
+		 * Annotate the parameter with the specified single annotation, customized by the
+		 * specified consumer.
+		 * @param className the class of the annotation
+		 * @param annotation a consumer of the builder
+		 * @return this for method chaining
+		 */
+		public Builder singleAnnotate(ClassName className, Consumer<Annotation.Builder> annotation) {
+			this.annotations.addSingle(className, annotation);
+			return this;
+		}
+
+		/**
+		 * Annotate the parameter with the specified repeatable annotation.
+		 * @param className the class of the annotation
+		 * @return this for method chaining
+		 */
+		public Builder repeatableAnnotate(ClassName className) {
+			return repeatableAnnotate(className, null);
+		}
+
+		/**
+		 * Annotate the parameter with the specified repeatable annotation, customized by
+		 * the specified consumer.
+		 * @param className the class of the annotation
+		 * @param annotation a consumer of the builder
+		 * @return this for method chaining
+		 */
+		public Builder repeatableAnnotate(ClassName className, Consumer<Annotation.Builder> annotation) {
+			this.annotations.addRepeatable(className, annotation);
 			return this;
 		}
 

@@ -182,7 +182,7 @@ class JavaSourceCodeWriterTests {
 		JavaFieldDeclaration field = JavaFieldDeclaration.field("testString")
 			.modifiers(Modifier.PRIVATE)
 			.returning("java.lang.String");
-		field.annotations().add(ClassName.of("org.springframework.beans.factory.annotation.Autowired"));
+		field.annotations().addSingle(ClassName.of("org.springframework.beans.factory.annotation.Autowired"));
 		test.addFieldDeclaration(field);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "",
@@ -242,7 +242,7 @@ class JavaSourceCodeWriterTests {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.annotations().add(ClassName.of("org.springframework.boot.autoconfigure.SpringBootApplication"));
+		test.annotations().addSingle(ClassName.of("org.springframework.boot.autoconfigure.SpringBootApplication"));
 		test.addMethodDeclaration(JavaMethodDeclaration.method("main")
 			.modifiers(Modifier.PUBLIC | Modifier.STATIC)
 			.returning("void")
@@ -289,7 +289,7 @@ class JavaSourceCodeWriterTests {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
 		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
-		test.annotations().add(ClassName.of(annotationClassName), annotation);
+		test.annotations().addSingle(ClassName.of(annotationClassName), annotation);
 		return writeSingleType(sourceCode, "com/example/Test.java");
 	}
 
@@ -302,7 +302,7 @@ class JavaSourceCodeWriterTests {
 			.returning("void")
 			.parameters()
 			.body(CodeBlock.of(""));
-		method.annotations().add(ClassName.of("com.example.test.TestAnnotation"));
+		method.annotations().addSingle(ClassName.of("com.example.test.TestAnnotation"));
 		test.addMethodDeclaration(method);
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.test.TestAnnotation;", "",
@@ -318,13 +318,55 @@ class JavaSourceCodeWriterTests {
 			.returning("void")
 			.parameters(Parameter.builder("service")
 				.type(ClassName.of("com.example.another.MyService"))
-				.annotate(ClassName.of("com.example.stereotype.Service"))
+				.singleAnnotate(ClassName.of("com.example.stereotype.Service"))
 				.build())
 			.body(CodeBlock.of("")));
 		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
 		assertThat(lines).containsExactly("package com.example;", "", "import com.example.another.MyService;",
 				"import com.example.stereotype.Service;", "", "class Test {", "",
 				"    void something(@Service MyService service) {", "    }", "", "}");
+	}
+
+	@Test
+	void repeatableClassAnnotations() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		test.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "@Repeatable", "@Repeatable", "class Test {", "",
+				"}");
+	}
+
+	@Test
+	void repeatableFieldAnnotations() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaFieldDeclaration field = JavaFieldDeclaration.field("myField").returning("java.lang.String");
+		field.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		field.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		test.addFieldDeclaration(field);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @Repeatable",
+				"    @Repeatable", "    String myField;", "", "}");
+	}
+
+	@Test
+	void repeatableMethodAnnotations() throws IOException {
+		JavaSourceCode sourceCode = new JavaSourceCode();
+		JavaCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		JavaTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		JavaMethodDeclaration method = JavaMethodDeclaration.method("myMethod")
+			.returning("void")
+			.body(CodeBlock.of(""));
+		method.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		method.annotations().addRepeatable(ClassName.of("com.example.Repeatable"));
+		test.addMethodDeclaration(method);
+		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
+		assertThat(lines).containsExactly("package com.example;", "", "class Test {", "", "    @Repeatable",
+				"    @Repeatable", "    void myMethod() {", "    }", "", "}");
 	}
 
 	private List<String> writeSingleType(JavaSourceCode sourceCode, String location) throws IOException {

@@ -66,7 +66,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 			GroovyMethodDeclaration method = GroovyMethodDeclaration.method("contextLoads")
 				.returning("void")
 				.body(CodeBlock.of(""));
-			method.annotations().add(ClassName.of("org.junit.jupiter.api.Test"));
+			method.annotations().addSingle(ClassName.of("org.junit.jupiter.api.Test"));
 			typeDeclaration.addMethodDeclaration(method);
 		};
 	}
@@ -93,7 +93,7 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 					.parameters(
 							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
 					.body(CodeBlock.ofStatement("application.sources($L)", description.getApplicationName()));
-				configure.annotations().add(ClassName.of(Override.class));
+				configure.annotations().addSingle(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);
 			};
 		}

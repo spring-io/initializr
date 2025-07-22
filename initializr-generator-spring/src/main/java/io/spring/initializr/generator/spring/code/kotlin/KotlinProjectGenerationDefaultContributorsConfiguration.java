@@ -57,7 +57,7 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		return (typeDeclaration) -> {
 			KotlinFunctionDeclaration function = KotlinFunctionDeclaration.function("contextLoads")
 				.body(CodeBlock.of(""));
-			function.annotations().add(ClassName.of("org.junit.jupiter.api.Test"));
+			function.annotations().addSingle(ClassName.of("org.junit.jupiter.api.Test"));
 			typeDeclaration.addFunctionDeclaration(function);
 		};
 	}
