@@ -19,6 +19,8 @@ package io.spring.initializr.generator.spring.build;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 
 /**
  * A {@link BuildCustomizer} that configures the build's repositories based on the version
@@ -41,6 +43,8 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 		.onlySnapshots()
 		.build();
 
+	private static final VersionRange SPRING_BOOT_4_0_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0-M1");
+
 	private final Version springBootVersion;
 
 	SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
@@ -51,13 +55,13 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 	public void customize(Build build) {
 		build.repositories().add("maven-central");
 		switch (getReleaseType()) {
-			case MILESTONE -> addMilestoneRepository(build);
+			case MILESTONE -> addMilestoneRepositoryIfNeeded(build);
 			case SNAPSHOT -> {
 				if (isMaintenanceRelease()) {
 					addSnapshotRepository(build);
 				}
 				else {
-					addMilestoneRepository(build);
+					addMilestoneRepositoryIfNeeded(build);
 					addSnapshotRepository(build);
 				}
 			}
@@ -89,7 +93,11 @@ class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Bu
 		build.pluginRepositories().add(SPRING_SNAPSHOTS);
 	}
 
-	private void addMilestoneRepository(Build build) {
+	private void addMilestoneRepositoryIfNeeded(Build build) {
+		if (SPRING_BOOT_4_0_OR_LATER.match(this.springBootVersion)) {
+			// Spring Boot 4.0 and up publishes milestones to Maven Central
+			return;
+		}
 		build.repositories().add(SPRING_MILESTONES);
 		build.pluginRepositories().add(SPRING_MILESTONES);
 	}

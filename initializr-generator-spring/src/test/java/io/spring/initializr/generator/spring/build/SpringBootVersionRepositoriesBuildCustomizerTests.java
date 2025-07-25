@@ -103,4 +103,19 @@ class SpringBootVersionRepositoriesBuildCustomizerTests {
 				SpringBootVersionRepositoriesBuildCustomizer.SPRING_SNAPSHOTS);
 	}
 
+	@Test
+	void boot4ReleasesShouldNotAddMilestoneRepository() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("4.0.0-M1")).customize(build);
+		assertThat(build.repositories().items()).containsExactly(MavenRepository.MAVEN_CENTRAL);
+	}
+
+	@Test
+	void boot4SnapshotReleasesShouldNotAddMilestoneRepository() {
+		MavenBuild build = new MavenBuild();
+		new SpringBootVersionRepositoriesBuildCustomizer(Version.parse("4.0.0-SNAPSHOT")).customize(build);
+		assertThat(build.repositories().items()).containsExactly(MavenRepository.MAVEN_CENTRAL,
+				SpringBootVersionRepositoriesBuildCustomizer.SPRING_SNAPSHOTS);
+	}
+
 }
