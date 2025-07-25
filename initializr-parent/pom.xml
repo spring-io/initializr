@@ -33,7 +33,7 @@
 		<java.version>17</java.version>
 		<commons-compress.version>1.27.1</commons-compress.version>
 		<commons-text.version>1.14.0</commons-text.version>
-		<maven.version>3.9.6</maven.version>
+		<maven.version>3.9.11</maven.version>
 		<maven-resolver.version>1.9.20</maven-resolver.version>
 		<spring-boot.version>3.5.4</spring-boot.version>
 		<spring-cloud-contract.version>4.2.0</spring-cloud-contract.version>
