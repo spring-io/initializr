@@ -36,7 +36,7 @@
 		<maven.version>3.9.11</maven.version>
 		<maven-resolver.version>1.9.24</maven-resolver.version>
 		<spring-boot.version>3.5.4</spring-boot.version>
-		<spring-cloud-contract.version>4.2.0</spring-cloud-contract.version>
+		<spring-cloud-contract.version>4.3.0</spring-cloud-contract.version>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
