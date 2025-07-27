@@ -16,12 +16,33 @@
 
 package io.spring.initializr.generator.configuration.format;
 
+import java.util.Objects;
+
+import org.springframework.core.io.support.SpringFactoriesLoader;
+
 public interface ConfigurationFileFormat {
 
 	/**
-	 * Return the id of the packaging.
+	 * Return the id of the configuration file format.
 	 * @return the id
 	 */
 	String id();
+
+	/**
+	 * Creates the configuration file format for the given id.
+	 * @param id the id
+	 * @return the configuration file format
+	 * @throws IllegalStateException if the configuration file format with the given id
+	 * can't be found
+	 */
+	static ConfigurationFileFormat forId(String id) {
+		return SpringFactoriesLoader
+			.loadFactories(ConfigurationFileFormatFactory.class, ConfigurationFileFormat.class.getClassLoader())
+			.stream()
+			.map((factory) -> factory.createConfigurationFileFormat(id))
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElseThrow(() -> new IllegalStateException("Unrecognized configuration file format id '" + id + "'"));
+	}
 
 }
