@@ -40,7 +40,12 @@ public enum InitializrMetadataVersion {
 	/**
 	 * Add support for SemVer compliant version format.
 	 */
-	V2_2("application/vnd.initializr.v2.2+json");
+	V2_2("application/vnd.initializr.v2.2+json"),
+
+	/**
+	 * Add support for selecting the project's configuration file format.
+	 */
+	V2_3("application/vnd.initializr.v2.3+json");
 
 	private final MediaType mediaType;
 

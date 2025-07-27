@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -91,6 +92,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		description.setDescription(request.getDescription());
 		description.setGroupId(cleanInputValue(request.getGroupId()));
 		description.setLanguage(Language.forId(request.getLanguage(), request.getJavaVersion()));
+		description.setConfigurationFileFormat(ConfigurationFileFormat.forId(request.getConfigurationFileFormat()));
 		description.setName(cleanInputValue(request.getName()));
 		description.setPackageName(cleanInputValue(request.getPackageName()));
 		description.setPackaging(Packaging.forId(request.getPackaging()));
@@ -114,6 +116,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		validatePlatformVersion(request, metadata);
 		validateType(request.getType(), metadata);
 		validateLanguage(request.getLanguage(), metadata);
+		validateConfigurationFileFormat(request.getConfigurationFileFormat(), metadata);
 		validatePackaging(request.getPackaging(), metadata);
 		validateDependencies(request, metadata);
 	}
@@ -145,6 +148,17 @@ public class DefaultProjectRequestToDescriptionConverter
 			DefaultMetadataElement languageFromMetadata = metadata.getLanguages().get(language);
 			if (languageFromMetadata == null) {
 				throw new InvalidProjectRequestException("Unknown language '" + language + "' check project metadata");
+			}
+		}
+	}
+
+	private void validateConfigurationFileFormat(String configurationFileFormat, InitializrMetadata metadata) {
+		if (configurationFileFormat != null) {
+			DefaultMetadataElement configurationFileFormatFromMetadata = metadata.getConfigurationFileFormats()
+				.get(configurationFileFormat);
+			if (configurationFileFormatFromMetadata == null) {
+				throw new InvalidProjectRequestException(
+						"Unknown configuration file format '" + configurationFileFormat + "' check project metadata");
 			}
 		}
 	}

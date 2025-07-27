@@ -73,6 +73,12 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 	}
 
 	@Test
+	void metadataWithV23AcceptHeader() {
+		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.3+json");
+		validateMetadata(response, InitializrMetadataVersion.V2_3.getMediaType(), "2.3.0", JSONCompareMode.STRICT);
+	}
+
+	@Test
 	void metadataWithInvalidPlatformVersion() {
 		try {
 			execute("/dependencies?bootVersion=2.2.17.RELEASE", String.class, "application/vnd.initializr.v2.1+json",

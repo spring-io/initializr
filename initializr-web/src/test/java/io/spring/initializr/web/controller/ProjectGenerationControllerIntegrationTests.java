@@ -53,7 +53,37 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 			// alias: jpa -> data-jpa
 			.hasDependency(Dependency.createSpringBootStarter("data-jpa"))
 			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		// default configuration file format is .properties
+		assertThat(project).containsFiles("src/main/resources/application.properties");
+	}
 
+	@Test
+	void simpleZipProjectWithPropertiesFormat() {
+		ResponseEntity<byte[]> entity = downloadArchive(
+				"/starter.zip?dependencies=web&configurationFileFormat=properties");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
+		ProjectStructure project = projectFromArchive(entity.getBody());
+		assertDefaultProject(project);
+		assertHasWebResources(project);
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(2)
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).containsFiles("src/main/resources/application.properties");
+	}
+
+	@Test
+	void simpleZipProjectWithYAMLFormat() {
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=yaml");
+		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
+		ProjectStructure project = projectFromArchive(entity.getBody());
+		assertDefaultProject(project);
+		assertHasWebResources(project);
+		assertThat(project).mavenBuild()
+			.hasDependenciesSize(2)
+			.hasDependency(Dependency.createSpringBootStarter("web"))
+			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
+		assertThat(project).containsFiles("src/main/resources/application.yml");
 	}
 
 	@Test
