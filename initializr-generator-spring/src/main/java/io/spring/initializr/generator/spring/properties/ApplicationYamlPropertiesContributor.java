@@ -50,7 +50,7 @@ public class ApplicationYamlPropertiesContributor implements ProjectContributor 
 		}
 		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output, StandardOpenOption.APPEND), false,
 				StandardCharsets.UTF_8)) {
-			this.properties.writeToYaml(writer);
+			this.properties.writeYaml(writer);
 		}
 	}
 
