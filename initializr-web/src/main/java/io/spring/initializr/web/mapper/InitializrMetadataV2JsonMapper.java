@@ -88,6 +88,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		singleSelect(parent, metadata.getPackagings());
 		singleSelect(parent, metadata.getJavaVersions());
 		singleSelect(parent, metadata.getLanguages());
+		singleSelect(parent, metadata.getConfigurationFileFormats());
 		singleSelect(parent, metadata.getBootVersions(), this::mapVersionMetadata, this::formatVersion);
 		text(parent, metadata.getGroupId());
 		text(parent, metadata.getArtifactId());

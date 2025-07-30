@@ -187,6 +187,20 @@
       }
     ]
   },
+  "configurationFileFormat": {
+    "type": "single-select",
+    "default": "properties",
+    "values": [
+      {
+        "id": "properties",
+        "name": "Properties"
+      },
+      {
+        "id": "yml",
+        "name": "YAML"
+      }
+    ]
+  },
   "bootVersion": {
     "type": "single-select",
     "default": "2.4.4",
