@@ -73,6 +73,10 @@ public class ApplicationProperties {
 		}
 	}
 
+	void writeToYaml(PrintWriter writer) {
+		// TODO: Impl
+	}
+
 	private void add(String key, Object value) {
 		Assert.state(!this.properties.containsKey(key), () -> "Property '%s' already exists".formatted(key));
 		this.properties.put(key, value);
