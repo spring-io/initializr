@@ -168,7 +168,7 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder addDefaultConfigurationFileFormats() {
-		return addConfigurationFileFormats("properties", true).addConfigurationFileFormats("yml", false);
+		return addConfigurationFileFormats("properties", true).addConfigurationFileFormats("yaml", false);
 	}
 
 	public InitializrMetadataTestBuilder addConfigurationFileFormats(String id, boolean defaultValue) {

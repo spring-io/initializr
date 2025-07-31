@@ -155,7 +155,7 @@ initializr:
       id: properties
       default: true
     - name: YAML
-      id: yml
+      id: yaml
       default: false
   bootVersions:
     - name : Latest SNAPSHOT

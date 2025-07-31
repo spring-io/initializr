@@ -329,7 +329,7 @@
       },
       {
         "default": false,
-        "id": "yml",
+        "id": "yaml",
         "name": "YAML"
       }
     ],

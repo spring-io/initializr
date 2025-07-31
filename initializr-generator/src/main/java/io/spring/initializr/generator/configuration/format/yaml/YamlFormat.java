@@ -28,7 +28,7 @@ public final class YamlFormat implements ConfigurationFileFormat {
 	/**
 	 * YAML {@link ConfigurationFileFormat} identifier.
 	 */
-	public static final String ID = "yml";
+	public static final String ID = "yaml";
 
 	@Override
 	public String id() {
