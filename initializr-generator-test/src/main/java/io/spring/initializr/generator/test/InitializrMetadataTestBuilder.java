@@ -87,6 +87,7 @@ public class InitializrMetadataTestBuilder {
 		return addDefaultTypes().addDefaultPackagings()
 			.addDefaultJavaVersions()
 			.addDefaultLanguages()
+			.addDefaultConfigurationFileFormats()
 			.addDefaultBootVersions();
 	}
 
@@ -162,6 +163,21 @@ public class InitializrMetadataTestBuilder {
 			element.setName(id);
 			element.setDefault(defaultValue);
 			it.getLanguages().addContent(element);
+		});
+		return this;
+	}
+
+	public InitializrMetadataTestBuilder addDefaultConfigurationFileFormats() {
+		return addConfigurationFileFormats("properties", true).addConfigurationFileFormats("yaml", false);
+	}
+
+	public InitializrMetadataTestBuilder addConfigurationFileFormats(String id, boolean defaultValue) {
+		this.builder.withCustomizer((it) -> {
+			DefaultMetadataElement element = new DefaultMetadataElement();
+			element.setId(id);
+			element.setName(id);
+			element.setDefault(defaultValue);
+			it.getConfigurationFileFormats().addContent(element);
 		});
 		return this;
 	}

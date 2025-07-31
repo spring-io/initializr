@@ -71,10 +71,32 @@ class ApplicationPropertiesTests {
 			.withMessage("Property 'test' already exists");
 	}
 
+	@Test
+	void writeYaml() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("name", "testapp");
+		properties.add("port", 8080);
+		properties.add("app.version", "1.0");
+		properties.add("db.host", "localhost");
+		properties.add("app.config.debug", true);
+		properties.add("db.connection.timeout", 30);
+		String written = writeYaml(properties);
+		assertThat(written).contains("name: testapp", "port: 8080", "app:\n  config:\n    debug: true\n  version: 1.0",
+				"db:\n  host: localhost\n  connection:\n    timeout: 30");
+	}
+
 	private String write(ApplicationProperties properties) {
 		StringWriter stringWriter = new StringWriter();
 		try (PrintWriter writer = new PrintWriter(stringWriter)) {
 			properties.writeTo(writer);
+		}
+		return stringWriter.toString();
+	}
+
+	private String writeYaml(ApplicationProperties properties) {
+		StringWriter stringWriter = new StringWriter();
+		try (PrintWriter writer = new PrintWriter(stringWriter)) {
+			properties.writeYaml(writer);
 		}
 		return stringWriter.toString();
 	}

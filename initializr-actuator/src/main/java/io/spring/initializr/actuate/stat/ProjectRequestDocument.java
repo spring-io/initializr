@@ -48,6 +48,8 @@ public class ProjectRequestDocument {
 
 	private String language;
 
+	private String configurationFileFormat;
+
 	private String packaging;
 
 	private String packageName;
@@ -116,6 +118,14 @@ public class ProjectRequestDocument {
 		this.language = language;
 	}
 
+	public String getConfigurationFileFormat() {
+		return this.configurationFileFormat;
+	}
+
+	public void setConfigurationFileFormat(String configurationFileFormat) {
+		this.configurationFileFormat = configurationFileFormat;
+	}
+
 	public String getPackaging() {
 		return this.packaging;
 	}
@@ -177,6 +187,7 @@ public class ProjectRequestDocument {
 			.add("artifactId='" + this.artifactId + "'")
 			.add("javaVersion='" + this.javaVersion + "'")
 			.add("language='" + this.language + "'")
+			.add("configurationFileFormat='" + this.configurationFileFormat + "'")
 			.add("packaging='" + this.packaging + "'")
 			.add("packageName='" + this.packageName + "'")
 			.add("version=" + this.version)
@@ -331,6 +342,8 @@ public class ProjectRequestDocument {
 
 		private Boolean language;
 
+		private Boolean configurationFileFormat;
+
 		private Boolean packaging;
 
 		private Boolean type;
@@ -357,6 +370,14 @@ public class ProjectRequestDocument {
 
 		public void setLanguage(Boolean language) {
 			this.language = language;
+		}
+
+		public Boolean getConfigurationFileFormat() {
+			return this.configurationFileFormat;
+		}
+
+		public void setConfigurationFileFormat(Boolean configurationFileFormat) {
+			this.configurationFileFormat = configurationFileFormat;
 		}
 
 		public Boolean getPackaging() {
@@ -396,6 +417,7 @@ public class ProjectRequestDocument {
 			return new StringJoiner(", ", "{", "}").add("invalid=" + this.invalid)
 				.add("javaVersion=" + this.javaVersion)
 				.add("language=" + this.language)
+				.add("configurationFileFormat=" + this.configurationFileFormat)
 				.add("packaging=" + this.packaging)
 				.add("type=" + this.type)
 				.add("dependencies=" + this.dependencies)

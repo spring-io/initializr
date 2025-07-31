@@ -6,6 +6,7 @@
   "artifactId": "test",
   "javaVersion": "1.8",
   "language": "java",
+  "configurationFileFormat": "properties",
   "packaging": "jar",
   "packageName": "com.example.acme.test",
   "version": {

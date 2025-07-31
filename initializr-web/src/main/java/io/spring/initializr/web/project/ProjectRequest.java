@@ -50,6 +50,8 @@ public class ProjectRequest {
 
 	private String language;
 
+	private String configurationFileFormat;
+
 	private String packageName;
 
 	private String javaVersion;
@@ -143,6 +145,14 @@ public class ProjectRequest {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public String getConfigurationFileFormat() {
+		return this.configurationFileFormat;
+	}
+
+	public void setConfigurationFileFormat(String configurationFileFormat) {
+		this.configurationFileFormat = configurationFileFormat;
 	}
 
 	public String getPackageName() {

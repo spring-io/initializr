@@ -320,6 +320,24 @@
     "title": "Language",
     "type": "SINGLE_SELECT"
   },
+  "configurationFileFormats": {
+    "content": [
+      {
+        "default": true,
+        "id": "properties",
+        "name": "Properties"
+      },
+      {
+        "default": false,
+        "id": "yaml",
+        "name": "YAML"
+      }
+    ],
+    "description": "configuration file format",
+    "id": "configurationFileFormat",
+    "title": "Configuration File Format",
+    "type": "SINGLE_SELECT"
+  },
   "name": {
     "content": "demo",
     "description": "project name (infer application name)",

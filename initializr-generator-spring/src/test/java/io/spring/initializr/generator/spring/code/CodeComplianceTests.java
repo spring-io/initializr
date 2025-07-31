@@ -59,8 +59,7 @@ class CodeComplianceTests extends AbstractComplianceTests {
 					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
 							language.sourceFileExtension()),
 					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
+							language.sourceFileExtension()));
 	}
 
 	@ParameterizedTest
@@ -73,8 +72,7 @@ class CodeComplianceTests extends AbstractComplianceTests {
 					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
 							language.sourceFileExtension()),
 					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
-							language.sourceFileExtension()),
-					"src/main/resources/application.properties");
+							language.sourceFileExtension()));
 	}
 
 	@ParameterizedTest

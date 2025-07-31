@@ -63,6 +63,12 @@ public class InitializrProperties extends InitializrConfiguration {
 	private final List<DefaultMetadataElement> languages = new ArrayList<>();
 
 	/**
+	 * Available configuration file formats.
+	 */
+	@JsonIgnore
+	private final List<DefaultMetadataElement> configurationFileFormats = new ArrayList<>();
+
+	/**
 	 * Available Spring Boot versions.
 	 */
 	@JsonIgnore
@@ -122,6 +128,10 @@ public class InitializrProperties extends InitializrConfiguration {
 
 	public List<DefaultMetadataElement> getLanguages() {
 		return this.languages;
+	}
+
+	public List<DefaultMetadataElement> getConfigurationFileFormats() {
+		return this.configurationFileFormats;
 	}
 
 	public List<DefaultMetadataElement> getBootVersions() {

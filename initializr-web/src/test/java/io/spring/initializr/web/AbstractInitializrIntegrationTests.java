@@ -167,8 +167,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected void assertDefaultJavaProject(ProjectStructure project) {
 		assertThat(project).containsFiles("src/main/java/com/example/demo/DemoApplication.java",
-				"src/test/java/com/example/demo/DemoApplicationTests.java",
-				"src/main/resources/application.properties");
+				"src/test/java/com/example/demo/DemoApplicationTests.java");
 	}
 
 	protected void assertHasWebResources(ProjectStructure project) {

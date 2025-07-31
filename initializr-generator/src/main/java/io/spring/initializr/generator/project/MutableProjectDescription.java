@@ -22,6 +22,7 @@ import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
@@ -42,6 +43,8 @@ public class MutableProjectDescription implements ProjectDescription {
 	private Packaging packaging;
 
 	private Language language;
+
+	private ConfigurationFileFormat configurationFileFormat;
 
 	private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
 
@@ -134,6 +137,19 @@ public class MutableProjectDescription implements ProjectDescription {
 	@Override
 	public Language getLanguage() {
 		return this.language;
+	}
+
+	/**
+	 * Sets the configuration file format.
+	 * @param configurationFileFormat the configuration file format
+	 */
+	public void setConfigurationFileFormat(ConfigurationFileFormat configurationFileFormat) {
+		this.configurationFileFormat = configurationFileFormat;
+	}
+
+	@Override
+	public ConfigurationFileFormat getConfigurationFileFormat() {
+		return this.configurationFileFormat;
 	}
 
 	/**

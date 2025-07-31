@@ -20,6 +20,7 @@ import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
@@ -70,6 +71,12 @@ public interface ProjectDescription {
 	 * @return the primary language or {@code null}
 	 */
 	Language getLanguage();
+
+	/**
+	 * Return the {@link ConfigurationFileFormat} of the project.
+	 * @return the configuration file format or {@code null}
+	 */
+	ConfigurationFileFormat getConfigurationFileFormat();
 
 	/**
 	 * Return the build {@code groupId}.
