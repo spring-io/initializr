@@ -74,7 +74,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleZipProjectWithYAMLFormat() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&&configurationFileFormat=yaml");
+		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=yaml");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
 		ProjectStructure project = projectFromArchive(entity.getBody());
 		assertDefaultProject(project);
