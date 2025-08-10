@@ -31,6 +31,7 @@ import io.spring.initializr.web.mapper.DependencyMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataJsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV21JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV22JsonMapper;
+import io.spring.initializr.web.mapper.InitializrMetadataV23JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
@@ -77,6 +78,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
 	}
 
+	@GetMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.3+json" })
+	public ResponseEntity<String> serviceCapabilitiesV23() {
+		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_3);
+	}
+
 	@GetMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
 	public ResponseEntity<String> serviceCapabilitiesV22() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_2);
@@ -91,6 +97,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	@GetMapping(path = { "/", "/metadata/client" }, produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
+	}
+
+	@GetMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.3+json")
+	public ResponseEntity<String> dependenciesV23(@RequestParam(required = false) String bootVersion) {
+		return dependenciesFor(InitializrMetadataVersion.V2_3, bootVersion);
 	}
 
 	@GetMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.2+json")
@@ -185,7 +196,8 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		return switch (metadataVersion) {
 			case V2 -> new InitializrMetadataV2JsonMapper();
 			case V2_1 -> new InitializrMetadataV21JsonMapper();
-			default -> new InitializrMetadataV22JsonMapper();
+			case V2_2 -> new InitializrMetadataV22JsonMapper();
+			default -> new InitializrMetadataV23JsonMapper();
 		};
 	}
 
