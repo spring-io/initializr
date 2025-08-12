@@ -620,6 +620,14 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 				}""");
 	}
 
+	@Test
+	void gradleBuildWithDescription() {
+		GradleBuild build = new GradleBuild();
+		build.settings().description("Demo for test");
+		String written = write(build);
+		assertThat(written).contains("description = \"Demo for test\"");
+	}
+
 	protected String write(GradleBuild build) {
 		return write(new KotlinDslGradleBuildWriter(), build);
 	}
