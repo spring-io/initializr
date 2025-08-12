@@ -190,4 +190,14 @@ class GradleKtsProjectGenerationConfigurationTests {
 			.containsSequence("tasks.withType<Test> {", "    useJUnitPlatform()", "}");
 	}
 
+	@Test
+	void descriptionIsWrittenWhenBuildingGradleProject() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setDescription("Test Project");
+		description.setPlatformVersion(Version.parse("2.4.0"));
+		description.setLanguage(new JavaLanguage());
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("build.gradle.kts").contains("description = \"Test Project\"");
+	}
+
 }

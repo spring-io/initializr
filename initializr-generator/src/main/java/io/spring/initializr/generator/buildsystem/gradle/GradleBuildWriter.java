@@ -67,6 +67,7 @@ public abstract class GradleBuildWriter {
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
 		writeProperty(writer, "version", settings.getVersion());
+		writeProperty(writer, "description", settings.getDescription());
 		writer.println();
 		writeJavaSourceCompatibility(writer, settings);
 		writeToolchain(writer, settings);
