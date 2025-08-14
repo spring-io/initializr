@@ -69,7 +69,7 @@ public class ApplicationProperties {
 		add(key, (Object) value);
 	}
 
-	void writeTo(PrintWriter writer) {
+	void writeProperties(PrintWriter writer) {
 		for (Map.Entry<String, Object> entry : this.properties.entrySet()) {
 			writer.printf("%s=%s%n", entry.getKey(), entry.getValue());
 		}

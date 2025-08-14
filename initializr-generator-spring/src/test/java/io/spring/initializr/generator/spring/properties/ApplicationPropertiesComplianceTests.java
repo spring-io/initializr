@@ -49,7 +49,7 @@ class ApplicationPropertiesComplianceTests extends AbstractComplianceTests {
 	static Stream<Arguments> parameters() {
 		return Stream.of(
 				Arguments.arguments(ConfigurationFileFormat.forId(PropertiesFormat.ID), "application.properties"),
-				Arguments.arguments(ConfigurationFileFormat.forId(YamlFormat.ID), "application.yml"));
+				Arguments.arguments(ConfigurationFileFormat.forId(YamlFormat.ID), "application.yaml"));
 	}
 
 	@ParameterizedTest

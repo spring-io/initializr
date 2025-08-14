@@ -35,7 +35,7 @@ class ApplicationPropertiesTests {
 	void stringProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "string");
-		String written = write(properties);
+		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=string");
 	}
 
@@ -43,7 +43,7 @@ class ApplicationPropertiesTests {
 	void longProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 1);
-		String written = write(properties);
+		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=1");
 	}
 
@@ -51,7 +51,7 @@ class ApplicationPropertiesTests {
 	void doubleProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 0.1);
-		String written = write(properties);
+		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=0.1");
 	}
 
@@ -59,7 +59,7 @@ class ApplicationPropertiesTests {
 	void booleanProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", false);
-		String written = write(properties);
+		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=false");
 	}
 
@@ -81,14 +81,24 @@ class ApplicationPropertiesTests {
 		properties.add("app.config.debug", true);
 		properties.add("db.connection.timeout", 30);
 		String written = writeYaml(properties);
-		assertThat(written).contains("name: testapp", "port: 8080", "app:\n  config:\n    debug: true\n  version: 1.0",
-				"db:\n  host: localhost\n  connection:\n    timeout: 30");
+		assertThat(written).isEqualToNormalizingNewlines("""
+				app:
+				  config:
+				    debug: true
+				  version: 1.0
+				port: 8080
+				name: testapp
+				db:
+				  host: localhost
+				  connection:
+				    timeout: 30
+				""");
 	}
 
-	private String write(ApplicationProperties properties) {
+	private String writeProperties(ApplicationProperties properties) {
 		StringWriter stringWriter = new StringWriter();
 		try (PrintWriter writer = new PrintWriter(stringWriter)) {
-			properties.writeTo(writer);
+			properties.writeProperties(writer);
 		}
 		return stringWriter.toString();
 	}

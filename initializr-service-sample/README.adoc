@@ -58,7 +58,7 @@ On further request, you won't see this log entry as the content is cached.
 There are no expiration set, so the available versions won't change until you restart the service.
 
 === Basic Metadata
-The configuration in `application.yml` is very simple with a single `web` dependency that brings `spring-boot-starter-web`.
+The configuration in `application.yaml` is very simple with a single `web` dependency that brings `spring-boot-starter-web`.
 The default `groupId` for generated projects has been customized to `org.acme`.
 
 You can experiment by adding more dependencies or other elements that drive how projects are generated.

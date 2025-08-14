@@ -83,7 +83,7 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 			.hasDependenciesSize(2)
 			.hasDependency(Dependency.createSpringBootStarter("web"))
 			.hasDependency(Dependency.createSpringBootStarter("test", Dependency.SCOPE_TEST));
-		assertThat(project).containsFiles("src/main/resources/application.yml");
+		assertThat(project).containsFiles("src/main/resources/application.yaml");
 	}
 
 	@Test

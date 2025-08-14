@@ -286,7 +286,7 @@ will have values. In the rest of this section, we will configure those basic set
 Most of the settings are configured via `application.properties` using the `initializr`
 namespace. Because the configuration is highly hierarchical, we recommend using the yaml
 format that is more readable for such structure. If you agree, go ahead and create an
-`application.yml` in `src/main/resources`.
+`application.yaml` in `src/main/resources`.
 ====
 
 

@@ -26,14 +26,14 @@ import java.nio.file.StandardOpenOption;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * A {@link ProjectContributor} that contributes a {@code application.yml} file to a
+ * A {@link ProjectContributor} that contributes a {@code application.yaml} file to a
  * project.
  *
  * @author Sijun Yang
  */
 public class ApplicationYamlPropertiesContributor implements ProjectContributor {
 
-	private static final String FILE = "src/main/resources/application.yml";
+	private static final String FILE = "src/main/resources/application.yaml";
 
 	private final ApplicationProperties properties;
 

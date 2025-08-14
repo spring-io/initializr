@@ -51,7 +51,7 @@ public class ApplicationPropertiesContributor implements ProjectContributor {
 		}
 		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output, StandardOpenOption.APPEND), false,
 				StandardCharsets.UTF_8)) {
-			this.properties.writeTo(writer);
+			this.properties.writeProperties(writer);
 		}
 	}
 
