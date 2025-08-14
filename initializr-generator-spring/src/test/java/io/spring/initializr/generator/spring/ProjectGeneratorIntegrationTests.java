@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.configuration.format.properties.PropertiesFormat;
+import io.spring.initializr.generator.configuration.format.yaml.YamlFormat;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
@@ -81,9 +83,26 @@ class ProjectGeneratorIntegrationTests {
 	}
 
 	@Test
+	void yaml() {
+		MutableProjectDescription description = initProjectDescription();
+		description.setBuildSystem(new MavenBuildSystem());
+		description.setBaseDirectory("test/demo-app");
+		description.setConfigurationFileFormat(new YamlFormat());
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths()
+			.containsOnly("test/demo-app/.gitignore", "test/demo-app/.gitattributes", "test/demo-app/pom.xml",
+					"test/demo-app/mvnw", "test/demo-app/mvnw.cmd",
+					"test/demo-app/.mvn/wrapper/maven-wrapper.properties",
+					"test/demo-app/src/main/java/com/example/demo/DemoApplication.java",
+					"test/demo-app/src/main/resources/application.yaml",
+					"test/demo-app/src/test/java/com/example/demo/DemoApplicationTests.java", "test/demo-app/HELP.md");
+	}
+
+	@Test
 	void generatedMavenProjectBuilds(@TempDir Path mavenHome) throws Exception {
 		MutableProjectDescription description = initProjectDescription();
 		description.setBuildSystem(new MavenBuildSystem());
+		description.setConfigurationFileFormat(new YamlFormat());
 		ProjectStructure project = this.projectTester.generate(description);
 		Path projectDirectory = project.getProjectDirectory();
 		runBuild(mavenHome, projectDirectory, description);
@@ -146,6 +165,7 @@ class ProjectGeneratorIntegrationTests {
 		description.setApplicationName("DemoApplication");
 		description.setPlatformVersion(Version.parse(SpringBootVersion.getVersion()));
 		description.setLanguage(new JavaLanguage(JAVA_VERSION));
+		description.setConfigurationFileFormat(new PropertiesFormat());
 		description.setGroupId("com.example");
 		return description;
 	}

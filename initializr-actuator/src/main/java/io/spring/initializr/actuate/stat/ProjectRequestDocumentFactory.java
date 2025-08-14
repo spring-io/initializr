@@ -68,6 +68,12 @@ public class ProjectRequestDocumentFactory {
 			document.triggerError().setLanguage(true);
 		}
 
+		document.setConfigurationFileFormat(request.getConfigurationFileFormat());
+		if (StringUtils.hasText(request.getConfigurationFileFormat())
+				&& metadata.getConfigurationFileFormats().get(request.getConfigurationFileFormat()) == null) {
+			document.triggerError().setConfigurationFileFormat(true);
+		}
+
 		document.setPackaging(request.getPackaging());
 		if (StringUtils.hasText(request.getPackaging())
 				&& metadata.getPackagings().get(request.getPackaging()) == null) {

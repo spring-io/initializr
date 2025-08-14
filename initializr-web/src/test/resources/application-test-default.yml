@@ -150,6 +150,13 @@ initializr:
     - name: Kotlin
       id: kotlin
       default: false
+  configuration-file-formats:
+    - name: Properties
+      id: properties
+      default: true
+    - name: YAML
+      id: yaml
+      default: false
   bootVersions:
     - name : Latest SNAPSHOT
       id: 2.5.0-SNAPSHOT

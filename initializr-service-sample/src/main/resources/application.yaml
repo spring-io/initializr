@@ -52,3 +52,10 @@ initializr:
         format: project
       default: false
       action: /starter.zip
+  configuration-file-formats:
+    - name: Properties
+      id: properties
+      default: true
+    - name: YAML
+      id: yaml
+      default: false

@@ -26,19 +26,18 @@ import java.nio.file.StandardOpenOption;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * A {@link ProjectContributor} that contributes a {@code application.properties} file to
- * a project.
+ * A {@link ProjectContributor} that contributes a {@code application.yaml} file to a
+ * project.
  *
- * @author Stephane Nicoll
- * @author Moritz Halbritter
+ * @author Sijun Yang
  */
-public class ApplicationPropertiesContributor implements ProjectContributor {
+public class ApplicationYamlPropertiesContributor implements ProjectContributor {
 
-	private static final String FILE = "src/main/resources/application.properties";
+	private static final String FILE = "src/main/resources/application.yaml";
 
 	private final ApplicationProperties properties;
 
-	public ApplicationPropertiesContributor(ApplicationProperties properties) {
+	public ApplicationYamlPropertiesContributor(ApplicationProperties properties) {
 		this.properties = properties;
 	}
 
@@ -51,7 +50,7 @@ public class ApplicationPropertiesContributor implements ProjectContributor {
 		}
 		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output, StandardOpenOption.APPEND), false,
 				StandardCharsets.UTF_8)) {
-			this.properties.writeProperties(writer);
+			this.properties.writeYaml(writer);
 		}
 	}
 
