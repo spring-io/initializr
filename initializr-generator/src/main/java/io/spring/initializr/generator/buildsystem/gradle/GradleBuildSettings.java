@@ -33,10 +33,13 @@ public class GradleBuildSettings extends BuildSettings {
 
 	private final List<PluginMapping> pluginMappings;
 
+	private final String description;
+
 	protected GradleBuildSettings(Builder builder) {
 		super(builder);
 		this.sourceCompatibility = builder.sourceCompatibility;
 		this.pluginMappings = new ArrayList<>(builder.pluginMappings);
+		this.description = builder.description;
 	}
 
 	/**
@@ -56,6 +59,14 @@ public class GradleBuildSettings extends BuildSettings {
 	}
 
 	/**
+	 * Return a human-readable description of the project.
+	 * @return the description of the project or {@code null}
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+
+	/**
 	 * Builder for {@link GradleBuildSettings}.
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
@@ -63,6 +74,8 @@ public class GradleBuildSettings extends BuildSettings {
 		private String sourceCompatibility;
 
 		private final List<PluginMapping> pluginMappings = new ArrayList<>();
+
+		private String description;
 
 		/**
 		 * Set the java version compatibility to use when compiling Java source.
@@ -86,6 +99,16 @@ public class GradleBuildSettings extends BuildSettings {
 				throw new IllegalArgumentException("Mapping for plugin '" + id + "' must have a version");
 			}
 			this.pluginMappings.add(new PluginMapping(id, pluginDependency));
+			return this;
+		}
+
+		/**
+		 * Set a human-readable description of the project.
+		 * @param description the description of the project
+		 * @return this for method chaining
+		 */
+		public Builder description(String description) {
+			this.description = description;
 			return this;
 		}
 
