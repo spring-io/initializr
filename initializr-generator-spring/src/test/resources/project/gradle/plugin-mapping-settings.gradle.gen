@@ -1,0 +1,10 @@
+pluginManagement {
+	resolutionStrategy {
+		eachPlugin {
+			if (requested.id.id == 'com.example') {
+				useModule('com.example:gradle-plugin:1.0.0')
+			}
+		}
+	}
+}
+rootProject.name = 'demo'
