@@ -46,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class GradleSettingsComplianceTests extends AbstractComplianceTests {
 
+	private static final String BOOT_VERSION = "3.5.0";
+
 	static Stream<Arguments> parameters() {
 		return Stream.of(new JavaLanguage(), new GroovyLanguage(), new KotlinLanguage())
 			.flatMap((language) -> Stream.of(
@@ -58,7 +60,7 @@ class GradleSettingsComplianceTests extends AbstractComplianceTests {
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void defaultProjectSettings(Language language, BuildSystem build, String fileName) {
-		ProjectStructure project = generateProject(language, build, "2.7.0");
+		ProjectStructure project = generateProject(language, build, BOOT_VERSION);
 		String path = "project/gradle/" + getAssertFileName(fileName);
 		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
@@ -66,7 +68,7 @@ class GradleSettingsComplianceTests extends AbstractComplianceTests {
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void customArtifactId(Language language, BuildSystem build, String fileName) {
-		ProjectStructure project = generateProject(language, build, "2.7.0",
+		ProjectStructure project = generateProject(language, build, BOOT_VERSION,
 				(description) -> description.setArtifactId("my-project"));
 		String path = "project/gradle/custom-artifact-id-" + getAssertFileName(fileName);
 		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
@@ -75,7 +77,7 @@ class GradleSettingsComplianceTests extends AbstractComplianceTests {
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void pluginRepository(Language language, BuildSystem build, String fileName) {
-		ProjectStructure project = generateProject(language, build, "2.7.0", (description) -> {
+		ProjectStructure project = generateProject(language, build, BOOT_VERSION, (description) -> {
 		}, (context) -> context.registerBean(BuildCustomizer.class,
 				() -> (gradleBuild) -> gradleBuild.pluginRepositories()
 					.add(MavenRepository.withIdAndUrl("spring-milestones", "https://repo.spring.io/milestone"))));
@@ -86,7 +88,7 @@ class GradleSettingsComplianceTests extends AbstractComplianceTests {
 	@ParameterizedTest
 	@MethodSource("parameters")
 	void pluginMapping(Language language, BuildSystem build, String fileName) {
-		ProjectStructure project = generateProject(language, build, "2.7.0", (description) -> {
+		ProjectStructure project = generateProject(language, build, BOOT_VERSION, (description) -> {
 		}, (context) -> context.registerBean(BuildCustomizer.class,
 				() -> (gradleBuild) -> ((GradleBuildSettings.Builder) gradleBuild.settings()).mapPlugin("com.example",
 						Dependency.withCoordinates("com.example", "gradle-plugin")
