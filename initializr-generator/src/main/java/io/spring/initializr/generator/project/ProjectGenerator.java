@@ -146,10 +146,12 @@ public class ProjectGenerator {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	List<String> getProjectGenerationConfigurationFactoryNames() {
-		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-				getClass().getClassLoader());
+		return SpringFactoriesLoader.forDefaultResourceLocation(getClass().getClassLoader())
+			.load(ProjectGenerationConfiguration.class)
+			.stream()
+			.map((config) -> config.getClass().getName())
+			.toList();
 	}
 
 	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {
