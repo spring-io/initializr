@@ -24,18 +24,8 @@ runs:
       shell: bash
       run: jf rt download --spec ${{ format('{0}/artifacts.spec', github.action_path) }} --spec-vars 'buildName=${{ format('initializr-{0}', inputs.initializr-version) }};buildNumber=${{ github.run_number }}'
     - name: Sync
-      uses: spring-io/central-publish-action@0cdd90d12e6876341e82860d951e1bcddc1e51b6 # v0.2.0
+      uses: spring-io/central-publish-action@0c03960e9b16fdfe70e2443e1d5393cbc3a35622 # v0.3.0
       with:
         token-name: ${{ inputs.sonatype-token-name }}
         token: ${{ inputs.sonatype-token }}
-    - name: Await
-      shell: bash
-      run: |
-        url=${{ format('https://repo.maven.apache.org/maven2/io/spring/initializr/initializr-generator/{0}/initializr-generator-{0}.jar', inputs.initializr-version) }}
-        echo "Waiting for $url"
-        until curl --fail --head --silent $url > /dev/null
-        do
-          echo "."
-          sleep 60
-        done
-        echo "$url is available"
+        await-artifact: ${{ format('io.spring.initializr:initializr-generator:{0}', inputs.initializr-version) }}
