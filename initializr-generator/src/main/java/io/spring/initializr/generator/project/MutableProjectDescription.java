@@ -79,6 +79,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.buildSystem = source.getBuildSystem();
 		this.packaging = source.getPackaging();
 		this.language = source.getLanguage();
+		this.configurationFileFormat = source.getConfigurationFileFormat();
 		this.requestedDependencies.putAll(source.getRequestedDependencies());
 		this.groupId = source.getGroupId();
 		this.artifactId = source.getArtifactId();
