@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
@@ -97,6 +98,19 @@ public class ProjectDescriptionDiff {
 	public void ifLanguageChanged(ProjectDescription current, BiConsumer<Language, Language> consumer) {
 		if (!Objects.equals(this.original.getLanguage(), current.getLanguage())) {
 			consumer.accept(this.original.getLanguage(), current.getLanguage());
+		}
+	}
+
+	/**
+	 * Calls the specified consumer if the {@code configurationFileFormat} is different on
+	 * the original source project description than the specified project description.
+	 * @param current the description to test against
+	 * @param consumer to call if the property has changed
+	 */
+	public void ifConfigurationFileFormatChanged(ProjectDescription current,
+			BiConsumer<ConfigurationFileFormat, ConfigurationFileFormat> consumer) {
+		if (!Objects.equals(this.original.getConfigurationFileFormat(), current.getConfigurationFileFormat())) {
+			consumer.accept(this.original.getConfigurationFileFormat(), current.getConfigurationFileFormat());
 		}
 	}
 

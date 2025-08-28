@@ -22,6 +22,9 @@ import java.util.function.Consumer;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
+import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
+import io.spring.initializr.generator.configuration.format.properties.PropertiesFormat;
+import io.spring.initializr.generator.configuration.format.yaml.YamlFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.Packaging;
@@ -58,6 +61,8 @@ class ProjectDescriptionDiffTests {
 		diff.ifBuildSystemChanged(description, (original, actual) -> fail("Values should not have changed"));
 		diff.ifPackagingChanged(description, (original, actual) -> fail("Values should not have changed"));
 		diff.ifLanguageChanged(description, (original, actual) -> fail("Values should not have changed"));
+		diff.ifConfigurationFileFormatChanged(description,
+				(original, actual) -> fail("Values should not have changed"));
 		diff.ifGroupIdChanged(description, (original, actual) -> fail("Values should not have changed"));
 		diff.ifArtifactIdChanged(description, (original, actual) -> fail("Values should not have changed"));
 		diff.ifVersionChanged(description, (original, actual) -> fail("Values should not have changed"));
@@ -110,6 +115,17 @@ class ProjectDescriptionDiffTests {
 		ProjectDescriptionDiff diff = new ProjectDescriptionDiff(description);
 		description.setLanguage(actual);
 		validateConsumer(original, actual, (consumer) -> diff.ifLanguageChanged(description, consumer));
+	}
+
+	@Test
+	void projectDescriptionDiffWithModifiedConfigurationFileFormatInvokesConsumer() {
+		ConfigurationFileFormat original = ConfigurationFileFormat.forId(YamlFormat.ID);
+		ConfigurationFileFormat actual = ConfigurationFileFormat.forId(PropertiesFormat.ID);
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setConfigurationFileFormat(original);
+		ProjectDescriptionDiff diff = new ProjectDescriptionDiff(description);
+		description.setConfigurationFileFormat(actual);
+		validateConsumer(original, actual, (consumer) -> diff.ifConfigurationFileFormatChanged(description, consumer));
 	}
 
 	@Test
