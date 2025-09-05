@@ -14,7 +14,7 @@ sent to the service. A good structure for a user agent is `clientId/clientVersio
 == Service Capabilities
 Any third party client can retrieve the capabilities of the service by issuing a
 `GET` on the root URL using the following `Accept` header:
-`application/vnd.initializr.v2.2+json`. Please note that the metadata may evolve in a
+`application/vnd.initializr.v2.3+json`. Please note that the metadata may evolve in a
 non backward compatible way in the future so adding this header ensures the service
 returns the metadata format you expect.
 
@@ -22,7 +22,8 @@ The following versions are supported:
 
 * `v2` initial version, with support of V1 version format only
 * `v2.1` support compatibility range and dependencies links
-* `v2.2` (current) support for V1 and V2 version formats.
+* `v2.2` support for V1 and V2 version formats.
+* `v2.3` (current) support for selecting the configuration file format.
 
 This is an example output for a service running at `start.example.com`:
 
@@ -45,6 +46,8 @@ component responsible to generate the project (for instance, generate an executa
 _jar_ project).
 * Java version: the supported java versions
 * Language: the language to use (e.g. Java)
+* Configuration file format: the supported configuration formats for the generated
+project (e.g. `application.properties`, `application.yml`)
 * Boot version: the platform version to use
 * Additional basic information such as: `groupId`, `artifactId`,  `version`, `name`,
 `description` and `packageName`.
@@ -165,6 +168,14 @@ The `language` element provides a list of possible languages for the project:
 
 .Language example
 include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/language.values.0.adoc[]
+
+
+
+=== Configuration file format
+The `configurationFileFormat` element provides a list of possible configuration file formats for the project:
+
+.Configuration file format example
+include::{snippets}/metadataWithCurrentAcceptHeader/response-fields/configurationFileFormat.values.0.adoc[]
 
 
 
