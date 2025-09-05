@@ -67,6 +67,16 @@ class ConditionalOnGradleVersionTests {
 	}
 
 	@Test
+	void outcomeWithSpringBoot40() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("4.0.0"));
+		this.projectTester.configure(description,
+				(context) -> assertThat(context).hasSingleBean(String.class)
+					.getBean(String.class)
+					.isEqualTo("testGradle9"));
+	}
+
+	@Test
 	void outcomeWithNoAvailableSpringBootVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		this.projectTester.configure(description, (context) -> assertThat(context).doesNotHaveBean(String.class));
@@ -92,6 +102,12 @@ class ConditionalOnGradleVersionTests {
 		@ConditionalOnGradleVersion("8")
 		String gradle8() {
 			return "testGradle8";
+		}
+
+		@Bean
+		@ConditionalOnGradleVersion("9")
+		String gradle9() {
+			return "testGradle9";
 		}
 
 	}
