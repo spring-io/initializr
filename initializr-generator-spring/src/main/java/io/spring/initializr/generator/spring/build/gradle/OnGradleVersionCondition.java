@@ -50,6 +50,10 @@ public class OnGradleVersionCondition extends ProjectGenerationCondition {
 		if (platformVersion == null) {
 			return null;
 		}
+		// Use Gradle 9 for Spring Boot 4.x, Gradle 8 for Spring Boot 3.x
+		if (platformVersion.getMajor() >= 4) {
+			return "9";
+		}
 		return "8";
 	}
 
