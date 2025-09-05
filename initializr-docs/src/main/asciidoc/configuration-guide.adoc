@@ -53,7 +53,7 @@ generate assets based on available candidates.
 A project is defined by `ProjectDescription` which consists of the following properties:
 
 * Basic coordinates such as `groupId`, `artifactId`, `name`, `description`
-* The `BuildSystem` and `Packaging`
+* The `BuildSystem`, `Packaging` and `ConfigurationFileFormat`
 * The JVM `Language`
 * The requested dependencies, indexed by ID
 * A platform `Version` used by the project. This can be used to tune available
@@ -340,6 +340,25 @@ The available packagings are also configurable that way:
 NOTE: `Jar` and `War` packaging types are available out-of-the-box. For additional
 packaging formats, you need to implement the `Packaging` abstraction and provide a
 `PackagingFactory` that corresponds to it.
+
+Configuration file formats are configurable in the same way as above:
+
+[source,yaml,indent=0]
+----
+    initializr:
+      configuration-file-formats:
+        - name: Properties
+          id: properties
+          default: true
+        - name: YAML
+          id: yaml
+          default: false
+----
+
+NOTE: `Properties` and `YAML` configuration file formats are supported out-of-the-box.
+If you need to support additional configuration formats, you must implement the
+`ConfigurationFileFormat` abstraction and provide a `ConfigurationFileFormatFactory` that can
+generate it.
 
 
 
