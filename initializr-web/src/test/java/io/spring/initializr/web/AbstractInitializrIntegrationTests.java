@@ -72,7 +72,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected static final MediaType DEFAULT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_1.getMediaType();
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_2.getMediaType();
+	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_3.getMediaType();
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -133,7 +133,7 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected void validateCurrentMetadata(ResponseEntity<String> response) {
 		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateMetadata(response.getBody(), "2.2.0");
+		validateMetadata(response.getBody(), "2.3.0");
 	}
 
 	protected void validateDefaultMetadata(String json) {

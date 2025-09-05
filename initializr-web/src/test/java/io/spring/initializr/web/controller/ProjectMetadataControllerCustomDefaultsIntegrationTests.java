@@ -20,6 +20,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,13 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 
 	@Test
 	void dependenciesV22WithNoBootVersion() throws JSONException {
-		validateDependenciesMetadata("application/vnd.initializr.v2.2+json", CURRENT_METADATA_MEDIA_TYPE);
+		validateDependenciesMetadata("application/vnd.initializr.v2.2+json",
+				InitializrMetadataVersion.V2_2.getMediaType());
+	}
+
+	@Test
+	void dependenciesV23WithNoBootVersion() throws JSONException {
+		validateDependenciesMetadata("application/vnd.initializr.v2.3+json", CURRENT_METADATA_MEDIA_TYPE);
 	}
 
 	private void validateDependenciesMetadata(String acceptHeader, MediaType expectedMediaType) throws JSONException {
