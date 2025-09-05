@@ -96,15 +96,13 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]");
 		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json");
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
-		validateMetadata(response.getBody(), "2.2.0");
+		validateCurrentMetadata(response);
 	}
 
 	@Test
 	void metadataWithSeveralVersionsAndQualifier() {
 		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json;q=0.9",
 				"application/vnd.initializr.v2.2+json");
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response);
 	}
 
@@ -112,7 +110,6 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 	void metadataWithSeveralVersionAndPreferenceOnInvalidVersion() {
 		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v5.4+json",
 				"application/vnd.initializr.v2.2+json;q=0.9");
-		validateContentType(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE);
 		validateCurrentMetadata(response);
 	}
 
