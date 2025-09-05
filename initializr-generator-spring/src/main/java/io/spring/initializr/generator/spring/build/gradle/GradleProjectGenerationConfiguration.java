@@ -151,6 +151,20 @@ public class GradleProjectGenerationConfiguration {
 	}
 
 	/**
+	 * Configuration specific to projects using Gradle 9.
+	 */
+	@Configuration
+	@ConditionalOnGradleVersion("9")
+	static class Gradle9ProjectGenerationConfiguration {
+
+		@Bean
+		GradleWrapperContributor gradle9WrapperContributor() {
+			return new GradleWrapperContributor("9");
+		}
+
+	}
+
+	/**
 	 * Configuration specific to projects using Gradle (Groovy DSL).
 	 */
 	@Configuration
