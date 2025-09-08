@@ -54,7 +54,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class GradleProjectGenerationConfigurationTests {
 
-	private static final String GRADLE_VERSION = "8.14.3";
+	private static final String GRADLE_8_VERSION = "8.14.3";
+
+	private static final String GRADLE_9_VERSION = "9.0.0";
 
 	private ProjectAssetTester projectTester;
 
@@ -68,7 +70,7 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> supportedPlatformVersions() {
-		return Stream.of(Arguments.arguments("3.3.0"), Arguments.arguments("3.4.0"));
+		return Stream.of(Arguments.arguments("3.4.0"), Arguments.arguments("3.5.0"), Arguments.arguments("4.0.0"));
 	}
 
 	@ParameterizedTest(name = "Spring Boot {0}")
@@ -87,10 +89,11 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("3.3.0", GRADLE_VERSION), Arguments.arguments("3.4.0", GRADLE_VERSION));
+		return Stream.of(Arguments.arguments("3.3.0", GRADLE_8_VERSION), Arguments.arguments("3.4.0", GRADLE_8_VERSION),
+				Arguments.arguments("4.0.0", GRADLE_9_VERSION));
 	}
 
-	@ParameterizedTest(name = "Spring Boot {0}")
+	@ParameterizedTest(name = "Spring Boot {0} uses Gradle {1}")
 	@MethodSource("gradleWrapperParameters")
 	void gradleWrapperIsContributedWhenGeneratingGradleProject(String platformVersion, String expectedGradleVersion) {
 		MutableProjectDescription description = new MutableProjectDescription();
