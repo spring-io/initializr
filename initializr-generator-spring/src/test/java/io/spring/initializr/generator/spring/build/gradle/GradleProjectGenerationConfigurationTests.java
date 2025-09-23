@@ -56,7 +56,7 @@ class GradleProjectGenerationConfigurationTests {
 
 	private static final String GRADLE_8_VERSION = "8.14.3";
 
-	private static final String GRADLE_9_VERSION = "9.0.0";
+	private static final String GRADLE_9_VERSION = "9.1.0";
 
 	private ProjectAssetTester projectTester;
 
@@ -89,7 +89,7 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	static Stream<Arguments> gradleWrapperParameters() {
-		return Stream.of(Arguments.arguments("3.3.0", GRADLE_8_VERSION), Arguments.arguments("3.4.0", GRADLE_8_VERSION),
+		return Stream.of(Arguments.arguments("3.4.0", GRADLE_8_VERSION), Arguments.arguments("3.5.0", GRADLE_8_VERSION),
 				Arguments.arguments("4.0.0", GRADLE_9_VERSION));
 	}
 
