@@ -18,6 +18,7 @@ package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
@@ -30,16 +31,20 @@ import org.springframework.core.Ordered;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Build> {
 
 	private final InitializrMetadata metadata;
 
+	private final Version platformVersion;
+
 	private final BuildMetadataResolver buildMetadataResolver;
 
 	public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
 		this.metadata = metadata;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
+		this.platformVersion = projectDescription.getPlatformVersion();
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, this.platformVersion);
 	}
 
 	@Override
@@ -47,12 +52,14 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 		if (!this.buildMetadataResolver.hasFacet(build, "web")) {
 			// Need to be able to bootstrap the web app
 			Dependency dependency = determineWebDependency(this.metadata);
-			build.dependencies().add(dependency.getId(), MetadataBuildItemMapper.toDependency(dependency));
+			build.dependencies()
+				.add(dependency.getId(),
+						MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion)));
 		}
 		// Add the tomcat starter in provided scope
-		Dependency tomcat = Dependency.createSpringBootStarter("tomcat");
+		Dependency tomcat = determineTomcatDependency(this.metadata);
 		tomcat.setScope(Dependency.SCOPE_PROVIDED);
-		build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat));
+		build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat.resolve(this.platformVersion)));
 	}
 
 	@Override
@@ -63,6 +70,11 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 	private Dependency determineWebDependency(InitializrMetadata metadata) {
 		Dependency web = metadata.getDependencies().get("web");
 		return (web != null) ? web : Dependency.createSpringBootStarter("web");
+	}
+
+	private Dependency determineTomcatDependency(InitializrMetadata metadata) {
+		Dependency tomcat = metadata.getDependencies().get("tomcat");
+		return (tomcat != null) ? tomcat : Dependency.createSpringBootStarter("tomcat");
 	}
 
 }

@@ -36,15 +36,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for {@link WarPackagingWebStarterBuildCustomizer}.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 class WarPackagingWebStarterBuildCustomizerTests {
+
+	private static final String PLATFORM_VERSION = "1.0.0";
 
 	private ProjectDescription projectDescription;
 
 	@BeforeEach
 	void setUp() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("1.0.0"));
+		description.setPlatformVersion(Version.parse(PLATFORM_VERSION));
 		this.projectDescription = description;
 	}
 
@@ -84,6 +87,30 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		build.dependencies().add("test");
 		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("test", "tomcat");
+	}
+
+	@Test
+	void shouldUseResolvedDependencies() {
+		Dependency web = Dependency.withId("web", "com.example", "web", null, Dependency.SCOPE_COMPILE);
+		Dependency.Mapping webMapping = new Dependency.Mapping();
+		webMapping.setCompatibilityRange(PLATFORM_VERSION);
+		webMapping.setArtifactId("mapped-web");
+		web.getMappings().add(webMapping);
+		Dependency tomcat = Dependency.withId("tomcat", "com.example", "tomcat", null, Dependency.SCOPE_COMPILE);
+		Dependency.Mapping tomcatMapping = new Dependency.Mapping();
+		tomcatMapping.setCompatibilityRange(PLATFORM_VERSION);
+		tomcatMapping.setArtifactId("mapped-tomcat");
+		tomcat.getMappings().add(tomcatMapping);
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("web", web, tomcat)
+			.build();
+		Build build = createBuild(metadata);
+		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
+		assertThat(build.dependencies().ids()).containsOnly("web", "tomcat");
+		io.spring.initializr.generator.buildsystem.Dependency webDependency = build.dependencies().get("web");
+		assertThat(webDependency.getArtifactId()).isEqualTo("mapped-web");
+		io.spring.initializr.generator.buildsystem.Dependency tomcatDependency = build.dependencies().get("tomcat");
+		assertThat(tomcatDependency.getArtifactId()).isEqualTo("mapped-tomcat");
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {
