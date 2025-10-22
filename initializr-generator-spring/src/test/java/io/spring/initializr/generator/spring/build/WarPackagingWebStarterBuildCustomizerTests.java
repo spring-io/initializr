@@ -21,7 +21,6 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.MutableProjectDescription;
-import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
@@ -29,6 +28,8 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,7 +43,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 
 	private static final String PLATFORM_VERSION = "1.0.0";
 
-	private ProjectDescription projectDescription;
+	private MutableProjectDescription projectDescription;
 
 	@BeforeEach
 	void setUp() {
@@ -111,6 +112,26 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		assertThat(webDependency.getArtifactId()).isEqualTo("mapped-web");
 		io.spring.initializr.generator.buildsystem.Dependency tomcatDependency = build.dependencies().get("tomcat");
 		assertThat(tomcatDependency.getArtifactId()).isEqualTo("mapped-tomcat");
+	}
+
+	@ParameterizedTest
+	@CsvSource(textBlock = """
+			3.4.0,org.springframework.boot:spring-boot-starter-tomcat
+			3.5.0,org.springframework.boot:spring-boot-starter-tomcat
+			4.0.0-M1,org.springframework.boot:spring-boot-starter-tomcat
+			4.0.0-M2,org.springframework.boot:spring-boot-starter-tomcat
+			4.0.0-M3,org.springframework.boot:spring-boot-starter-tomcat
+			4.0.0-RC1,org.springframework.boot:spring-boot-tomcat-runtime
+			4.0.0,org.springframework.boot:spring-boot-tomcat-runtime
+			""")
+	void shouldAddSpringBootTomcatRuntimeForBoot4Rc1(String bootVersion, String coordinates) {
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+		this.projectDescription.setPlatformVersion(Version.parse(bootVersion));
+		Build build = createBuild(metadata);
+		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
+		io.spring.initializr.generator.buildsystem.Dependency tomcat = build.dependencies().get("tomcat");
+		String actualCoordinates = tomcat.getGroupId() + ":" + tomcat.getArtifactId();
+		assertThat(actualCoordinates).isEqualTo(coordinates);
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {

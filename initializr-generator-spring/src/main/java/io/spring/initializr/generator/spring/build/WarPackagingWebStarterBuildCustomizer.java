@@ -19,6 +19,8 @@ package io.spring.initializr.generator.spring.build;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
@@ -34,6 +36,8 @@ import org.springframework.core.Ordered;
  * @author Moritz Halbritter
  */
 public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Build> {
+
+	private static final VersionRange SPRING_BOOT_4_RC1_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0-RC1");
 
 	private final InitializrMetadata metadata;
 
@@ -74,7 +78,14 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	private Dependency determineTomcatDependency(InitializrMetadata metadata) {
 		Dependency tomcat = metadata.getDependencies().get("tomcat");
-		return (tomcat != null) ? tomcat : Dependency.createSpringBootStarter("tomcat");
+		if (tomcat != null) {
+			return tomcat;
+		}
+		if (SPRING_BOOT_4_RC1_OR_LATER.match(this.platformVersion)) {
+			return Dependency.create("org.springframework.boot", "spring-boot-tomcat-runtime", null,
+					Dependency.SCOPE_PROVIDED);
+		}
+		return Dependency.createSpringBootStarter("tomcat");
 	}
 
 }
