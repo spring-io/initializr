@@ -18,7 +18,6 @@ package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.Dependency;
-import io.spring.initializr.generator.buildsystem.Dependency.Exclusion;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
@@ -48,11 +47,11 @@ public class BuildProjectGenerationConfiguration {
 			.add("test",
 					Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
 						.scope(DependencyScope.TEST_COMPILE)
-						.exclusions(new Exclusion("org.junit.vintage", "junit-vintage-engine")));
+						.exclusions(new Dependency.Exclusion("org.junit.vintage", "junit-vintage-engine")));
 	}
 
 	@Bean
-	@ConditionalOnPlatformVersion("2.4.0-M1")
+	@ConditionalOnPlatformVersion("[2.4.0-M1, 4.0.0-RC1)")
 	public BuildCustomizer<Build> junitJupiterTestStarterContributor() {
 		return (build) -> build.dependencies()
 			.add("test", Dependency.withCoordinates("org.springframework.boot", "spring-boot-starter-test")
@@ -65,6 +64,12 @@ public class BuildProjectGenerationConfiguration {
 		return (build) -> build.dependencies()
 			.add("junit-launcher", Dependency.withCoordinates("org.junit.platform", "junit-platform-launcher")
 				.scope(DependencyScope.TEST_RUNTIME));
+	}
+
+	@Bean
+	@ConditionalOnPlatformVersion("4.0.0-RC1")
+	DefaultTestStarterBuildCustomizer defaultTestStarterBuildCustomizer() {
+		return new DefaultTestStarterBuildCustomizer();
 	}
 
 	@Bean
