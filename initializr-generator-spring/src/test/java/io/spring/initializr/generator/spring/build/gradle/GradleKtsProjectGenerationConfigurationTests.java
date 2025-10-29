@@ -55,7 +55,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 
 	private static final String GRADLE_8_VERSION = "8.14.3";
 
-	private static final String GRADLE_9_VERSION = "9.1.0";
+	private static final String GRADLE_9_VERSION = "9.2.0";
 
 	private ProjectAssetTester projectTester;
 
