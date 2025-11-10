@@ -31,7 +31,7 @@ jobs:
           echo "Version is $version"
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Stage Release
-        uses: spring-io/artifactory-deploy-action@e7d40377cd74c3f06554144006ccfd64a548b351 # v0.0.3
+        uses: spring-io/artifactory-deploy-action@926d7f7cc810569395346bf3a4d91b380b3e355b # v0.0.4
         with:
           build-name: ${{ format('initializr-{0}', steps.read-version.outputs.version)}}
           folder: 'maven-repo'
