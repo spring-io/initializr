@@ -136,7 +136,7 @@ directory structure using available `ProjectContributor` beans.
 
 While the default `ProjectAssetGenerator` uses the file system and invoke a particular set
 of components, it is possible to use the same `ProjectGenerator` instance with a custom
-implementation that focusses on something else entirely.
+implementation that focuses on something else entirely.
 
 
 
