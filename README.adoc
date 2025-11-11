@@ -24,7 +24,7 @@ A set of optional conventions for Spring Boot projects is provided and are used 
 production instance at link:https://start.spring.io[]. To better understand how our
 service is configured, you may want to check {service}[the companion project] and, in
 particular, the
-{service}/blob/master/start-site/src/main/resources/application.yml[configuration of our
+{service}/blob/main/start-site/src/main/resources/application.yml[configuration of our
 instance]. Such configuration is also described in details in the documentation.
 
 NOTE: While Spring Initializr is available on Maven Central, it is still in a pre 1.0

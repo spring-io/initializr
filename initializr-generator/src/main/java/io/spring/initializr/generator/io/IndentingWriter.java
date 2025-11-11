@@ -50,7 +50,7 @@ public class IndentingWriter extends Writer {
 	 * Create a new instance with the specified {@linkplain Writer writer} and indent
 	 * strategy.
 	 * @param out the writer to use
-	 * @param indentStrategy a function that provides the ident to use based on a
+	 * @param indentStrategy a function that provides the indent to use based on a
 	 * indentation level
 	 */
 	public IndentingWriter(Writer out, Function<Integer, String> indentStrategy) {
