@@ -92,7 +92,7 @@ public class IndentingWriter extends Writer {
 	/**
 	 * Increase the indentation level and execute the {@link Runnable}. Decrease the
 	 * indentation level on completion.
-	 * @param runnable the code to execute withing an extra indentation level
+	 * @param runnable the code to execute within an extra indentation level
 	 */
 	public void indented(Runnable runnable) {
 		indent();
