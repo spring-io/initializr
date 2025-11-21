@@ -19,6 +19,8 @@ package io.spring.initializr.generator.spring.build;
 import java.util.Collections;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -28,8 +30,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -114,24 +114,22 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		assertThat(tomcatDependency.getArtifactId()).isEqualTo("mapped-tomcat");
 	}
 
-	@ParameterizedTest
-	@CsvSource(textBlock = """
-			3.4.0,org.springframework.boot:spring-boot-starter-tomcat
-			3.5.0,org.springframework.boot:spring-boot-starter-tomcat
-			4.0.0-M1,org.springframework.boot:spring-boot-starter-tomcat
-			4.0.0-M2,org.springframework.boot:spring-boot-starter-tomcat
-			4.0.0-M3,org.springframework.boot:spring-boot-starter-tomcat
-			4.0.0-RC1,org.springframework.boot:spring-boot-tomcat-runtime
-			4.0.0,org.springframework.boot:spring-boot-tomcat-runtime
-			""")
-	void shouldAddSpringBootTomcatRuntimeForBoot4Rc1(String bootVersion, String coordinates) {
+	@Test
+	void shouldCustomizeGradleBuildForBoot4() {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
-		this.projectDescription.setPlatformVersion(Version.parse(bootVersion));
-		Build build = createBuild(metadata);
+		Build build = createGradleBuild(metadata, "4.0.0");
 		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
-		io.spring.initializr.generator.buildsystem.Dependency tomcat = build.dependencies().get("tomcat");
-		String actualCoordinates = tomcat.getGroupId() + ":" + tomcat.getArtifactId();
-		assertThat(actualCoordinates).isEqualTo(coordinates);
+		assertThat(build.dependencies().has("tomcat")).isFalse();
+		io.spring.initializr.generator.buildsystem.Dependency dependency = build.dependencies().get("tomcat-runtime");
+		assertThat(dependency.getGroupId()).isEqualTo("org.springframework.boot");
+		assertThat(dependency.getArtifactId()).isEqualTo("spring-boot-starter-tomcat-runtime");
+		assertThat(dependency.getScope()).isEqualTo(DependencyScope.PROVIDED_RUNTIME);
+	}
+
+	private Build createGradleBuild(InitializrMetadata metadata, String bootVersion) {
+		Version version = Version.parse(bootVersion);
+		this.projectDescription.setPlatformVersion(version);
+		return new GradleBuild(new MetadataBuildItemResolver(metadata, version));
 	}
 
 	private Build createBuild(InitializrMetadata metadata) {

@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
@@ -37,7 +38,7 @@ import org.springframework.core.Ordered;
  */
 public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Build> {
 
-	private static final VersionRange SPRING_BOOT_4_RC1_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0-RC1");
+	private static final VersionRange SPRING_BOOT_4_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0");
 
 	private final InitializrMetadata metadata;
 
@@ -53,6 +54,23 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	@Override
 	public void customize(Build build) {
+		addWebDependency(build);
+		if (isBoot4OrLater() && isGradleBuild(build)) {
+			customizeGradle(build);
+			return;
+		}
+		addTomcatInProvidedScope(build);
+	}
+
+	private boolean isGradleBuild(Build build) {
+		return build instanceof GradleBuild;
+	}
+
+	private boolean isBoot4OrLater() {
+		return SPRING_BOOT_4_OR_LATER.match(this.platformVersion);
+	}
+
+	private void addWebDependency(Build build) {
 		if (!this.buildMetadataResolver.hasFacet(build, "web")) {
 			// Need to be able to bootstrap the web app
 			Dependency dependency = determineWebDependency(this.metadata);
@@ -60,10 +78,19 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 				.add(dependency.getId(),
 						MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion)));
 		}
-		// Add the tomcat starter in provided scope
+	}
+
+	private void addTomcatInProvidedScope(Build build) {
 		Dependency tomcat = determineTomcatDependency(this.metadata);
 		tomcat.setScope(Dependency.SCOPE_PROVIDED);
 		build.dependencies().add("tomcat", MetadataBuildItemMapper.toDependency(tomcat.resolve(this.platformVersion)));
+	}
+
+	private void customizeGradle(Build build) {
+		build.dependencies().remove("tomcat");
+		build.dependencies()
+			.add("tomcat-runtime", MetadataBuildItemMapper.toDependency(Dependency.create("org.springframework.boot",
+					"spring-boot-starter-tomcat-runtime", null, Dependency.SCOPE_PROVIDED)));
 	}
 
 	@Override
@@ -78,14 +105,7 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	private Dependency determineTomcatDependency(InitializrMetadata metadata) {
 		Dependency tomcat = metadata.getDependencies().get("tomcat");
-		if (tomcat != null) {
-			return tomcat;
-		}
-		if (SPRING_BOOT_4_RC1_OR_LATER.match(this.platformVersion)) {
-			return Dependency.create("org.springframework.boot", "spring-boot-tomcat-runtime", null,
-					Dependency.SCOPE_PROVIDED);
-		}
-		return Dependency.createSpringBootStarter("tomcat");
+		return (tomcat != null) ? tomcat : Dependency.createSpringBootStarter("tomcat");
 	}
 
 }
