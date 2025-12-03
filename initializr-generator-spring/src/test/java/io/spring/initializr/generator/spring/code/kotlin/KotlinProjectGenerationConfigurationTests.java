@@ -122,12 +122,24 @@ class KotlinProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void jacksonKotlinModuleShouldBeAddedWhenJsonFacetPresent() {
+	void jackson2KotlinModuleShouldBeAddedWhenJsonFacetPresentBeforeSpringBoot4() {
 		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("3.5.2"));
 		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo"));
 		ProjectStructure project = this.projectTester.generate(description);
 		assertThat(project).textFile("pom.xml")
 			.contains("        <dependency>", "            <groupId>com.fasterxml.jackson.module</groupId>",
+					"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
+	}
+
+	@Test
+	void jackson3KotlinModuleShouldBeAddedWhenJsonFacetPresentStartingAtSpringBoot4() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setPlatformVersion(Version.parse("4.0.0"));
+		description.addDependency("foo", Dependency.withCoordinates("com.example", "foo"));
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).textFile("pom.xml")
+			.contains("        <dependency>", "            <groupId>tools.jackson.module</groupId>",
 					"            <artifactId>jackson-module-kotlin</artifactId>", "        </dependency>");
 	}
 
