@@ -41,16 +41,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 class KotlinJacksonBuildCustomizerTests {
 
 	@Test
-	void customizeWhenJsonFacetPresentShouldAddJacksonKotlinModule() {
+	void customizeWhenJsonFacetPresentShouldAddJackson2KotlinModuleBeforeSpringBoot4() {
 		Dependency dependency = Dependency.withId("foo");
 		dependency.setFacets(Collections.singletonList("json"));
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setLanguage(new KotlinLanguage());
+		description.setPlatformVersion(Version.parse("3.5.2"));
 		MavenBuild build = getCustomizedBuild(dependency, description);
 		io.spring.initializr.generator.buildsystem.Dependency jacksonKotlin = build.dependencies()
 			.get("jackson-module-kotlin");
 		assertThat(jacksonKotlin.getArtifactId()).isEqualTo("jackson-module-kotlin");
 		assertThat(jacksonKotlin.getGroupId()).isEqualTo("com.fasterxml.jackson.module");
+	}
+
+	@Test
+	void customizeWhenJsonFacetPresentShouldAddJackson3KotlinModuleStrtingAtSpringBoot4() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("json"));
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new KotlinLanguage());
+		description.setPlatformVersion(Version.parse("4.0.0"));
+		MavenBuild build = getCustomizedBuild(dependency, description);
+		io.spring.initializr.generator.buildsystem.Dependency jacksonKotlin = build.dependencies()
+			.get("jackson-module-kotlin");
+		assertThat(jacksonKotlin.getArtifactId()).isEqualTo("jackson-module-kotlin");
+		assertThat(jacksonKotlin.getGroupId()).isEqualTo("tools.jackson.module");
 	}
 
 	@Test
