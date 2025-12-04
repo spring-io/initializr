@@ -22,6 +22,8 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.util.ClassUtils;
@@ -34,6 +36,8 @@ import org.springframework.util.ClassUtils;
  * @author Madhura Bhave
  */
 public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
+
+	private static final VersionRange SPRING_BOOT_4_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0");
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
@@ -48,10 +52,14 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 	public void customize(Build build) {
 		boolean isKotlin = ClassUtils.isAssignableValue(KotlinLanguage.class, this.description.getLanguage());
 		if (this.buildMetadataResolver.hasFacet(build, "json") && isKotlin) {
+			String groupId = isBoot4OrLater() ? "tools.jackson.module" : "com.fasterxml.jackson.module";
 			build.dependencies()
-				.add("jackson-module-kotlin", "com.fasterxml.jackson.module", "jackson-module-kotlin",
-						DependencyScope.COMPILE);
+				.add("jackson-module-kotlin", groupId, "jackson-module-kotlin", DependencyScope.COMPILE);
 		}
+	}
+
+	private boolean isBoot4OrLater() {
+		return SPRING_BOOT_4_OR_LATER.match(this.description.getPlatformVersion());
 	}
 
 }
