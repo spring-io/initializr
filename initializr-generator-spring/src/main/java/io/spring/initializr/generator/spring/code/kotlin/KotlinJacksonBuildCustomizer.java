@@ -37,11 +37,11 @@ import org.springframework.util.ClassUtils;
  */
 public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 
+	private static final VersionRange SPRING_BOOT_4_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0");
+
 	private final BuildMetadataResolver buildMetadataResolver;
 
 	private final ProjectDescription description;
-
-	private static final VersionRange SPRING_BOOT_4_OR_LATER = VersionParser.DEFAULT.parseRange("4.0.0");
 
 	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata, description.getPlatformVersion());
@@ -52,11 +52,14 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 	public void customize(Build build) {
 		boolean isKotlin = ClassUtils.isAssignableValue(KotlinLanguage.class, this.description.getLanguage());
 		if (this.buildMetadataResolver.hasFacet(build, "json") && isKotlin) {
-			String groupId = SPRING_BOOT_4_OR_LATER.match(this.description.getPlatformVersion())
-					? "tools.jackson.module" : "com.fasterxml.jackson.module";
+			String groupId = isBoot4OrLater() ? "tools.jackson.module" : "com.fasterxml.jackson.module";
 			build.dependencies()
 				.add("jackson-module-kotlin", groupId, "jackson-module-kotlin", DependencyScope.COMPILE);
 		}
+	}
+
+	private boolean isBoot4OrLater() {
+		return SPRING_BOOT_4_OR_LATER.match(this.description.getPlatformVersion());
 	}
 
 }
