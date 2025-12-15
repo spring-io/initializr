@@ -40,6 +40,10 @@ public class ComposeFileWriter {
 	 * @param compose the compose file to write
 	 */
 	public void writeTo(IndentingWriter writer, ComposeFile compose) {
+		if (compose.services().isEmpty()) {
+			writer.println("services: {}");
+			return;
+		}
 		writer.println("services:");
 		compose.services()
 			.values()

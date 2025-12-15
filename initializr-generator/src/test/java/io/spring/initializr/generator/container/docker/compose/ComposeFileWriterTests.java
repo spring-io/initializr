@@ -91,6 +91,14 @@ class ComposeFileWriterTests {
 				""");
 	}
 
+	@Test
+	void servicesWithNoEntriesWrittenAsEmptyMap() {
+		ComposeFile file = new ComposeFile();
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services: {}
+				""");
+	}
+
 	private Consumer<Builder> withSuffix(int suffix) {
 		return (builder) -> builder.image("image-" + suffix).imageTag("image-tag-" + suffix);
 	}
