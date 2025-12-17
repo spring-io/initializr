@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
@@ -37,14 +36,14 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.http.client.MockClientHttpRequest;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.util.StreamUtils;
@@ -125,7 +124,7 @@ class ProjectGenerationStatPublisherTests {
 		properties.getElastic().setUri("https://example.com/test/");
 		configureService(properties);
 		testAuthorization("https://example.com/test/initializr/_doc/",
-				(request) -> assertThat(request.getHeaders().containsKey("Authorization")).isFalse());
+				(request) -> assertThat(request.getHeaders().containsHeader("Authorization")).isFalse());
 	}
 
 	private void testAuthorization(String expectedUri, RequestMatcher authorizationMatcher) {
@@ -291,7 +290,7 @@ class ProjectGenerationStatPublisherTests {
 	void fatalErrorOnlyLogs() {
 		ProjectRequest request = createProjectRequest();
 		ProjectGeneratedEvent event = new ProjectGeneratedEvent(request, this.metadata);
-		this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2, Collections.singletonMap(Exception.class, true)));
+		this.retryTemplate.setRetryPolicy(RetryPolicy.builder().maxRetries(1).build());
 
 		this.mockServer.expect(requestTo("https://example.com/elastic/initializr/_doc/"))
 			.andExpect(method(HttpMethod.POST))

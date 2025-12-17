@@ -18,15 +18,14 @@ package io.spring.initializr.web.mapper;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,9 +36,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class InitializrMetadataV21JsonMapperTests {
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
-	private final InitializrMetadataV21JsonMapper jsonMapper = new InitializrMetadataV21JsonMapper();
+	private final InitializrMetadataV21JsonMapper mapper = new InitializrMetadataV21JsonMapper();
 
 	@Test
 	void withNoAppUrl() throws IOException {
@@ -47,8 +46,8 @@ class InitializrMetadataV21JsonMapperTests {
 			.addType("foo", true, "/foo.zip", "none", null, "test")
 			.addDependencyGroup("foo", "one", "two")
 			.build();
-		String json = this.jsonMapper.write(metadata, null);
-		JsonNode result = objectMapper.readTree(json);
+		String json = this.mapper.write(metadata, null);
+		JsonNode result = jsonMapper.readTree(json);
 		assertThat(get(result, "_links.foo.href"))
 			.isEqualTo("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion,"
 					+ "groupId,artifactId,version,name,description,packageName}");
@@ -60,8 +59,8 @@ class InitializrMetadataV21JsonMapperTests {
 			.addType("foo", true, "/foo.zip", "none", null, "test")
 			.addDependencyGroup("foo", "one", "two")
 			.build();
-		String json = this.jsonMapper.write(metadata, "http://server:8080/my-app");
-		JsonNode result = objectMapper.readTree(json);
+		String json = this.mapper.write(metadata, "http://server:8080/my-app");
+		JsonNode result = jsonMapper.readTree(json);
 		assertThat(get(result, "_links.foo.href"))
 			.isEqualTo("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion,"
 					+ "language,bootVersion,groupId,artifactId,version,name,description,packageName}");
@@ -75,7 +74,7 @@ class InitializrMetadataV21JsonMapperTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", dependency)
 			.build();
-		String json = this.jsonMapper.write(metadata, null);
+		String json = this.mapper.write(metadata, null);
 		int first = json.indexOf("https://example.com/how-to");
 		int second = json.indexOf("https://example.com/doc");
 		// JSON objects are not ordered
@@ -88,8 +87,8 @@ class InitializrMetadataV21JsonMapperTests {
 		Dependency dependency = Dependency.withId("test");
 		dependency.setCompatibilityRange("[1.1.1-RC1,1.2.0-M1)");
 		dependency.resolve();
-		ObjectNode node = this.jsonMapper.mapDependency(dependency);
-		assertThat(node.get("versionRange").textValue()).isEqualTo("[1.1.1.RC1,1.2.0.M1)");
+		ObjectNode node = this.mapper.mapDependency(dependency);
+		assertThat(node.get("versionRange").asString()).isEqualTo("[1.1.1.RC1,1.2.0.M1)");
 	}
 
 	@Test
@@ -97,20 +96,20 @@ class InitializrMetadataV21JsonMapperTests {
 		Dependency dependency = Dependency.withId("test");
 		dependency.setCompatibilityRange("1.2.0-SNAPSHOT");
 		dependency.resolve();
-		ObjectNode node = this.jsonMapper.mapDependency(dependency);
-		assertThat(node.get("versionRange").textValue()).isEqualTo("1.2.0.BUILD-SNAPSHOT");
+		ObjectNode node = this.mapper.mapDependency(dependency);
+		assertThat(node.get("versionRange").asString()).isEqualTo("1.2.0.BUILD-SNAPSHOT");
 	}
 
 	@Test
-	void platformVersionUsingSemVerUseBackwardCompatibleFormat() throws JsonProcessingException {
+	void platformVersionUsingSemVerUseBackwardCompatibleFormat() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("2.5.0-SNAPSHOT", false)
 			.addBootVersion("2.5.0-M2", false)
 			.addBootVersion("2.4.2", true)
 			.build();
-		String json = this.jsonMapper.write(metadata, null);
-		JsonNode result = objectMapper.readTree(json);
+		String json = this.mapper.write(metadata, null);
+		JsonNode result = jsonMapper.readTree(json);
 		JsonNode platformVersions = result.get("bootVersion");
-		assertThat(platformVersions.get("default").textValue()).isEqualTo("2.4.2.RELEASE");
+		assertThat(platformVersions.get("default").asString()).isEqualTo("2.4.2.RELEASE");
 		JsonNode versions = platformVersions.get("values");
 		assertThat(versions).hasSize(3);
 		assertVersionMetadata(versions.get(0), "2.5.0.BUILD-SNAPSHOT", "2.5.0-SNAPSHOT");
@@ -119,8 +118,8 @@ class InitializrMetadataV21JsonMapperTests {
 	}
 
 	private void assertVersionMetadata(JsonNode node, String id, String name) {
-		assertThat(node.get("id").textValue()).isEqualTo(id);
-		assertThat(node.get("name").textValue()).isEqualTo(name);
+		assertThat(node.get("id").asString()).isEqualTo(id);
+		assertThat(node.get("name").asString()).isEqualTo(name);
 	}
 
 	private Object get(JsonNode result, String path) {
@@ -129,7 +128,7 @@ class InitializrMetadataV21JsonMapperTests {
 			String node = nodes[i];
 			result = result.path(node);
 		}
-		return result.get(nodes[nodes.length - 1]).textValue();
+		return result.get(nodes[nodes.length - 1]).asString();
 	}
 
 }

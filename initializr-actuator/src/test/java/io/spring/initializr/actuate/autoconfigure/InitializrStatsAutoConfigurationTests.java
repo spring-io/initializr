@@ -25,18 +25,19 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.restclient.RestTemplateCustomizer;
+import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.retry.support.RetryTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,9 +75,11 @@ class InitializrStatsAutoConfigurationTests {
 			.run((context) -> {
 				assertThat(context).hasSingleBean(RetryTemplate.class);
 				RetryTemplate retryTemplate = context.getBean(RetryTemplate.class);
-				ExponentialBackOffPolicy backOffPolicy = (ExponentialBackOffPolicy) ReflectionTestUtils
-					.getField(retryTemplate, "backOffPolicy");
-				assertThat(backOffPolicy.getMultiplier()).isEqualTo(10);
+				RetryPolicy retryPolicy = retryTemplate.getRetryPolicy();
+				BackOff backOff = retryPolicy.getBackOff();
+				assertThat(backOff).isInstanceOf(ExponentialBackOff.class);
+				ExponentialBackOff exponentialBackOff = (ExponentialBackOff) backOff;
+				assertThat(exponentialBackOff.getMultiplier()).isEqualTo(10);
 			});
 	}
 
@@ -110,9 +113,9 @@ class InitializrStatsAutoConfigurationTests {
 		@Bean
 		RetryTemplate statsRetryTemplate() {
 			RetryTemplate retryTemplate = new RetryTemplate();
-			ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-			backOffPolicy.setMultiplier(10);
-			retryTemplate.setBackOffPolicy(backOffPolicy);
+			retryTemplate.setRetryPolicy(RetryPolicy.builder()
+				.backOff(new ExponentialBackOff(ExponentialBackOff.DEFAULT_INITIAL_INTERVAL, 10))
+				.build());
 			return retryTemplate;
 		}
 

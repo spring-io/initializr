@@ -16,18 +16,17 @@
 
 package io.spring.initializr.web.support;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Qualifier;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.metadata.DefaultMetadataElement;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -45,13 +44,12 @@ class SpringBootMetadataReader {
 
 	/**
 	 * Parse the content of the metadata at the specified url.
-	 * @param objectMapper the object mapper
+	 * @param jsonMapper the object mapper
 	 * @param restTemplate the rest template
 	 * @param url the metadata URL
-	 * @throws IOException on load error
 	 */
-	SpringBootMetadataReader(ObjectMapper objectMapper, RestTemplate restTemplate, String url) throws IOException {
-		this.content = objectMapper.readTree(restTemplate.getForObject(url, String.class));
+	SpringBootMetadataReader(JsonMapper jsonMapper, RestTemplate restTemplate, String url) {
+		this.content = jsonMapper.readTree(restTemplate.getForObject(url, String.class));
 	}
 
 	/**
@@ -72,7 +70,7 @@ class SpringBootMetadataReader {
 	}
 
 	private DefaultMetadataElement parseVersionMetadata(JsonNode node) {
-		String versionId = node.get("version").textValue();
+		String versionId = node.get("version").asString();
 		Version version = VersionParser.DEFAULT.safeParse(versionId);
 		if (version == null) {
 			return null;

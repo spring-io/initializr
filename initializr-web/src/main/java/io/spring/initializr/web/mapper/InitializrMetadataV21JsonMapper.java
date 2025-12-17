@@ -18,11 +18,11 @@ package io.spring.initializr.web.mapper;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Type;
+import tools.jackson.databind.node.ObjectNode;
 
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;

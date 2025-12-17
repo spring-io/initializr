@@ -168,6 +168,7 @@ initializr:
       id: 2.3.10.RELEASE
       default: false
 
-server:
-  error:
-    include-message: always
+spring:
+  web:
+    error:
+      include-message: always

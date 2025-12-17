@@ -32,8 +32,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.web.AbstractInitializrIntegrationTests.Config;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
@@ -48,11 +46,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -74,9 +74,9 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE = InitializrMetadataVersion.V2_3.getMediaType();
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
-	public Path folder;
+	private Path folder;
 
 	@Autowired
 	private RestTemplateBuilder restTemplateBuilder;
@@ -105,12 +105,7 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected JsonNode parseJson(String text) {
-		try {
-			return objectMapper.readTree(text);
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Invalid json", ex);
-		}
+		return jsonMapper.readTree(text);
 	}
 
 	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType, String version,

@@ -18,12 +18,12 @@ package io.spring.initializr.web.support;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrConfiguration.Env;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -41,11 +41,11 @@ public class SpringIoInitializrMetadataUpdateStrategy implements InitializrMetad
 
 	private final RestTemplate restTemplate;
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 
-	public SpringIoInitializrMetadataUpdateStrategy(RestTemplate restTemplate, ObjectMapper objectMapper) {
+	public SpringIoInitializrMetadataUpdateStrategy(RestTemplate restTemplate, JsonMapper jsonMapper) {
 		this.restTemplate = restTemplate;
-		this.objectMapper = objectMapper;
+		this.jsonMapper = jsonMapper;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class SpringIoInitializrMetadataUpdateStrategy implements InitializrMetad
 		if (StringUtils.hasText(url)) {
 			try {
 				logger.info("Fetching Spring Boot metadata from " + url);
-				return new SpringBootMetadataReader(this.objectMapper, this.restTemplate, url).getBootVersions();
+				return new SpringBootMetadataReader(this.jsonMapper, this.restTemplate, url).getBootVersions();
 			}
 			catch (Exception ex) {
 				logger.warn("Failed to fetch Spring Boot metadata", ex);

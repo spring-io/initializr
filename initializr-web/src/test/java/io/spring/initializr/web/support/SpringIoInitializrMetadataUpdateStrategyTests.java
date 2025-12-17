@@ -18,12 +18,12 @@ package io.spring.initializr.web.support;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +45,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 class SpringIoInitializrMetadataUpdateStrategyTests {
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	private RestTemplate restTemplate;
 
@@ -64,7 +64,7 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 			.build();
 		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
-				this.restTemplate, objectMapper);
+				this.restTemplate, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/springio/spring-boot.json");
 
@@ -88,7 +88,7 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 			.build();
 		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
-				this.restTemplate, objectMapper);
+				this.restTemplate, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/springio/spring-boot-no-default.json");
 

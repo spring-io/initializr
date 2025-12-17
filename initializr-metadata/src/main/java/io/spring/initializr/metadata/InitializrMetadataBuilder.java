@@ -17,17 +17,15 @@
 package io.spring.initializr.metadata;
 
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.core.io.Resource;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -191,9 +189,12 @@ public class InitializrMetadataBuilder {
 
 		private static final Log logger = LogFactory.getLog(ResourceInitializrMetadataCustomizer.class);
 
-		private static final Charset UTF_8 = StandardCharsets.UTF_8;
-
 		private final Resource resource;
+
+		private final JsonMapper jsonMapper = JsonMapper.builder()
+			.enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+			.enable(MapperFeature.USE_GETTERS_AS_SETTERS)
+			.build();
 
 		ResourceInitializrMetadataCustomizer(Resource resource) {
 			this.resource = resource;
@@ -203,9 +204,7 @@ public class InitializrMetadataBuilder {
 		public void customize(InitializrMetadata metadata) {
 			logger.info("Loading initializr metadata from " + this.resource);
 			try (InputStream in = this.resource.getInputStream()) {
-				String content = StreamUtils.copyToString(in, UTF_8);
-				ObjectMapper objectMapper = new ObjectMapper();
-				InitializrMetadata anotherMetadata = objectMapper.readValue(content, InitializrMetadata.class);
+				InitializrMetadata anotherMetadata = this.jsonMapper.readValue(in, InitializrMetadata.class);
 				metadata.merge(anotherMetadata);
 			}
 			catch (Exception ex) {

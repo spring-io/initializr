@@ -16,6 +16,7 @@
 
 package io.spring.initializr.web.controller;
 
+import java.util.Locale;
 import java.util.Map;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
@@ -39,7 +40,9 @@ public class DefaultProjectGenerationController extends ProjectGenerationControl
 	@Override
 	public ProjectRequest projectRequest(Map<String, String> headers) {
 		WebProjectRequest request = new WebProjectRequest();
-		request.getParameters().putAll(headers);
+		for (Map.Entry<String, String> entry : headers.entrySet()) {
+			request.getParameters().put(entry.getKey().toLowerCase(Locale.ROOT), entry.getValue());
+		}
 		request.initialize(getMetadata());
 		return request;
 	}

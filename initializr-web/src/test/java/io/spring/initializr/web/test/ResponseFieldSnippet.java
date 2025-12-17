@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.restdocs.RestDocumentationContext;
 import org.springframework.restdocs.operation.Operation;
@@ -47,7 +47,7 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 
 	private final JsonFieldProcessor fieldProcessor = new JsonFieldProcessor();
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final JsonMapper jsonMapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
 
 	private final Integer index;
 
@@ -71,7 +71,6 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 		}
 		this.file = file;
 		this.path = path;
-		this.objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
 
 	/*
@@ -95,12 +94,12 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	@Override
 	protected Map<String, Object> createModel(Operation operation) {
 		try {
-			Object object = this.objectMapper.readValue(operation.getResponse().getContentAsString(), Object.class);
+			Object object = this.jsonMapper.readValue(operation.getResponse().getContentAsString(), Object.class);
 			Object field = this.fieldProcessor.extract(JsonFieldPath.compile(this.path), object);
 			if (field instanceof List && this.index != null) {
 				field = ((List<?>) field).get(this.index);
 			}
-			return Collections.singletonMap("value", this.objectMapper.writeValueAsString(field));
+			return Collections.singletonMap("value", this.jsonMapper.writeValueAsString(field));
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);

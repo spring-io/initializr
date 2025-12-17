@@ -19,11 +19,11 @@ package io.spring.initializr.web.support;
 import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
@@ -44,7 +44,7 @@ class SpringBootMetadataReaderTests {
 
 	private final InitializrMetadata metadata = InitializrMetadataBuilder.create().build();
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
@@ -55,7 +55,7 @@ class SpringBootMetadataReaderTests {
 		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
 			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot.json"),
 					MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 			.getBootVersions();
 		assertThat(versions).hasSize(7);
@@ -74,7 +74,7 @@ class SpringBootMetadataReaderTests {
 		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
 			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot-invalid-version.json"),
 					MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.objectMapper, this.restTemplate,
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restTemplate,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 			.getBootVersions();
 		assertThat(versions).hasSize(1);

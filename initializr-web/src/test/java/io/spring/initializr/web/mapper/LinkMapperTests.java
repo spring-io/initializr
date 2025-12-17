@@ -19,10 +19,10 @@ package io.spring.initializr.web.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.Link;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,8 +42,8 @@ class LinkMapperTests {
 		assertThat(model.has("a")).isTrue();
 		ObjectNode linkModel = (ObjectNode) model.get("a");
 		assertThat(linkModel).hasSize(2);
-		assertThat(linkModel.get("href").textValue()).isEqualTo("https://example.com");
-		assertThat(linkModel.get("title").textValue()).isEqualTo("some description");
+		assertThat(linkModel.get("href").asString()).isEqualTo("https://example.com");
+		assertThat(linkModel.get("title").asString()).isEqualTo("some description");
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class LinkMapperTests {
 		assertThat(model.has("a")).isTrue();
 		ObjectNode linkModel = (ObjectNode) model.get("a");
 		assertThat(linkModel).hasSize(2);
-		assertThat(linkModel.get("href").textValue()).isEqualTo("https://example.com/{bootVersion}/a");
+		assertThat(linkModel.get("href").asString()).isEqualTo("https://example.com/{bootVersion}/a");
 		assertThat(linkModel.get("templated").booleanValue()).isEqualTo(true);
 	}
 
@@ -69,8 +69,8 @@ class LinkMapperTests {
 		assertThat(model.has("a")).isTrue();
 		ArrayNode linksModel = (ArrayNode) model.get("a");
 		assertThat(linksModel).hasSize(2);
-		assertThat(linksModel.get(0).get("href").textValue()).isEqualTo("https://example.com");
-		assertThat(linksModel.get(1).get("href").textValue()).isEqualTo("https://example.com/2");
+		assertThat(linksModel.get(0).get("href").asString()).isEqualTo("https://example.com");
+		assertThat(linksModel.get(1).get("href").asString()).isEqualTo("https://example.com/2");
 	}
 
 	@Test

@@ -19,10 +19,6 @@ package io.spring.initializr.web.mapper;
 import java.util.List;
 import java.util.function.Function;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionParser;
@@ -37,6 +33,10 @@ import io.spring.initializr.metadata.SingleSelectCapability;
 import io.spring.initializr.metadata.TextCapability;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.TypeCapability;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;

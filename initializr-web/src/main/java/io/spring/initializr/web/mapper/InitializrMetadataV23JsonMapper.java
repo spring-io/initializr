@@ -16,9 +16,9 @@
 
 package io.spring.initializr.web.mapper;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
+import tools.jackson.databind.node.ObjectNode;
 
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;

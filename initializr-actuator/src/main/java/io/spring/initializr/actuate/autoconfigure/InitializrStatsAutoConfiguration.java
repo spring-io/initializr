@@ -16,8 +16,6 @@
 
 package io.spring.initializr.actuate.autoconfigure;
 
-import java.util.Collections;
-
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
 import io.spring.initializr.actuate.stat.ProjectRequestDocumentFactory;
 import io.spring.initializr.actuate.stat.StatsProperties;
@@ -28,17 +26,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
-import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.StringUtils;
+import org.springframework.util.backoff.ExponentialBackOff;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -69,13 +67,9 @@ class InitializrStatsAutoConfiguration {
 	@ConditionalOnMissingBean(name = "statsRetryTemplate")
 	RetryTemplate statsRetryTemplate() {
 		RetryTemplate retryTemplate = new RetryTemplate();
-		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-		backOffPolicy.setInitialInterval(3000L);
-		backOffPolicy.setMultiplier(3);
-		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(this.statsProperties.getElastic().getMaxAttempts(),
-				Collections.singletonMap(Exception.class, true));
-		retryTemplate.setBackOffPolicy(backOffPolicy);
-		retryTemplate.setRetryPolicy(retryPolicy);
+		ExponentialBackOff backOff = new ExponentialBackOff(3000L, 3);
+		backOff.setMaxAttempts(this.statsProperties.getElastic().getMaxAttempts());
+		retryTemplate.setRetryPolicy(RetryPolicy.builder().backOff(backOff).build());
 		return retryTemplate;
 	}
 

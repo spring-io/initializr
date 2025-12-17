@@ -20,18 +20,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.actuate.stat.StatsProperties.Elastic;
 import io.spring.initializr.web.project.ProjectRequestEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -48,7 +48,7 @@ public class ProjectGenerationStatPublisher {
 
 	private final ProjectRequestDocumentFactory documentFactory;
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 
 	private final RestTemplate restTemplate;
 
@@ -59,7 +59,7 @@ public class ProjectGenerationStatPublisher {
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
 			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
 		this.documentFactory = documentFactory;
-		this.objectMapper = createObjectMapper();
+		this.jsonMapper = createJsonMapper();
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(determineEntityUrl(elastic));
 		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic, uriBuilder).build();
@@ -82,7 +82,7 @@ public class ProjectGenerationStatPublisher {
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(json);
 
-			this.retryTemplate.execute((context) -> {
+			this.retryTemplate.execute(() -> {
 				this.restTemplate.exchange(request, String.class);
 				return null;
 			});
@@ -94,17 +94,17 @@ public class ProjectGenerationStatPublisher {
 
 	private String toJson(ProjectRequestDocument stats) {
 		try {
-			return this.objectMapper.writeValueAsString(stats);
+			return this.jsonMapper.writeValueAsString(stats);
 		}
-		catch (JsonProcessingException ex) {
+		catch (JacksonException ex) {
 			throw new IllegalStateException("Cannot convert to JSON", ex);
 		}
 	}
 
-	private static ObjectMapper createObjectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		return mapper;
+	private static JsonMapper createJsonMapper() {
+		return JsonMapper.builder()
+			.changeDefaultPropertyInclusion((handler) -> handler.withValueInclusion(JsonInclude.Include.NON_NULL))
+			.build();
 	}
 
 	// For testing purposes only

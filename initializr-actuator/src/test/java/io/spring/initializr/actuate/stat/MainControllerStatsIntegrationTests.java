@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -70,11 +70,11 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("groupId").textValue()).isEqualTo("com.foo");
-		assertThat(json.get("artifactId").textValue()).isEqualTo("bar");
+		assertThat(json.get("groupId").asString()).isEqualTo("com.foo");
+		assertThat(json.get("artifactId").asString()).isEqualTo("bar");
 		JsonNode list = json.get("dependencies").get("values");
 		assertThat(list).hasSize(1);
-		assertThat(list.get(0).textValue()).isEqualTo("web");
+		assertThat(list.get(0).asString()).isEqualTo("web");
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("client").get("ip").textValue()).as("Wrong requestIp").isEqualTo("10.0.0.123");
+		assertThat(json.get("client").get("ip").asString()).as("Wrong requestIp").isEqualTo("10.0.0.123");
 	}
 
 	@Test
@@ -144,7 +144,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	}
 
 	@Test
-	void invalidProjectSillHasStats() {
+	void invalidProjectStillHasStats() {
 		assertThatExceptionOfType(HttpClientErrorException.class)
 			.isThrownBy(() -> downloadArchive("/starter.zip?type=invalid-type"))
 			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
@@ -152,14 +152,14 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
 		JsonNode json = parseJson(content.json);
-		assertThat(json.get("groupId").textValue()).isEqualTo("com.example");
-		assertThat(json.get("artifactId").textValue()).isEqualTo("demo");
+		assertThat(json.get("groupId").asString()).isEqualTo("com.example");
+		assertThat(json.get("artifactId").asString()).isEqualTo("demo");
 		assertThat(json.has("errorState")).isTrue();
 		JsonNode errorState = json.get("errorState");
 		assertThat(errorState.get("invalid").booleanValue()).isEqualTo(true);
 		assertThat(errorState.get("type").booleanValue()).isEqualTo(true);
 		assertThat(errorState.get("message")).isNotNull();
-		assertThat(errorState.get("message").textValue()).contains("invalid-type");
+		assertThat(errorState.get("message").asString()).contains("invalid-type");
 	}
 
 	@Test

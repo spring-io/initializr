@@ -72,6 +72,7 @@ public class MockMvcClientHttpRequestFactory implements ClientHttpRequestFactory
 					requestBuilder.headers(getHeaders());
 					MockHttpServletResponse servletResponse = actions(requestBuilder).andReturn().getResponse();
 					HttpStatus status = HttpStatus.valueOf(servletResponse.getStatus());
+					// TODO MH: WTF?
 					if (status.value() >= 400) {
 						requestBuilder = request(HttpMethod.GET, "/error")
 							.requestAttr(RequestDispatcher.ERROR_STATUS_CODE, status.value())
