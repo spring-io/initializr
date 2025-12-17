@@ -178,18 +178,6 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testStarterExcludesVintageEngineWithCompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("build.gradle")
-			.lines()
-			.containsSequence("    testImplementation('org.springframework.boot:spring-boot-starter-test') {",
-					"        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'", "    }");
-	}
-
-	@Test
 	void testStarterDoesNotExcludeVintageEngineWith24Snapshot() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.4.0-SNAPSHOT"));

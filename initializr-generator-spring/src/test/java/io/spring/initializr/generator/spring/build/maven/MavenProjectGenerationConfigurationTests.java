@@ -92,20 +92,6 @@ class MavenProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void testStarterExcludesVintageEngineWithCompatibleVersion() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.2.4.RELEASE"));
-		description.setLanguage(new JavaLanguage());
-		ProjectStructure project = this.projectTester.generate(description);
-		assertThat(project).textFile("pom.xml")
-			.lines()
-			.containsSequence("            <exclusions>", "                <exclusion>",
-					"                    <groupId>org.junit.vintage</groupId>",
-					"                    <artifactId>junit-vintage-engine</artifactId>", "                </exclusion>",
-					"            </exclusions>");
-	}
-
-	@Test
 	void testStarterDoesNotExcludesVintageEngineAndJUnitWithIncompatibleVersion() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setPlatformVersion(Version.parse("2.1.6.RELEASE"));

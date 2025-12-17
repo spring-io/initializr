@@ -28,7 +28,6 @@ import io.spring.initializr.generator.buildsystem.gradle.KotlinDslGradleSettings
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.condition.ConditionalOnPackaging;
-import io.spring.initializr.generator.condition.ConditionalOnPlatformVersion;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.language.groovy.GroovyLanguage;
 import io.spring.initializr.generator.language.java.JavaLanguage;
@@ -182,7 +181,6 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return BuildCustomizer.ordered(TEST_ORDER,
 					(build) -> build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform")));
@@ -215,7 +213,6 @@ public class GradleProjectGenerationConfiguration {
 		}
 
 		@Bean
-		@ConditionalOnPlatformVersion("2.2.0.M3")
 		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return BuildCustomizer.ordered(TEST_ORDER,
 					(build) -> build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform")));
