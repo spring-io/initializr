@@ -38,6 +38,8 @@
 		<spring-boot.version>4.0.1</spring-boot.version>
 		<spring-cloud-contract.version>5.0.1</spring-cloud-contract.version>
 		<error-prone.version>2.45.0</error-prone.version>
+		<null-away.version>0.12.15</null-away.version>
+		<null-away.require-explicit-null-marking>OFF</null-away.require-explicit-null-marking>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
@@ -194,13 +196,18 @@
 							<arg>-Xlint:-processing</arg>
 							<arg>-XDcompilePolicy=simple</arg>
 							<arg>--should-stop=ifError=FLOW</arg>
-							<arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepDisableWarningsInGeneratedCode</arg>
+							<arg>-Xplugin:ErrorProne -XepDisableAllChecks -XepDisableWarningsInGeneratedCode -Xep:RequireExplicitNullMarking:${null-away.require-explicit-null-marking} -Xep:NullAway:ERROR -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:JSpecifyMode=true -XepOpt:NullAway:HandleTestAssertionLibraries=true -XepOpt:NullAway:CustomContractAnnotations=org.springframework.lang.Contract,org.assertj.core.internal.annotation.Contract</arg>
 						</compilerArgs>
 						<annotationProcessorPaths>
 							<path>
 								<groupId>com.google.errorprone</groupId>
 								<artifactId>error_prone_core</artifactId>
 								<version>${error-prone.version}</version>
+							</path>
+							<path>
+								<groupId>com.uber.nullaway</groupId>
+								<artifactId>nullaway</artifactId>
+								<version>${null-away.version}</version>
 							</path>
 						</annotationProcessorPaths>
 					</configuration>
