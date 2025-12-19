@@ -77,7 +77,7 @@ The `initializr-service-sample` showcases a basic custom instance with dedicated
 
 [[build]]
 == Building from Source
-You need Java 17 and a bash-like shell.
+You need Java 25 and a bash-like shell.
 
 [[building]]
 === Building
