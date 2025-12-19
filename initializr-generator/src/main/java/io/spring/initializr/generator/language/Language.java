@@ -18,6 +18,8 @@ package io.spring.initializr.generator.language;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
@@ -71,7 +73,7 @@ public interface Language {
 	 * @return the language
 	 * @throws IllegalStateException if no language for this id can be found
 	 */
-	static Language forId(String id, String jvmVersion) {
+	static Language forId(@Nullable String id, @Nullable String jvmVersion) {
 		return SpringFactoriesLoader.loadFactories(LanguageFactory.class, LanguageFactory.class.getClassLoader())
 			.stream()
 			.map((factory) -> factory.createLanguage(id, jvmVersion))

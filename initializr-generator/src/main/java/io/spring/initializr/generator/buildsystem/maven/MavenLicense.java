@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@code <license>} in a Maven pom.
  *
@@ -24,13 +26,13 @@ package io.spring.initializr.generator.buildsystem.maven;
  */
 public class MavenLicense {
 
-	private final String name;
+	private final @Nullable String name;
 
-	private final String url;
+	private final @Nullable String url;
 
-	private final Distribution distribution;
+	private final @Nullable Distribution distribution;
 
-	private final String comments;
+	private final @Nullable String comments;
 
 	MavenLicense(Builder builder) {
 		this.name = builder.name;
@@ -43,7 +45,7 @@ public class MavenLicense {
 	 * Return the name of the license.
 	 * @return the name
 	 */
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
@@ -51,7 +53,7 @@ public class MavenLicense {
 	 * Return the URL of the license.
 	 * @return the URL
 	 */
-	public String getUrl() {
+	public @Nullable String getUrl() {
 		return this.url;
 	}
 
@@ -59,7 +61,7 @@ public class MavenLicense {
 	 * Return the distribution mechanism of the project associated with the license.
 	 * @return the distribution mechanism
 	 */
-	public Distribution getDistribution() {
+	public @Nullable Distribution getDistribution() {
 		return this.distribution;
 	}
 
@@ -67,7 +69,7 @@ public class MavenLicense {
 	 * Return the comments associated with the license.
 	 * @return the comments
 	 */
-	public String getComments() {
+	public @Nullable String getComments() {
 		return this.comments;
 	}
 
@@ -76,20 +78,20 @@ public class MavenLicense {
 	 */
 	public static class Builder {
 
-		private String name;
+		private @Nullable String name;
 
-		private String url;
+		private @Nullable String url;
 
-		private Distribution distribution;
+		private @Nullable Distribution distribution;
 
-		private String comments;
+		private @Nullable String comments;
 
 		/**
 		 * Set the name of the license.
 		 * @param name the name of the license or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder name(String name) {
+		public Builder name(@Nullable String name) {
 			this.name = name;
 			return this;
 		}
@@ -99,7 +101,7 @@ public class MavenLicense {
 		 * @param url the URL of the license or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder url(String url) {
+		public Builder url(@Nullable String url) {
 			this.url = url;
 			return this;
 		}
@@ -109,7 +111,7 @@ public class MavenLicense {
 		 * @param distribution the distribution mechanism of the project or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder distribution(Distribution distribution) {
+		public Builder distribution(@Nullable Distribution distribution) {
 			this.distribution = distribution;
 			return this;
 		}
@@ -119,7 +121,7 @@ public class MavenLicense {
 		 * @param comments the comments for the license or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder comments(String comments) {
+		public Builder comments(@Nullable String comments) {
 			this.comments = comments;
 			return this;
 		}

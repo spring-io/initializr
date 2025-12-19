@@ -17,4 +17,7 @@
 /**
  * Packaging abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.packaging;
+
+import org.jspecify.annotations.NullMarked;

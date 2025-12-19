@@ -18,6 +18,9 @@ package io.spring.initializr.generator.language.java;
 
 import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.AnnotationContainer;
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.util.Assert;
 
 /**
  * Declaration of a field written in Java.
@@ -34,13 +37,14 @@ public final class JavaFieldDeclaration implements Annotatable {
 
 	private final String returnType;
 
-	private final Object value;
+	private final @Nullable Object value;
 
 	private final boolean initialized;
 
 	private JavaFieldDeclaration(Builder builder) {
 		this.modifiers = builder.modifiers;
 		this.name = builder.name;
+		Assert.state(builder.returnType != null, "'builder.returnType' must not be null");
 		this.returnType = builder.returnType;
 		this.value = builder.value;
 		this.initialized = builder.initialized;
@@ -88,7 +92,7 @@ public final class JavaFieldDeclaration implements Annotatable {
 	 * Return the value.
 	 * @return the value
 	 */
-	public Object getValue() {
+	public @Nullable Object getValue() {
 		return this.value;
 	}
 
@@ -107,11 +111,11 @@ public final class JavaFieldDeclaration implements Annotatable {
 
 		private final String name;
 
-		private String returnType;
+		private @Nullable String returnType;
 
 		private int modifiers;
 
-		private Object value;
+		private @Nullable Object value;
 
 		private boolean initialized;
 
@@ -134,7 +138,7 @@ public final class JavaFieldDeclaration implements Annotatable {
 		 * @param value the value
 		 * @return this for method chaining
 		 */
-		public Builder value(Object value) {
+		public Builder value(@Nullable Object value) {
 			this.value = value;
 			this.initialized = true;
 			return this;
@@ -145,7 +149,7 @@ public final class JavaFieldDeclaration implements Annotatable {
 		 * @param returnType the return type
 		 * @return this for method chaining
 		 */
-		public JavaFieldDeclaration returning(String returnType) {
+		public JavaFieldDeclaration returning(@Nullable String returnType) {
 			this.returnType = returnType;
 			return new JavaFieldDeclaration(this);
 		}

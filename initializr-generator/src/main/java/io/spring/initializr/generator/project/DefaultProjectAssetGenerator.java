@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A default {@link ProjectAssetGenerator} implementation that generates a directory
@@ -33,13 +34,13 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
  */
 public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path> {
 
-	private final ProjectDirectoryFactory projectDirectoryFactory;
+	private final @Nullable ProjectDirectoryFactory projectDirectoryFactory;
 
 	/**
 	 * Create a new instance with the {@link ProjectDirectoryFactory} to use.
 	 * @param projectDirectoryFactory the project directory factory to use
 	 */
-	public DefaultProjectAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
+	public DefaultProjectAssetGenerator(@Nullable ProjectDirectoryFactory projectDirectoryFactory) {
 		this.projectDirectoryFactory = projectDirectoryFactory;
 	}
 

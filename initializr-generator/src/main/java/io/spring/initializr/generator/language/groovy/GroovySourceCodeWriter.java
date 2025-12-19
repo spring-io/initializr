@@ -47,6 +47,7 @@ import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.SourceStructure;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.CollectionUtils;
 
@@ -266,7 +267,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
-	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, String name) {
+	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, @Nullable String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}

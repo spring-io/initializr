@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.spring.initializr.generator.io.IndentingWriter;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 
@@ -93,7 +94,7 @@ public class ComposeFileWriter {
 		});
 	}
 
-	private void writeServiceCommand(IndentingWriter writer, String command) {
+	private void writeServiceCommand(IndentingWriter writer, @Nullable String command) {
 		if (!StringUtils.hasText(command)) {
 			return;
 		}

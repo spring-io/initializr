@@ -21,6 +21,8 @@ import java.util.Objects;
 
 import javax.lang.model.SourceVersion;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -38,11 +40,11 @@ public final class ClassName {
 
 	private final String simpleName;
 
-	private final ClassName enclosingType;
+	private final @Nullable ClassName enclosingType;
 
-	private String canonicalName;
+	private @Nullable String canonicalName;
 
-	private ClassName(String packageName, String simpleName, ClassName enclosingType) {
+	private ClassName(String packageName, String simpleName, @Nullable ClassName enclosingType) {
 		this.packageName = packageName;
 		this.simpleName = simpleName;
 		this.enclosingType = enclosingType;
@@ -112,7 +114,7 @@ public final class ClassName {
 	 * enclosing type.
 	 * @return the enclosing type, if any
 	 */
-	public ClassName getEnclosingType() {
+	public @Nullable ClassName getEnclosingType() {
 		return this.enclosingType;
 	}
 
@@ -165,7 +167,7 @@ public final class ClassName {
 		}
 	}
 
-	private static void buildName(ClassName className, StringBuilder sb) {
+	private static void buildName(@Nullable ClassName className, StringBuilder sb) {
 		if (className == null) {
 			return;
 		}

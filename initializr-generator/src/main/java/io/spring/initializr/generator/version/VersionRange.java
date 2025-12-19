@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.version;
 
 import io.spring.initializr.generator.version.Version.Format;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -41,11 +42,11 @@ public class VersionRange {
 
 	private final boolean lowerInclusive;
 
-	private final Version higherVersion;
+	private final @Nullable Version higherVersion;
 
 	private final boolean higherInclusive;
 
-	protected VersionRange(Version lowerVersion, boolean lowerInclusive, Version higherVersion,
+	protected VersionRange(Version lowerVersion, boolean lowerInclusive, @Nullable Version higherVersion,
 			boolean higherInclusive) {
 		this.lowerVersion = lowerVersion;
 		this.lowerInclusive = lowerInclusive;
@@ -103,7 +104,7 @@ public class VersionRange {
 		return this.lowerInclusive;
 	}
 
-	public Version getHigherVersion() {
+	public @Nullable Version getHigherVersion() {
 		return this.higherVersion;
 	}
 
@@ -130,7 +131,7 @@ public class VersionRange {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		if (this == obj) {
 			return true;
 		}

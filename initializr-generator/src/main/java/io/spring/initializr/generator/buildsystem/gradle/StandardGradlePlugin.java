@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A standard {@link GradlePlugin} used in the {@code plugins} block.
  *
@@ -23,17 +25,17 @@ package io.spring.initializr.generator.buildsystem.gradle;
  */
 public class StandardGradlePlugin extends GradlePlugin {
 
-	private String version;
+	private @Nullable String version;
 
 	public StandardGradlePlugin(String id) {
 		super(id, false);
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(@Nullable String version) {
 		this.version = version;
 	}
 
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 

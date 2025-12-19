@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleTask.Builder;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -70,7 +71,7 @@ public class GradleTaskContainer {
 	 * @param task the name or type
 	 * @return the matching gradle task or {@code null}
 	 */
-	public GradleTask get(String task) {
+	public @Nullable GradleTask get(String task) {
 		Builder builder = this.tasks.get(task);
 		return (builder != null) ? builder.build() : null;
 	}

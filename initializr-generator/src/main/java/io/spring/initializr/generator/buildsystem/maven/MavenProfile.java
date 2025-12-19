@@ -21,6 +21,7 @@ import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.DependencyContainer;
 import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 import io.spring.initializr.generator.buildsystem.PropertyContainer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A profile in a {@link MavenBuild}.
@@ -215,9 +216,9 @@ public class MavenProfile {
 	 */
 	public static class SettingsBuilder {
 
-		private String defaultGoal;
+		private @Nullable String defaultGoal;
 
-		private String finalName;
+		private @Nullable String finalName;
 
 		/**
 		 * Creates a new instance.
@@ -232,7 +233,7 @@ public class MavenProfile {
 		 * build
 		 * @return this for method chaining
 		 */
-		public SettingsBuilder defaultGoal(String defaultGoal) {
+		public SettingsBuilder defaultGoal(@Nullable String defaultGoal) {
 			this.defaultGoal = defaultGoal;
 			return this;
 		}
@@ -244,7 +245,7 @@ public class MavenProfile {
 		 * value in the build.
 		 * @return this for method chaining
 		 */
-		public SettingsBuilder finalName(String finalName) {
+		public SettingsBuilder finalName(@Nullable String finalName) {
 			this.finalName = finalName;
 			return this;
 		}
@@ -264,9 +265,9 @@ public class MavenProfile {
 	 */
 	public static final class Settings {
 
-		private final String defaultGoal;
+		private final @Nullable String defaultGoal;
 
-		private final String finalName;
+		private final @Nullable String finalName;
 
 		/**
 		 * Creates a new instance.
@@ -281,7 +282,7 @@ public class MavenProfile {
 		 * Return the default goal or phase to execute if none is given.
 		 * @return the default goal or {@code null} to use the default
 		 */
-		public String getDefaultGoal() {
+		public @Nullable String getDefaultGoal() {
 			return this.defaultGoal;
 		}
 
@@ -289,7 +290,7 @@ public class MavenProfile {
 		 * Return the final name of the artifact.
 		 * @return the final name or {@code null} to use the default
 		 */
-		public String getFinalName() {
+		public @Nullable String getFinalName() {
 			return this.finalName;
 		}
 

@@ -6,4 +6,5 @@
 	<suppress files=".+Application\.java" checks="HideUtilityClassConstructor"/>
 	<suppress files="[\\/]initializr-service-sample[\\/]" checks="JavadocType"/>
 	<suppress files="[\\/]initializr-service-sample[\\/]" checks="ImportControl"/>
+	<suppress files="MavenBuildSettings\.java" checks="NoWhitespaceBefore" message="'...'"/>
 </suppressions>

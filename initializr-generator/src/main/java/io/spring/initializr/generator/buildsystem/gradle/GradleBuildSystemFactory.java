@@ -18,6 +18,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link BuildSystemFactory Factory} for {@link GradleBuildSystem}.
@@ -27,12 +28,12 @@ import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
 class GradleBuildSystemFactory implements BuildSystemFactory {
 
 	@Override
-	public BuildSystem createBuildSystem(String id) {
+	public @Nullable BuildSystem createBuildSystem(@Nullable String id) {
 		return createBuildSystem(id, null);
 	}
 
 	@Override
-	public BuildSystem createBuildSystem(String id, String dialect) {
+	public @Nullable BuildSystem createBuildSystem(@Nullable String id, @Nullable String dialect) {
 		if (GradleBuildSystem.ID.equals(id)) {
 			if (dialect == null) {
 				return new GradleBuildSystem();

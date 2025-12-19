@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.version.VersionReference;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A build extension in a @{@link MavenBuild}.
@@ -30,7 +31,7 @@ public class MavenExtension {
 
 	private final String artifactId;
 
-	private final VersionReference version;
+	private final @Nullable VersionReference version;
 
 	/**
 	 * Creates a new instance.
@@ -64,7 +65,7 @@ public class MavenExtension {
 	 * @deprecated for removal in favor of {@link #getVersionReference()}
 	 */
 	@Deprecated(forRemoval = true)
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return (this.version != null) ? this.version.getValue() : null;
 	}
 
@@ -72,7 +73,7 @@ public class MavenExtension {
 	 * Return the version of the extension.
 	 * @return the version
 	 */
-	public VersionReference getVersionReference() {
+	public @Nullable VersionReference getVersionReference() {
 		return this.version;
 	}
 
@@ -85,7 +86,7 @@ public class MavenExtension {
 
 		private final String artifactId;
 
-		private VersionReference version;
+		private @Nullable VersionReference version;
 
 		/**
 		 * Creates a new instance.
@@ -102,7 +103,7 @@ public class MavenExtension {
 		 * @param version the version of the extension
 		 * @return this for method chaining
 		 */
-		public Builder version(String version) {
+		public Builder version(@Nullable String version) {
 			if (version == null) {
 				return versionReference(null);
 			}
@@ -114,7 +115,7 @@ public class MavenExtension {
 		 * @param version the version of the extension
 		 * @return this for method chaining
 		 */
-		public Builder versionReference(VersionReference version) {
+		public Builder versionReference(@Nullable VersionReference version) {
 			this.version = version;
 			return this;
 		}

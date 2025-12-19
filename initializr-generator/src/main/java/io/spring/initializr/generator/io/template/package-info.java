@@ -17,4 +17,7 @@
 /**
  * Template rendering abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.io.template;
+
+import org.jspecify.annotations.NullMarked;

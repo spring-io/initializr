@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.configuration.format;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A factory for creating a {@link ConfigurationFileFormat}.
  *
@@ -29,6 +31,6 @@ public interface ConfigurationFileFormatFactory {
 	 * @param id the id of the configuration file format
 	 * @return the configuration file format or {@code null}
 	 */
-	ConfigurationFileFormat createConfigurationFileFormat(String id);
+	@Nullable ConfigurationFileFormat createConfigurationFileFormat(@Nullable String id);
 
 }

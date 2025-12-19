@@ -20,6 +20,7 @@ import javax.lang.model.SourceVersion;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.Language;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Java {@link Language}.
@@ -45,7 +46,7 @@ public final class JavaLanguage extends AbstractLanguage {
 	 * Creates a new instance.
 	 * @param jvmVersion the JVM version
 	 */
-	public JavaLanguage(String jvmVersion) {
+	public JavaLanguage(@Nullable String jvmVersion) {
 		super(ID, jvmVersion, "java");
 	}
 

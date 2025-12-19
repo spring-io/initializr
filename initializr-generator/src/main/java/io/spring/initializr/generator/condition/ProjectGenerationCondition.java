@@ -21,6 +21,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.Assert;
 
 /**
  * Base class for project generation {@link Condition Conditions} that rely on the state
@@ -32,6 +33,7 @@ public abstract class ProjectGenerationCondition implements Condition {
 
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		Assert.state(context.getBeanFactory() != null, "'context.getBeanFactory()' must not be null");
 		ProjectDescription description = context.getBeanFactory().getBean(ProjectDescription.class);
 		return matches(description, context, metadata);
 	}

@@ -18,6 +18,8 @@ package io.spring.initializr.generator.buildsystem;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A Maven repository.
  *
@@ -37,7 +39,7 @@ public class MavenRepository {
 
 	private final String id;
 
-	private final String name;
+	private final @Nullable String name;
 
 	private final String url;
 
@@ -80,7 +82,7 @@ public class MavenRepository {
 	 * Return the name of the repository.
 	 * @return the repository name
 	 */
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
@@ -134,7 +136,7 @@ public class MavenRepository {
 
 		private String id;
 
-		private String name;
+		private @Nullable String name;
 
 		private String url;
 
@@ -168,7 +170,7 @@ public class MavenRepository {
 		 * @param name the name
 		 * @return this for method chaining
 		 */
-		public Builder name(String name) {
+		public Builder name(@Nullable String name) {
 			this.name = name;
 			return this;
 		}

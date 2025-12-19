@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.buildsystem.maven;
 
 import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link BuildSystemFactory Factory} for {@link MavenBuildSystem}.
@@ -26,7 +27,7 @@ import io.spring.initializr.generator.buildsystem.BuildSystemFactory;
 class MavenBuildSystemFactory implements BuildSystemFactory {
 
 	@Override
-	public MavenBuildSystem createBuildSystem(String id) {
+	public @Nullable MavenBuildSystem createBuildSystem(@Nullable String id) {
 		if (MavenBuildSystem.ID.equals(id)) {
 			return new MavenBuildSystem();
 		}

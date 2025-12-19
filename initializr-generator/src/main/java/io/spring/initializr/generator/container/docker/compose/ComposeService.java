@@ -25,6 +25,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.util.Assert;
+
 /**
  * A service to be declared in a Docker Compose file.
  *
@@ -40,18 +44,19 @@ public final class ComposeService {
 
 	private final String imageTag;
 
-	private final String imageWebsite;
+	private final @Nullable String imageWebsite;
 
 	private final Map<String, String> environment;
 
 	private final Set<PortMapping> portMappings;
 
-	private final String command;
+	private final @Nullable String command;
 
 	private final Map<String, String> labels;
 
 	private ComposeService(Builder builder) {
 		this.name = builder.name;
+		Assert.state(builder.image != null, "'builder.image' must not be null");
 		this.image = builder.image;
 		this.imageTag = builder.imageTag;
 		this.imageWebsite = builder.imageWebsite;
@@ -73,7 +78,7 @@ public final class ComposeService {
 		return this.imageTag;
 	}
 
-	public String getImageWebsite() {
+	public @Nullable String getImageWebsite() {
 		return this.imageWebsite;
 	}
 
@@ -97,7 +102,7 @@ public final class ComposeService {
 		return this.portMappings;
 	}
 
-	public String getCommand() {
+	public @Nullable String getCommand() {
 		return this.command;
 	}
 
@@ -112,17 +117,17 @@ public final class ComposeService {
 
 		private final String name;
 
-		private String image;
+		private @Nullable String image;
 
 		private String imageTag = "latest";
 
-		private String imageWebsite;
+		private @Nullable String imageWebsite;
 
 		private final Map<String, String> environment = new TreeMap<>();
 
 		private final Set<PortMapping> portMappings = new TreeSet<>();
 
-		private String command;
+		private @Nullable String command;
 
 		private final Map<String, String> labels = new TreeMap<>();
 
@@ -136,7 +141,7 @@ public final class ComposeService {
 			return image(split[0]).imageTag(tag);
 		}
 
-		public Builder image(String image) {
+		public Builder image(@Nullable String image) {
 			this.image = image;
 			return this;
 		}
@@ -146,7 +151,7 @@ public final class ComposeService {
 			return this;
 		}
 
-		public Builder imageWebsite(String imageWebsite) {
+		public Builder imageWebsite(@Nullable String imageWebsite) {
 			this.imageWebsite = imageWebsite;
 			return this;
 		}
@@ -185,7 +190,7 @@ public final class ComposeService {
 			return this;
 		}
 
-		public Builder command(String command) {
+		public Builder command(@Nullable String command) {
 			this.command = command;
 			return this;
 		}

@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -102,7 +103,7 @@ class BuildItemContainerTests {
 	}
 
 	private BuildItemContainer<String, String> createTestContainer(Map<String, String> content,
-			Function<String, String> itemResolver) {
+			Function<String, @Nullable String> itemResolver) {
 		return new BuildItemContainer<>(content, itemResolver);
 	}
 

@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A factory for creating a {@link BuildSystem}.
  *
@@ -29,7 +31,7 @@ public interface BuildSystemFactory {
 	 * @param id the id of the build system
 	 * @return the build system or {@code null}
 	 */
-	BuildSystem createBuildSystem(String id);
+	@Nullable BuildSystem createBuildSystem(@Nullable String id);
 
 	/**
 	 * Creates and returns a {@link BuildSystem} for the given {@code id} and
@@ -39,7 +41,7 @@ public interface BuildSystemFactory {
 	 * @param dialect the dialect of the build system
 	 * @return the build system or {@code null}
 	 */
-	default BuildSystem createBuildSystem(String id, String dialect) {
+	default @Nullable BuildSystem createBuildSystem(@Nullable String id, @Nullable String dialect) {
 		return createBuildSystem(id);
 	}
 

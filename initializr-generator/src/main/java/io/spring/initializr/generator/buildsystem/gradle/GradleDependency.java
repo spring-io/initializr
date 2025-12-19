@@ -18,6 +18,7 @@ package io.spring.initializr.generator.buildsystem.gradle;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Gradle-specific {@link Dependency}.
@@ -26,7 +27,7 @@ import io.spring.initializr.generator.buildsystem.DependencyScope;
  */
 public class GradleDependency extends Dependency {
 
-	private final String configuration;
+	private final @Nullable String configuration;
 
 	protected GradleDependency(Builder builder) {
 		super(builder);
@@ -59,7 +60,7 @@ public class GradleDependency extends Dependency {
 	 * dependency.
 	 * @return the custom configuration name to use or {@code null}
 	 */
-	public String getConfiguration() {
+	public @Nullable String getConfiguration() {
 		return this.configuration;
 	}
 
@@ -70,7 +71,7 @@ public class GradleDependency extends Dependency {
 	 */
 	public static class Builder extends Dependency.Builder<Builder> {
 
-		private String configuration;
+		private @Nullable String configuration;
 
 		protected Builder(String groupId, String artifactId) {
 			super(groupId, artifactId);
@@ -82,7 +83,7 @@ public class GradleDependency extends Dependency {
 		 * @param configuration the name of the configuration to use
 		 * @return this for method chaining
 		 */
-		public Builder configuration(String configuration) {
+		public Builder configuration(@Nullable String configuration) {
 			this.configuration = configuration;
 			return self();
 		}

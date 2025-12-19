@@ -26,6 +26,7 @@ import io.spring.initializr.generator.configuration.format.ConfigurationFileForm
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 
@@ -36,33 +37,33 @@ import org.springframework.util.StringUtils;
  */
 public class MutableProjectDescription implements ProjectDescription {
 
-	private Version platformVersion;
+	private @Nullable Version platformVersion;
 
-	private BuildSystem buildSystem;
+	private @Nullable BuildSystem buildSystem;
 
-	private Packaging packaging;
+	private @Nullable Packaging packaging;
 
-	private Language language;
+	private @Nullable Language language;
 
-	private ConfigurationFileFormat configurationFileFormat;
+	private @Nullable ConfigurationFileFormat configurationFileFormat;
 
 	private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
 
-	private String groupId;
+	private @Nullable String groupId;
 
-	private String artifactId;
+	private @Nullable String artifactId;
 
-	private String version;
+	private @Nullable String version;
 
-	private String name;
+	private @Nullable String name;
 
-	private String description;
+	private @Nullable String description;
 
-	private String applicationName;
+	private @Nullable String applicationName;
 
-	private String packageName;
+	private @Nullable String packageName;
 
-	private String baseDirectory;
+	private @Nullable String baseDirectory;
 
 	/**
 	 * Creates a new instance.
@@ -97,7 +98,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	}
 
 	@Override
-	public Version getPlatformVersion() {
+	public @Nullable Version getPlatformVersion() {
 		return this.platformVersion;
 	}
 
@@ -105,12 +106,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the platform version.
 	 * @param platformVersion the platform version
 	 */
-	public void setPlatformVersion(Version platformVersion) {
+	public void setPlatformVersion(@Nullable Version platformVersion) {
 		this.platformVersion = platformVersion;
 	}
 
 	@Override
-	public BuildSystem getBuildSystem() {
+	public @Nullable BuildSystem getBuildSystem() {
 		return this.buildSystem;
 	}
 
@@ -118,12 +119,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the build system.
 	 * @param buildSystem the build system
 	 */
-	public void setBuildSystem(BuildSystem buildSystem) {
+	public void setBuildSystem(@Nullable BuildSystem buildSystem) {
 		this.buildSystem = buildSystem;
 	}
 
 	@Override
-	public Packaging getPackaging() {
+	public @Nullable Packaging getPackaging() {
 		return this.packaging;
 	}
 
@@ -131,12 +132,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the packaging.
 	 * @param packaging the packaging
 	 */
-	public void setPackaging(Packaging packaging) {
+	public void setPackaging(@Nullable Packaging packaging) {
 		this.packaging = packaging;
 	}
 
 	@Override
-	public Language getLanguage() {
+	public @Nullable Language getLanguage() {
 		return this.language;
 	}
 
@@ -144,12 +145,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the configuration file format.
 	 * @param configurationFileFormat the configuration file format
 	 */
-	public void setConfigurationFileFormat(ConfigurationFileFormat configurationFileFormat) {
+	public void setConfigurationFileFormat(@Nullable ConfigurationFileFormat configurationFileFormat) {
 		this.configurationFileFormat = configurationFileFormat;
 	}
 
 	@Override
-	public ConfigurationFileFormat getConfigurationFileFormat() {
+	public @Nullable ConfigurationFileFormat getConfigurationFileFormat() {
 		return this.configurationFileFormat;
 	}
 
@@ -157,7 +158,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the language.
 	 * @param language the language
 	 */
-	public void setLanguage(Language language) {
+	public void setLanguage(@Nullable Language language) {
 		this.language = language;
 	}
 
@@ -167,7 +168,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * @param dependency the dependency
 	 * @return the added dependency
 	 */
-	public Dependency addDependency(String id, Dependency dependency) {
+	public @Nullable Dependency addDependency(String id, Dependency dependency) {
 		return this.requestedDependencies.put(id, dependency);
 	}
 
@@ -177,7 +178,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * @param builder the dependency builder
 	 * @return the added dependency
 	 */
-	public Dependency addDependency(String id, Dependency.Builder<?> builder) {
+	public @Nullable Dependency addDependency(String id, Dependency.Builder<?> builder) {
 		return addDependency(id, builder.build());
 	}
 
@@ -186,7 +187,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * @param id the id
 	 * @return the removed dependency
 	 */
-	public Dependency removeDependency(String id) {
+	public @Nullable Dependency removeDependency(String id) {
 		return this.requestedDependencies.remove(id);
 	}
 
@@ -196,7 +197,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	}
 
 	@Override
-	public String getGroupId() {
+	public @Nullable String getGroupId() {
 		return this.groupId;
 	}
 
@@ -204,12 +205,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the group id.
 	 * @param groupId the group id
 	 */
-	public void setGroupId(String groupId) {
+	public void setGroupId(@Nullable String groupId) {
 		this.groupId = groupId;
 	}
 
 	@Override
-	public String getArtifactId() {
+	public @Nullable String getArtifactId() {
 		return this.artifactId;
 	}
 
@@ -217,12 +218,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the artifact id.
 	 * @param artifactId the artifact id
 	 */
-	public void setArtifactId(String artifactId) {
+	public void setArtifactId(@Nullable String artifactId) {
 		this.artifactId = artifactId;
 	}
 
 	@Override
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
@@ -230,12 +231,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the version.
 	 * @param version the version
 	 */
-	public void setVersion(String version) {
+	public void setVersion(@Nullable String version) {
 		this.version = version;
 	}
 
 	@Override
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
@@ -243,12 +244,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the name.
 	 * @param name the name
 	 */
-	public void setName(String name) {
+	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 
 	@Override
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
@@ -256,12 +257,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the description.
 	 * @param description the description
 	 */
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
 	@Override
-	public String getApplicationName() {
+	public @Nullable String getApplicationName() {
 		return this.applicationName;
 	}
 
@@ -269,12 +270,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the application name.
 	 * @param applicationName the application name
 	 */
-	public void setApplicationName(String applicationName) {
+	public void setApplicationName(@Nullable String applicationName) {
 		this.applicationName = applicationName;
 	}
 
 	@Override
-	public String getPackageName() {
+	public @Nullable String getPackageName() {
 		if (StringUtils.hasText(this.packageName)) {
 			return this.packageName;
 		}
@@ -288,12 +289,12 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the package name.
 	 * @param packageName the package name
 	 */
-	public void setPackageName(String packageName) {
+	public void setPackageName(@Nullable String packageName) {
 		this.packageName = packageName;
 	}
 
 	@Override
-	public String getBaseDirectory() {
+	public @Nullable String getBaseDirectory() {
 		return this.baseDirectory;
 	}
 
@@ -301,7 +302,7 @@ public class MutableProjectDescription implements ProjectDescription {
 	 * Sets the base directory.
 	 * @param baseDirectory the base directory
 	 */
-	public void setBaseDirectory(String baseDirectory) {
+	public void setBaseDirectory(@Nullable String baseDirectory) {
 		this.baseDirectory = baseDirectory;
 	}
 

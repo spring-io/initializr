@@ -21,6 +21,8 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.PluginMapping;
 import io.spring.initializr.generator.io.IndentingWriter;
 
+import org.springframework.util.Assert;
+
 /**
  * {@link GradleBuild} settings writer abstraction.
  *
@@ -39,7 +41,10 @@ public abstract class GradleSettingsWriter {
 	 */
 	public final void writeTo(IndentingWriter writer, GradleBuild build) {
 		writePluginManagement(writer, build);
-		writer.println("rootProject.name = " + wrapWithQuotes(build.getSettings().getArtifact()));
+		String artifact = build.getSettings().getArtifact();
+		if (artifact != null) {
+			writer.println("rootProject.name = " + wrapWithQuotes(artifact));
+		}
 	}
 
 	private void writePluginManagement(IndentingWriter writer, GradleBuild build) {
@@ -84,6 +89,7 @@ public abstract class GradleSettingsWriter {
 	private void writePluginMapping(IndentingWriter writer, PluginMapping pluginMapping) {
 		writer.println("if (requested.id.id == " + wrapWithQuotes(pluginMapping.getId()) + ") {");
 		Dependency dependency = pluginMapping.getDependency();
+		Assert.state(dependency.getVersion() != null, "'dependency.getVersion()' must not be null");
 		String module = String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(),
 				dependency.getVersion().getValue());
 		writer.indented(() -> writer.println("useModule(" + wrapWithQuotes(module) + ")"));

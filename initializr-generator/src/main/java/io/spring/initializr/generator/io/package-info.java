@@ -17,4 +17,7 @@
 /**
  * Support for writing project assets.
  */
+@NullMarked
 package io.spring.initializr.generator.io;
+
+import org.jspecify.annotations.NullMarked;

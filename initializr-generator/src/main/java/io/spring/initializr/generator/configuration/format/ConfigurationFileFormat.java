@@ -18,6 +18,8 @@ package io.spring.initializr.generator.configuration.format;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 public interface ConfigurationFileFormat {
@@ -35,7 +37,7 @@ public interface ConfigurationFileFormat {
 	 * @throws IllegalStateException if the configuration file format with the given id
 	 * can't be found
 	 */
-	static ConfigurationFileFormat forId(String id) {
+	static ConfigurationFileFormat forId(@Nullable String id) {
 		return SpringFactoriesLoader
 			.loadFactories(ConfigurationFileFormatFactory.class, ConfigurationFileFormat.class.getClassLoader())
 			.stream()

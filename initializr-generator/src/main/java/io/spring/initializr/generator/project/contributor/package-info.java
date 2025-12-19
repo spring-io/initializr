@@ -17,4 +17,7 @@
 /**
  * Project contribution abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.project.contributor;
+
+import org.jspecify.annotations.NullMarked;

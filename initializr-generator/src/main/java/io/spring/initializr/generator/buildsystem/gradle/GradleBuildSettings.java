@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Gradle-specific {@linkplain BuildSettings build settings}.
@@ -29,11 +30,11 @@ import io.spring.initializr.generator.buildsystem.Dependency;
  */
 public class GradleBuildSettings extends BuildSettings {
 
-	private final String sourceCompatibility;
+	private final @Nullable String sourceCompatibility;
 
 	private final List<PluginMapping> pluginMappings;
 
-	private final String description;
+	private final @Nullable String description;
 
 	protected GradleBuildSettings(Builder builder) {
 		super(builder);
@@ -46,7 +47,7 @@ public class GradleBuildSettings extends BuildSettings {
 	 * Return the java version compatibility to use when compiling Java source.
 	 * @return the java version to use for source.
 	 */
-	public String getSourceCompatibility() {
+	public @Nullable String getSourceCompatibility() {
 		return this.sourceCompatibility;
 	}
 
@@ -62,7 +63,7 @@ public class GradleBuildSettings extends BuildSettings {
 	 * Return a human-readable description of the project.
 	 * @return the description of the project or {@code null}
 	 */
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
@@ -71,18 +72,18 @@ public class GradleBuildSettings extends BuildSettings {
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
 
-		private String sourceCompatibility;
+		private @Nullable String sourceCompatibility;
 
 		private final List<PluginMapping> pluginMappings = new ArrayList<>();
 
-		private String description;
+		private @Nullable String description;
 
 		/**
 		 * Set the java version compatibility to use when compiling Java source.
 		 * @param sourceCompatibility java version compatibility
 		 * @return this for method chaining
 		 */
-		public Builder sourceCompatibility(String sourceCompatibility) {
+		public Builder sourceCompatibility(@Nullable String sourceCompatibility) {
 			this.sourceCompatibility = sourceCompatibility;
 			return self();
 		}
@@ -107,7 +108,7 @@ public class GradleBuildSettings extends BuildSettings {
 		 * @param description the description of the project
 		 * @return this for method chaining
 		 */
-		public Builder description(String description) {
+		public Builder description(@Nullable String description) {
 			this.description = description;
 			return this;
 		}

@@ -18,6 +18,8 @@ package io.spring.initializr.generator.version;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A version reference to either a property or an actual version.
  *
@@ -25,11 +27,11 @@ import java.util.Objects;
  */
 public final class VersionReference {
 
-	private final VersionProperty property;
+	private final @Nullable VersionProperty property;
 
-	private final String value;
+	private final @Nullable String value;
 
-	private VersionReference(VersionProperty property, String value) {
+	private VersionReference(@Nullable VersionProperty property, @Nullable String value) {
 		this.property = property;
 		this.value = value;
 	}
@@ -42,7 +44,7 @@ public final class VersionReference {
 		return ofProperty(VersionProperty.of(internalProperty));
 	}
 
-	public static VersionReference ofValue(String value) {
+	public static VersionReference ofValue(@Nullable String value) {
 		return new VersionReference(null, value);
 	}
 
@@ -59,7 +61,7 @@ public final class VersionReference {
 	 * property.
 	 * @return the version property or {@code null}
 	 */
-	public VersionProperty getProperty() {
+	public @Nullable VersionProperty getProperty() {
 		return this.property;
 	}
 
@@ -67,12 +69,12 @@ public final class VersionReference {
 	 * Return the version or {@code null} if this reference is backed by a property.
 	 * @return the version or {@code null}
 	 */
-	public String getValue() {
+	public @Nullable String getValue() {
 		return this.value;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(@Nullable Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -89,7 +91,7 @@ public final class VersionReference {
 	}
 
 	@Override
-	public String toString() {
+	public @Nullable String toString() {
 		return (this.property != null) ? "${" + this.property.toStandardFormat() + "}" : this.value;
 	}
 

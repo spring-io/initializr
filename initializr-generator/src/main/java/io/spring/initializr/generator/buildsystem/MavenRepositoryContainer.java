@@ -19,6 +19,8 @@ package io.spring.initializr.generator.buildsystem;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link BuildItemContainer} implementation for {@link MavenRepository maven
  * repositories}.
@@ -32,7 +34,7 @@ public class MavenRepositoryContainer extends BuildItemContainer<String, MavenRe
 	 * @param itemResolver the function that returns a {@link MavenRepository} based on an
 	 * identifier.
 	 */
-	public MavenRepositoryContainer(Function<String, MavenRepository> itemResolver) {
+	public MavenRepositoryContainer(Function<String, @Nullable MavenRepository> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 

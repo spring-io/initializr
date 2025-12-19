@@ -18,6 +18,10 @@ package io.spring.initializr.generator.language;
 
 import java.util.function.Consumer;
 
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.util.Assert;
+
 /**
  * A parameter, typically of a method or function.
  *
@@ -34,6 +38,7 @@ public final class Parameter implements Annotatable {
 
 	private Parameter(Builder builder) {
 		this.name = builder.name;
+		Assert.state(builder.type != null, "'builder.type' must not be null");
 		this.type = builder.type;
 		this.annotations = builder.annotations.deepCopy();
 	}
@@ -86,7 +91,7 @@ public final class Parameter implements Annotatable {
 	}
 
 	/**
-	 * Return the typ of the parameter.
+	 * Return the type of the parameter.
 	 * @return the type
 	 */
 	public String getType() {
@@ -105,7 +110,7 @@ public final class Parameter implements Annotatable {
 
 		private final String name;
 
-		private String type;
+		private @Nullable String type;
 
 		private final AnnotationContainer annotations = new AnnotationContainer();
 
@@ -136,7 +141,7 @@ public final class Parameter implements Annotatable {
 		 * @param type the type
 		 * @return this for method chaining
 		 */
-		public Builder type(String type) {
+		public Builder type(@Nullable String type) {
 			this.type = type;
 			return this;
 		}
@@ -164,7 +169,7 @@ public final class Parameter implements Annotatable {
 		 */
 		@Deprecated(forRemoval = true)
 		@SuppressWarnings("removal")
-		public Builder annotate(ClassName className, Consumer<Annotation.Builder> annotation) {
+		public Builder annotate(ClassName className, @Nullable Consumer<Annotation.Builder> annotation) {
 			this.annotations.add(className, annotation);
 			return this;
 		}
@@ -185,7 +190,7 @@ public final class Parameter implements Annotatable {
 		 * @param annotation a consumer of the builder
 		 * @return this for method chaining
 		 */
-		public Builder singleAnnotate(ClassName className, Consumer<Annotation.Builder> annotation) {
+		public Builder singleAnnotate(ClassName className, @Nullable Consumer<Annotation.Builder> annotation) {
 			this.annotations.addSingle(className, annotation);
 			return this;
 		}
@@ -206,7 +211,7 @@ public final class Parameter implements Annotatable {
 		 * @param annotation a consumer of the builder
 		 * @return this for method chaining
 		 */
-		public Builder repeatableAnnotate(ClassName className, Consumer<Annotation.Builder> annotation) {
+		public Builder repeatableAnnotate(ClassName className, @Nullable Consumer<Annotation.Builder> annotation) {
 			this.annotations.addRepeatable(className, annotation);
 			return this;
 		}

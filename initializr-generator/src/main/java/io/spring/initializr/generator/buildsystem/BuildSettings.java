@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * General build settings.
  *
@@ -23,11 +25,11 @@ package io.spring.initializr.generator.buildsystem;
  */
 public class BuildSettings {
 
-	private final String group;
+	private final @Nullable String group;
 
-	private final String artifact;
+	private final @Nullable String artifact;
 
-	private final String version;
+	private final @Nullable String version;
 
 	protected BuildSettings(Builder<?> builder) {
 		this.group = builder.group;
@@ -39,7 +41,7 @@ public class BuildSettings {
 	 * Return the identifier of the group for the project.
 	 * @return the group identifier or {@code null}
 	 */
-	public String getGroup() {
+	public @Nullable String getGroup() {
 		return this.group;
 	}
 
@@ -47,7 +49,7 @@ public class BuildSettings {
 	 * Return the identifier of the project.
 	 * @return the project identifier or {@code null}
 	 */
-	public String getArtifact() {
+	public @Nullable String getArtifact() {
 		return this.artifact;
 	}
 
@@ -55,7 +57,7 @@ public class BuildSettings {
 	 * Return the version of the project.
 	 * @return the project version or {@code null}
 	 */
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
@@ -66,11 +68,11 @@ public class BuildSettings {
 	 */
 	public abstract static class Builder<B extends Builder<B>> {
 
-		private String group;
+		private @Nullable String group;
 
-		private String artifact;
+		private @Nullable String artifact;
 
-		private String version = "0.0.1-SNAPSHOT";
+		private @Nullable String version = "0.0.1-SNAPSHOT";
 
 		protected Builder() {
 		}
@@ -80,7 +82,7 @@ public class BuildSettings {
 		 * @param group the group ID
 		 * @return this for method chaining
 		 */
-		public B group(String group) {
+		public B group(@Nullable String group) {
 			this.group = group;
 			return self();
 		}
@@ -90,7 +92,7 @@ public class BuildSettings {
 		 * @param artifact the artifact ID
 		 * @return this for method chaining
 		 */
-		public B artifact(String artifact) {
+		public B artifact(@Nullable String artifact) {
 			this.artifact = artifact;
 			return self();
 		}
@@ -100,7 +102,7 @@ public class BuildSettings {
 		 * @param version the version
 		 * @return this for method chaining
 		 */
-		public B version(String version) {
+		public B version(@Nullable String version) {
 			this.version = version;
 			return self();
 		}

@@ -18,6 +18,8 @@ package io.spring.initializr.generator.packaging;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
@@ -39,7 +41,7 @@ public interface Packaging {
 	 * @return the packaging
 	 * @throws IllegalStateException if the packaging with the given id can't be found
 	 */
-	static Packaging forId(String id) {
+	static Packaging forId(@Nullable String id) {
 		return SpringFactoriesLoader.loadFactories(PackagingFactory.class, Packaging.class.getClassLoader())
 			.stream()
 			.map((factory) -> factory.createPackaging(id))

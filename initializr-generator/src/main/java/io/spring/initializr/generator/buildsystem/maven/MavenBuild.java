@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.MavenRepositoryContainer;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSettings.Builder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maven-specific {@linkplain Build build configuration}.
@@ -51,7 +52,7 @@ public class MavenBuild extends Build {
 	 * Creates a new instance.
 	 * @param buildItemResolver the build item resolver
 	 */
-	public MavenBuild(BuildItemResolver buildItemResolver) {
+	public MavenBuild(@Nullable BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 		this.profiles = new MavenProfileContainer(determineBuildItemResolver(buildItemResolver));
 	}

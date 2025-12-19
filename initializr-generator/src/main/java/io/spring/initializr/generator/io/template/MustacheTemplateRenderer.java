@@ -26,11 +26,13 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Mustache.Compiler;
 import com.samskivert.mustache.Mustache.TemplateLoader;
 import com.samskivert.mustache.Template;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueRetrievalException;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.Assert;
 
 /**
  * A {@link TemplateRenderer} using Mustache with a configurable resource prefix.
@@ -44,7 +46,7 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 
 	private final Function<String, String> keyGenerator;
 
-	private final Cache templateCache;
+	private final @Nullable Cache templateCache;
 
 	/**
 	 * Create a new instance with the resource prefix and the {@link Cache} to use.
@@ -53,7 +55,7 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 	 * @param templateCache the cache to use for compiled templates (can be {@code null}
 	 * to not use caching)
 	 */
-	public MustacheTemplateRenderer(String resourcePrefix, Cache templateCache) {
+	public MustacheTemplateRenderer(String resourcePrefix, @Nullable Cache templateCache) {
 		String prefix = (resourcePrefix.endsWith("/") ? resourcePrefix : resourcePrefix + "/");
 		this.mustache = Mustache.compiler().withLoader(mustacheTemplateLoader(prefix)).escapeHTML(false);
 		this.keyGenerator = (name) -> String.format("%s%s", prefix, name);
@@ -88,7 +90,9 @@ public class MustacheTemplateRenderer implements TemplateRenderer {
 		try {
 			if (this.templateCache != null) {
 				try {
-					return this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
+					Template template = this.templateCache.get(this.keyGenerator.apply(name), () -> loadTemplate(name));
+					Assert.state(template != null, "'template' must not be null");
+					return template;
 				}
 				catch (ValueRetrievalException ex) {
 					throw ex.getCause();

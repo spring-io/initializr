@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.support.SpringFactoriesLoader;
@@ -137,7 +139,7 @@ public class ProjectGenerator {
 		}).toList();
 	}
 
-	private Class<?> resolveClass(String candidate) {
+	private @Nullable Class<?> resolveClass(String candidate) {
 		try {
 			return ClassUtils.forName(candidate, getClass().getClassLoader());
 		}

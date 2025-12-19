@@ -18,6 +18,7 @@ package io.spring.initializr.generator.packaging.jar;
 
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.packaging.PackagingFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link PackagingFactory Factory} for {@link JarPackaging}.
@@ -27,7 +28,7 @@ import io.spring.initializr.generator.packaging.PackagingFactory;
 class JarPackagingFactory implements PackagingFactory {
 
 	@Override
-	public Packaging createPackaging(String id) {
+	public @Nullable Packaging createPackaging(@Nullable String id) {
 		if (JarPackaging.ID.equals(id)) {
 			return new JarPackaging();
 		}

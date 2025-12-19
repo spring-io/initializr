@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * The {@code <parent>} in a Maven pom.
  *
@@ -29,9 +31,9 @@ public class MavenParent {
 
 	private final String version;
 
-	private final String relativePath;
+	private final @Nullable String relativePath;
 
-	MavenParent(String groupId, String artifactId, String version, String relativePath) {
+	MavenParent(String groupId, String artifactId, String version, @Nullable String relativePath) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -66,7 +68,7 @@ public class MavenParent {
 	 * Return the relative path of this parent.
 	 * @return the relative path of this parent or {@code null}.
 	 */
-	public String getRelativePath() {
+	public @Nullable String getRelativePath() {
 		return this.relativePath;
 	}
 

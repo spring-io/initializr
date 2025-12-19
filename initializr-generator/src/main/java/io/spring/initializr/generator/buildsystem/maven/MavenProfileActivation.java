@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link MavenProfile profile} activation in a {@link MavenBuild}.
  *
@@ -23,15 +25,15 @@ package io.spring.initializr.generator.buildsystem.maven;
  */
 public class MavenProfileActivation {
 
-	private final Boolean activeByDefault;
+	private final @Nullable Boolean activeByDefault;
 
-	private final String jdk;
+	private final @Nullable String jdk;
 
-	private final Os os;
+	private final @Nullable Os os;
 
-	private final Property property;
+	private final @Nullable Property property;
 
-	private final File file;
+	private final @Nullable File file;
 
 	/**
 	 * Creates a new instance.
@@ -60,7 +62,7 @@ public class MavenProfileActivation {
 	 * default value.
 	 * @return {@code true} to active the profile if no other profile is active
 	 */
-	public Boolean getActiveByDefault() {
+	public @Nullable Boolean getActiveByDefault() {
 		return this.activeByDefault;
 	}
 
@@ -69,7 +71,7 @@ public class MavenProfileActivation {
 	 * {@code null} to not enable the profile based on the JDK.
 	 * @return the jdk (or jdks range) that should match or {@code null}
 	 */
-	public String getJdk() {
+	public @Nullable String getJdk() {
 		return this.jdk;
 	}
 
@@ -78,7 +80,7 @@ public class MavenProfileActivation {
 	 * profile based on the OS.
 	 * @return the operating system activation settings or {@code null}
 	 */
-	public Os getOs() {
+	public @Nullable Os getOs() {
 		return this.os;
 	}
 
@@ -87,7 +89,7 @@ public class MavenProfileActivation {
 	 * the profile based on a property.
 	 * @return the property to match or {@code null}
 	 */
-	public Property getProperty() {
+	public @Nullable Property getProperty() {
 		return this.property;
 	}
 
@@ -96,7 +98,7 @@ public class MavenProfileActivation {
 	 * based on the presence or absence of a file.
 	 * @return the file activation settings or {@code null}
 	 */
-	public File getFile() {
+	public @Nullable File getFile() {
 		return this.file;
 	}
 
@@ -105,15 +107,15 @@ public class MavenProfileActivation {
 	 */
 	public static final class Os {
 
-		private final String name;
+		private final @Nullable String name;
 
-		private final String family;
+		private final @Nullable String family;
 
-		private final String arch;
+		private final @Nullable String arch;
 
-		private final String version;
+		private final @Nullable String version;
 
-		Os(String name, String family, String arch, String version) {
+		Os(@Nullable String name, @Nullable String family, @Nullable String arch, @Nullable String version) {
 			this.name = name;
 			this.family = family;
 			this.arch = arch;
@@ -124,7 +126,7 @@ public class MavenProfileActivation {
 		 * Return the name of the OS to match or {@code null}.
 		 * @return the name of the OS
 		 */
-		public String getName() {
+		public @Nullable String getName() {
 			return this.name;
 		}
 
@@ -133,7 +135,7 @@ public class MavenProfileActivation {
 		 * {@code mac}, {@code windows}, {@code unix}, {@code os/400}, etc.
 		 * @return the family of OS
 		 */
-		public String getFamily() {
+		public @Nullable String getFamily() {
 			return this.family;
 		}
 
@@ -141,7 +143,7 @@ public class MavenProfileActivation {
 		 * Return the cpu architecture of the OS to match or {@code null}.
 		 * @return the cpu architecture of the OS
 		 */
-		public String getArch() {
+		public @Nullable String getArch() {
 			return this.arch;
 		}
 
@@ -149,7 +151,7 @@ public class MavenProfileActivation {
 		 * Return the version of the OS to match or {@code null}.
 		 * @return the version of the OS
 		 */
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return this.version;
 		}
 
@@ -162,9 +164,9 @@ public class MavenProfileActivation {
 
 		private final String name;
 
-		private final String value;
+		private final @Nullable String value;
 
-		Property(String name, String value) {
+		Property(String name, @Nullable String value) {
 			this.name = name;
 			this.value = value;
 		}
@@ -181,7 +183,7 @@ public class MavenProfileActivation {
 		 * Return the value of the property.
 		 * @return the property value
 		 */
-		public String getValue() {
+		public @Nullable String getValue() {
 			return this.value;
 		}
 
@@ -192,11 +194,11 @@ public class MavenProfileActivation {
 	 */
 	public static final class File {
 
-		private final String exists;
+		private final @Nullable String exists;
 
-		private final String missing;
+		private final @Nullable String missing;
 
-		File(String exists, String missing) {
+		File(@Nullable String exists, @Nullable String missing) {
 			this.missing = missing;
 			this.exists = exists;
 		}
@@ -205,7 +207,7 @@ public class MavenProfileActivation {
 		 * Return the file that should exists for the profile to match or {@code null}.
 		 * @return the file that should exist
 		 */
-		public String getExists() {
+		public @Nullable String getExists() {
 			return this.exists;
 		}
 
@@ -214,7 +216,7 @@ public class MavenProfileActivation {
 		 * {@code null}.
 		 * @return the file that should be missing
 		 */
-		public String getMissing() {
+		public @Nullable String getMissing() {
 			return this.missing;
 		}
 
@@ -225,17 +227,17 @@ public class MavenProfileActivation {
 	 */
 	public static class Builder {
 
-		private Boolean activeByDefault;
+		private @Nullable Boolean activeByDefault;
 
-		private String jdk;
+		private @Nullable String jdk;
 
-		private Os os;
+		private @Nullable Os os;
 
-		private Property property;
+		private @Nullable Property property;
 
-		private String fileExists;
+		private @Nullable String fileExists;
 
-		private String fileMissing;
+		private @Nullable String fileMissing;
 
 		/**
 		 * Creates a new instance.
@@ -248,7 +250,7 @@ public class MavenProfileActivation {
 		 * @param activeByDefault whether to enable the profile is no profile is active
 		 * @return this for method chaining
 		 */
-		public Builder activeByDefault(Boolean activeByDefault) {
+		public Builder activeByDefault(@Nullable Boolean activeByDefault) {
 			this.activeByDefault = activeByDefault;
 			return this;
 		}
@@ -259,7 +261,7 @@ public class MavenProfileActivation {
 		 * @param jdk the jdk (or JDKs range) to match
 		 * @return this for method chaining
 		 */
-		public Builder jdk(String jdk) {
+		public Builder jdk(@Nullable String jdk) {
 			this.jdk = jdk;
 			return this;
 		}
@@ -272,7 +274,8 @@ public class MavenProfileActivation {
 		 * @param version the version of the OS
 		 * @return this for method chaining
 		 */
-		public Builder os(String name, String family, String arch, String version) {
+		public Builder os(@Nullable String name, @Nullable String family, @Nullable String arch,
+				@Nullable String version) {
 			if (name == null && family == null && arch == null && version == null) {
 				this.os = null;
 			}
@@ -288,7 +291,7 @@ public class MavenProfileActivation {
 		 * @param value the value of the property
 		 * @return this for method chaining
 		 */
-		public Builder property(String name, String value) {
+		public Builder property(@Nullable String name, @Nullable String value) {
 			if (name == null) {
 				this.property = null;
 			}
@@ -303,7 +306,7 @@ public class MavenProfileActivation {
 		 * @param existingFile the file that should exist
 		 * @return this for method chaining
 		 */
-		public Builder fileExists(String existingFile) {
+		public Builder fileExists(@Nullable String existingFile) {
 			this.fileExists = existingFile;
 			return this;
 		}
@@ -313,7 +316,7 @@ public class MavenProfileActivation {
 		 * @param missingFile the file that should be missing
 		 * @return this for method chaining
 		 */
-		public Builder fileMissing(String missingFile) {
+		public Builder fileMissing(@Nullable String missingFile) {
 			this.fileMissing = missingFile;
 			return this;
 		}

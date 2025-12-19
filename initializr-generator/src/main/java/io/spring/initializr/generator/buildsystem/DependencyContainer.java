@@ -19,6 +19,8 @@ package io.spring.initializr.generator.buildsystem;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link BuildItemContainer} implementation for dependencies.
  *
@@ -31,7 +33,7 @@ public class DependencyContainer extends BuildItemContainer<String, Dependency> 
 	 * @param itemResolver the function that returns a {@link Dependency} based on an
 	 * identifier.
 	 */
-	public DependencyContainer(Function<String, Dependency> itemResolver) {
+	public DependencyContainer(Function<String, @Nullable Dependency> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 

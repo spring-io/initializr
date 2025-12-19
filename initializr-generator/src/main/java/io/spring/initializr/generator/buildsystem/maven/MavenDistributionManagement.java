@@ -18,6 +18,8 @@ package io.spring.initializr.generator.buildsystem.maven;
 
 import java.util.function.Consumer;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Maven {@code <distributionManagement>} section.
  *
@@ -26,7 +28,7 @@ import java.util.function.Consumer;
  */
 public class MavenDistributionManagement {
 
-	private final String downloadUrl;
+	private final @Nullable String downloadUrl;
 
 	private final DeploymentRepository repository;
 
@@ -57,7 +59,7 @@ public class MavenDistributionManagement {
 	 * Return the URL where this project can be downloaded from.
 	 * @return the URL of the project's download page
 	 */
-	public String getDownloadUrl() {
+	public @Nullable String getDownloadUrl() {
 		return this.downloadUrl;
 	}
 
@@ -101,7 +103,7 @@ public class MavenDistributionManagement {
 	 */
 	public static class Builder {
 
-		private String downloadUrl;
+		private @Nullable String downloadUrl;
 
 		private final DeploymentRepository.Builder repository = new DeploymentRepository.Builder();
 
@@ -116,7 +118,7 @@ public class MavenDistributionManagement {
 		 * @param downloadUrl the URL of the project's download page
 		 * @return this for method chaining
 		 */
-		public Builder downloadUrl(String downloadUrl) {
+		public Builder downloadUrl(@Nullable String downloadUrl) {
 			this.downloadUrl = downloadUrl;
 			return this;
 		}
@@ -177,15 +179,15 @@ public class MavenDistributionManagement {
 	 */
 	public static class DeploymentRepository {
 
-		private final String id;
+		private final @Nullable String id;
 
-		private final String name;
+		private final @Nullable String name;
 
-		private final String url;
+		private final @Nullable String url;
 
-		private final String layout;
+		private final @Nullable String layout;
 
-		private final Boolean uniqueVersion;
+		private final @Nullable Boolean uniqueVersion;
 
 		DeploymentRepository(Builder builder) {
 			this.id = builder.id;
@@ -208,7 +210,7 @@ public class MavenDistributionManagement {
 		 * Return the identifier of the repository.
 		 * @return the repository ID
 		 */
-		public String getId() {
+		public @Nullable String getId() {
 			return this.id;
 		}
 
@@ -216,7 +218,7 @@ public class MavenDistributionManagement {
 		 * Return the name of the repository.
 		 * @return the repository name
 		 */
-		public String getName() {
+		public @Nullable String getName() {
 			return this.name;
 		}
 
@@ -224,7 +226,7 @@ public class MavenDistributionManagement {
 		 * Return the url of the repository to use to upload artifacts.
 		 * @return the repository url
 		 */
-		public String getUrl() {
+		public @Nullable String getUrl() {
 			return this.url;
 		}
 
@@ -232,7 +234,7 @@ public class MavenDistributionManagement {
 		 * Return the repository layout. Can be {@code default} or {@code legacy}.
 		 * @return the repository layout
 		 */
-		public String getLayout() {
+		public @Nullable String getLayout() {
 			return this.layout;
 		}
 
@@ -241,7 +243,7 @@ public class MavenDistributionManagement {
 		 * and build number, or to use the same version each time.
 		 * @return {@code true} to assign each snapshot a unique version
 		 */
-		public Boolean getUniqueVersion() {
+		public @Nullable Boolean getUniqueVersion() {
 			return this.uniqueVersion;
 		}
 
@@ -250,22 +252,22 @@ public class MavenDistributionManagement {
 		 */
 		public static class Builder {
 
-			private String id;
+			private @Nullable String id;
 
-			private String name;
+			private @Nullable String name;
 
-			private String url;
+			private @Nullable String url;
 
-			private String layout;
+			private @Nullable String layout;
 
-			private Boolean uniqueVersion;
+			private @Nullable Boolean uniqueVersion;
 
 			/**
 			 * Set the id of the repository.
 			 * @param id the identifier
 			 * @return this for method chaining
 			 */
-			public Builder id(String id) {
+			public Builder id(@Nullable String id) {
 				this.id = id;
 				return this;
 			}
@@ -275,7 +277,7 @@ public class MavenDistributionManagement {
 			 * @param name the name
 			 * @return this for method chaining
 			 */
-			public Builder name(String name) {
+			public Builder name(@Nullable String name) {
 				this.name = name;
 				return this;
 			}
@@ -287,7 +289,7 @@ public class MavenDistributionManagement {
 			 * @param url the url
 			 * @return this for method chaining
 			 */
-			public Builder url(String url) {
+			public Builder url(@Nullable String url) {
 				this.url = url;
 				return this;
 			}
@@ -297,7 +299,7 @@ public class MavenDistributionManagement {
 			 * @param layout the layout
 			 * @return this for method chaining
 			 */
-			public Builder layout(String layout) {
+			public Builder layout(@Nullable String layout) {
 				this.layout = layout;
 				return this;
 			}
@@ -308,7 +310,7 @@ public class MavenDistributionManagement {
 			 * @param uniqueVersion {@code true} to use unique version for snapshots
 			 * @return this for method chaining
 			 */
-			public Builder uniqueVersion(Boolean uniqueVersion) {
+			public Builder uniqueVersion(@Nullable Boolean uniqueVersion) {
 				this.uniqueVersion = uniqueVersion;
 				return this;
 			}
@@ -331,11 +333,11 @@ public class MavenDistributionManagement {
 	 */
 	public static class Site {
 
-		private final String id;
+		private final @Nullable String id;
 
-		private final String name;
+		private final @Nullable String name;
 
-		private final String url;
+		private final @Nullable String url;
 
 		Site(Builder builder) {
 			this.id = builder.id;
@@ -355,7 +357,7 @@ public class MavenDistributionManagement {
 		 * Return the identifier of the repository.
 		 * @return the repository ID
 		 */
-		public String getId() {
+		public @Nullable String getId() {
 			return this.id;
 		}
 
@@ -363,7 +365,7 @@ public class MavenDistributionManagement {
 		 * Return the name of the repository.
 		 * @return the repository name
 		 */
-		public String getName() {
+		public @Nullable String getName() {
 			return this.name;
 		}
 
@@ -371,7 +373,7 @@ public class MavenDistributionManagement {
 		 * Return the url of the repository to use to upload the site.
 		 * @return the repository url
 		 */
-		public String getUrl() {
+		public @Nullable String getUrl() {
 			return this.url;
 		}
 
@@ -380,18 +382,18 @@ public class MavenDistributionManagement {
 		 */
 		public static class Builder {
 
-			private String id;
+			private @Nullable String id;
 
-			private String name;
+			private @Nullable String name;
 
-			private String url;
+			private @Nullable String url;
 
 			/**
 			 * Set the id of the repository.
 			 * @param id the identifier
 			 * @return this for method chaining
 			 */
-			public Builder id(String id) {
+			public Builder id(@Nullable String id) {
 				this.id = id;
 				return this;
 			}
@@ -401,7 +403,7 @@ public class MavenDistributionManagement {
 			 * @param name the name
 			 * @return this for method chaining
 			 */
-			public Builder name(String name) {
+			public Builder name(@Nullable String name) {
 				this.name = name;
 				return this;
 			}
@@ -412,7 +414,7 @@ public class MavenDistributionManagement {
 			 * @param url the url
 			 * @return this for method chaining
 			 */
-			public Builder url(String url) {
+			public Builder url(@Nullable String url) {
 				this.url = url;
 				return this;
 			}
@@ -435,13 +437,13 @@ public class MavenDistributionManagement {
 	 */
 	public static class Relocation {
 
-		private final String groupId;
+		private final @Nullable String groupId;
 
-		private final String artifactId;
+		private final @Nullable String artifactId;
 
-		private final String version;
+		private final @Nullable String version;
 
-		private final String message;
+		private final @Nullable String message;
 
 		Relocation(Builder builder) {
 			this.groupId = builder.groupId;
@@ -462,7 +464,7 @@ public class MavenDistributionManagement {
 		 * Return the new group ID of the dependency.
 		 * @return the relocated group ID
 		 */
-		public String getGroupId() {
+		public @Nullable String getGroupId() {
 			return this.groupId;
 		}
 
@@ -470,7 +472,7 @@ public class MavenDistributionManagement {
 		 * Return the new artifact ID of the dependency.
 		 * @return the relocated artifact ID
 		 */
-		public String getArtifactId() {
+		public @Nullable String getArtifactId() {
 			return this.artifactId;
 		}
 
@@ -478,7 +480,7 @@ public class MavenDistributionManagement {
 		 * Return the new version of the dependency.
 		 * @return the relocated version
 		 */
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return this.version;
 		}
 
@@ -486,7 +488,7 @@ public class MavenDistributionManagement {
 		 * Return a message that provides more details about the relocation.
 		 * @return the relocation message
 		 */
-		public String getMessage() {
+		public @Nullable String getMessage() {
 			return this.message;
 		}
 
@@ -495,20 +497,20 @@ public class MavenDistributionManagement {
 		 */
 		public static class Builder {
 
-			private String groupId;
+			private @Nullable String groupId;
 
-			private String artifactId;
+			private @Nullable String artifactId;
 
-			private String version;
+			private @Nullable String version;
 
-			private String message;
+			private @Nullable String message;
 
 			/**
 			 * Specify the new group ID of the dependency.
 			 * @param groupId the new group ID of the dependency
 			 * @return this for method chaining
 			 */
-			public Builder groupId(String groupId) {
+			public Builder groupId(@Nullable String groupId) {
 				this.groupId = groupId;
 				return this;
 			}
@@ -518,7 +520,7 @@ public class MavenDistributionManagement {
 			 * @param artifactId the new artifact ID of the dependency
 			 * @return this for method chaining
 			 */
-			public Builder artifactId(String artifactId) {
+			public Builder artifactId(@Nullable String artifactId) {
 				this.artifactId = artifactId;
 				return this;
 			}
@@ -528,7 +530,7 @@ public class MavenDistributionManagement {
 			 * @param version the new version of the dependency
 			 * @return this for method chaining
 			 */
-			public Builder version(String version) {
+			public Builder version(@Nullable String version) {
 				this.version = version;
 				return this;
 			}
@@ -538,7 +540,7 @@ public class MavenDistributionManagement {
 			 * @param message the relocation message
 			 * @return this for method chaining
 			 */
-			public Builder message(String message) {
+			public Builder message(@Nullable String message) {
 				this.message = message;
 				return this;
 			}

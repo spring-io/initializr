@@ -17,4 +17,7 @@
 /**
  * Configuration file format abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.configuration.format;
+
+import org.jspecify.annotations.NullMarked;

@@ -46,6 +46,7 @@ import io.spring.initializr.generator.buildsystem.maven.MavenPlugin.Setting;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -271,12 +272,12 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private Predicate<DependencyScope> hasScope(DependencyScope... validScopes) {
-		return (scope) -> Arrays.asList(validScopes).contains(scope);
+	private Predicate<@Nullable DependencyScope> hasScope(DependencyScope... validScopes) {
+		return (scope) -> scope != null && Arrays.asList(validScopes).contains(scope);
 	}
 
 	private Collection<Dependency> writeDependencies(IndentingWriter writer, DependencyContainer dependencies,
-			Predicate<DependencyScope> filter) {
+			Predicate<@Nullable DependencyScope> filter) {
 		Collection<Dependency> candidates = dependencies.items()
 			.filter((dep) -> filter.test(dep.getScope()))
 			.sorted(getDependencyComparator())
@@ -307,7 +308,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private String scopeForType(DependencyScope type) {
+	private @Nullable String scopeForType(@Nullable DependencyScope type) {
 		if (type == null) {
 			return null;
 		}
@@ -345,12 +346,15 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private String determineVersion(VersionReference versionReference) {
+	private @Nullable String determineVersion(@Nullable VersionReference versionReference) {
 		if (versionReference == null) {
 			return null;
 		}
-		return (versionReference.isProperty()) ? "${" + versionReference.getProperty().toStandardFormat() + "}"
-				: versionReference.getValue();
+		VersionProperty property = versionReference.getProperty();
+		if (property != null) {
+			return "${" + property.toStandardFormat() + "}";
+		}
+		return versionReference.getValue();
 	}
 
 	private void writeBuild(IndentingWriter writer, MavenBuild build) {
@@ -433,7 +437,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writePluginConfiguration(IndentingWriter writer, Configuration configuration) {
+	private void writePluginConfiguration(IndentingWriter writer, @Nullable Configuration configuration) {
 		if (configuration == null || configuration.getSettings().isEmpty()) {
 			return;
 		}
@@ -624,7 +628,7 @@ public class MavenBuildWriter {
 		});
 	}
 
-	private void writeSingleElement(IndentingWriter writer, String name, Object value) {
+	private void writeSingleElement(IndentingWriter writer, String name, @Nullable Object value) {
 		if (value != null) {
 			CharSequence text = (value instanceof CharSequence) ? (CharSequence) value : value.toString();
 			if (!StringUtils.hasLength(text)) {
@@ -667,7 +671,7 @@ public class MavenBuildWriter {
 		}
 	}
 
-	private <T> void ifNotNull(T value, Consumer<T> elementWriter) {
+	private <T> void ifNotNull(@Nullable T value, Consumer<T> elementWriter) {
 		if (value != null) {
 			elementWriter.accept(value);
 		}

@@ -17,4 +17,7 @@
 /**
  * Java archive packaging.
  */
+@NullMarked
 package io.spring.initializr.generator.packaging.jar;
+
+import org.jspecify.annotations.NullMarked;

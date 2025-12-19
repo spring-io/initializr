@@ -18,9 +18,12 @@ package io.spring.initializr.generator.condition;
 
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.ProjectDescription;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.Assert;
+import org.springframework.util.MultiValueMap;
 
 /**
  * {@link ProjectGenerationCondition Condition} implementation for
@@ -36,9 +39,12 @@ class OnPackagingCondition extends ProjectGenerationCondition {
 		if (description.getPackaging() == null) {
 			return false;
 		}
-		String packagingId = (String) metadata.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName())
-			.getFirst("value");
-		Packaging packaging = Packaging.forId(packagingId);
+		MultiValueMap<String, @Nullable Object> attributes = metadata
+			.getAllAnnotationAttributes(ConditionalOnPackaging.class.getName());
+		Assert.state(attributes != null, "'attributes' must not be null");
+		String value = (String) attributes.getFirst("value");
+		Assert.state(value != null, "'value' must not be null");
+		Packaging packaging = Packaging.forId(value);
 		return description.getPackaging().id().equals(packaging.id());
 	}
 

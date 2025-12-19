@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Build configuration for a project.
  *
@@ -34,7 +36,7 @@ public abstract class Build {
 
 	private final MavenRepositoryContainer pluginRepositories;
 
-	protected Build(BuildItemResolver buildItemResolver) {
+	protected Build(@Nullable BuildItemResolver buildItemResolver) {
 		BuildItemResolver resolver = determineBuildItemResolver(buildItemResolver);
 		this.properties = new PropertyContainer();
 		this.dependencies = new DependencyContainer(resolver::resolveDependency);
@@ -43,7 +45,7 @@ public abstract class Build {
 		this.pluginRepositories = new MavenRepositoryContainer(resolver::resolveRepository);
 	}
 
-	protected static BuildItemResolver determineBuildItemResolver(BuildItemResolver buildItemResolver) {
+	protected static BuildItemResolver determineBuildItemResolver(@Nullable BuildItemResolver buildItemResolver) {
 		if (buildItemResolver != null) {
 			return buildItemResolver;
 		}

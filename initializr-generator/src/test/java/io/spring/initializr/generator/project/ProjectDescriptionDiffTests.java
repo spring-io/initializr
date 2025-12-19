@@ -30,6 +30,7 @@ import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.packaging.jar.JarPackaging;
 import io.spring.initializr.generator.version.Version;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -233,7 +234,7 @@ class ProjectDescriptionDiffTests {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> void validateConsumer(T original, T actual, Consumer<BiConsumer<T, T>> test) {
+	private <T> void validateConsumer(@Nullable T original, T actual, Consumer<BiConsumer<T, T>> test) {
 		BiConsumer<T, T> consumer = mock(BiConsumer.class);
 		test.accept(consumer);
 		verify(consumer).accept(original, actual);

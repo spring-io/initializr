@@ -50,6 +50,7 @@ class DependencyTests {
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
 		assertThat(dependency.getArtifactId()).isEqualTo("acme");
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.RUNTIME);
+		assertThat(dependency.getVersion()).isNotNull();
 		assertThat(dependency.getVersion().getValue()).isEqualTo("1.0.0");
 		assertThat(dependency.getClassifier()).isNull();
 		assertThat(dependency.getType()).isNull();

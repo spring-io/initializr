@@ -27,6 +27,8 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.FileCopyUtils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Test contributors.
  *
@@ -41,7 +43,9 @@ public class TestProjectGenerationConfiguration {
 		return (projectRoot) -> {
 			Path testFile = projectRoot.resolve("artifact-id.txt");
 			Files.createFile(testFile);
-			FileCopyUtils.copy(description.getArtifactId(), Files.newBufferedWriter(testFile));
+			String artifactId = description.getArtifactId();
+			assertThat(artifactId).isNotNull();
+			FileCopyUtils.copy(artifactId, Files.newBufferedWriter(testFile));
 		};
 	}
 

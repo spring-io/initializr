@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.spring.initializr.generator.version.VersionReference;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -37,13 +38,13 @@ public class Dependency {
 
 	private final String artifactId;
 
-	private final VersionReference version;
+	private final @Nullable VersionReference version;
 
-	private final DependencyScope scope;
+	private final @Nullable DependencyScope scope;
 
-	private final String classifier;
+	private final @Nullable String classifier;
 
-	private final String type;
+	private final @Nullable String type;
 
 	private final Set<Exclusion> exclusions;
 
@@ -98,7 +99,7 @@ public class Dependency {
 	 * dependency whose version is expected to be provided by dependency management.
 	 * @return the version reference or {@code null}
 	 */
-	public VersionReference getVersion() {
+	public @Nullable VersionReference getVersion() {
 		return this.version;
 	}
 
@@ -106,7 +107,7 @@ public class Dependency {
 	 * The {@link DependencyScope scope} of the dependency.
 	 * @return the scope
 	 */
-	public DependencyScope getScope() {
+	public @Nullable DependencyScope getScope() {
 		return this.scope;
 	}
 
@@ -114,7 +115,7 @@ public class Dependency {
 	 * The classifier of this dependency. Can be {@code null}
 	 * @return the classifier or {@code null}
 	 */
-	public String getClassifier() {
+	public @Nullable String getClassifier() {
 		return this.classifier;
 	}
 
@@ -123,7 +124,7 @@ public class Dependency {
 	 * should be used (i.e. {@code jar}).
 	 * @return the type or {@code null}
 	 */
-	public String getType() {
+	public @Nullable String getType() {
 		return this.type;
 	}
 
@@ -147,13 +148,13 @@ public class Dependency {
 
 		private String artifactId;
 
-		private VersionReference version;
+		private @Nullable VersionReference version;
 
-		private DependencyScope scope;
+		private @Nullable DependencyScope scope;
 
-		private String type;
+		private @Nullable String type;
 
-		private String classifier;
+		private @Nullable String classifier;
 
 		private Set<Exclusion> exclusions = new LinkedHashSet<>();
 
@@ -172,22 +173,22 @@ public class Dependency {
 			return self();
 		}
 
-		public B version(VersionReference version) {
+		public B version(@Nullable VersionReference version) {
 			this.version = version;
 			return self();
 		}
 
-		public B scope(DependencyScope scope) {
+		public B scope(@Nullable DependencyScope scope) {
 			this.scope = scope;
 			return self();
 		}
 
-		public B classifier(String classifier) {
+		public B classifier(@Nullable String classifier) {
 			this.classifier = classifier;
 			return self();
 		}
 
-		public B type(String type) {
+		public B type(@Nullable String type) {
 			this.type = type;
 			return self();
 		}
@@ -197,7 +198,7 @@ public class Dependency {
 			return self();
 		}
 
-		public B exclusions(Set<Exclusion> exclusions) {
+		public B exclusions(@Nullable Set<Exclusion> exclusions) {
 			this.exclusions = (exclusions != null) ? new LinkedHashSet<>(exclusions) : new LinkedHashSet<>();
 			return self();
 		}

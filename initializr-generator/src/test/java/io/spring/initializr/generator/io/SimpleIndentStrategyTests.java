@@ -54,6 +54,7 @@ class SimpleIndentStrategyTests {
 	}
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void mustHaveIndent() {
 		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new SimpleIndentStrategy(null));
 	}

@@ -17,4 +17,7 @@
 /**
  * Web Application archive packaging.
  */
+@NullMarked
 package io.spring.initializr.generator.packaging.war;
+
+import org.jspecify.annotations.NullMarked;

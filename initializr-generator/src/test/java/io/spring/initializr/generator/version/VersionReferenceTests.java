@@ -41,7 +41,9 @@ class VersionReferenceTests {
 	void ofPropertyWithInternalProperty() {
 		VersionReference reference = VersionReference.ofProperty("test.version");
 		assertThat(reference.isProperty()).isTrue();
-		assertThat(reference.getProperty().toStandardFormat()).isEqualTo("test.version");
+		VersionProperty property = reference.getProperty();
+		assertThat(property).isNotNull();
+		assertThat(property.toStandardFormat()).isEqualTo("test.version");
 		assertThat(reference.getValue()).isNull();
 		assertThat(reference).hasToString("${test.version}");
 	}

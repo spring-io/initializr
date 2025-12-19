@@ -18,6 +18,7 @@ package io.spring.initializr.generator.buildsystem;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings.Builder;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +83,7 @@ class BuildTests {
 
 		private final TestBuildSettingsBuilder settings = new TestBuildSettingsBuilder();
 
-		TestBuild(BuildItemResolver buildItemResolver) {
+		TestBuild(@Nullable BuildItemResolver buildItemResolver) {
 			super(buildItemResolver);
 		}
 

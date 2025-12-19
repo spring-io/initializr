@@ -19,6 +19,8 @@ package io.spring.initializr.generator.buildsystem;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link BuildItemContainer} implementation for boms.
  *
@@ -31,7 +33,7 @@ public class BomContainer extends BuildItemContainer<String, BillOfMaterials> {
 	 * @param itemResolver the function that returns a {@link BillOfMaterials} based on an
 	 * identifier.
 	 */
-	public BomContainer(Function<String, BillOfMaterials> itemResolver) {
+	public BomContainer(Function<String, @Nullable BillOfMaterials> itemResolver) {
 		super(new LinkedHashMap<>(), itemResolver);
 	}
 

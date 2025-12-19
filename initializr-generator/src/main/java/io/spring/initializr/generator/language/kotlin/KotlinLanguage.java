@@ -20,6 +20,7 @@ import java.util.Set;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.Language;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Kotlin {@link Language}.
@@ -52,7 +53,7 @@ public final class KotlinLanguage extends AbstractLanguage {
 	 * Creates a new instance.
 	 * @param jvmVersion the JVM version
 	 */
-	public KotlinLanguage(String jvmVersion) {
+	public KotlinLanguage(@Nullable String jvmVersion) {
 		super(ID, jvmVersion, "kt");
 	}
 

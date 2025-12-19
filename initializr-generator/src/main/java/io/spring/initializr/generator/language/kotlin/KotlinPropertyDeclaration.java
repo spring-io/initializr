@@ -26,6 +26,7 @@ import io.spring.initializr.generator.language.Annotation;
 import io.spring.initializr.generator.language.AnnotationContainer;
 import io.spring.initializr.generator.language.ClassName;
 import io.spring.initializr.generator.language.CodeBlock;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Declaration of a property written in Kotlin.
@@ -40,15 +41,15 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 	private final String name;
 
-	private final String returnType;
+	private final @Nullable String returnType;
 
 	private final List<KotlinModifier> modifiers;
 
-	private final CodeBlock valueCode;
+	private final @Nullable CodeBlock valueCode;
 
-	private final Accessor getter;
+	private final @Nullable Accessor getter;
 
-	private final Accessor setter;
+	private final @Nullable Accessor setter;
 
 	private KotlinPropertyDeclaration(Builder<?> builder) {
 		this.name = builder.name;
@@ -86,7 +87,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		return this.name;
 	}
 
-	String getReturnType() {
+	@Nullable String getReturnType() {
 		return this.returnType;
 	}
 
@@ -98,15 +99,15 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		return this.modifiers;
 	}
 
-	CodeBlock getValueCode() {
+	@Nullable CodeBlock getValueCode() {
 		return this.valueCode;
 	}
 
-	Accessor getGetter() {
+	@Nullable Accessor getGetter() {
 		return this.getter;
 	}
 
-	Accessor getSetter() {
+	@Nullable Accessor getSetter() {
 		return this.setter;
 	}
 
@@ -126,15 +127,15 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final String name;
 
-		private String returnType;
+		private @Nullable String returnType;
 
 		private List<KotlinModifier> modifiers = new ArrayList<>();
 
-		private CodeBlock valueCode;
+		private @Nullable CodeBlock valueCode;
 
-		private Accessor getter;
+		private @Nullable Accessor getter;
 
-		private Accessor setter;
+		private @Nullable Accessor setter;
 
 		private Builder(String name, boolean isVal) {
 			this.name = name;
@@ -170,7 +171,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 * @param returnType the return type
 		 * @return this for method chaining
 		 */
-		public T returning(String returnType) {
+		public T returning(@Nullable String returnType) {
 			this.returnType = returnType;
 			return self();
 		}
@@ -198,7 +199,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 * @param valueCode the code for the value
 		 * @return the property declaration
 		 */
-		public KotlinPropertyDeclaration value(CodeBlock valueCode) {
+		public KotlinPropertyDeclaration value(@Nullable CodeBlock valueCode) {
 			this.valueCode = valueCode;
 			return new KotlinPropertyDeclaration(this);
 		}
@@ -254,7 +255,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final AnnotationContainer annotations = new AnnotationContainer();
 
-		private CodeBlock code;
+		private @Nullable CodeBlock code;
 
 		private final T parent;
 
@@ -280,7 +281,8 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 * @param annotation configurer for the annotation
 		 * @return this for method chaining
 		 */
-		public AccessorBuilder<?> withAnnotation(ClassName className, Consumer<Annotation.Builder> annotation) {
+		public AccessorBuilder<?> withAnnotation(ClassName className,
+				@Nullable Consumer<Annotation.Builder> annotation) {
 			this.annotations.addSingle(className, annotation);
 			return this;
 		}
@@ -290,7 +292,7 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 		 * @param code the code for the body
 		 * @return this for method chaining
 		 */
-		public AccessorBuilder<?> withBody(CodeBlock code) {
+		public AccessorBuilder<?> withBody(@Nullable CodeBlock code) {
 			this.code = code;
 			return this;
 		}
@@ -310,14 +312,14 @@ public final class KotlinPropertyDeclaration implements Annotatable {
 
 		private final AnnotationContainer annotations;
 
-		private final CodeBlock code;
+		private final @Nullable CodeBlock code;
 
 		Accessor(AccessorBuilder<?> builder) {
 			this.annotations = builder.annotations.deepCopy();
 			this.code = builder.code;
 		}
 
-		CodeBlock getCode() {
+		@Nullable CodeBlock getCode() {
 			return this.code;
 		}
 

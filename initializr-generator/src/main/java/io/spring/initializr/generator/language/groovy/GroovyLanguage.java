@@ -20,6 +20,7 @@ import java.util.Set;
 
 import io.spring.initializr.generator.language.AbstractLanguage;
 import io.spring.initializr.generator.language.Language;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Groovy {@link Language}.
@@ -52,7 +53,7 @@ public final class GroovyLanguage extends AbstractLanguage {
 	 * Creates a new instance.
 	 * @param jvmVersion the JVM version
 	 */
-	public GroovyLanguage(String jvmVersion) {
+	public GroovyLanguage(@Nullable String jvmVersion) {
 		super(ID, jvmVersion, "groovy");
 	}
 

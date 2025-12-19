@@ -23,6 +23,7 @@ import java.util.stream.Collector;
 import java.util.stream.StreamSupport;
 
 import io.spring.initializr.generator.io.IndentingWriter;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ClassUtils;
 
@@ -63,7 +64,7 @@ public final class CodeBlock {
 
 	private final List<String> parts;
 
-	private final List<Object> args;
+	private final List<@Nullable Object> args;
 
 	private final List<String> imports;
 
@@ -195,7 +196,7 @@ public final class CodeBlock {
 
 		private final List<String> parts = new ArrayList<>();
 
-		private final List<Object> args = new ArrayList<>();
+		private final List<@Nullable Object> args = new ArrayList<>();
 
 		private final List<String> imports = new ArrayList<>();
 
@@ -279,7 +280,7 @@ public final class CodeBlock {
 			return arg;
 		}
 
-		private String argToString(Object arg) {
+		private @Nullable String argToString(@Nullable Object arg) {
 			return (arg != null) ? String.valueOf(arg) : null;
 		}
 

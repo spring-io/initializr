@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -52,17 +54,18 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	private static final VersionParser parser = new VersionParser(Collections.emptyList());
 
-	private final Integer major;
+	private final @Nullable Integer major;
 
-	private final Integer minor;
+	private final @Nullable Integer minor;
 
-	private final Integer patch;
+	private final @Nullable Integer patch;
 
-	private final Qualifier qualifier;
+	private final @Nullable Qualifier qualifier;
 
 	private final Format format;
 
-	public Version(Integer major, Integer minor, Integer patch, Qualifier qualifier) {
+	public Version(@Nullable Integer major, @Nullable Integer minor, @Nullable Integer patch,
+			@Nullable Qualifier qualifier) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
@@ -70,7 +73,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		this.format = determineFormat(qualifier);
 	}
 
-	private static Format determineFormat(Qualifier qualifier) {
+	private static Format determineFormat(@Nullable Qualifier qualifier) {
 		if (qualifier == null) {
 			return Format.V2;
 		}
@@ -92,7 +95,8 @@ public final class Version implements Serializable, Comparable<Version> {
 		return new Version(this.major, this.minor, this.patch, qualifier);
 	}
 
-	private Qualifier formatQualifier(String newSeparator, Function<String, String> idTransformer) {
+	private @Nullable Qualifier formatQualifier(String newSeparator,
+			Function<@Nullable String, @Nullable String> idTransformer) {
 		String originalQualifier = (this.qualifier != null) ? this.qualifier.getId() : null;
 		String newId = idTransformer.apply(originalQualifier);
 		if (newId != null) {
@@ -101,7 +105,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		return null;
 	}
 
-	private String toV1Qualifier(String id) {
+	private String toV1Qualifier(@Nullable String id) {
 		if ("SNAPSHOT".equals(id)) {
 			return "BUILD-SNAPSHOT";
 		}
@@ -111,7 +115,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		return id;
 	}
 
-	private String toV2Qualifier(String id) {
+	private @Nullable String toV2Qualifier(@Nullable String id) {
 		if ("BUILD-SNAPSHOT".equals(id)) {
 			return "SNAPSHOT";
 		}
@@ -121,19 +125,19 @@ public final class Version implements Serializable, Comparable<Version> {
 		return id;
 	}
 
-	public Integer getMajor() {
+	public @Nullable Integer getMajor() {
 		return this.major;
 	}
 
-	public Integer getMinor() {
+	public @Nullable Integer getMinor() {
 		return this.minor;
 	}
 
-	public Integer getPatch() {
+	public @Nullable Integer getPatch() {
 		return this.patch;
 	}
 
-	public Qualifier getQualifier() {
+	public @Nullable Qualifier getQualifier() {
 		return this.qualifier;
 	}
 
@@ -161,7 +165,10 @@ public final class Version implements Serializable, Comparable<Version> {
 	 * @return a Version instance for the specified version text
 	 * @see VersionParser
 	 */
-	public static Version safeParse(String text) {
+	public static @Nullable Version safeParse(@Nullable String text) {
+		if (text == null) {
+			return null;
+		}
 		try {
 			return parse(text);
 		}
@@ -171,7 +178,7 @@ public final class Version implements Serializable, Comparable<Version> {
 	}
 
 	@Override
-	public int compareTo(Version other) {
+	public int compareTo(@Nullable Version other) {
 		if (other == null) {
 			return 1;
 		}
@@ -190,14 +197,14 @@ public final class Version implements Serializable, Comparable<Version> {
 		return qualifierComparator.compare(this.qualifier, other.qualifier);
 	}
 
-	private static int safeCompare(Integer first, Integer second) {
+	private static int safeCompare(@Nullable Integer first, @Nullable Integer second) {
 		Integer firstIndex = (first != null) ? first : 0;
 		Integer secondIndex = (second != null) ? second : 0;
 		return firstIndex.compareTo(secondIndex);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -277,7 +284,7 @@ public final class Version implements Serializable, Comparable<Version> {
 
 		private final String id;
 
-		private final Integer version;
+		private final @Nullable Integer version;
 
 		private final String separator;
 
@@ -285,7 +292,7 @@ public final class Version implements Serializable, Comparable<Version> {
 			this(id, null, ".");
 		}
 
-		public Qualifier(String id, Integer version, String separator) {
+		public Qualifier(String id, @Nullable Integer version, String separator) {
 			this.id = id;
 			this.version = version;
 			this.separator = separator;
@@ -295,7 +302,7 @@ public final class Version implements Serializable, Comparable<Version> {
 			return this.id;
 		}
 
-		public Integer getVersion() {
+		public @Nullable Integer getVersion() {
 			return this.version;
 		}
 
@@ -304,7 +311,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(@Nullable Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -362,7 +369,7 @@ public final class Version implements Serializable, Comparable<Version> {
 		static final List<String> KNOWN_QUALIFIERS = Arrays.asList(MILESTONE, RC, BUILD_SNAPSHOT, SNAPSHOT, RELEASE);
 
 		@Override
-		public int compare(Qualifier o1, Qualifier o2) {
+		public int compare(@Nullable Qualifier o1, @Nullable Qualifier o2) {
 			Qualifier first = (o1 != null) ? o1 : new Qualifier(RELEASE);
 			Qualifier second = (o2 != null) ? o2 : new Qualifier(RELEASE);
 

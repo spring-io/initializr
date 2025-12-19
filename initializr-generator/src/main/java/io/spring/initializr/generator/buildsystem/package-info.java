@@ -17,4 +17,7 @@
 /**
  * Build systems abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.buildsystem;
+
+import org.jspecify.annotations.NullMarked;

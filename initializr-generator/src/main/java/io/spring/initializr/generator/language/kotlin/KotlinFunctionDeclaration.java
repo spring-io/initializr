@@ -24,6 +24,7 @@ import io.spring.initializr.generator.language.Annotatable;
 import io.spring.initializr.generator.language.AnnotationContainer;
 import io.spring.initializr.generator.language.CodeBlock;
 import io.spring.initializr.generator.language.Parameter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Declaration of a function written in Kotlin.
@@ -36,7 +37,7 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 	private final String name;
 
-	private final String returnType;
+	private final @Nullable String returnType;
 
 	private final List<KotlinModifier> modifiers;
 
@@ -65,7 +66,7 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 		return this.name;
 	}
 
-	String getReturnType() {
+	@Nullable String getReturnType() {
 		return this.returnType;
 	}
 
@@ -97,7 +98,7 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 
 		private List<KotlinModifier> modifiers = new ArrayList<>();
 
-		private String returnType;
+		private @Nullable String returnType;
 
 		private Builder(String name) {
 			this.name = name;
@@ -118,7 +119,7 @@ public final class KotlinFunctionDeclaration implements Annotatable {
 		 * @param returnType the return type
 		 * @return this for method chaining
 		 */
-		public Builder returning(String returnType) {
+		public Builder returning(@Nullable String returnType) {
 			this.returnType = returnType;
 			return this;
 		}

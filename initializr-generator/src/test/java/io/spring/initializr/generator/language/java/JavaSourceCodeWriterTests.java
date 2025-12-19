@@ -55,17 +55,20 @@ class JavaSourceCodeWriterTests {
 	private static final Language LANGUAGE = new JavaLanguage();
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	private final JavaSourceCodeWriter writer = new JavaSourceCodeWriter(IndentingWriterFactory.withDefaultSettings());
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullPackageInvalidCompilationUnit() {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit(null, "Test"));
 	}
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullNameInvalidCompilationUnit() {
 		JavaSourceCode sourceCode = new JavaSourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit("com.example", null));

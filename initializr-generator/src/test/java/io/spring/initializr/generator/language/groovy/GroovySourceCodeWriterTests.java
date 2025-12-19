@@ -55,18 +55,21 @@ class GroovySourceCodeWriterTests {
 	private static final Language LANGUAGE = new GroovyLanguage();
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	private final GroovySourceCodeWriter writer = new GroovySourceCodeWriter(
 			IndentingWriterFactory.withDefaultSettings());
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullPackageInvalidCompilationUnit() {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit(null, "Test"));
 	}
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullNameInvalidCompilationUnit() {
 		GroovySourceCode sourceCode = new GroovySourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit("com.example", null));

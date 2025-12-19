@@ -48,9 +48,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 class BulletedSectionTests {
 
 	@Mock
+	@SuppressWarnings("NullAway.Init")
 	private TemplateRenderer renderer;
 
 	@Captor
+	@SuppressWarnings("NullAway.Init")
 	private ArgumentCaptor<Map<String, Object>> modelCaptor;
 
 	@Test

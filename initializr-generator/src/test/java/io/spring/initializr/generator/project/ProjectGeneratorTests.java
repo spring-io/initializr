@@ -124,7 +124,7 @@ class ProjectGeneratorTests {
 			context.registerBean("second", ProjectDescriptionCustomizer.class, () -> firstCustomizer);
 		});
 		MutableProjectDescription description = new MutableProjectDescription();
-		generator.generate(description, (context) -> null);
+		generator.generate(description, (context) -> new Object());
 		InOrder inOrder = inOrder(firstCustomizer, secondCustomizer);
 		inOrder.verify(firstCustomizer).customize(description);
 		inOrder.verify(secondCustomizer).customize(description);

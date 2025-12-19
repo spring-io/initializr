@@ -15,12 +15,9 @@
  */
 
 /**
- * Kotlin language. Provides a
- * {@link io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit compilation
- * unit} implementation and a write for Kotlin
- * {@link io.spring.initializr.generator.language.kotlin.KotlinSourceCode source code}.
+ * @author Moritz Halbritter
  */
 @NullMarked
-package io.spring.initializr.generator.language.kotlin;
+package com.example;
 
 import org.jspecify.annotations.NullMarked;

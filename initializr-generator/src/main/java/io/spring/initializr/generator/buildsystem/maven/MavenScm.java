@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem.maven;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A version control section of a {@link MavenBuild}.
  *
@@ -23,13 +25,13 @@ package io.spring.initializr.generator.buildsystem.maven;
  */
 public class MavenScm {
 
-	private final String connection;
+	private final @Nullable String connection;
 
-	private final String developerConnection;
+	private final @Nullable String developerConnection;
 
-	private final String tag;
+	private final @Nullable String tag;
 
-	private final String url;
+	private final @Nullable String url;
 
 	MavenScm(Builder builder) {
 		this.connection = builder.connection;
@@ -47,7 +49,7 @@ public class MavenScm {
 	 * how to connect to the repository.
 	 * @return the source control management system URL
 	 */
-	public String getConnection() {
+	public @Nullable String getConnection() {
 		return this.connection;
 	}
 
@@ -57,7 +59,7 @@ public class MavenScm {
 	 * will not be read only.
 	 * @return the source control management system URL for developers
 	 */
-	public String getDeveloperConnection() {
+	public @Nullable String getDeveloperConnection() {
 		return this.developerConnection;
 	}
 
@@ -65,7 +67,7 @@ public class MavenScm {
 	 * The tag of current code. By default, it's set to HEAD during development.
 	 * @return the tag of current code
 	 */
-	public String getTag() {
+	public @Nullable String getTag() {
 		return this.tag;
 	}
 
@@ -73,19 +75,19 @@ public class MavenScm {
 	 * The URL to the project's browsable SCM repository.
 	 * @return the URL to the project's browsable SCM repository
 	 */
-	public String getUrl() {
+	public @Nullable String getUrl() {
 		return this.url;
 	}
 
 	public static class Builder {
 
-		private String connection;
+		private @Nullable String connection;
 
-		private String developerConnection;
+		private @Nullable String developerConnection;
 
-		private String tag;
+		private @Nullable String tag;
 
-		private String url;
+		private @Nullable String url;
 
 		/**
 		 * Specify the source control management system URL that describes the repository
@@ -93,7 +95,7 @@ public class MavenScm {
 		 * @param connection the source control management system URL
 		 * @return this for method chaining
 		 */
-		public Builder connection(String connection) {
+		public Builder connection(@Nullable String connection) {
 			this.connection = connection;
 			return this;
 		}
@@ -105,7 +107,7 @@ public class MavenScm {
 		 * developers
 		 * @return this for method chaining
 		 */
-		public Builder developerConnection(String developerConnection) {
+		public Builder developerConnection(@Nullable String developerConnection) {
 			this.developerConnection = developerConnection;
 			return this;
 		}
@@ -116,7 +118,7 @@ public class MavenScm {
 		 * @param tag the tag of current code
 		 * @return this for method chaining
 		 */
-		public Builder tag(String tag) {
+		public Builder tag(@Nullable String tag) {
 			this.tag = tag;
 			return this;
 		}
@@ -126,7 +128,7 @@ public class MavenScm {
 		 * @param url the URL to the project's browsable SCM repository
 		 * @return this for method chaining
 		 */
-		public Builder url(String url) {
+		public Builder url(@Nullable String url) {
 			this.url = url;
 			return this;
 		}

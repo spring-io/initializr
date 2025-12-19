@@ -17,4 +17,7 @@
 /**
  * Language abstraction.
  */
+@NullMarked
 package io.spring.initializr.generator.language;
+
+import org.jspecify.annotations.NullMarked;

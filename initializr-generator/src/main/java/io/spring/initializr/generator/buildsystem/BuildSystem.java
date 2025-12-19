@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.SourceStructure;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
@@ -42,7 +43,7 @@ public interface BuildSystem {
 	 * support multiple dialects.
 	 * @return the dialect or {@code null}
 	 */
-	default String dialect() {
+	default @Nullable String dialect() {
 		return null;
 	}
 
@@ -70,7 +71,7 @@ public interface BuildSystem {
 		return forIdAndDialect(id, null);
 	}
 
-	static BuildSystem forIdAndDialect(String id, String dialect) {
+	static BuildSystem forIdAndDialect(@Nullable String id, @Nullable String dialect) {
 		return SpringFactoriesLoader.loadFactories(BuildSystemFactory.class, BuildSystem.class.getClassLoader())
 			.stream()
 			.map((factory) -> factory.createBuildSystem(id, dialect))

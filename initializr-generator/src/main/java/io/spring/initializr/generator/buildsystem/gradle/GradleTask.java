@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A customization for a Gradle task.
  *
@@ -33,7 +35,7 @@ public class GradleTask {
 
 	private final String name;
 
-	private final String type;
+	private final @Nullable String type;
 
 	private final List<Attribute> attributes;
 
@@ -68,7 +70,7 @@ public class GradleTask {
 	 * no type.
 	 * @return the associated task type or {@code null}
 	 */
-	public String getType() {
+	public @Nullable String getType() {
 		return this.type;
 	}
 
@@ -103,7 +105,7 @@ public class GradleTask {
 
 		private final String name;
 
-		private final String type;
+		private final @Nullable String type;
 
 		private final Map<String, Attribute> attributes = new LinkedHashMap<>();
 
@@ -116,7 +118,7 @@ public class GradleTask {
 		 * @param name the name of the task
 		 * @param type the type of the task
 		 */
-		protected Builder(String name, String type) {
+		protected Builder(String name, @Nullable String type) {
 			this.name = name;
 			this.type = type;
 		}

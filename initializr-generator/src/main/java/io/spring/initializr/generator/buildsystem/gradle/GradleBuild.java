@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSettings.Builder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Gradle-specific {@linkplain Build build configuration}.
@@ -49,7 +50,7 @@ public class GradleBuild extends Build {
 	 * Create a new Gradle build using the specified {@link BuildItemResolver}.
 	 * @param buildItemResolver the build item resolved to use
 	 */
-	public GradleBuild(BuildItemResolver buildItemResolver) {
+	public GradleBuild(@Nullable BuildItemResolver buildItemResolver) {
 		super(buildItemResolver);
 	}
 

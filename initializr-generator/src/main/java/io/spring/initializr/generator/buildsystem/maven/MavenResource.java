@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A resource of a {@link MavenBuild}.
  *
@@ -29,7 +31,7 @@ public class MavenResource {
 
 	private final String directory;
 
-	private final String targetPath;
+	private final @Nullable String targetPath;
 
 	private final boolean filtering;
 
@@ -63,7 +65,7 @@ public class MavenResource {
 	 * {@code null} by default which represents the root directory.
 	 * @return the target path or {@code null}
 	 */
-	public String getTargetPath() {
+	public @Nullable String getTargetPath() {
 		return this.targetPath;
 	}
 
@@ -101,7 +103,7 @@ public class MavenResource {
 
 		private final String directory;
 
-		private String targetPath;
+		private @Nullable String targetPath;
 
 		private boolean filtering;
 
@@ -123,7 +125,7 @@ public class MavenResource {
 		 * @param targetPath the target path
 		 * @return this for method chaining
 		 */
-		public Builder targetPath(String targetPath) {
+		public Builder targetPath(@Nullable String targetPath) {
 			this.targetPath = targetPath;
 			return this;
 		}

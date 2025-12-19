@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.language;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Base {@link Language} implementation.
  *
@@ -35,7 +37,7 @@ public abstract class AbstractLanguage implements Language {
 	 * @param jvmVersion the JVM version
 	 * @param sourceFileExtension the source file extension
 	 */
-	protected AbstractLanguage(String id, String jvmVersion, String sourceFileExtension) {
+	protected AbstractLanguage(String id, @Nullable String jvmVersion, String sourceFileExtension) {
 		this.id = id;
 		this.jvmVersion = (jvmVersion != null) ? jvmVersion : DEFAULT_JVM_VERSION;
 		this.sourceFileExtension = sourceFileExtension;

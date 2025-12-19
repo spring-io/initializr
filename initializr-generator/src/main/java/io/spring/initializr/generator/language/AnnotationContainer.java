@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.language.Annotation.Builder;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -121,7 +122,7 @@ public class AnnotationContainer {
 	 * {@link #addRepeatable(ClassName)}
 	 */
 	@Deprecated(forRemoval = true)
-	public void add(ClassName className, Consumer<Builder> annotation) {
+	public void add(ClassName className, @Nullable Consumer<Builder> annotation) {
 		if (hasRepeatable(className)) {
 			throw new IllegalArgumentException(
 					"%s has already been used for repeatable annotations".formatted(className));
@@ -152,7 +153,7 @@ public class AnnotationContainer {
 	 * @throws IllegalStateException if the annotation has already been used for
 	 * repeatable annotations
 	 */
-	public boolean addSingle(ClassName className, Consumer<Builder> annotation) {
+	public boolean addSingle(ClassName className, @Nullable Consumer<Builder> annotation) {
 		if (hasSingle(className)) {
 			return false;
 		}
@@ -197,7 +198,7 @@ public class AnnotationContainer {
 	 * @throws IllegalStateException if the annotation has already been added as a single
 	 * annotation
 	 */
-	public void addRepeatable(ClassName className, Consumer<Builder> annotation) {
+	public void addRepeatable(ClassName className, @Nullable Consumer<Builder> annotation) {
 		if (hasSingle(className)) {
 			throw new IllegalStateException("%s has already been added as a single annotation".formatted(className));
 		}

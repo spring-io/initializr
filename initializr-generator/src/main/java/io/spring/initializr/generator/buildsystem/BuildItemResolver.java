@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.buildsystem;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Resolve an item of the {@link Build} against an identifier.
  *
@@ -33,20 +35,20 @@ public interface BuildItemResolver {
 	 * @param id the id of the dependency
 	 * @return the matching {@link Dependency} or {@code null} if none is found
 	 */
-	Dependency resolveDependency(String id);
+	@Nullable Dependency resolveDependency(String id);
 
 	/**
 	 * Resolve the {@link BillOfMaterials} with the specified {@code id}.
 	 * @param id the id of the bom
 	 * @return the matching {@link BillOfMaterials} or {@code null} if none is found
 	 */
-	BillOfMaterials resolveBom(String id);
+	@Nullable BillOfMaterials resolveBom(String id);
 
 	/**
 	 * Resolve the {@link MavenRepository repository} with the specified {@code id}.
 	 * @param id the id of the bom
 	 * @return the matching {@link MavenRepository} or {@code null} if none is found
 	 */
-	MavenRepository resolveRepository(String id);
+	@Nullable MavenRepository resolveRepository(String id);
 
 }

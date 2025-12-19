@@ -54,18 +54,21 @@ class KotlinSourceCodeWriterTests {
 	private static final Language LANGUAGE = new KotlinLanguage();
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	private final KotlinSourceCodeWriter writer = new KotlinSourceCodeWriter(new KotlinLanguage(),
 			IndentingWriterFactory.withDefaultSettings());
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullPackageInvalidCompilationUnit() {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit(null, "Test"));
 	}
 
 	@Test
+	@SuppressWarnings("NullAway") // Test null checks
 	void nullNameInvalidCompilationUnit() {
 		KotlinSourceCode sourceCode = new KotlinSourceCode();
 		assertThatIllegalArgumentException().isThrownBy(() -> sourceCode.createCompilationUnit("com.example", null));

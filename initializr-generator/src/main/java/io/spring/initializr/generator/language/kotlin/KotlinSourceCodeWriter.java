@@ -45,6 +45,7 @@ import io.spring.initializr.generator.language.Parameter;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.SourceStructure;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.CollectionUtils;
 
@@ -97,11 +98,11 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 				writeAnnotations(writer, type);
 				writeModifiers(writer, type.getModifiers());
 				writer.print("class " + type.getName());
-				boolean hasExtends = type.getExtends() != null;
-				if (hasExtends) {
+				if (type.getExtends() != null) {
 					writer.print(" : " + getUnqualifiedName(type.getExtends()) + "()");
 				}
 				if (!CollectionUtils.isEmpty(type.getImplements())) {
+					boolean hasExtends = type.getExtends() != null;
 					writer.print(hasExtends ? ", " : " : ");
 					writeImplements(type, writer);
 				}
@@ -179,13 +180,15 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			writer.print(" = ");
 			valueCode.write(writer, FORMATTING_OPTIONS);
 		}
-		if (propertyDeclaration.getGetter() != null) {
+		KotlinPropertyDeclaration.Accessor getter = propertyDeclaration.getGetter();
+		if (getter != null) {
 			writer.println();
-			writer.indented(() -> writeAccessor(writer, "get", propertyDeclaration.getGetter()));
+			writer.indented(() -> writeAccessor(writer, "get", getter));
 		}
-		if (propertyDeclaration.getSetter() != null) {
+		KotlinPropertyDeclaration.Accessor setter = propertyDeclaration.getSetter();
+		if (setter != null) {
 			writer.println();
-			writer.indented(() -> writeAccessor(writer, "set", propertyDeclaration.getSetter()));
+			writer.indented(() -> writeAccessor(writer, "set", setter));
 		}
 		writer.println();
 	}
@@ -302,7 +305,7 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 		return name.substring(name.lastIndexOf(".") + 1);
 	}
 
-	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, String name) {
+	private boolean isImportCandidate(CompilationUnit<?> compilationUnit, @Nullable String name) {
 		if (name == null || !name.contains(".")) {
 			return false;
 		}

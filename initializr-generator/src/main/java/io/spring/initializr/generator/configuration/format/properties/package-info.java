@@ -17,4 +17,7 @@
 /**
  * Properties configuration file format.
  */
+@NullMarked
 package io.spring.initializr.generator.configuration.format.properties;
+
+import org.jspecify.annotations.NullMarked;

@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.spring.initializr.generator.version.Version.Qualifier;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -90,7 +91,7 @@ public class VersionParser {
 		}
 	}
 
-	private Qualifier parseQualifier(Matcher matcher) {
+	private @Nullable Qualifier parseQualifier(Matcher matcher) {
 		String qualifierSeparator = matcher.group(4);
 		String qualifierId = matcher.group(5);
 		if (StringUtils.hasText(qualifierSeparator) && StringUtils.hasText(qualifierId)) {
@@ -109,7 +110,7 @@ public class VersionParser {
 	 * @return a Version instance for the specified version text
 	 * @see #parse(java.lang.String)
 	 */
-	public Version safeParse(String text) {
+	public @Nullable Version safeParse(String text) {
 		try {
 			return parse(text);
 		}
@@ -140,7 +141,8 @@ public class VersionParser {
 		return new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive);
 	}
 
-	private Version findLatestVersion(Integer major, Integer minor, Version.Qualifier qualifier) {
+	private @Nullable Version findLatestVersion(@Nullable Integer major, @Nullable Integer minor,
+			Version.@Nullable Qualifier qualifier) {
 		List<Version> matches = this.latestVersions.stream().filter((it) -> {
 			if (major != null && !major.equals(it.getMajor())) {
 				return false;

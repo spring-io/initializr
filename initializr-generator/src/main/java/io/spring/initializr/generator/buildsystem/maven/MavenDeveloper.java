@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@code <developer>} in a Maven pom.
  *
@@ -29,21 +31,21 @@ import java.util.Map;
  */
 public class MavenDeveloper {
 
-	private final String id;
+	private final @Nullable String id;
 
-	private final String name;
+	private final @Nullable String name;
 
-	private final String email;
+	private final @Nullable String email;
 
-	private final String url;
+	private final @Nullable String url;
 
-	private final String organization;
+	private final @Nullable String organization;
 
-	private final String organizationUrl;
+	private final @Nullable String organizationUrl;
 
 	private final List<String> roles;
 
-	private final String timezone;
+	private final @Nullable String timezone;
 
 	private final Map<String, String> properties;
 
@@ -63,7 +65,7 @@ public class MavenDeveloper {
 	 * Return the ID of the developer.
 	 * @return the ID
 	 */
-	public String getId() {
+	public @Nullable String getId() {
 		return this.id;
 	}
 
@@ -71,7 +73,7 @@ public class MavenDeveloper {
 	 * Return the name of the developer.
 	 * @return the name
 	 */
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
@@ -79,7 +81,7 @@ public class MavenDeveloper {
 	 * Return the email address of the developer.
 	 * @return the email address
 	 */
-	public String getEmail() {
+	public @Nullable String getEmail() {
 		return this.email;
 	}
 
@@ -87,7 +89,7 @@ public class MavenDeveloper {
 	 * Return the URL of the developer.
 	 * @return the URL
 	 */
-	public String getUrl() {
+	public @Nullable String getUrl() {
 		return this.url;
 	}
 
@@ -95,7 +97,7 @@ public class MavenDeveloper {
 	 * Return the organization's name of the developer.
 	 * @return the organization
 	 */
-	public String getOrganization() {
+	public @Nullable String getOrganization() {
 		return this.organization;
 	}
 
@@ -103,7 +105,7 @@ public class MavenDeveloper {
 	 * Return the associated organization's URL of the developer.
 	 * @return the organization's URL
 	 */
-	public String getOrganizationUrl() {
+	public @Nullable String getOrganizationUrl() {
 		return this.organizationUrl;
 	}
 
@@ -119,7 +121,7 @@ public class MavenDeveloper {
 	 * Return the timezone associated with the developer.
 	 * @return the timezone
 	 */
-	public String getTimezone() {
+	public @Nullable String getTimezone() {
 		return this.timezone;
 	}
 
@@ -136,21 +138,21 @@ public class MavenDeveloper {
 	 */
 	public static class Builder {
 
-		private String id;
+		private @Nullable String id;
 
-		private String name;
+		private @Nullable String name;
 
-		private String email;
+		private @Nullable String email;
 
-		private String url;
+		private @Nullable String url;
 
-		private String organization;
+		private @Nullable String organization;
 
-		private String organizationUrl;
+		private @Nullable String organizationUrl;
 
 		private final List<String> roles = new ArrayList<>();
 
-		private String timezone;
+		private @Nullable String timezone;
 
 		private final Map<String, String> properties = new LinkedHashMap<>();
 
@@ -159,7 +161,7 @@ public class MavenDeveloper {
 		 * @param id the ID of the developer or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder id(String id) {
+		public Builder id(@Nullable String id) {
 			this.id = id;
 			return this;
 		}
@@ -169,7 +171,7 @@ public class MavenDeveloper {
 		 * @param name the name of the developer or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder name(String name) {
+		public Builder name(@Nullable String name) {
 			this.name = name;
 			return this;
 		}
@@ -179,7 +181,7 @@ public class MavenDeveloper {
 		 * @param email the email address of the developer or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder email(String email) {
+		public Builder email(@Nullable String email) {
 			this.email = email;
 			return this;
 		}
@@ -189,7 +191,7 @@ public class MavenDeveloper {
 		 * @param url the URL of the developer or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder url(String url) {
+		public Builder url(@Nullable String url) {
 			this.url = url;
 			return this;
 		}
@@ -199,7 +201,7 @@ public class MavenDeveloper {
 		 * @param organization the organization of the developer or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder organization(String organization) {
+		public Builder organization(@Nullable String organization) {
 			this.organization = organization;
 			return this;
 		}
@@ -209,7 +211,7 @@ public class MavenDeveloper {
 		 * @param organizationUrl the URL of the organization or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder organizationUrl(String organizationUrl) {
+		public Builder organizationUrl(@Nullable String organizationUrl) {
 			this.organizationUrl = organizationUrl;
 			return this;
 		}
@@ -229,7 +231,7 @@ public class MavenDeveloper {
 		 * @param timezone the timezone that the developer lives in or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder timezone(String timezone) {
+		public Builder timezone(@Nullable String timezone) {
 			this.timezone = timezone;
 			return this;
 		}

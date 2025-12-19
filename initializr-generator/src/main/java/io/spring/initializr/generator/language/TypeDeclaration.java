@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A type declared in a {@link CompilationUnit}.
  *
@@ -32,7 +34,7 @@ public class TypeDeclaration implements Annotatable {
 
 	private final String name;
 
-	private String extendedClassName;
+	private @Nullable String extendedClassName;
 
 	private List<String> implementsClassNames = Collections.emptyList();
 
@@ -48,7 +50,7 @@ public class TypeDeclaration implements Annotatable {
 	 * Extend the class with the given name.
 	 * @param name the name of the class to extend
 	 */
-	public void extend(String name) {
+	public void extend(@Nullable String name) {
 		this.extendedClassName = name;
 	}
 
@@ -77,7 +79,7 @@ public class TypeDeclaration implements Annotatable {
 		return this.name;
 	}
 
-	public String getExtends() {
+	public @Nullable String getExtends() {
 		return this.extendedClassName;
 	}
 

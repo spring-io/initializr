@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import io.spring.initializr.generator.version.VersionReference;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A plugin in a {@link MavenBuild}.
@@ -38,7 +39,7 @@ public class MavenPlugin {
 
 	private final String artifactId;
 
-	private final VersionReference version;
+	private final @Nullable VersionReference version;
 
 	private final boolean extensions;
 
@@ -48,7 +49,7 @@ public class MavenPlugin {
 
 	private final List<Dependency> dependencies;
 
-	private final Configuration configuration;
+	private final @Nullable Configuration configuration;
 
 	/**
 	 * Creates a new instance.
@@ -88,7 +89,7 @@ public class MavenPlugin {
 	 * @deprecated for removal in favor of {@link #getVersionReference()}
 	 */
 	@Deprecated(forRemoval = true)
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return (this.version != null) ? this.version.getValue() : null;
 	}
 
@@ -97,7 +98,7 @@ public class MavenPlugin {
 	 * managed.
 	 * @return the version or {@code null}
 	 */
-	public VersionReference getVersionReference() {
+	public @Nullable VersionReference getVersionReference() {
 		return this.version;
 	}
 
@@ -137,7 +138,7 @@ public class MavenPlugin {
 	 * Return the {@linkplain Configuration configuration} of the plugin.
 	 * @return the configuration
 	 */
-	public Configuration getConfiguration() {
+	public @Nullable Configuration getConfiguration() {
 		return this.configuration;
 	}
 
@@ -150,17 +151,17 @@ public class MavenPlugin {
 
 		private final String artifactId;
 
-		private VersionReference version;
+		private @Nullable VersionReference version;
 
 		private boolean extensions;
 
 		private boolean inherited = true;
 
-		private final Map<String, ExecutionBuilder> executions = new LinkedHashMap<>();
+		private final Map<@Nullable String, ExecutionBuilder> executions = new LinkedHashMap<>();
 
 		private final List<Dependency> dependencies = new ArrayList<>();
 
-		private ConfigurationBuilder configurationBuilder;
+		private @Nullable ConfigurationBuilder configurationBuilder;
 
 		/**
 		 * Creates a new instance.
@@ -178,7 +179,7 @@ public class MavenPlugin {
 		 * @param version the version of the plugin or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder version(String version) {
+		public Builder version(@Nullable String version) {
 			if (version == null) {
 				return versionReference(null);
 			}
@@ -191,7 +192,7 @@ public class MavenPlugin {
 		 * @param version the version of the plugin or {@code null}
 		 * @return this for method chaining
 		 */
-		public Builder versionReference(VersionReference version) {
+		public Builder versionReference(@Nullable VersionReference version) {
 			this.version = version;
 			return this;
 		}
@@ -237,7 +238,7 @@ public class MavenPlugin {
 		 * @param execution a {@link Consumer} to customize the {@link Execution}
 		 * @return this for method chaining
 		 */
-		public Builder execution(String id, Consumer<ExecutionBuilder> execution) {
+		public Builder execution(@Nullable String id, Consumer<ExecutionBuilder> execution) {
 			execution.accept(this.executions.computeIfAbsent(id, (key) -> new ExecutionBuilder(id)));
 			return this;
 		}
@@ -249,7 +250,7 @@ public class MavenPlugin {
 		 * @param version the version of the dependency
 		 * @return this for method chaining
 		 */
-		public Builder dependency(String groupId, String artifactId, String version) {
+		public Builder dependency(String groupId, String artifactId, @Nullable String version) {
 			return dependency(groupId, artifactId, (version != null) ? VersionReference.ofValue(version) : null);
 		}
 
@@ -260,7 +261,7 @@ public class MavenPlugin {
 		 * @param version the version of the dependency
 		 * @return this for method chaining
 		 */
-		public Builder dependency(String groupId, String artifactId, VersionReference version) {
+		public Builder dependency(String groupId, String artifactId, @Nullable VersionReference version) {
 			this.dependencies.add(new Dependency(groupId, artifactId, version));
 			return this;
 		}
@@ -280,21 +281,21 @@ public class MavenPlugin {
 	 */
 	public static class ExecutionBuilder {
 
-		private final String id;
+		private @Nullable final String id;
 
-		private String phase;
+		private @Nullable String phase;
 
 		private final List<String> goals = new ArrayList<>();
 
 		private final List<String> processingInstructions = new ArrayList<>();
 
-		private ConfigurationBuilder configurationCustomization = null;
+		private @Nullable ConfigurationBuilder configurationCustomization = null;
 
 		/**
 		 * Creates a new instance.
 		 * @param id the id
 		 */
-		public ExecutionBuilder(String id) {
+		public ExecutionBuilder(@Nullable String id) {
 			this.id = id;
 		}
 
@@ -309,7 +310,7 @@ public class MavenPlugin {
 		 * @param phase the phase to use
 		 * @return this for method chaining
 		 */
-		public ExecutionBuilder phase(String phase) {
+		public ExecutionBuilder phase(@Nullable String phase) {
 			this.phase = phase;
 			return this;
 		}
@@ -501,18 +502,18 @@ public class MavenPlugin {
 	 */
 	public static final class Execution {
 
-		private final String id;
+		private final @Nullable String id;
 
-		private final String phase;
+		private final @Nullable String phase;
 
 		private final List<String> goals;
 
-		private final Configuration configuration;
+		private final @Nullable Configuration configuration;
 
 		private final List<String> processingInstructions;
 
-		private Execution(String id, String phase, List<String> goals, Configuration configuration,
-				List<String> processingInstructions) {
+		private Execution(@Nullable String id, @Nullable String phase, List<String> goals,
+				@Nullable Configuration configuration, List<String> processingInstructions) {
 			this.id = id;
 			this.phase = phase;
 			this.goals = Collections.unmodifiableList(goals);
@@ -524,7 +525,7 @@ public class MavenPlugin {
 		 * Return the id of the execution.
 		 * @return the execution id
 		 */
-		public String getId() {
+		public @Nullable String getId() {
 			return this.id;
 		}
 
@@ -532,7 +533,7 @@ public class MavenPlugin {
 		 * Return the {@code phase} of the build lifecycle that goals will execute in.
 		 * @return the execution phase
 		 */
-		public String getPhase() {
+		public @Nullable String getPhase() {
 			return this.phase;
 		}
 
@@ -548,7 +549,7 @@ public class MavenPlugin {
 		 * Return the {@linkplain Configuration configuration} of the execution.
 		 * @return the configuration
 		 */
-		public Configuration getConfiguration() {
+		public @Nullable Configuration getConfiguration() {
 			return this.configuration;
 		}
 
@@ -567,9 +568,9 @@ public class MavenPlugin {
 
 		private final String artifactId;
 
-		private final VersionReference version;
+		private final @Nullable VersionReference version;
 
-		private Dependency(String groupId, String artifactId, VersionReference version) {
+		private Dependency(String groupId, String artifactId, @Nullable VersionReference version) {
 			this.groupId = groupId;
 			this.artifactId = artifactId;
 			this.version = version;
@@ -597,7 +598,7 @@ public class MavenPlugin {
 		 * @deprecated for removal in favor of {@link #getVersionReference()}.
 		 */
 		@Deprecated(forRemoval = true)
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return (this.version != null) ? this.version.getValue() : null;
 		}
 
@@ -605,7 +606,7 @@ public class MavenPlugin {
 		 * Return the version of the plugin dependency.
 		 * @return the version
 		 */
-		public VersionReference getVersionReference() {
+		public @Nullable VersionReference getVersionReference() {
 			return this.version;
 		}
 

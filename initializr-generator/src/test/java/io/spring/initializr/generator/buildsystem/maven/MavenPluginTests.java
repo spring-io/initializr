@@ -38,10 +38,12 @@ class MavenPluginTests {
 			.configuration((configuration) -> configuration.add("enabled", "false").add("skip", "true"))
 			.configuration((configuration) -> configuration.add("another", "test"))
 			.build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
-				"skip", "another");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("false",
-				"true", "test");
+		MavenPlugin.Configuration configuration = plugin.getConfiguration();
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getSettings().stream().map(Setting::getName)).containsExactly("enabled", "skip",
+				"another");
+		assertThat(configuration.getSettings().stream().map(Setting::getValue)).containsExactly("false", "true",
+				"test");
 	}
 
 	@Test
@@ -50,10 +52,10 @@ class MavenPluginTests {
 			.configuration((configuration) -> configuration.add("enabled", "true"))
 			.configuration((configuration) -> configuration.add("skip", "false"))
 			.build();
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getName)).containsExactly("enabled",
-				"skip");
-		assertThat(plugin.getConfiguration().getSettings().stream().map(Setting::getValue)).containsExactly("true",
-				"false");
+		MavenPlugin.Configuration configuration = plugin.getConfiguration();
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getSettings().stream().map(Setting::getName)).containsExactly("enabled", "skip");
+		assertThat(configuration.getSettings().stream().map(Setting::getValue)).containsExactly("true", "false");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,8 +67,10 @@ class MavenPluginTests {
 				items.add("item", (secondItem) -> secondItem.add("name", "two"));
 			}))
 			.build();
-		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
-		Setting setting = plugin.getConfiguration().getSettings().get(0);
+		MavenPlugin.Configuration configuration = plugin.getConfiguration();
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getSettings()).hasSize(1);
+		Setting setting = configuration.getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> values = (List<Setting>) setting.getValue();
@@ -93,8 +97,10 @@ class MavenPluginTests {
 			.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "one")))
 			.configuration((configuration) -> configuration.configure("items", (items) -> items.add("item", "two")))
 			.build();
-		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
-		Setting setting = plugin.getConfiguration().getSettings().get(0);
+		MavenPlugin.Configuration configuration = plugin.getConfiguration();
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getSettings()).hasSize(1);
+		Setting setting = configuration.getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> values = (List<Setting>) setting.getValue();
@@ -112,8 +118,10 @@ class MavenPluginTests {
 					(items) -> items.configure("item",
 							(subItems) -> subItems.add("subItem", "two").add("subItem", "three"))))
 			.build();
-		assertThat(plugin.getConfiguration().getSettings()).hasSize(1);
-		Setting setting = plugin.getConfiguration().getSettings().get(0);
+		MavenPlugin.Configuration configuration = plugin.getConfiguration();
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getSettings()).hasSize(1);
+		Setting setting = configuration.getSettings().get(0);
 		assertThat(setting.getName()).isEqualTo("items");
 		assertThat(setting.getValue()).isInstanceOf(List.class);
 		List<Setting> items = (List<Setting>) setting.getValue();
@@ -164,7 +172,9 @@ class MavenPluginTests {
 					(test) -> test.configuration((testConfiguration) -> testConfiguration.add("another", "test")))
 			.build();
 		assertThat(plugin.getExecutions()).hasSize(1);
-		List<Setting> settings = plugin.getExecutions().get(0).getConfiguration().getSettings();
+		MavenPlugin.Configuration configuration = plugin.getExecutions().get(0).getConfiguration();
+		assertThat(configuration).isNotNull();
+		List<Setting> settings = configuration.getSettings();
 		assertThat(settings.stream().map(Setting::getName)).containsExactly("enabled", "another");
 		assertThat(settings.stream().map(Setting::getValue)).containsExactly("true", "test");
 	}

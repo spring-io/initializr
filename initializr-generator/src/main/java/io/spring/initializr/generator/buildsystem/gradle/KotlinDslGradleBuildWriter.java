@@ -28,6 +28,7 @@ import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.io.IndentingWriter;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link GradleBuild} writer for {@code build.gradle.kts}.
@@ -65,7 +66,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		return result;
 	}
 
-	private String shortPluginNotation(String pluginId) {
+	private @Nullable String shortPluginNotation(String pluginId) {
 		if (pluginId.equals("java") || pluginId.equals("war") || pluginId.equals("groovy")) {
 			return pluginId;
 		}
@@ -163,10 +164,10 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 				+ "\")";
 	}
 
-	private String determineVersion(VersionReference versionReference) {
+	private @Nullable String determineVersion(@Nullable VersionReference versionReference) {
 		if (versionReference != null) {
-			if (versionReference.isProperty()) {
-				VersionProperty property = versionReference.getProperty();
+			VersionProperty property = versionReference.getProperty();
+			if (property != null) {
 				return "${property(\""
 						+ (property.isInternal() ? property.toCamelCaseFormat() : property.toStandardFormat()) + "\")}";
 			}
@@ -197,7 +198,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	@Override
-	protected void writeProperty(IndentingWriter writer, String name, String value) {
+	protected void writeProperty(IndentingWriter writer, String name, @Nullable String value) {
 		if (value != null) {
 			writer.println(String.format("%s = \"%s\"", name, value));
 		}

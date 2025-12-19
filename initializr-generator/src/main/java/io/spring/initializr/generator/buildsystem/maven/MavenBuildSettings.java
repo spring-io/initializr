@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 
 import io.spring.initializr.generator.buildsystem.BuildSettings;
 import io.spring.initializr.generator.packaging.Packaging;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maven {@link BuildSettings}.
@@ -33,13 +34,13 @@ import io.spring.initializr.generator.packaging.Packaging;
  */
 public class MavenBuildSettings extends BuildSettings {
 
-	private final MavenParent parent;
+	private final @Nullable MavenParent parent;
 
-	private final String packaging;
+	private final @Nullable String packaging;
 
-	private final String name;
+	private final @Nullable String name;
 
-	private final String description;
+	private final @Nullable String description;
 
 	private final List<MavenLicense> licenses;
 
@@ -47,15 +48,15 @@ public class MavenBuildSettings extends BuildSettings {
 
 	private final MavenScm scm;
 
-	private final String defaultGoal;
+	private final @Nullable String defaultGoal;
 
-	private final String finalName;
+	private final @Nullable String finalName;
 
-	private final String sourceDirectory;
+	private final @Nullable String sourceDirectory;
 
-	private final String testSourceDirectory;
+	private final @Nullable String testSourceDirectory;
 
-	private final String url;
+	private final @Nullable String url;
 
 	private final boolean addOverrideIfEmpty;
 
@@ -85,7 +86,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * parent.
 	 * @return the parent pom or {@code null}
 	 */
-	public MavenParent getParent() {
+	public @Nullable MavenParent getParent() {
 		return this.parent;
 	}
 
@@ -94,7 +95,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * packaging.
 	 * @return the packaging to use
 	 */
-	public String getPackaging() {
+	public @Nullable String getPackaging() {
 		return this.packaging;
 	}
 
@@ -102,7 +103,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * Return a simple name for the project.
 	 * @return the name of the project or {@code null}
 	 */
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
@@ -110,7 +111,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * Return a human readable description of the project.
 	 * @return the description of the project or {@code null}
 	 */
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
@@ -142,7 +143,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * Return the default goal or phase to execute if none is given.
 	 * @return the default goal or {@code null} to use the default
 	 */
-	public String getDefaultGoal() {
+	public @Nullable String getDefaultGoal() {
 		return this.defaultGoal;
 	}
 
@@ -150,7 +151,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * Return the final name of the artifact.
 	 * @return the final name or {@code null} to use the default
 	 */
-	public String getFinalName() {
+	public @Nullable String getFinalName() {
 		return this.finalName;
 	}
 
@@ -159,7 +160,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * {@code ${basedir}}.
 	 * @return the location of main source code or {@code null} to use the default
 	 */
-	public String getSourceDirectory() {
+	public @Nullable String getSourceDirectory() {
 		return this.sourceDirectory;
 	}
 
@@ -168,7 +169,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * {@code ${basedir}}.
 	 * @return the location of test source code or {@code null} to use the default
 	 */
-	public String getTestSourceDirectory() {
+	public @Nullable String getTestSourceDirectory() {
 		return this.testSourceDirectory;
 	}
 
@@ -176,7 +177,7 @@ public class MavenBuildSettings extends BuildSettings {
 	 * The URL to the project.
 	 * @return the url to the project
 	 */
-	public String getUrl() {
+	public @Nullable String getUrl() {
 		return this.url;
 	}
 
@@ -194,13 +195,13 @@ public class MavenBuildSettings extends BuildSettings {
 	 */
 	public static class Builder extends BuildSettings.Builder<Builder> {
 
-		private MavenParent parent;
+		private @Nullable MavenParent parent;
 
-		private String packaging;
+		private @Nullable String packaging;
 
-		private String name;
+		private @Nullable String name;
 
-		private String description;
+		private @Nullable String description;
 
 		private List<MavenLicense> licenses = new ArrayList<>();
 
@@ -208,15 +209,15 @@ public class MavenBuildSettings extends BuildSettings {
 
 		private final MavenScm.Builder scm = new MavenScm.Builder();
 
-		private String defaultGoal;
+		private @Nullable String defaultGoal;
 
-		private String finalName;
+		private @Nullable String finalName;
 
-		private String sourceDirectory;
+		private @Nullable String sourceDirectory;
 
-		private String testSourceDirectory;
+		private @Nullable String testSourceDirectory;
 
-		private String url;
+		private @Nullable String url;
 
 		private boolean addOverrideIfEmpty;
 
@@ -259,7 +260,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param relativePath the relative path
 		 * @return this for method chaining
 		 */
-		public Builder parent(String groupId, String artifactId, String version, String relativePath) {
+		public Builder parent(String groupId, String artifactId, String version, @Nullable String relativePath) {
 			this.parent = new MavenParent(groupId, artifactId, version, relativePath);
 			return self();
 		}
@@ -270,7 +271,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @return this for method chaining
 		 * @see Packaging
 		 */
-		public Builder packaging(String packaging) {
+		public Builder packaging(@Nullable String packaging) {
 			this.packaging = packaging;
 			return self();
 		}
@@ -280,7 +281,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param name the name of the project
 		 * @return this for method chaining
 		 */
-		public Builder name(String name) {
+		public Builder name(@Nullable String name) {
 			this.name = name;
 			return self();
 		}
@@ -290,7 +291,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param description the description of the project
 		 * @return this for method chaining
 		 */
-		public Builder description(String description) {
+		public Builder description(@Nullable String description) {
 			this.description = description;
 			return self();
 		}
@@ -300,7 +301,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param licenses the licenses associated with the project
 		 * @return this for method chaining
 		 */
-		public Builder licenses(MavenLicense... licenses) {
+		public Builder licenses(MavenLicense @Nullable ... licenses) {
 			this.licenses = (licenses != null) ? Arrays.asList(licenses) : new ArrayList<>();
 			return self();
 		}
@@ -310,7 +311,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param developers the developers associated with the project
 		 * @return this for method chaining
 		 */
-		public Builder developers(MavenDeveloper... developers) {
+		public Builder developers(MavenDeveloper @Nullable ... developers) {
 			this.developers = (developers != null) ? Arrays.asList(developers) : new ArrayList<>();
 			return self();
 		}
@@ -330,7 +331,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param finalName the final name of the artifact
 		 * @return this for method chaining
 		 */
-		public Builder finalName(String finalName) {
+		public Builder finalName(@Nullable String finalName) {
 			this.finalName = finalName;
 			return self();
 		}
@@ -340,7 +341,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param defaultGoal the default goal or {@code null} to use the default
 		 * @return this for method chaining
 		 */
-		public Builder defaultGoal(String defaultGoal) {
+		public Builder defaultGoal(@Nullable String defaultGoal) {
 			this.defaultGoal = defaultGoal;
 			return self();
 		}
@@ -352,7 +353,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * the default
 		 * @return this for method chaining
 		 */
-		public Builder sourceDirectory(String sourceDirectory) {
+		public Builder sourceDirectory(@Nullable String sourceDirectory) {
 			this.sourceDirectory = sourceDirectory;
 			return self();
 		}
@@ -364,7 +365,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * use the default
 		 * @return this for method chaining
 		 */
-		public Builder testSourceDirectory(String testSourceDirectory) {
+		public Builder testSourceDirectory(@Nullable String testSourceDirectory) {
 			this.testSourceDirectory = testSourceDirectory;
 			return self();
 		}
@@ -374,7 +375,7 @@ public class MavenBuildSettings extends BuildSettings {
 		 * @param url the url of the project
 		 * @return this for method chaining
 		 */
-		public Builder url(String url) {
+		public Builder url(@Nullable String url) {
 			this.url = url;
 			return self();
 		}

@@ -24,6 +24,7 @@ import io.spring.initializr.generator.configuration.format.ConfigurationFileForm
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Description of a project to generate.
@@ -52,78 +53,78 @@ public interface ProjectDescription {
 	 * Return the requested platform {@link Version}.
 	 * @return the requested platform version or {@code null}
 	 */
-	Version getPlatformVersion();
+	@Nullable Version getPlatformVersion();
 
 	/**
 	 * Return the {@link BuildSystem} to use.
 	 * @return the build system or {@code null}
 	 */
-	BuildSystem getBuildSystem();
+	@Nullable BuildSystem getBuildSystem();
 
 	/**
 	 * Return the build {@link Packaging} to use.
 	 * @return the build packaging or {@code null}
 	 */
-	Packaging getPackaging();
+	@Nullable Packaging getPackaging();
 
 	/**
 	 * Return the primary {@link Language} of the project.
 	 * @return the primary language or {@code null}
 	 */
-	Language getLanguage();
+	@Nullable Language getLanguage();
 
 	/**
 	 * Return the {@link ConfigurationFileFormat} of the project.
 	 * @return the configuration file format or {@code null}
 	 */
-	ConfigurationFileFormat getConfigurationFileFormat();
+	@Nullable ConfigurationFileFormat getConfigurationFileFormat();
 
 	/**
 	 * Return the build {@code groupId}.
 	 * @return the groupId or {@code null}
 	 */
-	String getGroupId();
+	@Nullable String getGroupId();
 
 	/**
 	 * Return the build {@code artifactId}.
 	 * @return the artifactId or {@code null}
 	 */
-	String getArtifactId();
+	@Nullable String getArtifactId();
 
 	/**
 	 * Return the version of the project.
 	 * @return the version of {@code null}
 	 */
-	String getVersion();
+	@Nullable String getVersion();
 
 	/**
 	 * Return a simple name for the project.
 	 * @return the name of the project or {@code null}
 	 */
-	String getName();
+	@Nullable String getName();
 
 	/**
 	 * Return a human-readable description of the project.
 	 * @return the description of the project or {@code null}
 	 */
-	String getDescription();
+	@Nullable String getDescription();
 
 	/**
 	 * Return the name of the application as a standard Java identifier.
 	 * @return the name of the application or {@code null}
 	 */
-	String getApplicationName();
+	@Nullable String getApplicationName();
 
 	/**
 	 * Return the root package name of the project.
 	 * @return the package name or {@code null}
 	 */
-	String getPackageName();
+	@Nullable String getPackageName();
 
 	/**
 	 * Return the base directory of the project or {@code null} to use the root directory.
 	 * @return the base directory
 	 */
-	String getBaseDirectory();
+	@Nullable String getBaseDirectory();
 
 }
